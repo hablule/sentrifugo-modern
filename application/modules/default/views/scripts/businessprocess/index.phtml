@@ -1,0 +1,55 @@
+<?php
+
+/**
+ * Business Process Index View
+ * Displays the grid of core transactional engines (e.g., Payroll, Appraisals).
+ * Refactored to comply with SSOT v6.7.
+ * 
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ * @author     Hablul Soft Solution < /hablul.in>
+ * @license    http://gnu.org GNU General Public License, version 3.0 (GPL-3.0)
+ * @version    Sentrifugo v3.2
+ */
+?>
+
+<!-- Flash Messages -->
+<div id="message_container">
+    <?php if (isset($this->messages) && !empty($this->messages)) : ?>
+        <div id="dispmsg" class="settingssuccess">
+            <?php foreach ($this->messages as $message) : $key = key($message); ?>
+                <div class="ml-alert-1-<?php echo $key; ?>">
+                    <div style="display:block;">
+                        <span class="style-1-icon <?php echo $key; ?>"></span>
+                        <?php echo $this->escape($message[$key]); ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+</div>
+
+<!-- AJAX Error Container -->
+<div id="error_message" style="display:none;"></div>
+
+<!-- Grid Container -->
+<?php if (isset($this->call) && $this->call === 'ajaxcall') : ?>
+    <!-- AJAX Content Only -->
+    <?php echo $this->grid($this->dataArray[0]); ?>
+<?php else : ?>
+    <!-- Full Layout Container -->
+    <div id="grid_<?php echo $this->escape($this->dataArray[0]['objectname']); ?>" class="all-grid-control">
+        <div id="msg" style="display:none; font-style: oblique; font-weight: bold; color: green;"></div>
+        <?php echo $this->grid($this->dataArray[0]); ?>
+    </div>
+<?php endif; ?>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Auto-fade flash messages (Standard Sentrifugo UI Behavior)
+        setTimeout(function() {
+            $('#dispmsg').fadeOut('slow');
+        }, 4000);
+    });
+</script>

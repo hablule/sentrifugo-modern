@@ -1,0 +1,300 @@
+<?php 
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+$form = $this->form;
+sapp_Global::generateClientValidations($form); 
+?>
+<script type="text/javascript" src="<?php echo MEDIA_PATH;?>js/formValidator.js"></script>
+<?php if (count($this->messages)) {?>
+	<div id="dispmsgemp" class="settingssuccess">
+		<?php 
+			foreach ($this->messages as $message)
+			{
+				$flag = array();				
+				$flag = array_keys($message);
+				echo "<div id='messageData' class='ml-alert-1-$flag[0]'><div style='display:block;'><span class='style-1-icon $flag[0]'></span>";
+				echo $message[$flag[0]];
+				echo "</div></div>";
+			} 
+		;
+		?>
+	</div>	
+	
+<?php } ?>
+<div id="error_message" style="display:none;"></div>
+<?php 
+$auth = Zend_Auth::getInstance();
+$validcand = sapp_Global::_checkprivileges(CANDIDATEDETAILS,'',$auth->getStorage()->read()->emprole,'add');
+
+ 
+	$div = '<div id="grid_'.$this->dataArray['objectname'].'" class="all-grid-control">'; $endDiv = '</div>';
+
+$multi = '';
+
+    if($validcand == 'Yes'){
+        
+    }
+	
+
+   echo $multi.$div.'<div id="msg" style="display:none;font-style: oblique; font-weight: bold; color: green;""></div>'.$this->grid($this->dataArray).$endDiv;
+
+?>
+<form id="formid" name="frm_sinterview_rounds" method="POST">
+
+<div class="total-form-controller" id="cont" style="display: none;">
+   <div class="separetor-heading">Interview Details</div>
+       <div class="new-form-ui">
+           <label class="required">Requisition ID</label>
+           <div class="division"><?php echo $form->req_id;?>
+        <span id="errors-req_id" class="errors" onclick="display()"><?php echo (isset($messages['req_id'])?$messages['req_id']:"");?></span>
+       </div></div>
+     
+       
+       <div class="new-form-ui">
+           <label>Interview Status</label>
+           <div class="division">
+               <select disabled name="sel_inter_status" id="idsel_inter_status">
+                   <option value="In process">In process</option>
+                   <option value="Completed">Completed</option>
+                   <option value="On hold">On hold</option>
+               </select>			 
+           </div>
+       </div>
+     
+     <div class="new-form-ui">
+               <label class="required">Location</label>
+               <div class="division"><?php echo $form->int_location;?>
+          <span id="errors-int_location" class="errors"><?php echo (isset($messages['int_location'])?$messages['int_location']:"");?></span>
+       </div></div>
+   
+     <div class="new-form-ui">
+       <label class="required">Country</label>
+     <div class="division"><?php echo $this->form->country; ?>
+       <?php if(isset($messages['country'])){?>
+          <span class="errors" id="errors-country"><?php echo $messages['country'];?></span>
+       <?php }?>
+       
+       <?php if(in_array('country',$this->popConfigPermission)) { ?>	
+                 <span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL.'countries/addpopup' ?>','Country');"> Add Country</span>			
+         <?php } ?>	
+     </div></div>
+     
+     <div class="new-form-ui container_left">
+       <label class="required">State</label>
+     <div class="division"><?php echo $this->form->state; ?>
+       <?php if(isset($messages['state'])){?>
+          <span class="errors" id="errors-state"><?php echo $messages['state'];?></span>
+       <?php }?>
+       
+       <?php if(in_array('state',$this->popConfigPermission)) { ?>	
+            <span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL.'states/addpopup' ?>','State');"> Add State</span>			
+       <?php } ?>
+     </div></div>
+   
+     
+     
+   
+     <div class="new-form-ui container_left">
+       <label class="required">City</label>
+     <div class="division"><?php echo $this->form->city; ?>
+          <?php if(isset($messages['city'])){?>
+          <span class="errors" id="errors-city"><?php echo $messages['city'];?></span>
+       <?php }?>
+       <?php if(in_array('city',$this->popConfigPermission)) { ?>	
+             <span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL.'cities/addpopup' ?>','City');"> Add City</span>			
+       <?php } ?>
+     </div></div>
+   
+     <div class="new-form-ui">
+           <label class="required">Interviewer</label>
+           <div class="division">
+           <select name="interviewer_id" id="interviewer_id">
+               <option value="">Select Interviewer</option>
+           </select>
+           </div>
+     </div>
+   
+     <div class="new-form-ui">
+               <label class="required">Interview Type</label>
+                 <div class="division"><?php echo $form->interview_mode;?></div>
+            <span id="errors-interview_mode" class="errors"><?php echo (isset($messages['interview_mode'])?$messages['interview_mode']:"");?></span>
+       </div>
+     
+     <div class="new-form-ui">
+               <label class="required">Interview Date <img class="tooltip" title="<?php echo DATE_DESCRIPTION;?>" src="<?php echo $this->baseUrl().'/public/media/';?>images/help.png"></label>
+               <div class="division"><?php echo $form->interview_date;?></div>
+          <span id="errors-interview_date" class="errors"><?php echo (isset($messages['interview_date'])?$messages['interview_date']:"");?></span>
+       </div>
+       <div class="new-form-ui">
+           <label class="required">Interview Time</label>
+               <div class="division"><?php echo $form->interview_time;?></div>
+          <span id="errors-interview_time" class="errors"><?php echo (isset($messages['interview_time'])?$messages['interview_time']:"");?></span>
+       </div>	
+     <div class="new-form-ui">
+               <label class="required">Interview Name<img class="tooltip" title="Written,Technical,HR.." src="<?php echo $this->baseUrl().'/public/media/';?>images/help.png"></label>
+                 <div class="division"><?php echo $form->interview_round;?></div>
+            <span id="errors-interview_round" class="errors"><?php echo (isset($messages['interview_round'])?$messages['interview_round']:"");?></span>
+       </div>   
+      
+   <div class="new-form-ui-submit" style="width: 10%; float:right;">
+   <input hidden type="button" name="submit" value="submit" id="submitBtn" />
+   </div>
+</div>
+   </form>
+<script>
+$('body').ready(function(){
+  <?php 
+    
+    
+    ?>
+ // document.getElementById('cont').hidden = true
+var yearrange = <?php echo "'".YEAR.':'.(date('Y')+20)."'"; ?>;
+$( "#interview_date" ).datepicker({
+        showOn: "both",
+        buttonImage: "<?php echo MEDIA_PATH;?>images/cal.png",
+        buttonImageOnly: true,
+		buttonText: "",
+		yearRange: yearrange,
+        changeMonth: true,
+        changeYear: true,
+        dateFormat:"<?php echo DATEFORMAT_JS;?>",
+        minDate:0,
+        showButtonPanel: true ,
+        onClose:function(){
+        $( "#interview_date" ).trigger('blur');
+        timepicker_onclose('interview_time');
+        }
+        });
+	
+		$('#interview_time').timepicker({
+                    showPeriod: true,
+                    showLeadingZero: true,
+                     onClose:function(){
+                         $('#interview_time').trigger('blur');
+                         timepicker_onclose('interview_time');
+                     }
+                });
+
+
+$('.check1').change(function(ev) {
+    var checkedboxes = $('.check1:checked');
+    console.log($('.check1').prop('checked'));
+    if(checkedboxes.length == 0)
+    {
+      document.getElementById('submitBtn').style.display = 'none';
+      if(document.getElementsByClassName('total-form-controller').length>1){
+       
+		    document.getElementsByClassName('total-form-controller')[1].style.display = 'none';
+      }
+        else{
+          document.getElementsByClassName('total-form-controller')[0].style.display = 'none';
+        }
+        /* document.getElementById('cont').innerHTML = '';
+        document.getElementById('submitBtn').innerHTML = ''; */
+    }
+    else
+    {
+      document.getElementById('submitBtn').style.display = 'block';
+      if(document.getElementsByClassName('total-form-controller').length>1){
+          document.getElementsByClassName('total-form-controller')[1].style.display = 'block';
+      }
+      else{
+        document.getElementsByClassName('total-form-controller')[0].style.display = 'block';
+      }
+    }
+});
+$('#submitBtn').click(function(ev){
+    var boxs = $('.check1:checked');
+    var req_id = $('#req_id').val();
+    var interview_status = $('#idsel_inter_status').val();
+    var location = $('#int_location').val();
+    var country = $('#country').val();
+    var state = $('#state').val();
+    var city = $('#city').val();
+    var interviewer_id = $('#interviewer_id').val();
+    var interview_type = $('#interview_mode').val();
+    var interview_date  = $('#interview_date').val();
+    var interview_time = $('#interview_time').val()
+    var interview_round = $('#interview_round').val();
+    var ids = [];
+  for (let index = 0; index < boxs.length; index++) {
+      ids.push(boxs[index].value);
+      
+  }
+  console.log(ids);
+  if(document.forms[0].checkValidity())
+  {
+    /* var res=$.ajax({
+        url:base_url+'/list/selected',
+        type:'POST',
+        dataType: 'json',
+        data:{'ids':ids,'req_id':req_id,'interview_status':interview_status,'int_location':location,'country':country,'state':state,'city':city,'interview_mode':interview_type,'interview_time':interview_time,'interview_date':interview_date,'interview_round':interview_round,'interviewer_id':interviewer_id},
+        async:false
+
+  }).responseJSON
+  console.log(res); */
+  var res = JSON.parse(getphpdata('list/selected',{ids:ids,req_id:req_id,interview_status:interview_status,int_location:location
+                                                  ,country:country,state:state,city:city,interview_mode:interview_type
+                                                  ,interview_time:interview_time,interview_date:interview_date
+                                                  ,interview_round:interview_round,interviewer_id:interviewer_id},false,'POST','json'));
+
+
+  if(res['result']=='success')
+  {
+    
+    document.location.reload();
+  }
+  }
+  else{
+    <?php $messages['interview_date'] = 'help'?>
+    //document.location.reload();
+  }
+  /* var res=$.ajax({
+        url:base_url+'/list/selected',
+        type:'POST',
+        dataType: 'json',
+        data:{'ids':ids,'req_id':req_id,'interview_status':interview_status,'int_location':location,'country':country,'state':state,'city':city,'interview_mode':interview_type,'interview_time':interview_time,'interview_date':interview_date,'interview_round':interview_round,'interviewer_id':interviewer_id},
+        async:false
+
+  }).responseJSON
+  console.log(res);
+  if(res['result']=='success')
+  {
+    document.location.reload();
+  } */
+});
+
+<?php
+foreach ($this->isdiff as $key => $value) {?>
+	var isdiff ='<?php echo $value; ?>';
+	if(isdiff==1)
+	{
+		var editelement = document.getElementsByName('<?php echo $key; ?>')[1].hidden = true;
+	}
+
+<?php } ?>
+function display()
+{
+  console.log('display')
+}
+
+})
+
+</script>

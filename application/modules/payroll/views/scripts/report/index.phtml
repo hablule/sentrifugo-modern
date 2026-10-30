@@ -1,0 +1,38 @@
+<?php
+$form = $this->form;
+$validators = $this->validators;
+/* Zend_Debug::dump($this->dataArray);
+die(); */
+try{
+?>
+
+
+<?php
+
+if ($this->call !== 'ajaxcall') {
+
+  $div = '<div id="grid_' . $this->dataArray['objectname'] . '" class="all-grid-control">';
+  $endDiv = '</div>';
+
+  $multi = '';
+  echo $multi . $div . '<div id="msg" style="display:none;font-style: oblique; font-weight: bold; color: green;""></div>' . $this->gridtms($this->dataArray) . $endDiv;
+  
+  
+} 
+else {
+
+    $div = '<div id="grid_' . $this->dataArray['objectname'] . '" class="all-grid-control">';
+    $endDiv = '</div>';
+
+    $multi = '';
+    echo $multi . $div . '<div id="msg" style="display:none;font-style: oblique; font-weight: bold; color: green;""></div>' . $this->gridtms($this->dataArray) . $endDiv;
+
+}
+?>
+
+<?php
+}catch(\Throwable $th)
+{
+    Zend_Debug::dump($th->getMessage());
+}
+?>

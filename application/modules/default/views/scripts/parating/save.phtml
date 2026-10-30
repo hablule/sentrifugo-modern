@@ -1,0 +1,369 @@
+<?php
+
+/**
+ * PA Rating Save View (Merged Form)
+ * Final version with corrected script placement to avoid browser parsing conflicts.
+ */
+$this->msgarray = isset($this->msgarray) ? $this->msgarray : array();
+sapp_Global::generateClientValidations($this->form);
+$childOptionsJson = json_encode($this->childOptions ?? array());
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container">
+            <?php if (!empty($this->msgarray)) : ?>
+                <div class="ml-alert-1-error">
+                    <div style="display:block;"><span class="style-1-icon error"></span>Please correct the highlighted errors below.</div>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" method="<?php echo $this->escape($this->form->getMethod()); ?>">
+            <?php echo $this->form->id; ?>
+            <?php echo $this->form->options_payload; ?>
+
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <h4 style="font-size: 14px; color: #26a69a; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 15px;">Scale Settings</h4>
+
+                    <!-- ... All your form elements (code, name, data_type, etc.) go here ... -->
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->code; ?></div>
+                            <span class="errors" id="errors-code"><?php echo $this->escape($this->msgarray['code'] ?? ''); ?></span>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->name; ?></div>
+                            <span class="errors" id="errors-name"><?php echo $this->escape($this->msgarray['name'] ?? ''); ?></span>
+                        </div>
+                    </div>
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->data_type->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->data_type; ?></div>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->ui_widget->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->ui_widget; ?></div>
+                        </div>
+                        <div class="new-form-ui clearb" id="step_value_container" style="display:none;">
+                            <label class="required"><?php echo $this->escape($this->form->step_value->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->step_value; ?></div>
+                            <span class="errors" id="errors-step_value"><?php echo $this->escape($this->msgarray['step_value'] ?? ''); ?></span>
+                        </div>
+                    </div>
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                    </div>
+                    <!-- ========================================================== -->
+
+                    <div style="clear: both; height: 1px;"></div>
+
+                    <!-- DYNAMIC CHILD GRID: RATING OPTIONS -->
+                    <div id="options_section" style="display: none; margin-top: 20px; background-color: #fcfcfc; padding: 15px; border: 1px solid #eee; border-radius: 4px; clear: both;">
+                        <h4 style="font-size: 14px; color: #555; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 15px;">
+                            <i class="fa fa-list-ol"></i> Manage Scale Options
+                        </h4>
+                        <span class="errors" id="errors-options_payload" style="display: block; margin-bottom: 10px; color: red; font-size: 12px;"><?php echo $this->escape($this->msgarray['options_payload'] ?? ''); ?></span>
+                        <!-- ... Mini-Form to add options ... -->
+                        <div style="background: #fff; padding: 15px; border: 1px solid #e0e0e0; border-radius: 4px; margin-bottom: 20px; overflow: hidden;">
+                            <div style="float: left; width: 15%; padding-right: 15px; box-sizing: border-box;">
+                                <label style="display:block; font-weight:bold; color:#555; margin-bottom:5px; font-size:12px;">Value <span style="color:red;">*</span></label>
+                                <input type="text" id="tmp_value" class="formDataElement" placeholder="e.g. 5.0" style="width: 100%; box-sizing: border-box;">
+                            </div>
+                            <div style="float: left; width: 45%; padding-right: 15px; box-sizing: border-box;">
+                                <label style="display:block; font-weight:bold; color:#555; margin-bottom:5px; font-size:12px;">Text Label <span style="color:red;">*</span></label>
+                                <input type="text" id="tmp_name" class="formDataElement" placeholder="e.g. Excellent" style="width: 100%; box-sizing: border-box;">
+                            </div>
+                            <div style="float: left; width: 25%; padding-right: 15px; box-sizing: border-box;">
+                                <label style="display:block; font-weight:bold; color:#555; margin-bottom:5px; font-size:12px;">Icon Class (Opt)</label>
+                                <input type="text" id="tmp_icon" class="formDataElement" placeholder="e.g. fa-star" style="width: 100%; box-sizing: border-box;">
+                            </div>
+                            <div style="float: left; width: 15%; box-sizing: border-box; padding-top: 22px; text-align: right;">
+                                <button type="button" id="add_opt_btn" class="actbtn_btn" onclick="addOptionRow();" style="margin: 0; width: 100%;">
+                                    <i class="fa fa-plus"></i> Add
+                                </button>
+                            </div>
+                        </div>
+                        <!-- ... Options Table ... -->
+                        <table class="grid" id="options_table" style="width: 100%; background: #fff;">
+                            <thead>
+                                <tr style="background: #f5f5f5;">
+                                    <th style="width: 15%;">Value</th>
+                                    <th style="width: 35%;">Text Label</th>
+                                    <th style="width: 15%;">Auto-Calculated %</th>
+                                    <th style="width: 20%;">Icon</th>
+                                    <th style="width: 15%;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="options_tbody"></tbody>
+                        </table>
+                    </div>
+
+                    <div style="clear: both;"></div>
+                    <div class="new-form-ui-submit" style="margin-top: 20px;">
+                        <div class="division">
+                            <?php echo $this->form->submit; ?>
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>parating';" value="Cancel" type="button" class="reset" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form> <!-- END OF FORM TAG -->
+    </div>
+</div>
+
+<!-- SCRIPT BLOCK IS NOW OUTSIDE THE FORM -->
+<script type="text/javascript">
+    var optionsData = <?php echo $childOptionsJson; ?>;
+    var editingIndex = -1;
+
+    $(document).ready(function() {
+        $('#description').jqte();
+        if ($.isFunction($.fn.select2)) {
+            $('select').select2({
+                width: '100%'
+            });
+        }
+
+        // Unbind any global listeners attached to this form to give us full control
+        // $('#formid').off('submit');
+
+        // Show/Hide Step Value based on UI Widget selection
+        $('#ui_widget').change(function() {
+            if ($(this).val() === 'Slider') {
+                $('#step_value_container').fadeIn('fast');
+            } else {
+                $('#step_value_container').hide();
+                $('#step_value').val('');
+            }
+        }).trigger('change');
+
+        // Toggle UI logic
+        $('#data_type').change(function() {
+            if ($(this).val() === 'Structured') {
+                $('#options_section').slideDown();
+                renderOptionsTable();
+            } else {
+                $('#options_section').slideUp();
+            }
+        });
+
+        $('#ui_widget').change(function() {
+            var widget = $(this).val();
+            var iconInput = $('#tmp_icon');
+            if (iconInput.val() === '' || iconInput.val() === 'fa-star') {
+                if (widget === 'Stars') {
+                    iconInput.val('fa-star');
+                } else {
+                    iconInput.val('');
+                }
+            }
+        });
+
+        $('#data_type').trigger('change');
+        $('#ui_widget').trigger('change');
+
+        // Explicit AJAX Handler
+        $('#submitbutton').off('click').on('click', function(e) {
+            e.preventDefault();
+            var $form = $('#formid');
+
+            if ($.isFunction($form.valid) && !$form.valid()) {
+                return false;
+            }
+            $('#message_container').empty();
+            $form.find('.errors').remove();
+
+            if ($('#data_type').val() === 'Structured') {
+                if (optionsData.length === 0) {
+                    var errorHtml = '<div class="ml-alert-1-error"><div style="display:block;"><span class="style-1-icon error"></span>Structured scales require at least one Rating Option.</div></div>';
+                    $('#message_container').html(errorHtml);
+                    $('html, body').animate({
+                        scrollTop: 0
+                    }, 'slow');
+                    return false;
+                }
+                if (editingIndex > -1 || ($('#tmp_value').val() !== '' && $('#tmp_name').val() !== '')) {
+                    if (!confirm("You have unsaved changes in the Option input fields. Save anyway?")) {
+                        return false;
+                    }
+                }
+                $('#options_payload').val(JSON.stringify(optionsData));
+            } else {
+                $('#options_payload').val('[]');
+            }
+
+            var formData = new FormData($form[0]);
+
+            $.ajax({
+                url: base_url + '/parating/save/format/json',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                global: false,
+                beforeSend: function() {
+                    if ($.isFunction($.blockUI)) $.blockUI({
+                        width: '50px',
+                        message: '<img src="<?php echo MEDIA_PATH; ?>images/loader2.gif" alt="Loading" />'
+                    });
+                },
+                complete: function() {
+                    if ($.isFunction($.unblockUI)) $.unblockUI();
+                },
+                success: function(response) {
+                    if (response.result === 'saved') {
+                        window.location.href = base_url + '/parating';
+                    } else {
+                        var mainError = response.result === 'exception' ? response.message : 'Please fix the highlighted errors.';
+                        $('#message_container').html('<div class="ml-alert-1-error"><div style="display:block;"><span class="style-1-icon error"></span>' + mainError + '</div></div>');
+
+                        if (typeof response === 'object') {
+                            $.each(response, function(fieldId, errorMsg) {
+                                var errorSpan = '<span class="errors" id="errors-' + fieldId + '">' + errorMsg + '</span>';
+                                var $element = $('#' + fieldId).parent().parent();
+                                if ($element.length) $element.append(errorSpan);
+                            });
+                        }
+                        $('html, body').animate({
+                            scrollTop: 0
+                        }, 'slow');
+                    }
+                },
+                error: function() {
+                    $('#message_container').html('<div class="ml-alert-1-error"><div style="display:block;"><span class="style-1-icon error"></span>Server communication error.</div></div>');
+                }
+            });
+        });
+    });
+
+    // Option Grid helper functions remain the same...
+    function renderOptionsTable() {
+        var tbody = $('#options_tbody');
+        tbody.empty();
+
+        if (optionsData.length === 0) {
+            tbody.append('<tr><td colspan="5" style="text-align:center; padding: 15px; color:#999; font-style:italic;">No options added yet.</td></tr>');
+            return;
+        }
+
+        optionsData.sort(function(a, b) {
+            return b.value - a.value;
+        });
+
+        $.each(optionsData, function(index, opt) {
+            var iconHtml = opt.icon_class ? '<i class="fa ' + opt.icon_class + '" style="color:#f39c12;"></i>' : '-';
+            var actionHtml = '<a href="javascript:void(0);" onclick="editOptionRow(' + index + ');" style="color:#3498db; margin-right: 10px;" title="Edit"><i class="fa fa-edit"></i></a>' +
+                '<a href="javascript:void(0);" onclick="removeOptionRow(' + index + ');" style="color:#e74c3c;" title="Delete"><i class="fa fa-trash"></i></a>';
+            var rowStyle = (index === editingIndex) ? 'background-color: #fffacd;' : '';
+
+            var tr = '<tr style="border-bottom: 1px solid #eee; ' + rowStyle + '">' +
+                '<td style="text-align:center; font-weight:bold;">' + opt.value + '</td>' +
+                '<td>' + opt.name + '</td>' +
+                '<td style="text-align:center;">' + opt.normalized_value + '</td>' +
+                '<td style="text-align:center;">' + iconHtml + '</td>' +
+                '<td style="text-align:center;">' + actionHtml + '</td>' +
+                '</tr>';
+            tbody.append(tr);
+        });
+    }
+
+    function addOptionRow() {
+        var val = parseFloat($('#tmp_value').val());
+        var name = $.trim($('#tmp_name').val());
+        var icon = $.trim($('#tmp_icon').val());
+        var existingId = '';
+
+        if (val === '' || name === '') {
+            alert("Numeric Value and Text Label are required.");
+            return;
+        }
+        if (isNaN(val)) {
+            alert("Value must be a valid number.");
+            return;
+        }
+
+        // Enforce Slider Limits in the UI
+        var uiType = $('#ui_widget').val();
+        if (uiType === 'Slider' && optionsData.length >= 2 && editingIndex === -1) {
+            alert('Sliders can only have exactly TWO options (A Minimum and a Maximum boundary).');
+            return;
+        }
+
+        var isDup = false;
+        $.each(optionsData, function(index, opt) {
+            if (index !== editingIndex && (parseFloat(opt.value) === parseFloat(val) || opt.name.toLowerCase() === name.toLowerCase())) {
+                isDup = true;
+            }
+        });
+        if (isDup) {
+            alert("This numeric value already exists in the list.");
+            return;
+        }
+
+        if (editingIndex > -1) {
+            existingId = optionsData[editingIndex].id;
+            optionsData[editingIndex] = {
+                id: existingId,
+                value: val,
+                name: name,
+                icon_class: icon
+            };
+            editingIndex = -1;
+            $('#add_opt_btn').html('<i class="fa fa-plus"></i> Add');
+        } else {
+            optionsData.push({
+                id: '',
+                value: val,
+                name: name,
+                icon_class: icon 
+            });
+        }
+
+        renderOptionsTable();
+        $('#tmp_value, #tmp_name').val('');
+        $('#tmp_icon').val('');
+        $('#ui_widget').trigger('change');
+    }
+
+    function editOptionRow(index) {
+        var opt = optionsData[index];        
+        editingIndex = index;
+
+        $('#tmp_value').val(opt.value);
+        $('#tmp_name').val(opt.name);
+        $('#tmp_icon').val(opt.icon_class);
+        $('#add_opt_btn').html('<i class="fa fa-save"></i> Update');
+        
+        renderOptionsTable();
+    }
+
+    function removeOptionRow(index) {
+        if (confirm("Are you sure you want to remove this option?")) {
+            optionsData.splice(index, 1);
+            if (editingIndex === index) {
+                $('#tmp_value, #tmp_name, #tmp_icon').val('');
+                $('#add_opt_btn').html('<i class="fa fa-plus"></i> Add');
+                editingIndex = -1;
+            } else if (editingIndex > index) {
+                editingIndex--;
+            }
+            renderOptionsTable();
+        }
+    }
+</script>

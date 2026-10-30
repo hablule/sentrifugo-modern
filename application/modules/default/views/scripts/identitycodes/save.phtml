@@ -1,0 +1,153 @@
+<?php
+
+/**
+ * Identity Codes Save View (Add/Edit)
+ *
+ * Provides the user interface for adding or modifying identity codes.
+ * Refactored to comply with SSOT v6.2.
+ *
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ * @author     Hablul Soft Solution < /hablul.in>
+ * @license    http://gnu.org GNU General Public License, version 3.0 (GPL-3.0)
+ * @version    Sentrifugo v3.2
+ */
+?>
+
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<?php sapp_Global::generateClientValidations($this->form); ?>
+
+<div class="row">
+    <div class="col s12">
+
+        <!-- Error Message Container (For standard POST fallbacks) -->
+        <div id="message_container">
+            <?php if (!empty($this->msgarray)) : ?>
+                <div class="ml-alert-1-error">
+                    <div style="display:block;">
+                        <span class="style-1-icon error"></span>
+                        Please correct the errors highlighted below.
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" action="<?php echo $this->escape($this->form->getAction()); ?>" method="<?php echo $this->escape($this->form->getMethod()); ?>">
+
+            <!-- Hidden Elements -->
+            <?php echo $this->form->id; ?>
+
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <!-- Employee Code -->
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->employee_code->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->employee_code; ?>
+                            <!-- Unconditional Error Span required by hrms.js saveDetails() -->
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->employee_code->getId()); ?>">
+                                <?php echo isset($this->msgarray['employee_code']) ? $this->escape($this->msgarray['employee_code']) : ''; ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Background Agency Code (Conditional Rendering based on Module config) -->
+                    <?php if ($this->form->getElement('backgroundagency_code')) : ?>
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->backgroundagency_code->getLabel()); ?></label>
+                            <div class="division">
+                                <?php echo $this->form->backgroundagency_code; ?>
+                                <span class="errors" id="errors-<?php echo $this->escape($this->form->backgroundagency_code->getId()); ?>">
+                                    <?php echo isset($this->msgarray['backgroundagency_code']) ? $this->escape($this->msgarray['backgroundagency_code']) : ''; ?>
+                                </span>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+                    <!-- Requisition Code (Conditional Rendering) -->
+                    <?php if ($this->form->getElement('requisition_code')) : ?>
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->requisition_code->getLabel()); ?></label>
+                            <div class="division">
+                                <?php echo $this->form->requisition_code; ?>
+                                <span class="errors" id="errors-<?php echo $this->escape($this->form->requisition_code->getId()); ?>">
+                                    <?php echo isset($this->msgarray['requisition_code']) ? $this->escape($this->msgarray['requisition_code']) : ''; ?>
+                                </span>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+                    <!-- Staffing Code -->
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->staffing_code->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->staffing_code; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->staffing_code->getId()); ?>">
+                                <?php echo isset($this->msgarray['staffing_code']) ? $this->escape($this->msgarray['staffing_code']) : ''; ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Users Code -->
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->users_code->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->users_code; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->users_code->getId()); ?>">
+                                <?php echo isset($this->msgarray['users_code']) ? $this->escape($this->msgarray['users_code']) : ''; ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Vendors Code -->
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->vendors_code->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->vendors_code; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->vendors_code->getId()); ?>">
+                                <?php echo isset($this->msgarray['vendors_code']) ? $this->escape($this->msgarray['vendors_code']) : ''; ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <!-- Active Status -->
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->isactive; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->isactive->getId()); ?>">
+                                <?php echo isset($this->msgarray['isactive']) ? $this->escape($this->msgarray['isactive']) : ''; ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="new-form-ui-submit">
+                        <div class="division">
+                            <?php echo $this->form->submit; ?>
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>identitycodes/index';" value="Cancel" type="button" class="reset" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#description').jqte();
+    });
+</script>

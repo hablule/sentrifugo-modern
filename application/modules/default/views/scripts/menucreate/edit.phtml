@@ -1,0 +1,96 @@
+<?php sapp_Global::generateClientValidations($this->form); ?>
+<?php if ($this->successmessage != '') { ?>
+    <div id="dispmsgmenucreate" class="ml-alert-1-success">
+        <div class="style-1-icon success"></div>
+        <?php echo $this->successmessage; ?>
+    </div>
+
+<?php } ?>
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" method="POST" , action="<?php echo $this->fomr->getAction; ?>">
+    <?php echo $this->form->id; ?>
+    <div class="new-form-ui ">
+        <label class="required"><?php echo $this->form->menu_name->getLabel(); ?></Address></label>
+        <div class="division"><?php echo $this->form->menu_name; ?></div>
+        <?php if (isset($this->msgarray['menu_name'])) { ?>
+            <span class="errors" id="errors-<?php echo $this->form->menu_name->getId(); ?>"><?php echo $this->msgarray['menu_name']; ?></span>
+        <?php } ?>
+    </div>
+
+    <div class="new-form-ui ">
+        <label class="required"><?php echo $this->form->url->getLabel(); ?></Address></label>
+        <div class="division"><?php echo $this->form->url; ?></div>
+        <?php if (isset($this->msgarray['url'])) { ?>
+            <span class="errors" id="errors-<?php echo $this->form->url->getId(); ?>"><?php echo $this->msgarray['url']; ?></span>
+        <?php } ?>
+    </div>
+
+    <div class="new-form-ui ">
+        <label class="required"><?php echo $this->form->parent->getLabel(); ?></Address></label>
+        <div class="division"><?php echo $this->form->parent; ?></div>
+        <?php if (isset($this->msgarray['parent'])) { ?>
+            <span class="errors" id="errors-<?php echo $this->form->parent->getId(); ?>"><?php echo $this->msgarray['parent']; ?></span>
+        <?php } ?>
+    </div>
+
+    <div class="new-form-ui ">
+        <label class="required"><?php echo $this->form->role->getLabel(); ?></Address></label>
+        <div class="division"><?php echo $this->form->role; ?></div>
+        <?php if (isset($this->msgarray['role'])) { ?>
+            <span class="errors" id="errors-<?php echo $this->form->role->getId(); ?>"><?php echo $this->msgarray['role']; ?></span>
+        <?php } ?>
+    </div>
+    <br>
+    <h2>Permissions</h2>
+    <br>
+
+    <div class="new-form-ui ">
+        <label class="required"><?php echo $this->form->add->getLabel(); ?></Address></label>
+        <div class="division"><?php echo $this->form->add; ?></div>
+    </div>
+
+    <div class="new-form-ui ">
+        <label class="required"><?php echo $this->form->edit->getLabel(); ?></Address></label>
+        <div class="division"><?php echo $this->form->edit; ?></div>
+    </div>
+
+    <div class="new-form-ui ">
+        <label class="required"><?php echo $this->form->delete->getLabel(); ?></Address></label>
+        <div class="division"><?php echo $this->form->delete; ?></div>
+    </div>
+
+    <div class="new-form-ui ">
+        <label class="required"><?php echo $this->form->view->getLabel(); ?></label>
+        <div class="division"><?php echo $this->form->view; ?></div>
+    </div>
+
+    <div class="new-form-ui ">
+        <label class="required"><?php echo $this->form->viewatt->getLabel(); ?></label>
+        <div class="division"><?php echo $this->form->viewatt; ?></div>
+    </div>
+
+    <div class="new-form-ui ">
+        <label class="required"><?php echo $this->form->uploadatt->getLabel(); ?></label>
+        <div class="division"><?php echo $this->form->uploadatt; ?></div>
+    </div>
+
+    <div class="new-form-ui ">
+        <label class="required"><?php echo $this->form->isactive->getLabel(); ?></label>
+        <div class="division"><?php echo $this->form->isactive; ?></div>
+    </div>
+
+    <div class="new-form-ui-submit ">
+        <div class="division"><?php echo $this->form->submit; ?></div>
+        <button onclick="window.location.href='<?php echo BASE_URL; ?>menucreate';" type="button" >Cancel</button>
+
+    </div>
+</form>
+
+<script>
+    <?php if (count($this->successmessage)) { ?>
+        setTimeout(function() {
+            $('#dispmsgmenucreate').fadeOut('slow');
+            location.reload();
+        }, 3000);
+
+    <?php } ?>
+</script>

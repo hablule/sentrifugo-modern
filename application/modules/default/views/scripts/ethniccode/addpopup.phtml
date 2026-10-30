@@ -1,0 +1,123 @@
+<?php
+
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+?>
+
+<?php
+/**
+ * Ethnic Code Add Popup View
+ * Runs inside an iframe. On success, updates parent DOM via JS.
+ * @category   Sentrifugo
+ * @package    Sentrifugo_Default
+ * @subpackage Views
+ * @author     hablul <hablul@sapplica.com>
+ * @copyright  Copyright (c) 2014 Sapplica
+ * @license    http://www.gnu.org/licenses/ GNU General Public License
+ * @version    3.2
+ * 
+ */
+?>
+
+<?php
+/**
+ * Ethnic Code Add Popup View
+ * Runs inside an iframe modal. On success, updates parent DOM via global JS.
+ */
+$this->msgarray = isset($this->msgarray) ? $this->msgarray : array();
+?>
+<!-- Essential Popup CSS and Editor JS (No screen.css to protect checkbox styling) -->
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/addelement.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/custompopup.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<div style="padding: 15px;">
+    <?php if (isset($this->popup) && $this->popup == 'close') { ?>
+        <div class="ml-alert-1-success">
+            <div class="style-1-icon success"></div>
+            Ethnic Code <?php echo $this->escape($this->eventact); ?> successfully.
+        </div>
+    <?php } else {
+        sapp_Global::generateClientValidations($this->form);
+    ?>
+        <div id="error_message" style="display:none;"></div>
+
+        <?php if (!empty($this->msgarray['error'])) : ?>
+            <div class="ml-alert-1-error">
+                <div class="style-1-icon error"></div>
+                <?php echo $this->escape($this->msgarray['error']); ?>
+            </div>
+        <?php endif; ?>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" action="<?php echo $this->escape($this->form->getAction()); ?>" method="<?php echo $this->escape($this->form->getMethod()); ?>">
+            <?php echo $this->form->id; ?>
+
+            <div class="total-form-controller" style="box-shadow: none; border: none; padding: 0;">
+
+                <div class="new-form-ui clearb">
+                    <label class="required"><?php echo $this->escape($this->form->ethnicname->getLabel()); ?></label>
+                    <div class="division"><?php echo $this->form->ethnicname; ?></div>
+                    <span class="errors" id="errors-<?php echo $this->escape($this->form->ethnicname->getId()); ?>"><?php echo $this->escape($this->msgarray['ethnicname'] ?? ''); ?></span>
+                </div>
+
+                <div class="new-form-ui clearb">
+                    <label class="required"><?php echo $this->escape($this->form->ethniccode->getLabel()); ?></label>
+                    <div class="division"><?php echo $this->form->ethniccode; ?></div>
+                    <span class="errors" id="errors-<?php echo $this->escape($this->form->ethniccode->getId()); ?>"><?php echo $this->escape($this->msgarray['ethniccode'] ?? ''); ?></span>
+                </div>
+
+                <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                <div class="new-form-ui clearb">
+                    <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                    <div class="division"><?php echo $this->form->isactive; ?></div>
+                    <span class="errors" id="errors-<?php echo $this->escape($this->form->isactive->getId()); ?>"><?php echo $this->escape($this->msgarray['isactive'] ?? ''); ?></span>
+                </div>
+
+                <div class="new-form-ui-submit" style="margin-top: 15px;">
+                    <?php echo $this->form->submit; ?>
+                    <input onclick="closeiframepopup('<?php echo $this->escape($this->controllername); ?>','cancel');" value="Cancel" type="button" class="reset" />
+                </div>
+
+            </div>
+        </form>
+    <?php } ?>
+</div>
+
+<script language='javascript' type='text/javascript'>
+    <?php if (isset($this->popup) && $this->popup != '') { ?>
+        /* 
+         * Sentrifugo Global Helper: closeiframeAddPopup(optionsList, controllerName, parentDropdownId, labelText)
+         * Ensure 'ethniccode_id' matches the ID of the select element in your parent form! 
+         */
+        closeiframeAddPopup("<?php echo $this->ethniccodeData; ?>", "<?php echo $this->escape($this->controllername); ?>", "ethniccode_id", "Ethnic Code");
+    <?php } ?>
+
+    $(document).ready(function() {
+        $('#description').jqte();
+
+        <?php if (!empty($this->messages)) { ?>
+            setTimeout(function() {
+                $('#popupmessage').fadeOut('slow');
+            }, 3000);
+        <?php } ?>
+    });
+</script>

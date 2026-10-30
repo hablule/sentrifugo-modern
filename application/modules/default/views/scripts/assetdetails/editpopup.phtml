@@ -1,0 +1,200 @@
+<?php 
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+// Zend_Debug::dump($this);
+?>
+<script type="text/javascript" src="<?php echo MEDIA_PATH ?>/js/hrms.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH ?>css/custompopup.css" />
+    <script type="text/javascript" src="<?php echo MEDIA_PATH ?>js/custompopup.js"></script>
+	<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+<?php $baseUrl = $this->serverUrl().$this->baseUrl();
+$addcomp = $this->addcomp;
+sapp_Global::generateClientValidations($this->form);
+
+?>
+<?php if($this->successmessage != '') { ?>
+<div id="dispmsgnempskills" class="ml-alert-1-success">
+<div class="style-1-icon success"></div>
+<?php echo $this->successmessage; ?>
+</div>
+
+<?php } else { ?>
+<div id="error_message" style="display:none;"></div>
+<?php		
+if($this->emptyFlag != 0)
+	{
+?>	 <div class="ml-alert-1-info m1-info-set">
+		<div class="style-1-icon info"></div>
+			The employee configurations are not yet set.
+	</div>	
+<?php	}	?>
+
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction();?>" method="<?php echo $this->form->getMethod(); ?>">
+		<?php echo $this->form->id; 
+		echo $this->form->user_id;
+		echo $this->form->uomid;
+		?>
+        <div class="total-form-controller">
+
+
+		 	<div class="new-form-ui ">
+			  <label class="required">Asset</label>
+				<div class="division loca_state_div"><?php echo $this->form->asset_id; ?>
+				<?php if($this->assetpermission == 'Yes'){?>
+				<span class="add-coloum" onclick="displayNestedPopup('<?php echo BASE_URL . 'assets/assets/addpopup/id/nested' ?>','Asset');"> Add Asset</span>
+				<?php }?>
+			</div>
+				<?php if(isset($this->msgarray['asset_id'])){?>
+				<span class="errors" id="errors-<?php echo $this->form->asset_id->getId(); ?>"><?php echo $this->msgarray['asset_id'];?></span>
+				<?php }?>
+			</div>
+			<div  class="new-form-ui " style="display:none ;">
+			  <label  id="assetinstant_idlable">Asset Instant</label>
+				<div class="division loca_state_div"><?php echo $this->form->assetinstant_id; ?></div>
+				<?php if(isset($this->msgarray['assetinstant_id'])){?>
+				<span class="errors" id="errors-<?php echo $this->form->assetinstant_id->getId(); ?>"><?php echo $this->msgarray['assetinstant_id'];?></span>
+				<?php }?>
+			</div>
+			<div class="new-form-ui ">
+			  <label  >Quantity</label>
+				<div class="division loca_state_div"><?php echo $this->form->quantity; ?></div>
+				<?php if(isset($this->msgarray['quantity'])){?>
+				<span class="errors" id="errors-<?php echo $this->form->quantity->getId(); ?>"><?php echo $this->msgarray['quantity'];?></span>
+				<?php }?>
+			</div>
+			<div class="new-form-ui ">
+			  <label  class="required">UOM</label>
+				<div class="division loca_state_div"><?php echo $this->form->uom_id; ?>
+				<!-- <span class="add-coloum" onclick="displayNestedPopup('<?php echo BASE_URL . 'skillsource/addpopup' ?>','Skill Source');"> Add Skill Source</span> -->
+
+			</div>
+				<?php if(isset($this->msgarray['uom_id'])){?>
+				<span class="errors" id="errors-<?php echo $this->form->uom_id->getId(); ?>"><?php echo $this->msgarray['uom_id'];?></span>
+				<?php }?>
+			</div>
+			<div class="new-form-ui ">
+			  <label  class="required">Issued Date</label>
+				<div class="division loca_state_div"><?php echo $this->form->issueddate; ?>
+			</div>
+				<?php if(isset($this->msgarray['issueddate'])){?>
+				<span class="errors" id="errors-<?php echo $this->form->issueddate->getId(); ?>"><?php echo $this->msgarray['issueddate'];?></span>
+				<?php }?>
+			</div>
+			<div class="new-form-ui ">
+			  <label >Return Date</label>
+				<div class="division loca_state_div"><?php echo $this->form->returndate; ?>
+
+			</div>
+				<?php if(isset($this->msgarray['returndate'])){?>
+				<span class="errors" id="errors-<?php echo $this->form->returndate->getId(); ?>"><?php echo $this->msgarray['returndate'];?></span>
+				<?php }?>
+			</div>
+			<div class="new-form-ui ">
+			  <label >Active</label>
+				<div class="division loca_state_div"><?php echo $this->form->isactive; ?>
+
+			</div>
+				<?php if(isset($this->msgarray['isactive'])){?>
+				<span class="errors" id="errors-<?php echo $this->form->isactive->getId(); ?>"><?php echo $this->msgarray['isactive'];?></span>
+				<?php }?>
+			</div>
+			<?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+			
+	<?php if(isset($this->msgarray['general'])){?>
+				   <span class="errors" id="errors-general"><?php echo $this->msgarray['general'];?></span>
+				<?php }?>													
+        <div class="new-form-ui-submit" id="formSubmit">
+        <?php echo $this->form->submit; ?>
+        <button onclick="closeiframepopup('assetdetails','cancel');" type="button">Cancel</button>
+        </div>
+   		</div>     
+</form>
+<?php } ?>
+<div id="skillsourceContainer" style="display: none; overflow: auto;">
+        <div class="heading">
+            <a href="javascript:void(0)">
+                <img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+        </div>
+
+        <iframe id="skillsourceCont" class="business_units_iframe" frameborder="0"></iframe>
+    </div>
+    <div id="skillContainer" style="display: none; overflow: auto;">
+        <div class="heading">
+            <a href="javascript:void(0)">
+                <img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+        </div>
+
+        <iframe id="skillCont" class="business_units_iframe" frameborder="0"></iframe>
+    </div>
+	<div id="measurementindexContainer" style="display: none; overflow: auto;">
+        <div class="heading">
+            <a href="javascript:void(0)">
+                <img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+        </div>
+
+        <iframe id="measurementindexCont" class="business_units_iframe" frameborder="0"></iframe>
+    </div>
+<script type='text/javascript'>
+<?php if($this->successmessage != '') { ?>
+        setTimeout(function(){
+		    closeiframepopup('<?php echo $this->controllername; ?>',''); 
+		},2000);
+<?php } ?>
+</script>
+
+<script type='text/javascript'>
+
+$(document).ready(function(){
+	var id = <?php echo $this->form->id->getValue();?>;
+	displayParticulardomain_normalinstant("asset_id","assetinstant_id","","uom_id","edit",id);
+
+
+     var yearrange = <?php echo "'".YEAR.':'.date('Y')."'"; ?>;
+	$('#issueddate,#returndate').datepicker({
+					showOn:'both',
+					// maxDate: new Date, 
+				    yearRange: yearrange,
+					dateFormat:"<?php echo DATEFORMAT_JS;?>",
+					buttonImage: "<?php echo $this->baseUrl("public/media/images/cal.jpg");?>",
+					buttonImageOnly: true,
+					buttonText: "",
+					changeMonth: true,
+					changeYear: true,
+                                        showButtonPanel: true ,
+                    onClose:function(){
+                                    $('#issueddate').trigger('blur');
+									$('#returndate').trigger('blur');
+
+                                } 					
+	});
+	
+	 });
+</script>
+ <script type="text/javascript">
+
+
+
+	    $('#description').jqte();
+
+		
+		</script>

@@ -1,0 +1,44 @@
+
+
+<?php
+$form = $this->form;
+$validators = $this->validators;
+try {
+ 
+?>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/formValidator.js"></script>
+
+<?php
+
+if ($this->call !== 'ajaxcall') {
+
+  $div = '<div id="grid_' . $this->dataArray['objectname'] . '" class="all-grid-control">';
+  $endDiv = '</div>';
+
+  $multi = '';
+  echo $multi . $div . '<div id="msg" style="display:none;font-style: oblique; font-weight: bold; color: green;""></div>' . $this->grid($this->dataArray) . $endDiv;
+
+} 
+else {
+
+    $div = '<div id="grid_' . $this->dataArray['objectname'] . '" class="all-grid-control">';
+    $endDiv = '</div>';
+    $multi = '';
+    echo $multi . $div . '<div id="msg" style="display:none;font-style: oblique; font-weight: bold; color: green;""></div>' . $this->grid($this->dataArray) . $endDiv;
+}
+?>
+<?php if($this->call != 'ajaxcall'){ ?>
+
+<div id="missedhoursapproveContainer"  style="display: none; overflow: auto;">
+	<div class="heading">
+		<a href="javascript:void(0)" onclick="window.location.href='<?php echo BASE_URL;?>perkapprove'">
+	    <img src="<?php echo $this->baseUrl().'/public/media/';?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;" > </a>
+	</div>
+
+	<iframe id="missedhoursapproveCont" class="business_units_iframe" frameborder="0"></iframe>
+</div>
+<?php }?>
+<?php  //code...
+} catch (\Throwable $th) {
+  Zend_Debug::dump($th->getMessage());
+}?>

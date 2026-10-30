@@ -1,0 +1,61 @@
+<?php
+
+$form = $this->form;
+sapp_Global::generateClientValidations($this->form);
+
+    //code...
+
+?> 
+<script type="text/javascript" src="<?php echo MEDIA_PATH ?>js/addelement.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH ?>css/addelement.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction(); ?>" method="POST">
+    <?php echo $this->form->id; ?>
+    <div class="total-form-controller">
+    <div class="new-form-ui ">
+            <label class="required">Period</label>
+            <div class="division loca_state_div"><?php echo $this->form->period; ?>
+            <?php if(isset($this->msgarray['period'])){?>
+			   <span class="errors" id="errors-<?php echo $form->period->getId(); ?>"><?php echo $this->msgarray['period'];?></span>
+			<?php }?>
+            </div>
+        </div>
+        <div class="new-form-ui ">
+            <label class="required">Control Type</label>
+            <div class="division loca_state_div"><?php echo $this->form->controltype; ?>
+            <?php if(isset($this->msgarray['controltype'])){?>
+			   <span class="errors" id="errors-<?php echo $form->controltype->getId(); ?>"><?php echo $this->msgarray['controltype'];?></span>
+			<?php }?>
+            </div>
+        </div>
+        
+        <div class="new-form-ui ">
+            <label >Is auto generated</label>
+            <div class="division"><?php echo $this->form->isauto; ?>
+                <div>
+                    <span style="color:red" id="category_error"></span>
+                </div>
+            </div>
+
+        </div>
+        
+        <br>
+        <table>
+            <tr>
+                
+                <td>
+                    <div class="new-form-ui-submit">
+                        <?php echo $form->submit; ?>
+                        <button onclick="window.location.href='<?php echo BASE_URL; ?>periodcontroltype';" type="button">Cancel</button>
+                    </div>
+                </td>
+                <td>
+                
+                </td>
+            </tr>
+        </table>
+    </div>
+
+  
+</form>

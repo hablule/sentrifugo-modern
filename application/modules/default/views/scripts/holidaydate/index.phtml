@@ -1,0 +1,126 @@
+<?php
+
+/**
+ * Holiday Calendar Index View (Occurrences)
+ * Displays the grid of generated holiday blocks and provides the batch generation trigger.
+ * Complies with SSOT v6.7.7.
+ * 
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ * @author     Hablul Soft Solution < /hablul.in>
+ * @license    http://gnu.org GNU General Public License, version 3.0 (GPL-3.0)
+ * @version    Sentrifugo v3.2
+ */
+?>
+
+<!-- Header Actions & Generator Toolbar -->
+<?php if ($this->call !== 'ajaxcall') : ?>
+    <div class="profile-tabs-right-2" style="width: 100% !important; margin-bottom: 15px;">
+        <div class="flt_left">
+            <h4 class="page-title" style="margin: 0; padding-top: 5px;">Holiday Calendar (Occurrences)</h4>
+            <p style="font-size: 12px; color: #666; margin: 0;">View, override, and generate calendar holiday blocks from master policies.</p>
+        </div>
+
+        <div class="flt_right">
+            <div class="actions_div" style="display: flex; gap: 10px; align-items: center;">
+                <!-- Batch Year Generator Tool -->
+                <select id="gen_target_year" class="browser-default" style="border: 1px solid #ccc; padding: 5px; height: 32px; border-radius: 3px;">
+                    <?php
+                    $currentYear = (int)date('Y');
+                    for ($y = $currentYear - 1; $y <= $currentYear + 3; $y++) {
+                        $selected = ($y === $currentYear) ? 'selected="selected"' : '';
+                        echo "<option value=\"{$y}\" {$selected}>Year {$y}</option>";
+                    }
+                    ?>
+                </select>
+                <button type="button" id="btn-generate-holidays" class="actbtn_btn" style="background-color: #f39c12; margin: 0;">
+                    <i class="fa fa-refresh"></i> Generate Holiday Calendar
+                </button>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+
+<!-- Flash Messages -->
+<div id="message_container">
+    <?php if (isset($this->messages) && !empty($this->messages)) : ?>
+        <div id="dispmsg" class="settingssuccess">
+            <?php foreach ($this->messages as $message) : $key = key($message); ?>
+                <div class="ml-alert-1-<?php echo $key; ?>">
+                    <div style="display:block;">
+                        <span class="style-1-icon <?php echo $key; ?>"></span>
+                        <?php echo $this->escape($message[$key]); ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+</div>
+
+<div id="error_message" style="display:none;"></div>
+
+<!-- Grid Container -->
+<?php if (isset($this->call) && $this->call === 'ajaxcall') : ?>
+    <?php echo $this->grid($this->dataArray[0]); ?>
+<?php else : ?>
+    <div id="grid_<?php echo $this->escape($this->dataArray[0]['objectname']); ?>" class="all-grid-control">
+        <div id="msg" style="display:none; font-style: oblique; font-weight: bold; color: green;"></div>
+        <?php echo $this->grid($this->dataArray[0]); ?>
+    </div>
+<?php endif; ?>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        setTimeout(function() {
+            $('#dispmsg').fadeOut('slow');
+        }, 4000);
+
+        // Batch Generation AJAX Handler
+        $('#btn-generate-holidays').on('click', function(e) {
+            e.preventDefault();
+            var targetYear = $('#gen_target_year').val();
+
+            if (!confirm("Generate all active holiday occurrences for " + targetYear + "? Existing occurrences will be safely skipped.")) {
+                return;
+            }
+
+            if (typeof $.blockUI === "function") {
+                $.blockUI({
+                    message: '<img src="<?php echo MEDIA_PATH; ?>images/loader2.gif" alt="Generating..." />'
+                });
+            }
+
+            $.ajax({
+                url: base_url + '/holidaydate/generate/format/json',
+                type: 'POST',
+                data: {
+                    target_year: targetYear
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (typeof $.unblockUI === "function") $.unblockUI();
+
+                    if (response && response.result === 'saved') {
+                        var alertClass = (response.msgtype === 'warning') ? 'ml-alert-1-warning' : 'ml-alert-1-success';
+                        var iconClass = (response.msgtype === 'warning') ? 'warning' : 'success';
+
+                        $('#message_container').html('<div class="' + alertClass + '"><span class="style-1-icon ' + iconClass + '"></span>' + response.message + '</div>');
+                        // Refresh grid data
+                        if (typeof getAjaxgridData === 'function') {
+                            getAjaxgridData('holidaydate', 1, 'start_date', 'ASC', '');
+                        } else {
+                            window.location.reload();
+                        }
+                    } else {
+                        $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>' + response.message + '</div>');
+                    }
+                },
+                error: function() {
+                    if (typeof $.unblockUI === "function") $.unblockUI();
+                    $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Server error during generation.</div>');
+                }
+            });
+        });
+    });
+</script>

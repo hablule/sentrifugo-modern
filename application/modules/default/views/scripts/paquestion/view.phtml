@@ -1,0 +1,74 @@
+<?php
+
+/**
+ * PA Question View (Read-Only)
+ * Strictly adheres to SSOT v6.2.
+ */
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<div class="row">
+    <div class="col s12">
+        <?php if (isset($this->nodata)) : ?>
+            <div class="ml-alert-1-info">
+                <div style="display:block;"><span class="style-1-icon info"></span>No data found.</div>
+            </div>
+        <?php else : ?>
+            <div class="total-form-controller">
+                <div class="division">
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->category_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->category_id; ?></div>
+                        </div>
+                        <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->rating_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->rating_id; ?></div>
+                        </div>
+                        <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->weight->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->weight; ?></div>
+                        </div>
+                    </div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray ?? array(), $this->form, 'name', '', 'fck_editor_height', '', array()); ?>
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray ?? array(), $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <div class="new-form-ui clearb" style="width: 100%;">
+                        <label style="width: 100%;"><?php echo $this->escape($this->form->skill_ids->getLabel()); ?></label>
+                        <div class="division" style="width: 100%;"><?php echo $this->form->skill_ids; ?></div>
+                    </div>
+
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                    </div>
+                    <div class="new-form-ui-submit">
+                        <div class="division">
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>paquestion';" value="Back to List" type="button" class="reset" />
+                            <?php if (sapp_Global::_checkprivileges(APPRAISALQUESTIONS, $this->loginuserGroup, $this->loginuserRole, 'edit') == 'Yes') : ?>
+                                <input onclick="window.location.href='<?php echo BASE_URL; ?>paquestion/edit/id/<?php echo $this->id; ?>';" value="Edit" type="button" class="reset" />
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#name, #description').jqte();
+        $('.jqte_editor').attr('contenteditable', 'false');
+
+        if ($.isFunction($.fn.select2)) {
+            $('#category_id, #rating_id').select2({
+                width: '100%'
+            });
+            $('#skill_ids').attr('multiple', 'multiple').select2({
+                width: '100%'
+            });
+        }
+    });
+</script>

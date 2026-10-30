@@ -1,0 +1,406 @@
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/fingerprint.js"></script>
+
+<style>
+	.display-fingerprint {
+
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		align-items: center;
+
+
+	}
+
+	.fingerContainers {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		align-items: center;
+
+	}
+
+	.container-full {
+		width: 100%;
+		display: block;
+		z-index: 0;
+	}
+
+	.fingers {
+		width: 100%;
+		display: flex;
+		gap: 10px;
+	}
+</style>
+<script src="<?php echo MEDIA_PATH; ?>js/custompopup.js"></script>
+<?php
+?>
+<?php
+
+
+?>
+<?php if ($this->popup == 'close') { ?>
+	<div class="ml-alert-1-success">
+		<div class="style-1-icon success"></div>
+		User <?php echo $this->eventact; ?> successfully
+	</div>
+
+<?php } else {
+	sapp_Global::generateClientValidations($this->form); ?>
+	<div id="error_message" style="display:none;"></div>
+
+	<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction(); ?>" method="<?php echo $this->form->getMethod(); ?>">
+		<?php echo $this->form->id; ?>
+		<?php echo $this->form->hs; ?>
+
+		<div class="total-form-controller">
+			<div class="new-form-ui clearb">
+				<label class="required">Choose Authentication</label>
+				<div class="division"><?php echo $this->form->choose_auth_method; ?></div>
+				<?php if (isset($this->msgarray['choose_auth_method'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->choose_auth_method->getId(); ?>"><?php echo $this->msgarray['choose_auth_method']; ?></span>
+				<?php } ?>
+			</div>
+			<div class="new-form-ui clearb">
+				<label class="required">Device To Add User</label>
+				<div class="division"><?php echo $this->form->device_id; ?></div>
+				<?php if (isset($this->msgarray['device_id'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->device_id->getId(); ?>"><?php echo $this->msgarray['device_id']; ?></span>
+				<?php } ?>
+			</div>
+			<div class="new-form-ui clearb">
+				<label class="required">Device To Scan User</label>
+				<div class="division"><?php echo $this->form->device_to_scan; ?></div>
+				<?php if (isset($this->msgarray['device_to_scan'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->device_to_scan->getId(); ?>"><?php echo $this->msgarray['device_to_scan']; ?></span>
+				<?php } ?>
+			</div>
+			<div class="new-form-ui clearb">
+				<label class="required">Number Of Fingers</label>
+				<div class="division"><?php echo $this->form->num_of_fingers; ?></div>
+				<?php if (isset($this->msgarray['num_of_fingers'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->num_of_fingers->getId(); ?>"><?php echo $this->msgarray['num_of_fingers']; ?></span>
+				<?php } ?>
+			</div>
+			<div class="new-form-ui clearb">
+				<label class="required">Number Of Cards</label>
+				<div class="division"><?php echo $this->form->num_of_cards; ?></div>
+				<?php if (isset($this->msgarray['num_of_cards'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->num_of_cards->getId(); ?>"><?php echo $this->msgarray['num_of_cards']; ?></span>
+				<?php } ?>
+			</div>
+
+			<div class="new-form-ui clearb">
+				<label class="required">Pin</label>
+				<div class="division"><?php echo $this->form->pin; ?></div>
+				<?php if (isset($this->msgarray['pin'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->pin->getId(); ?>"><?php echo $this->msgarray['pin']; ?></span>
+				<?php } ?>
+			</div>
+
+			<div class="new-form-ui clearb">
+				<label class="required">Fingerprint Authentication Mode</label>
+				<div class="division"><?php echo $this->form->finger_auth_mode; ?></div>
+				<?php if (isset($this->msgarray['finger_auth_mode'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->finger_auth_mode->getId(); ?>"><?php echo $this->msgarray['finger_auth_mode']; ?></span>
+				<?php } ?>
+			</div>
+
+
+			<div class="new-form-ui clearb">
+				<label class="required">Card Authentication Mode</label>
+				<div class="division"><?php echo $this->form->card_auth_mode; ?></div>
+				<?php if (isset($this->msgarray['card_auth_mode'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->card_auth_mode->getId(); ?>"><?php echo $this->msgarray['card_auth_mode']; ?></span>
+				<?php } ?>
+			</div>
+
+			<div class="new-form-ui clearb">
+				<label class="required">ID Authentication Mode</label>
+				<div class="division"><?php echo $this->form->id_auth_mode; ?></div>
+				<?php if (isset($this->msgarray['id_auth_mode'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->id_auth_mode->getId(); ?>"><?php echo $this->msgarray['id_auth_mode']; ?></span>
+				<?php } ?>
+			</div>
+			<div class="new-form-ui clearb">
+				<label class="required">Security Level</label>
+				<div class="division"><?php echo $this->form->security_level; ?></div>
+				<?php if (isset($this->msgarray['security_level'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->security_level->getId(); ?>"><?php echo $this->msgarray['security_level']; ?></span>
+				<?php } ?>
+
+			</div>
+			<div class="new-form-ui clearb" id="fingerprint_template">
+				<label class="required"><?php echo $this->form->fingerprint_template->getLabel() ?></label>
+				<div class="division"><?php echo $this->form->fingerprint_template; ?></div>
+				<?php if (isset($this->msgarray['fingerprint_template'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->fingerprint_template->getId(); ?>"><?php echo $this->msgarray['fingerprint_template']; ?></span>
+				<?php } ?>
+
+			</div>
+			<div class="new-form-ui clearb container-full">
+				<div class="fingerContainers">
+
+				</div>
+			</div>
+			<div class="new-form-ui clearb">
+				<!-- <div class="display-fingerprint">
+
+					<img src="<?php echo MEDIA_PATH; ?>assets/images/real-fingerprint.webp" alt="Fingerprint" width="100" height="110" />
+					<button id="fingerprint">Scan Fingerprint</button>
+				</div>
+				<div class="display-fingerprint">
+					<img src="<?php echo MEDIA_PATH; ?>assets/images/card.png" alt="Fingerprint" width="100" height="110" />
+					<button id="card">Scan Card</button>
+				</div>
+				<div class="display-fingerprint">
+					<img src="<?php echo MEDIA_PATH; ?>assets/images/real-fingerprint.webp" alt="Fingerprint" width="100" height="110" />
+					<button id="face">Scan Face</button>
+				</div> -->
+			</div>
+
+
+			<div class="new-form-ui-submit">
+				<?php echo $this->form->submit; ?>
+				<button onclick="closeiframepopup('empdevice','cancel');" type="button">Cancel</button>
+
+			</div>
+		</div>
+
+	</form>
+
+<?php } ?>
+<script>
+
+
+</script>
+<script>
+	<?php if ($this->popup != '') { ?>
+		setTimeout(function() {
+
+			<?php if ($this->nested) { ?>
+				removeNestedPopup_OnFinish("<?php echo $this->category; ?>", '<?php echo $this->controllername; ?>', 'iddocumentcategory_id', '', 'yes', false);
+			<?php } else { ?>
+				closeiframeAddPopup("<?php echo $this->category; ?>", '<?php echo $this->controllername; ?>', 'iddocumentcategory_id', 'Select...');
+			<?php } ?>
+		}, 2000);
+
+	<?php } ?>
+	// }
+	let templateData = {};
+
+
+	$(document).ready(function() {
+		let prevData = `<?php echo $this->hs ?>`;
+		if (prevData) {
+			console.log(prevData.split(':'));
+			templateData = JSON.parse(prevData);
+
+			console.log(templateData, 'that')
+		} else {
+			templateData = {};
+
+		}
+		let fingerCount = $(`[name='num_of_fingers']`).val() || 0;
+		$('#fingerprint').parent().hide();
+		$('#card').parent().hide();
+		$('#face').parent().hide();
+		$('#finger_auth_mode').parent().parent().hide();
+		$('#card_auth_mode').parent().parent().hide();
+		$('#id_auth_mode').parent().parent().hide();
+		$('#num_of_fingers').parent().parent().hide();
+		$('#num_of_cards').parent().parent().hide();
+		$("#pin").parent().parent().hide();
+		$("#fingerprint_template").hide();
+		$('.fingerContainers').hide()
+		var value = $('#choose_auth_method').val();
+		console.log(value)
+		var authType = value.join(",");
+		console.log('here')
+		value.map((val) => {
+			if (val == 1) {
+				const fingers = {
+					0: "Thumb",
+					1: "Index",
+					2: "Middle",
+					3: "Ring",
+					4: "Pinky",
+				}
+				//$('#fingerprint_template').show();
+				$('#finger_auth_mode').parent().parent().show();
+				$("#num_of_fingers").attr('readonly', true);
+				$('.fingerContainers').show();
+				for (let index = 0; index < 10; index++) {
+					if (index >= 5) {
+						if (index == 5) {
+							$('.fingerContainers').append(`<div class="lefthand">
+								<h3>Left Hand</h3>
+							</div>`);
+						}
+
+
+						$('.lefthand').append(`<div class="fingers" id=${index}>
+						<span class="sprite addrecord"></span>
+						<span>${fingers[index-5]} Finger</span>
+						<img src="<?php echo MEDIA_PATH; ?>css/select2-spinner.gif" width="10" height="10"/></div>`);
+						$(".fingers").find('img').hide();
+						if (templateData[fingers[index - 5]] && templateData[fingers[index - 5]]['left']) {
+							$(`#${index}`).find('.addrecord').hide();
+							$(`#${index}`).append('<span class="sprite delete"></span>');
+							$(`[name='${fingers[index-5]}']`).val(JSON.stringify(templateData[fingers[index - 5]]));
+							$(`#${index}`).find('.delete').click((e) => {
+								deleteFingerPrint(fingers[index - 5], "left", templateData, index);
+								//scanFingerPrint(fingers[index - 5], index);
+							})
+							$(`[name='num_of_fingers']`).val(Object.keys(templateData[fingers[index - 5]]).length);
+						}
+						$(`#${index}`).find('.addrecord').click(async (e) => {
+							scanFingerPrint(`<?php echo DEVICE_API_URL ?>`, fingers[index - 5], index, `<?php echo $this->userId ?>`);
+						});
+					} else {
+						if (index == 0) {
+							$('.fingerContainers').append(`<div class="righthand">
+								<h3>Right Hand</h3>
+							</div>`);
+						}
+						$(".total-form-controller").append(`<textarea name="${fingers[index]}"></textarea>`);
+						$("[name='" + fingers[index] + "']").hide();
+						//$("[name='" + fingers[index] + "']").val(templateData[fingers[index]]);
+						$('.righthand').append(`<div class="fingers" id=${index}>
+												<span class="sprite addrecord"></span>
+												<span>${fingers[index]} Finger</span>
+												<img src="<?php echo MEDIA_PATH; ?>css/select2-spinner.gif" width="10" height="10"/></div>`);
+						$(".fingers").find('img').hide();
+						if (templateData[fingers[index]] && templateData[fingers[index]]['right']) {
+							
+							$(`#${index}`).find('.addrecord').hide();
+							$(`#${index}`).append('<span class="sprite delete"></span>');
+							$(`[name='${fingers[index]}']`).val(JSON.stringify(templateData[fingers[index]]));
+							$(`#${index}`).find('.delete').click((e) => {
+								deleteFingerPrint(fingers[index], "right", templateData, index);
+							})
+							$(`[name='num_of_fingers']`).val(Object.keys(templateData[fingers[index]]).length);
+						}
+						$(`#${index}`).find('.addrecord').click(async (e) => {
+							scanFingerPrint(`<?php echo DEVICE_API_URL ?>`, fingers[index], index, `<?php echo $this->userId ?>`);
+						});
+
+					}
+
+				}
+			}
+			if (val == 2) {
+				$('#face').parent().show();
+				$('#id_auth_mode').show();
+				$('#num_of_faces').parent().parent().show();
+			}
+			if (val == 3) {
+				$('#card').parent().show();
+				$('#card_auth_mode').show();
+				$('#num_of_cards').parent().parent().show();
+			}
+		});
+		var value = $("#finger_auth_mode").val();
+		if (value == 1) {
+			$('#pin').parent().parent().show();
+		} else {
+			$('#pin').parent().parent().hide();
+		}
+		$('#choose_auth_method').change(function() {
+			$('#fingerprint').hide();
+			$('#card').parent().hide();
+			$('#face').parent().hide();
+			$('#finger_auth_mode').parent().parent().hide();
+			$('#card_auth_mode').parent().parent().hide();
+			$('#id_auth_mode').parent().parent().hide();
+			$('#num_of_fingers').parent().parent().hide();
+			$('#num_of_cards').parent().parent().hide();
+			var value = $(this).val();
+			var authType = value.join(",");
+			value.map((val) => {
+				if (val == 1) {
+					$('#fingerprint_template').show();
+					$('#finger_auth_mode').parent().parent().show();
+					$('#num_of_fingers').parent().parent().show();
+				}
+				if (val == 2) {
+					$('#face').parent().show();
+					$('#id_auth_mode').show();
+					$('#num_of_faces').parent().parent().show();
+				}
+				if (val == 3) {
+					$('#card').parent().show();
+					$('#card_auth_mode').show();
+					$('#num_of_cards').parent().parent().show();
+				}
+			});
+			$.ajax({
+				url: base_url + '/empdevice/filterdevice',
+				type: 'POST',
+				dataType: 'html',
+				data: {
+					auth_type: authType
+				},
+				success: function(response) {
+					$("#device_id").html('');
+					$("#device_id").html('');
+					//$("#device_id").html('<option value="*">All Device</option>');
+					$("#device_id").parent().find(".select2-search-choice").remove();
+					$('#device_id').html('<option value="*">All Device</option>' + response);
+					$("#device_to_scan").html(response);
+				}
+			})
+		});
+		$("#device_id").change(function() {
+			let device_id = $("#device_id").val();
+			device_id.map((val) => {
+				if (val == '*') {
+					//$("#device_id").parent().find(".select2-search-choice").remove();
+					//$("#device_id").html('<option value="*">All Device</option>');
+				}
+			})
+		})
+		$("#finger_auth_mode").change(function() {
+			var value = $(this).val();
+			if (value == 1) {
+				$('#pin').parent().parent().show();
+			} else {
+				$('#pin').parent().parent().hide();
+			}
+		});
+		$("#fingerprint").click((e) => {
+			e.preventDefault();
+			let num_of_finger = $('#num_of_fingers').val();
+			let deviceId = $('#device_to_scan').val();
+			let empId = `<?php echo $this->userId ?>`;
+			device_api_url = `<?php echo DEVICE_API_URL; ?>`;
+			$.ajax({
+				url: device_api_url + "ConnectDevice/scanfingerprint?deviceId=" + deviceId + "&num_of_fingers=" + num_of_finger + "&empId=" + empId,
+				type: "POST",
+				success: function(response) {
+					$('#hs').val(JSON.stringify(response.data));
+					alert('Fingerprint scanned successfully');
+				},
+				error: function() {
+					alert('Fingerprint scan failed. Please try again');
+				}
+
+			});
+		})
+
+
+
+
+
+
+
+
+		<?php if (count($this->messages)) { ?>
+			setTimeout(function() {
+
+				$('#popupmessage').fadeOut('slow');
+			}, 3000);
+
+		<?php } ?>
+	});
+</script>

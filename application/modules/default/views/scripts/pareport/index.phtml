@@ -1,0 +1,330 @@
+<?php
+
+/**
+ * PA Report Master Dashboard (Global-First BI Layout)
+ * 
+ * Renders the global filters and uses AJAX to fetch metrics across 
+ * all campaigns or specifically filtered datasets.
+ */
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+
+<style>
+    /* Global Filter Bar */
+    .master-filter-bar {
+        background: #f4f6f6;
+        border: 1px solid #b2d8d8;
+        padding: 15px 20px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    .filter-label {
+        font-size: 11px;
+        color: #555;
+        text-transform: uppercase;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    /* KPI Cards & Tabs */
+    .kpi-row {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .kpi-card {
+        flex: 1;
+        background: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    }
+
+    .kpi-value {
+        font-size: 28px;
+        font-weight: bold;
+        color: #26a69a;
+        margin: 10px 0 5px 0;
+    }
+
+    .kpi-label {
+        font-size: 12px;
+        color: #666;
+        text-transform: uppercase;
+        font-weight: bold;
+        letter-spacing: 0.5px;
+    }
+
+    .sf-tabs-nav {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        border-bottom: 2px solid #ccc;
+        display: flex;
+        width: 100%;
+    }
+
+    .sf-tabs-nav li {
+        margin-bottom: -2px;
+    }
+
+    .sf-tabs-nav li a {
+        display: block;
+        padding: 10px 20px;
+        text-decoration: none;
+        color: #666;
+        font-weight: bold;
+        border-bottom: 2px solid transparent;
+        transition: all 0.3s;
+    }
+
+    .sf-tabs-nav li.active a {
+        color: #26a69a;
+        border-bottom: 2px solid #26a69a;
+    }
+
+    .sf-tab-panel {
+        padding: 20px 0;
+        display: none;
+    }
+
+    .sf-tab-panel.active {
+        display: block;
+    }
+
+    /* Simple CSS Bar Chart for Status */
+    .css-bar-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .css-bar-label {
+        width: 120px;
+        font-size: 13px;
+        color: #555;
+    }
+
+    .css-bar-track {
+        flex: 1;
+        height: 20px;
+        background: #eee;
+        border-radius: 3px;
+        overflow: hidden;
+        margin: 0 15px;
+    }
+
+    .css-bar-fill {
+        height: 100%;
+        background: #26a69a;
+        transition: width 0.5s ease-out;
+    }
+
+    .css-bar-val {
+        width: 40px;
+        font-size: 13px;
+        font-weight: bold;
+        text-align: right;
+    }
+</style>
+
+<div class="row">
+    <div class="col s12">
+
+        <h4 style="font-size: 18px; color: #333; margin-bottom: 15px;">
+            <i class="fa fa-bar-chart" style="color:#26a69a;"></i> Performance Analytics & Reports
+        </h4>
+
+        <!-- ================= THE GLOBAL FILTER BAR ================= -->
+        <div class="master-filter-bar">
+            <div class="filter-group">
+                <span class="filter-label"><i class="fa fa-filter"></i> Filter by Campaign</span>
+                <select id="filter_campaign" class="browser-default select2">
+                    <option value="">All Campaigns (Global Data)</option>
+                    <?php foreach ($this->campaignOptions as $k => $v) echo "<option value='$k'>" . $this->escape($v) . "</option>"; ?>
+                </select>
+            </div>
+            <!-- Future Filters (Department, Period) can be added here seamlessly -->
+            <div style="margin-top: 15px;">
+                <button type="button" class="actbtn_btn" onclick="fetchDashboardData();"><i class="fa fa-refresh"></i> Apply Filters</button>
+            </div>
+        </div>
+
+        <!-- ================= DASHBOARD TABS ================= -->
+        <div id="report-tabs" style="width: 100%;">
+            <ul class="sf-tabs-nav">
+                <li class="active"><a href="#tab-summary" data-target="tab-summary"><i class="fa fa-dashboard"></i> Executive Summary</a></li>
+                <?php if ($this->accessLevel > 1): ?>
+                    <li><a href="#tab-matrix" data-target="tab-matrix"><i class="fa fa-exchange"></i> 360 Gap Matrix</a></li>
+                    <li><a href="#tab-skills" data-target="tab-skills"><i class="fa fa-crosshairs"></i> Skill Diagnostics</a></li>
+                <?php endif; ?>
+            </ul>
+
+            <!-- TAB 1: EXECUTIVE SUMMARY -->
+            <div id="tab-summary" class="sf-tab-panel active">
+                <!-- KPI CARDS -->
+                <div class="kpi-row">
+                    <div class="kpi-card">
+                        <div class="kpi-label">Total Assessments</div>
+                        <div class="kpi-value" id="kpi_total">-</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label">Completion Rate</div>
+                        <div class="kpi-value" id="kpi_completion">-</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label">Average Score</div>
+                        <div class="kpi-value" id="kpi_score">-</div>
+                    </div>
+                </div>
+
+                <!-- CHARTS ROW -->
+                <div style="display: flex; gap: 20px;">
+                    <div style="flex: 1; background: #fff; border: 1px solid #eee; border-radius: 4px; padding: 20px;">
+                        <h5 style="margin-top: 0; font-size: 14px; color: #555; border-bottom: 1px solid #f0f0f0; padding-bottom: 10px; margin-bottom: 15px;">Workflow Status Breakdown</h5>
+                        <div id="chart_status_container">
+                            <div style="text-align: center; color: #999; padding: 20px;">Applying Filters...</div>
+                        </div>
+                    </div>
+
+                    <?php if ($this->accessLevel > 2): ?>
+                        <div style="flex: 1; background: #fff; border: 1px solid #eee; border-radius: 4px; padding: 20px;">
+                            <h5 style="margin-top: 0; font-size: 14px; color: #555; border-bottom: 1px solid #f0f0f0; padding-bottom: 10px; margin-bottom: 15px;">Organizational Averages</h5>
+                            <div id="chart_org_container">
+                                <div style="text-align: center; color: #999; padding: 20px;">(Pending Future Development)</div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <!-- TAB 2 & 3 Placeholders -->
+            <?php if ($this->accessLevel > 1): ?>
+                <div id="tab-matrix" class="sf-tab-panel">
+                    <div style="background: #fff; border: 1px solid #eee; border-radius: 4px; padding: 20px; text-align: center; color: #777;">
+                        <i class="fa fa-wrench fa-3x" style="color: #ccc; margin-bottom: 15px;"></i><br><strong>360 Gap Matrix Report</strong><br>Pending Phase 5b Development.
+                    </div>
+                </div>
+                <div id="tab-skills" class="sf-tab-panel">
+                    <div style="background: #fff; border: 1px solid #eee; border-radius: 4px; padding: 20px; text-align: center; color: #777;">
+                        <i class="fa fa-wrench fa-3x" style="color: #ccc; margin-bottom: 15px;"></i><br><strong>Skill & Competency Diagnostics</strong><br>Pending Phase 5b Development.
+                    </div>
+                </div>
+            <?php endif; ?>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        if ($.isFunction($.fn.select2)) {
+            $('.select2').select2({
+                width: '100%'
+            });
+        }
+
+        // CUSTOM TABS
+        $('.sf-tabs-nav a').on('click', function(e) {
+            e.preventDefault();
+            var targetPanelId = $(this).attr('href');
+            $('.sf-tabs-nav li').removeClass('active');
+            $(this).parent('li').addClass('active');
+            $('.sf-tab-panel').removeClass('active').hide();
+            $(targetPanelId).addClass('active').fadeIn('fast');
+        });
+
+        // Run on initial load
+        fetchDashboardData();
+    });
+
+    /**
+     * Master function to ping all APIs and refresh the canvas based on the Global Filters.
+     */
+    function fetchDashboardData() {
+        // Gather all UI Filters into a JSON object
+        var activeFilters = {
+            campaign_id: $('#filter_campaign').val()
+        };
+        var filterJson = JSON.stringify(activeFilters);
+
+        // UI Feedback
+        $('#kpi_total, #kpi_completion, #kpi_score').html('<i class="fa fa-spinner fa-spin"></i>');
+        $('#chart_status_container').html('<div style="text-align: center; color: #999; padding: 20px;"><i class="fa fa-spinner fa-spin fa-2x"></i></div>');
+
+        // 1. Fetch KPIs
+        $.getJSON(base_url + '/pareport/getdashboarddata', {
+            filters: filterJson
+        }, function(res) {
+            if (res.status === 'success' && res.data) {
+                var d = res.data;
+                $('#kpi_total').text(d.total_assessments || 0);
+
+                var total = parseInt(d.total_assessments) || 0;
+                var completed = parseInt(d.completed_assessments) || 0;
+                var rate = (total > 0) ? Math.round((completed / total) * 100) : 0;
+                $('#kpi_completion').text(rate + '%');
+
+                var avg = parseFloat(d.average_score);
+                $('#kpi_score').text(!isNaN(avg) ? avg.toFixed(2) : 'N/A');
+            } else {
+                $('.kpi-value').text('Error');
+            }
+        });
+
+        // 2. Fetch Status Chart
+        $.getJSON(base_url + '/pareport/getchartdata', {
+            type: 'status_breakdown',
+            filters: filterJson
+        }, function(res) {
+            if (res.status === 'success') {
+                var maxCount = 0;
+                $.each(res.data, function(i, val) {
+                    if (parseInt(val) > maxCount) maxCount = parseInt(val);
+                });
+
+                if (maxCount === 0) {
+                    $('#chart_status_container').html('<div style="text-align:center; color:#999; padding:20px;">No data available for the selected filters.</div>');
+                    return;
+                }
+
+                var html = '';
+                $.each(res.labels, function(i, label) {
+                    var count = parseInt(res.data[i]);
+                    var widthPct = Math.round((count / maxCount) * 100);
+
+                    var color = '#95a5a6'; // Gray
+                    if (label === 'Completed' || label === 'Acknowledged') color = '#27ae60'; // Green
+                    if (label === 'Pending') color = '#e74c3c'; // Red
+                    if (label === 'In Progress') color = '#f39c12'; // Orange
+
+                    html += '<div class="css-bar-row">';
+                    html += '  <div class="css-bar-label">' + label + '</div>';
+                    html += '  <div class="css-bar-track"><div class="css-bar-fill" style="width: ' + widthPct + '%; background-color: ' + color + ';"></div></div>';
+                    html += '  <div class="css-bar-val">' + count + '</div>';
+                    html += '</div>';
+                });
+
+                $('#chart_status_container').html(html);
+            } else {
+                $('#chart_status_container').html('<div style="color:red;">Failed to load chart data.</div>');
+            }
+        });
+    }
+</script>

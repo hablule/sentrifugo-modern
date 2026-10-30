@@ -1,0 +1,110 @@
+<?php
+
+/**
+ * Employment Type Save View
+ */
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<?php sapp_Global::generateClientValidations($this->form); ?>
+
+<div id="error_message" style="display:none;"></div>
+
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" method="<?php echo $this->form->getMethod(); ?>">
+    <?php echo $this->form->id; ?>
+
+    <div class="total-form-controller">
+        <div class="division">
+
+            <div class="new-form-ui clearb">
+                <label class="required"><?php echo $this->form->code->getLabel(); ?></label>
+                <div class="division"><?php echo $this->form->code; ?></div>
+                <?php if (isset($this->msgarray['code'])) { ?>
+                    <span class="errors" id="errors-<?php echo $this->form->code->getId(); ?>"><?php echo $this->msgarray['code']; ?></span>
+                <?php } ?>
+            </div>
+
+            <div class="new-form-ui clearb">
+                <label class="required"><?php echo $this->form->name->getLabel(); ?></label>
+                <div class="division"><?php echo $this->form->name; ?></div>
+                <?php if (isset($this->msgarray['name'])) { ?>
+                    <span class="errors" id="errors-<?php echo $this->form->name->getId(); ?>"><?php echo $this->msgarray['name']; ?></span>
+                <?php } ?>
+            </div>
+            
+            <div style="clear: both; width: 100%; height: 20px;"></div>
+
+            <!-- Policy Switches -->
+            <div style="border-top: 1px solid #eee; padding-top: 15px; margin-top: 15px;">
+                <h4 style="color: #26a69a; margin-bottom: 15px;">System Eligibility Policies</h4>
+            </div>
+
+            <div class="new-form-ui clearb">
+                <label class="required"><?php echo $this->form->is_benefits_eligible->getLabel(); ?></label>
+                <div class="division"><?php echo $this->form->is_benefits_eligible; ?></div>
+                <?php if (isset($this->msgarray['is_benefits_eligible'])) { ?>
+                    <span class="errors" id="errors-<?php echo $this->form->is_benefits_eligible->getId(); ?>"><?php echo $this->msgarray['is_benefits_eligible']; ?></span>
+                <?php } ?>
+            </div>
+
+            <div class="new-form-ui clearb">
+                <label class="required"><?php echo $this->form->is_leave_eligible->getLabel(); ?></label>
+                <div class="division"><?php echo $this->form->is_leave_eligible; ?></div>
+                <?php if (isset($this->msgarray['is_leave_eligible'])) { ?>
+                    <span class="errors" id="errors-<?php echo $this->form->is_leave_eligible->getId(); ?>"><?php echo $this->msgarray['is_leave_eligible']; ?></span>
+                <?php } ?>
+            </div>
+
+            <div class="new-form-ui clearb">
+                <label class="required"><?php echo $this->form->is_overtime_eligible->getLabel(); ?></label>
+                <div class="division"><?php echo $this->form->is_overtime_eligible; ?></div>
+                <?php if (isset($this->msgarray['is_overtime_eligible'])) { ?>
+                    <span class="errors" id="errors-<?php echo $this->form->is_overtime_eligible->getId(); ?>"><?php echo $this->msgarray['is_overtime_eligible']; ?></span>
+                <?php } ?>
+            </div>
+
+            <div class="new-form-ui clearb">
+                <label class="required"><?php echo $this->form->requires_timesheet->getLabel(); ?></label>
+                <div class="division"><?php echo $this->form->requires_timesheet; ?></div>
+                <?php if (isset($this->msgarray['requires_timesheet'])) { ?>
+                    <span class="errors" id="errors-<?php echo $this->form->requires_timesheet->getId(); ?>"><?php echo $this->msgarray['requires_timesheet']; ?></span>
+                <?php } ?>
+            </div>
+
+            <div class="new-form-ui clearb">
+                <label class="required"><?php echo $this->form->has_fixed_term->getLabel(); ?></label>
+                <div class="division"><?php echo $this->form->has_fixed_term; ?></div>
+                <?php if (isset($this->msgarray['has_fixed_term'])) { ?>
+                    <span class="errors" id="errors-<?php echo $this->form->has_fixed_term->getId(); ?>"><?php echo $this->msgarray['has_fixed_term']; ?></span>
+                <?php } ?>
+            </div>
+
+            <div style="clear: both; width: 100%; height: 20px;"></div>
+
+            <div style="border-top: 1px solid #eee; padding-top: 15px; margin-top: 15px;"></div>
+
+            <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+            <div class="new-form-ui clearb">
+                <label><?php echo $this->form->isactive->getLabel(); ?></label>
+                <div class="division"><?php echo $this->form->isactive; ?></div>
+                <?php if (isset($this->msgarray['isactive'])) { ?>
+                    <span class="errors" id="errors-<?php echo $this->form->isactive->getId(); ?>"><?php echo $this->msgarray['isactive']; ?></span>
+                <?php } ?>
+            </div>
+
+            <div class="new-form-ui-submit">
+                <div class="division">
+                    <?php echo $this->form->submit; ?>
+                    <input onclick="window.location.href='<?php echo BASE_URL; ?>employmenttype/index';" value="Cancel" type="button" class="reset" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+    $('#description').jqte();
+</script>

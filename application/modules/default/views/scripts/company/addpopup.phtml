@@ -1,0 +1,161 @@
+<?php
+
+/**
+ * Company Add Popup View
+ *
+ * Modal interface for adding top-level companies "On-The-Fly".
+ * Refactored to comply with SSOT v6.4.
+ *
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ * @author     Hablul Soft Solution < /hablul.in>
+ * @license    http://gnu.org GNU General Public License, version 3.0 (GPL-3.0)
+ * @version    Sentrifugo v3.2
+ */
+?>
+
+<!-- Asset Inclusions -->
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/custompopup.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/custompopup.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<style>
+    .multicheckbox-container label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: normal;
+    }
+
+    .multicheckbox-container input[type="checkbox"] {
+        margin-right: 10px;
+    }
+</style>
+
+<?php if (isset($this->popup) && $this->popup === 'close') : ?>
+
+    <!-- Success UI -->
+    <div class="ml-alert-1-success">
+        <div class="style-1-icon success"></div>
+        Company added successfully. Closing...
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var optionsHtml = '<?php echo $this->escape(isset($this->optionsHtml) ? $this->optionsHtml : ''); ?>';
+            var prevCntrl = '<?php echo $this->escape(isset($this->prev_cntrl) ? $this->prev_cntrl : 'company'); ?>';
+
+            setTimeout(function() {
+                if (typeof parent.closeiframeAddPopup === 'function') {
+                    // Update dropdown in parent window and close modal
+                    parent.closeiframeAddPopup(optionsHtml, prevCntrl, 'company_id', 'Company');
+                } else {
+                    parent.$('#companyContainer').dialog('close');
+                }
+            }, 1500);
+        });
+    </script>
+
+<?php else : ?>
+
+    <?php sapp_Global::generateClientValidations($this->form); ?>
+
+    <div id="error_message" style="display:none;"></div>
+
+    <?php if (!empty($this->msgarray)) : ?>
+        <div class="ml-alert-1-error" style="margin: 10px;">
+            <div style="display:block;">
+                <span class="style-1-icon error"></span>
+                Please correct the errors highlighted below.
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" action="<?php echo $this->escape($this->form->getAction()); ?>" method="post" enctype="multipart/form-data">
+
+        <?php echo $this->form->id; ?>
+
+        <div class="total-form-controller" style="padding: 15px;">
+            <div class="division">
+
+                <!-- Code -->
+                <div class="new-form-ui clearb">
+                    <label class="required"><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+                    <div class="division">
+                        <?php echo $this->form->code; ?>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->code->getId()); ?>">
+                            <?php echo isset($this->msgarray['code']) ? $this->escape($this->msgarray['code']) : ''; ?>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Name -->
+                <div class="new-form-ui clearb">
+                    <label class="required"><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                    <div class="division">
+                        <?php echo $this->form->name; ?>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->name->getId()); ?>">
+                            <?php echo isset($this->msgarray['name']) ? $this->escape($this->msgarray['name']) : ''; ?>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Representative -->
+                <div class="new-form-ui clearb">
+                    <label class="required"><?php echo $this->escape($this->form->representative_id->getLabel()); ?></label>
+                    <div class="division">
+                        <?php echo $this->form->representative_id; ?>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->representative_id->getId()); ?>">
+                            <?php echo isset($this->msgarray['representative_id']) ? $this->escape($this->msgarray['representative_id']) : ''; ?>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- File Upload -->
+                <div class="new-form-ui clearb">
+                    <label><?php echo $this->escape($this->form->org_image->getLabel()); ?></label>
+                    <div class="division">
+                        <?php echo $this->form->org_image; ?>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->org_image->getId()); ?>">
+                            <?php echo isset($this->msgarray['org_image']) ? $this->escape($this->msgarray['org_image']) : ''; ?>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                <!-- Active Status -->
+                <div class="new-form-ui clearb">
+                    <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                    <div class="division">
+                        <?php echo $this->form->isactive; ?>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="new-form-ui-submit">
+                    <div class="division">
+                        <?php echo $this->form->submit; ?>
+                        <input onclick="parent.$('#companyContainer').dialog('close');" value="Cancel" type="button" class="reset" />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </form>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#description').jqte();            
+
+            <?php if (!empty($this->msgarray)) : ?>
+                $('html, body').animate({
+                    scrollTop: 0
+                }, 'slow');
+            <?php endif; ?>
+        });
+    </script>
+
+<?php endif; ?>

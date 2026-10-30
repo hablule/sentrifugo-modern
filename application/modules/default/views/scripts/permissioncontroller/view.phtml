@@ -1,0 +1,111 @@
+<?php
+/**
+ * Controller Registry View (Read-Only)
+ */
+$this->headLink()->appendStylesheet(MEDIA_PATH . 'css/screen.css');
+$this->headLink()->appendStylesheet(MEDIA_PATH . 'css/style.css');
+?>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container">
+            <?php if (isset($this->nodata)) : ?>
+                <div class="ml-alert-1-info">
+                    <div style="display:block;">
+                        <span class="style-1-icon info"></span>
+                        No data found.
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <?php if (!isset($this->nodata)) : ?>
+            <div class="total-form-controller">
+                <div class="division">
+                    
+                    <!-- Controller Info -->
+                    <div class="new-form-ui clearb">
+                        <label>Controller Name</label>
+                        <div class="division">
+                            <span class="view_label" style="font-weight: bold; color: #26a69a;">
+                                <?php echo $this->escape($this->data['controller']); ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label>Module</label>
+                        <div class="division">
+                            <span class="view_label">
+                                <?php echo $this->escape($this->data['module_name']); ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label>File Path</label>
+                        <div class="division">
+                            <span class="view_label" style="font-family: monospace; font-size: 11px;">
+                                <?php echo $this->escape($this->data['file_path']); ?>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="new-form-ui clearb">
+                        <label>Last Scanned</label>
+                        <div class="division">
+                            <span class="view_label">
+                                <?php echo $this->escape($this->data['last_scanned']); ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Actions List -->
+                    <div class="new-form-ui clearb" style="width: 100%; margin-top: 20px;">
+                        <label style="width: 100%; border-bottom: 1px solid #eee; margin-bottom: 10px; padding-bottom: 5px;">
+                            Discovered Actions (Methods)
+                        </label>
+                        <div class="division" style="width: 100%;">
+                            <?php if (!empty($this->actions)): ?>
+                                <table class="grid" style="width: 80%; border: 1px solid #ddd;">
+                                    <thead>
+                                        <tr style="background: #f9f9f9;">
+                                            <th style="padding: 8px; text-align: left;">Action Name</th>
+                                            <th style="padding: 8px; text-align: center;">Scanner Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($this->actions as $act): ?>
+                                            <tr style="border-bottom: 1px solid #eee;">
+                                                <td style="padding: 8px; font-family: monospace;">
+                                                    <?php echo $this->escape($act['name']); ?>
+                                                </td>
+                                                <td style="padding: 8px; text-align: center;">
+                                                    <?php 
+                                                        if ($act['status'] == 'Active') echo '<span style="color: green;">Mapped (Active)</span>';
+                                                        elseif ($act['status'] == 'New') echo '<span style="color: orange; font-weight: bold;">New (Unmapped)</span>';
+                                                        elseif ($act['status'] == 'Obsolete') echo '<span style="color: red; text-decoration: line-through;">Obsolete</span>';
+                                                    ?>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            <?php else: ?>
+                                <span class="view_label">No actions found in this controller.</span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <!-- Navigation -->
+                    <div class="new-form-ui-submit">
+                        <div class="division">
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>permissioncontroller/index';" value="Back to List" type="button" class="reset" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>

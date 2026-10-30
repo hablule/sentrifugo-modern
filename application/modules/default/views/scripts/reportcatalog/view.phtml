@@ -1,0 +1,170 @@
+<?php
+
+/**
+ * Report Catalog View (Read-Only)
+ * 
+ * Rehydrates JSON mapping arrays into static HTML tables.
+ * Strictly adheres to SSOT v6.7.4.
+ */
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+
+<style>
+    .mapping-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 25px;
+    }
+
+    .mapping-table th,
+    .mapping-table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+    }
+
+    .mapping-table th {
+        background-color: #f9f9f9;
+        color: #333;
+        font-weight: bold;
+    }
+
+    .acl-section-header {
+        font-size: 13px;
+        margin-bottom: 10px;
+        color: #333;
+    }
+</style>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container">
+            <?php if (isset($this->nodata)) : ?>
+                <div class="ml-alert-1-info">
+                    <div style="display:block;"><span class="style-1-icon info"></span>No data found.</div>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <?php if (!isset($this->nodata)) : ?>
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <h4 style="font-size: 14px; color: #26a69a; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 15px; margin-top: 0;">Report Definition</h4>
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->menugroup_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->menugroup_id; ?></div>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->category_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->category_id; ?></div>
+                        </div>
+                    </div>
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->code; ?></div>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->name; ?></div>
+                        </div>
+                    </div>
+
+                    <div style="clear: both; width: 100%; height: 20px;"></div>
+
+                    <h4 style="font-size: 14px; color: #26a69a; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 15px;">Access Control List (ACL)</h4>
+
+                    <div style="background: #fdfdfd; padding: 15px; border: 1px solid #eee; border-radius: 4px; margin-bottom: 20px;">
+                        <h5 class="acl-section-header"><i class="fa fa-users"></i> Authorized Groups</h5>
+                        <table class="mapping-table" id="view-groups">
+                            <thead>
+                                <tr>
+                                    <th style="width: 100px;">Group ID</th>
+                                    <th>Group Name</th>
+                                </tr>
+                            </thead>
+                            <tbody><!-- JS Injected --></tbody>
+                        </table>
+
+                        <h5 class="acl-section-header"><i class="fa fa-briefcase"></i> Authorized Roles</h5>
+                        <table class="mapping-table" id="view-roles">
+                            <thead>
+                                <tr>
+                                    <th style="width: 100px;">Role ID</th>
+                                    <th>Role Name</th>
+                                </tr>
+                            </thead>
+                            <tbody><!-- JS Injected --></tbody>
+                        </table>
+
+                        <h5 class="acl-section-header"><i class="fa fa-user"></i> Authorized Employees</h5>
+                        <table class="mapping-table" id="view-employees">
+                            <thead>
+                                <tr>
+                                    <th style="width: 100px;">Emp ID</th>
+                                    <th>Employee Name</th>
+                                </tr>
+                            </thead>
+                            <tbody><!-- JS Injected --></tbody>
+                        </table>
+                    </div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray ?? array(), $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                    </div>
+
+                    <div class="new-form-ui-submit">
+                        <div class="division">
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>reportcatalog';" value="Back to List" type="button" class="reset" />
+                            <?php
+                            $menuId = defined('REPORTCATALOG');
+                            if (sapp_Global::_checkprivileges($menuId, $this->loginuserGroup, $this->loginuserRole, 'edit') == 'Yes') :
+                            ?>
+                                <input onclick="window.location.href='<?php echo BASE_URL; ?>reportcatalog/edit/id/<?php echo $this->id; ?>';" value="Edit" type="button" class="reset" />
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>
+
+<!-- SSOT VII.11: Disable Rich Text Editor -->
+<script type="text/javascript">
+    var arrGroups = <?php echo $this->existingGroups ?? '[]'; ?>;
+    var arrRoles = <?php echo $this->existingRoles ?? '[]'; ?>;
+    var arrEmployees = <?php echo $this->existingEmployees ?? '[]'; ?>;
+
+    $(document).ready(function() {
+        $('#description').jqte();
+        $('.jqte_editor').attr('contenteditable', 'false');
+
+        _renderReadonly('view-groups', arrGroups);
+        _renderReadonly('view-roles', arrRoles);
+        _renderReadonly('view-employees', arrEmployees);
+    });
+
+    function _renderReadonly(tableId, arr) {
+        var html = '';
+        if (arr.length === 0) {
+            html = '<tr><td colspan="2" style="text-align:center; color:#999; font-style:italic;">No assignment.</td></tr>';
+        } else {
+            $.each(arr, function(idx, val) {
+                html += '<tr><td>#' + val.target_id + '</td><td>' + val.target_name + '</td></tr>';
+            });
+        }
+        $('#' + tableId + ' tbody').html(html);
+    }
+</script>

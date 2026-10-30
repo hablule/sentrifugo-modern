@@ -1,0 +1,139 @@
+<?php
+
+/**
+ * License Type Add Popup View
+ *
+ * Modal interface for adding license types "On-The-Fly".
+ * Refactored to comply with SSOT v6.3.
+ *
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ * @author     Hablul Soft Solution < /hablul.in>
+ * @license    http://gnu.org GNU General Public License, version 3.0 (GPL-3.0)
+ * @version    Sentrifugo v3.2
+ */
+?>
+
+<!-- Asset Inclusions (SSOT v6.3 Standard) -->
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/custompopup.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/custompopup.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<?php if (isset($this->popup) && $this->popup === 'close') : ?>
+
+    <!-- Success UI -->
+    <div class="ml-alert-1-success">
+        <div class="style-1-icon success"></div>
+        License Type added successfully. Closing...
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // Retrieve injected variables safely
+            var optionsHtml = '<?php echo $this->escape(isset($this->identity_data) ? $this->identity_data : ''); ?>';
+            var prevCntrl = '<?php echo $this->escape(isset($this->prev_cntrl) ? $this->prev_cntrl : 'licensetype'); ?>';
+
+            setTimeout(function() {
+                // SSOT v6.3 "On-The-Fly" Popup Pattern closure
+                if (typeof parent.closeiframeAddPopup === 'function') {
+                    // Update dropdown in parent window and close modal
+                    parent.closeiframeAddPopup(optionsHtml, prevCntrl, 'licensetype_id', 'License Type');
+                } else {
+                    // Fallback close if parent doesn't have the handler
+                    parent.$('#licensetypeContainer').dialog('close');
+                }
+            }, 1500);
+        });
+    </script>
+
+<?php else : ?>
+
+    <?php sapp_Global::generateClientValidations($this->form); ?>
+
+    <!-- Error Message Container for POST fallbacks -->
+    <div id="error_message" style="display:none;"></div>
+
+    <?php if (!empty($this->msgarray)) : ?>
+        <div class="ml-alert-1-error" style="margin: 10px;">
+            <div style="display:block;">
+                <span class="style-1-icon error"></span>
+                Please correct the errors highlighted below.
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" action="<?php echo $this->escape($this->form->getAction()); ?>" method="post">
+
+        <!-- Hidden Elements -->
+        <?php echo $this->form->id; ?>
+
+        <div class="total-form-controller" style="padding: 15px;">
+            <div class="division">
+
+                <!-- Code -->
+                <div class="new-form-ui clearb">
+                    <label class="required"><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+                    <div class="division">
+                        <?php echo $this->form->code; ?>
+                        <!-- Unconditional Error Span required by hrms.js saveDetails() -->
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->code->getId()); ?>">
+                            <?php echo isset($this->msgarray['code']) ? $this->escape($this->msgarray['code']) : ''; ?>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Name -->
+                <div class="new-form-ui clearb">
+                    <label class="required"><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                    <div class="division">
+                        <?php echo $this->form->name; ?>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->name->getId()); ?>">
+                            <?php echo isset($this->msgarray['name']) ? $this->escape($this->msgarray['name']) : ''; ?>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Description (Textarea helper handling styling and class attachments) -->
+                <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                <!-- Active Status -->
+                <div class="new-form-ui clearb">
+                    <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                    <div class="division">
+                        <?php echo $this->form->isactive; ?>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->isactive->getId()); ?>">
+                            <?php echo isset($this->msgarray['isactive']) ? $this->escape($this->msgarray['isactive']) : ''; ?>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="new-form-ui-submit">
+                    <div class="division">
+                        <?php echo $this->form->submit; ?>
+                        <!-- Standard Parent Modal Close Hook -->
+                        <input onclick="parent.$('#licensetypeContainer').dialog('close');" value="Cancel" type="button" class="reset" />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </form>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // Initialize WYSIWYG for description field
+            $('#description').jqte();
+
+            // Form-level error scrolling
+            <?php if (!empty($this->msgarray)) : ?>
+                $('html, body').animate({
+                    scrollTop: 0
+                }, 'slow');
+            <?php endif; ?>
+        });
+    </script>
+
+<?php endif; ?>

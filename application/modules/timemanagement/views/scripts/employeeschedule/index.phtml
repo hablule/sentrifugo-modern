@@ -1,0 +1,132 @@
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/fullcalendar.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/fullcalendar.print.css" media='print' />
+
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction(); ?>" method="<?php echo $this->form->getMethod(); ?>">
+    <?php echo $this->form->id; ?>
+    <div class="total-form-controller">
+        <div class="new-form-ui">
+            <label class="required">Week days </label>
+            <div class="division"><?php echo $this->form->workdays; ?></div>
+        </div>
+        <div class="new-form-ui">
+            <label class="required">From</label>
+            <div class="division"><?php echo $this->form->from; ?></div>
+        </div>
+        <div class="new-form-ui">
+            <label class="required">To</label>
+            <div class="division"><?php echo $this->form->to; ?></div>
+        </div>
+
+        <div class="new-form-ui-submit">
+            <?php echo $this->form->submit; ?>
+            <button type="button" onclick="window.location.href='<?php echo BASE_URL . 'scheduleinterviews'; ?>'" id="Cancel" name="Cancel">Cancel</button>
+        </div>
+
+    </div>
+
+</form>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>jquery/js/fullcalendar.min.js"></script>
+<script src="<?php echo MEDIA_PATH ?>js/hrms.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+<div id='calendar' style="clear:both;"></div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#to').timepicker({
+            showPeriod: true,
+            showLeadingZero: true,
+            onClose: function() {
+                $('#to').trigger('blur');
+                timepicker_onclose('to');
+            }
+        });
+
+        $('#from').timepicker({
+            showPeriod: true,
+            showLeadingZero: true,
+            onClose: function() {
+                $('#from').trigger('blur');
+                timepicker_onclose('from');
+            }
+        });
+
+        var options = {
+            defaultView: 'month',
+            aspectRatio: 2.0,
+            header: {
+                right: 'title',
+                center: '',
+                left: 'today prev,next'
+            },
+            weekends: true,
+            weekNumbers: false,
+            weekNumberCalculation: 'iso',
+            weekNumberTitle: 'W',
+
+            // editing
+            //editable: false,
+           // disableDragging: true,
+            //disableResizing: false,
+
+            allDayDefault: true,
+            ignoreTimezone: true,
+
+            // event ajax
+            lazyFetching: true,
+            startParam: 'start',
+            endParam: 'end',
+
+            // time formats
+            titleFormat: {
+                month: 'MMMM yyyy',
+                week: "MMM d[ yyyy]{ '&#8212;'[ MMM] d yyyy}",
+                day: 'dddd, MMM d, yyyy'
+            },
+            columnFormat: {
+                month: 'ddd',
+                week: 'ddd M/d',
+                day: 'dddd M/d'
+            },
+            timeFormat: { // for event elements
+                '': 'h(:mm)t' // default
+            },
+
+            // locale
+            isRTL: false,
+            firstDay: 0,
+            monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            monthNamesShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+            dayNamesShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            buttonText: {
+                prev: "<span class='fc-text-arrow'>&lsaquo;</span>",
+                next: "<span class='fc-text-arrow'>&rsaquo;</span>",
+                prevYear: "<span class='fc-text-arrow'>&laquo;</span>",
+                nextYear: "<span class='fc-text-arrow'>&raquo;</span>",
+                today: 'today',
+                month: 'month',
+                week: 'week',
+                day: 'day'
+            },
+
+            // jquery-ui theming
+            theme: true,
+            buttonIcons: {
+                prev: 'circle-triangle-w',
+                next: 'circle-triangle-e'
+            },
+
+            //selectable: false,
+            unselectAuto: true,
+
+            dropAccept: '*',
+
+            handleWindowResize: true
+        }
+
+        $('#calendar').fullCalendar(options)
+
+
+    })
+</script>

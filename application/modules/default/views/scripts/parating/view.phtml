@@ -1,0 +1,113 @@
+<?php
+
+/**
+ * PA Rating View (Read-Only)
+ */
+$childOptions = isset($this->childOptions) ? $this->childOptions : array();
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<div class="row">
+    <div class="col s12">
+        <?php if (isset($this->nodata)) : ?>
+            <div class="ml-alert-1-info">
+                <div style="display:block;"><span class="style-1-icon info"></span>No data found.</div>
+            </div>
+        <?php else : ?>
+            <div class="total-form-controller">
+                <div class="division">
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->code; ?></div>
+                        </div>
+                        <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->name; ?></div>
+                        </div>
+                    </div>
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->data_type->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->data_type; ?></div>
+                        </div>
+                        <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->ui_widget->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->ui_widget; ?></div>
+                        </div>
+                        <div class="new-form-ui clearb" id="step_value_container" style="display:none;">
+                            <label><?php echo $this->escape($this->form->step_value->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->step_value; ?></div>
+                        </div>
+                    </div>
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray ?? array(), $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                    </div>
+
+                    <div style="clear: both; height: 1px;"></div>
+
+                    <?php if ($this->form->data_type->getValue() === 'Structured'): ?>
+                        <div style="margin-top: 30px; background-color: #fcfcfc; padding: 15px; border: 1px solid #eee; border-radius: 4px;">
+                            <h4 style="font-size: 14px; color: #555; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 15px;"><i class="fa fa-list-ol"></i> Configured Options</h4>
+                            <table class="grid" style="width: 100%; background: #fff;">
+                                <thead>
+                                    <tr style="background: #f5f5f5;">
+                                        <th style="padding: 10px; text-align: center; width: 20%;">Value</th>
+                                        <th style="padding: 10px; text-align: left; width: 40%;">Text Label</th>
+                                        <th style="padding: 10px; text-align: center; width: 20%;">Auto-Calculated %</th>
+                                        <th style="padding: 10px; text-align: center; width: 20%;">Icon</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if (!empty($childOptions)): foreach ($childOptions as $opt): ?>
+                                            <tr style="border-bottom: 1px solid #eee;">
+                                                <td style="text-align:center; font-weight:bold;"><?php echo $this->escape($opt['value']); ?></td>
+                                                <td><?php echo $this->escape($opt['name']); ?></td>
+                                                <td style="text-align:center;"><?php echo !empty($opt['normalized_value']) ? $this->escape($opt['normalized_value']) : '-'; ?></td>
+                                                <td style="text-align:center;"><?php echo !empty($opt['icon_class']) ? '<i class="fa ' . $this->escape($opt['icon_class']) . '" style="color:#f39c12;"></i>' : '-'; ?></td>
+                                            </tr>
+                                        <?php endforeach;
+                                    else: ?>
+                                        <tr>
+                                            <td colspan="4" style="text-align:center; padding: 15px; color:#999; font-style:italic;">No options configured.</td>
+                                        </tr>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php endif; ?>
+
+                    <div class="new-form-ui-submit" style="margin-top: 20px;">
+                        <div class="division">
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>parating';" value="Back to List" type="button" class="reset" />
+                            <?php if (sapp_Global::_checkprivileges(RATING_SCALES, $this->loginuserGroup, $this->loginuserRole, 'edit') == 'Yes') : ?>
+                                <input onclick="window.location.href='<?php echo BASE_URL; ?>parating/edit/id/<?php echo $this->id; ?>';" value="Edit" type="button" class="reset" />
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#description').jqte();
+        $('.jqte_editor').attr('contenteditable', 'false');
+        if ($.isFunction($.fn.select2)) {
+            $('select').select2({
+                width: '100%'
+            });
+        }
+
+        if($('#data_type').val() === 'Structured' && $('#ui_widget').val() === 'Slider') {
+            $('#step_value_container').show();
+        } else {
+            $('#step_value_container').hide();
+        }        
+
+    });
+</script>

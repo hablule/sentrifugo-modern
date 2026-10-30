@@ -1,0 +1,336 @@
+<?php
+
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2015 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+?>
+
+<?php
+// Ensure standard headers and styles are loaded
+$this->headLink()->appendStylesheet(MEDIA_PATH . 'css/style.css');
+?>
+
+<style>
+	/* --- DYNAMIC SVG DONUT STYLING --- */
+
+	.menu-explain-data {
+		text-align: center;
+		margin-bottom: 20px;
+	}
+
+	#svg-container {
+		position: relative;
+		width: 600px;
+		height: 600px;
+		margin: 0 auto;
+	}
+
+	/* SVG Paths (The Slices) */
+	.donut-slice {
+		stroke: #ffffff;
+		/* White border between slices */
+		stroke-width: 3px;
+		cursor: pointer;
+		transition: fill 0.3s ease, opacity 0.3s ease;
+	}
+
+	/* Inactive State */
+	.slice-inactive {
+		fill: #e0e0e0;
+		/* Gray */
+	}
+
+	.slice-inactive:hover {
+		fill: #d0d0d0;
+		/* Darker gray on hover */
+	}
+
+	/* Active State */
+	.slice-active {
+		fill: #26a69a;
+		/* Sentrifugo Active Color (Adjust as needed) */
+	}
+
+	.slice-active:hover {
+		fill: #1e8e83;
+	}
+
+	/* Icons and Labels overlaid on the SVG */
+	.module-icon-container {
+		position: absolute;
+		transform: translate(-50%, -50%);
+		/* Center perfectly on coordinate */
+		text-align: center;
+		pointer-events: none;
+		/* Let clicks pass through to the SVG slice below */
+		z-index: 10;
+	}
+
+	.module-icon-container img {
+		max-width: 32px;
+		max-height: 32px;
+		margin-bottom: 5px;
+		/* Basic grayscale for inactive icons */
+		transition: filter 0.3s ease;
+	}
+
+	.icon-inactive {
+		filter: grayscale(100%) opacity(0.6);
+	}
+
+	.icon-active {
+		filter: none;
+	}
+
+	.module-label {
+		font-family: 'Roboto Regular', Cambria, serif;
+		font-size: 13px;
+		color: #333;
+		font-weight: bold;
+		text-shadow: 0px 1px 2px rgba(255, 255, 255, 0.8);
+		white-space: nowrap;
+	}
+
+	/* The Center Circle / Text */
+	.center-circle {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		width: 250px;
+		height: 250px;
+		background-color: #fcfcfc;
+		border-radius: 50%;
+		border: 1px solid #bfbfbf;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.05);
+		z-index: 5;
+		pointer-events: none;
+	}
+
+	.hrms-text {
+		font-family: 'Roboto Regular', sans-serif;
+		font-size: 22px;
+		color: #2f2f2f;
+		text-align: center;
+	}
+
+	/* Legend */
+	.diagram-details {
+		margin-top: 15px;
+	}
+
+	.legend-item {
+		display: inline-block;
+		margin: 0 10px;
+		font-family: sans-serif;
+		font-size: 13px;
+	}
+
+	.legend-color {
+		display: inline-block;
+		width: 12px;
+		height: 12px;
+		border-radius: 50%;
+		margin-right: 5px;
+		vertical-align: middle;
+	}
+
+	.legend-active {
+		background-color: #26a69a;
+	}
+
+	.legend-inactive {
+		background-color: #e0e0e0;
+	}
+</style>
+
+<!-- Messages -->
+<div id="message_container">
+	<?php if (count($this->messages)) : ?>
+		<div id="dispmsgmenu">
+			<?php foreach ($this->messages as $message) : $key = key($message); ?>
+				<div class="ml-alert-1-<?php echo $key; ?>">
+					<div style="display:block;">
+						<span class="style-1-icon <?php echo $key; ?>"></span>
+						<?php echo $message[$key]; ?>
+					</div>
+				</div>
+			<?php endforeach; ?>
+		</div>
+	<?php endif; ?>
+</div>
+
+<div class="menu-explain-data">
+	<div class="menu-text">You can manage your <?php echo APPLICATION_NAME; ?> system by selecting or de-selecting the below modules.</div>
+	<div class="diagram-details">
+		<div class="legend-item"><span class="legend-color legend-active"></span> Active</div>
+		<div class="legend-item"><span class="legend-color legend-inactive"></span> Inactive</div>
+	</div>
+</div>
+
+<!-- DYNAMIC SVG CONTAINER -->
+<div id="svg-container">
+	<div class="center-circle">
+		<div class="hrms-text"><?php echo APPLICATION_NAME; ?></div>
+	</div>
+</div>
+
+<div class="submit-explain-data inputheight-1" style="text-align: center; margin-top: 30px;">
+	<form id="formid" method="post" action="<?php echo BASE_URL; ?>managemenus/save" name="managemenu">
+		<input type="hidden" name="chk_menu" value="" id="chk_menu" />
+
+		<div class="new-form-ui-submit" style="display: none; justify-content: center;" id="savebuttondiv">
+			<input id="submitbutton" class="actbtn_btn" type="submit" name="submit" value="Save">
+			<button id="Cancel" class="reset" title="Go back to list." type="button" onclick="window.location.href='<?php echo BASE_URL; ?>welcome';">Cancel</button>
+		</div>
+	</form>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+
+		setTimeout(function() {
+			$('#dispmsgmenu').fadeOut('slow');
+		}, 4000);
+
+		// 1. Data Injection from PHP
+		var activeIds = <?php echo json_encode($this->activeIds); ?>;
+		var modules = <?php echo json_encode($this->topLevelMenus); ?>;
+
+		// Convert activeIds to strings for easy jQuery .inArray checking
+		activeIds = $.map(activeIds, String);
+
+		// 2. SVG Math Configuration
+		var size = 600;
+		var center = size / 2;
+		var outerRadius = 280;
+		var innerRadius = 125; // Matches the .center-circle radius
+
+		var numSlices = modules.length;
+		var sliceAngle = (Math.PI * 2) / numSlices;
+
+		// Base URL for icons
+		var mediaPath = '<?php echo MEDIA_PATH; ?>images/';
+
+		// 3. Create SVG Element
+		var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+		svg.setAttribute("width", size);
+		svg.setAttribute("height", size);
+		svg.setAttribute("viewBox", "0 0 " + size + " " + size);
+
+		// Helper function to calculate X,Y on a circle
+		function getCoordinates(radius, angle) {
+			return {
+				x: center + (radius * Math.cos(angle)),
+				y: center + (radius * Math.sin(angle))
+			};
+		}
+
+		// 4. Generate Slices and Icons
+		$.each(modules, function(index, module) {
+			var menuId = String(module.id);
+			var isActive = $.inArray(menuId, activeIds) !== -1;
+
+			// Calculate angles for this slice
+			// Subtract PI/2 to start at the top (12 o'clock)
+			var startAngle = (index * sliceAngle) - (Math.PI / 2);
+			var endAngle = ((index + 1) * sliceAngle) - (Math.PI / 2);
+
+			// SVG Path coordinates for outer curve
+			var p1 = getCoordinates(outerRadius, startAngle);
+			var p2 = getCoordinates(outerRadius, endAngle);
+
+			// SVG Path coordinates for inner curve
+			var p3 = getCoordinates(innerRadius, endAngle);
+			var p4 = getCoordinates(innerRadius, startAngle);
+
+			// Determine if arc is > 180 deg (needed for SVG path flag, rare unless < 3 modules)
+			var largeArcFlag = sliceAngle > Math.PI ? 1 : 0;
+
+			// Build the SVG Path String (Draws the slice)
+			var pathData = [
+				"M", p1.x, p1.y,
+				"A", outerRadius, outerRadius, 0, largeArcFlag, 1, p2.x, p2.y,
+				"L", p3.x, p3.y,
+				"A", innerRadius, innerRadius, 0, largeArcFlag, 0, p4.x, p4.y,
+				"Z"
+			].join(" ");
+
+			// Create Path Element
+			var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+			path.setAttribute("d", pathData);
+			path.setAttribute("class", "donut-slice " + (isActive ? "slice-active" : "slice-inactive"));
+			path.setAttribute("data-id", menuId);
+
+			// Add click event directly to the SVG slice
+			$(path).on('click', function() {
+				var $this = $(this);
+				var clickedId = $this.attr('data-id');
+				var currentlyActive = $this.hasClass('slice-active');
+
+				if (currentlyActive) {
+					// Deactivate
+					$this.removeClass('slice-active').addClass('slice-inactive');
+					$('#icon-' + clickedId).removeClass('icon-active').addClass('icon-inactive');
+					activeIds = $.grep(activeIds, function(value) {
+						return value != clickedId;
+					});
+				} else {
+					// Activate
+					$this.removeClass('slice-inactive').addClass('slice-active');
+					$('#icon-' + clickedId).removeClass('icon-inactive').addClass('icon-active');
+					if ($.inArray(clickedId, activeIds) === -1) activeIds.push(clickedId);
+				}
+
+				// Update hidden form field and show save button
+				$('#chk_menu').val(activeIds.join(','));
+				$('#savebuttondiv').css('display', 'flex'); // Flex to keep buttons centered
+			});
+
+			svg.appendChild(path);
+
+			// --- Calculate Icon Position (Middle of the slice) ---
+			var midAngle = startAngle + (sliceAngle / 2);
+			// Place icon at exactly the midpoint between inner and outer radius
+			var iconRadius = innerRadius + ((outerRadius - innerRadius) / 2);
+			var iconPos = getCoordinates(iconRadius, midAngle);
+
+			// Build HTML overlay for Icon and Text
+			var iconSrc = module.iconPath ? (mediaPath + module.iconPath) : (mediaPath + 'menuIcons/default.png');
+			var iconStateClass = isActive ? "icon-active" : "icon-inactive";
+
+			var overlayHtml = '<div class="module-icon-container" style="left:' + iconPos.x + 'px; top:' + iconPos.y + 'px;">';
+			overlayHtml += '<img id="icon-' + menuId + '" class="' + iconStateClass + '" src="' + iconSrc + '" onerror="this.style.display=\'none\'" />';
+			overlayHtml += '<div class="module-label">' + module.menuName + '</div>';
+			overlayHtml += '</div>';
+
+			$('#svg-container').append(overlayHtml);
+		});
+
+		// 5. Append SVG to Container
+		// Make sure SVG is the first child so HTML overlays sit on top
+		$('#svg-container').prepend(svg);
+
+		// Initialize hidden field
+		$('#chk_menu').val(activeIds.join(','));
+	});
+</script>

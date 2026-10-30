@@ -1,0 +1,52 @@
+<?php
+sapp_Global::generateClientValidations($this->form);
+?>
+<div id="error_message" style="display:none;"></div>
+
+
+<?php sapp_Helper::viewHeader();
+if (!empty($this->empovertimes)) {
+	foreach ($this->empovertimes as $value) {
+
+		$whole_minute = $value['earned_time'];
+		$minute = $whole_minute % 60;
+
+		$hour = ($whole_minute - $minute) / 60;
+		if ($hour < 10) {
+			$x = 0;
+			$result = $x . $hour . ":" . $minute;
+		} else {
+			$result = $hour . ":" . $minute;
+		}
+
+		if ($value['processed'] == "N") {
+			$y = "No";
+		} else {
+			$y = "Yes";
+		}
+
+		if ($value['approved'] == "N") {
+			$x = "No";
+		} elseif ($value['approved'] == "Y") {
+			$x = "Yes";
+		} else {
+			$x = "Pending";
+		}
+		sapp_Helper::viewBody('nor', 'Overtime  Name', $value['name'], 'base', $value['base']);
+		sapp_Helper::viewBody('alt', 'Earnerd Time in(hour)', $result, 'Amount Payed Per Minute', $value['amount_due']);
+		sapp_Helper::viewBody('nor', 'Status', $x, 'processed', $y);
+		sapp_Helper::viewBody('alt', 'From', $value['start_time'], 'To', $value['end_time']);
+		sapp_Helper::viewBody('nor', 'Employer Name', $value['userfullname'], 'Type', $value['c_name']);
+	}
+} else { ?>
+	<h6 style="text-align: center;"> No overtime is Assigned Assigned</h6>
+<?php
+	sapp_Helper::viewBody('nor', '----------', '----------', '----------', '----------');
+}
+sapp_Helper::viewFooter();
+?>
+<div class="new-form-ui-submit">
+
+	<button onclick="window.location.href='<?php echo BASE_URL; ?>schedule/manageremployeeovertime';" type="button" id="Cancel" name="Cancel">Cancel</button>
+</div>
+</div>

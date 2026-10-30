@@ -1,0 +1,199 @@
+<?php
+
+/**
+ * City Save View
+ */
+$this->msgarray = isset($this->msgarray) ? $this->msgarray : array();
+sapp_Global::generateClientValidations($this->form);
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container">
+            <?php if (!empty($this->msgarray)) : ?>
+                <?php if (isset($this->msgarray['error'])) : ?>
+                    <div class="ml-alert-1-error">
+                        <div style="display:block;"><span class="style-1-icon error"></span><?php echo $this->escape($this->msgarray['error']); ?></div>
+                    </div>
+                <?php else : ?>
+                    <div class="ml-alert-1-error">
+                        <div style="display:block;"><span class="style-1-icon error"></span>Please correct the highlighted errors below.</div>
+                    </div>
+                <?php endif; ?>
+            <?php endif; ?>
+        </div>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" method="<?php echo $this->escape($this->form->getMethod()); ?>">
+            <?php echo $this->form->id; ?>
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->country_id->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->country_id; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->country_id->getId()); ?>"><?php echo $this->escape($this->msgarray['country_id'] ?? ''); ?></span>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->state_id->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->state_id; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->state_id->getId()); ?>"><?php echo $this->escape($this->msgarray['state_id'] ?? ''); ?></span>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->name; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->name->getId()); ?>"><?php echo $this->escape($this->msgarray['name'] ?? ''); ?></span>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->code; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->code->getId()); ?>"><?php echo $this->escape($this->msgarray['code'] ?? ''); ?></span>
+                    </div>
+
+                    <!-- Mapped Geography Groups -->
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->geographygroup_id->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->geographygroup_id; ?>
+                            
+                            <!-- The On-The-Fly Popup Trigger (Only in save.phtml) -->
+                            <?php if (sapp_Global::_checkprivileges(GEOGRAPHYGROUP, $this->loginuserGroup, $this->loginuserRole, 'add') == 'Yes') : ?>
+                                <span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL . 'geographygroup/addpopup' ?>', 'Geography Group');" style="cursor: pointer; color: #26a69a; font-size: 12px; margin-top: 5px; display: inline-block;">
+                                    <i class="fa fa-plus"></i> Create New Group
+                                </span>
+                            <?php endif; ?>
+                            
+                        </div>
+                        <?php if (isset($this->msgarray['geographygroup_id'])): ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->geographygroup_id->getId()); ?>">
+                                <?php echo $this->escape($this->msgarray['geographygroup_id'] ?? ''); ?>
+                            </span>
+                        <?php endif; ?>
+                    </div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->isactive->getId()); ?>"><?php echo $this->escape($this->msgarray['isactive'] ?? ''); ?></span>
+                    </div>
+
+                    <div class="new-form-ui-submit">
+                        <div class="division">
+                            <?php echo $this->form->submit; ?>
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>city';" value="Cancel" type="button" class="reset" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Hidden Container for On-the-Fly Geography Group Popup (SSOT VIII) -->
+<div id="geographygroupContainer" style="display: none; overflow: auto;">
+    <div class="heading">
+        <a href="javascript:void(0)">
+            <img src="<?php echo MEDIA_PATH; ?>images/close.png" align="right" border="0" class="closeAttachPopup" style="margin: -24px 8px 0 0;" onclick="$('#geographygroupContainer').dialog('close');"> 
+        </a>
+    </div>
+    <iframe id="geographygroupCont" class="business_units_iframe" frameborder="0"></iframe>
+</div>
+
+<script type="text/javascript">
+    // SSOT VII: Robust AJAX Dropdown Pattern
+    function getStatesByCountry(countryId) {
+        var $stateSelect = $('#state_id');
+
+        // 1. Reset
+        $stateSelect.empty().append('<option value="">Select State/Province</option>');
+
+        if (!countryId) {
+            // 4. Re-Initialize if empty
+            if ($.isFunction($.fn.material_select)) $stateSelect.material_select();
+            return;
+        }
+
+        // 2. Target Block UI
+        $stateSelect.parent().block({
+            message: null,
+            overlayCSS: {
+                background: '#fff url(' + base_url + '/public/media/images/loader2.gif) no-repeat center',
+                opacity: 0.8
+            }
+        });
+
+        $.ajax({
+            url: base_url + '/city/getstates/format/json',
+            type: 'POST',
+            data: {
+                country_id: countryId
+            },
+            dataType: 'json',
+            success: function(response) {
+                // 3. Robust Parsing
+                if (response && Object.keys(response).length > 0) {
+                    var firstOptionSelected = false; // Flag to track the first item
+
+                    $.each(response, function(key, value) {
+                        var optId = '',
+                            optName = '';
+                        if (typeof value === 'object') {
+                            optId = value.id || key;
+                            optName = value.name || value.state_name;
+                        } else {
+                            optId = key;
+                            optName = value;
+                        }
+
+                        // Select the first valid option dynamically
+                        var selectedAttr = (!firstOptionSelected) ? ' selected="selected"' : '';
+                        $stateSelect.append('<option value="' + optId + '"' + selectedAttr + '>' + optName + '</option>');
+                        firstOptionSelected = true;
+                    });
+                    
+                    // Trigger change so any child dropdowns (if added later) know the state changed
+                    $stateSelect.trigger('change');
+
+                } else {
+                    // No states found for this country
+                    $stateSelect.append('<option value="">No States Available</option>');
+                }
+
+            },
+            complete: function() {
+                $stateSelect.parent().unblock();
+                // 4. Re-Initialization
+                if ($.isFunction($.fn.material_select)) {
+                    $stateSelect.material_select();
+                } else if ($.isFunction($.fn.select2)) {
+                    $stateSelect.select2();
+                }
+            },
+            error: function() {
+                $stateSelect.parent().unblock();
+                alert('Error loading states. Please try again.');
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        if ($('#description').length) {
+            $('#description').jqte();
+        }
+
+        if ($.isFunction($.fn.select2)) {
+            $('#geographygroup_id').select2({ placeholder: "Select geography groups...", allowClear: true });
+        }
+    });
+</script>

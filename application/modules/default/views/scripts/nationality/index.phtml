@@ -1,0 +1,86 @@
+<?php
+
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+?>
+
+<?php
+/**
+ * Nationality Index View
+ * 
+ * Displays the grid list of Nationalities and Legal Statuses.
+ * Strictly adheres to SSOT v6.1: No manual headers or add buttons. Relies 
+ * entirely on Sentrifugo's global grid helper. Protected against PHP 8+ crashes.
+ * 
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ * @author     Hablul Soft Solution < /hablul.in>
+ * @license    http://gnu.org GNU General Public License, version 3.0 (GPL-3.0)
+ * @version    Sentrifugo v3.2
+ */
+?>
+
+<!-- SSOT V.5 Standard Flash Messages -->
+<div id="message_container">
+	<?php if (!empty($this->messages)) : ?>
+		<div id="dispmsg" class="settingssuccess">
+			<?php foreach ($this->messages as $message) :
+				if (is_array($message)): $key = key($message); ?>
+					<div class="ml-alert-1-<?php echo $this->escape($key); ?>">
+						<div style="display:block;">
+							<span class="style-1-icon <?php echo $this->escape($key); ?>"></span>
+							<?php echo $this->escape($message[$key]); ?>
+						</div>
+					</div>
+			<?php endif;
+			endforeach; ?>
+		</div>
+	<?php endif; ?>
+</div>
+
+<!-- Grid Container -->
+<div id="nationality_container" class="full-width">
+	<!-- Required hidden div for Sentrifugo Global JS logic -->
+	<div id="msg" style="display:none; font-style: oblique; font-weight: bold; color: green;"></div>
+
+	<div id="grid_nationality" class="all-grid-control">
+		<?php
+		// SSOT VIII: Safe check to prevent PHP 8+ Array/Null crashes
+		if (isset($this->dataArray[0]['tablecontent']) && !empty($this->dataArray[0]['tablecontent'])) {
+			echo $this->grid($this->dataArray[0]);
+		} else if ($this->call != 'ajaxcall') {
+			echo "<div class='no-data' style='text-align: center; color: #7f8c8d; padding: 30px; border: 1px dashed #ccc; background: #f9f9f9; border-radius: 4px;'>";
+			echo "<i class='fa fa-folder-open-o' style='font-size: 24px; margin-bottom: 10px;'></i><br>";
+			echo "No Nationalities or Legal Status records found.";
+			echo "</div>";
+		}
+		?>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		// Auto-fade flash messages cleanly
+		setTimeout(function() {
+			$('#dispmsg').fadeOut('slow');
+		}, 4000);
+	});
+</script>

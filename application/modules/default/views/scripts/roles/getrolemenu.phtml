@@ -1,0 +1,13 @@
+<?php 
+/**
+ * AJAX Response View
+ * Renders the menu privileges helper.
+ */
+
+if (!empty($this->menuArray)) {
+    // Call the helper with the array prepared by the controller
+    echo $this->menuPrivileges($this->menuArray);
+} else {
+    echo '<div class="ml-alert-1-info"><div class="style-1-icon info"></div>No menu privileges found for this group.</div>';
+}
+?>

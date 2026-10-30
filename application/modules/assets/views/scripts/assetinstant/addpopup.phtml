@@ -1,0 +1,79 @@
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+<script src="<?php echo MEDIA_PATH; ?>js/custompopup.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH ?>css/custompopup.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH ?>js/custompopup.js"></script>
+<?php if($this->popup == 'close') { ?>	
+	<div class="ml-alert-1-success">
+	<div class="style-1-icon success"></div>
+Asset Instant<?php echo $this->eventact; ?> successfully
+	</div>
+
+	<?php } 
+else
+{
+    sapp_Global::generateClientValidations($this->form);?>
+    <div id="error_message" style="display:none;"></div>
+
+    <form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction();?>" method="<?php echo $this->form->getMethod(); ?>">
+		<?php echo $this->form->id; ?>
+  <div class="total-form-controller">
+
+  <div class="new-form-ui ">
+		    <label ><?php echo $this->form->asset_id->getLabel(); ?> </label>
+			<div class="division"><?php echo $this->form->asset_id; ?>
+			<span class="add-coloum" onclick="addpopupasset('<?php echo BASE_URL.'assets/assets/addpopup/isfrompopup/yes' ?>','Asset');"> Add Asset</span>
+
+			<?php if(isset($this->msgarray['asset_id'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->asset_id->getId(); ?>"><?php echo $this->msgarray['asset_id'];?></span>
+			<?php }?>
+			</div> 
+		</div>
+
+	    <div class="new-form-ui ">
+		    <label class="required"><?php echo $this->form->serialidentification->getLabel(); ?> </label>
+			<div class="division"><?php echo $this->form->serialidentification; ?>
+			<?php if(isset($this->msgarray['serialidentification'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->serialidentification->getId(); ?>"><?php echo $this->msgarray['serialidentification'];?></span>
+			<?php }?>
+			</div> 
+		</div>
+		<div class="new-form-ui ">
+		    <label ><?php echo $this->form->isactive->getLabel(); ?> </label>
+			<div class="division"><?php echo $this->form->isactive; ?>
+			<?php if(isset($this->msgarray['isactive'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->isactive->getId(); ?>"><?php echo $this->msgarray['isactive'];?></span>
+			<?php }?>
+			</div> 
+		</div>
+	
+            <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description','', 'fck_editor_height','',array());?>
+
+        
+		<div class="new-form-ui-submit">
+		<?php echo $this->form->submit; ?>
+		<button onclick="closeiframepopup('assetinstant','cancel');"  type="button" >Cancel</button>
+
+		</div>
+</div>
+</form>
+<?php } ?>
+<script language='javascript' type='text/javascript'>
+	<?php if ($this->popup != '') { ?>
+		setTimeout(function() {
+			removeNestedPopup_OnFinish("<?php echo $this->assetinstant; ?>", "assetinstant", "assetinstant_id_id", "", "");
+		}, 2000);
+	<?php } ?>
+	$(document).ready(function() {
+		<?php if (count($this->messages)) { ?>
+			setTimeout(function() {
+				$('#popupmessage').fadeOut('slow');
+			}, 3000);
+
+		<?php } ?>
+		$('#description').jqte()
+	});
+</script>
+<script>
+	$('#description').jqte();
+</script>

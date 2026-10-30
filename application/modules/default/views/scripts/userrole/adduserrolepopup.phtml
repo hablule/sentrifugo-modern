@@ -1,0 +1,82 @@
+<?php
+/**
+ * Sentrifugo
+ *
+ * PHP version 5
+ *
+ * @category   Sentrifugo
+ * @package    Userrole
+ * @subpackage Views
+ * @author     Sentrifugo Team < /hablul.in>
+ * @license    http://gnu.org GNU General Public License, version 3.0 (GPL-3.0)
+ * @version    Sentrifugo v3.2
+ **/
+?>
+<div class="popup-container">
+    <div class="popup-header">
+        <h4 class="modal-title">Assign User Role</h4>
+    </div>
+    
+    <div class="popup-body">
+        <!-- Sentrifugo standard error display -->
+        <?php if (!empty($this->msgarray)) : ?>
+            <div class="ml-alert-1-error">
+                <div style="display:block;">
+                    <span class="style-1-icon error"></span>
+                    Please correct the errors highlighted below.
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <form id="userrole_popup_form" method="post" action="<?php echo $this->userrole_form->getAction(); ?>">
+            <div class="new-form-ui">
+                <div class="division">
+                    <div class="form-row">
+                        <label>Employee <span class="required">*</span></label>
+                        <?php echo $this->userrole_form->user_id; ?>
+                        <span class="error_msg"><?php echo $this->msgarray['user_id'] ?? ''; ?></span>
+                    </div>
+
+                    <div class="form-row">
+                        <label>Role <span class="required">*</span></label>
+                        <?php echo $this->userrole_form->role_id; ?>
+                        <span class="error_msg"><?php echo $this->msgarray['role_id'] ?? ''; ?></span>
+                    </div>
+
+                    <div class="form-row">
+                        <label>Date From <span class="required">*</span></label>
+                        <?php echo $this->userrole_form->datefrom; ?>
+                        <span class="error_msg"><?php echo $this->msgarray['datefrom'] ?? ''; ?></span>
+                    </div>
+
+                    <div class="form-row">
+                        <label>Description</label>
+                        <?php echo $this->userrole_form->description; ?>
+                    </div>
+
+                    <div class="form-row action-row text-right">
+                        <button type="submit" class="actbtn_btn">Assign Role</button>
+                        <button type="button" class="actbtn_btn reset" onclick="parent.$.colorbox.close();">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Handle Success logic: Refresh parent and close popup
+        <?php if ($this->popup == 'close') : ?>
+            parent.window.location.reload(); // Or use parent.refreshgrid() if using Sentrifugo grids
+            parent.$.colorbox.close();
+        <?php endif; ?>
+
+        // Re-init datepicker for the dynamic content
+        $('.datepicker').datepicker({
+            dateFormat: 'mm/dd/yy',
+            changeMonth: true,
+            changeYear: true
+        });
+    });
+</script>

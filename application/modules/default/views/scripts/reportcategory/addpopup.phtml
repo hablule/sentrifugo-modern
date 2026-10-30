@@ -1,0 +1,85 @@
+<?php
+
+/**
+ * Report Category Add Popup View
+ * 
+ * Strictly adheres to SSOT v6.7.4 (Section VIII).
+ * Connects via parent.closeiframeAddPopup() back to the main Report Configurator module.
+ * 
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ */
+$this->msgarray = isset($this->msgarray) ? $this->msgarray : array();
+sapp_Global::generateClientValidations($this->form);
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/custompopup.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<div style="padding: 15px;">
+    <?php if (isset($this->popup) && $this->popup == 'close') : ?>
+        <div class="ml-alert-1-success">
+            <div style="display:block;"><span class="style-1-icon success"></span>Category <?php echo $this->escape($this->eventact); ?> successfully.</div>
+        </div>
+
+        <!-- SSOT VIII.4: Parent DOM Update Trigger -->
+        <script type="text/javascript">
+            $(document).ready(function() {
+                setTimeout(function() {
+                    // Passes the newly generated options back to the "reportconfig" module's "category_id" dropdown
+                    parent.closeiframeAddPopup("<?php echo $this->optionsHtml; ?>", "reportconfig", "category_id", "Report Category");
+                }, 1500);
+            });
+        </script>
+
+    <?php else : ?>
+        <div id="error_message" style="display:none;"></div>
+        <?php if (!empty($this->msgarray['error'])) : ?>
+            <div class="ml-alert-1-error">
+                <div style="display:block;"><span class="style-1-icon error"></span><?php echo $this->escape($this->msgarray['error']); ?></div>
+            </div>
+        <?php endif; ?>
+
+        <!-- Form Action dynamically points to the popup action -->
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" action="<?php echo $this->escape($this->form->getAction()); ?>" method="<?php echo $this->escape($this->form->getMethod()); ?>">
+            <?php echo $this->form->id; ?>
+
+            <div class="total-form-controller" style="box-shadow: none; border: none; padding: 0;">
+                <div class="division">
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->code; ?></div>
+                        <span class="errors" id="errors-code"><?php echo $this->escape($this->msgarray['code'] ?? ''); ?></span>
+                    </div>
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->name; ?></div>
+                        <span class="errors" id="errors-name"><?php echo $this->escape($this->msgarray['name'] ?? ''); ?></span>
+                    </div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                    </div>
+
+                    <!-- SSOT VIII.3: Standard Submit Button (No saveDetails JS) -->
+                    <div class="new-form-ui-submit" style="margin-top: 15px;">
+                        <div class="division">
+                            <input type="submit" name="submit" id="submitbutton" value="Save" class="actbtn_btn" />
+                            <button type="button" class="reset" onclick="parent.closeiframepopup('reportcategory', 'cancel');">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#description').jqte();
+            });
+        </script>
+    <?php endif; ?>
+</div>

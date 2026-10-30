@@ -1,0 +1,113 @@
+
+<?php
+sapp_Global::generateClientValidations($this->form);
+?>
+<?php if (count($this->messages)) {?>
+	<div id="dispmsgemp" class="settingssuccess">
+		<?php 
+			foreach ($this->messages as $message)
+			{
+				$flag = array();				
+				$flag = array_keys($message);
+				echo "<div id='messageData' class='ml-alert-1-$flag[0]'><div style='display:block;'><span class='style-1-icon $flag[0]'></span>";
+				echo $message[$flag[0]];
+				echo "</div></div>";
+			} 
+		;
+		?>
+	</div>	
+	
+<?php } ?>
+
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH ?>css/custompopup.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH ?>js/custompopup.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" method="POST" , action="<?php echo $this->fomr->getAction; ?>">
+    <div class="new-form-ui ">
+        <label class="required">Name</label>
+        <div class="division"><?php echo $this->form->name; ?></div>
+        <?php if (isset($this->msgarray['name'])) { ?>
+            <span class="errors" id="errors-<?php echo $this->form->name->getId(); ?>"><?php echo $this->msgarray['name']; ?></span>
+        <?php } ?>
+    </div>
+
+   
+    <div class="new-form-ui">
+					<label class="required">Calendar</label>
+					<div class="division"><?php echo $this->form->calendar; ?>
+					<?php if ($this->calandaraddpermission == 'Yes') { ?>
+						<span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL . 'calendar/addpopup' ?>','Add Calender');"> Add Calender </span>
+						<?php } ?>	
+					</div>
+					<?php if (isset($this->msgarray['calendar'])) { ?>
+						<span class="errors" id="errors-<?php echo $this->form->calendar->getId(); ?>"><?php echo $this->msgarray['calendar']; ?></span>
+					<?php } ?>
+				</div>
+
+    <div class="new-form-ui ">
+        <label class="required">Start Date</label>
+        <div class="division"><?php echo $this->form->start_date; ?></div>
+        <?php if (isset($this->msgarray['start_date'])) { ?>
+            <span class="errors" id="errors-<?php echo $this->form->start_date->getId(); ?>"><?php echo $this->msgarray['start_date']; ?></span>
+        <?php } ?>
+    </div>
+    <div class="new-form-ui ">
+        <label class="required">End Date</label>
+        <div class="division"><?php echo $this->form->end_date; ?></div>
+        <?php if (isset($this->msgarray['end_date'])) { ?>
+            <span class="errors" id="errors-<?php echo $this->form->end_date->getId(); ?>"><?php echo $this->msgarray['end_date']; ?></span>
+        <?php } ?>
+    </div>
+	<div class="new-form-ui ">
+        <label>Active</label>
+        <div class="division"><?php echo $this->form->isactive; ?></div>
+        <?php if (isset($this->msgarray['isactive'])) { ?>
+            <span class="errors" id="errors-<?php echo $this->form->isactive->getId(); ?>"><?php echo $this->msgarray['isactive']; ?></span>
+        <?php } ?>
+    </div>
+	<?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description','', 'fck_editor_height','',array());?>
+
+    <div class="new-form-ui-submit ">
+       
+        <div class="division"><?php echo $this->form->submit; ?></div>
+        <button onclick="window.location.href='<?php echo BASE_URL; ?>year';" type="button">Cancel</button>
+    </div>
+</form>
+<script>
+	  $('#description').jqte();
+</script>
+<script>
+
+$('#start_date,#end_date').datepicker({
+		showOn: 'both',
+		//minDate: 0,
+		//yearRange: yearrange,
+		dateFormat: '<?php echo DATEFORMAT_JS; ?>',
+		buttonImage: "<?php echo $this->baseUrl("public/media/images/cal.jpg"); ?>",
+		buttonImageOnly: true,
+		buttonText: "",
+		changeMonth: true,
+		changeYear: true,
+		showButtonPanel: true,
+		onClose: function() {
+			$(this).trigger('blur');
+			var msg = "";
+			if (this.id == 'end_date')
+				msg = "End date should be greater than Start date.";
+			else
+				msg = "Start date should be less than End date.";
+			from_to_date_validation('start_date', 'end_date', this, msg);
+		}
+
+	});
+</script>
+<div id="calendarContainer" style="display: none; overflow: auto;">
+		<div class="heading">
+			<a href="javascript:void(0)">
+				<img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+		</div>
+
+		<iframe id="calendarCont" class="business_units_iframe" frameborder="0"></iframe>
+	</div>
+	

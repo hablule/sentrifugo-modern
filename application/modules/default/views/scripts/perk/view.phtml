@@ -1,0 +1,37 @@
+
+			<?php sapp_Helper::viewHeader();
+			if (!empty($this->perks)) {
+				foreach ($this->perks as $value) {
+
+					sapp_Helper::viewBody('nor', 'Perk Name', $value['name'], 'Description', $value['description'], 'code', $value['code']);
+					sapp_Helper::viewBody('alt', 'From', $value['start'], 'To', $value['end']);
+
+					sapp_Helper::viewBody('nor', 'Perk Category', $value['cname'], 'Perk Type', $value['type']);
+					$amount = '....';
+					$amountValue = '....';
+					if ($value['type'] == 'Individualized') {
+						$amount = 'Amount';
+						$amountValue = $value['amount'];
+					}
+					sapp_Helper::viewBody('alt','Active', $value['active'], $amount, $amountValue);
+                    sapp_Helper::viewBody('nor','code', $value['code'],'','');
+					sapp_Helper::viewBody('nor', ' ', ' ', ' ', ' ');
+				}
+			}else{?>
+			<h6 style="text-align: center;"> No Perk is Assigned Assigned</h6>
+			<?php
+			sapp_Helper::viewBody('nor', '----------', '----------', '----------', '----------');	
+			}
+			sapp_Helper::viewFooter();
+			?>
+		</div>
+
+<form name="<?php echo $this->form->getName();?>" id="<?php echo $this->form->getId();?>" method="POST" action="<?php echo $this->form->getAction();?>">
+<div class="new-form-ui-previousBtn">
+    <div class="division">
+        <?php echo $this->form->back;?>
+    </div>
+
+</div>
+</form>
+

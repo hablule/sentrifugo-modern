@@ -1,0 +1,28 @@
+
+
+<?php
+sapp_Global::generateClientValidations($this->form);
+?>
+<div id="error_message" style="display:none;"></div>
+
+			<?php sapp_Helper::viewHeader();
+			if (!empty($this->misshours)) {
+				foreach ($this->misshours as $value) {
+
+					sapp_Helper::viewBody('nor', 'Schedule  Name', $value['schedule_name'], 'Employer Name', $value['userfullname'] );
+					sapp_Helper::viewBody('alt', 'Shift Name', $value['name'], 'Amount Lost', $value['amount_lost']);
+					sapp_Helper::viewBody('nor','Submitted Date', $value['submitted_date'],'','');
+
+                }	
+			}else{?>
+			<h6 style="text-align: center;"> No Missed Hour Requiest  is Found</h6>
+			<?php
+		sapp_Helper::viewBody('nor', '----------', '----------', '----------', '----------');	
+			}
+			sapp_Helper::viewFooter();
+			?>
+			<div class="new-form-ui-submit">
+			<button onclick="window.location.href='<?php echo BASE_URL; ?>missedhoursapprove';" type="button" id="Cancel" name="Cancel">Cancel</button>
+			</div>
+		</div>
+ 

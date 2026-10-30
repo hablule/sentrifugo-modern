@@ -1,0 +1,65 @@
+<?php 
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+?>
+	<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+<?php $baseUrl = $this->serverUrl().$this->baseUrl();
+sapp_Global::generateClientValidations($this->form);
+?>
+<div class="poc-ui-data-control">
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction();?>" method="<?php echo $this->form->getMethod(); ?>">
+		<?php echo $this->form->id; ?>
+        <div class="total-form-controller">
+		    
+			<div class="new-form-ui ">
+			  <label class="required">Name</label>
+			  <div class="division"><?php echo $this->form->name; ?></div>
+				<?php if(isset($this->msgarray['name'])){?>
+				   <span class="errors" id="errors-<?php echo $this->form->name->getId(); ?>"><?php echo $this->msgarray['name'];?></span>
+				<?php }?>
+			</div>
+            <div class="new-form-ui ">
+			  <label class="required">Code</label>
+			  <div class="division"><?php echo $this->form->code; ?></div>
+				<?php if(isset($this->msgarray['code'])){?>
+				   <span class="errors" id="errors-<?php echo $this->form->code->getId(); ?>"><?php echo $this->msgarray['code'];?></span>
+				<?php }?>
+			</div>
+
+			<?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+            <div class="new-form-ui ">
+			  <label>Active</label>
+			  <div class="division"><?php echo $this->form->isactive; ?></div>
+				<?php if(isset($this->msgarray['isactive'])){?>
+				   <span class="errors" id="errors-<?php echo $this->form->isactive->getId(); ?>"><?php echo $this->msgarray['isactive'];?></span>
+				<?php }?>
+			</div>
+        <div class="new-form-ui-submit" id="formSubmit">
+        <?php echo $this->form->submit; ?>
+        <a href="<?php echo BASE_URL .'/studylevel'?>"><button type="button">Cancel</button></a>
+        </div>
+     </div>
+</form>
+<script>
+$("#description").jqte();
+
+</script>

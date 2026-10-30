@@ -1,0 +1,133 @@
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH ?>css/custompopup.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH ?>js/custompopup.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+<?php if($this->popup == 'close') { ?>	
+	<div class="ml-alert-1-success">
+	<div class="style-1-icon success"></div>
+	Department <?php echo $this->eventact; ?> successfully
+	</div>
+
+	<?php } 
+else
+{
+    sapp_Global::generateClientValidations($this->form);?>
+    <div id="error_message" style="display:none;"></div>
+
+
+	<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction(); ?>" method="<?php echo $this->form->getMethod(); ?>">
+		<?php echo $this->form->id;
+		echo $this->form->user_id;
+		?>
+		<div class="total-form-controller">
+
+			<div class="new-form-ui">
+				<label class='required'>Department Name</label>
+				<div class="division"><?php echo $this->form->name; ?></div>
+				<?php if (isset($this->msgarray['name'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->name->getId(); ?>"><?php echo $this->msgarray['name']; ?></span>
+				<?php } ?>
+			</div>
+
+
+			<div class="new-form-ui">
+				<label class='required'>Department Code</label>
+				<div class="division"><?php echo $this->form->code; ?>
+				</div>
+				<?php if (isset($this->msgarray['code'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->code->getId(); ?>"><?php echo $this->msgarray['code']; ?></span>
+				<?php } ?>
+			</div>
+			<div class="new-form-ui">
+				<label >Company</label>
+				<div class="division"><?php echo $this->form->company_id; ?></div>
+				<?php if (isset($this->msgarray['company_id'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->company_id->getId(); ?>"><?php echo $this->msgarray['company_id']; ?></span>
+				<?php } ?>
+			</div>
+			<div class="new-form-ui">
+				<label >Strategic Bussiness Unit</label>
+				<div class="division"><?php echo $this->form->sbunit_id; ?></div>
+				<?php if (isset($this->msgarray['sbunit_id'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->sbunit_id->getId(); ?>"><?php echo $this->msgarray['sbunit_id']; ?></span>
+				<?php } ?>
+			</div>
+			<div class="new-form-ui">
+				<label > Division</label>
+				<div class="division"><?php echo $this->form->division_id; ?></div>
+				<?php if (isset($this->msgarray['division_id'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->division_id->getId(); ?>"><?php echo $this->msgarray['division_id']; ?></span>
+				<?php } ?>
+			</div>
+			<div class="new-form-ui">
+				<label > Parent Department</label>
+				<div class="division"><?php echo $this->form->parentdepartement_id; ?></div>
+				<?php if (isset($this->msgarray['parentdepartement_id'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->parentdepartement_id->getId(); ?>"><?php echo $this->msgarray['parentdepartement_id']; ?></span>
+				<?php } ?>
+			</div>
+			<div class="new-form-ui">
+				<label class="required">Representative</label>
+				<div class="division" class="required"><?php echo $this->form->representative_id; ?></div>
+				<?php if (isset($this->msgarray['representative_id'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->representative_id->getId(); ?>"><?php echo $this->msgarray['representative_id']; ?></span>
+				<?php } ?>
+			</div>
+			<br>
+			<?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description','', 'fck_editor_height','',array());?>
+			<?php if (isset($this->msgarray['allfk'])) { ?>
+					<span class="errors" id="errors-allfk"><?php echo $this->msgarray['allfk']; ?></span>
+				<?php } ?>
+			
+			
+			<div class="total-form-controller" id="total-form-controller">
+			</div>
+
+			<div class="new-form-ui-submit ">
+				<div class="division"><?php echo $this->form->submit; ?>
+				<?php if ($this->status=='nested') { ?>
+					<button onclick="removeNestedPopup_OnFinish('departments','cancel');" >Cancel</button>
+
+
+<?php } else {?>
+
+	<button onclick="closeiframepopup('departments','cancel');" >Cancel</button>
+
+
+	<?php }?>
+			</div>
+			</div>
+
+
+	</form>
+<?php } ?>
+
+<script>
+		<?php if ($this->popup != '') { ?>
+			setTimeout(function() {
+			<?php if ($this->status=='nested') { ?>
+				removeNestedPopup_OnFinish("<?php echo $this->dData; ?>", '<?php echo $this->controllername; ?>', 'department_id', '', '','');
+
+
+			<?php } else{?>
+			closeiframeAddPopup("<?php echo $this->dData; ?>", '<?php echo $this->controllername; ?>', 'parentdepartement_id', 'Department');
+			closeiframeAddPopup("<?php echo $this->dData; ?>", '<?php echo $this->controllername; ?>', 'departement_id', 'Department');
+			closeiframeAddPopup("<?php echo $this->dData; ?>", '<?php echo $this->controllername; ?>', 'department_id', 'Department');
+
+
+			<?php } ?>		
+		}, 2000);
+
+	<?php } ?>
+	$(document).ready(function() {
+		<?php if (count($this->messages)) { ?>
+			setTimeout(function() {
+				$('#popupmessage').fadeOut('slow');
+			}, 3000);
+
+		<?php } ?>
+	});
+$('#description').jqte();
+
+</script>
+

@@ -1,0 +1,91 @@
+<?php
+
+/**
+ * Digital Media Type Add Popup View
+ * 
+ * Runs inside an iframe modal. On success, updates the parent DOM via global JS.
+ * Strictly adheres to SSOT v6.2 (Section VIII).
+ * 
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ */
+$this->msgarray = isset($this->msgarray) ? $this->msgarray : array();
+
+// SSOT VII.3
+sapp_Global::generateClientValidations($this->form);
+?>
+<!-- SSOT VIII.2 requires custom popup layout assets -->
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/custompopup.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<div style="padding: 15px;">
+    <?php if (isset($this->popup) && $this->popup == 'close') : ?>
+        <div class="ml-alert-1-success">
+            <div style="display:block;"><span class="style-1-icon success"></span>Type <?php echo $this->escape($this->eventact); ?> successfully.</div>
+        </div>
+
+        <!-- SSOT VIII.4: Parent DOM Update -->
+        <script type="text/javascript">
+            $(document).ready(function() {
+                setTimeout(function() {
+                    // Triggers the global JS to update the dropdown and close the modal
+                    parent.closeiframeAddPopup("<?php echo $this->optionsHtml; ?>", "digitalmediatype", "digitalmediatype_id", "Digital Media Type");
+                }, 1500);
+            });
+        </script>
+
+    <?php else : ?>
+        <div id="error_message" style="display:none;"></div>
+        <?php if (!empty($this->msgarray['error'])) : ?>
+            <div class="ml-alert-1-error">
+                <div style="display:block;"><span class="style-1-icon error"></span><?php echo $this->escape($this->msgarray['error']); ?></div>
+            </div>
+        <?php endif; ?>
+
+        <!-- Form requires standard POST within Iframe -->
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" action="<?php echo $this->escape($this->form->getAction()); ?>" method="<?php echo $this->escape($this->form->getMethod()); ?>">
+            <?php echo $this->form->id; ?>
+
+            <div class="total-form-controller" style="box-shadow: none; border: none; padding: 0;">
+                <div class="division">
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->code; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->code->getId()); ?>"><?php echo $this->escape($this->msgarray['code'] ?? ''); ?></span>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->name; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->name->getId()); ?>"><?php echo $this->escape($this->msgarray['name'] ?? ''); ?></span>
+                    </div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->isactive->getId()); ?>"><?php echo $this->escape($this->msgarray['isactive'] ?? ''); ?></span>
+                    </div>
+
+                    <div class="new-form-ui-submit" style="margin-top: 15px;">
+                        <div class="division">
+                            <input type="submit" name="submit" id="submitbutton" value="Save" class="actbtn_btn" />
+                            <button type="button" class="reset" onclick="parent.closeiframepopup('digitalmediatype', 'cancel');">Cancel</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#description').jqte();
+            });
+        </script>
+    <?php endif; ?>
+</div>

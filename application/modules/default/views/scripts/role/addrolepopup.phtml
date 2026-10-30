@@ -1,0 +1,67 @@
+<?php 
+/**
+ * User Role Index View
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ * @author     Hablul Soft Solution < /hablul.in>
+ * @license    http://gnu.org GNU General Public License, version 3.0 (GPL-3.0)
+ * @version    Sentrifugo v3.2
+ **/
+?>
+
+<div class="popup-container">
+    <div class="popup-header">
+        <h4 class="modal-title">Quick Add Role</h4>
+    </div>
+    
+    <div class="popup-body">
+        <?php if (!empty($this->msgarray['error'])) : ?>
+            <div class="ml-alert-1-error">
+                <div style="display:block;"><span class="style-1-icon error"></span>
+                    <?php echo $this->msgarray['error']; ?>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <div class="new-form-ui">
+            <form id="role_popup_form" method="post" action="">
+                <div class="division">
+                    <div class="form-row">
+                        <label class="required"><?php echo $this->roleForm->rolename->getLabel(); ?></label>
+                        <?php echo $this->roleForm->rolename; ?>
+                        <?php if (isset($this->msgarray['rolename'])) { ?>
+                            <span class="errors" id="errors-<?php echo $this->roleForm->rolename->getId(); ?>"><?php echo $this->msgarray['rolename']; ?></span>
+                        <?php } ?>
+                    </div>
+
+                    <div class="form-row">
+                        <label>Group <span class="required">*</span></label>
+                        <?php echo $this->roleForm->group_id; ?>
+                        <span class="error_text"><?php echo $this->msgarray['group_id'] ?? ''; ?></span>
+                    </div>
+
+                    <div class="form-row">
+                        <label>Description</label>
+                        <?php echo $this->roleForm->description; ?>
+                    </div>
+
+                    <div class="form-row action-row text-right">
+                        <button type="submit" class="actbtn_btn">Save Role</button>
+                        <button type="button" class="actbtn_btn reset" onclick="parent.$.colorbox.close();">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    // ESSENCE: If save was successful, close colorbox and trigger parent refresh
+    <?php if (isset($this->popup) && $this->popup == 'close') : ?>
+        parent.refreshDropdowns(); // Defined in your save.phtml
+        parent.$.colorbox.close();
+    <?php endif; ?>
+});
+</script>

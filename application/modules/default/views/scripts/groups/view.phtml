@@ -1,0 +1,167 @@
+<?php
+
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH ?>css/custompopup.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH ?>js/custompopup.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH ?>js/hrms.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+
+<?php
+if ($this->nodata != '') {
+?>
+    <div class="ml-alert-1-info">
+        <div class="style-1-icon info"></div>
+        No data found.
+    </div>
+<?php
+} else { 
+?>
+
+    <?php sapp_Global::generateClientValidations($this->form); ?>
+
+    <form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" method="<?php echo $this->form->getMethod(); ?>">
+
+        <?php echo $this->form->id; ?>
+
+        <div class="poc-ui-data-control">
+
+            <div class="new-form-ui clearb">
+                <label class="required"><?php echo $this->form->code->getLabel(); ?></label>
+                <div class="division"><?php echo $this->form->code; ?>
+                    <?php if (isset($this->msgarray['code'])) { ?>
+                        <span class="errors" id="errors-<?php echo $this->form->code->getId(); ?>"><?php echo $this->msgarray['code']; ?></span>
+                    <?php } ?>
+                </div>
+            </div>
+
+            <div class="new-form-ui clearb">
+                <label class="required"><?php echo $this->form->name->getLabel(); ?></label>
+                <div class="division"><?php echo $this->form->name; ?>
+                    <?php if (isset($this->msgarray['name'])) { ?>
+                        <span class="errors" id="errors-<?php echo $this->form->name->getId(); ?>"><?php echo $this->msgarray['name']; ?></span>
+                    <?php } ?>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="new-form-ui clearb">
+            <label class="required"><?php echo $this->form->displayorder->getLabel(); ?></label>
+            <div class="division"><?php echo $this->form->displayorder; ?>
+                <?php if (isset($this->msgarray['displayorder'])) { ?>
+                    <span class="errors" id="errors-<?php echo $this->form->displayorder->getId(); ?>"><?php echo $this->msgarray['displayorder']; ?></span>
+                <?php } ?>
+            </div>
+        </div>
+
+        <div class="new-form-ui clearb">
+            <label class="required"><?php echo $this->form->isactive->getLabel(); ?></label>
+            <div class="division"><?php echo $this->form->isactive; ?>
+                <?php if (isset($this->msgarray['isactive'])) { ?>
+                    <span class="errors" id="errors-<?php echo $this->form->isactive->getId(); ?>"><?php echo $this->msgarray['isactive']; ?></span>
+                <?php } ?>
+            </div>
+        </div>
+
+        <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+        <div class="form-body-header">Privileges<?php echo $this->form->prev_cnt; ?><span class="imp-text">*</span></div>
+        <div class="privileges-note">Note : The add, edit, view and delete privileges are to the grid alone. To remove a certain menu please uncheck the menu item.</div>
+
+        <div id="idaccordion_content">
+            <?php echo $this->menuPrivileges($this->groupMenuArray, true); ?>
+        </div>
+
+        <div class="new-form-ui-submit">
+            <div class="division">
+                <input onclick="window.location.href='<?php echo BASE_URL; ?>groups/index';" id="Back" value="Back to List" type="button" class="reset" />
+
+                <?php if (sapp_Global::_checkprivileges(USERROLE_MENU_ID, $this->loginuserGroup, $this->loginuserRole, 'edit') == 'Yes') : ?>
+                    <input onclick="window.location.href='<?php echo BASE_URL; ?>groups/edit/id/<?php echo $this->id; ?>';" id="Edit" value="Edit" type="button" class="reset" />
+                <?php endif; ?>
+            </div>
+        </div>
+
+    </form>
+<?php }
+?>
+
+<script type="text/javascript" language="javascript">
+    $('#description').jqte();
+
+    $(document).ready(function() {
+
+        // --- 1. PREVENT BUBBLING (Fixes Issue 2) ---
+        // Clicking inside the permission box should NOT trigger the parent accordion/menu actions
+        $(document).on('click', '.cls_radiobuttons_div', function(e) {
+            e.stopPropagation();
+        });
+
+        // --- 2. TOGGLE PERMISSION BOX ON NAME CLICK ---
+        $('.cls_menuname').css('cursor', 'pointer');
+        $(document).on('click', '.cls_menuname', function(e) {
+            e.stopPropagation(); // Stop bubbling
+            e.preventDefault(); // Stop default label action
+
+            // Toggle the permission div next to this label
+            var permDiv = $(this).parent().next('.cls_radiobuttons_div');
+            permDiv.slideToggle();
+        });
+
+        // --- 3. MAIN CHECKBOX TOGGLE ---
+        $(document).on('click', 'input[data-role="menu-checkbox"]', function(e) {
+            e.stopPropagation(); // Stop bubbling to accordion            
+        });
+
+        // --- 4. PERMISSION RADIO/CHECKBOX TOGGLE (Fixes Issue 1) ---
+        $(document).on('click', 'input[data-role="perm-radio"]', function(e) {
+            e.stopPropagation(); // Critical: Stop bubbling to Accordion Header
+        });
+
+        // --- 5. ACCORDION UI TOGGLE ---
+        $(document).on('click', '.ui-accordion-header', function(e) {
+            // Safety: These checks are redundant due to stopPropagation above, but kept for robustness
+            if ($(e.target).is('input')) return;
+            if ($(e.target).hasClass('cls_menuname')) return;
+            if ($(e.target).closest('.cls_radiobuttons_div').length > 0) return;
+
+            var contentDiv = $(this).next('.ui-accordion-content');
+            var icon = $(this).find('.ui-accordion-header-icon');
+
+            contentDiv.slideToggle();
+            $(this).toggleClass('ui-accordion-header-active ui-state-active ui-corner-top ui-corner-all');
+            contentDiv.toggleClass('ui-accordion-content-active');
+
+            if (icon.hasClass('ui-icon-plus')) {
+                icon.removeClass('ui-icon-plus').addClass('ui-icon-minus');
+            } else {
+                icon.removeClass('ui-icon-minus').addClass('ui-icon-plus');
+            }
+        });
+
+        
+    });
+
+    
+</script>

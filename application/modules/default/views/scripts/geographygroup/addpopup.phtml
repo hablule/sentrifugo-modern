@@ -1,0 +1,107 @@
+<?php
+
+/**
+ * Geography Group Add Popup View
+ * 
+ * Runs inside an iframe modal. On success, updates the parent DOM via global JS.
+ * Strictly adheres to SSOT v6.1.
+ */
+$this->msgarray = isset($this->msgarray) ? $this->msgarray : array();
+sapp_Global::generateClientValidations($this->form);
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/custompopup.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<div style="padding: 15px;">
+    <?php if (isset($this->popup) && $this->popup == 'close') : ?>
+        <div class="ml-alert-1-success">
+            <div style="display:block;"><span class="style-1-icon success"></span>Geography Group <?php echo $this->escape($this->eventact); ?> successfully.</div>
+        </div>
+        
+        <script type="text/javascript">
+            $(document).ready(function() {
+                // 1. Capture the target dropdown in the parent window
+                var $parentSelect = parent.$('#geographygroup_id');
+                var newId = "<?php echo $this->newInsertedId; ?>";
+                
+                // 2. Rescue the currently selected items (if any)
+                var rescuedSelections = [];
+                if ($parentSelect.length) {
+                    rescuedSelections = $parentSelect.val() || [];
+                    // Ensure the newly created ID is added to our rescued list
+                    if (parent.$.inArray(newId, rescuedSelections) === -1) {
+                        rescuedSelections.push(newId);
+                    }
+                }
+
+                // 3. Call the standard Sentrifugo global function (Double Quotes are Critical!)
+                // This updates the HTML options, selects the new item, and closes the popup.
+                parent.closeiframeAddPopup("<?php echo $this->optionsHtml; ?>", "geographygroup", "geographygroup_id", "Geography Group");
+
+                // 4. Instantly restore the rescued multi-select array and force a UI refresh
+                if ($parentSelect.length) {
+                    $parentSelect.val(rescuedSelections);
+                    
+                    // Trigger chosen/select2/materialize to re-draw the blue tags
+                    if (parent.$.isFunction(parent.$.fn.select2)) {
+                        $parentSelect.select2();
+                    } else if (parent.$.isFunction(parent.$.fn.material_select)) {
+                        $parentSelect.material_select();
+                    }
+                }
+            });
+        </script>
+
+    <?php else : ?>
+        <div id="error_message" style="display:none;"></div>
+        <?php if (!empty($this->msgarray['error'])) : ?>
+            <div class="ml-alert-1-error">
+                <div style="display:block;"><span class="style-1-icon error"></span><?php echo $this->escape($this->msgarray['error']); ?></div>
+            </div>
+        <?php endif; ?>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" action="<?php echo $this->escape($this->form->getAction()); ?>" method="<?php echo $this->escape($this->form->getMethod()); ?>">
+            <?php echo $this->form->id; ?>
+            <div class="total-form-controller" style="box-shadow: none; border: none; padding: 0;">
+                <div class="division">
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->code; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->code->getId()); ?>"><?php echo $this->escape($this->msgarray['code'] ?? ''); ?></span>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->name; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->name->getId()); ?>"><?php echo $this->escape($this->msgarray['name'] ?? ''); ?></span>
+                    </div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->isactive->getId()); ?>"><?php echo $this->escape($this->msgarray['isactive'] ?? ''); ?></span>
+                    </div>
+
+                    <div class="new-form-ui-submit" style="margin-top: 15px;">
+                        <div class="division">
+                            <input type="submit" name="submit" id="submitbutton" value="Save" class="actbtn_btn" />
+                            <button type="button" class="reset" onclick="parent.closeiframepopup('geographygroup', 'cancel');">Cancel</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                if ($('#description').length) {
+                    $('#description').jqte();
+                }
+            });
+        </script>
+    <?php endif; ?>
+</div>

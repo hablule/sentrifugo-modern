@@ -1,0 +1,225 @@
+<?php
+//$this->form->setAttrib('onsubmit', 'return validate()');
+$form = $this->form;
+$elementLabels = $this->elementLabels;
+$elementNames = $this->elementNames;
+$elementOptions = $this->elementOptions;
+$msgerror = $this->msgerror;
+$validators = $this->validators;
+
+?>
+<?php
+if (count($this->messages)) { ?>
+    <div id="dispmsgaccountclasstype">
+        <?php
+        foreach ($this->messages as $message) {
+            $flag = array();
+            $flag = array_keys($message);
+            echo "<div id='messageData' class='ml-alert-1-$flag[0]'><div style='display:block;'><span class='style-1-icon $flag[0]'></span>";
+            echo $message[$flag[0]];
+            echo "</div></div>";
+        }
+        ?>
+    </div>
+
+
+<?php } ?>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/formValidator.js"></script>
+<form name="<?php echo $form->getName(); ?>" id="<?php echo $form->getId(); ?>" method="POST" action="<?php echo $form->getAction(); ?>">
+    <?php echo $form->id;
+    ?>
+    <?php sapp_Global::generateClientValidations($form); ?>
+    <div class="separetor-heading">Candidate Details</div>
+    <div id='all'>
+
+        <?php for ($i = 0; $i < count($elementNames); $i++) {
+
+            if ($elementOptions[$i]['OccupyLine'] == 'OccupyLine' || $elementOptions[$i]['NewLine'] == 'NewLine') { ?>
+                <br>
+            <?php } ?>
+
+            <div class="new-form-ui" id="<?php echo $elementNames[$i]; ?>clone">
+                <label class="required"><?php echo $elementLabels[$i]; ?></label>
+                <div class="division"><?php $elementName = $elementNames[$i];
+                                        echo $form->$elementName; ?>
+                </div>
+                <span class="errors" id="<?php echo $elementNames[$i]; ?>_error"></span>
+            </div>
+            <?php if ($elementOptions[$i]['OccupyLine'] == 'OccupyLine') { ?>
+                <br>
+        <?php }
+        } ?>
+    </div>
+    <input type="button" title="Add" value="Add Language" name="add" id="add" />
+
+    <br>
+    <br>
+    <div id="lan">
+    </div>
+    <br>
+    <div id="but">
+    </div>
+    <br>
+    <div class="new-form-ui">
+    
+        <table>
+            <tr>
+                <!-- <td>
+                    <div class="new-form-ui-previousBtn">
+                        <?php //echo $form->prevsbtn; 
+                        ?>
+                    </div>
+                </td> -->
+                <td>
+                    <div class="new-form-ui-submit" id="submit-button">
+                        <?php echo $form->submit; ?>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <?php //var_dump($form->candidatefirstname->msgarray['candidatefirstname'])
+        ?>
+    </div>
+</form>
+<script>
+    $("#submit-button").click(function() {
+        try {
+            
+            let elementsArray = [];
+            let languageElements = ['native_language', 'native_writing', 'native_reading', 'native_speaking', 'native_listening'];
+
+
+            /* if (!(validate(<?php echo json_encode($elementNames); ?>, <?php echo json_encode($validators); ?>))) {
+                console.log('error');
+                return false;
+            } */
+            var index_check = 1;
+            var newLanguageElements = [];
+            while (document.getElementById(languageElements[0] + "" + index_check)) {
+                newLanguageElements = [];
+                for (k = 0; k < 5; k++) {
+                    newLanguageElements[k] = languageElements[k] + "" + index_check;
+                }
+                var validator = <?php echo json_encode($validators['native_language']); ?>;
+                var validators = [];
+                validators['native_language' + index_check] = validator;
+
+                if (!(validate(newLanguageElements, validators))) {
+                    return false
+                }
+                index_check++;
+            }
+            <?php
+            for ($w = 0; $w < count($elementNames); $w++) {
+                $elementName = $elementNames[$w]; ?>
+                elementsArray.push("<?php echo $elementName; ?>");
+            <?php
+            }
+            ?>
+            var data1 = '';
+            var url = '';
+            index = 0;
+            cand_id = 0;
+            do {
+                url = '';
+                data1 = '';
+                var formIndex = "";
+
+
+                if (index == 0) {
+                    url = '/addpersonaldetail/add';
+                    formIndex = "";
+                    for (var k = 0; k < elementsArray.length; k++) {
+                        if (elementsArray[k] != 'id') {
+                            if (k == 0) {
+                                data1 = data1 + elementsArray[k] + "=" + document.getElementById(elementsArray[k] + formIndex).value;
+                            } else {
+                                data1 = data1 + "&" + elementsArray[k] + "=" + document.getElementById(elementsArray[k] + formIndex).value;
+                            }
+                        }
+                    }
+                } else {
+                    url = '/addpersonaldetail/addlanguage';
+                    formIndex = formIndex + index;
+                    for (var k = 0; k < 5; k++) {
+                        if (k == 0) {
+                            data1 = data1 + languageElements[k] + "=" + document.getElementById(languageElements[k] + formIndex).value;
+                        } else {
+                            data1 = data1 + "&" + languageElements[k] + "=" + document.getElementById(languageElements[k] + formIndex).value;
+                        }
+                    }
+                }
+                /* var result = $.ajax({
+                    url: base_url + url,
+                    type: "POST",
+                    data: {
+                        data: data1,
+                        candidate_id: cand_id
+                    },
+                    dataType: "json",
+                    async: false
+                }).responseText; */
+                //var result = getphpdata(url,{data:data1,candidate_id:cand_id},false,'POST','json')
+                index++;
+                cand_id = JSON.parse(result);
+                //cand_id = Number(cand_id);
+                console.log(cand_id);
+                $("#id").val(cand_id);
+            }
+            while (document.getElementById(languageElements[0] + "" + index));
+            return true;
+        } catch (error) {
+        }
+    });
+
+    
+    let arr = [];
+    let arr2 = [];
+
+    <?php
+            for ($w = 0; $w < count($elementNames); $w++) {
+                //$educationElementNames = $educationElementNames[$w]; 
+                if($elementNames[$w]!="native_language" and $elementNames[$w]!="native_reading" and $elementNames[$w]!="native_writing" and $elementNames[$w]!="native_listening" and $elementNames[$w]!="native_speaking"){?>
+                arr.push("<?php echo $elementNames[$w]; ?>");
+            <?php
+            }
+            else{?>
+                arr2.push("<?php echo $elementNames[$w]; ?>");
+          <?php  }
+        }
+            ?>
+            var g=arr.length;
+            var g2=arr2.length;
+
+
+    var i = 1;
+    $('#add').on('click', function() {
+        var x = i;
+        const origin = $('select');
+        origin.select2('destroy');
+        var $all = $('#all').clone(true).attr('id', 'all' + x);
+        for (var j = 0; j < arr.length; j++) {
+                $all.find("#" + arr[j]+"clone").remove();
+
+            }
+            for (var j = 0; j < arr2.length; j++) {
+                $all.find("#" + arr2[j]).attr("id", arr2[j] +""+x);
+                $all.find("#" + arr2[j]+"_error").attr("id", arr2[j] +""+x+"_error");
+
+
+            }
+        var $xx = $all.find("select");
+        $xx.select2('destroy');
+        $xx.removeAttr('data-select2-id');
+        $xx.find('option').removeAttr('data-select2-id');
+        origin.select2();
+        $xx.select2().val(null).trigger('change');
+        $all.find("#"+arr2[g2-1]+""+x).after("<br><br><input type='button' class='btn_less1' style='color:red;width=100px;height=100px;' value='Remove' id='buttonless'/>")
+        $all.insertBefore("#but:first");
+        i++;
+    });
+    $(document).on('click', ".btn_less1", function() {
+        $(this).closest(".btn_less1").parent().parent().parent().parent().remove();
+    });
+</script>

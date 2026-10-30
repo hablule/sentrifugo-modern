@@ -1,0 +1,56 @@
+<?php
+
+/**
+ * Holiday Date Add Popup View
+ * Modal interface for on-the-fly additions.
+ * Complies with SSOT v6.7.7.
+ */
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/custompopup.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/custompopup.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<?php if (isset($this->popup) && $this->popup === 'close') : ?>
+    <div class="ml-alert-1-success">
+        <div class="style-1-icon success"></div>Occurrence added successfully. Closing...
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            setTimeout(function() {
+                parent.$('#holidaydateContainer').dialog('close');
+            }, 1500);
+        });
+    </script>
+<?php else : ?>
+    <?php sapp_Global::generateClientValidations($this->form); ?>
+    <div id="error_message" style="display:none;"></div>
+    <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" action="<?php echo $this->escape($this->form->getAction()); ?>" method="post">
+        <?php echo $this->form->id; ?>
+        <div class="total-form-controller" style="padding: 15px;">
+            <div class="division">
+                <div class="new-form-ui clearb"><label class="required"><?php echo $this->escape($this->form->holiday_id->getLabel()); ?></label>
+                    <div class="division"><?php echo $this->form->holiday_id; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->holiday_id->getId()); ?>"></span></div>
+                </div>
+                <div class="new-form-ui clearb"><label class="required"><?php echo $this->escape($this->form->start_date->getLabel()); ?></label>
+                    <div class="division"><?php echo $this->form->start_date; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->start_date->getId()); ?>"></span></div>
+                </div>
+                <div class="new-form-ui clearb"><label class="required"><?php echo $this->escape($this->form->end_date->getLabel()); ?></label>
+                    <div class="division"><?php echo $this->form->end_date; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->end_date->getId()); ?>"></span></div>
+                </div>
+                <div class="new-form-ui-submit">
+                    <div class="division"><?php echo $this->form->submit; ?><input onclick="parent.$('#holidaydateContainer').dialog('close');" value="Cancel" type="button" class="reset" /></div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#start_date, #end_date').datepicker({
+                dateFormat: '<?php echo DATEFORMAT_JS; ?>',
+                changeMonth: true,
+                changeYear: true
+            });
+        });
+    </script>
+<?php endif; ?>

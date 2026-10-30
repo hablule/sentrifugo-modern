@@ -1,0 +1,180 @@
+<?php
+
+/**
+ * PA Assessment Index View (Execution Dashboard)
+ * 
+ * Supports dual-routing (Mine vs. Team).
+ * Uses Local JS Function Overrides to guarantee context is passed to the URLs.
+ * Strictly adheres to SSOT v6.6.
+ */
+?>
+
+<!-- SSOT V.5 Standard Flash Messages -->
+<div id="message_container">
+    <?php if (!empty($this->messages)) : ?>
+        <div id="dispmsg" class="settingssuccess">
+            <?php foreach ($this->messages as $message) :
+                if (is_array($message)): $key = key($message); ?>
+                    <div class="ml-alert-1-<?php echo $this->escape($key); ?>">
+                        <div style="display:block;">
+                            <span class="style-1-icon <?php echo $this->escape($key); ?>"></span>
+                            <?php echo $this->escape($message[$key]); ?>
+                        </div>
+                    </div>
+            <?php endif;
+            endforeach; ?>
+        </div>
+    <?php endif; ?>
+</div>
+
+<div id="paassessment_container" class="full-width">
+    <div id="msg" style="display:none; font-style: oblique; font-weight: bold; color: green;"></div>
+
+    <div id="grid_paassessment" class="all-grid-control">
+        <?php
+        if (isset($this->dataArray[0]['tablecontent']) && !empty($this->dataArray[0]['tablecontent'])) {
+            echo $this->grid($this->dataArray[0]);
+        } else if ($this->call != 'ajaxcall') {
+            echo "<div class='no-data' style='text-align: center; color: #7f8c8d; padding: 30px; border: 1px dashed #ccc; background: #f9f9f9; border-radius: 4px;'>";
+            echo "<i class='fa fa-file-text-o' style='font-size: 24px; margin-bottom: 10px;'></i><br>";
+            if ($this->context === 'team') {
+                echo "There are currently no active assessments for your team members.";
+            } else {
+                echo "You have no pending assessments assigned to you.";
+            }
+            echo "</div>";
+        }
+        ?>
+    </div>
+</div>
+
+<script type="text/javascript">
+    // Dynamically captures 'mine', 'tasks', or 'team' from the controller
+    var currentContext = '<?php echo isset($this->context) ? $this->escape($this->context) : "mine"; ?>';
+
+    // =========================================================================
+    // JQUERY EVENT DELEGATION: INTERCEPT ALL GRID LINKS
+    // Captures the click event as it bubbles up, allowing us to safely modify
+    // native <a href="..."> tags AND inline onclick attributes seamlessly.
+    // =========================================================================
+    $(document).on('click', '#grid_paassessment a', function(e) {
+        var href = $(this).attr('href');
+        var onclickAttr = $(this).attr('onclick');
+
+        // 1. Intercept Sentrifugo's native inline functions (editrecord / viewrecord)
+        if (onclickAttr && (onclickAttr.indexOf('editrecord') !== -1 || onclickAttr.indexOf('viewrecord') !== -1)) {
+            e.preventDefault();
+            e.stopPropagation(); // SSOT VII.12: Stop parent DOM events
+
+            var match = onclickAttr.match(/'(\d+)'/);
+            if (match && match[1]) {
+                var recordId = match[1];
+                var action = onclickAttr.indexOf('editrecord') !== -1 ? 'edit' : 'view';
+
+                if ($.isFunction($.blockUI)) {
+                    $.blockUI({
+                        width: "50px",
+                        message: $("#spinner").html()
+                    });
+                }
+                window.location.href = base_url + '/paassessment/' + action + '/id/' + recordId + '/context/' + currentContext;
+            }
+            return false;
+        }
+        // 2. Intercept Sentrifugo's native delete function
+        else if (onclickAttr && onclickAttr.indexOf('deleterecord') !== -1) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            var delMatch = onclickAttr.match(/'(\d+)'/);
+            if (delMatch && delMatch[1]) {
+                deleteAssessment(delMatch[1], currentContext);
+            }
+            return false;
+        }
+        // 3. Fallback for standard <a href="..."> links
+        else if (href && href !== '#' && href.toLowerCase().indexOf('javascript') === -1) {
+            if (href.indexOf('/edit/id/') !== -1 || href.indexOf('/view/id/') !== -1) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                // Append the context if it's missing
+                if (href.indexOf('/context/') === -1) {
+                    if ($.isFunction($.blockUI)) {
+                        $.blockUI({
+                            width: "50px",
+                            message: $("#spinner").html()
+                        });
+                    }
+                    window.location.href = href + '/context/' + currentContext;
+                } else {
+                    if ($.isFunction($.blockUI)) {
+                        $.blockUI({
+                            width: "50px",
+                            message: $("#spinner").html()
+                        });
+                    }
+                    window.location.href = href;
+                }
+                return false;
+            }
+        }
+    });
+
+    // =========================================================================
+    // OVERRIDE: Global Delete Handler
+    // Ensures context is passed in the POST payload for the deleteAction
+    // =========================================================================
+    var originalChangeStatus = window.changestatus;
+    window.changestatus = function(controllername, objid, flag) {
+        if (controllername === 'paassessment') {
+            if (!confirm('Are you sure you want to delete this assessment record?')) {
+                return false;
+            }
+            if ($.isFunction($.blockUI)) {
+                $.blockUI({
+                    width: "50px",
+                    message: $("#spinner").html()
+                });
+            }
+
+            $.ajax({
+                url: base_url + '/' + controllername + '/delete/format/json',
+                type: 'POST',
+                data: {
+                    objid: objid,
+                    context: currentContext
+                },
+                dataType: 'json',
+                success: function(res) {
+                    if ($.isFunction($.unblockUI)) $.unblockUI();
+                    if (res.msgtype === 'success') {
+                        if ($.isFunction(window.refreshgrid)) {
+                            refreshgrid(controllername);
+                        } else {
+                            window.location.reload();
+                        }
+                    } else {
+                        alert('Error: ' + res.message);
+                    }
+                },
+                error: function() {
+                    if ($.isFunction($.unblockUI)) $.unblockUI();
+                    alert('Server Error occurred during deletion.');
+                }
+            });
+        } else if (typeof originalChangeStatus === 'function') {
+            originalChangeStatus(controllername, objid, flag);
+        }
+    };
+
+    function deleteAssessment(id, context) {
+        window.changestatus('paassessment', id, '');
+    }
+
+    $(document).ready(function() {
+        setTimeout(function() {
+            $('#dispmsg').fadeOut('slow');
+        }, 4000);
+    });
+</script>

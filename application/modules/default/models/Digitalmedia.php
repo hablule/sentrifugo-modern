@@ -1,0 +1,318 @@
+<?php
+
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+
+/**
+ * Digital Media Model
+ * 
+ * Manages specific digital media lookup records, bridging Categories and Types.
+ * Strictly adheres to SSOT v6.2: Zend_Db_Select exclusively, explicit method grouping,
+ * singular table naming, and mandatory dependency checks.
+ * 
+ * @category   Application
+ * @package    Default
+ * @subpackage Models
+ * @version    Sentrifugo v3.2
+ */
+class Default_Model_Digitalmedia extends Zend_Db_Table_Abstract
+{
+    /** @var string Table name (SSOT Singular Naming Convention) */
+    protected $_name = 'main_digitalmedia';
+
+    /** @var string Primary key */
+    protected $_primary = 'id';
+
+    /* =================================================================================
+     * GROUP 1: DATA DISPLAY & RETRIEVAL
+     * ================================================================================= */
+
+    /**
+     * Standard retrieval of all records.
+     * 
+     * @param int|null    $limit
+     * @param int|null    $offset
+     * @param string|null $search_val
+     * @param string|null $search_str
+     * @param int|null    $activeStatus
+     * @return array
+     */
+    public function getAllRecords($limit = null, $offset = null, $search_val = null, $search_str = null, $activeStatus = null)
+    {
+        $select = $this->select()
+            ->setIntegrityCheck(false)
+            ->from(array('dm' => $this->_name))
+            ->joinInner(array('dmc' => 'main_digitalmediacategory'), 'dm.digitalmediacategory_id = dmc.id', array('category_name' => 'dmc.name'))
+            ->joinInner(array('dmt' => 'main_digitalmediatype'), 'dm.digitalmediatype_id = dmt.id', array('type_name' => 'dmt.name'))
+            ->where('dm.isactive != 5');
+
+        if ($activeStatus !== null) {
+            $select->where('dm.isactive = ?', (int)$activeStatus);
+        }
+
+        if (!empty($search_val) && !empty($search_str)) {
+            $select->where("$search_val LIKE ?", '%' . $search_str . '%');
+        }
+
+        $select->order('dm.name ASC');
+
+        if ($limit !== null) {
+            $select->limit($limit, (int)$offset);
+        }
+
+        return $this->fetchAll($select)->toArray();
+    }
+
+    /**
+     * SSOT Standard Grid Configuration.
+     * 
+     * @param string $sort
+     * @param string $by
+     * @param int    $perPage
+     * @param int    $pageNo
+     * @param string $searchData
+     * @param string $call
+     * @param string $dashboardcall
+     * @return array
+     */
+    public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
+    {
+        $searchQuery = '';
+        $searchArray = array();
+
+        if ($searchData != '' && $searchData != 'undefined') {
+            $searchValues = json_decode($searchData, true);
+            foreach ($searchValues as $key => $val) {
+                if ($key == 'status_text') {
+                    $dbVal = ($val === 'Active') ? 1 : 0;
+                    $searchQuery .= " dm.isactive = " . $dbVal . " AND ";
+                } elseif ($key == 'category_name') {
+                    $searchQuery .= " dmc.name LIKE '%$val%' AND ";
+                } elseif ($key == 'type_name') {
+                    $searchQuery .= " dmt.name LIKE '%$val%' AND ";
+                } else {
+                    $searchQuery .= " dm.$key LIKE '%$val%' AND ";
+                }
+                $searchArray[$key] = $val;
+            }
+            $searchQuery = rtrim($searchQuery, " AND");
+        }
+
+        // Must match exact column aliases defined in getGridData()
+        $tableHeaders = array(
+            'action'        => 'Action',
+            'code'          => 'Media Code',
+            'name'          => 'Media Name',
+            'category_name' => 'Category',
+            'type_name'     => 'Type',
+            'status_text'   => 'Status'
+        );
+
+        $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
+
+        return array(
+            'sort'           => $sort,
+            'by'             => $by,
+            'pageNo'         => $pageNo,
+            'perPage'        => $perPage,
+            'tablecontent'   => $tableContent,
+            'objectname'     => 'digitalmedia',
+            'tableheader'    => $tableHeaders,
+            'extra'          => array(),
+            'jsGridFnName'   => 'getAjaxgridData',
+            'jsFillFnName'   => '',
+            'searchArray'    => $searchArray,
+            // SSOT IV.4: No 'add' flag injected here.
+            'menuName'       => 'Digital Media',
+            'call'           => $call,
+            'dashboardcall'  => $dashboardcall,
+            'search_filters' => array(
+                'status_text' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive'))
+            )
+        );
+    }
+
+    /**
+     * SSOT Standard Grid Data Fetcher.
+     * 
+     * @param string $sort
+     * @param string $by
+     * @param int    $pageNo
+     * @param int    $perPage
+     * @param string $searchQuery
+     * @return Zend_Db_Select
+     */
+    public function getGridData($sort, $by, $pageNo, $perPage, $searchQuery = '')
+    {
+        // Handle sorting aliases
+        if ($by == 'status_text') $by = 'dm.isactive';
+        if ($by == 'category_name') $by = 'dmc.name';
+        if ($by == 'type_name') $by = 'dmt.name';
+        if (in_array($by, array('code', 'name'))) $by = 'dm.' . $by;
+
+        $select = $this->select()
+            ->setIntegrityCheck(false)
+            ->from(array('dm' => $this->_name), array(
+                'id'          => 'dm.id', // SSOT IV.2: Mandatory Grid Aliasing
+                'code'        => 'dm.code',
+                'name'        => 'dm.name',
+                'status_text' => new Zend_Db_Expr("CASE WHEN dm.isactive = 1 THEN 'Active' ELSE 'Inactive' END")
+            ))
+            ->joinInner(array('dmc' => 'main_digitalmediacategory'), 'dm.digitalmediacategory_id = dmc.id', array('category_name' => 'dmc.name'))
+            ->joinInner(array('dmt' => 'main_digitalmediatype'), 'dm.digitalmediatype_id = dmt.id', array('type_name' => 'dmt.name'))
+            ->where('dm.isactive != 5');
+
+        if (!empty($searchQuery)) {
+            $select->where($searchQuery);
+        }
+
+        $select->order("$by $sort")->limitPage((int)$pageNo, (int)$perPage);
+
+        return $select;
+    }
+
+    /**
+     * Standard Pairs Retrieval (For Dropdowns).
+     * 
+     * @param bool $activeOnly
+     * @return array [id => name]
+     */
+    public function getPairs($activeOnly = true)
+    {
+        $select = $this->select()
+            ->from($this->_name, array('id', 'name'))
+            ->order('name ASC');
+
+        if ($activeOnly) {
+            $select->where("isactive = 1");
+        }
+
+        return $this->getAdapter()->fetchPairs($select);
+    }
+
+    /**
+     * Standard ID Retrieval.
+     * 
+     * @param int $id
+     * @return array|null
+     */
+    public function getRecordById($id)
+    {
+        $select = $this->select()->where('id = ?', (int)$id)->where('isactive != 5');
+        $row = $this->fetchRow($select);
+        return ($row) ? $row->toArray() : null;
+    }
+
+    /* =================================================================================
+     * GROUP 2: MODIFICATION & PERSISTENCE
+     * ================================================================================= */
+
+    /**
+     * Standard Save/Update.
+     * 
+     * @param array $data DB Columns mapping
+     * @param int   $id   Optional ID for updating
+     * @return int|string Last insert ID or 'update'
+     */
+    public function saveRecord(array $data, $id = null)
+    {
+        $auth = Zend_Auth::getInstance();
+        $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
+
+        if (!empty($id)) {
+            $data['modifiedby']   = $userId;
+            $data['modifieddate'] = gmdate("Y-m-d H:i:s");
+            $this->update($data, array('id = ?' => (int)$id));
+            return 'update';
+        }
+
+        $data['createdby']   = $userId;
+        $data['createddate'] = gmdate("Y-m-d H:i:s");
+        $this->insert($data);
+        return $this->getAdapter()->lastInsertId($this->_name);
+    }
+
+    /* =================================================================================
+     * GROUP 3: REMOVAL & STATUS
+     * ================================================================================= */
+
+    /**
+     * Soft delete standard execution. Checks dependencies first per SSOT IV.5.
+     * 
+     * @param int $id
+     * @return int
+     * @throws Exception if record is in use
+     */
+    public function deleteRecord($id)
+    {
+        if ($this->checkInUse($id)) {
+            throw new Exception("Cannot delete this Digital Media record. It is currently linked to an active Digital Presence (Employee, Company, etc.).");
+        }
+
+        $auth = Zend_Auth::getInstance();
+        $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
+
+        $data = array(
+            'isactive'     => 5,
+            'modifiedby'   => $userId,
+            'modifieddate' => gmdate("Y-m-d H:i:s")
+        );
+        return $this->update($data, array('id = ?' => (int)$id));
+    }
+
+    public function toggleStatus($id, $status)
+    {
+        $auth = Zend_Auth::getInstance();
+        $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
+
+        $data = array(
+            'isactive'     => (int)$status,
+            'modifiedby'   => $userId,
+            'modifieddate' => gmdate("Y-m-d H:i:s")
+        );
+        return $this->update($data, array('id = ?' => (int)$id));
+    }
+
+    /* =================================================================================
+     * GROUP 4: INTEGRITY CHECKS & INTERNAL HELPERS
+     * ================================================================================= */
+
+    public function checkDuplicate($field, $value, $excludeId = null)
+    {
+        $select = $this->select()
+            ->where("$field = ?", trim($value))
+            ->where("isactive != 5");
+
+        if ($excludeId) {
+            $select->where('id != ?', (int)$excludeId);
+        }
+        return $this->fetchRow($select);
+    }
+
+    /**
+     * Dependency Checker (SSOT IV.5 Data Integrity)
+     * Verifies if the media is assigned to the operational main_digitalpresence table.
+     * 
+     * @param int $id
+     * @return bool
+     */
+    public function checkInUse($id)
+    {
+        $db = $this->getAdapter();
+        try {
+            $select = $db->select()
+                ->from('main_digitalpresence', 'id')
+                ->where('digitalmedia_id = ?', (int)$id)
+                ->where('isactive != 5')
+                ->limit(1);
+            if ((bool)$db->fetchOne($select)) return true;
+        } catch (Exception $e) {
+            error_log("DigitalMedia Dependency Check: " . $e->getMessage());
+        }
+        return false;
+    }
+}

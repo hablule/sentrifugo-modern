@@ -1,0 +1,128 @@
+<?php
+
+/**
+ * Postal Code Add Popup View
+ */
+$this->msgarray = isset($this->msgarray) ? $this->msgarray : array();
+sapp_Global::generateClientValidations($this->form);
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/custompopup.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<div style="padding: 15px;">
+    <?php if (isset($this->popup) && $this->popup == 'close') : ?>
+        <div class="ml-alert-1-success">
+            <div style="display:block;"><span class="style-1-icon success"></span>Postal Code <?php echo $this->escape($this->eventact); ?> successfully.</div>
+        </div>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                setTimeout(function() {
+                    // Update parent dropdown and close iframe modal
+                    parent.closeiframeAddPopup('<?php echo $this->optionsHtml; ?>', 'postalcode', 'postal_code_id', 'Postal Code');
+                }, 1500);
+            });
+        </script>
+    <?php else : ?>
+        <div id="error_message" style="display:none;"></div>
+        <?php if (!empty($this->msgarray['error'])) : ?>
+            <div class="ml-alert-1-error">
+                <div style="display:block;"><span class="style-1-icon error"></span><?php echo $this->escape($this->msgarray['error']); ?></div>
+            </div>
+        <?php endif; ?>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" action="<?php echo $this->escape($this->form->getAction()); ?>" method="<?php echo $this->escape($this->form->getMethod()); ?>">
+            <?php echo $this->form->id; ?>
+            <div class="total-form-controller" style="box-shadow: none; border: none; padding: 0;">
+                <div class="division">
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->country_id->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->country_id; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->country_id->getId()); ?>"><?php echo $this->escape($this->msgarray['country_id'] ?? ''); ?></span>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->state_id->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->state_id; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->state_id->getId()); ?>"><?php echo $this->escape($this->msgarray['state_id'] ?? ''); ?></span>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->city_id->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->city_id; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->city_id->getId()); ?>"><?php echo $this->escape($this->msgarray['city_id'] ?? ''); ?></span>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->code; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->code->getId()); ?>"><?php echo $this->escape($this->msgarray['code'] ?? ''); ?></span>
+                    </div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->isactive->getId()); ?>"><?php echo $this->escape($this->msgarray['isactive'] ?? ''); ?></span>
+                    </div>
+
+                    <div class="new-form-ui-submit" style="margin-top: 15px;">
+                        <div class="division">
+                            <input type="submit" name="submit" id="submitbutton" value="Save" class="actbtn_btn" />
+                            <button type="button" class="reset" onclick="parent.closeiframepopup('postalcode', 'cancel');">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <script type="text/javascript">
+            // SSOT VII: Robust AJAX Dropdown Pattern for Popups
+            function getStatesByCountry(countryId) {
+                var $stateSelect = $('#state_id');
+                var $citySelect = $('#city_id');
+                $stateSelect.empty().append('<option value="">Select State/Province...</option>');
+                $citySelect.empty().append('<option value="">Select State First...</option>');
+                if (!countryId) return;
+                $.ajax({
+                    url: base_url + '/postalcode/getstates/format/json',
+                    type: 'POST',
+                    data: {
+                        country_id: countryId
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response) $.each(response, function(key, value) {
+                            $stateSelect.append('<option value="' + key + '">' + value + '</option>');
+                        });
+                    }
+                });
+            }
+
+            function getCitiesByState(stateId) {
+                var $citySelect = $('#city_id');
+                $citySelect.empty().append('<option value="">Select City...</option>');
+                if (!stateId) return;
+                $.ajax({
+                    url: base_url + '/postalcode/getcities/format/json',
+                    type: 'POST',
+                    data: {
+                        state_id: stateId
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response) $.each(response, function(key, value) {
+                            $citySelect.append('<option value="' + key + '">' + value + '</option>');
+                        });
+                    }
+                });
+            }
+            $(document).ready(function() {
+                if ($('#description').length) {
+                    $('#description').jqte();
+                }
+            });
+        </script>
+    <?php endif; ?>
+</div>

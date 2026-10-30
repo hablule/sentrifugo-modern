@@ -1,0 +1,91 @@
+<?php
+
+/**
+ * User Role Index View
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ * @author     Hablul Soft Solution < /hablul.in>
+ * @license    http://gnu.org GNU General Public License, version 3.0 (GPL-3.0)
+ * @version    Sentrifugo v3.2
+ **/
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH ?>css/addelement.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH ?>css/custompopup.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH ?>js/custompopup.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<?php if ($this->popup == 'close') : ?>
+    <div class="ml-alert-1-success">
+        <div class="style-1-icon success"></div>
+        Role <?php echo $this->eventact; ?> successfully. Closing...
+    </div>
+    
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // Use improved variable name roleOptionsHtml
+            var options = '<?php echo $this->roleOptionsHtml; ?>';
+            var newId = '<?php echo $this->newRoleId; ?>';
+            var controller = '<?php echo $this->controllername; ?>';
+            
+            // Logic to update parent window
+            // Custom extension of Sentrifugo's closeiframeAddPopup logic
+            window.parent.updateParentDropdown(options, newId, controller);
+            
+            // Short delay so user can see success message
+            setTimeout(function() {
+                parent.$("#makeactiveinactiveContainer").dialog('close');
+            }, 1500);
+        });
+    </script>
+
+<?php else : 
+    sapp_Global::generateClientValidations($this->form); ?>
+    
+    <div id="error_message" style="display:none;"></div>
+
+    <form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction(); ?>" method="post">
+        <div class="total-form-controller">
+
+            <!-- Standardized rendering using Helper for all fields -->
+            <?php 
+                echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'code', '', '', '', array('maxlength' => 50));
+                echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'name', '', '', '', array('maxlength' => 100));
+                echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'group_id', '', '', '', array());
+                echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'levelid', '', '', '', array());
+                echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array());
+            ?>
+
+            <!-- Active Status -->
+            <div class="new-form-ui clearb">
+                <label><?php echo $this->form->isactive->getLabel(); ?></label>
+                <div class="division">
+                    <?php echo $this->form->isactive; ?>
+                    <span class="errors" id="errors-<?php echo $this->form->isactive->getId(); ?>">
+                        <?php echo $this->msgarray['isactive'] ?? ''; ?>
+                    </span>
+                </div>
+            </div>
+
+            <div class="new-form-ui-submit">
+                <div class="division">
+                    <?php echo $this->form->submit; ?>
+                    <input onclick="parent.$('#rolesContainer').dialog('close');" value="Cancel" type="button" class="reset" />
+                </div>
+            </div>
+        </div>
+    </form>
+<?php endif; ?>
+
+<script type='text/javascript'>
+    $(document).ready(function() {
+        // Initialize Editor as requested
+        $('#description').jqte();
+
+        <?php if (!empty($this->msgarray)) : ?>
+            // Scroll to error if validation fails
+            $('html, body').animate({ scrollTop: 0 }, 'slow');
+        <?php endif; ?>
+    });
+</script>

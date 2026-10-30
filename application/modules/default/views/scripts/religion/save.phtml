@@ -1,0 +1,122 @@
+<?php
+/**
+ * Religion Save View
+ * 
+ * Handles the Add and Edit form rendering for the Religion module.
+ * Strictly adheres to SSOT v6.1: Clean layout, Sentrifugo asset stack, 
+ * dynamic labeling, PHP 8+ strictness, and robust server-side error rendering.
+ * 
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ * @author     Hablul Soft Solution < /hablul.in>
+ * @license    http://gnu.org GNU General Public License, version 3.0 (GPL-3.0)
+ * @version    Sentrifugo v3.2
+ */
+
+// SSOT IX: Safe Initialization for PHP 8+
+$this->msgarray = isset($this->msgarray) ? $this->msgarray : array();
+
+// SSOT VII: Client Validation Generation
+sapp_Global::generateClientValidations($this->form);
+?>
+<!-- SSOT VII: Strict Asset Inclusions (No screen.css) -->
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<div class="row">
+    <div class="col s12">
+        <!-- Error/Success Injection Container for Sentrifugo Global JS -->
+        <div id="message_container">
+            
+            <!-- SERVER-SIDE ERROR HANDLING: Renders if form reloads due to failure -->
+            <?php if (!empty($this->msgarray)) : ?>                
+                <?php if (isset($this->msgarray['error'])) : ?>
+                    <!-- General System Error (e.g., Database Failure) -->
+                    <div class="ml-alert-1-error">
+                        <div style="display:block;">
+                            <span class="style-1-icon error"></span>
+                            <?php echo $this->escape($this->msgarray['error']); ?>
+                        </div>
+                    </div>
+                <?php else : ?>
+                    <!-- Form Validation Error -->
+                    <div class="ml-alert-1-error">
+                        <div style="display:block;">
+                            <span class="style-1-icon error"></span>
+                            Please correct the highlighted errors below.
+                        </div>
+                    </div>
+                <?php endif; ?>
+            <?php endif; ?>
+        </div>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" method="<?php echo $this->escape($this->form->getMethod()); ?>">
+            <!-- Hidden ID Element -->
+            <?php echo $this->form->id; ?>
+
+            <div class="total-form-controller">
+                <div class="division">
+                    
+                    <!-- Religion Code -->
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->code; ?>
+                        </div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->code->getId()); ?>">
+                            <?php echo $this->escape($this->msgarray['code'] ?? ''); ?>
+                        </span>
+                    </div>
+
+                    <!-- Religion Name -->
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->name; ?>
+                        </div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->name->getId()); ?>">
+                            <?php echo $this->escape($this->msgarray['name'] ?? ''); ?>
+                        </span>
+                    </div>
+
+                    <!-- Description -->
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <!-- Active Status -->
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->isactive; ?>
+                        </div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->isactive->getId()); ?>">
+                            <?php echo $this->escape($this->msgarray['isactive'] ?? ''); ?>
+                        </span>
+                    </div>
+
+                    <!-- Navigation & Actions -->
+                    <div class="new-form-ui-submit">
+                        <div class="division">
+                            <?php echo $this->form->submit; ?>
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>religion';" value="Cancel" type="button" class="reset" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Initialize JQTE for the description text area
+        if ($('#description').length) {
+            $('#description').jqte();
+        }
+    });
+</script>

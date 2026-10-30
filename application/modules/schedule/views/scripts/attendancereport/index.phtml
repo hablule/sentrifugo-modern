@@ -1,0 +1,70 @@
+<?php
+$form = $this->form;
+$validators = $this->validators;
+?>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/formValidator.js"></script>
+<?php if (count($this->messages)) {?>
+	<div id="dispmsgemp" class="settingssuccess">
+		<?php 
+			foreach ($this->messages as $message)
+			{
+				$flag = array();				
+				$flag = array_keys($message);
+				echo "<div id='messageData' class='ml-alert-1-success'><div style='display:block;'><span class='style-1-icon $flag[0]'></span>";
+				echo $message[$flag[0]];
+				echo "</div></div>";
+			} 
+		;
+		?>
+	</div>	
+	
+<?php } ?>
+<div id="error_message" style="display:none;"></div>
+<?php
+
+if ($this->call !== 'ajaxcall') {
+
+  $div = '<div id="grid_' . $this->dataArray['objectname'] . '" class="all-grid-control">';
+  $endDiv = '</div>';
+
+  $multi = '';
+  echo $multi . $div . '<div id="msg" style="display:none;font-style: oblique; font-weight: bold; color: green;""></div>' . $this->grid($this->dataArray[0]) . $endDiv;
+} else {
+
+  $div = '<div id="grid_' . $this->dataArray['objectname'] . '" class="all-grid-control">';
+  $endDiv = '</div>';
+
+  $multi = '';
+  echo $multi . $div . '<div id="msg" style="display:none;font-style: oblique; font-weight: bold; color: green;""></div>' . $this->grid($this->dataArray[0]) . $endDiv;
+}
+?>
+<?php if ($this->call != 'ajaxcall') { ?>
+  <div id="attendancereportContainer" style="display: none; overflow: auto;">
+    <div class="heading">
+      <a href="javascript:void(0)" onclick="window.location.href='<?php echo BASE_URL; ?>attendancereport'">
+        <img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+    </div>
+
+    <iframe id="attendancereportCont" class="business_units_iframe" frameborder="0"></iframe>
+  </div>
+<?php } ?>
+<div class="new-form-ui-submit">
+<div class="division">
+    <button  type="button" id="submit" name="submit">Print</button>
+</div>
+</div>
+<script type='text/javascript'>
+  $(document).ready(function() {
+        <?php if ($this->call != 'ajaxcall') { ?>
+            $('.breadcrumbs').append("<span class='arrows'>&rsaquo;</span><span>Time Table</span>");
+        <?php } ?>
+        <?php if (count($this->messages)) { ?>
+            setTimeout(function() {
+                $('#dispmsgclients').fadeOut('slow');
+            }, 3000);
+        <?php } ?>
+    });
+    $('#submit').click(function(){
+        displaydeptform("<?php echo BASE_URL.'attendancereport/printreport' ?>",'Attendance Report');
+    })
+</script>

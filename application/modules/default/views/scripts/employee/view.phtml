@@ -1,0 +1,186 @@
+<?php 
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+?>
+
+<?php 
+
+
+if(sapp_Helper::SappEmpty($this->empdata)){?>
+     <div class="ml-alert-1-info m1-info-set">
+				<div class="style-1-icon info"></div>
+				<?php if($this->rowexist == 'norows'){?>
+				No data found.
+				<?php }else{?>
+				Employee Inactivated.
+				<?php }?>
+	</div>
+
+<?php 
+}
+else
+{
+$data = $this->data;
+
+			if(!sapp_Helper::SappEmpty($this->employeedata))
+			 {
+					 	echo $this->employeedetails($this->employeedata,'view',$this->id);
+                        
+                        
+			 } 
+?>
+  <div class='right-block-data'>
+<div id="error_message" style="display:none;"></div>
+<?php
+// die(json_encode($this->data));
+			   sapp_Helper::viewHeader();
+               sapp_Helper::viewBody('alt','First Name',(!sapp_Helper::SappEmpty($this->data['firstname']))?$this->data['firstname']:"...","Middle Name",(!sapp_Helper::SappEmpty($this->data['middlename']))?$this->data['middlename']:"...");
+               sapp_Helper::viewBody('nor','Last Name',(!sapp_Helper::SappEmpty($this->data['lastname']))?$this->data['lastname']:"...","Code",(!sapp_Helper::SappEmpty($this->data['code']))?$this->data['code']:"...");
+               sapp_Helper::viewBody('alt','Job Title',(!sapp_Helper::SappEmpty( $this->data['jobtitle']))? $this->data['jobtitle']:"...",'Position',(!sapp_Helper::SappEmpty( $this->data['position']))? $this->data['position']:"...");
+               sapp_Helper::viewBody('alt','Branch',(!sapp_Helper::SappEmpty($this->data['branch']))?$this->data['branch']:"...","Email",(!sapp_Helper::SappEmpty($this->data['emailaddress']))?$this->data['emailaddress']:"...");
+               sapp_Helper::viewBody('nor','Date of Joining',(!sapp_Helper::SappEmpty($this->data['date_of_joining']))?$this->data['date_of_joining']:"...","Date of Leaving",(!sapp_Helper::SappEmpty($this->data['date_of_leaving']))?$this->data['date_of_leaving']:"...");
+               sapp_Helper::viewBody('alt','Reporting Manager',(!sapp_Helper::SappEmpty($this->data['reporting_manager']))?$this->data['reporting_manager']:"...","Year Of Experiance",(!sapp_Helper::SappEmpty($this->data['years_exp']))?$this->data['years_exp']:"...");
+               sapp_Helper::viewBody('nor  ','Mode of Employment ',(!sapp_Helper::SappEmpty($this->data['modeofentry']))?$this->data['modeofentry']:"...","Role",(!sapp_Helper::SappEmpty($this->data['role']))?$this->data['role']:"...");
+				// sapp_Helper::viewBody('nor',$this->form->code->getLabel(),(!sapp_Helper::SappEmpty($this->form->code->getValue()))?$this->form->code->getValue():"..."	,'',"...");
+				// sapp_Helper::viewBody('nor',$this->form->lastname->getLabel(),(!sapp_Helper::SappEmpty($this->form->lastname->getValue()))?$this->form->lastname->getValue():"...",$this->form->modeofentry->getLabel(),(!sapp_Helper::SappEmpty($this->form->modeofentry->getValue()))?$this->form->modeofentry->getValue():"...");
+                // sapp_Helper::viewBody('alt',$this->form->branch_id->getLabel(),(!sapp_Helper::SappEmpty($this->data['branch']))?$this->data['branch']:"...",$this->form->title_id->getLabel(),(!sapp_Helper::SappEmpty($this->data['name']))?$this->data['name']:"...");
+
+?>				
+			    <div  id="iddiv_canditatename">				 
+				<?php
+                 sapp_Helper::viewBody('alt',$this->form->rccandidatename->getLabel(),(!sapp_Helper::SappEmpty($this->form->rccandidatename->getValue()))?$this->form->rccandidatename->getValue():"...",'','');
+
+                ?>					
+				</div>	
+				<div id="iddivrequi" >
+				 <?php
+				 if(isset($data['requisition_code']))
+                sapp_Helper::viewBody('nor','Requisition code', (!sapp_Helper::SappEmpty(  $this->data['requisition_code']))?  $this->data['requisition_code']:"..."	,'','');
+                  
+                ?>	
+                 </div>  
+                <!--  <div  id="iddiv_referredby" style="display:none;"> -->
+				<div  id="iddiv_referredby" >
+                <?php
+                sapp_Helper::viewBody('alt',$this->form->candidatereferredby->getLabel(),(!sapp_Helper::SappEmpty($this->form->candidatereferredby->getValue()))?$this->form->candidatereferredby->getValue():"...",'','');
+ 
+                ?>				
+                 </div> 
+                
+                <div id="iddiv_otherentry" >
+			    <?php
+                sapp_Helper::viewBody('alt',$this->form->other_modeofentry->getLabel(), (!sapp_Helper::SappEmpty($this->form->other_modeofentry->getValue()))? $this->form->other_modeofentry->getValue():"...",'','');
+ 
+                ?>	
+				 </div>
+				              
+				 
+                                
+                <?php
+				
+			 	
+			 if($this->data['is_orghead'] == 0)
+				{ 
+					
+				sapp_Helper::viewBody('alt','Business Unit', (!sapp_Helper::SappEmpty( $this->data['businessunit_id']))? $this->data['businessunit_id']:"..."	,'Department',(!sapp_Helper::SappEmpty( $this->data['department_id']))? $this->data['department_id']:"...");
+				sapp_Helper::viewBody('nor','Reporting Manager',(!sapp_Helper::SappEmpty( $this->data['reporting_manager']))? $this->data['reporting_manager']:"..."	,'','');
+				}
+				
+				if($this->data['is_orghead'] == 0)
+				{ 
+				sapp_Helper::viewBody('nor','Employment Status',(!sapp_Helper::SappEmpty( $this->data['emp_status_id']))? $this->data['emp_status_id']:"..."	,'','');
+				}
+				if($this->data['is_orghead'] == 0)
+				{ 
+				sapp_Helper::viewBody('nor','Date of Leaving',(!sapp_Helper::SappEmpty($this->form->date_of_leaving->getValue()))? $this->form->date_of_leaving->getValue():"..."	,'','');
+				}
+				
+				sapp_Helper::viewFooter();
+			   ?>
+</div>	</div>
+
+
+	
+<script type='text/javascript'>
+$(document).ready(function(){
+
+   $("#empdetails").addClass('active');
+    $("#empdetails").removeAttr("onclick");
+    
+ 
+<?php 
+    if($this->form->id->getValue() != '')
+    {
+?>     
+     
+        var val = '<?php echo $this->form->modeofentry->getValue();?>';
+        if(val == 'Direct')
+        {
+            $('#iddiv_fullname').show();
+            $('#rccandidatename').val('');
+            $('#iddiv_canditatename').hide();   
+            $('#iddivrequi').hide();
+            $('#iddiv_otherentry').hide();
+            $('#iddiv_referredby').hide();
+            
+        }
+        else if(val == 'Reference')
+        {
+            $('#iddiv_referredby').show();
+            $('#iddiv_fullname').hide();
+            //$('#userfullname').val('');
+            $('#firstname').val('');
+            $('#lastname').val('');
+            $('#iddiv_canditatename').show();  
+            $('#iddivrequi').show();
+            $('#iddiv_otherentry').hide();  
+        }
+        else if(val == 'Other')
+        {
+            $('#iddiv_canditatename').show();            
+            $('#iddivrequi').show();
+            $('#iddiv_otherentry').show();    
+            $('#candidatereferredby').val('');                        
+            //$('#userfullname').val('');
+            $('#firstname').val('');
+            $('#lastname').val('');
+            $('#iddiv_referredby').hide();
+            $('#iddiv_fullname').hide();  
+                      
+        }
+        else 
+        {
+            $('#iddiv_canditatename').show();
+            $('#iddivrequi').show();
+            $('#candidatereferredby').val('');
+            //$('#userfullname').val('');
+            $('#firstname').val('');
+            $('#lastname').val('');
+            $('#iddiv_referredby').hide();
+            $('#iddiv_fullname').hide(); 
+            $('#iddiv_otherentry').hide();          
+        }
+        
+<?php         
+    }
+?>
+});//end of ready function
+</script>
+<?php } ?>

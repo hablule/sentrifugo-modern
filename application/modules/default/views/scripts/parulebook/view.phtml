@@ -1,0 +1,177 @@
+<?php
+
+/**
+ * PA Rulebook View (Read-Only)
+ * Shows Header details and dynamically reconstructs the JSON mappings into HTML tables.
+ */
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<style>
+    .mapping-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+
+    .mapping-table th,
+    .mapping-table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+    }
+
+    .mapping-table th {
+        background-color: #f9f9f9;
+        color: #333;
+        font-weight: bold;
+    }
+</style>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container">
+            <?php if (isset($this->nodata)) : ?>
+                <div class="ml-alert-1-info">
+                    <div style="display:block;"><span class="style-1-icon info"></span>No data found.</div>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <?php if (!isset($this->nodata)) : ?>
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <h4 style="font-size: 14px; color: #26a69a; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 15px;">Rulebook Template Settings</h4>
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->code; ?></div>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->name; ?></div>
+                        </div>
+                    </div>
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->frequency->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->frequency; ?></div>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->trigger_type->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->trigger_type; ?></div>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->is_mandatory->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->is_mandatory; ?></div>
+                    </div>
+
+                    <div style="clear: both; width: 100%; height: 20px;"></div>
+
+                    <!-- Read-Only Mappings generated from Controller JSON -->
+                    <h4 style="font-size: 14px; color: #26a69a; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 15px;">Configured Elements</h4>
+
+                    <div style="padding: 10px; background: #fdfdfd; border: 1px solid #eee; margin-bottom: 20px;">
+                        <h5 style="margin-top:0; font-size: 13px;">Target Audience</h5>
+                        <table class="mapping-table" id="view-targets">
+                            <thead>
+                                <tr>
+                                    <th>Target Type</th>
+                                    <th>Specific ID/Name</th>
+                                </tr>
+                            </thead>
+                            <tbody><!-- JS Injected --></tbody>
+                        </table>
+                    </div>
+
+                    <div style="padding: 10px; background: #fdfdfd; border: 1px solid #eee; margin-bottom: 20px;">
+                        <h5 style="margin-top:0; font-size: 13px;">Evaluators</h5>
+                        <table class="mapping-table" id="view-evaluators">
+                            <thead>
+                                <tr>
+                                    <th>Evaluator Type</th>
+                                    <th>Mandatory?</th>
+                                </tr>
+                            </thead>
+                            <tbody><!-- JS Injected --></tbody>
+                        </table>
+                    </div>
+
+                    <div style="padding: 10px; background: #fdfdfd; border: 1px solid #eee; margin-bottom: 20px;">
+                        <h5 style="margin-top:0; font-size: 13px;">Assigned Questions</h5>
+                        <table class="mapping-table" id="view-questions">
+                            <thead>
+                                <tr>
+                                    <th style="width: 100px;">Question ID</th>
+                                    <th>Prompt</th>
+                                </tr>
+                            </thead>
+                            <tbody><!-- JS Injected --></tbody>
+                        </table>
+                    </div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray ?? array(), $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                    </div>
+
+                    <div class="new-form-ui-submit">
+                        <div class="division">
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>parulebook';" value="Back to List" type="button" class="reset" />
+                            <?php
+                            $menuId = defined('RULEBOOKS') ? RULEBOOKS : 398;
+                            if (sapp_Global::_checkprivileges($menuId, $this->loginuserGroup, $this->loginuserRole, 'edit') == 'Yes') :
+                            ?>
+                                <input onclick="window.location.href='<?php echo BASE_URL; ?>parulebook/edit/id/<?php echo $this->id; ?>';" value="Edit" type="button" class="reset" />
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var arrTargets = <?php echo $this->existingTargets; ?>;
+    var arrEvaluators = <?php echo $this->existingEvaluators; ?>;
+    var arrQuestions = <?php echo $this->existingQuestions; ?>;
+
+    $(document).ready(function() {
+        $('#description').jqte();
+        $('.jqte_editor').attr('contenteditable', 'false');
+
+        // Render read-only tables
+        var htmlT = '';
+        $.each(arrTargets, function(idx, val) {
+            var displayId = val.target_name ? val.target_name : (val.target_id > 0 ? 'ID: ' + val.target_id : 'All Employees');
+            htmlT += '<tr><td>' + val.target_type + '</td><td>' + displayId + '</td></tr>';
+        });
+        $('#view-targets tbody').html(htmlT);
+
+        var htmlE = '';
+        $.each(arrEvaluators, function(idx, val) {
+            var mandText = val.is_mandatory == 1 ? '<span style="color:green;font-weight:bold;">Yes</span>' : '<span style="color:#e67e22;">No</span>';
+            htmlE += '<tr><td>' + val.evaluator_type + '</td><td>' + mandText + '</td></tr>';
+        });
+        $('#view-evaluators tbody').html(htmlE);
+
+        var htmlQ = '';
+        $.each(arrQuestions, function(idx, val) {
+            htmlQ += '<tr><td>#' + val.question_id + '</td><td>' + val.question_name + '</td></tr>';
+        });
+        $('#view-questions tbody').html(htmlQ);
+    });
+</script>

@@ -1,0 +1,74 @@
+<?php if (count($this->messages)) {?>
+	<div id="dispmsgemp" class="settingssuccess">
+		<?php 
+			foreach ($this->messages as $message)
+			{
+				$flag = array();				
+				$flag = array_keys($message);
+				echo "<div id='messageData' class='ml-alert-1-success'><div style='display:block;'><span class='style-1-icon $flag[0]'></span>";
+				echo $message[$flag[0]];
+				echo "</div></div>";
+			} 
+		;
+		?>
+	</div>	
+	
+<?php } ?>
+<div id="error_message" style="display:none;"></div>
+<?php 
+	$div = '<div id="grid_'.$this->dataArray['objectname'].'" class="all-grid-control">'; $endDiv = '</div>';
+
+$multi = '';
+echo $multi.$div.'<div id="msg" style="display:none;font-style: oblique; font-weight: bold; color: green;""></div>'.$this->gridtms($this->dataArray).$endDiv;
+
+?>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		let ids = '';
+		for (let index = 0; index < $('tr').length; index++)
+		{
+			const element = $('tr')[index];
+			const td = $(element).find('td')[0];
+
+			const link = $(td).find('a');
+
+			let id = $(link[0]).attr('name');
+
+			if (id != undefined)
+			{
+				if ((index + 1) == $("tr").length)
+				{
+					ids = ids + id;
+				}
+				else
+				{
+					ids = id + ','+ids;
+				}
+			}
+		}
+
+		var res = $.ajax({
+			url: base_url +'/schedule/timecategory/isavalible',
+			dataType:'json',
+			data:'category_id='+ ids,
+			async: false
+		}).responseJSON;
+		console.log(res)
+
+		if(ids != undefined)
+		{
+			if (res != undefined)
+			{
+				for (const key in res)
+				{
+					const categoryId = res[key]['timecategory_id'];
+					$("#edit"+categoryId).hide();
+					$("#del"+categoryId).hide();
+
+				}
+			}
+		}
+	})
+
+</script>

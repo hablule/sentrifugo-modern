@@ -1,0 +1,240 @@
+<?php 
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+?>
+<script type="text/javascript" src="<?php echo MEDIA_PATH ?>/js/hrms.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH ?>css/custompopup.css" />
+    <script type="text/javascript" src="<?php echo MEDIA_PATH ?>js/custompopup.js"></script>
+	<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+<?php $baseUrl = $this->serverUrl().$this->baseUrl();
+$addcomp = $this->addcomp;
+sapp_Global::generateClientValidations($this->form);
+
+?>
+<?php if($this->successmessage != '') { ?>
+<div id="dispmsgnempskills" class="ml-alert-1-success">
+<div class="style-1-icon success"></div>
+<?php echo $this->successmessage; ?>
+</div>
+
+<?php } else { ?>
+<div id="error_message" style="display:none;"></div>
+<?php		
+if($this->emptyFlag != 0)
+	{
+?>	 <div class="ml-alert-1-info m1-info-set">
+		<div class="style-1-icon info"></div>
+			The employee configurations are not yet set.
+	</div>	
+<?php	}	?>
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction();?>" method="<?php echo $this->form->getMethod(); ?>">
+		<?php echo $this->form->id; ?>
+        <div class="total-form-controller">
+		 	<div class="new-form-ui">
+			  <label id="injuredDate" class="required">Certificate</label>
+				<div class="division loca_state_div"><?php echo $this->form->certificate_id; ?>
+				<span class="add-coloum" onclick="displayNestedPopup('<?php echo BASE_URL . 'certificate/addpopup' ?>','Certificate');"> Add Certificate</span>
+
+			</div>
+				<?php if(isset($this->msgarray['certificate_id'])){?>
+				<span class="errors" id="errors-<?php echo $this->form->certificate_id->getId(); ?>"><?php echo $this->msgarray['certificate_id'];?></span>
+				<?php }?>
+			</div>
+			<div class="new-form-ui " >
+			  <label class="required">Training</label>
+			  <div class="division"><?php echo $this->form->trainingname; ?></div>
+				<?php if(isset($this->msgarray['trainingname'])){?>
+				   <span class="errors" id="errors-<?php echo $this->form->trainingname->getId(); ?>"><?php echo $this->msgarray['trainingname'];?></span>
+				<?php }?>
+			</div>
+			<div class="new-form-ui ">
+				<label class="required">Certificate Provider</label>
+				<div class="division"><?php echo $this->form->certprovider_id; ?>
+				<?php if($this->provideaddpermission == 'Yes'){?>
+					<span class="add-coloum" onclick="displayNestedPopup('<?php echo BASE_URL . 'certprovider/addpopup/id/nested' ?>','Provider');"> Add Provider</span>
+				<?php }?>
+
+			</div>
+				 <?php if(isset($this->msgarray['certprovider_id'])){?>
+				   <span class="errors" id="errors-<?php echo $this->form->certprovider_id->getId(); ?>"><?php echo $this->msgarray['certprovider_id'];?></span>
+				<?php }?>
+			</div>
+			<div class="new-form-ui ">
+				<label class="required">Offerd By</label>
+				<div class="division"><?php echo $this->form->offeredby; ?></div>
+				 <?php if(isset($this->msgarray['offeredby'])){?>
+				   <span class="errors" id="errors-<?php echo $this->form->offeredby->getId(); ?>"><?php echo $this->msgarray['offeredby'];?></span>
+				<?php }?>
+			</div>
+		
+			<div class="new-form-ui ">
+			  <label class="required">Issued Date <img class="tooltip" title="<?php echo DATE_DESCRIPTION;?>" src="<?php echo $this->baseUrl().'/public/media/';?>images/help.png"> </label>
+			  <div class="division"><?php echo $this->form->issueddate; ?></div>
+				<?php if(isset($this->msgarray['issueddate'])){?>
+				   <span class="errors" id="errors-<?php echo $this->form->issueddate->getId(); ?>"><?php echo $this->msgarray['issueddate'];?></span>
+				<?php }?>
+			</div>
+			<div class="new-form-ui ">
+			  <label id="issuedDate">Expiry Date  <img class="tooltip" title="<?php echo DATE_DESCRIPTION;?>" src="<?php echo $this->baseUrl().'/public/media/';?>images/help.png"> </label>
+			  <div class="division"><?php echo $this->form->expirydate; ?></div>
+				<?php if(isset($this->msgarray['expirydate'])){?>
+				   <span class="errors" id="errors-<?php echo $this->form->expirydate->getId(); ?>"><?php echo $this->msgarray['expirydate'];?></span>
+				<?php }?>
+			</div>
+			<div class="new-form-ui ">
+			  <label >Active</label>
+			  <div class="division"><?php echo $this->form->isactive; ?></div>
+				<?php if(isset($this->msgarray['isactive'])){?>
+				   <span class="errors" id="errors-<?php echo $this->form->isactive->getId(); ?>"><?php echo $this->msgarray['isactive'];?></span>
+				<?php }?>
+			</div>
+			<div class="new-form-ui org-logo-height logo-width-org clearall">
+		<label>Attestation <img title="<?php echo 'Upload only .gif, .jpg, .jpeg, .png images';?>" src="<?php echo $this->baseUrl().'/public/media/';?>images/help.png" /></label>
+		 <div class="division">
+         <div class="org-img">
+				<?php if($this->org_image!=''){?>
+					<img id="blah" class="" style="padding:0px;" src="<?php echo $this->baseUrl("public/uploads/skills/").$this->org_image;?>" onerror="this.src='<?php echo MEDIA_PATH; ?>images/logo_default-size.jpg'" />
+				<?php }else{?>
+					<img id="blah" class=""  src="<?php echo MEDIA_PATH;?>images/logo_main.png" />
+				<?php }?>
+			</div>
+         <span id="org_image" class="uploadbut-org">update Attestation </span>
+			<input type="hidden" name="attestation_image_value" value="" id="attestation_image_value">
+		  	<input type="hidden" name="imgerr" value="" id="imgerr">
+			<input type="hidden" name="imgerrmsg" value="" id="imgerrmsg"><!--<span id="image_name"></span>-->
+		 <?php if(isset($this->msgarray['attestation_image_value'])){?>
+		  <span class="errors" id="errors-attestation_image_value"><?php echo $this->msgarray['attestation_image_value'];?></span>
+		  <?php }else {?>
+			<span style="display:none;" class="errors" id="errors-attestation_image_value"></span>
+		 <?php } ?>
+		 <div id="orgloaderimg" style="display:none;">
+         	<img src="<?php echo $this->baseUrl("public/media/images/loaderwhite_21X21.gif");?>" style="width:21px; height: 21px; float: none; "/>
+         </div>
+       </div>
+	</div>
+
+			<?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'summaryofcourse','', 'fck_editor_height','',array());?>
+
+			<?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description','', 'fck_editor_height','',array());?>
+
+		
+        <div class="new-form-ui-submit" id="formSubmit">
+        <?php echo $this->form->submit; ?>
+        <button onclick="closeiframepopup('trainingandcertificationdetails','cancel');" type="button">Cancel</button>
+        </div>
+</div>        
+</form>
+<?php } ?>
+<div id="certificateContainer" style="display: none; overflow: auto;">
+        <div class="heading">
+            <a href="javascript:void(0)">
+                <img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+        </div>
+
+        <iframe id="certificateCont" class="business_units_iframe" frameborder="0"></iframe>
+    </div>
+    <div id="certproviderContainer" style="display: none; overflow: auto;">
+        <div class="heading">
+            <a href="javascript:void(0)">
+                <img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+        </div>
+
+        <iframe id="certproviderCont" class="business_units_iframe" frameborder="0"></iframe>
+    </div>
+<script type='text/javascript'>
+<?php if($this->successmessage != '') { ?>
+        setTimeout(function(){
+		    closeiframepopup('<?php echo $this->controllername; ?>',''); 
+		},2000);
+<?php } ?>
+</script>
+<script type='text/javascript'>
+$(document).ready(function(){
+	$('#description').jqte();
+	$('#summaryofcourse').jqte();
+	hideselectortext("certificate_id","trainingname");
+	hideselectortext("certprovider_id","offeredby");
+
+	<?php echo "'".date("Y", strtotime("-30 years")).':'.date('Y')."'"; ?>;
+	     var yearrange = <?php echo "'".YEAR.':'.date('Y')."'"; ?>;
+	$('#issueddate,#expirydate').datepicker({
+					showOn:'both',
+					// maxDate: new Date, 
+					yearRange: yearrange,
+					dateFormat:"<?php echo DATEFORMAT_JS;?>",
+					buttonImage: "<?php echo $this->baseUrl("public/media/images/cal.jpg");?>",
+					buttonImageOnly: true,
+					buttonText: "",
+					changeMonth: true,
+					changeYear: true,
+                                        showButtonPanel: true ,
+					onClose:function()
+					{
+						$(this).trigger('blur');
+					}  
+					
+	});
+	
+	 });
+
+
+
+	 var btnUpload = $('#org_image');
+			new AjaxUpload(btnUpload, {	
+				action :  base_url+'/empskills/uploadpreview',
+				name   : 'profile_photo',  //we can rename it 
+				dataType: 'json',
+				onSubmit: function(file,ext){		
+				if($("#errors-attestation_image_value").is(":visible"))
+				  $("#errors-attestation_image_value").hide();	
+				  $("#orgloaderimg").show();												 
+				},
+				onComplete: function(file, response){				
+					var result = JSON.parse(response);
+					if(result.result == 'success')
+					{						
+						$('#errors-attestation_image_value').html('');
+						$('#imgerr').val(result.result);						
+						$("#imgerrmsg").val(result.msg);	
+						$("#errors-attestation_image_value").css('display','block');
+						$("#attestation_image_value").val(result.img);
+						$('.org-img').html('<img src="'+domain_data+'/public/uploads/skillpreview/'+result.img+'" /><div id="org_image" class="caption uploadbut-org" style="top: -35px; display: none;">Upload image</div>');
+						$("#orgloaderimg").hide();						
+							
+	
+					}
+					else
+					{
+						$('.uploaderror').show();
+						$("#errors-attestation_image_value").css('display','block');
+						$('#errors-attestation_image_value').html(result.msg);
+						$('#imgerr').val(result.result);
+						$("#imgerrmsg").val(result.msg);
+						$("#orgloaderimg").hide();
+						setTimeout(function()
+						{
+						$('.uploaderror').fadeOut('slow');
+						},3000);
+					}
+				}
+			},'json');
+</script>

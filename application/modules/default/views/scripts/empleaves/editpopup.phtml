@@ -1,0 +1,259 @@
+<?php if ($this->successmessage != '') { ?>
+    <div id="dispmsgnempjobhistory" class="ml-alert-1-success">
+        <div class="style-1-icon success"></div>
+        <?php echo $this->successmessage; ?>
+    </div>
+
+<?php } else { ?>
+
+    <?php if (empty($this->empdata)) { ?>
+        <div class="ml-alert-1-info m1-info-set">
+            <div class="style-1-icon info"></div>
+            <?php if ($this->rowexist == 'norows') { ?>
+                No data found.
+            <?php } else { ?>
+                Employee inactivated.
+            <?php } ?>
+        </div>
+
+    <?php
+    } else {
+        $baseUrl = $this->serverUrl() . $this->baseUrl();
+        sapp_Global::generateClientValidations($this->form);
+    ?>
+        <?php if (count($this->messages)) { ?>
+            <div id="dispmsgempleaves" class="settingssuccess">
+                <?php
+                foreach ($this->messages as $message) {
+                    $flag = array();
+                    $flag = array_keys($message);
+                    echo "<div id='messageData' class='ml-alert-1-$flag[0]'><div style='display:block;'><span class='style-1-icon $flag[0]'></span>";
+                    echo $message[$flag[0]];
+                    echo "</div></div>";
+                }
+                ?>
+            </div>
+
+        <?php } ?>
+        <?php if ($this->call != 'ajaxcall') {  ?>
+            <?php /* if (!empty($this->empdata)) {
+                echo $this->employeedetails($this->employeedata, 'edit', $this->id);
+            }else{
+
+            } */
+            ?>
+
+            <div id="error_message" style="display:none;"></div>
+            <?php
+            //if ($this->permission == 'Yes' && $this->formflag == 'show') { 
+            ?>
+            <form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction(); ?>" method="<?php echo $this->form->getMethod(); ?>">
+                <?php echo $this->form->id; ?>
+                <div class="total-form-controller">
+
+
+                    <div class="new-form-ui">
+                        <label class="required"><?php echo $this->form->leave->getLabel(); ?></label>
+                        <div class="division"><?php echo $this->form->leave; ?></div>
+                        <?php if (isset($this->msgarray['leave'])) { ?>
+                            <span class="errors" id="errors-<?php echo $this->form->leave->getId(); ?>"><?php echo $this->msgarray['leave']; ?></span>
+                        <?php } ?>
+                    </div>
+
+                    <div class="new-form-ui" id="year_div" style="display: none;">
+                        <label class="required"><?php echo $this->form->year->getLabel(); ?></label>
+                        <div class="division"><?php echo $this->form->year; ?></div>
+                        <?php if (isset($this->msgarray['year'])) { ?>
+                            <span class="errors" id="errors-<?php echo $this->form->year->getId(); ?>"><?php echo $this->msgarray['year']; ?></span>
+                        <?php } ?>
+                    </div>
+
+                    <div class="new-form-ui" id="period_div" style="display: none;">
+                        <label class="required"><?php echo $this->form->period->getLabel(); ?></label>
+                        <div class="division"><?php echo $this->form->period; ?></div>
+                        <?php if (isset($this->msgarray['period'])) { ?>
+                            <span class="errors" id="errors-<?php echo $this->form->period->getId(); ?>"><?php echo $this->msgarray['period']; ?></span>
+                        <?php } ?>
+                    </div>
+
+                    <div class="new-form-ui" id="alloted_days_div" style="display: none;">
+                        <label class="required"><?php echo $this->form->alloted_days->getLabel(); ?></label>
+                        <div class="division"><?php echo $this->form->alloted_days; ?></div>
+                        <?php if (isset($this->msgarray['alloted_days'])) { ?>
+                            <span class="errors" id="errors-<?php echo $this->form->alloted_days->getId(); ?>"><?php echo $this->msgarray['alloted_days']; ?></span>
+                        <?php } ?>
+                    </div>
+                </div>
+<br>
+                    <div class="new-form-ui" >
+                        <label class="required"><?php echo $this->form->isactive->getLabel(); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                        <?php if (isset($this->msgarray['isactive'])) { ?>
+                            <span class="errors" id="errors-<?php echo $this->form->isactive->getId(); ?>"><?php echo $this->msgarray['isactive']; ?></span>
+                        <?php } ?>
+                    </div>
+
+
+                  
+
+                    <div class="new-form-ui-submit">
+                        <?php if ($this->leavetransfercount != '') {
+                            echo $this->form->submitbutton;
+                        } else {
+                            echo $this->form->submit;
+                        }
+                        ?>
+		<button onclick="closeiframepopup('empleaves','cancel');" type="button">Cancel</button>
+                    </div>
+
+                </div>
+            </form>
+            <?php 
+
+
+                        if (!empty($this->request)) {
+                            echo "<h1><center> Your Leave Summary </center></h1>";
+                            echo"<br>";
+                            foreach ($this->request as $key=>$value) {
+                        
+                                if ($key%2==0) {
+                                    $bgcolor = 'nor';
+                                    if($key!=0)
+                                        die();
+                                }
+                                else{
+                                    $bgcolor = 'alt';
+                                }
+                              
+
+                                sapp_Helper::viewHeader();
+                                sapp_Helper::viewBody($bgcolor,'Leave Name',$value['leave'],'Leave Category',$value['leavecategory']);
+                                sapp_Helper::viewBody($bgcolor,'From Date',$value['leavefrom'],'To Date',$value['leaveto']);
+                                sapp_Helper::viewBody($bgcolor,'Remark',$value['remark'],'Processed',$value['processed']);
+                                sapp_Helper::viewBody($bgcolor,'Alloted Days',$value['alloteddays'],'Applied On',$value['requested']);
+                                sapp_Helper::viewBody($bgcolor,'Calendar',$value['calendar'],'Year',$value['year']);
+                                sapp_Helper::viewBody($bgcolor,'Period',$value['period'],'Approved By',$value['approvedby']);
+                                sapp_Helper::viewFooter();
+                    
+                            }
+                            
+                        } else { ?>
+                            <h6 style="text-align: center;"> No Leave Summary</h6>
+                        <?php
+                            sapp_Helper::viewBody('nor', '----------', '----------', '----------', '----------');
+                        }
+                    
+                    
+                    
+                    ?>
+             <?php 
+
+
+if (!empty($this->expected)) {
+    echo "<h1><center>Your Expected Leave Summary </center></h1>";
+    echo"<br>";
+    foreach ($this->expected as $key=>$value) {
+
+        if ($key%2==0) {
+            $bgcolor = 'nor';
+            
+        }
+        else{
+            $bgcolor = 'alt';
+        }
+      
+
+        sapp_Helper::viewHeader();
+        sapp_Helper::viewBody($bgcolor,'Leave Name',$value['name'],'Leave Category',$value['categoryname']);
+        sapp_Helper::viewBody($bgcolor,'Active',$value['isactive'],'Description',$value['description']);
+        sapp_Helper::viewBody($bgcolor,'Duration Type',$value['durationtype'],'Paytype',$value['paytype']);
+        sapp_Helper::viewBody($bgcolor,'Alloted Days',$value['alloteddays'],'Approved Required',$value['approvedrequired']);
+        sapp_Helper::viewBody($bgcolor,'Preset',$value['ispreset'],'','');
+        sapp_Helper::viewFooter();
+
+    }
+    
+} else { ?>
+    <h6 style="text-align: center;"> No Expected Leave Summary</h6>
+<?php
+    sapp_Helper::viewBody('nor', '----------', '----------', '----------', '----------');
+}
+
+
+
+?>
+        <?php } ?>
+    <?php } ?>
+<?php } ?>
+ 
+<script type='text/javascript'>
+    <?php if ($this->successmessage != '') { ?>
+        setTimeout(function() {
+            closeiframepopup('<?php echo $this->controllername; ?>', '');
+        }, 2000);
+    <?php } ?>
+</script>
+<script>
+    var leaves = [];
+    var leaveData = [];
+    var selectedLeaveIndex = -1;
+    $(document).ready(function() {
+        console.log("kkk");
+        leaves = `<?php echo json_encode($this->leaves); ?>`;
+        leaves = JSON.parse(leaves);
+        <?php if (count($this->messages)) { ?>
+            setTimeout(function() {
+                $('#dispmsgempleaves').fadeOut('slow');
+            }, 3000);
+
+        <?php } ?>
+        leaveData = `<?php echo json_encode($this->leaveData); ?>`;
+        leaveData = JSON.parse(leaveData);
+        console.log(leaveData);
+        console.log(leaves);
+        leaves.forEach(leaveSelect);
+        leaveBasedAction();
+    });
+
+
+    function leaveSelect(item, index) {
+        if (item['leave_id'] == document.getElementById('leave').value) {
+            selectedLeaveIndex = index;
+        }
+    }
+
+    function leaveBasedAction() {
+        if (selectedLeaveIndex != -1) {
+            if (leaves[selectedLeaveIndex]['baseperiod'] == 'Yearly') {
+                document.getElementById('year_div').style.display = 'block';
+                document.getElementById('period_div').style.display = 'none';
+
+            } else if (leaves[selectedLeaveIndex]['baseperiod'] == 'Periodic') {
+                document.getElementById('year_div').style.display = 'block';
+                document.getElementById('period_div').style.display = 'block';
+                if (leaveData.length > 0) {
+                    if (leaveData[0]['leave_id'] == leaves[selectedLeaveIndex]['leave_id']) {
+                        displayParticularPeriod_normal(document.getElementById('year'), "", "period", "");
+                        document.getElementById('period').value = leaveData[0]['period_id'];
+
+                        console.log(document.getElementById('period').value + "value");
+                    }
+                }
+            }
+
+            if (leaves[selectedLeaveIndex]['durationtype'] == 'Individual') {
+                document.getElementById('alloted_days').innerHTML = "";
+                document.getElementById('alloted_days_div').style.display = 'block'
+                if (leaveData.length > 0) {
+                    if (leaveData[0]['leave_id'] == leaves[selectedLeaveIndex]['leave_id']) {
+                        document.getElementById('alloted_days').value = leaveData[0]['alloteddays'];
+                    }
+                }
+            } else {
+                document.getElementById('alloted_days').innerHTML = "";
+                document.getElementById('alloted_days_div').style.display = 'none'
+            }
+        }
+    }
+  
+</script>

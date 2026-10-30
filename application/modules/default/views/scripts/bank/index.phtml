@@ -1,0 +1,50 @@
+<script src="<?php echo MEDIA_PATH;?>js/hrms.js"></script>
+<?php if (count($this->messages)) {?>
+	<div id="dispmsgemp" class="settingssuccess">
+		<?php 
+			foreach ($this->messages as $message)
+			{
+				$flag = array();				
+				$flag = array_keys($message);
+				echo "<div id='messageData' class='ml-alert-1-success'><div style='display:block;'><span class='style-1-icon $flag[0]'></span>";
+				echo $message[$flag[0]];
+				echo "</div></div>";
+			} 
+		;
+		?>
+	</div>	
+	
+<?php } ?>
+<span id="error_message"></span>
+<?php 
+
+if($this->call == 'ajaxcall'){
+	$div = ''; $endDiv = ''; 
+} else { 
+	$div = '<div id="grid_'.$this->dataArray[0]['objectname'].'" class="all-grid-control">'; $endDiv = '</div>';
+}
+//Zend_Debug::dump($this->dataArray[0])
+
+	echo $div.'<div id="msg" style="display:none;font-style: oblique; font-weight: bold; color: green;""></div>'.$this->grid($this->dataArray[0]).$endDiv;
+    
+?>
+
+<script type='text/javascript'>
+$(document).ready(function(){
+	var ids=getid('main_bank','bank_id','bank_id','main_empbankaccount');
+	ids.forEach(id => {
+		removedeleteicon(id);
+	});
+<?php if (count($this->messages)) {?>
+      setTimeout(function(){
+			$('#dispmsgcontroltype').fadeOut('slow');
+		},3000);
+
+<?php } ?>
+
+})
+
+
+
+</script>
+

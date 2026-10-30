@@ -1,0 +1,41 @@
+<?php 
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+?>
+
+
+<?php echo $this->form->id; 
+		echo $this->form->user_id;
+		?>
+<?php 
+sapp_Helper::viewHeader();
+sapp_Helper::viewBody('alt','Certificate',(!empty($this->data['cert_name']))?$this->data['cert_name']:"...",'Training',(!empty($this->data['trainingname']))?$this->data['trainingname']:"...");
+sapp_Helper::viewBody('nor','Provider',(!empty($this->data['provider']))?$this->data['provider']:"...",'Offerd By',(!empty($this->data['offeredby']))?$this->data['offeredby']:"...");
+sapp_Helper::viewBody('alt','Summary of course',(!empty($this->data['summaryofcourse']))?$this->data['summaryofcourse']:"...",'Description',(!empty($this->data['description']))?$this->data['description']:"...");
+sapp_Helper::viewBody('nor','Issued Date',(!empty($this->data['issueddate']))?$this->data['issueddate']:"...",'Expiry Date',(!empty($this->data['expirydate']))?$this->data['expirydate']:"...");
+sapp_Helper::viewBody('nor','Active',(!empty($this->data['isactive']))?$this->data['isactive']:"...","","...");
+
+sapp_Helper::viewFooter();
+?>
+		 <div class="new-form-ui-submit" id="formSubmit">
+		 <input onclick="closeiframepopup('trainingandcertificationdetails','cancel');" type="button" value="close"  />
+        </div>
+     
+

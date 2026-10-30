@@ -1,0 +1,183 @@
+<?php
+
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+?>
+  <link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH ?>css/custompopup.css" />
+    <script type="text/javascript" src="<?php echo MEDIA_PATH ?>js/custompopup.js"></script>
+	<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+<?php $baseUrl = $this->serverUrl() . $this->baseUrl();
+
+$form = $this->form;
+
+sapp_Global::generateClientValidations($this->form);
+?>
+<?php if ($this->successmessage != '') { ?>
+    <div id="dispmsgnempbankaccount" class="ml-alert-1-success">
+        <div class="style-1-icon success"></div>
+        <?php echo $this->successmessage; ?>
+    </div>
+
+<?php } else {
+    sapp_Global::generateClientValidations($this->form); ?>
+    <div id="error_message" style="display:none;"></div>
+    
+    <form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction(); ?>" method="POST">
+        <?php echo $this->form->id; ?>
+        <div class="total-form-controller">
+        <div class="new-form-ui">
+                <label><?php echo $this->form->bankname->getLabel(); ?></label>
+                <div class="division"><?php echo $this->form->bankname; ?>
+                    <div><span class="errors" id="errors-<?php echo $this->form->bankname->getId(); ?>"> <?php echo $this->msgarray['bankname']; ?></span> </div>
+                    <?php if($this->bankpermission == 'Yes') { ?>	
+                        <span class="add-coloum" onclick="displayNestedPopup('<?php echo BASE_URL . 'bank/addpopup' ?>','Add Bank');"> Add Bank</span>
+				<?php } ?>
+                </div>
+
+            </div>
+
+           
+            <div class="new-form-ui">
+                <label><?php echo $this->form->accountclasstypeid->getLabel(); ?></label>
+                <div class="division"><?php echo $this->form->accountclasstypeid; ?>
+                    <div><span class="errors" id="errors-<?php echo $this->form->accountclasstypeid->getId(); ?>"><?php echo $this->msgarray['accountclasstypeid']; ?></span></div>
+                </div>
+
+            </div>
+
+
+
+            <div class="new-form-ui">
+                <label><?php echo $this->form->accountnumber->getLabel(); ?></label>
+                <div class="division"><?php echo $this->form->accountnumber; ?>
+                    <div><span class="errors" id="errors-<?php echo $this->form->accountnumber->getId(); ?>"><?php echo $this->msgarray['accountnumber']; ?></span></div>
+                </div>
+
+            </div>
+            <div class="new-form-ui">
+                <label><?php echo $this->form->isdefault->getLabel(); ?></label>
+                <div class="division"><?php echo $this->form->isdefault; ?>
+                    <div><span class="errors" id="errors-<?php echo $this->form->isdefault->getId(); ?>"><?php echo $this->msgarray['isdefault']; ?></span></div>
+                </div>
+
+            </div>
+            <div class="new-form-ui">
+                <label><?php echo $this->form->location->getLabel(); ?></label>
+                <div class="division"><?php echo $this->form->location; ?> 
+                 <a  id='mv' onclick="displayNestedPopup('<?php echo BASE_URL . 'location/addpopupnested' ?>','Add Location');"><img class="ui-datepicker-trigger" src="/Sentrifugo_3.2/public/media/images/map2.png" height="20px" alt="" title=""></a></div>
+                    <div><span class="errors" id="errors-<?php echo $this->form->location->getId(); ?>"><?php echo $this->msgarray['location']; ?></span></div>
+                </div>
+
+            </div>
+
+            <div class="new-form-ui">
+                <label><?php echo $this->form->bban->getLabel(); ?></label>
+                <div class="division"><?php echo $this->form->bban; ?>
+                    <div><span class="errors" id="errors-<?php echo $this->form->bban->getId(); ?>"><?php echo $this->msgarray['bban']; ?></span></div>
+                </div>
+
+            </div>
+            <div class="new-form-ui">
+                <label><?php echo $this->form->iban->getLabel(); ?></label>
+                <div class="division"><?php echo $this->form->iban; ?>
+                    <div><span class="errors" id="errors-<?php echo $this->form->iban->getId(); ?>"><?php echo $this->msgarray['iban']; ?></span></div>
+                </div>
+
+            </div>
+
+           
+
+
+            <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description','', 'fck_editor_height','',array());?>
+
+      
+            <div class="new-form-ui-submit" style="margin: 15px 0;">
+                <?php echo $this->form->submit; ?>
+                <button onclick="closeiframepopup('empbankaccount','cancel');" type="button">Cancel</button>
+
+            </div>
+        </div>
+    </form>
+    <!-- <div class="nested-popup-model" id="popup-model">
+        <div class="nested-popup-model-content">
+            <div class="nested-popup-title"></div>
+            <div class="nested-popup-main-content">
+            <iframe id="bankCont" class="" frameborder="0" src="<?php //echo BASE_URL.'bank/addpopup';?>"></iframe>
+            </div>
+        </div>
+        
+    </div> -->
+    <div id="bankContainer" style="display: none; overflow: auto;">
+        <div class="heading">
+            <a href="javascript:void(0)">
+                <img src="<?php echo MEDIA_PATH; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+        </div>
+
+        <iframe id="bankCont" class="business_units_iframe" frameborder="0"></iframe>
+
+    </div>
+    <div id="locationContainer" style="display: none; overflow: auto;">
+        <div class="heading">
+            <a href="javascript:void(0)">
+                <img src="<?php echo MEDIA_PATH; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+        </div>
+
+        <iframe id="locationCont" class="business_units_iframe" frameborder="0"></iframe>
+
+    </div>
+<?php } ?>
+<script type='text/javascript'>
+    <?php if ($this->successmessage != '') {  ?>
+        setTimeout(function() {
+            closeiframepopup('<?php echo $this->controllername; ?>', '');
+        }, 2000);
+    <?php } ?>
+</script>
+
+<script type='text/javascript'>
+    $('#description').jqte();
+    $(document).ready(function() {
+        var yearrange = <?php echo "'" . YEAR . ':' . date('Y') . "'"; ?>;
+        //var yearrange = <?php echo "'" . date("Y", strtotime("-40 years")) . ':' . date('Y') . "'"; ?>;
+        $('#start_date,#end_date').datepicker({
+            showOn: 'both',
+            // maxDate: new Date,
+            // yearRange: yearrange,
+            dateFormat: "<?php echo DATEFORMAT_JS; ?>",
+            buttonImage: "<?php echo $this->baseUrl("public/media/images/cal.jpg"); ?>",
+            buttonImageOnly: true,
+            buttonText: "",
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            onClose: function() {
+                $('#start_date,#end_date').trigger('blur');
+                var msg = "";
+                if (this.id == 'end_date')
+                    msg = "To date should be greater than from date.";
+                else
+                    msg = "From date should be less than to date.";
+                from_to_date_validation('start_date', 'end_date', this, msg);
+            }
+        });
+
+    });
+</script>

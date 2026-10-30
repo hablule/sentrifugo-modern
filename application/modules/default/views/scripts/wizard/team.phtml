@@ -1,0 +1,234 @@
+<?php 
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+?>
+
+<?php
+if($this->nodata != '')
+{
+?>
+<div class="ml-alert-1-info m1-info-set-2">
+    <div class="style-1-icon info"></div>
+       No data found.
+</div>
+<?php 
+}
+else 
+{
+
+	 if (count($this->messages)) {?>
+			<div id="dispmsgmenu">
+		    <div class="ml-alert-1-success new_wizard_success">
+			<div class="style-1-icon success"></div>
+				<?php foreach ($this->messages as $message){?>
+				 Team Added successfully<?php echo $this->escape($message); ?>
+				<?php } ?>
+		       </div> 
+			</div>	
+	
+<?php       } 
+$date_formats_arr = $this->date_formats_arr;
+$time_formats_arr = $this->time_formats_arr;
+sapp_Global::generateClientValidations($this->form);?>
+<div class="total-form-controller">
+<div id="error_message" style="display:none;"></div>
+<h3 class="step_main_title">Team</h3>
+<?php echo sapp_Helper::dispayAddEmployeeLink($this->wizarddata,'superadmin');?>
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction(); ?>" method="<?php echo $this->form->getMethod(); ?>"class="step_form">
+<?php echo $this->form->id;
+		echo $this->form->user_id;
+		?>
+
+			<div class="new-form-ui">
+				<label class='required'>Team Name</label>
+				<div class="division"><?php echo $this->form->name; ?></div>
+				<?php if (isset($this->msgarray['name'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->name->getId(); ?>"><?php echo $this->msgarray['name']; ?></span>
+				<?php } ?>
+			</div>
+
+
+			<div class="new-form-ui">
+				<label class='required'>Team Code</label>
+				<div class="division"><?php echo $this->form->code; ?>
+				</div>
+				<?php if (isset($this->msgarray['code'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->code->getId(); ?>"><?php echo $this->msgarray['code']; ?></span>
+				<?php } ?>
+			</div>
+			<div class="new-form-ui">
+				<label >Company</label>
+				<div class="division"><?php echo $this->form->company_id; ?></div>
+				<?php if (isset($this->msgarray['company_id'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->company_id->getId(); ?>"><?php echo $this->msgarray['company_id']; ?></span>
+				<?php } ?>
+			</div>
+			<div class="new-form-ui">
+				<label >Strategic Bussiness Unit</label>
+				<div class="division"><?php echo $this->form->sbunit_id; ?>
+				<span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL . 'businessunits/addpopup' ?>','Business Units');"> Add Business Unit </span>
+
+			</div>
+				<?php if (isset($this->msgarray['sbunit_id'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->sbunit_id->getId(); ?>"><?php echo $this->msgarray['sbunit_id']; ?></span>
+				<?php } ?>
+			</div>
+			<div class="new-form-ui">
+				<label > Division</label>
+				<div class="division"><?php echo $this->form->division_id; ?>
+				<span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL . 'division/addpopup' ?>','Division');"> Add Division </span>
+
+			</div>
+				<?php if (isset($this->msgarray['division_id'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->division_id->getId(); ?>"><?php echo $this->msgarray['division_id']; ?></span>
+				<?php } ?>
+			</div>
+			<div class="new-form-ui">
+				<label >Department</label>
+				<div class="division"><?php echo $this->form->departement_id; ?>
+				<span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL . 'departments/addpopup' ?>','Department');"> Add Department </span>
+
+			</div>
+				<?php if (isset($this->msgarray['departement_id'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->departement_id->getId(); ?>"><?php echo $this->msgarray['departement_id']; ?></span>
+				<?php } ?>
+			</div>
+			<div class="new-form-ui">
+				<label >Section</label>
+				<div class="division"><?php echo $this->form->section_id; ?>
+				<span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL . 'section/addpopup' ?>','Section');"> Add Section </span>
+
+			</div>
+				<?php if (isset($this->msgarray['section_id'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->section_id->getId(); ?>"><?php echo $this->msgarray['section_id']; ?></span>
+				<?php } ?>
+			</div>
+			<div class="new-form-ui">
+				<label >Project</label>
+				<div class="division"><?php echo $this->form->project_id; ?>
+				<span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL . 'project/addpopup' ?>','Project');"> Add Project </span>
+
+			</div>
+				<?php if (isset($this->msgarray['project_id'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->project_id->getId(); ?>"><?php echo $this->msgarray['project_id']; ?></span>
+				<?php } ?>
+			</div>
+			<div class="new-form-ui">
+				<label >Parent Team</label>
+				<div class="division"><?php echo $this->form->parentteam_id; ?>
+				<span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL . 'team/addpopup' ?>','Team');"> Add Team </span>
+
+			</div>
+				<?php if (isset($this->msgarray['parentteam_id'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->parentteam_id->getId(); ?>"><?php echo $this->msgarray['parentteam_id']; ?></span>
+				<?php } ?>
+			</div>
+			<div class="new-form-ui">
+				<label >Representative</label>
+				<div class="division" class="required"><?php echo $this->form->representative_id; ?></div>
+				<?php if (isset($this->msgarray['representative_id'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->representative_id->getId(); ?>"><?php echo $this->msgarray['representative_id']; ?></span>
+				<?php } ?>
+			</div>
+			<br>
+			<?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description','', 'fck_editor_height','',array());?>
+			<?php if (isset($this->msgarray['allfk'])) { ?>
+					<span class="errors" id="errors-allfk"><?php echo $this->msgarray['allfk']; ?></span>
+				<?php } ?>
+
+			<div class="new-form-ui-submit ">
+				<div class="division"><?php echo $this->form->submit; ?></div>
+				<button onclick="window.location.href='<?php echo BASE_URL; ?>team';" type="button" >Cancel</button>
+			</div>
+
+
+	</form>
+
+<div class="nxt_pre_button">
+			<button class="Prev_butt" name="prev" id="prev" type="button" onclick="window.location='<?php echo BASE_URL?>wizard/project';">Prev</button>		
+			<button class="next_butt" name="next" id="next" type="button" onclick="window.location='<?php echo BASE_URL?>wizard/configureservicerequest';">Next</button>
+		</div>
+</div>
+<div id="businessunitsContainer" style="display: none; overflow: auto;">
+		<div class="heading">
+			<a href="javascript:void(0)">
+				<img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+		</div>
+
+		<iframe id="businessunitsCont" class="business_units_iframe" frameborder="0"></iframe>
+	</div>
+
+    <div id="divisionContainer" style="display: none; overflow: auto;">
+		<div class="heading">
+			<a href="javascript:void(0)">
+				<img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+		</div>
+
+		<iframe id="divisionCont" class="business_units_iframe" frameborder="0"></iframe>
+	</div>
+	<div id="sectionContainer" style="display: none; overflow: auto;">
+		<div class="heading">
+			<a href="javascript:void(0)">
+				<img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+		</div>
+
+		<iframe id="sectionCont" class="business_units_iframe" frameborder="0"></iframe>
+	</div>
+    <div id="departmentsContainer" style="display: none; overflow: auto;">
+		<div class="heading">
+			<a href="javascript:void(0)">
+				<img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+		</div>
+
+		<iframe id="departmentsCont" class="business_units_iframe" frameborder="0"></iframe>
+	</div>
+	<div id="projectContainer" style="display: none; overflow: auto;">
+		<div class="heading">
+			<a href="javascript:void(0)">
+				<img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+		</div>
+
+		<iframe id="projectCont" class="business_units_iframe" frameborder="0"></iframe>
+	</div>
+	<div id="teamContainer" style="display: none; overflow: auto;">
+		<div class="heading">
+			<a href="javascript:void(0)">
+				<img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+		</div>
+
+		<iframe id="teamCont" class="business_units_iframe" frameborder="0"></iframe>
+	</div>
+<?php 
+}
+?>
+<script>
+  $(document).ready(function(){
+   
+    <?php echo sapp_Helper::modifyClass($this->wizarddata); ?>
+});
+</script>
+
+
+
+
+
+
+
+

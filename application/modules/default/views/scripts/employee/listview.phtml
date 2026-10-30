@@ -1,0 +1,118 @@
+<?php if ($this->call != "ajaxcall") {
+?>
+
+    <div><a href="<?php echo BASE_URL . 'employee'; ?>"><img src="<?php echo MEDIA_PATH; ?>images/box.png" width="20px" height="20px" title="Box View" /></a>
+
+        <script src="<?php echo EXPENSES_MEDIA_PATH; ?>js/materialize.js"></script>
+        <link rel="stylesheet" href="<?php echo MEDIA_PATH ?>css/screen.css">
+        <div class="profile-tabs-right-2">
+            <div class="flt_right">
+                <div class="actions_div">
+                    <a href="<?php echo BASE_URL . 'employee/add'; ?>" class="sprite addrecord">Add</a>
+                    <span class="uploadbut_exel uploadbutsel flt_left marginfiv" id="upload_custom_div">Import Employees</span> <a target="_blank" href="<?php echo DOMAIN; ?>public/downloads/import_employees.xlsx" class="importformatlink flt_left">Import format</a> <a target="_blank" href="<?php echo DOMAIN; ?>public/downloads/importguide.pdf" class="importformatlink flt_left">Help</a>
+                    <div id="loaderimgprofile" style="display:none;"><img src="<?php echo DOMAIN; ?>public/media/images/loaderwhite_21X21.gif" style="width:21px; height: 21px; float: none; " /></div>
+                </div>
+            </div>
+            <input type="hidden" id="uploadimagepath" name="uploadimagepath" value="" />
+            <input type="hidden" name="emp_excel" value="" />
+        </div>
+    </div> <span id="error_message"></span>
+    <div id="upload_error" style="display:none;clear:both;"></div>
+<?php } ?>
+<?php
+
+if ($this->call !== 'ajaxcall') {
+    $div = '<div id="grid_' . $this->dataArray['objectname'] . '" class="all-grid-control">';
+    $endDiv = '</div>';
+
+    $multi = '';
+    echo $multi . $div . '<div id="msg" style="display:none;font-style: oblique; font-weight: bold; color: green;""></div>' . $this->grid($this->dataArray) . $endDiv;
+} else {
+    $div = '<div id="grid_' . $this->dataArray['objectname'] . '" class="all-grid-control">';
+    $endDiv = '</div>';
+
+    $multi = '';
+    echo $multi . $div . '<div id="msg" style="display:none;font-style: oblique; font-weight: bold; color: green;""></div>' . $this->grid($this->dataArray) . $endDiv;
+}
+
+?>
+
+<?php
+
+foreach ($this->dataArray as $data) {
+    foreach ($data as $emp) {
+        if ($this->perm[$emp['empid']]['permission'] != 'Y') {
+            echo "<script type='text/javascript'>
+                $(document).ready(function() {
+                    $('#edit'+" . $this->perm[$emp['empid']]['empid'] . ").remove();
+                });
+                </script>";
+        } else {
+        }
+    }
+}
+
+
+?>
+<script type="text/javascript">
+    var btnUpload = $('#upload_custom_div');
+    new AjaxUpload(btnUpload, {
+        action: base_url + '/employee/uploadexcel',
+        name: 'emp_excel', //we can rename it 
+        dataType: 'json',
+        onSubmit: function(file, ext) {
+            if ($("#upload_error").is(":visible")) $("#upload_error").hide();
+            $("#loaderimgprofile").show();
+        },
+        onComplete: function(file, response) {
+            try {
+                var result = JSON.parse(response);
+                if (result.result == 'success') {
+                    $('#upload_error').show();
+                    $("#loaderimgprofile").hide();
+                    refreshgrid("employee", "No", "");
+                    $('#upload_error').html('<div  class="ml-alert-1-success"><div style="display:block;"><span class="style-1-icon success"></span>' + result.msg + '</div></div>');
+                    setTimeout(function() {
+                        $('#upload_error').fadeOut('slow');
+                    }, 3000);
+                } else {
+                    $('#upload_error').show();
+                    $("#loaderimgprofile").hide();
+                    if (result.msg) $('#upload_error').html('<div  class="ml-alert-1-error"><div style="display:block;"><span class="style-1-icon error"></span>' + result.msg + '</div></div>');
+                    else $('#upload_error').html('<div  class="ml-alert-1-error"><div style="display:block;"><span class="style-1-icon error"></span>Please choose different file.</div></div>');
+                }
+            } catch (e) {
+                $('#upload_error').show();
+                $("#loaderimgprofile").hide();
+                $('#upload_error').html('<div  class="ml-alert-1-error"><div style="display:block;"><span class="style-1-icon error"></span>Something went wrong, please try again.</div></div>');
+            }
+        }
+    }, 'json');
+</script>
+
+
+<style>
+    .search_emp {
+        width: 42%;
+        float: left;
+    }
+
+    .profile-tabs-right-2 {
+        width: 58%;
+    }
+
+    .search_emp .new-form-ui {
+        height: inherit;
+        margin-bottom: 12px;
+    }
+
+    @media (min-width: 1280px) {
+        .search_emp {
+            width: 59%;
+        }
+
+        .profile-tabs-right-2 {
+            width: 41%;
+        }
+    }
+</style>

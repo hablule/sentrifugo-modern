@@ -1,0 +1,19 @@
+<?php
+
+$baseUrl = $this->serverUrl().$this->baseUrl();
+echo $this->form->id; 
+$msgtitle = $this->controllername.'_delete';
+sapp_Helper::editdeleteForView(LINECATEGORY,$this->controllername,$this->id,$msgtitle);
+
+ 
+sapp_Helper::viewHeader();
+sapp_Helper::viewBody('alt','Skill',(!empty($this->data['name']))?$this->data['name']:"...",'Code',(!empty($this->data['code']))?$this->data['code']:"...");
+sapp_Helper::viewBody('nor','Summary',(!empty($this->data['issummary']))?$this->data['issummary']:"...",'Active',(!empty($this->data['isactive']))?$this->data['isactive']:"...");
+sapp_Helper::viewBody('alt','Skill Categry',(!empty($this->data['skillcategoryname']))?$this->data['skillcategoryname']:"...",'Measurement',(!empty($this->data['measurementname']))?$this->data['measurementname']:"...");
+sapp_Helper::viewBody('nor','Description',(!empty($this->data['description']))?$this->data['description']:"...",'Parent Skill',(!empty($this->data['parentskill']))?$this->data['parentskill']:"...");
+
+sapp_Helper::viewFooter();
+?>
+<div class="new-form-ui-submit">
+<button onclick="window.location.href='<?php echo BASE_URL; ?>skill';" type="button">Cancel</button>
+</div>

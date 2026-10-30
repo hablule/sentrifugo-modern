@@ -1,0 +1,405 @@
+<?php
+
+/**
+ * Business Unit Save View (Add/Edit)
+ *
+ * Provides the user interface for adding or modifying business units.
+ * Refactored to comply with SSOT v6.4.
+ *
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ * @author     Hablul Soft Solution < /hablul.in>
+ * @license    http://gnu.org GNU General Public License, version 3.0 (GPL-3.0)
+ * @version    Sentrifugo v3.2
+ */
+?>
+
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<?php sapp_Global::generateClientValidations($this->form); ?>
+
+<div class="row">
+    <div class="col s12">
+
+        <!-- Error Message Container (For standard POST fallbacks) -->
+        <div id="message_container">
+            <?php if (!empty($this->msgarray)) : ?>
+                <div class="ml-alert-1-error">
+                    <div style="display:block;">
+                        <span class="style-1-icon error"></span>
+                        Please correct the errors highlighted below.
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" action="<?php echo $this->escape($this->form->getAction()); ?>" method="<?php echo $this->escape($this->form->getMethod()); ?>">
+
+            <!-- Hidden Elements -->
+            <?php echo $this->form->id; ?>
+
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <!-- Code -->
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->code; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->code->getId()); ?>">
+                                <?php echo isset($this->msgarray['code']) ? $this->escape($this->msgarray['code']) : ''; ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Name -->
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->name; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->name->getId()); ?>">
+                                <?php echo isset($this->msgarray['name']) ? $this->escape($this->msgarray['name']) : ''; ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Start Date -->
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->startdate->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->startdate; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->startdate->getId()); ?>">
+                                <?php echo isset($this->msgarray['startdate']) ? $this->escape($this->msgarray['startdate']) : ''; ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Unit Head -->
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->unithead_id->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->unithead_id; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->unithead_id->getId()); ?>">
+                                <?php echo isset($this->msgarray['unithead_id']) ? $this->escape($this->msgarray['unithead_id']) : ''; ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <!-- Parent: Company -->
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->company_id->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->company_id; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->company_id->getId()); ?>">
+                                <?php echo isset($this->msgarray['company_id']) ? $this->escape($this->msgarray['company_id']) : ''; ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Parent: Business Unit (Recursive) -->
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->parent_id->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->parent_id; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->parent_id->getId()); ?>">
+                                <?php echo isset($this->msgarray['parent_id']) ? $this->escape($this->msgarray['parent_id']) : ''; ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <!-- Location Dropdowns (AJAX Cascading expected for State/City) -->
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->country->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->country; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->country->getId()); ?>">
+                                <?php echo isset($this->msgarray['country']) ? $this->escape($this->msgarray['country']) : ''; ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->state->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->state; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->state->getId()); ?>">
+                                <?php echo isset($this->msgarray['state']) ? $this->escape($this->msgarray['state']) : ''; ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->city->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->city; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->city->getId()); ?>">
+                                <?php echo isset($this->msgarray['city']) ? $this->escape($this->msgarray['city']) : ''; ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Address Lines -->
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->address1->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->address1; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->address1->getId()); ?>">
+                                <?php echo isset($this->msgarray['address1']) ? $this->escape($this->msgarray['address1']) : ''; ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->address2->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->address2; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->address2->getId()); ?>">
+                                <?php echo isset($this->msgarray['address2']) ? $this->escape($this->msgarray['address2']) : ''; ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->address3->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->address3; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->address3->getId()); ?>">
+                                <?php echo isset($this->msgarray['address3']) ? $this->escape($this->msgarray['address3']) : ''; ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <!-- Configuration Options -->
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->timezone->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->timezone; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->timezone->getId()); ?>">
+                                <?php echo isset($this->msgarray['timezone']) ? $this->escape($this->msgarray['timezone']) : ''; ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->service_desk_flag->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->service_desk_flag; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->service_desk_flag->getId()); ?>">
+                                <?php echo isset($this->msgarray['service_desk_flag']) ? $this->escape($this->msgarray['service_desk_flag']) : ''; ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Business Domains -->
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->businessdomain->getLabel()); ?></label>
+                        <div class="division multicheckbox-container">
+                            <?php echo $this->form->businessdomain; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->businessdomain->getId()); ?>">
+                                <?php echo isset($this->msgarray['businessdomain']) ? $this->escape($this->msgarray['businessdomain']) : ''; ?>
+                            </span>
+                        </div>
+                    </div>
+
+
+                    <!-- Description -->
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+
+                    <!-- Active Status -->
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->isactive; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->isactive->getId()); ?>">
+                                <?php echo isset($this->msgarray['isactive']) ? $this->escape($this->msgarray['isactive']) : ''; ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="new-form-ui-submit">
+                        <div class="division">
+                            <?php echo $this->form->submit; ?>
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>businessunit/index';" value="Cancel" type="button" class="reset" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Initialize WYSIWYG
+        $('#description').jqte();
+        
+        // Initialize DatePicker
+        $('#startdate').datepicker({
+            showOn: 'both',
+            buttonImage: "<?php echo MEDIA_PATH; ?>images/cal.jpg",
+            buttonImageOnly: true,
+            dateFormat: '<?php echo DATEFORMAT_JS; ?>',
+            changeMonth: true,
+            changeYear: true
+        });
+
+        // AJAX Cascading Dropdowns for Location
+        $('#country').change(function() {
+            var countryId = $(this).val();
+            $('#state').html('<option value="">Select State / Province</option>');
+            $('#city').html('<option value="">Select City</option>');
+            
+            if (countryId) {
+                if (typeof $.blockUI === "function") $('#state').parent().block({ message: null });
+
+                $.ajax({
+                    url: base_url + '/states/getstatepairs',
+                    type: 'POST',
+                    data: { country_id: countryId },
+                    dataType: 'json',
+                    success: function(response) {
+                        var options = '<option value="">Select State / Province</option>';
+                        if (response && !$.isEmptyObject(response)) {
+                            $.each(response, function(key, value) {
+                                // Handle both SSOT flat objects and legacy arrays
+                                var optVal = (typeof value === 'object') ? (value.id || key) : key;
+                                var optText = (typeof value === 'object') ? (value.state_name || value.name) : value;
+                                options += '<option value="' + optVal + '">' + optText + '</option>';
+                            });
+                        }
+                        $('#state').html(options);
+                    },
+                    complete: function() {
+                        if (typeof $.unblockUI === "function") $('#state').parent().unblock();
+                    }
+                });
+            }
+        });
+
+        $('#state').change(function() {
+            var stateId = $(this).val();
+            $('#city').html('<option value="">Select City</option>');
+            
+            if (stateId) {
+                if (typeof $.blockUI === "function") $('#city').parent().block({ message: null });
+
+                $.ajax({
+                    url: base_url + '/cities/getcitypairs',
+                    type: 'POST',
+                    data: { state_id: stateId },
+                    dataType: 'json',
+                    success: function(response) {
+                        var options = '<option value="">Select City</option>';
+                        if (response && !$.isEmptyObject(response)) {
+                            $.each(response, function(key, value) {
+                                var optVal = (typeof value === 'object') ? (value.id || key) : key;
+                                var optText = (typeof value === 'object') ? (value.city_name || value.name) : value;
+                                options += '<option value="' + optVal + '">' + optText + '</option>';
+                            });
+                        }
+                        $('#city').html(options);
+                    },
+                    complete: function() {
+                        if (typeof $.unblockUI === "function") $('#city').parent().unblock();
+                    }
+                });
+            }
+        });
+
+        // --- SSOT v6.5 EXPLICIT AJAX SUBMIT HANDLER ---
+        $('#submitbutton').off('click').on('click', function(e) {
+            e.preventDefault(); 
+            var $form = $('#formid');
+            
+            // 1. Clear previous errors
+            $('.errors').text('');
+            $('#message_container').empty();
+
+            // 2. Standard Client Validations
+            if (!$form.valid()) { 
+                return false; 
+            }
+            
+            // 3. Custom Poly-Hierarchical Validation
+            var companyParent = $('#company_id').val();
+            var sbuParent = $('#parent_id').val();
+            var parentCount = 0;
+            if (companyParent && companyParent !== '') parentCount++;
+            if (sbuParent && sbuParent !== '') parentCount++;
+
+            if (parentCount === 0 || parentCount > 1) {
+                var errorMsg = (parentCount > 1) 
+                    ? 'A Business Unit can only have one parent. Please clear one selection.'
+                    : 'A Business Unit must have a parent. Please select one.';
+                
+                $('#errors-company_id').text(errorMsg);
+                $('#errors-parent_id').text(errorMsg);
+                $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Please fix the highlighted errors.</div>');
+                $('html, body').animate({ scrollTop: 0 }, 'slow');
+                return false; 
+            }
+
+            // 4. Block UI
+            if (typeof $.blockUI === "function") {
+                $.blockUI({ message: '<img src="<?php echo MEDIA_PATH; ?>images/loader2.gif" alt="Loading" />' });
+            }
+
+            // 5. Build FormData (Handles files natively)
+            var formData = new FormData($form[0]);
+
+            // 6. Explicit AJAX Call
+            $.ajax({
+                url: base_url + '/businessunit/save/format/json',
+                type: 'POST',
+                data: formData,
+                processData: false, 
+                contentType: false, 
+                dataType: 'json',
+                success: function(response) {
+                    if (typeof $.unblockUI === "function") $.unblockUI();
+
+                    // Success Routing
+                    if (response && response.result === 'saved') {
+                        window.location.href = base_url + '/businessunit';
+                    } 
+                    // Server Exception Routing
+                    else if (response && response.result === 'exception') {
+                        $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>' + response.message + '</div>');
+                        $('html, body').animate({ scrollTop: 0 }, 'slow');
+                    } 
+                    // Zend Form Validation Error Routing
+                    else if (response && typeof response === 'object') {
+                        $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Please fix the highlighted errors.</div>');
+                        
+                        $.each(response, function(fieldId, errorObj) {
+                            var errMsg = (typeof errorObj === 'object') ? errorObj[Object.keys(errorObj)[0]] : errorObj;
+                            $('#errors-' + fieldId).text(errMsg);
+                        });
+                        
+                        $('html, body').animate({ scrollTop: 0 }, 'slow');
+                    }
+                },
+                error: function() {
+                    if (typeof $.unblockUI === "function") $.unblockUI();
+                    $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>A critical server error occurred. Check logs.</div>');
+                    $('html, body').animate({ scrollTop: 0 }, 'slow');
+                }
+            });
+        });
+    });
+</script>

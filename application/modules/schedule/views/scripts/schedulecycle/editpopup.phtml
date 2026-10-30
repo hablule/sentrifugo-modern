@@ -1,0 +1,352 @@
+<style>
+    .add_new_asset {
+        top: 0px;
+    }
+
+    #schtable td {
+        border: 1px black solid;
+    }
+
+    #schtable th {
+        border: 1px black solid;
+    }
+
+    #editlink {
+        overflow: auto;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/hrms.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH ?>css/addelement.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/font-awesome.css" />
+
+
+
+
+<?php if ($this->pop == 'close') { ?>
+    <div class="ml-alert-1-success">
+        <div class="style-1-icon success"></div>
+
+        Schedule cycle <?php echo $this->eventact; ?> successfully
+    </div>
+
+<?php } else {
+    sapp_Global::generateClientValidations($this->form); ?>
+
+    <form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction(); ?>" method="<?php echo $this->form->getMethod(); ?>">
+        <?php echo $this->form->id; ?>
+        <div class="total-form-controller">
+
+            <div class="new-form-ui clearb" style="display: none;">
+                <label id="dailylable"> Daily </label>
+                <div class="division"><?php echo $this->form->daily; ?>
+
+                    <span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL . 'cycleshift/addpopup' ?>','Cycle Shift');">
+                        Add Cycle Shift
+                    </span>
+                </div>
+                <?php if (isset($this->msgarray['daily'])) { ?>
+                    <span class="errors" id="errors-<?php echo $this->form->dayily->getId(); ?>"><?php echo $this->msgarray['dayily']; ?></span>
+                <?php } ?>
+            </div>
+
+            <div class="new-form-ui clearb" style="display: none;">
+                <label id="dayofweeklable"> Day of Week </label>
+                <div class="division"><?php echo $this->form->dayofweek; ?>
+                    <a id="clickToSub" class="add_new_asset dayofweek">+&nbsp;Add Week Day</a>
+                    <span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL . 'cycleshift/addpopup' ?>','Cycle Shift');">
+                        Add Cycle Shift
+                    </span>
+                </div>
+
+                <?php if (isset($this->msgarray['dayofweek'])) { ?>
+                    <span class="errors" id="errors-<?php echo $this->form->dayofweek->getId(); ?>"><?php echo $this->msgarray['dayofweek']; ?></span>
+                <?php } ?>
+
+            </div>
+            <div class="new-form-ui clearb" style="display: none;">
+                <label id="dayofmonthlable">Day of Month</label>
+                <div class="division"><?php echo $this->form->dayofmonth; ?>
+                    <a id="clickToSub" class="add_new_asset dayofmonth">+&nbsp;Add Month</a>
+                    <span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL . 'cycleshift/addpopup' ?>','Cycle Shift');">
+                        Add Cycle Shift
+                    </span>
+                </div>
+                <?php if (isset($this->msgarray['dayofmonth'])) { ?>
+                    <span class="errors" id="errors-<?php echo $this->form->dayofmonth->getId(); ?>"><?php echo $this->msgarray['dayofmonth']; ?></span>
+                <?php } ?>
+            </div>
+            <br>
+            <div id="editlink" class="new-form-ui clearb" style="margin-left: 200px;">
+
+            </div>
+            <div id="cycleshiftdata"></div>
+            <textarea name="statedata" hidden></textarea>
+            <br>
+
+            <textarea name="cycleshiftdata" hidden></textarea>
+            <br>
+
+
+
+        </div>
+
+        <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+        <div class="new-form-ui clearb">
+            <label>Active</label>
+            <div class="division"><?php echo $this->form->isactive; ?>
+                <?php if (isset($this->msgarray['isactive'])) { ?>
+                    <span class="errors" id="errors-<?php echo $this->form->isactive->getId(); ?>"><?php echo $this->msgarray['isactive']; ?></span>
+                <?php } ?>
+
+            </div>
+
+        </div>
+        <div class="new-form-ui-submit">
+            <div class="division"><?php echo $this->form->submit; ?>
+                <input onclick="closeiframepopup('schedulecycle','cancel');" type="button" value="Close" />
+            </div>
+        </div>
+        </div>
+    </form>
+    <div id="schedule" style="width: 100%;"></div>
+
+    <!-- <div  id="timetableContainer"  style="display: none; overflow: auto;">
+		<div class="heading">
+			<a href="javascript:void(0)">
+			<img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right"
+				border="0" hspace="3" vspace="5" class="closeAttachPopup"
+				style="margin: -24px 8px 0 0;"> </a>
+		</div>
+
+			<iframe id="timetableCont" class="business_units_iframe" frameborder="0"></iframe>
+
+	</div> -->
+<?php } ?>
+<script>
+    $('#description').jqte();
+    var choosenElement = "";
+    var originalOption = {};
+    $('document').ready(() => {
+
+        console.log(originalOption)
+        setTimeout(() => {
+            $("#" + choosenElement).parent().parent().find("#errors-" + choosenElement).remove();
+            $("#" + choosenElement).parent().parent().remove("#errors-" + choosenElement);
+        }, 3000);
+        <?php if ($this->pop == 'close') { ?>
+
+            closeiframeAddPopup('<?php echo $this->cycledata; ?>', '<?php echo $this->controllername; ?>', 'test2', 'Shift');
+
+        <?php } ?>
+        // $('#cycleshiftdata').html('x');
+        /* let res = getCycleId(40);
+        let shiftcycle = getShiftCycle(res);
+        for (const key in res) {
+            const element = res[key]
+            $("#editlink").append("<div><span class='add-coloum' id="+element['schedulecycle_id']+">" + element['cycle'] + "</span><button><i class='fa fa-pencil'></i></button><button onClick='removeSchedule(event)'><i class='fa fa-times-circle'></i></button></div>");
+        } */
+        console.log("<?php echo $this->id; ?>");
+        choosenElement = chooseOne("daily", "dayofweek", "dayofmonth", `<?php echo $this->id ?>`);
+        let option = $("#" + choosenElement).find("option")
+
+        for (var i = 1; i < option.length; i++) {
+            $(option[i]).attr("id", i);
+            originalOption[$(option[i]).html()] = i
+        }
+        let res = getCycleId("<?php echo $this->cycleid; ?>");
+        $("textarea[name=cycleshiftdata]").val(JSON.stringify(res));
+        $(".jqte_editor").html(res[0]['description']);
+        $("#isactive").html(res[0]['isactive'] == "Y" ? 1 : 0);
+        let shiftcycle = getShiftCycle(res, choosenElement);
+        console.log($(".select2-match"))
+        console.log(res);
+        res.forEach(element => {
+            $("#" + choosenElement).find("option[value=" + element[choosenElement] + "]").remove()
+            console.log(element[choosenElement]);
+        });
+        createLink(res);
+        console.log(res, 'res to check');
+        localStorage.setItem('schedule', JSON.stringify(res));
+        if ($("#" + choosenElement).val() == '') {
+            $("#" + choosenElement).parent().find('.add-coloum').hide();
+
+        }
+
+        $("#" + choosenElement).change(() => {
+            if ($("#" + choosenElement).val() != '') {
+                $("#" + choosenElement).parent().find('.add-coloum').show();
+
+            } else {
+                $("#" + choosenElement).parent().find('.add-coloum').hide();
+            }
+        });
+
+        $("." + choosenElement).click(() => {
+
+            let chosenData = $("#" + choosenElement).val();
+            let cycleShiftData = $('#cycleshiftdata').html();
+            $("textarea[name='statedata']").val('');
+            console.log(cycleShiftData);
+            let desc = $('#description').val();
+            let isactive = $("#isactive").val();
+
+            $("#" + choosenElement).parent().parent().find('#errors-' + choosenElement).remove();
+            if (chosenData != '') {
+
+                let dayschedule = {};
+                if ($('#cycleshiftdata').html() != '') {
+                    try {
+                        $("option[value=" + chosenData + "]").remove();
+                        $(".select2-choice").find('span').html(" ");
+                        let prevSchedule = localStorage.getItem("schedule");
+                        cycleShiftData = JSON.parse(cycleShiftData);
+                        let res = [];
+                        if (prevSchedule != null || prevSchedule != "")
+                            res = JSON.parse(prevSchedule)
+
+                        dayschedule[choosenElement] = chosenData;
+                        dayschedule['description'] = desc;
+                        dayschedule['isactive'] = isactive;
+                        dayschedule['schedule_id'] = "<?php echo $this->cycleid; ?>";
+                        dayschedule['cycle'] = chosenData;
+                        dayschedule['cycleshiftdata'] = cycleShiftData;
+                        console.log(res, "res to focus");
+                        res.push(dayschedule)
+                        $('#cycleshiftdata').html('');
+                        localStorage.setItem('schedule', JSON.stringify(res));
+                        $("textarea[name=cycleshiftdata]").val(JSON.stringify(res));
+                        createLink(res);
+
+                    } catch (error) {
+                        $("#" + choosenElement).parent().parent().append("<span class='errors' id='errors-" + choosenElement + "'>Shift Cycle not Entered </span>")
+                        setTimeout(() => {
+                            $("#" + choosenElement).parent().parent().find("#errors-" + choosenElement).remove();
+                            $("#" + choosenElement).parent().parent().remove("#errors-" + choosenElement);
+                        }, 4000);
+
+
+                    }
+                } else {
+
+                    $("#" + choosenElement).parent().parent().append("<span class='errors' id='errors-" + choosenElement + "'>Shift Cycle not Entered </span>")
+                }
+
+            } else {
+                $("#" + choosenElement).parent().parent().append("<span class='errors' id='errors-" + choosenElement + "'>You need to select </span>");
+                setTimeout(() => {
+                    $("#" + choosenElement).parent().parent().find("#errors-" + choosenElement).remove();
+                    $("#" + choosenElement).parent().parent().remove("#errors-" + choosenElement);
+                }, 3000);
+            }
+
+            // $('#cycleshiftdata').html('x');
+        })
+
+    })
+
+
+    function getCycleId(id) {
+        var res = $.ajax({
+            url: base_url + '/schedulecycle/getcycledata',
+            dataType: 'json',
+            data: 'id=' + id,
+            async: false
+        }).responseJSON;
+
+        return res;
+    }
+
+    function getShiftCycle(res, chooseElement) {
+        let shift = []
+        let shifts = []
+        res.forEach(element => {
+            shift = [];
+            if (shifts[element[chooseElement]] == undefined) {
+                shift['shift_id'] = [element['shift_id']];
+                shifts[element[chooseElement]] = shift;
+            } else {
+                shifts[element[chooseElement]]['shift_id'].push(element['shift_id'])
+            }
+            console.log(shifts[element[chooseElement]]['shift_id'])
+
+        });
+        console.log(shifts)
+    }
+
+    function removeSchedule(event) {
+        event.preventDefault();
+
+        let res = localStorage.getItem('schedule');
+        res = JSON.parse(res);
+    
+        const index = $(event.target).parent().parent().attr('id')
+        let removed = res.splice(index, 1);
+        localStorage.setItem('schedule', JSON.stringify(res));
+        $("textarea[name=cycleshiftdata]").val(JSON.stringify(res));
+        console.log(res);
+        $(event.target).parent().parent().remove();
+        let cutedOption = $("#" + choosenElement).find("option");
+        let match = originalOption[removed[0][choosenElement]];
+        if (cutedOption.length == 1)
+            $("#" + choosenElement).append("<option id=" + match + " value=" + removed[0][choosenElement] + ">" + removed[0][choosenElement] + "</option>");
+        for (var i = 1; i < cutedOption.length; i++) {
+            console.log($(cutedOption[i]).attr("id"), "me")
+            if ($(cutedOption[i]).attr("id") < match) {
+                if ($(cutedOption[i + 1]).attr("id") < match)
+                    continue;
+                $(cutedOption[i]).after("<option id=" + match + " value=" + removed[0][choosenElement] + ">" + removed[0][choosenElement] + "</option>")
+                return;
+            } else if ($(cutedOption[i]).attr("id") > match) {
+                $(cutedOption[i]).before("<option id=" + match + " value=" + removed[0][choosenElement] + ">" + removed[0][choosenElement] + "</option>")
+                return;
+            }
+
+        }
+    }
+
+
+    function drawTable(weekschedule, choosenElement) {
+        let tableOpen = '<table id="schtable" style="width: 100%; border: 1px black solid"></table>';
+        let daysche;
+        let daydata;
+        let shiftcycle;
+        let len = 0;
+        $("#schedule").html('');
+        $("#schedule").append(tableOpen);
+        for (const day in weekschedule) {
+            daysche = weekschedule[day];
+            daydata = daysche[choosenElement];
+            shiftcycle = daysche['cycleshiftdata'];
+            $('#schtable').append("<tr id='" + daydata + "'></tr>");
+            len = shiftcycle.length;
+            $('#' + daydata).append("<th  rowspan='" + len + "'>" + daydata + "</th>");
+            let clone = JSON.stringify(shiftcycle);
+            clone = JSON.parse(clone);
+            $("#" + daydata).append("<td>" + clone.shift()['shift_id'] + "</td>")
+            for (const cycle in clone) {
+                $("#schtable").append("<tr id=" + daydata + "_" + clone[cycle]['shift_id'] + "></tr>");
+                $("#" + daydata + "_" + clone[cycle]['shift_id']).append("<td>" + clone[cycle]['shift_id'] + "</td>")
+            }
+        }
+
+    }
+
+    function createLink(res) {
+        $("#editlink").html('');
+        let unsortedRes = res;
+        unsortedRes = unsortedRes.sort();
+        for (const key in unsortedRes) {
+            const element = unsortedRes[key]
+            console.log(key, 'keys');
+            $("#editlink").append("<div id=" + key + "><span class='add-coloum' id=" + element['schedulecycle_id'] + ">" + element['cycle'] + "</span><span><i class='fa fa-pencil'></i></span>" + (element["cycle"] != 'ANYDAY' ? "<span onClick='removeSchedule(event)'><i class='fa fa-times-circle'></i></span>" : "") + "</div>");
+            $("#" + element['schedulecycle_id']).parent().find('.fa-pencil').click((e) => {
+                if (element['schedulecycle_id'] != undefined)
+                    displaydeptform('<?php echo BASE_URL . 'cycleshift/editpopup?id=' ?>' + element['schedulecycle_id'], 'Cycle Shift');
+                else
+                    displaydeptform('<?php echo BASE_URL . 'cycleshift/addpopup?shift=' ?>' + JSON.stringify(element['cycleshiftdata']), 'Cycle Shift');
+            })
+        }
+    }
+</script>

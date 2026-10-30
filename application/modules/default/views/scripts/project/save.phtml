@@ -1,0 +1,384 @@
+<?php
+
+/**
+ * Project Save View
+ * Implements SSOT v6.5 explicit $.ajax() submission.
+ */
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<?php sapp_Global::generateClientValidations($this->form); ?>
+
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container"></div>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" method="post">
+            <?php echo $this->form->id; ?>
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->code; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->code->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->name; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->name->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->representative_id->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->representative_id; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->representative_id->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <!-- SSOT v6.6: Multi-Select Participant Mapping -->
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->participants_company->getLabel()); ?></label>
+                        <div class="division multicheckbox-container">
+                            <?php echo $this->form->participants_company; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->participants_company->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->participants_businessunit->getLabel()); ?></label>
+                        <div class="division multicheckbox-container">
+                            <?php echo $this->form->participants_businessunit; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->participants_businessunit->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->participants_division->getLabel()); ?></label>
+                        <div class="division multicheckbox-container">
+                            <?php echo $this->form->participants_division; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->participants_division->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->participants_department->getLabel()); ?></label>
+                        <div class="division multicheckbox-container">
+                            <?php echo $this->form->participants_department; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->participants_department->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->participants_section->getLabel()); ?></label>
+                        <div class="division multicheckbox-container">
+                            <?php echo $this->form->participants_section; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->participants_section->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->participants_team->getLabel()); ?></label>
+                        <div class="division multicheckbox-container">
+                            <?php echo $this->form->participants_team; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->participants_team->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->participants_employee->getLabel()); ?></label>
+                        <div class="division multicheckbox-container">
+                            <?php echo $this->form->participants_employee; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->participants_employee->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <!-- End Participant Mapping -->
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                    </div>
+
+                    <div class="new-form-ui-submit">
+                        <div class="division">
+                            <?php echo $this->form->submit; ?>
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>project/index';" value="Cancel" type="button" class="reset" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var optionsData = <?php echo $childOptionsJson; ?>;
+    var editingIndex = -1;
+
+    $(document).ready(function() {
+        $('#description').jqte();
+        if ($.isFunction($.fn.select2)) {
+            $('select').select2({
+                width: '100%'
+            });
+        }
+
+        // =====================================================================
+        // THE FIX: Unbind Sentrifugo's global form hijackers from this specific form
+        // =====================================================================
+        $('#formid').off('submit');
+
+        // Toggle visibility based on Data Type
+        $('#data_type').change(function() {
+            if ($(this).val() === 'Structured') {
+                $('#options_section').slideDown();
+                renderOptionsTable();
+            } else {
+                $('#options_section').slideUp();
+            }
+        });
+
+        // Auto-fill Icon Class based on UI Widget selection
+        $('#ui_widget').change(function() {
+            var widget = $(this).val();
+            var iconInput = $('#tmp_icon');
+            if (iconInput.val() === '' || iconInput.val() === 'fa-star') {
+                if (widget === 'Stars') {
+                    iconInput.val('fa-star');
+                } else {
+                    iconInput.val('');
+                }
+            }
+        });
+
+        // Trigger initial states
+        $('#data_type').trigger('change');
+        $('#ui_widget').trigger('change');
+
+        // =====================================================================
+        // SSOT VI.9: ISOLATED AJAX HANDLER
+        // =====================================================================
+        $('#submitbutton').on('click', function(e) {
+            e.preventDefault();
+            var $form = $('#formid');
+
+            // 1. Client Validation
+            if ($.isFunction($form.valid) && !$form.valid()) {
+                return false;
+            }
+
+            // 2. Clear UI Errors
+            $('#message_container').empty();
+            $form.find('.errors').remove();
+
+            // 3. Prepare JSON Payload
+            if ($('#data_type').val() === 'Structured') {
+                if (optionsData.length === 0) {
+                    var errorHtml = '<div class="ml-alert-1-error"><div style="display:block;"><span class="style-1-icon error"></span>Structured scales require at least one Rating Option to be added below.</div></div>';
+                    $('#message_container').html(errorHtml);
+                    $('html, body').animate({
+                        scrollTop: 0
+                    }, 'slow');
+                    return false;
+                }
+                if (editingIndex > -1 || ($('#tmp_value').val() !== '' && $('#tmp_name').val() !== '')) {
+                    if (!confirm("You have unsaved changes in the Option fields. Save anyway (ignoring the un-added option)?")) {
+                        return false;
+                    }
+                }
+                $('#options_payload').val(JSON.stringify(optionsData));
+            } else {
+                $('#options_payload').val('[]');
+            }
+
+            var formData = new FormData($form[0]);
+
+            // 4. Manually trigger the overlay
+            if ($.isFunction($.blockUI)) {
+                $.blockUI({
+                    width: '50px',
+                    message: '<img src="<?php echo MEDIA_PATH; ?>images/loader2.gif" alt="Loading" />'
+                });
+            }
+
+            // 5. Fire Isolated AJAX Call
+            $.ajax({
+                url: base_url + '/parating/save/format/json',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                global: false, // Tell Sentrifugo's global ajaxStart to ignore this
+                success: function(response) {
+                    if (response.result === 'saved') {
+                        // Success -> Redirect
+                        window.location.href = base_url + '/parating';
+                    } else {
+                        // Failure -> Unblock UI and show errors
+                        if ($.isFunction($.unblockUI)) {
+                            $.unblockUI();
+                        }
+
+                        if (response.result === 'exception') {
+                            $('#message_container').html('<div class="ml-alert-1-error"><div style="display:block;"><span class="style-1-icon error"></span>' + response.message + '</div></div>');
+                        } else {
+                            $('#message_container').html('<div class="ml-alert-1-error"><div style="display:block;"><span class="style-1-icon error"></span>Please fix the highlighted errors.</div></div>');
+                            if (typeof response === 'object') {
+                                $.each(response, function(fieldId, errorMsg) {
+                                    var errorSpan = '<span class="errors" id="errors-' + fieldId + '">' + errorMsg + '</span>';
+                                    var $element = $('#' + fieldId);
+                                    if ($element.length > 0) {
+                                        $element.parent().parent().append(errorSpan);
+                                    } else {
+                                        $('[name="' + fieldId + '"]').parent().parent().append(errorSpan);
+                                    }
+                                });
+                            }
+                        }
+                        $('html, body').animate({
+                            scrollTop: 0
+                        }, 'slow');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    if ($.isFunction($.unblockUI)) {
+                        $.unblockUI();
+                    }
+                    $('#message_container').html('<div class="ml-alert-1-error"><div style="display:block;"><span class="style-1-icon error"></span>Server communication error. Check browser console.</div></div>');
+                    $('html, body').animate({
+                        scrollTop: 0
+                    }, 'slow');
+                }
+            });
+        });
+    });
+
+    // -------------------------------------------------------------
+    // OPTION GRID FUNCTIONS
+    // -------------------------------------------------------------
+    function renderOptionsTable() {
+        var tbody = $('#options_tbody');
+        tbody.empty();
+
+        if (optionsData.length === 0) {
+            tbody.append('<tr><td colspan="4" style="text-align:center; padding: 15px; color:#999; font-style:italic;">No options added yet. Structured scales require at least one option.</td></tr>');
+            return;
+        }
+
+        optionsData.sort(function(a, b) {
+            return b.value - a.value;
+        });
+
+        $.each(optionsData, function(index, opt) {
+            var iconHtml = opt.icon_class ? '<i class="fa ' + opt.icon_class + '" style="color:#f39c12;"></i>' : '-';
+            var actionHtml = '<a href="javascript:void(0);" onclick="editOptionRow(' + index + ');" style="color:#3498db; margin-right: 10px;" title="Edit"><i class="fa fa-edit"></i></a>' +
+                '<a href="javascript:void(0);" onclick="removeOptionRow(' + index + ');" style="color:#e74c3c;" title="Delete"><i class="fa fa-trash"></i></a>';
+            var rowStyle = (index === editingIndex) ? 'background-color: #fffacd;' : '';
+
+            var tr = '<tr style="border-bottom: 1px solid #eee; ' + rowStyle + '">' +
+                '<td style="text-align:center; font-weight:bold;">' + opt.value + '</td>' +
+                '<td>' + opt.name + '</td>' +
+                '<td style="text-align:center;">' + iconHtml + '</td>' +
+                '<td style="text-align:center;">' + actionHtml + '</td>' +
+                '</tr>';
+            tbody.append(tr);
+        });
+    }
+
+    function addOptionRow() {
+        var v = $('#tmp_value').val().trim();
+        var n = $('#tmp_name').val().trim();
+        var i = $('#tmp_icon').val().trim();
+        var existingId = '';
+
+        if (v === '' || n === '') {
+            alert("Numeric Value and Text Label are required.");
+            return;
+        }
+        if (isNaN(v)) {
+            alert("Value must be a valid number.");
+            return;
+        }
+
+        var isDup = false;
+        $.each(optionsData, function(index, opt) {
+            if (index !== editingIndex && parseFloat(opt.value) === parseFloat(v)) {
+                isDup = true;
+            }
+        });
+
+        if (isDup) {
+            alert("This numeric value already exists in the list.");
+            return;
+        }
+
+        if (editingIndex > -1) {
+            existingId = optionsData[editingIndex].id;
+            optionsData[editingIndex] = {
+                id: existingId,
+                value: v,
+                name: n,
+                icon_class: i
+            };
+            editingIndex = -1;
+            $('#add_opt_btn').html('<i class="fa fa-plus"></i> Add');
+        } else {
+            optionsData.push({
+                id: '',
+                value: v,
+                name: n,
+                icon_class: i
+            });
+        }
+
+        renderOptionsTable();
+        $('#tmp_value, #tmp_name').val('');
+        $('#tmp_icon').val('');
+        $('#ui_widget').trigger('change');
+    }
+
+    function editOptionRow(index) {
+        var opt = optionsData[index];
+        $('#tmp_value').val(opt.value);
+        $('#tmp_name').val(opt.name);
+        $('#tmp_icon').val(opt.icon_class);
+        editingIndex = index;
+        $('#add_opt_btn').html('<i class="fa fa-save"></i> Update');
+        renderOptionsTable();
+        $('html, body').animate({
+            scrollTop: $("#options_section").offset().top - 50
+        }, 500);
+    }
+
+    function removeOptionRow(index) {
+        if (confirm("Are you sure you want to remove this option?")) {
+            optionsData.splice(index, 1);
+            if (editingIndex === index) {
+                $('#tmp_value, #tmp_name, #tmp_icon').val('');
+                $('#add_opt_btn').html('<i class="fa fa-plus"></i> Add');
+                editingIndex = -1;
+            } else if (editingIndex > index) {
+                editingIndex--;
+            }
+            renderOptionsTable();
+        }
+    }
+</script>

@@ -1,0 +1,182 @@
+<?php
+//die(json_encode($this->dataArray2));
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+//die(json_encode($this->dataArray[0]));
+if (count($this->messages)) { ?>
+	<div id="dispmsgclients">
+		<?php
+		foreach ($this->messages as $message) {
+			$flag = array();
+			$flag = array_keys($message);
+			echo "<div id='messageData' class='ml-alert-1-$flag[0]' style='margin-bottom: 0px;'><div style='display:block;'><span class='style-1-icon $flag[0]'></span>";
+			echo $message[$flag[0]];
+			echo "</div></div>";
+		}
+		?>
+	</div>
+
+<?php } ?>
+<span id="error_message"></span>
+
+<?php
+//  if($this->call == 'ajaxcall'){
+// 	$div = ''; $endDiv = ''; 
+// } else { 
+// 	$div = '<div id="grid_'.$this->dataArray[0]['objectname'].'" class="all-grid-control">'; $endDiv = '</div>';
+// }
+// 	echo $div.'<div id="msg" style="display:none;font-style: oblique; font-weight: bold; color: green;""></div>'.$this->gridtms($this->dataArray[0]).$endDiv; 
+if ($this->call !== 'ajaxcall') {
+	$div = '<div id="grid_' . $this->dataArray['objectname'] . '" class="all-grid-control">';
+	$endDiv = '</div>';
+
+	$multi = '';
+	echo $multi . $div . '<div id="msg" style="display:none;font-style: oblique; font-weight: bold; color: green;""></div>' . $this->gridtms($this->dataArray) . $endDiv;
+
+
+	// $div2 = '<div id="grid_' . $this->dataArray2['objectname'] . '" class="all-grid-control">';
+	// $endDiv2 = '</div>';
+
+	// $multi2 = '';
+	// echo $multi2 . $div2 . '<div id="msg" style="display:none;font-style: oblique; font-weight: bold; color: green;""></div>' . $this->grid($this->dataArray2) . $endDiv2;
+} else {
+	// if ($this->objectName == 'addperk') {
+	// 	$div2 = '<div id="grid_' . $this->dataArray2['objectname'] . '" class="all-grid-control">';
+	// 	$endDiv2 = '</div>';
+
+	// 	$multi2 = '';
+	// 	echo $multi2 . $div2 . '<div id="msg" style="display:none;font-style: oblique; font-weight: bold; color: green;""></div>' . $this->gridtms($this->dataArray2) . $endDiv2;
+	// } else if ($this->objectName == 'schedule') {
+		$div = '<div id="grid_' . $this->dataArray['objectname'] . '" class="all-grid-control">';
+		$endDiv = '</div>';
+
+		$multi = '';
+		echo $multi . $div . '<div id="msg" style="display:none;font-style: oblique; font-weight: bold; color: green;""></div>' . $this->grid($this->dataArray) . $endDiv;
+	//}
+}
+
+?>
+
+<!-- <?php
+if ($this->call != 'ajaxcall') { ?>
+	<form name="<?php //echo $this->form->getName(); ?>" id="<?php //echo $this->form->getId(); ?>" class="nn" action="<?php //echo $this->form->getAction(); ?>" method="POST">
+		<?php //echo $this->form->OT_id; ?>
+
+		<div class="total-form-controller">
+			<div class="new-form-ui-submit">
+				<?php //echo $this->form->submit; ?>
+			</div>
+		</div>
+	</form>
+<?php }
+?> -->
+
+<script type='text/javascript'>
+	$(document).ready(function() {
+		<?php if ($this->call != 'ajaxcall') { ?>
+			$('.breadcrumbs').append("<span class='arrows'>&rsaquo;</span><span>Time Table</span>");
+		<?php } ?>
+		<?php if (count($this->messages)) { ?>
+			setTimeout(function() {
+				$('#dispmsgclients').fadeOut('slow');
+			}, 3000);
+		<?php } ?>
+	});
+
+	$('.check2').change(function() {
+		if ($(this).prop("checked") == true) {
+
+			var boxs2 = $('.check2:checked');
+			var OT_ids;
+			for (let index2 = 0; index2 < boxs2.length; index2++) {
+				// perk_ids.push(boxs2[index2].value);
+				OT_ids = boxs2[index2].value;
+			}
+			/* var res = $.ajax({
+				url: base_url + '/overtime',
+				type: 'POST',
+				dataType: 'json',
+				data: {
+					OT_ids: OT_ids
+				},
+				async: false
+			}).responseText; */
+			var res = getphpdata('overtime',{OT_ids:OT_ids},false,'POST','json')
+			res = JSON.parse(res);
+			y = res;
+			for (var key in res) {
+				for (var key1 in res[key]) {
+					x = document.getElementById('emp' + res[key][key1]);
+					x.checked = true;
+				}
+			}
+			return false;
+		} else if ($(this).prop("checked") == false) {
+			console.log("Checkbox is unchecked.");
+			for (var key in y) {
+				for (var key1 in y[key]) {
+					console.log(key);
+					x = document.getElementById('emp' + y[key][key1]);
+					x.checked = false;
+				}
+			}
+		}
+	});
+
+	$('#submit').click(function(ev) {
+		var boxs = $('.check1:checked');
+		var boxs2 = $('.check2:checked');
+		var emp_ids = [];
+		var OT_ids = [];
+		for (let index = 0; index < boxs.length; index++) {
+			emp_ids.push(boxs[index].value);
+		}
+		for (let index2 = 0; index2 < boxs2.length; index2++) {
+			OT_ids.push(boxs2[index2].value);
+		}
+		if (emp_ids.length == 0 && OT_ids.length == 0) {
+			alert('Please Select Overtime and Employees');
+			return false;
+		}
+		if (emp_ids.length == 0) {
+			alert('Please Select Employee');
+			return false;
+		}
+		if (OT_ids.length == 0) {
+			alert('Please Select Overtime');
+			return false
+		}
+		var res = $.ajax({
+			url: base_url + '/overtime/add',
+			type: 'POST',
+			dataType: 'json',
+			data: {
+				emp_ids: emp_ids,
+				OT_ids: OT_ids
+			},
+			async: false
+		}).responseText;
+		var res = getphpdata('overtime/add',{emp_ids:emp_ids,OT_ids:OT_ids},false,'POST','json')
+		// console.log(res);
+		// return false;
+		document.location.reload();
+		return false;
+	});
+</script>

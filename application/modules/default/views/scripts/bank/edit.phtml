@@ -1,0 +1,63 @@
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+<?php
+$form = $this->form;
+
+sapp_Global::generateClientValidations($this->form);
+?>
+
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction(); ?>" method="<?php echo $this->form->getMethod(); ?>">
+    <?php echo $this->form->id; ?>
+    <div class="total-form-controller">
+        <div class="new-form-ui clearb">
+            <label class="required"><?php echo $form->name->getLabel(); ?></label>
+            <div class="division"><?php echo $form->name; ?></div>
+            <?php if (isset($this->msgarray['name'])) { ?>
+                <span class="errors" id="errors-<?php echo $form->name->getId(); ?>"><?php echo $this->msgarray['name']; ?></span>
+            <?php } ?>
+        </div>
+
+      
+
+
+        <div class="new-form-ui clearb">
+            <label class="required"><?php echo $form->routingno->getLabel(); ?></label>
+            <div class="division"><?php echo $form->routingno; ?></div>
+            <?php if (isset($this->msgarray['routingno'])) { ?>
+                <span class="errors" id="errors-<?php echo $form->routingno->getId(); ?>"><?php echo $this->msgarray['routing']; ?></span>
+            <?php } ?>
+        </div>
+
+        <div class="new-form-ui clearb">
+            <label class="required"><?php echo $form->verification_class->getLabel(); ?></label>
+            <div class="division"><?php echo $form->verification_class; ?></div>
+            <?php if (isset($this->msgarray['verification_class'])) { ?>
+                <span class="errors" id="errors-<?php echo $form->verification_class->getId(); ?>"><?php echo $this->msgarray['verification_class']; ?></span>
+            <?php } ?>
+        </div>
+
+        <div class="new-form-ui clearb">
+            <label class="required"><?php echo $form->swift_code->getLabel(); ?></label>
+            <div class="division"><?php echo $form->swift_code; ?></div>
+            <?php if (isset($this->msgarray['swift_code'])) { ?>
+                <span class="errors" id="errors-<?php echo $form->swift_code->getId(); ?>"><?php echo $this->msgarray['swift_code']; ?></span>
+            <?php } ?>
+        </div>
+        <div class="new-form-ui clearb">
+            <label class="required">Active<img class="tooltip" src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/help.png"></label>
+            <div class="division"><?php echo $this->form->isactive; ?></div>
+            <?php if (isset($this->msgarray['isactive'])) { ?>
+                <span class="errors" id="errors-<?php echo $this->form->isactive->getId(); ?>"><?php echo $this->msgarray['isactive']; ?></span>
+            <?php } ?>
+        </div>
+    </div>
+    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+    <div class="new-form-ui-submit">
+        <?php echo $form->submit; ?>
+        <button onclick="window.location.href='<?php echo BASE_URL; ?>bank';" type="button" id="Cancel" name="Cancel">Cancel</button>
+    </div>
+</form>
+<script>
+    $('#description').jqte();
+</script>

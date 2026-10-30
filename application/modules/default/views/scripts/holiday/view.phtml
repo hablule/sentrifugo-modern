@@ -1,0 +1,99 @@
+<?php
+
+/**
+ * Holiday Master Policy View (Read-Only)
+ *
+ * Displays the complete read-only master configuration and criteria rules.
+ * Complies with SSOT v6.7.7.
+ */
+?>
+
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container">
+            <?php if (isset($this->nodata) && $this->nodata === 'nodata') : ?>
+                <div class="ml-alert-1-info">
+                    <div class="style-1-icon info"></div>No data found.
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <?php if (isset($this->form)) : ?>
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <h5 style="color:#26a69a; border-bottom:1px solid #ddd; padding-bottom:5px;">Master Policy Details</h5>
+
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->name; ?></div>
+                    </div>
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->category_id->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->category_id; ?></div>
+                    </div>
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->tag_id->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->tag_id; ?></div>
+                    </div>
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->work_policy->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->work_policy; ?></div>
+                    </div>
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->payroll_multiplier->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->payroll_multiplier; ?></div>
+                    </div>
+
+                    <h5 style="color:#26a69a; border-bottom:1px solid #ddd; padding-bottom:5px; margin-top:30px;">Recurrence & Weekend Rule</h5>
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->recurrence_type->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->recurrence_type; ?></div>
+                    </div>
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->weekend_policy->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->weekend_policy; ?></div>
+                    </div>
+
+                    <h5 style="color:#26a69a; border-bottom:1px solid #ddd; padding-bottom:5px; margin-top:30px;">Targeting Criteria</h5>
+                    <table class="criteria-table" style="width:100%; border:1px solid #ddd; border-collapse:collapse;" id="tbl-criteria-view">
+                        <thead>
+                            <tr style="background:#f9f9f9;">
+                                <th style="padding:8px;">Group</th>
+                                <th style="padding:8px;">Type</th>
+                                <th style="padding:8px;">Value</th>
+                                <th style="padding:8px;">Match</th>
+                            </tr>
+                        </thead>
+                        <tbody><!-- JS injected --></tbody>
+                    </table>
+
+                    <div class="new-form-ui-submit" style="margin-top:20px;">
+                        <div class="division">
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>holiday';" value="Back to List" type="button" class="reset" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var arrCriteria = <?php echo isset($this->existingCriteria) ? $this->existingCriteria : '[]'; ?>;
+    $(document).ready(function() {
+        var html = '';
+        if (arrCriteria.length === 0) {
+            html = '<tr><td colspan="4" style="text-align:center; padding:10px; color:#999;">Applies globally to all employees.</td></tr>';
+        } else {
+            $.each(arrCriteria, function(i, item) {
+                html += '<tr style="border-bottom:1px solid #eee;">';
+                html += '<td style="padding:8px;">Group ' + item.group_id + '</td>';
+                html += '<td style="padding:8px;">' + item.criteria_type + '</td>';
+                html += '<td style="padding:8px;">' + item.criteria_value + '</td>';
+                html += '<td style="padding:8px;">' + item.match_type + '</td>';
+                html += '</tr>';
+            });
+        }
+        $('#tbl-criteria-view tbody').html(html);
+    });
+</script>

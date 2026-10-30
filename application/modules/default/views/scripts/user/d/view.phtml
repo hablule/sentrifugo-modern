@@ -1,0 +1,16 @@
+<?php
+$baseUrl = $this->serverUrl().$this->baseUrl();
+echo $this->form->id; 
+$msgtitle = $this->controllername.'_delete';
+sapp_Helper::editdeleteForView(LINETYPE,$this->controllername,$this->id,$msgtitle);
+ $name = $this->form->name->getValue();
+ 
+sapp_Helper::viewHeader();
+sapp_Helper::viewBody('alt','Name',(!empty($name))?$this->form->name->getValue():"...",'Code',(!empty($this->form->code->getValue()))?$this->form->code->getValue():"...");
+sapp_Helper::viewBody('nor','Description',(!empty($this->form->description->getValue()))?$this->form->description->getValue():"...",'Active',(!empty($this->isactive))?$this->isactive:"...");
+sapp_Helper::viewFooter();
+
+?>
+<div class="new-form-ui-submit">
+<button onclick="window.location.href='<?php echo BASE_URL; ?>linetype';" type="button">Cancel</button>
+</div>

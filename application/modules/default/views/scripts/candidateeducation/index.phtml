@@ -1,0 +1,232 @@
+<?php
+
+$form = $this->form;
+$educationElementNames = $this->educationElementNames;
+$educationElementLabels = $this->educationElementLabels;
+$educationElementOptions = $this->educationElementOptions;
+$validators = $this->validators;
+?>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/formValidator.js"></script>
+<input type="button" title="Add" value="Add Record" name="add" id="add" class="sprite addrecord">
+<form name="<?php echo $form->getName(); ?>" id="<?php echo $form->getId(); ?>" action="<?php echo $form->getAction(); ?>">
+    <?php echo $form->id; ?>
+    <?php sapp_Global::generateClientValidations($this->form); ?>
+    <div class="separator-heading"> Education Detail</div>
+    <div id="all">
+
+        <?php
+        for ($i = 0; $i < count($educationElementNames); $i++) {
+
+            if ($educationElementOptions[$i]['OccupyLine'] == 'OccupyLine' || $educationElementOptions[$i]['NewLine'] == 'NewLine') { ?>
+                <br>
+            <?php } ?>
+            <div class="new-form-ui">
+                <label class="required"><?php echo $educationElementLabels[$i]; ?></label>
+                <div class="division">
+                    <?php $elementName = $educationElementNames[$i];
+                    echo $form->$elementName; ?>
+                </div>
+                <span class="errors" id="<?php echo $educationElementNames[$i]; ?>_error"></span>
+            </div>
+            <?php if ($educationElementOptions[$i]['OccupyLine'] == 'OccupyLine') { ?>
+                <br>
+        <?php           }
+        } ?>
+        <br>
+    </div>
+    <br>
+    <div id="but">
+
+        <div class="new-form-ui">
+            <table>
+                <tr>
+                    <td>
+                        <div class="new-form-ui-previousBtn">
+                            <?php echo $form->prevsbtn; ?>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="new-form-ui-submit">
+                            <?php echo $form->submit; ?>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script>
+    $(document).ready(function() {
+        let elementsArray = [];
+        let arr = [];
+
+        <?php
+        for ($w = 0; $w < count($educationElementNames); $w++) {
+            $elementName = $educationElementNames[$w]; ?>
+            elementsArray.push("<?php echo $educationElementNames[$w]; ?>");
+        <?php
+        }
+        ?>
+        $('#submit').on('click', function() {
+      
+            var elements = <?php echo json_encode($educationElementNames); ?>;
+            var validators = <?php echo json_encode($validators); ?>;
+            var newElements = [];
+            var newValidators = [];
+            if (!(validate(<?php echo json_encode($educationElementNames); ?>, <?php echo json_encode($validators); ?>))) {
+                return false;
+                
+            }
+            index_check = 1;
+            while(document.getElementById(elements[0]+""+index_check)){
+                newElements = [];
+                newValidators = [];
+                for(k=0;k<elements.length;k++){
+                    newElements[k] = elements[k]+""+index_check;
+                    newValidators[newElements[k]] = validators[elements[k]];
+                }
+                if(!(validate(newElements,newValidators))){
+                    return false;
+                }
+                index_check++;
+            }
+            var cand_id = <?php echo $this->candidate_id;?>;
+            $('#id').val(cand_id);
+            var data1 = '';
+            index = 0;
+            do {
+                data1 = '';
+                var formIndex = "";
+                if (index == 0) {
+                    formIndex = "";
+                } else {
+                    formIndex = formIndex + index;
+                }
+                for (var k = 0; k < elementsArray.length; k++) {
+                    if (elementsArray[k] != 'id_hidden') {
+                        if (k == 0) {
+                            data1 = data1 + elementsArray[k] + "=" + document.getElementById(elementsArray[k] + formIndex).value;
+                        } else {
+                            data1 = data1 + "&" + elementsArray[k] + "=" + document.getElementById(elementsArray[k] + formIndex).value;
+                        }
+                    }
+                }
+                
+                /* var result = $.ajax({
+                    url: base_url + '/education/add',
+                    type: "POST",
+                    data: {
+                        data: data1,
+                        candidate_id:cand_id
+                    },
+                    dataType: "json",
+                    async: false
+                }).responseText; */
+                var result = getphpdata('education/add',{data:data1,candidate_id:cand_id},false,'POST','json')
+                index++;
+            } while (document.getElementById(elementsArray[0] + "" + index));
+            return true;
+        });
+        var i = 1;
+        $('#add').on('click', function() {
+            <?php
+            for ($w = 0; $w < count($educationElementNames); $w++) {
+                //$educationElementNames = $educationElementNames[$w]; 
+            ?>
+                arr.push("<?php echo $educationElementNames[$w]; ?>");
+            <?php
+            }
+            ?>
+            var g = arr.length;
+            var x = i;
+            const origin = $('select'); // last in case there are more than one select
+            origin.select2('destroy');
+            var $newel = $('#all').clone(true).attr('id', 'all2');
+
+            var $xx = $newel.find("select");
+            $xx.select2('destroy');
+            $xx.removeAttr('data-select2-id');
+            $xx.find('option').removeAttr('data-select2-id');
+            origin.select2();
+            $xx.select2().val(null).trigger('change');
+            for (var j = 0; j < arr.length; j++) {
+                $newel.find("#" + arr[j]).attr("id", arr[j] + "" + x);
+            }
+            $newel.find(".ui-datepicker-trigger").hide();
+            $newel.find("#start_date" + x)
+
+                .removeClass('hasDatepicker')
+                .removeData('trigger')
+                .removeData('datepicker')
+                .unbind().datepicker({
+                    showOn: "both",
+                    buttonImage: "<?php echo MEDIA_PATH; ?>images/cal.png",
+                    buttonImageOnly: true,
+                    buttonText: "dfxcgb",
+                    changeMonth: true,
+                    changeYear: true,
+                    dateFormat: "<?php echo DATEFORMAT_JS; ?>",
+                    showButtonPanel: false,
+                    onClose: function() {
+                        $('#start_date' + x).trigger('blur');
+                    }
+                });
+            $newel.find("#end_date" + x)
+                .removeClass('hasDatepicker')
+                .removeData('datepicker')
+                .unbind('click').datepicker({
+                    showOn: "both",
+                    buttonImage: "<?php echo MEDIA_PATH; ?>images/cal.png",
+                    buttonImageOnly: true,
+                    buttonText: "",
+                    changeMonth: true,
+                    changeYear: true,
+                    dateFormat: "<?php echo DATEFORMAT_JS; ?>",
+                    showButtonPanel: true,
+                    onClose: function() {
+                        $('#end_date' + x).trigger('blur');
+                    }
+                });
+
+            $newel.find("#" + arr[g - 1] + "" + x).after("<br><br><input type='button' class='btn_less1' style='color:red;width=100px;height=100px;' value='Remove' id='buttonless'/>")
+
+            $newel.insertBefore("#but:first");
+            $(this).parents('#but').after($newel);
+            i++;
+
+        });
+        $(document).on('click', ".btn_less1", function() {
+            $(this).closest(".btn_less1").parent().parent().parent().remove();
+        });
+        $("#start_date").datepicker({
+            showOn: "both",
+            buttonImage: "<?php echo MEDIA_PATH; ?>images/cal.png",
+            buttonImageOnly: true,
+            buttonText: "",
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: "<?php echo DATEFORMAT_JS; ?>",
+            showButtonPanel: true,
+            onClose: function() {
+                $('#start_date').trigger('blur');
+            }
+        });
+
+        $("#end_date").datepicker({
+            showOn: "both",
+            buttonImage: "<?php echo MEDIA_PATH; ?>images/cal.png",
+            buttonImageOnly: true,
+            buttonText: "",
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: "<?php echo DATEFORMAT_JS; ?>",
+            showButtonPanel: true,
+            onClose: function() {
+                $('#end_date').trigger('blur');
+            }
+        });
+    });
+</script>

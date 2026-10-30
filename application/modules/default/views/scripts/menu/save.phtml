@@ -1,0 +1,196 @@
+<?php
+
+/**
+ * Menu Save View (Add/Edit)
+ */
+$this->headLink()->appendStylesheet(MEDIA_PATH . 'css/screen.css');
+$this->headLink()->appendStylesheet(MEDIA_PATH . 'css/style.css');
+sapp_Global::generateClientValidations($this->form);
+?>
+
+
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container"></div>
+
+        <form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" method="POST">
+            <?php echo $this->form->id; ?>
+
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->form->menuName->getLabel(); ?></label>
+                        <div class="division"><?php echo $this->form->menuName; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->form->menuName->getId(); ?>"></span>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->form->url->getLabel(); ?></label>
+                        <div class="division"><?php echo $this->form->url; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->form->url->getId(); ?>"></span>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->form->parent->getLabel(); ?></label>
+                        <div class="division"><?php echo $this->form->parent; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->form->parent->getId(); ?>"></span>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->form->menugroup_id->getLabel(); ?></label>
+                        <div class="division"><?php echo $this->form->menugroup_id; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->form->menugroup_id->getId(); ?>"></span>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->form->modulename->getLabel(); ?></label>
+                        <div class="division"><?php echo $this->form->modulename; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->form->modulename->getId(); ?>"></span>
+                    </div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'helpText', '', 'fck_editor_height', '', array()); ?>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'toolTip', '', 'fck_editor_height', '', array()); ?>
+
+
+                    <!-- File Upload & Current Image Preview -->
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->form->iconPath->getLabel(); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->iconPath; ?>
+                            <?php if (!empty($this->currentIcon)): ?>
+                                <div style="margin-top: 10px;">
+                                    <p style="margin: 0 0 5px 0; font-size: 12px; color: #666;">Current Icon:</p>
+                                    <img src="<?php echo MENU_ICONS_PATH;
+                                                echo $this->escape($this->currentIcon); ?>"
+                                        style="max-width: 50px; max-height: 50px; border: 1px solid #ccc; padding: 2px; background: #fff;"
+                                        onerror="this.style.display='none'" />
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->form->menuOrder->getLabel(); ?></label>
+                        <div class="division"><?php echo $this->form->menuOrder; ?></div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->form->segment_flag->getLabel(); ?></label>
+                        <div class="division"><?php echo $this->form->segment_flag; ?></div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->form->isdefault->getLabel(); ?></label>
+                        <div class="division"><?php echo $this->form->isdefault; ?></div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->form->isactive->getLabel(); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                    </div>
+
+                    <div class="new-form-ui-submit">
+                        <div class="division">
+                            <?php echo $this->form->submit; ?>
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>menu';" value="Cancel" type="button" class="reset" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#description, #helpText, #toolTip').jqte();
+
+        $ // --- Custom AJAX Submit for File Uploads ---
+        $('#submitbutton').click(function(e) {
+            e.preventDefault(); // Stop default HTML submission
+
+            var $form = $('#formid');
+
+            // 1. Run Sentrifugo Client Validations
+            if (!$form.valid()) {
+                return false; // Stop if form is invalid
+            }
+
+            // Block UI
+            if (typeof $.blockUI === "function") {
+                $.blockUI({
+                    width: '50px',
+                    message: '<img src="<?php echo MEDIA_PATH; ?>images/loader2.gif" alt="Loading" />'
+                });
+            }
+
+            // 2. Prepare FormData (Allows file uploads via AJAX)
+            var formData = new FormData($form[0]);
+
+            // 3. Send AJAX Request
+            $.ajax({
+                url: base_url + '/menu/save/format/json',
+                type: 'POST',
+                data: formData,
+                processData: false, // Tell jQuery not to process the data (required for files)
+                contentType: false, // Tell jQuery not to set contentType (required for files)
+                dataType: 'json',
+                success: function(response) {
+                    if (typeof $.unblockUI === "function") {
+                        $.unblockUI();
+                    }
+
+                    if (response.result === 'saved' || response.msgtype === 'success') {
+                        // Success: Redirect to index
+                        window.location.href = base_url + '/menu';
+                    } else if (response && response.result === 'exception') {
+                        $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>' + response.message + '</div>');
+                        $('html, body').animate({
+                            scrollTop: 0
+                        }, 'slow');
+                    } else if (response.result === 'error') {
+                        // Display Zend Form Validation Errors
+                        var errHtml = '<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Please fix the highlighted errors.</div>';
+                        $('#message_container').html(errHtml);
+
+                        // Try to attach errors to specific fields
+                        $.each(response.message, function(key, val) {
+                            var errMsg = (typeof val === 'object') ? val[Object.keys(val)[0]] : val;
+                            var $field = $('#' + key);
+                            $('#errors-' + key).remove(); // Remove old errors
+                            $field.parent().append('<span class="errors" id="errors-' + key + '">' + errMsg + '</span>');
+                        });
+
+                        $('html, body').animate({
+                            scrollTop: 0
+                        }, 'slow');
+                    } else {
+                        // General Error
+                        $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>' + response.message + '</div>');
+                        $('html, body').animate({
+                            scrollTop: 0
+                        }, 'slow');
+                    }
+                },
+                error: function() {
+                    if (typeof $.unblockUI === "function") {
+                        $.unblockUI();
+                    }
+                    $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Server error occurred.</div>');
+                }
+            });
+        });
+    });
+</script>

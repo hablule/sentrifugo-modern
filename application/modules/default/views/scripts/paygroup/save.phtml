@@ -1,0 +1,113 @@
+<?php
+
+/**
+ * Pay Group Save View (Add/Edit)
+ * Features On-the-Fly popup connection to Pay Frequency.
+ * Complies with SSOT v6.7.7.
+ */
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/custompopup.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/custompopup.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<style>
+    .add-coloum {
+        color: #26a69a;
+        cursor: pointer;
+        font-size: 11px;
+        margin-top: 4px;
+        display: inline-block;
+        font-weight: bold;
+    }
+
+    .add-coloum:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<?php sapp_Global::generateClientValidations($this->form); ?>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container"></div>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" method="post">
+            <?php echo $this->form->id; ?>
+
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->code; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->code->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->name; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->name->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <!-- Base Frequency with On-the-fly Popup -->
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->payfrequency_id->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->payfrequency_id; ?>
+                            <span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL; ?>payfrequency/addpopup', 'Add Pay Frequency');">+ Add Frequency</span>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->payfrequency_id->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->payment_lag_days->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->payment_lag_days; ?>
+                            <span style="font-size: 11px; color: #888; display: block;">Days between the cycle end date and actual pay date (Bank execution).</span>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->payment_lag_days->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->isactive; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->isactive->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui-submit">
+                        <div class="division">
+                            <?php echo $this->form->submit; ?>
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>paygroup/index';" value="Cancel" type="button" class="reset" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Container for Pay Frequency On-the-fly addition -->
+<div id="payfrequencyContainer" style="display: none; overflow: auto;">
+    <div class="heading"><a href="javascript:void(0)"><img src="<?php echo MEDIA_PATH; ?>images/close.png" class="closeAttachPopup" align="right" border="0" style="margin: -24px 8px 0 0;"></a></div>
+    <iframe id="payfrequencyCont" class="user_iframe" frameborder="0"></iframe>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#description').jqte();
+    });
+</script>

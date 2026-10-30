@@ -1,0 +1,112 @@
+<?php
+
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+?>
+
+<?php
+/**
+ * Position View (Read-Only Seat)
+ * Complies with SSOT v6.7.7.
+ */
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container">
+            <?php if (isset($this->nodata) && $this->nodata === 'nodata') : ?>
+                <div class="ml-alert-1-info">
+                    <div class="style-1-icon info"></div>No data found.
+                </div>
+            <?php endif; ?>
+        </div>
+        <?php if (isset($this->form)) : ?>
+            <div class="total-form-controller">
+                <div class="division">
+                    <h5 style="color:#26a69a; border-bottom:1px solid #ddd; padding-bottom:5px;">Position Seat Specification</h5>
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->code; ?></div>
+                    </div>
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                        <div class="division">
+                            <?php
+                            // Display logic: If null, show fallback text
+                            $nameVal = $this->form->name->getValue();
+                            echo !empty($nameVal) ? $this->escape($nameVal) : '<span style="font-style:italic; color:#999;">(Inherits from Job Title)</span>';
+                            ?>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->jobtitle_id->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->jobtitle_id; ?></div>
+                    </div>
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->reports_to_position_id->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->reports_to_position_id; ?></div>
+                    </div>
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->status->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->status; ?></div>
+                    </div>
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->max_fte->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->max_fte; ?></div>
+                    </div>
+
+                    <h5 style="color:#26a69a; border-bottom:1px solid #ddd; padding-bottom:5px; margin-top:25px;">Direct Organizational Owner</h5>
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->org_type->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->org_type; ?></div>
+                    </div>
+
+                    <?php
+                    $orgField = '';
+                    $orgVal = $this->form->org_type->getValue();
+                    if ($orgVal === 'Company') $orgField = $this->form->company_id;
+                    elseif ($orgVal === 'BusinessUnit') $orgField = $this->form->businessunit_id;
+                    elseif ($orgVal === 'Division') $orgField = $this->form->division_id;
+                    elseif ($orgVal === 'Department') $orgField = $this->form->department_id;
+                    elseif ($orgVal === 'Section') $orgField = $this->form->section_id;
+                    elseif ($orgVal === 'Team') $orgField = $this->form->team_id;
+                    ?>
+                    <?php if ($orgField) : ?>
+                        <div class="new-form-ui clearb"><label>Assigned Unit</label>
+                            <div class="division"><?php echo $orgField; ?></div>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                    </div>
+                    <div class="new-form-ui-submit">
+                        <div class="division">
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>position/index';" value="Back to List" type="button" class="reset" />
+                            <?php if (defined('POSITION_MENU_ID') && sapp_Global::_checkprivileges(POSITION_MENU_ID, $this->loginuserGroup, $this->loginuserRole, 'edit') === 'Yes') : ?>
+                                <input onclick="window.location.href='<?php echo BASE_URL; ?>position/edit/id/<?php echo $this->id; ?>';" value="Edit" type="button" class="reset" />
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>

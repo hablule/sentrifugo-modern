@@ -1,0 +1,256 @@
+<?php 
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+?>
+<script type="text/javascript" src="<?php echo MEDIA_PATH ?>/js/hrms.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH ?>css/custompopup.css" />
+    <script type="text/javascript" src="<?php echo MEDIA_PATH ?>js/custompopup.js"></script>
+	<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+<?php $baseUrl = $this->serverUrl().$this->baseUrl();
+$addcomp = $this->addcomp;
+sapp_Global::generateClientValidations($this->form);
+
+?>
+<?php if($this->successmessage != '') { ?>
+<div id="dispmsgnempskills" class="ml-alert-1-success">
+<div class="style-1-icon success"></div>
+<?php echo $this->successmessage; ?>
+</div>
+
+<?php } else { ?>
+<div id="error_message" style="display:none;"></div>
+<?php		
+if($this->emptyFlag != 0)
+	{
+?>	 <div class="ml-alert-1-info m1-info-set">
+		<div class="style-1-icon info"></div>
+			The employee configurations are not yet set.
+	</div>	
+<?php	}	?>
+
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction();?>" method="<?php echo $this->form->getMethod(); ?>">
+		<?php echo $this->form->id; 
+		echo $this->form->user_id;
+		?>
+        <div class="total-form-controller">
+		 	<div class="new-form-ui ">
+			  <label >Skill</label>
+				<div class="division loca_state_div"><?php echo $this->form->skill_id; ?>
+				<?php if($this->skilladdpermission == 'Yes'){?>
+				<span class="add-coloum" onclick="displayNestedPopup('<?php echo BASE_URL . 'skill/addpopup/id/nested' ?>','Skill');"> Add Skill</span>
+				<?php }?>
+			</div>
+				<?php if(isset($this->msgarray['skill_id'])){?>
+				<span class="errors" id="errors-<?php echo $this->form->skill_id->getId(); ?>"><?php echo $this->msgarray['skill_id'];?></span>
+				<?php }?>
+			</div>
+			<div class="new-form-ui ">
+			  <label  >Skill Name</label>
+				<div class="division loca_state_div"><?php echo $this->form->skillname; ?></div>
+				<?php if(isset($this->msgarray['skillname'])){?>
+				<span class="errors" id="errors-<?php echo $this->form->skillname->getId(); ?>"><?php echo $this->msgarray['skillname'];?></span>
+				<?php }?>
+			</div>
+			<div class="new-form-ui ">
+			  <label  >Skill Source</label>
+				<div class="division loca_state_div"><?php echo $this->form->skillsource_id; ?>
+				<?php if($this->skillsourceaddpermission == 'Yes'){?>
+				<span class="add-coloum" onclick="displayNestedPopup('<?php echo BASE_URL . 'skillsource/addpopup' ?>','Skill Source');"> Add Skill Source</span>
+				<?php }?>
+			</div>
+				<?php if(isset($this->msgarray['skillsource_id'])){?>
+				<span class="errors" id="errors-<?php echo $this->form->skillsource_id->getId(); ?>"><?php echo $this->msgarray['skillsource_id'];?></span>
+				<?php }?>
+			</div>
+			<div class="new-form-ui ">
+			  <label  class="required">Measurement Index</label>
+				<div class="division loca_state_div"><?php echo $this->form->measurementindex_id; ?>
+				<?php if($this->measurmentaddpermission == 'Yes'){?>
+				<span class="add-coloum" onclick="displayNestedPopup('<?php echo BASE_URL . 'measurementindex/addpopup' ?>','Measurement Index');"> Add Measurement Index</span>
+				<?php } ?>
+			</div>
+				<?php if(isset($this->msgarray['measurementindex_id'])){?>
+				<span class="errors" id="errors-<?php echo $this->form->measurementindex_id->getId(); ?>"><?php echo $this->msgarray['measurementindex_id'];?></span>
+				<?php }?>
+			</div>
+			<div class="new-form-ui ">
+			  <label >Measurement Value</label>
+				<div class="division loca_state_div"><?php echo $this->form->measurementvalue; ?>
+
+			</div>
+				<?php if(isset($this->msgarray['measurementvalue'])){?>
+				<span class="errors" id="errors-<?php echo $this->form->measurementvalue->getId(); ?>"><?php echo $this->msgarray['measurementvalue'];?></span>
+				<?php }?>
+			</div>
+			<div class="new-form-ui ">
+				<label class="required">Acquired Since </label>
+				<div class="division"><?php echo $this->form->acquiredsince; ?></div>
+				 <?php if(isset($this->msgarray['acquiredsince'])){?>
+				   <span class="errors" id="errors-<?php echo $this->form->acquiredsince->getId(); ?>"><?php echo $this->msgarray['acquiredsince'];?></span>
+				<?php }?>
+			</div>
+		
+			<?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+			<div class="new-form-ui org-logo-height logo-width-org clearall">
+			<label>Attestation <img title="<?php echo 'Upload only .gif, .jpg, .jpeg, .png images';?>" src="<?php echo $this->baseUrl().'/public/media/';?>images/help.png" /></label>
+			
+		 <div class="division">
+         <div class="org-img">
+				<?php if($this->org_image!=''){?>
+					<img id="blah" class="" style="padding:0px;" src="<?php echo $this->baseUrl("public/uploads/skills/").$this->org_image;?>" onerror="this.src='<?php echo MEDIA_PATH; ?>images/logo_default-size.jpg'" />
+				<?php }else{?>
+					<img id="blah" class=""  src="<?php echo MEDIA_PATH;?>images/logo_main.png" />
+				<?php }?>
+			</div>
+         <span id="org_image" class="uploadbut-org">Upload Attestation </span>
+			<input type="hidden" name="attestation_image_value" value="" id="attestation_image_value">
+		  	<input type="hidden" name="imgerr" value="" id="imgerr">
+			<input type="hidden" name="imgerrmsg" value="" id="imgerrmsg"><!--<span id="image_name"></span>-->
+		 <?php if(isset($this->msgarray['attestation_image_value'])){?>
+		  <span class="errors" id="errors-attestation_image_value"><?php echo $this->msgarray['attestation_image_value'];?></span>
+		  <?php }else {?>
+			<span style="display:none;" class="errors" id="errors-attestation_image_value"></span>
+		 <?php } ?>
+		 <div id="orgloaderimg" style="display:none;">
+         	<img src="<?php echo $this->baseUrl("public/media/images/loaderwhite_21X21.gif");?>" style="width:21px; height: 21px; float: none; "/>
+         </div>
+       </div>
+	</div>
+	<?php if(isset($this->msgarray['general'])){?>
+				   <span class="errors" id="errors-general"><?php echo $this->msgarray['general'];?></span>
+				<?php }?>													
+        <div class="new-form-ui-submit" id="formSubmit">
+        <?php echo $this->form->submit; ?>
+        <button onclick="closeiframepopup('empskills','cancel');" type="button">Cancel</button>
+        </div>
+   		</div>     
+</form>
+<?php } ?>
+<div id="skillsourceContainer" style="display: none; overflow: auto;">
+        <div class="heading">
+            <a href="javascript:void(0)">
+                <img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+        </div>
+
+        <iframe id="skillsourceCont" class="business_units_iframe" frameborder="0"></iframe>
+    </div>
+    <div id="skillContainer" style="display: none; overflow: auto;">
+        <div class="heading">
+            <a href="javascript:void(0)">
+                <img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+        </div>
+
+        <iframe id="skillCont" class="business_units_iframe" frameborder="0"></iframe>
+    </div>
+	<div id="measurementindexContainer" style="display: none; overflow: auto;">
+        <div class="heading">
+            <a href="javascript:void(0)">
+                <img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+        </div>
+
+        <iframe id="measurementindexCont" class="business_units_iframe" frameborder="0"></iframe>
+    </div>
+<script type='text/javascript'>
+<?php if($this->successmessage != '') { ?>
+        setTimeout(function(){
+		    closeiframepopup('<?php echo $this->controllername; ?>',''); 
+		},2000);
+<?php } ?>
+</script>
+
+<script type='text/javascript'>
+$(document).ready(function(){
+	
+     var yearrange = <?php echo "'".YEAR.':'.date('Y')."'"; ?>;
+	$('#acquiredsince').datepicker({
+					showOn:'both',
+					// maxDate: new Date, 
+				    yearRange: yearrange,
+					dateFormat:"<?php echo DATEFORMAT_JS;?>",
+					buttonImage: "<?php echo $this->baseUrl("public/media/images/cal.jpg");?>",
+					buttonImageOnly: true,
+					buttonText: "",
+					changeMonth: true,
+					changeYear: true,
+                                        showButtonPanel: true ,
+                    onClose:function(){
+                                    $('#acquiredsince').trigger('blur');
+                                } 					
+	});
+	
+	 });
+</script>
+ <script type="text/javascript">
+
+$(document).ready(function () {
+	hideselectortext('skill_id','skillname');
+	hideselectortext('measurementindex_id','measurementvalue');
+
+})
+
+	    $('#description').jqte();
+
+			var btnUpload = $('#org_image');
+			new AjaxUpload(btnUpload, {	
+				action :  base_url+'/empskills/uploadpreview',
+				name   : 'profile_photo',  //we can rename it 
+				dataType: 'json',
+				onSubmit: function(file,ext){		
+				if($("#errors-attestation_image_value").is(":visible"))
+				  $("#errors-attestation_image_value").hide();	
+				  $("#orgloaderimg").show();												 
+				},
+				onComplete: function(file, response){				
+					var result = JSON.parse(response);
+					if(result.result == 'success')
+					{						
+						$('#errors-attestation_image_value').html('');
+						$('#imgerr').val(result.result);						
+						$("#imgerrmsg").val(result.msg);	
+						$("#errors-attestation_image_value").css('display','block');
+						$("#attestation_image_value").val(result.img);
+						$('.org-img').html('<img src="'+domain_data+'/public/uploads/skillpreview/'+result.img+'" /><div id="org_image" class="caption uploadbut-org" style="top: -35px; display: none;">Upload image</div>');
+						$("#orgloaderimg").hide();						
+							
+	
+					}
+					else
+					{
+						$('.uploaderror').show();
+						$("#errors-attestation_image_value").css('display','block');
+						$('#errors-attestation_image_value').html(result.msg);
+						$('#imgerr').val(result.result);
+						$("#imgerrmsg").val(result.msg);
+						$("#orgloaderimg").hide();
+						setTimeout(function()
+						{
+						$('.uploaderror').fadeOut('slow');
+						},3000);
+					}
+				}
+			},'json');
+	
+
+			
+		
+		</script>

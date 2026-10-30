@@ -1,0 +1,165 @@
+<?php
+
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+?>
+
+<?php
+/**
+ * Ethnic Code Add Popup View
+ * Runs inside an iframe. On success, updates parent DOM via JS.
+ * @category   Sentrifugo
+ * @package    Sentrifugo_Default
+ * @subpackage Views
+ * @author     hablul <hablul@sapplica.com>
+ * @copyright  Copyright (c) 2014 Sapplica
+ * @license    http://www.gnu.org/licenses/ GNU General Public License
+ * @version    3.2
+ * 
+ */
+?>
+
+<?php
+/**
+ * Gender Add Popup View
+ * 
+ * Runs inside an iframe modal. On success, updates the parent DOM via global JS.
+ * Strictly adheres to SSOT v6.1: Direct HTML asset inclusion, strict escaping, 
+ * dynamic form labels, and crash-proof array lookups.
+ * 
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ * @author     Hablul Soft Solution < /hablul.in>
+ * @license    http://gnu.org GNU General Public License, version 3.0 (GPL-3.0)
+ * @version    Sentrifugo v3.2
+ */
+
+// SSOT IX: Safe Initialization for PHP 8+
+$this->msgarray = isset($this->msgarray) ? $this->msgarray : array();
+
+// SSOT VII: Client Validation Generation
+sapp_Global::generateClientValidations($this->form);
+?>
+<!-- Essential Popup CSS and Editor JS (No screen.css to protect checkbox styling) -->
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/custompopup.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<div style="padding: 15px;">
+    <?php if (isset($this->popup) && $this->popup == 'close') : ?>
+        <!-- Success State: Render message and trigger parent window refresh -->
+        <div class="ml-alert-1-success">
+            <div style="display:block;">
+                <span class="style-1-icon success"></span>
+                Gender <?php echo $this->escape($this->eventact); ?> successfully.
+            </div>
+        </div>
+        
+        <script type="text/javascript">
+            $(document).ready(function() {
+                setTimeout(function() {
+                    // Update parent dropdown and close iframe modal
+                    // Params: (optionsHtml, controllerName, dropdownId, label)
+                    parent.closeiframeAddPopup('<?php echo $this->optionsHtml; ?>', 'gender', 'genderid', 'Gender');
+                }, 1500);
+            });
+        </script>
+
+    <?php else : ?>
+        <!-- Form State -->
+        <div id="error_message" style="display:none;"></div>
+        
+        <?php if (!empty($this->msgarray['error'])) : ?>
+            <div class="ml-alert-1-error">
+                <div style="display:block;">
+                    <span class="style-1-icon error"></span>
+                    <?php echo $this->escape($this->msgarray['error']); ?>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" action="<?php echo $this->escape($this->form->getAction()); ?>" method="<?php echo $this->escape($this->form->getMethod()); ?>">
+            <!-- Hidden ID Element -->
+            <?php echo $this->form->id; ?>
+            
+            <!-- Standardized Form Controller Layout (Box shadow stripped for modal cleanliness) -->
+            <div class="total-form-controller" style="box-shadow: none; border: none; padding: 0;">
+                <div class="division">
+                    
+                    <!-- Gender Name -->
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->name; ?>
+                        </div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->name->getId()); ?>">
+                            <?php echo $this->escape($this->msgarray['name'] ?? ''); ?>
+                        </span>
+                    </div>
+                    
+                    <!-- Gender Code -->
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->code; ?>
+                        </div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->code->getId()); ?>">
+                            <?php echo $this->escape($this->msgarray['code'] ?? ''); ?>
+                        </span>
+                    </div>
+
+                    <!-- Description -->
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <!-- Active Status -->
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->isactive; ?>
+                        </div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->isactive->getId()); ?>">
+                            <?php echo $this->escape($this->msgarray['isactive'] ?? ''); ?>
+                        </span>
+                    </div>
+
+                    <!-- Submit & Cancel -->
+                    <div class="new-form-ui-submit" style="margin-top: 15px;">
+                        <div class="division">
+                            <!-- Standard HTML submit, handled by Zend Form isValid -->
+                            <input type="submit" name="submit" id="submitbutton" value="Save" class="actbtn_btn" />
+                            <button type="button" class="reset" onclick="parent.closeiframepopup('gender', 'cancel');">Cancel</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+        
+        <script type="text/javascript">
+            $(document).ready(function() {
+                // Initialize JQTE for the description text area
+                if ($('#description').length) {
+                    $('#description').jqte();
+                }
+            });
+        </script>
+    <?php endif; ?>
+</div>

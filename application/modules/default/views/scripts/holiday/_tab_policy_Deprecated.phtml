@@ -1,0 +1,143 @@
+<style>
+    .form-grid-row { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 10px; }
+    .form-grid-col-2 { flex: 1 1 calc(50% - 15px); }
+    .form-grid-col-3 { flex: 1 1 calc(33.333% - 15px); }
+    .form-grid-col-4 { flex: 1 1 calc(25% - 15px); }
+    .btn-quick-time { background: #eee; border: 1px solid #ccc; padding: 4px 8px; font-size: 11px; cursor: pointer; border-radius: 3px; margin-top: 4px; }
+    .btn-quick-time:hover { background: #26a69a; color: #fff; border-color: #26a69a; }
+</style>
+
+<!-- Row 1: Core Identifiers -->
+<div class="form-grid-row">
+    <div class="form-grid-col-2">
+        <div class="new-form-ui clearb">
+            <label class="required"><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+            <div class="division">
+                <?php echo $this->form->name; ?>
+                <span class="errors" id="errors-<?php echo $this->escape($this->form->name->getId()); ?>"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-grid-col-4">
+        <div class="new-form-ui clearb">
+            <label class="required"><?php echo $this->escape($this->form->category_id->getLabel()); ?></label>
+            <div class="division">
+                <?php echo $this->form->category_id; ?>
+                <span class="errors" id="errors-<?php echo $this->escape($this->form->category_id->getId()); ?>"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-grid-col-4">
+        <div class="new-form-ui clearb">
+            <label class="required"><?php echo $this->escape($this->form->tag_id->getLabel()); ?></label>
+            <div class="division">
+                <?php echo $this->form->tag_id; ?>
+                <span class="errors" id="errors-<?php echo $this->escape($this->form->tag_id->getId()); ?>"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Row 2: Operational & Financial Policies -->
+<div class="form-grid-row">
+    <div class="form-grid-col-2">
+        <div class="new-form-ui clearb">
+            <label class="required"><?php echo $this->escape($this->form->work_policy->getLabel()); ?></label>
+            <div class="division">
+                <?php echo $this->form->work_policy; ?>
+                <span class="errors" id="errors-<?php echo $this->escape($this->form->work_policy->getId()); ?>"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-grid-col-4">
+        <div class="new-form-ui clearb">
+            <label class="required"><?php echo $this->escape($this->form->payroll_multiplier->getLabel()); ?></label>
+            <div class="division">
+                <?php echo $this->form->payroll_multiplier; ?>
+                <span class="errors" id="errors-<?php echo $this->escape($this->form->payroll_multiplier->getId()); ?>"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-grid-col-4">
+        <div class="new-form-ui clearb">
+            <label class="required"><?php echo $this->escape($this->form->priority->getLabel()); ?></label>
+            <div class="division">
+                <?php echo $this->form->priority; ?>
+                <span class="errors" id="errors-<?php echo $this->escape($this->form->priority->getId()); ?>"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Row 3: Temporal Boundaries & Shift Hours -->
+<div style="background: #fdfdfd; border-left: 3px solid #26a69a; padding: 12px 15px; margin: 15px 0; border-radius: 0 4px 4px 0;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <span style="font-weight: bold; color: #26a69a; font-size: 13px;">Shift & Working Hours</span>
+        <button type="button" class="btn-quick-time" onclick="setFullDayHours();">⚡ Set Full Day (00:00 - 23:59)</button>
+    </div>
+    
+    <div class="form-grid-row" style="margin-bottom: 0;">
+        <div class="form-grid-col-3">
+            <div class="new-form-ui clearb">
+                <label class="required"><?php echo $this->escape($this->form->duration_days->getLabel()); ?></label>
+                <div class="division">
+                    <?php echo $this->form->duration_days; ?>
+                    <span class="errors" id="errors-<?php echo $this->escape($this->form->duration_days->getId()); ?>"></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-grid-col-3">
+            <div class="new-form-ui clearb">
+                <label class="required"><?php echo $this->escape($this->form->start_time->getLabel()); ?></label>
+                <div class="division">
+                    <?php echo $this->form->start_time; ?>
+                    <span class="errors" id="errors-<?php echo $this->escape($this->form->start_time->getId()); ?>"></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-grid-col-3">
+            <div class="new-form-ui clearb">
+                <label class="required"><?php echo $this->escape($this->form->end_time->getLabel()); ?></label>
+                <div class="division">
+                    <?php echo $this->form->end_time; ?>
+                    <span class="errors" id="errors-<?php echo $this->escape($this->form->end_time->getId()); ?>"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Row 4: Observance Flags -->
+<div class="form-grid-row" style="align-items: center;">
+    <div class="form-grid-col-3">
+        <div class="new-form-ui clearb">
+            <label><?php echo $this->escape($this->form->is_paid->getLabel()); ?></label>
+            <div class="division"><?php echo $this->form->is_paid; ?></div>
+        </div>
+    </div>
+    <div class="form-grid-col-3">
+        <div class="new-form-ui clearb">
+            <label><?php echo $this->escape($this->form->is_mandatory->getLabel()); ?></label>
+            <div class="division"><?php echo $this->form->is_mandatory; ?></div>
+        </div>
+    </div>
+    <div class="form-grid-col-3">
+        <div class="new-form-ui clearb">
+            <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+            <div class="division"><?php echo $this->form->isactive; ?></div>
+        </div>
+    </div>
+</div>
+
+<!-- Row 5: Notes / WYSIWYG -->
+<div style="margin-top: 15px;">
+    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+</div>
+
+<script type="text/javascript">
+function setFullDayHours() {
+    $('#start_time').val('00:00:00');
+    $('#end_time').val('23:59:59');
+    $('#duration_days').val('1.00');
+}
+</script>

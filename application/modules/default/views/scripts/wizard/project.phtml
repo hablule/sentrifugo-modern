@@ -1,0 +1,125 @@
+<?php 
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+?>
+
+<?php
+if($this->nodata != '')
+{
+?>
+<div class="ml-alert-1-info m1-info-set-2">
+    <div class="style-1-icon info"></div>
+       No data found.
+</div>
+<?php 
+}
+else 
+{
+
+	 if (count($this->messages)) {?>
+			<div id="dispmsgmenu">
+		    <div class="ml-alert-1-success new_wizard_success">
+			<div class="style-1-icon success"></div>
+				<?php foreach ($this->messages as $message){?>
+				 Project Added successfully<?php echo $this->escape($message); ?>
+				<?php } ?>
+		       </div> 
+			</div>	
+	
+<?php       } 
+$date_formats_arr = $this->date_formats_arr;
+$time_formats_arr = $this->time_formats_arr;
+sapp_Global::generateClientValidations($this->form);?>
+<div class="total-form-controller">
+<div id="error_message" style="display:none;"></div>
+<h3 class="step_main_title">Project</h3>
+<?php echo sapp_Helper::dispayAddEmployeeLink($this->wizarddata,'superadmin');?>
+
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction(); ?>" method="<?php echo $this->form->getMethod(); ?>" class="step_form">
+		<?php echo $this->form->id;
+		echo $this->form->user_id;
+		?>
+
+			<div class="new-form-ui">
+				<label class='required'>Project Name</label>
+				<div class="division"><?php echo $this->form->name; ?></div>
+				<?php if (isset($this->msgarray['name'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->name->getId(); ?>"><?php echo $this->msgarray['name']; ?></span>
+				<?php } ?>
+			</div>
+
+			<div class="new-form-ui">
+				<label class='required'>Project Code</label>
+				<div class="division"><?php echo $this->form->code; ?>
+				</div>
+				<?php if (isset($this->msgarray['code'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->code->getId(); ?>"><?php echo $this->msgarray['code']; ?></span>
+				<?php } ?>
+			</div>
+		
+			<div class="new-form-ui">
+				<label class="required">Representative</label>
+				<div class="division" class="required"><?php echo $this->form->representative_id; ?></div>
+				<?php if (isset($this->msgarray['representative_id'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->representative_id->getId(); ?>"><?php echo $this->msgarray['representative_id']; ?></span>
+				<?php } ?>
+			</div>
+            <div class="new-form-ui">
+				<label>Description</label>
+				<div class="division" class="required"><?php echo $this->form->description; ?></div>
+				<?php if (isset($this->msgarray['description'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->description->getId(); ?>"><?php echo $this->msgarray['description']; ?></span>
+				<?php } ?>
+			</div>	
+			<?php if (isset($this->msgarray['allfk'])) { ?>
+					<span class="errors" id="errors-allfk"><?php echo $this->msgarray['allfk']; ?></span>
+				<?php } ?>
+			
+			
+		
+
+			<div class="new-form-ui-submit ">
+				<div class="division"><?php echo $this->form->submit; ?></div>
+			</div>
+
+
+	</form>
+
+<div class="nxt_pre_button">
+			<button class="Prev_butt" name="prev" id="prev" type="button" onclick="window.location='<?php echo BASE_URL?>wizard/section';">Prev</button>		
+			<button class="next_butt" name="next" id="next" type="button" onclick="window.location='<?php echo BASE_URL?>wizard/team';">Next</button>
+		</div>
+</div>
+<?php 
+}
+?>
+<script>
+  $(document).ready(function(){
+   
+    <?php echo sapp_Helper::modifyClass($this->wizarddata); ?>
+});
+</script>
+
+
+
+
+
+
+

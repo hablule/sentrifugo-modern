@@ -1,0 +1,77 @@
+<?php
+
+/**
+ * Digital Media Category View (Read-Only)
+ * 
+ * Strictly adheres to SSOT v6.2.
+ * 
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ */
+?>
+<!-- SSOT VII.2: Strict Asset Inclusions -->
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container">
+            <?php if (isset($this->nodata)) : ?>
+                <div class="ml-alert-1-info">
+                    <div style="display:block;"><span class="style-1-icon info"></span>No data found.</div>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <?php if (!isset($this->nodata)) : ?>
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->code; ?></div>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->name; ?></div>
+                        </div>
+                    </div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray ?? array(), $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                    </div>
+
+                    <div class="new-form-ui-submit">
+                        <div class="division">
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>digitalmediacategory';" value="Back to List" type="button" class="reset" />
+                            <?php
+                            $menuId = defined('DIGITALMEDIACATEGORY') ? DIGITALMEDIACATEGORY : 284;
+                            if (sapp_Global::_checkprivileges($menuId, $this->loginuserGroup, $this->loginuserRole, 'edit') == 'Yes') :
+                            ?>
+                                <input onclick="window.location.href='<?php echo BASE_URL; ?>digitalmediacategory/edit/id/<?php echo $this->id; ?>';" value="Edit" type="button" class="reset" />
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>
+
+<!-- SSOT VII.8: Disable Rich Text Editor in View Mode -->
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#description').jqte();
+        $('.jqte_editor').attr('contenteditable', 'false');
+    });
+</script>

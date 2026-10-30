@@ -1,0 +1,178 @@
+<?php
+
+/**
+ * Year Add Popup View
+ * Refactored to comply with SSOT v6.7.
+ */
+?>
+
+<!-- Asset Inclusions -->
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/custompopup.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/custompopup.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<?php if (isset($this->popup) && $this->popup === 'close') : ?>
+
+	<div class="ml-alert-1-success">
+		<div class="style-1-icon success"></div>Year added successfully. Closing...
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			var optionsHtml = '<?php echo $this->escape(isset($this->optionsHtml) ? $this->optionsHtml : ''); ?>';
+			var prevCntrl = '<?php echo $this->escape(isset($this->prev_cntrl) ? $this->prev_cntrl : 'year'); ?>';
+			setTimeout(function() {
+				if (typeof parent.closeiframeAddPopup === 'function') {
+					parent.closeiframeAddPopup(optionsHtml, prevCntrl, 'year_id', 'Year');
+				} else {
+					parent.$('#yearContainer').dialog('close');
+				}
+			}, 1500);
+		});
+	</script>
+
+<?php else : ?>
+
+	<?php sapp_Global::generateClientValidations($this->form); ?>
+
+	<div id="error_message" style="display:none;"></div>
+	<div id="message_container" style="margin: 10px;"></div>
+
+	<form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" action="<?php echo $this->escape($this->form->getAction()); ?>" method="post">
+		<?php echo $this->form->id; ?>
+
+		<div class="total-form-controller" style="padding: 15px;">
+			<div class="division">
+
+				<div class="new-form-ui clearb"><label class="required"><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+					<div class="division"><?php echo $this->form->name; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->name->getId()); ?>"></span></div>
+				</div>
+				<div class="new-form-ui clearb"><label class="required"><?php echo $this->escape($this->form->calendar_id->getLabel()); ?></label>
+					<div class="division"><?php echo $this->form->calendar_id; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->calendar_id->getId()); ?>"></span></div>
+				</div>
+
+				<div class="row no-margin">
+					<div class="new-form-ui clearb">
+						<div class="new-form-ui"><label class="required"><?php echo $this->escape($this->form->start_date->getLabel()); ?></label>
+							<div class="division"><?php echo $this->form->start_date; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->start_date->getId()); ?>"></span></div>
+						</div>
+					</div>
+					<div class="new-form-ui clearb">
+						<div class="new-form-ui"><label class="required"><?php echo $this->escape($this->form->end_date->getLabel()); ?></label>
+							<div class="division"><?php echo $this->form->end_date; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->end_date->getId()); ?>"></span></div>
+						</div>
+					</div>
+				</div>
+
+				<div class="new-form-ui clearb" style="background: #fdfdfd; border-left: 3px solid #26a69a; padding-left: 10px; margin-top: 15px;"><label class="required"><?php echo $this->escape($this->form->period_generation->getLabel()); ?></label>
+					<div class="division"><?php echo $this->form->period_generation; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->period_generation->getId()); ?>"></span></div>
+				</div>
+
+				<?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+				<div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+					<div class="division"><?php echo $this->form->isactive; ?></div>
+				</div>
+
+				<div class="new-form-ui-submit">
+					<div class="division">
+						<?php echo $this->form->submit; ?>
+						<input onclick="parent.$('#yearContainer').dialog('close');" value="Cancel" type="button" class="reset" />
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</form>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('#description').jqte();
+
+			$('#start_date').datepicker({
+				showOn: 'both',
+				dateFormat: '<?php echo DATEFORMAT_JS; ?>',
+				buttonImage: "<?php echo MEDIA_PATH; ?>images/cal.jpg",
+				buttonImageOnly: true,
+				changeMonth: true,
+				changeYear: true,
+				onClose: function(selectedDate) {
+					$(this).trigger('blur');
+					$("#end_date").datepicker("option", "minDate", selectedDate);
+				}
+			});
+			$('#end_date').datepicker({
+				showOn: 'both',
+				dateFormat: '<?php echo DATEFORMAT_JS; ?>',
+				buttonImage: "<?php echo MEDIA_PATH; ?>images/cal.jpg",
+				buttonImageOnly: true,
+				changeMonth: true,
+				changeYear: true,
+				onClose: function(selectedDate) {
+					$(this).trigger('blur');
+					$("#start_date").datepicker("option", "maxDate", selectedDate);
+				}
+			});
+
+			if ($('#start_date').val() != '') {
+				$("#end_date").datepicker("option", "minDate", $('#start_date').val());
+			}
+			if ($('#end_date').val() != '') {
+				$("#start_date").datepicker("option", "maxDate", $('#end_date').val());
+			}
+
+			// AJAX submit handler identical to save.phtml
+			$('#submitbutton').off('click').on('click', function(e) {
+				e.preventDefault();
+				var $form = $('#formid');
+				$('.errors').text('');
+				$('#message_container').empty();
+
+				if (!$form.valid()) {
+					return false;
+				}
+
+				var sDate = new Date($('#start_date').val());
+				var eDate = new Date($('#end_date').val());
+				if (sDate > eDate) {
+					$('#errors-start_date').text("Start date cannot be after end date.");
+					$('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Please fix the highlighted errors.</div>');
+					return false;
+				}
+
+				if (typeof $.blockUI === "function") $.blockUI({
+					message: null
+				});
+
+				var formData = new FormData($form[0]);
+
+				$.ajax({
+					url: base_url + '/fiscalyear/savepopup/format/json',
+					type: 'POST',
+					data: formData,
+					processData: false,
+					contentType: false,
+					dataType: 'json',
+					success: function(response) {
+						if (typeof $.unblockUI === "function") $.unblockUI();
+
+						if (response && response.result === 'saved') {
+							window.location.reload(); // Success -> reload to hit PHP success block
+						} else if (response && response.result === 'exception') {
+							$('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>' + response.message + '</div>');
+						} else if (response && typeof response === 'object') {
+							$('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Please fix the highlighted errors.</div>');
+							$.each(response, function(fieldId, errorObj) {
+								var errMsg = (typeof errorObj === 'object') ? errorObj[Object.keys(errorObj)[0]] : errorObj;
+								$('#errors-' + fieldId).text(errMsg);
+							});
+						}
+					},
+					error: function() {
+						if (typeof $.unblockUI === "function") $.unblockUI();
+						$('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Server error occurred.</div>');
+					}
+				});
+			});
+		});
+	</script>
+<?php endif; ?>

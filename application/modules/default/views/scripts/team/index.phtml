@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * Team Index View
+ * Refactored to comply with SSOT v6.5.
+ */
+?>
+<div id="message_container">
+	<?php if (isset($this->messages) && !empty($this->messages)) : ?>
+		<div id="dispmsg" class="settingssuccess">
+			<?php foreach ($this->messages as $message) : $key = key($message); ?>
+				<div class="ml-alert-1-<?php echo $key; ?>">
+					<div style="display:block;">
+						<span class="style-1-icon <?php echo $key; ?>"></span>
+						<?php echo $this->escape($message[$key]); ?>
+					</div>
+				</div>
+			<?php endforeach; ?>
+		</div>
+	<?php endif; ?>
+</div>
+
+<div id="error_message" style="display:none;"></div>
+
+<?php if (isset($this->call) && $this->call === 'ajaxcall') : ?>
+	<?php echo $this->grid($this->dataArray[0]); ?>
+<?php else : ?>
+	<div id="grid_<?php echo $this->escape($this->dataArray[0]['objectname']); ?>" class="all-grid-control">
+		<div id="msg" style="display:none; font-style: oblique; font-weight: bold; color: green;"></div>
+		<?php echo $this->grid($this->dataArray[0]); ?>
+	</div>
+<?php endif; ?>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		setTimeout(function() {
+			$('#dispmsg').fadeOut('slow');
+		}, 4000);
+	});
+</script>

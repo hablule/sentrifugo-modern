@@ -1,0 +1,65 @@
+
+
+<?php if (count($this->messages)) {?>
+	<div id="dispmsgemp" class="settingssuccess">
+		<?php 
+			foreach ($this->messages as $message)
+			{
+				$flag = array();				
+				$flag = array_keys($message);
+				echo "<div id='messageData' class='ml-alert-1-$flag[0]'><div style='display:block;'><span class='style-1-icon $flag[0]'></span>";
+				echo $message[$flag[0]];
+				echo "</div></div>";
+			} 
+		;
+		?>
+	</div>	
+	
+<?php } ?>
+<div id="error_message" style="display:none;"></div>
+<?php 
+$auth = Zend_Auth::getInstance();
+$validcand = sapp_Global::_checkprivileges(CANDIDATEDETAILS,'',$auth->getStorage()->read()->emprole,'add');
+
+ 
+	$div = '<div id="grid_'.$this->dataArray['objectname'].'" class="all-grid-control">'; $endDiv = '</div>';
+
+$multi = '';
+echo $multi.$div.'<div id="msg" style="display:none;font-style: oblique; font-weight: bold; color: green;""></div>'.$this->gridtms($this->dataArray).$endDiv;
+
+?>
+
+<script>
+
+	$(document).ready(function(){
+		let ids = '';
+		
+		for (let index = 0; index < $('tr').length; index++) {
+			const element = $('tr')[index];
+			const td = $(element).find('td')[0];
+			const link = $(td).find('a');
+			let id = $(link[1]).attr('id');
+			
+			if(id!=undefined)
+			{
+				ids = id.slice(4)+','+ids;
+			}
+		}
+		if(ids != undefined){
+		ids = ids.slice(0,ids.length-1);
+		var res = $.ajax({
+			url:base_url+'/schedule/timeschedule/getschedules',
+			data:'ids='+ids,
+			dataType:"json",
+			async:false
+		}).responseJSON;
+		if(res!=undefined)
+		{
+			for (const key in res) {
+				const scheduleId = res[key]['schedule_id'];
+				$("#edit"+scheduleId).hide();
+				$("#del"+scheduleId).hide();
+			}
+		}}
+	})
+</script>

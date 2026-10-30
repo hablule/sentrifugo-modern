@@ -1,0 +1,111 @@
+<style>
+    .tab-field-block {
+        clear: both !important;
+        float: none !important;
+        width: 100% !important;
+        margin-bottom: 12px;
+        display: block;
+    }
+
+    .tab-field-block .new-form-ui {
+        float: none !important;
+        clear: both !important;
+        display: block;
+    }
+
+    .recur-inline-col {
+        float: left;
+        width: 180px;
+        margin-right: 15px;
+    }
+</style>
+
+<!-- Recurrence Mode -->
+<div class="tab-field-block">
+    <div class="new-form-ui clearb">
+        <label class="required"><?php echo $this->escape($this->form->recurrence_type->getLabel()); ?></label>
+        <div class="division">
+            <?php echo $this->form->recurrence_type; ?>
+            <span class="errors" id="errors-<?php echo $this->escape($this->form->recurrence_type->getId()); ?>"></span>
+        </div>
+    </div>
+</div>
+
+<!-- Dynamic Recurrence Inputs Container -->
+<div id="recurrence-dynamic-panel" style="clear: both; width: 100%; background: #fdfdfd; padding: 15px; border: 1px solid #eee; margin: 15px 0; box-sizing: border-box;">
+
+    <!-- Fixed Date Panel -->
+    <div id="panel-fixed-date" class="recurrence-panel" style="display: none; clear: both;">
+        <div class="new-form-ui clearb">
+            <label><?php echo $this->escape($this->form->recur_month->getLabel()); ?></label>
+            <div class="division"><?php echo $this->form->recur_month; ?></div>
+        </div>
+        <div class="new-form-ui clearb">
+            <label><?php echo $this->escape($this->form->recur_day->getLabel()); ?></label>
+            <div class="division"><?php echo $this->form->recur_day; ?></div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+    <!-- Relative Rule Panel (e.g., 4th Thursday in November) -->
+    <div id="panel-relative-date" class="recurrence-panel" style="display: none; clear: both;">
+        <div class="new-form-ui clearb">
+            <label><?php echo $this->escape($this->form->recur_week_num->getLabel()); ?></label>
+            <div class="division"><?php echo $this->form->recur_week_num; ?></div>
+        </div>
+        <div class="new-form-ui clearb">
+            <label><?php echo $this->escape($this->form->recur_day_of_week->getLabel()); ?></label>
+            <div class="division"><?php echo $this->form->recur_day_of_week; ?></div>
+        </div>
+
+        <div class="new-form-ui clearb">
+            <label><?php echo $this->escape($this->form->recur_month->getLabel()); ?></label>
+            <div class="division"><?php echo $this->form->recur_month; ?></div>
+        </div>
+       
+        <div class="clearfix"></div>
+    </div>
+
+</div>
+
+<!-- Weekend Collision Rule -->
+<div class="tab-field-block">
+    <div class="new-form-ui clearb">
+        <label class="required"><?php echo $this->escape($this->form->weekend_policy->getLabel()); ?></label>
+        <div class="division">
+            <?php echo $this->form->weekend_policy; ?>
+            <span class="errors" id="errors-<?php echo $this->escape($this->form->weekend_policy->getId()); ?>"></span>
+        </div>
+    </div>
+</div>
+
+<!-- Auto-Generate Flag -->
+<div class="tab-field-block">
+    <div class="new-form-ui clearb">
+        <label><?php echo $this->escape($this->form->auto_generate->getLabel()); ?></label>
+        <div class="division"><?php echo $this->form->auto_generate; ?></div>
+    </div>
+</div>
+
+<div class="clearfix"></div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        function toggleRecurrencePanels() {
+            var mode = $('#recurrence_type').val();
+            $('.recurrence-panel').hide();
+            $('#recurrence-dynamic-panel').show();
+
+            if (mode === 'FIXED_DATE') {
+                $('#panel-fixed-date').fadeIn(150);
+            } else if (mode === 'RELATIVE_DATE') {
+                $('#panel-relative-date').fadeIn(150);
+            } else {
+                $('#recurrence-dynamic-panel').hide();
+            }
+        }
+
+        $('#recurrence_type').on('change', toggleRecurrencePanels);
+        toggleRecurrencePanels();
+    });
+</script>

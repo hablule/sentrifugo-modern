@@ -1,0 +1,121 @@
+<?php
+
+/**
+ * Menu Group View (Read-Only)
+ * 
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ * @version    Sentrifugo v3.2
+ */
+
+$this->headLink()->appendStylesheet(MEDIA_PATH . 'css/screen.css');
+$this->headLink()->appendStylesheet(MEDIA_PATH . 'css/style.css');
+?>
+
+
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH ?>css/style.css">
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+
+<div class="row">
+    <div class="col s12">
+        <!-- Message Container -->
+        <div id="message_container">
+            <?php if (isset($this->nodata)) : ?>
+                <div class="ml-alert-1-info">
+                    <div style="display:block;">
+                        <span class="style-1-icon info"></span>
+                        No data found.
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <?php if (!isset($this->nodata)) : ?>
+            <div class="total-form-controller">
+
+                <div class="division">
+
+                    <!-- Group Name -->
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->form->name->getLabel(); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->name; ?>
+                        </div>
+                    </div>
+
+                    <!-- Code -->
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->form->code->getLabel(); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->code; ?>
+                        </div>
+                    </div>
+
+                    <!-- Background Color Preview -->
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->form->backgroundcolor->getLabel(); ?></label>
+                        <div class="division">
+                            <span class="view_label">
+                                <?php $bgColor = $this->escape($this->form->backgroundcolor->getValue()); ?>
+                                <div style="display: inline-block; width: 20px; height: 20px; background-color: <?php echo $bgColor; ?>; border: 1px solid #ccc; vertical-align: middle; margin-right: 5px;"></div>
+                                <?php echo $bgColor; ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Icon Preview -->
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->form->iconpath->getLabel();?></label>
+                        <div class="division">
+                            <span class="view_label">
+                                <?php if (!empty($this->currentIcon)): ?>
+                                    <img src="<?php echo MENUGROUP_ICONS_PATH; echo $this->escape($this->currentIcon);?>"
+                                        width="40"
+                                        style="border: 1px solid #ccc; border-radius: 4px; padding: 2px; background: #fff;"
+                                        onerror="this.style.display='none'" />
+                                <?php else: ?>
+                                    <span style="color: #999; font-style: italic;">No icon uploaded</span>
+                                <?php endif; ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <!-- Status -->
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->form->isactive->getLabel(); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                        <?php if (isset($this->msgarray['isactive'])) { ?>
+                            <span class="errors" id="errors-<?php echo $this->form->isactive->getId(); ?>"><?php echo $this->msgarray['isactive']; ?></span>
+                        <?php } ?>
+                    </div>
+
+                    <!-- Navigation Buttons -->
+                    <div class="new-form-ui-submit">
+                        <div class="division">
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>menugroup/index';" id="Back" value="Back to List" type="button" class="reset" />
+
+                            <?php if (sapp_Global::_checkprivileges(MENUGROUP_MENU_ID, $this->loginuserGroup, $this->loginuserRole, 'edit') == 'Yes') : ?>
+                                <input onclick="window.location.href='<?php echo BASE_URL; ?>menugroup/edit/id/<?php echo $this->id; ?>';" id="Edit" value="Edit" type="button" class="reset" />
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>
+
+<script type="text/javascript">
+    // Initialize JQTE
+    $('#description').jqte();
+</script>

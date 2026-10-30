@@ -1,0 +1,165 @@
+<?php
+
+/**
+ * User Role Assignment View (Read-Only)
+ * Handles the display of userroles
+ * 
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ * @author     Hablul Soft Solution < /hablul.in>
+ * @license    http://gnu.org GNU General Public License, version 3.0 (GPL-3.0)
+ * @version    Sentrifugo v3.2
+ **/
+
+?>
+
+<?php
+// 1. Functional Group: Asset Management
+$this->headLink()
+        ->appendStylesheet(MEDIA_PATH . 'css/screen.css')
+        ->appendStylesheet(MEDIA_PATH . 'css/jquery-te.css')
+        ->appendStylesheet(MEDIA_PATH . 'css/style.css');
+$this->headScript()
+        ->appendFile(MEDIA_PATH . 'js/scripts.js')
+        ->appendFile(MEDIA_PATH . 'js/materialize.js')
+        ->appendFile(MEDIA_PATH . 'js/jquery.validate.min.js')
+        ->appendFile(MEDIA_PATH . 'js/jquery-te.min.js');
+
+$baseUrl = $this->serverUrl() . $this->baseUrl();
+?>
+
+
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH ?>css/style.css">
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+
+<!-- <div class="right-block-data right-over-border"></div> -->
+<!-- 2. Functional Group: Header & Breadcrumbs -->
+<!-- <div class="page-header-container"> <h4 class="page-title">View Role Assignment</h4> </div> -->
+
+<!-- 3. Functional Group: Alert/Message Handling -->
+<div id="message_container">
+    <?php if ($this->rowexist == 'norows') : ?>
+        <div class="ml-alert-1-info">
+            <div style="display:block;">
+                <span class="style-1-icon info"></span>
+                No data found for this assignment.
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <?php
+    $flashMessenger = Zend_Controller_Action_HelperBroker::getStaticHelper('FlashMessenger');
+    foreach ($flashMessenger->getMessages() as $msg) :
+        $key = key($msg);
+    ?>
+        <div class="ml-alert-1-<?php echo $key; ?>">
+            <div style="display:block;">
+                <span class="style-1-icon <?php echo $key; ?>"></span>
+                <?php echo $msg[$key]; ?>
+            </div>
+        </div>
+    <?php endforeach; ?>
+</div>
+
+<?php if ($this->rowexist == 'rows') : ?>
+    <div class="total-form-controller">
+        <div class="division">
+
+            <!-- 4. Functional Group: Data Display Logic -->
+
+            <!-- User Row -->
+            <div class="new-form-ui clearb">
+                <label><?php echo $this->form->user_id->getLabel(); ?></label>
+                <div class="division">
+                    <?php echo $this->form->user_id; ?>
+                </div>
+            </div>
+
+            <!-- Role Row -->
+            <div class="new-form-ui clearb">
+                <label><?php echo $this->form->role_id->getLabel(); ?></label>
+                <div class="division">
+                    <?php echo $this->form->role_id; ?>
+                </div>
+            </div>
+
+            <!-- Dates Row (Side-by-side Layout) -->
+            <div class="row no-margin">
+                <div class="new-form-ui clearb">
+                    <div class="new-form-ui">
+                        <label><?php echo $this->form->datefrom->getLabel(); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->datefrom; ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="new-form-ui clearb">
+                    <div class="new-form-ui">
+                        <label><?php echo $this->form->dateto->getLabel(); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->dateto; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Description Row -->
+            <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+            <!-- Status Row -->
+            <div class="new-form-ui clearb">
+                <label><?php echo $this->form->isactive->getLabel(); ?></label>
+                <div class="division"><?php echo $this->form->isactive; ?></div>
+                <?php if (isset($this->msgarray['isactive'])) { ?>
+                    <span class="errors" id="errors-<?php echo $this->form->isactive->getId(); ?>"><?php echo $this->msgarray['isactive']; ?></span>
+                <?php } ?>
+            </div>
+
+            <!-- 5. Functional Group: Navigation Controls -->
+            <div class="new-form-ui-submit">
+                <div class="division">
+                    <input  onclick="window.location.href='<?php echo BASE_URL; ?>userrole/index';" id="Back" value="Back to List" type="button" class="reset" />
+                    
+                    <?php if (sapp_Global::_checkprivileges(USERROLE_MENU_ID, $this->loginuserGroup, $this->loginuserRole, 'edit') == 'Yes') : ?>
+                        <input  onclick="window.location.href='<?php echo BASE_URL; ?>userrole/edit/id/<?php echo $this->id; ?>';" id="Edit" value="Edit" type="button" class="reset" />
+                    <?php endif; ?>
+                </div>
+            </div>
+
+        </div>
+    </div>
+<?php endif; ?>
+
+
+<script type="text/javascript">
+    // Initialize JQTE
+    $('#description').jqte();
+
+    // 7. Functional Group: UI Initialization
+    $(document).ready(function() {
+        // Handle Materialize Switch state visually if needed
+        $('.switch').find('input[type="checkbox"]').prop('disabled', true);
+
+        // Ensure standard Select2 display for consistency even if disabled
+        if ($.isFunction($.fn.select2)) {
+            $('#user_id, #role_id').select2({
+                width: '100%'
+            });
+        }
+    });
+
+    $('#datefrom,#dateto').datepicker({
+        showOn: 'both',
+        dateFormat: '<?php echo DATEFORMAT_JS; ?>',
+        buttonImage: "<?php echo MEDIA_PATH; ?>images/cal.jpg",
+        buttonImageOnly: true,
+        changeMonth: true,
+        changeYear: true
+    });
+</script>

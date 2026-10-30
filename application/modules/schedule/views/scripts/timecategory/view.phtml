@@ -1,0 +1,35 @@
+<?php
+try {
+	
+sapp_Helper::viewHeader();
+if (!empty($this->data)) {
+
+		sapp_Helper::viewBody('alt', 'Name', $this->data[0]['name'], 'code', $this->data[0]['code']);
+		sapp_Helper::viewBody('alt', 'Active', $this->data[0]['isactive'], 'Description', $this->data[0]['description']);
+
+	
+} else { ?>
+	<h6 style="text-align: center;"> No Schedule is there</h6>
+<?php
+	sapp_Helper::viewBody('nor', '----------', '----------', '----------', '----------');
+}
+sapp_Helper::viewFooter();
+?>
+<div class="new-form-ui-submit">
+	<button onclick="window.location.href='<?php echo BASE_URL; ?>schedule/timecategory';" type="button" id="Cancel" name="Cancel" style="color: #208bbd;">Cancel</button>
+</div>
+</div>
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" method="POST" action="<?php echo $this->form->getAction(); ?>">
+	<div class="new-form-ui-submit">
+		<!-- 	<?php echo $this->form->submit; ?> -->
+
+	</div>
+
+	</div>
+</form>
+<?php
+//code...
+} catch (\Throwable $th) {
+	Zend_Debug::dump($th->getMessage());
+} 
+?>

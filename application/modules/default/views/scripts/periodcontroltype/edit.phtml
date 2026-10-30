@@ -1,0 +1,114 @@
+<?php
+
+$form = $this->form;
+sapp_Global::generateClientValidations($this->form);
+?>
+
+<script type="text/javascript" src="<?php echo MEDIA_PATH ?>js/addelement.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH ?>css/addelement.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction(); ?>" method="POST">
+    <?php echo $this->form->id; ?>
+    <div class="total-form-controller">
+    <div class="new-form-ui ">
+            <label class="required">Period</label>
+            <div class="division loca_state_div"><?php echo $this->form->period; ?>
+            <?php if(isset($this->msgarray['period'])){?>
+			   <span class="errors" id="errors-<?php echo $form->period->getId(); ?>"><?php echo $this->msgarray['period'];?></span>
+			<?php }?>
+            </div>
+        </div>
+        <div class="new-form-ui ">
+            <label class="required">Control Type</label>
+            <div class="division loca_state_div"><?php echo $this->form->controltype; ?>
+            <?php if(isset($this->msgarray['controltype'])){?>
+			   <span class="errors" id="errors-<?php echo $form->controltype->getId(); ?>"><?php echo $this->msgarray['controltype'];?></span>
+			<?php }?>
+            </div>
+        </div>
+        
+        <div class="new-form-ui ">
+            <label >Is auto generated</label>
+            <div class="division"><?php echo $this->form->isauto; ?>
+                <div>
+                    <span style="color:red" id="category_error"></span>
+                </div>
+            </div>
+
+        </div>
+        
+        <br>
+        <table>
+            <tr>
+                
+                <td>
+                    <div class="new-form-ui-submit">
+                        <?php echo $form->submit; ?>
+                        <button onclick="window.location.href='<?php echo BASE_URL; ?>periodcontroltype';" type="button">Cancel</button>
+                    </div>
+                </td>
+                <td>
+                    <div class="new-form-ui-previousBtn">
+                        <?php echo $form->back; ?>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>
+
+<script>
+console.log('js')
+$('#period').on('change',()=>{
+    var period = $('#period').val();
+    var controltype = $('#controltype').val();
+    /* var res = $.ajax({
+        url:base_url+'/periodcontroltype/checkpcpattern',
+        method:'POST',
+        dataType:'json',
+        data:'period=' + period +'&controltype=' +controltype,
+        async:false
+    }).responseText; */
+    var res = getphpdata('periodcontroltype/checkpcpattern','period=' + period +'&controltype=' +controltype,false,'POST','json')
+    res = JSON.parse(res);
+    console.log(res)
+    if (res.result=='true') {
+        $('#period').parent().append('<span class="errors" id="errors-period">The period already exist and set to</span>');
+        //$('#period').val('select');
+        $('#submit').attr('disabled',true);
+    }
+    else{
+        $('#errors-period').remove();
+        $('#submit').removeAttr('disabled');
+    }
+
+})
+$('#controltype').on('change',()=>{
+    var period = $('#period').val();
+    var controltype = $('#controltype').val();
+    console.log(controltype,period);
+    /* var res = $.ajax({
+        url:base_url+'/periodcontroltype/checkpcpattern',
+        method:'POST',
+        dataType:'json',
+        data:'period=' + period +'&controltype=' +controltype,
+        async:false
+    }).responseText; */
+    var res = getphpdata('periodcontroltype/checkpcpattern','period=' + period +'&controltype=' +controltype,false,'POST','json')
+    res = JSON.parse(res);
+    console.log(res)
+    if (res.result=='true') {
+      if ($('#errors-period').html()==undefined) {
+        $('#period').parent().append('<span class="errors" id="errors-period">The period already exist and set to</span>');
+        $('#submit').attr('disabled',true);
+      }
+       // $('#period').val('select');
+    }
+    else{
+        $('#errors-period').remove();
+        $('#submit').removeAttr('disabled');
+    }
+})
+
+</script>

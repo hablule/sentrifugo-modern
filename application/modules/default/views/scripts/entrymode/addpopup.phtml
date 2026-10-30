@@ -1,0 +1,101 @@
+<?php
+
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+?>
+
+<?php
+/**
+ * Entry Mode Add Popup View
+ * Strictly adheres to working Sentrifugo popup pattern with auto-select.
+ * Complies with SSOT v6.7.7.
+ */
+$this->msgarray = isset($this->msgarray) ? $this->msgarray : array();
+sapp_Global::generateClientValidations($this->form);
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/custompopup.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/custompopup.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<div style="padding: 15px;">
+	<?php if (isset($this->popup) && $this->popup == 'close') : ?>
+		<div class="ml-alert-1-success">
+			<div style="display:block;"><span class="style-1-icon success"></span>Entry Mode <?php echo $this->escape($this->eventact); ?> successfully.</div>
+		</div>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				setTimeout(function() {
+					var newId = "<?php echo $this->escape($this->newInsertedId); ?>";
+					parent.closeiframeAddPopup("<?php echo $this->optionsHtml; ?>", "entrymode", "entrymode_id", "Entry Mode");
+
+					if (newId && parent.$('#entrymode_id').length) {
+						var $select = parent.$('#entrymode_id');
+						$select.val(newId);
+						if (parent.$.isFunction(parent.$.fn.select2)) {
+							$select.select2({
+								width: '100%'
+							});
+						}
+						$select.trigger('change');
+					}
+				}, 1000);
+			});
+		</script>
+	<?php else : ?>
+		<div id="error_message" style="display:none;"></div>
+		<?php if (!empty($this->msgarray['error'])) : ?>
+			<div class="ml-alert-1-error">
+				<div style="display:block;"><span class="style-1-icon error"></span><?php echo $this->escape($this->msgarray['error']); ?></div>
+			</div>
+		<?php endif; ?>
+
+		<form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" action="<?php echo $this->escape($this->form->getAction()); ?>" method="post">
+			<?php echo $this->form->id; ?>
+			<div class="total-form-controller" style="padding: 0; box-shadow: none; border: none;">
+				<div class="division">
+					<div class="new-form-ui clearb">
+						<label class="required"><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+						<div class="division"><?php echo $this->form->code; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->code->getId()); ?>"><?php echo isset($this->msgarray['code']) ? $this->escape($this->msgarray['code']) : ''; ?></span></div>
+					</div>
+					<div class="new-form-ui clearb">
+						<label class="required"><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+						<div class="division"><?php echo $this->form->name; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->name->getId()); ?>"><?php echo isset($this->msgarray['name']) ? $this->escape($this->msgarray['name']) : ''; ?></span></div>
+					</div>
+					<?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+					<div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+						<div class="division"><?php echo $this->form->isactive; ?></div>
+					</div>
+					<div class="new-form-ui-submit" style="margin-top: 15px;">
+						<div class="division">
+							<input type="submit" name="submit" id="submitbutton" value="Save" class="actbtn_btn" />
+							<button type="button" class="reset" onclick="parent.closeiframepopup('entrymode', 'cancel');">Cancel</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$('#description').jqte();
+			});
+		</script>
+	<?php endif; ?>
+</div>

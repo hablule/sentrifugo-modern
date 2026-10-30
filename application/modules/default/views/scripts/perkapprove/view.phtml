@@ -1,0 +1,35 @@
+
+
+<?php
+sapp_Global::generateClientValidations($this->form);
+?>
+<div id="error_message" style="display:none;"></div>
+
+			<?php sapp_Helper::viewHeader();
+			if (!empty($this->empperks)) {
+				foreach ($this->empperks as $value) {
+if($value['type']=="Percentage"){
+$x=$value['amount'].'%';
+}
+else{
+	$x=$value['amount'];
+
+}
+					sapp_Helper::viewBody('nor', 'Perk  Name', $value['name'], 'Employer Name', $value['userfullname'] );
+					sapp_Helper::viewBody('alt', 'From', $value['start'], 'To', $value['end']);
+					sapp_Helper::viewBody('nor','type', $value['type'],'Amount Payed ',$x);
+					sapp_Helper::viewBody('alt', 'Category', $value['c_name'], 'Description', $value['c_description']);
+
+                }	
+			}else{?>
+			<h6 style="text-align: center;"> No perk Requiest  is here</h6>
+			<?php
+		sapp_Helper::viewBody('nor', '----------', '----------', '----------', '----------');	
+			}
+			sapp_Helper::viewFooter();
+			?>
+			<div class="new-form-ui-submit">
+			<button onclick="window.location.href='<?php echo BASE_URL; ?>perkapprove';" type="button" id="Cancel" name="Cancel">Cancel</button>
+			</div>
+		</div>
+ 

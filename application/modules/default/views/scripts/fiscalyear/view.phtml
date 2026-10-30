@@ -1,0 +1,170 @@
+<?php
+
+/**
+ * Fiscal Year View (Read-Only)
+ *
+ * Displays the read-only details for a specific year, including the child periods.
+ * Refactored to comply with SSOT v6.8.
+ *
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ * @author     Hablul Soft Solution < /hablul.in>
+ * @license    http://gnu.org GNU General Public License, version 3.0 (GPL-3.0)
+ * @version    Sentrifugo v3.2
+ */
+?>
+
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<style>
+    .mapping-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+
+    .mapping-table th,
+    .mapping-table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+    }
+
+    .mapping-table th {
+        background-color: #f9f9f9;
+        color: #333;
+        font-weight: bold;
+    }
+</style>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container">
+            <?php if (isset($this->nodata) && $this->nodata === 'nodata') : ?>
+                <div class="ml-alert-1-info">
+                    <div style="display:block;">
+                        <span class="style-1-icon info"></span>
+                        No data found.
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <?php if (isset($this->form)) : ?>
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <h5 style="margin-bottom: 20px; color: #26a69a; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Fiscal Year Details</h5>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->name; ?></div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->calendar_id->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->calendar_id; ?></div>
+                    </div>
+
+                    <!-- Dates Side-by-Side -->
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <div class="new-form-ui">
+                                <label><?php echo $this->escape($this->form->start_date->getLabel()); ?></label>
+                                <div class="division"><?php echo $this->form->start_date; ?></div>
+                            </div>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <div class="new-form-ui">
+                                <label><?php echo $this->escape($this->form->end_date->getLabel()); ?></label>
+                                <div class="division"><?php echo $this->form->end_date; ?></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <div style="clear: both; width: 100%; height: 20px;"></div>
+
+                    <!-- SSOT v6.8: Read-Only Period Grid -->
+                    <h5 style="margin: 30px 0 20px 0; color: #26a69a; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Associated Periods</h5>
+
+                    <table class="mapping-table" id="tbl-periods-view">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">Seq</th>
+                                <th>Period Name</th>
+                                <th style="width: 150px;">Start Date</th>
+                                <th style="width: 150px;">End Date</th>
+                                <th style="width: 80px;">Status</th>
+                                <th style="width: 60px; text-align:center;">Action</th> <!-- NEW -->
+                            </tr>
+                        </thead>
+                        <tbody><!-- JS injected --></tbody>
+                    </table>
+
+                    <div style="clear:both;"></div>
+
+                    <!-- Navigation Buttons -->
+                    <div class="new-form-ui-submit" style="margin-top: 20px;">
+                        <div class="division">
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>fiscalyear/index';" value="Back to List" type="button" class="reset" />
+
+                            <?php if (sapp_Global::_checkprivileges(CALENDERYEAR, $this->loginuserGroup, $this->loginuserRole, 'edit') === 'Yes') : ?>
+                                <input onclick="window.location.href='<?php echo BASE_URL; ?>fiscalyear/edit/id/<?php echo $this->id; ?>';" value="Edit" type="button" class="reset" />
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>
+
+<script type="text/javascript">
+    // Load existing periods from controller
+    var arrPeriods = <?php echo isset($this->existingPeriods) ? $this->existingPeriods : '[]'; ?>;
+
+    $(document).ready(function() {
+        $('#description').jqte();
+        $('.jqte_editor').attr('contenteditable', 'false'); // Lock WYSIWYG for view mode
+
+        renderReadOnlyPeriods();
+    });
+
+    function renderReadOnlyPeriods() {
+        var html = '';
+        if (arrPeriods.length === 0) {
+            html = '<tr><td colspan="6" style="text-align:center; color:#999;">No periods found for this Fiscal Year.</td></tr>';
+        } else {
+            $.each(arrPeriods, function(idx, val) {
+                var statusText = val.isactive == 1 ? '<span style="color:green;">Active</span>' : '<span style="color:red;">Inactive</span>';
+                var seqVal = val.sequence !== undefined ? val.sequence : (val.period_sequence || '0');
+
+                html += '<tr>';
+                html += '<td>' + seqVal + '</td>'; // Fixed sequence bug here too
+                html += '<td>' + val.name + '</td>';
+                html += '<td>' + val.start_date + '</td>';
+                html += '<td>' + val.end_date + '</td>';
+                html += '<td>' + statusText + '</td>';
+
+                // The Goto Action Button
+                html += '<td style="text-align:center;">';
+                if (val.id > 0) {
+                    html += '<a href="' + base_url + '/period/edit/id/' + val.id + '" target="_blank" style="color: #26a69a; text-decoration: none; font-size: 16px;" title="Go to Period Controls"><i class="fa fa-external-link"></i></a>';
+                }
+                html += '</td>';
+
+                html += '</tr>';
+            });
+        }
+        $('#tbl-periods-view tbody').html(html);
+    }
+</script>

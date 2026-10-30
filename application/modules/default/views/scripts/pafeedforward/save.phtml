@@ -1,0 +1,103 @@
+<?php
+
+/**
+ * PA Feedforward Save View (Generator)
+ * Strictly adheres to SSOT v6.2. Custom AJAX intercept to handle the redirect.
+ */
+$this->msgarray = isset($this->msgarray) ? $this->msgarray : array();
+sapp_Global::generateClientValidations($this->form);
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container">
+            <?php if (!empty($this->msgarray)) : ?>
+                <div class="ml-alert-1-error">
+                    <div style="display:block;"><span class="style-1-icon error"></span>Please correct the highlighted errors below.</div>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" method="<?php echo $this->escape($this->form->getMethod()); ?>">
+            <?php echo $this->form->id; ?>
+            <div class="total-form-controller">
+                <div class="division">
+                    <h4 style="font-size: 14px; color: #26a69a; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 15px;">Initiate Continuous Feedback</h4>
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->evaluatee_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->evaluatee_id; ?></div>
+                            <span class="errors" id="errors-evaluatee_id"><?php echo $this->escape($this->msgarray['evaluatee_id'] ?? ''); ?></span>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->rulebook_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->rulebook_id; ?></div>
+                            <span class="errors" id="errors-rulebook_id"><?php echo $this->escape($this->msgarray['rulebook_id'] ?? ''); ?></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui-submit" style="margin-top: 15px;">
+                        <div class="division">
+                            <?php echo $this->form->submit; ?>
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>pafeedforward';" value="Cancel" type="button" class="reset" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        if ($.isFunction($.fn.select2)) {
+            $('select').select2({
+                width: '100%'
+            });
+        }
+
+        // Intercept to handle the JSON redirect_url correctly
+        $('#submitbutton').off('click').on('click', function(e) {
+            e.preventDefault();
+            var $form = $('#formid');
+            if ($.isFunction($form.valid) && !$form.valid()) return false;
+
+            if ($.isFunction($.blockUI)) $.blockUI({
+                message: '<img src="<?php echo MEDIA_PATH; ?>images/loader2.gif" />'
+            });
+            var formData = new FormData($form[0]);
+
+            $.ajax({
+                url: base_url + '/pafeedforward/save/format/json',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function(res) {
+                    if ($.isFunction($.unblockUI)) $.unblockUI();
+                    if (res.result === 'saved') window.location.href = res.redirect_url;
+                    else if (res.result === 'exception') {
+                        $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>' + res.message + '</div>');
+                    } else {
+                        $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Please fix the highlighted errors.</div>');
+                        $('.errors').html('');
+                        $.each(res, function(key, val) {
+                            $('#errors-' + key).html((typeof val === 'object') ? val[Object.keys(val)[0]] : val);
+                        });
+                    }
+                },
+                error: function() {
+                    if ($.isFunction($.unblockUI)) $.unblockUI();
+                    $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Server Error.</div>');
+                }
+            });
+        });
+    });
+</script>

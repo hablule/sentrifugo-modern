@@ -1,0 +1,363 @@
+<?php
+
+/**
+ * System Users Index View
+ * Displays Users in Card or Grid view with toggle functionality.
+ * 
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ * @author     Hablul Soft Solution < /hablul.in>
+ * @license    http://gnu.org GNU General Public License, version 3.0 (GPL-3.0)
+ * @version    Sentrifugo v3.2
+ **/
+?>
+
+
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH ?>css/screen.css">
+
+<?php
+$auth = Zend_Auth::getInstance();
+if ($auth->hasIdentity()) {
+	$loginUserId = $auth->getStorage()->read()->id;
+	$loginuserRole = $auth->getStorage()->read()->emprole;
+	$loginuserGroup = $auth->getStorage()->read()->group_id;
+}
+$viewType = $this->viewType;
+$baseUrl = $this->serverUrl() . $this->baseUrl();
+?>
+
+
+<!-- 2. Header & Flash Messages -->
+<?php if ($this->call != 'ajaxcall') : ?>
+	<div id="user_header">
+		<div class="profile-tabs-right-2" style="width: 100% !important; margin-bottom: 15px;">
+
+			<!-- Flash Messages -->
+			<?php if (count($this->messages)) : ?>
+				<div id="dispmsguser" class="settingssuccess">
+					<?php foreach ($this->messages as $message) : $key = key($message); ?>
+						<div class="ml-alert-1-<?php echo $key; ?>">
+							<div class="style-1-icon <?php echo $key; ?>"></div>
+							<?php echo $message[$key]; ?>
+						</div>
+					<?php endforeach; ?>
+				</div>
+			<?php endif; ?>
+
+			<div class="flt_left">
+				<!-- View Toggle Buttons -->
+				<div class="view-toggles" style="display: inline-block; vertical-align: middle;">
+					<a href="javascript:void(0);" onclick="toggleView('card')" class="toggle-btn <?php echo ($viewType == 'card') ? 'active' : ''; ?>" title="Card View">
+						<i class="fa fa-th-large"></i>
+					</a>
+					<a href="javascript:void(0);" onclick="toggleView('grid')" class="toggle-btn <?php echo ($viewType == 'grid') ? 'active' : ''; ?>" title="Grid View">
+						<i class="fa fa-list"></i>
+					</a>
+				</div>
+			</div>
+
+			<div class="flt_right">
+				<!-- Add Button (Permission Check) -->
+				<?php if ($viewType == 'card') : ?>
+					<?php if (in_array('user', $this->popConfigPermission) || $this->loginuserGroup == 1) : ?>
+						<div class="actions_div">
+							<a href="<?php echo BASE_URL . 'user/add'; ?>" class="sprite addrecord">Add User</a>
+						</div>
+					<?php endif; ?>
+				<?php endif; ?>
+			</div>
+		</div>
+
+
+
+		<!-- Search Bar (Card View Only) -->
+		<div class="search_emp full-width">
+			<?php if ($viewType == 'card') : ?>
+				<div class="new-form-ui">
+					<div class="division">
+						<select name="search_val" id="search_val">
+							<option value="">Search Category</option>
+							<option value="username">User Name</option>
+							<option value="userfullname">Employee Name</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="new-form-ui">
+					<div class="division">
+						<input type="text" placeholder="Search keyword..." name="search_str" id="search_str" value="<?php echo $this->search_str; ?>">
+					</div>
+				</div>
+
+				<div class="new-form-ui" style="width: initial;">
+					<div class="division">
+						<button onclick="userSearch();" type="button" class="actbtn_btn" style="margin: 0;">Search</button>
+						<button onclick="window.location.href='<?php echo BASE_URL; ?>user/index'" type="button" class="actbtn_btn reset" style="margin-top: 0;">Clear</button>
+					</div>
+				</div>
+			<?php endif; ?>
+		</div>
+	</div>
+<?php endif; ?>
+
+<!-- 3. Main Content Container -->
+<div id="user_container" class="full-width">
+	<?php if ($viewType == 'card' && $this->call != 'ajaxcall') : ?>
+		<!-- CARD VIEW -->
+		<div class="list-container" id="more_users">
+			<?php if ($this->totalcount > 0) : ?>
+				<?php echo $this->render('user/getmoreusers.phtml'); ?>
+			<?php else : ?>
+				<p class='no-data'>No users found.</p>
+			<?php endif; ?>
+		</div>
+
+		<!-- Pagination State -->
+		<input type="hidden" id="offset" value="<?php echo $this->offset; ?>">
+		<input type="hidden" id="limit" value="<?php echo $this->limit; ?>">
+		<input type="hidden" id="count_remaining" value="<?php echo $this->remainingcount; ?>">
+
+		<?php if ($this->remainingcount > 0) : ?>
+			<div id="viewmorediv" onclick="viewMore();" class="view-more-btn">
+				View More..(<span id="remaining_text"><?php echo $this->remainingcount; ?></span> remaining)
+			</div>
+		<?php endif; ?>
+
+	<?php else : ?>
+		<!-- GRID VIEW (Sentrifugo Helper) -->
+		<div id="msg" style="display:none;font-style: oblique; font-weight: bold; color: green;"></div>
+		<div id="grid_user" class="all-grid-control">
+			<?php
+			if (!empty($this->dataArray[0]['tablecontent'])) {
+				echo $this->grid($this->dataArray[0]);
+			} else if ($this->call != 'ajaxcall') {
+				echo "<p class='no-data'>No users found.</p>";
+			}
+			?>
+		</div>
+	<?php endif; ?>
+</div>
+
+<!-- 4. JavaScript Logic -->
+<script type="text/javascript">
+	$(document).ready(function() {
+		// Initialize Materialize Dropdowns
+		$('.dropdown-button').dropdown({
+			constrain_width: false,
+			belowOrigin: true
+		});
+
+		// Auto-fade flash messages
+		setTimeout(function() {
+			$('#dispmsguser').fadeOut('slow');
+		}, 4000);
+	});
+
+	// Toggle View Preference
+	function toggleView(type) {
+		window.location.href = base_url + '/user/index/view_type/' + type;
+	}
+
+	// Card View Search
+	function userSearch() {
+		var s_val = $('#search_val').val();
+		var s_str = $('#search_str').val();
+		var v_type = '<?php echo $viewType; ?>';
+
+		window.location.href = base_url + '/user/index/view_type/' + v_type + '/search_val/' + s_val + '/search_str/' + s_str;
+	}
+
+	// Load More Cards (AJAX)
+	function viewMore() {
+		var limit = $('#limit').val();
+		var offset = $('#offset').val();
+		var count_rem = $('#count_remaining').val();
+		var s_val = '<?php echo $this->search_val; ?>';
+		var s_str = '<?php echo $this->search_str; ?>';
+
+		var $btn = $('#viewmorediv');
+		var originalHtml = $btn.html();
+		$btn.html('<i class="fa fa-spinner fa-spin"></i> Loading...').attr('onclick', '');
+
+		$.ajax({
+			url: base_url + '/user/getmoreusers', // Ensure this action exists in controller
+			type: 'POST',
+			data: {
+				limit: limit,
+				offset: offset,
+				count_remaining: count_rem,
+				search_val: s_val,
+				search_str: s_str,
+				view_type: 'card',
+				call: 'ajaxcall'
+			},
+			success: function(data) {
+				$('#more_users').append(data);
+
+				// Update State
+				var newOffset = parseInt(offset) + parseInt(limit);
+				var itemsAdded = $(data).filter('.list-item').length; // Approx check
+				// Better approach: Controller should return exact count, but logic here assumes full batch
+				var newRemaining = count_rem - itemsAdded; // Simple decrement logic
+
+				$('#offset').val(newOffset);
+				$('#count_remaining').val(newRemaining);
+				$('#remaining_text').text(newRemaining);
+
+				if (newRemaining <= 0) {
+					$btn.hide();
+				} else {
+					$btn.html(originalHtml).attr('onclick', 'viewMore();');
+					$('#remaining_text').text(newRemaining);
+				}
+
+				// Re-init dropdowns
+				$('.dropdown-button').dropdown({
+					constrain_width: false,
+					belowOrigin: true
+				});
+			},
+			error: function() {
+				$btn.html('Error loading. Click to retry.').attr('onclick', 'viewMore();');
+			}
+		});
+	}
+</script>
+
+<style>
+	/* View Toggle Styling */
+	.toggle-btn {
+		padding: 8px 12px;
+		background: #eee;
+		border-radius: 4px;
+		color: #666;
+		transition: 0.3s;
+		margin-right: 5px;
+	}
+
+	.toggle-btn.active {
+		background: #26a69a;
+		color: #fff;
+	}
+
+	.toggle-btn:hover {
+		background: #ddd;
+	}
+
+	/* Card Layout Styling */
+	.list-container {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 20px;
+		clear: both;
+		margin-top: 20px;
+	}
+
+	.list-item {
+		width: 31%;
+		border: 1px solid #eee;
+		background: #fff;
+		position: relative;
+		border-radius: 4px;
+		overflow: hidden;
+		transition: box-shadow 0.3s;
+	}
+
+	.list-item:hover {
+		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	}
+
+	.li-head {
+		padding: 15px;
+		border-bottom: 1px solid #f9f9f9;
+		position: relative;
+		display: flex;
+		align-items: center;
+	}
+
+	.li-avatar {
+		margin-right: 12px;
+	}
+
+	.li-avatar img {
+		border-radius: 10%;
+	}
+
+	.emp-name {
+		font-weight: bold;
+		color: #333;
+		display: block;
+		font-size: 14px;
+	}
+
+	.emp-designation {
+		color: #26a69a;
+		font-size: 12px;
+		display: block;
+	}
+
+	.li-actions {
+		position: absolute;
+		right: 8px;
+		top: 8px;
+	}
+
+	.dottedbtn {
+		color: #999;
+		padding: 5px;
+	}
+
+	.li-body {
+		padding: 12px 15px;
+		background: #fdfdfd;
+		font-size: 12px;
+		color: #777;
+	}
+
+	.li-body p {
+		margin: 0;
+	}
+
+	.li-body i {
+		margin-right: 8px;
+		width: 14px;
+		text-align: center;
+	}
+
+	/* Pagination Button */
+	.view-more-btn {
+		display: block;
+		width: 220px;
+		margin: 30px auto;
+		padding: 10px;
+		text-align: center;
+		background: #fff;
+		border: 1px solid #26a69a;
+		color: #26a69a;
+		border-radius: 20px;
+		cursor: pointer;
+		transition: 0.3s;
+	}
+
+	.view-more-btn:hover {
+		background: #26a69a;
+		color: #fff;
+	}
+
+	/* Mobile Responsiveness */
+	@media (max-width: 992px) {
+		.list-item {
+			width: 48%;
+		}
+	}
+
+	@media (max-width: 600px) {
+		.list-item {
+			width: 100%;
+		}
+	}
+</style>

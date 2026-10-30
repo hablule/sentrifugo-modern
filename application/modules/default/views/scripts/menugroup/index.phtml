@@ -1,0 +1,63 @@
+<?php
+/**
+ * Menu Group Index View
+ * 
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ * @version    Sentrifugo v3.2
+ * @author     Hablul Soft Solution < /hablul.in>
+ * @license    http://gnu.org GNU General Public License, version 3.0 (GPL-3.0)
+ * @modified  Sentrifugo v3.2
+ * @date	  June 2024
+ */
+
+$this->headLink()->appendStylesheet(MEDIA_PATH . 'css/screen.css');
+$this->headLink()->appendStylesheet(MEDIA_PATH . 'css/style.css');
+?>
+
+<!-- Header & Actions -->
+<?php if ($this->call != 'ajaxcall') : ?>
+    <div id="menugroup_header">        
+
+        <!-- Flash Messages -->
+        <div id="message_container">
+            <?php if (count($this->messages)) : ?>
+                <div id="dispmsg" class="settingssuccess">
+                    <?php foreach ($this->messages as $message) : $key = key($message); ?>
+                        <div class="ml-alert-1-<?php echo $key; ?>">
+                            <div style="display:block;">
+                                <span class="style-1-icon <?php echo $key; ?>"></span>
+                                <?php echo $message[$key]; ?>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+<?php endif; ?>
+
+<!-- Grid Container -->
+<div id="menugroup_container" class="full-width">
+    <div id="msg" style="display:none;font-style: oblique; font-weight: bold; color: green;"></div>
+    
+    <div id="grid_menugroup" class="all-grid-control">
+        <?php
+        if (!empty($this->dataArray[0]['tablecontent'])) {
+            echo $this->grid($this->dataArray[0]);
+        } else if ($this->call != 'ajaxcall') {
+            echo "<p class='no-data'>No menu groups found.</p>";
+        }
+        ?>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    // Auto-fade flash messages
+    setTimeout(function() {
+        $('#dispmsg').fadeOut('slow');
+    }, 4000);
+});
+</script>

@@ -1,0 +1,63 @@
+{
+    "intelephense.environment.includePaths": [
+        "C:/xampp/htdocs/Sentrifugo_3.2/Zend",
+        "C:/xampp/htdocs/Sentrifugo_3.2/ZendX",
+        "C:/xampp/htdocs/Sentrifugo_3.2/application/models",
+        "C:/xampp/htdocs/Sentrifugo_3.2/application/modules",
+        "C:/xampp/htdocs/Sentrifugo_3.2/public"
+    ],
+
+    "intelephense.files.exclude": [
+        "**/.git/**",
+        "**/node_modules/**",
+        "**/public/**",
+        "**/temp/**",
+        "**/cache/**",
+        "**/logs/**",
+        "**/*.min.js",
+        "**/*.min.css"
+    ],
+
+    "intelephense.stubs": [
+        "apache",
+        "bcmath",
+        "bz2",
+        "calendar",
+        "Core",
+        "ctype",
+        "curl",
+        "date",
+        "dom",
+        "fileinfo",
+        "filter",
+        "gd",
+        "hash",
+        "iconv",
+        "json",
+        "libxml",
+        "mbstring",
+        "mysqli",
+        "mysqlnd",
+        "openssl",
+        "pcre",
+        "PDO",
+        "pdo_mysql",
+        "mysql",
+        "sqlite3",
+        "Phar",
+        "readline",
+        "phpunit",
+        "Reflection",
+        "session",
+        "SimpleXML",
+        "SPL",
+        "standard",
+        "tokenizer",
+        "xml",
+        "xmlreader",
+        "xmlwriter",
+        "zip",
+        "zlib",
+        "zend"
+    ]
+}

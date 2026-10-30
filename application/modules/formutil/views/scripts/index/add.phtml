@@ -1,0 +1,50 @@
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction();?>" method="<?php echo $this->form->getMethod(); ?>">
+		<?php echo $this->form->id; 
+			echo $this->form->emptyFlag; 
+		?>
+        <div class="total-form-controller">
+		    <div class="new-form-ui">
+			  <label class="required">Module name</label>
+			<div class="division"><?php echo $this->form->modules; ?>	
+			<?php if(isset($this->msgarray['module'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->modules->getId(); ?>"><?php echo $this->msgarray['modules'];?></span>
+			<?php }?>
+			</div>
+			</div>
+
+            <div class="new-form-ui">
+			  <label class="required">Form name</label>
+			<div class="division"><?php echo $this->form->formname; ?>	
+			<?php if(isset($this->msgarray['formname'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->formname->getId(); ?>"><?php echo $this->msgarray['formname'];?></span>
+			<?php }?>
+			</div>
+			</div>
+
+           <!--  <div class="new-form-ui">
+			  <label class="required">No. of Elements</label>
+			<div class="division"><?php echo $this->form->noofele; ?>	
+			<?php if(isset($this->msgarray['noofele'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->noofele->getId(); ?>"><?php echo $this->msgarray['noofele'];?></span>
+			<?php }?>
+			</div>
+			</div> -->
+			<?php for ($i=0; $i < $this->noofele; $i++) { ?>
+			<div class="new-form-ui">
+				<div class="division">
+					<?php echo $this->newelement['name'.$i]?>
+				</div>
+			</div>
+			
+			<div class="new-form-ui">
+				<div class="division">
+					<?php echo $this->newelement['type'.$i]?>
+				</div>
+			</div> 
+			<?php } ?>
+		<div class="new-form-ui-submit">
+		<?php echo $this->form->submit; ?>
+		<button onclick="window.location.href='<?php echo BASE_URL; ?>expenses/expensecategories';" type="button" id="Cancel" name="Cancel">Cancel</button>
+		</div>
+		</div>
+</form>

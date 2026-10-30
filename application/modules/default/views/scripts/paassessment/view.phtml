@@ -1,0 +1,452 @@
+<?php
+
+/**
+ * PA Assessment View (Read-Only Execution Form)
+ * 
+ * Displays the dynamic assessment questions and answers in a locked state.
+ * Strictly adheres to SSOT v6.2.
+ * 
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ * @version    Sentrifugo v3.2
+ */
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<style>
+    /* Styling for Dynamic Question Blocks */
+    .question-block {
+        background: #fdfdfd;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+
+    .question-category {
+        font-size: 14px;
+        color: #26a69a;
+        border-bottom: 2px solid #26a69a;
+        padding-bottom: 5px;
+        margin-top: 30px;
+        margin-bottom: 15px;
+    }
+
+    .question-prompt {
+        font-size: 14px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 5px;
+    }
+
+    .question-desc {
+        font-size: 12px;
+        color: #777;
+        margin-bottom: 15px;
+        font-style: italic;
+    }
+
+    /* CSS-only Star Rating Widget Fallback (Read-Only Mode) */
+    .star-rating {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+    }
+
+    .star-rating input {
+        display: none;
+    }
+
+    .star-rating label {
+        color: #ccc;
+        font-size: 24px;
+        padding: 0 5px;
+        cursor: default;
+    }
+
+    /* Cursor default for read-only */
+    .star-rating label:before {
+        content: '\2605';
+        /* Unicode Star */
+    }
+
+    /* In read-only mode, we only highlight checked stars, no hover effects */
+    .star-rating input:checked~label {
+        color: #f39c12;
+    }
+
+    /* CSS for HTML5 Range Slider */
+    .custom-range-slider {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 8px;
+        border-radius: 5px;
+        background: #ddd;
+        outline: none;
+        opacity: 0.7;
+        /* transition: opacity .2s; */
+    }
+
+    .custom-range-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #26a69a;
+        cursor: pointer;
+    }
+
+    .custom-range-slider::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #26a69a;
+        cursor: pointer;
+    }
+</style>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container">
+            <?php if (isset($this->nodata)) : ?>
+                <div class="ml-alert-1-info">
+                    <div style="display:block;"><span class="style-1-icon info"></span>No data found.</div>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <?php if (!isset($this->nodata)) : ?>
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <!-- ================= HEADER SECTION (Read-Only Info) ================= -->
+                    <div class="row no-margin" style="background:#eef6f6; border:1px solid #b2d8d8; padding: 15px; border-radius: 4px; margin-bottom: 20px;">
+                        <div style="float: left; width: 33%;">
+                            <span style="font-size: 11px; color: #666; text-transform: uppercase;">Review Target</span><br>
+                            <span style="font-size: 16px; font-weight: bold; color: #333;"><?php echo $this->escape($this->headerData['evaluatee_name'] ?? 'Unknown'); ?></span>
+                        </div>
+                        <div style="float: left; width: 33%;">
+                            <span style="font-size: 11px; color: #666; text-transform: uppercase;">Reviewing As</span><br>
+                            <span style="font-size: 14px; color: #26a69a;"><i class="fa fa-user"></i> <?php echo $this->escape($this->headerData['evaluator_type'] ?? ''); ?></span>
+                        </div>
+                        <div style="float: left; width: 33%;">
+                            <span style="font-size: 11px; color: #666; text-transform: uppercase;">Campaign</span><br>
+                            <span style="font-size: 14px; color: #333;"><?php echo $this->escape($this->headerData['appraisal_name'] ?? ''); ?></span>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+
+                    <!-- ================= DYNAMIC QUESTION SECTION ================= -->
+                    <?php
+
+                    $currentCategory = '';
+                    $currentCategory = null;
+                    $catIndex = 0;
+
+                    if (!empty($this->dynamicQuestions)):
+                        foreach ($this->dynamicQuestions as $q):
+
+                            // If the category changes, close the previous one and open a new one
+                            if ($currentCategory !== $q['category_name']) {
+                                if ($currentCategory !== null) {
+                                    echo '</div></div>'; // Close previous category-body and category-wrapper
+                                }
+
+                                // Open new category
+                                echo '<div class="category-wrapper" style="margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; background: #fff;">';
+                                echo '<h3 class="question-category accordion-header" data-target="cat_body_' . $catIndex . '" style="cursor: pointer; font-size: 15px; color: #333; background: #f4f4f4; margin: 0; padding: 12px 15px; border-bottom: 1px solid #ddd;">';
+                                echo '<i class="fa fa-chevron-down toggle-icon" style="color: #26a69a; margin-right: 8px;"></i> ' . $this->escape($q['category_name']);
+                                // Progress Indicator Span
+                                echo '<span class="category-progress" style="float: right; font-size: 12px; font-weight: normal; color: #888;"></span>';
+                                echo '</h3>';
+
+                                // Open body wrapper
+                                echo '<div class="category-body" id="cat_body_' . $catIndex . '" style="padding: 15px;">';
+
+                                $currentCategory = $q['category_name'];
+                                $catIndex++;
+                            }
+
+                            $baseInputName = "answers[{$q['map_question_id']}]";
+                    ?>
+
+                            <div class="question-block">
+                                <div class="question-prompt"><?php echo nl2br($this->escape($q['question_name'])); ?></div>
+
+                                <!-- The Read-Only Answer Rendering -->
+                                <div style="margin-top: 15px;">
+                                    <?php if ($q['data_type'] === 'Structured'): ?>
+                                        <div style="margin-bottom: 10px;">
+
+                                            <?php if ($q['ui_widget'] === 'Dropdown'): ?>
+                                                <select name="<?php echo $baseInputName; ?>[rating_option_id]" class="browser-default select2 answer-input" style="width: 50%;" disabled="disabled">
+                                                    <option value="">No rating selected</option>
+                                                    <?php foreach ($q['options'] as $opt):
+                                                        if ($q['answer_rating_id'] == $opt['id']):
+                                                    ?>
+                                                            <option value="<?php echo $opt['id']; ?>" selected="selected"><?php echo $this->escape($opt['name']); ?> (<?php echo (float)$opt['value']; ?>)</option>
+                                                    <?php
+                                                        endif;
+                                                    endforeach; ?>
+                                                </select>
+
+                                            <?php elseif ($q['ui_widget'] === 'Radio'): ?>
+                                                <?php foreach ($q['options'] as $opt):
+                                                    $checked = ($q['answer_rating_id'] == $opt['id']) ? 'checked="checked"' : '';
+                                                    $inputId = "radio_" . $q['map_question_id'] . "_" . $opt['id'];
+                                                ?>
+                                                    <span style="margin-right: 15px;">
+                                                        <input type="radio" id="<?php echo $inputId; ?>" class="answer-input" name="<?php echo $baseInputName; ?>[rating_option_id]" value="<?php echo $opt['id']; ?>" <?php echo $checked; ?> disabled="disabled">                                                        
+                                                        <label style="color: #333; font-size: 13px;"><?php echo $this->escape($opt['name']); ?></label>
+                                                    </span>
+                                                <?php endforeach; ?>
+
+                                            <?php elseif ($q['ui_widget'] === 'Stars'): ?>
+                                                <div class="star-rating">
+                                                    <?php
+                                                    $reversedOptions = array_reverse($q['options']);
+                                                    foreach ($reversedOptions as $opt):
+                                                        $checked = ($q['answer_rating_id'] == $opt['id']) ? 'checked="checked"' : '';
+                                                        $inputId = "star_" . $q['map_question_id'] . "_" . $opt['id'];
+                                                    ?>
+                                                        <input type="radio" id="<?php echo $inputId; ?>" class="answer-input" name="<?php echo $baseInputName; ?>[rating_option_id]" value="<?php echo $opt['id']; ?>" <?php echo $checked; ?> disabled="disabled">
+                                                        <label title="<?php echo $this->escape($opt['name']); ?>"></label>
+                                                    <?php endforeach; ?>
+                                                </div>
+                                                <div style="clear:both;"></div>
+
+                                            <?php elseif ($q['ui_widget'] === 'Slider'):
+                                                $minVal = $q['options'][0]['value'] ?? 0;
+                                                $maxVal = end($q['options'])['value'] ?? 100;
+                                                $currentVal = isset($q['answer_numeric_value']) ? (float)$q['answer_numeric_value'] : $minVal;
+                                            ?>
+                                                <div class="slider-container" style="width: 80%; padding: 10px 0;">
+                                                    <div style="display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-bottom: 5px;">
+                                                        <span>Min (<?php echo $minVal; ?>)</span>
+                                                        <span style="color: #26a69a; font-weight: bold; font-size: 13px;">Selected: <?php echo $currentVal; ?></span>
+                                                        <span>Max (<?php echo $maxVal; ?>)</span>
+                                                    </div>
+                                                    <input type="range" 
+                                                        id="slider_<?php echo $q['map_question_id']; ?>"
+                                                        name="<?php echo $baseInputName; ?>[slider_value]"
+                                                        class="custom-range-slider answer-input"
+                                                        min="<?php echo $minVal; ?>" 
+                                                        max="<?php echo $maxVal; ?>" 
+                                                        value="<?php echo $currentVal; ?>" 
+                                                        disabled="disabled" 
+                                                        style="width: 100%; opacity: 0.5;">
+                                                </div>
+
+                                            <?php endif; ?>
+
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <!-- Comments Area (Read-Only) -->
+                                    <div style="padding: 10px; background: #fff; border: 1px solid #ddd; border-radius: 3px; min-height: 50px; color: #555;">
+                                        <textarea name="<?php echo $baseInputName; ?>[comments]" style="width: 100%; height: 60px; background: none; border: none; outline: none; border-radius: none; padding: none; resize: none;" disabled="disabled"><?php echo nl2br($this->escape($q['answer_comments'] ?? 'No comments provided.')); ?></textarea>                                        
+                                    </div>
+                                </div>
+                            </div>
+
+                        <?php
+                        endforeach; // End of the foreach loop over dynamicQuestions
+
+                        // Close the very last category wrapper safely
+                        if ($currentCategory !== null) {
+                            echo '</div></div>';
+                        }
+
+                    endif; // Close the if (!empty($this->dynamicQuestions)): block
+
+                    // If no questions exist, show the info block
+                    if (empty($this->dynamicQuestions)):
+                        ?>
+                        <div class="ml-alert-1-info">
+                            <div style="display:block;"><span class="style-1-icon info"></span>No questions have been assigned to this assessment.</div>
+                        </div>
+                    <?php endif; ?>
+
+                    <div style="clear: both; width: 100%; height: 20px;"></div>
+
+                    <!-- ================= FOOTER SECTION (Zend Form) ================= -->
+                    <h4 style="font-size: 14px; color: #26a69a; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 15px;">Finalize Assessment</h4>
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->status->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->status; ?></div>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->consolidated_score->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->consolidated_score; ?></div>
+                        </div>
+                    </div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray ?? array(), $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <div class="new-form-ui-submit" style="margin-top: 20px;">
+                        <div class="division">
+                            <!-- Use the context payload injected by the Controller to route back to 'mine' or 'team' -->
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>paassessment/<?php echo $this->escape($this->form->context->getValue() ?: 'mine'); ?>';" value="Back to List" type="button" class="reset" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ================= AUDIT TIMELINE ================= -->
+            <?php if (!empty($this->logs)): ?>
+                <div class="total-form-controller" style="margin-top: 20px; background-color: #fcfcfc;">
+                    <div class="division">
+                        <h4 style="font-size: 14px; color: #555; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 15px;"><i class="fa fa-history"></i> Submission History</h4>
+                        <ul style="list-style: none; padding-left: 0;">
+                            <?php foreach ($this->logs as $log): ?>
+                                <li style="padding: 10px 0; border-bottom: 1px solid #eee;">
+                                    <strong style="color: #26a69a;"><?php echo $this->escape($log['createddate']); ?></strong> -
+                                    <span style="color: #666;">(by <?php echo $this->escape($log['actor_name']); ?>)</span><br>
+                                    <span style="display: block; margin-top: 5px; color: #333; font-weight: bold;"><?php echo $this->escape($log['action_taken']); ?></span>
+                                    <?php if (!empty($log['description'])): ?>
+                                        <span style="display: block; margin-top: 3px; color: #555;"><?php echo nl2br($this->escape($log['description'])); ?></span>
+                                    <?php endif; ?>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+        <?php endif; ?>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#description').jqte();
+        $('.jqte_editor').attr('contenteditable', 'false');
+
+        if ($.isFunction($.fn.select2)) {
+            // Apply select2 to disabled selects for consistent styling
+            $('select').select2({
+                width: '100%'
+            });
+        }
+
+        // ==============================================================
+        // CATEGORY ACCORDION UI LOGIC
+        // ==============================================================
+        $('.accordion-header').on('click', function(e) {
+            e.preventDefault();
+            var targetId = $(this).data('target');
+            var $icon = $(this).find('.toggle-icon');
+
+            $('#' + targetId).slideToggle('fast', function() {
+                if ($(this).is(':visible')) {
+                    $icon.removeClass('fa-chevron-right').addClass('fa-chevron-down');
+                } else {
+                    $icon.removeClass('fa-chevron-down').addClass('fa-chevron-right');
+                }
+            });
+        });
+
+        // ==============================================================
+        // THE LIVE MATH & PROGRESS ENGINE
+        // ==============================================================
+        function calculateLiveScore() {
+
+            // Loop through each Category Wrapper to calculate Section Progress
+            $('.category-wrapper').each(function() {
+                var $category = $(this);
+                var questionsInCategory = $category.find('.question-block').length;
+                var answeredInCategory = 0;
+
+                // Loop through questions in THIS category
+                $category.find('.question-block').each(function() {
+                    var isAnswered = false;
+
+                    // 1. Check Dropdown
+                    var $select = $(this).find('select.answer-input');
+                    if ($select.length > 0) {
+                        var selectedOpt = $select.find('option:selected');
+                        if (selectedOpt.val() !== '') {
+                            isAnswered = true;
+                        }
+                    }
+                    // 2. Check Radio/Stars
+                    else if ($(this).find('input[type="radio"].answer-input').length > 0) {
+                        var $checkedRadio = $(this).find('input[type="radio"].answer-input:checked');
+                        if ($checkedRadio.length > 0) {
+                            isAnswered = true;
+                        }
+                    }
+                    // 3. Check Slider (Always answered by default since it has a starting position)
+                    else if ($(this).find('input[type="range"].answer-input').length > 0) {                        
+                        isAnswered = true;
+                    }
+                    // 4. Check Unstructured Text Only (No structured rating available)
+                    else {
+                        var comments = $.trim($(this).find('textarea').val());
+                        if (comments.length > 0) {
+                            isAnswered = true;
+                        }
+                    }
+
+                    if (isAnswered) answeredInCategory++;                    
+                });
+
+                // Update the Progress Indicator for this category
+                var $progressSpan = $category.find('.category-progress');
+                if (answeredInCategory === questionsInCategory) {
+                    $progressSpan.html('<i class="fa fa-check-circle" style="color: #27ae60;"></i> Complete (' + answeredInCategory + '/' + questionsInCategory + ')');
+                } else {
+                    $progressSpan.html('Answered: ' + answeredInCategory + ' / ' + questionsInCategory);
+                }
+            });            
+        }
+
+        // Run once on load
+        calculateLiveScore();
+
+    });
+
+    // ==============================================================
+    // SENTRIFUGO SIDEBAR FIX (SSOT v6.7 Compliant)
+    // Overrides global hrmsheader.phtml logic to force the correct 
+    // dual-routed menu open based on context.
+    // DEPRECATED: This logic is now handled globally in hrmsheader.phtml to ensure consistency across all modules and actions.
+    // ==============================================================
+    /*
+    setTimeout(function() {
+        var actionName = '<?php echo $this->escape($this->actionname ?: "mine"); ?>';
+        var targetMenuUrl = base_url + '/paassessment/' + actionName;
+
+        var $selected_obj = $("li[menu-url='" + targetMenuUrl + "']");
+
+        if ($selected_obj.length > 0) {
+            var parent_div = $selected_obj.attr("parent-div");
+
+            $('.active_menu_class').removeClass('active_menu_class');
+            $('.side-menu-selected').removeClass('side-menu-selected');
+
+            $selected_obj.addClass("active_menu_class");
+            $selected_obj.find("a").addClass("side-menu-selected");
+
+            if (parent_div) {
+                $('.' + parent_div).addClass("selected_menu_class").show();
+            }
+
+            if (typeof parent_menu_selected === 'function') {
+                parent_menu_selected($selected_obj);
+            }
+        }
+    }, 100);
+    */
+</script>

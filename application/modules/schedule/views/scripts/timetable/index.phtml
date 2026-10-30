@@ -1,0 +1,83 @@
+<?php try {
+?>
+	<?php if (count($this->messages)) { ?>
+		<div id="dispmsgtimetable">
+			<?php
+			foreach ($this->messages as $message) {
+				$flag = array();
+				$flag = array_keys($message);
+				echo "<div id='messageData' class='ml-alert-1-$flag[0]'><div style='display:block;'><span class='style-1-icon $flag[0]'></span>";
+				echo $message[$flag[0]];
+				echo "</div></div>";
+			}
+			?>
+		</div>
+
+	<?php } ?>
+	<span id="error_message"></span>
+	<?php
+	if ($this->call == 'ajaxcall') {
+		$div = '';
+		$endDiv = '';
+	} else {
+		$div = '<div id="grid_' . $this->dataArray[0]['objectname'] . '" class="all-grid-control">';
+		$endDiv = '</div>';
+	}
+	echo $div . '<div id="msg" style="display:none;font-style: oblique; font-weight: bold; color: green;""></div>' . $this->gridtms($this->dataArray[0]) . $endDiv;
+	?>
+	<script type='text/javascript'>
+		$(document).ready(function() {
+			let ids =''
+	
+			for (let index = 0; index < $('tr').length; index++) {
+				const element = $('tr')[index];
+				const td = $(element).find('td')[0];
+				
+				const link = $(td).find('a');
+				
+				let id = $(link[0]).attr('name');
+				
+				if (id != undefined) {
+					if ((index + 1) == $("tr").length)
+					{
+						ids =ids + id;
+					}
+					else{
+						ids = id + ','+ids;
+					}
+					
+				}
+			}
+			console.log(ids, 'look ids')
+			
+			var res = $.ajax({
+				url: base_url + '/schedule/timetable/isavalible',
+				dataType: 'json',
+				data: 'shiftid=' + ids,
+				async:false
+			}).responseJSON;
+			console.log(res)
+			if (ids != undefined) {
+				if (res != undefined) {
+					for (const key in res) {
+						
+						const scheduleId = res[key]['shift_id'];
+						$("#edit" + scheduleId).hide();
+						$("#del"+ scheduleId).hide();
+					}
+				}
+			}
+			<?php if ($this->call != 'ajaxcall') { ?>
+				$('.breadcrumbs').append("<span class='arrows'>&rsaquo;</span><span>Time Table</span>");
+			<?php } ?>
+			<?php if (count($this->messages)) { ?>
+				setTimeout(function() {
+					$('#dispmsgtimetable').fadeOut('slow');
+				}, 3000);
+			<?php } ?>
+		});
+	</script>
+<?php
+} catch (\Throwable $th) {
+	Zend_Debug::dump($th->getMessage());
+} ?>

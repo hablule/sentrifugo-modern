@@ -1,0 +1,176 @@
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/hrms.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH ?>css/addelement.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH ?>js/addelement.js"></script>
+<!-- <link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script> -->
+
+<?php if (count($this->messages)) { ?>
+	<div id="dispmsgemp" class="settingssuccess">
+		<?php
+		foreach ($this->messages as $message) {
+			$flag = array();
+			$flag = array_keys($message);
+			echo "<div id='messageData' class='ml-alert-1-$flag[0]'><div style='display:block;'><span class='style-1-icon $flag[0]'></span>";
+			echo $message[$flag[0]];
+			echo "</div></div>";
+		};
+		?>
+	</div>
+
+	<?php } ?><?php
+
+
+				sapp_Global::generateClientValidations($this->form);
+				?>
+
+	<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction(); ?>" method="<?php echo $this->form->getMethod(); ?>">
+		<?php echo $this->form->id; ?>
+		<div class="total-form-controller">
+			<div class="new-form-ui clearb">
+				<label class="required"> Schedule</label>
+				<div class="division"><?php echo $this->form->schedule_id; ?></div>
+				<?php if (isset($this->msgarray['schedule_id'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->schedule_id->getId(); ?>"><?php echo $this->msgarray['schedule_id']; ?></span>
+				<?php } ?>
+			</div>
+
+			<div class="new-form-ui clearb" style="display: none;">
+				<label id="dayilylable"> Daily </label>
+				<div class="division"><?php echo $this->form->dayily; ?>
+					<a onclick="displaydeptform('<?php echo BASE_URL . 'cycleshift/editpopup?id=' . $this->data[0]['id']; ?>','Shift');">
+						<img class="ui-datepicker-trigger" style="padding-left: 50px;" src="<?php echo MEDIA_PATH; ?>images/buton.png" height="20px" alt="" title="">
+					</a>
+				</div>
+				<?php if (isset($this->msgarray['dayily'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->dayily->getId(); ?>"><?php echo $this->msgarray['dayily']; ?></span>
+				<?php } ?>
+			</div>
+
+			<div class="new-form-ui clearb" style="display: none;">
+				<label id="dayofweeklable"> Day of Week </label>
+				<div class="division"><?php echo $this->form->dayofweek; ?>
+					<a onclick="displaydeptform('<?php echo BASE_URL . 'cycleshift/editpopup?id=' . $this->data[0]['id']; ?>','Shift');">
+						<img class="ui-datepicker-trigger" style="padding-left: 50px;" src="<?php echo MEDIA_PATH; ?>images/buton.png" height="20px" alt="" title="">
+					</a>
+				</div>
+
+				<?php if (isset($this->msgarray['dayofweek'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->dayofweek->getId(); ?>"><?php echo $this->msgarray['dayofweek']; ?></span>
+				<?php } ?>
+
+			</div>
+			<div class="new-form-ui clearb" style="display: none;">
+				<label id="dayofmonthlable">Day of Month</label>
+				<div class="division"><?php echo $this->form->dayofmonth; ?>
+					<a onclick="displaydeptform('<?php echo BASE_URL . 'cycleshift/editpopup?id=' . $this->data[0]['id']; ?>','Shift');">
+						<img class="ui-datepicker-trigger" style="padding-left: 50px;" src="<?php echo MEDIA_PATH; ?>images/buton.png" height="20px" alt="" title="">
+					</a>
+				</div>
+				<?php if (isset($this->msgarray['dayofmonth'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->dayofmonth->getId(); ?>"><?php echo $this->msgarray['dayofmonth']; ?></span>
+				<?php } ?>
+			</div>
+			<br>
+			<div class="new-form-ui ">
+				<label>Active</label>
+				<div class="division"><?php echo $this->form->isactive; ?>
+					<?php if (isset($this->msgarray['isactive'])) { ?>
+						<span class="errors" id="errors-<?php echo $this->form->isactive->getId(); ?>"><?php echo $this->msgarray['isactive']; ?></span>
+					<?php } ?>
+
+				</div>
+
+			</div>
+
+			<?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+			<div class="new-form-ui-submit">
+				<div class="division"><?php echo $this->form->submit; ?>
+					<button onclick="window.location.href='<?php echo BASE_URL; ?>schedule/schedulecycle';" type="button" id="Cancel" name="Cancel">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</form>
+	<div id="cycleshiftContainer" style="display: none; overflow: auto;">
+		<div class="heading">
+			<a href="javascript:void(0)">
+				<img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+		</div>
+
+		<iframe id="cycleshiftCont" class="business_units_iframe" frameborder="0"></iframe>
+
+	</div>
+	<script>
+		$('#description').jqte();
+		if('<?php echo $this->id;?>')
+		{
+		
+		var data = JSON.parse('<?php echo json_encode($this->data) ?>');
+		var dayof = '';
+		var id = $("#schedule_id").val()
+		console.log(data[0]['dayofweek'])
+		if (data[0]['dayofweek'] != null) {
+			$('#dayofweek').parent().parent().show();
+			dayof = 'dayofweek';
+		} else if (data[0]['dayofmonth'] != null) {
+			$('#dayofmonth').parent().parent().show();
+			dayof = 'dayofmonth';
+		} else {
+			$('#dayily').parent().parent().show();
+			dayof = 'daily';
+		}
+		$(document).ready(() => {
+			
+			var res = $.ajax({
+				url: base_url + '/empschedule/getschedules',
+				data: 'ids=' + id,
+				dataType: "json",
+				async: false
+			}).responseJSON;
+			console.log('<?php echo $this->id; ?>');
+			if (res.length != 0) {
+				console.log(res);
+			}
+			
+		})
+	
+	}
+	else
+	{
+
+	}
+		function checkweekday()
+		{
+			
+			let schedule_id = $("#schedule_id").val()
+			let dayof = getActiveElement();
+			console.log(dayof);
+			let cycle = $("#"+dayof).val()
+			var res = $.ajax({
+				url: base_url + '/schedulecycle/dayofexists',
+				data: 'cycleid=' + schedule_id +'&cycle='+cycle+'&dayof='+dayof,
+				dataType: "json",
+				async: false
+			}).responseJSON;
+			console.log(res+'res');
+			if(!res)
+			{
+				$("#"+dayof).parent().parent().append("<span class='errors' id='errors-"+dayof+"'>Data already exists</span>");
+			}
+			else{
+				$("#errors-"+dayof).parent().parent().find('span').html('');
+			}
+		}
+
+		function getActiveElement()
+		{
+			if($('#dayofweek').val()!='')
+				return "dayofweek";
+			else if($("#dayofmonth").val()!='')
+				return "dayofmonth";
+			else
+				return "dayily";
+		}
+	</script>

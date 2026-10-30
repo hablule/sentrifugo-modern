@@ -1,0 +1,5 @@
+/vendor/
+rector-upgrade.log
+.env
+*.sql
+/public/uploads/

@@ -1,0 +1,15 @@
+<?php
+sapp_Helper::viewHeader();
+sapp_Helper::viewBody('alt','Phone number',(!empty($this->data['phoneno']))?$this->data['phoneno']:"...",'Contact',(!empty($this->data['contact']))?$this->data['contact']:"...");
+sapp_Helper::viewBody('nor','Description',(!empty($this->data['description']))?$this->data['description']:"...",'Line type',(!empty($this->data['lname']))?$this->data['lname']:"...");
+sapp_Helper::viewBody('nor','Line category',(!empty($this->data['lcname']))?$this->data['lcname']:"...",'Address 1',(!empty($this->data['address1']))?$this->data['address1']:"...");
+sapp_Helper::viewBody('alt','Address 2',(!empty($this->data['address2']))?$this->data['address2']:"...",'Address 3',(!empty($this->data['address3']))?$this->data['address3']:"...");
+
+
+sapp_Helper::viewFooter();
+
+?>
+
+<div class="new-form-ui-submit" id="formSubmit">
+<button onclick="closeiframepopup('<?php echo $this->controllername;?>','cancel');"  type="button" >Cancel</button>
+</div>

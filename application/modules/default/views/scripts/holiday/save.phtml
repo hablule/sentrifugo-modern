@@ -1,0 +1,497 @@
+<?php
+
+/**
+ * Holiday Master Policy Save View (Master-Detail Balanced Layout)
+ *
+ * Features:
+ * - Balanced 3-column rows
+ * - Interactive Time-Selection Popups
+ * - SSOT VIII "On-The-Fly" Modal Iframes for Category & Tag
+ * - SSOT VII.17 Native Tab Switcher for Child Engines
+ *
+ * Complies with SSOT v6.7.7.
+ */
+?>
+
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<style>
+    /* Balanced 3-Column Layout */
+    .form-row-balanced {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        width: 100% !important;
+        clear: both !important;
+        margin-bottom: 12px;
+    }
+
+    .form-col-3 {
+        flex: 1 1 calc(33.333% - 20px);
+        min-width: 240px;
+        box-sizing: border-box;
+    }
+
+    .form-col-3 .new-form-ui,
+    .form-col-2 .new-form-ui {
+        float: none !important;
+        clear: both !important;
+        width: 100% !important;
+    }
+
+    .form-col-3 .division,
+    .form-col-2 .division {
+        width: 100% !important;
+    }
+
+    .form-col-3 input[type="text"],
+    .form-col-3 select {
+        width: 100% !important;
+    }
+
+    /* Shift Hours Container */
+    .shift-hours-card {
+        clear: both !important;
+        width: 100% !important;
+        margin: 15px 0 20px 0;
+        background: #fdfdfd;
+        border-left: 3px solid #26a69a;
+        border-top: 1px solid #eee;
+        border-right: 1px solid #eee;
+        border-bottom: 1px solid #eee;
+        padding: 15px;
+        border-radius: 0 4px 4px 0;
+        box-sizing: border-box;
+        display: block;
+    }
+
+    .shift-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        align-items: flex-end;
+    }
+
+    .shift-col-item {
+        flex: 1 1 calc(30% - 20px);
+        min-width: 180px;
+    }
+
+    .shift-col-item .new-form-ui {
+        float: none !important;
+        width: 100% !important;
+    }
+
+    .shift-col-item .division {
+        width: 100% !important;
+    }
+
+    .btn-quick-time {
+        background: #eee;
+        border: 1px solid #ccc;
+        padding: 6px 12px;
+        font-size: 11px;
+        cursor: pointer;
+        border-radius: 3px;
+        font-weight: bold;
+    }
+
+    .btn-quick-time:hover {
+        background: #26a69a;
+        color: #fff;
+        border-color: #26a69a;
+    }
+
+    /* "Add On The Fly" Popup Triggers */
+    .add-coloum {
+        color: #26a69a;
+        cursor: pointer;
+        font-size: 11px;
+        margin-top: 4px;
+        display: inline-block;
+        font-weight: bold;
+    }
+
+    .add-coloum:hover {
+        text-decoration: underline;
+    }
+
+    /* Child Tabs */
+    .tabs-wrapper {
+        clear: both !important;
+        width: 100% !important;
+        margin-top: 25px;
+        display: block;
+    }
+
+    .holiday-tabs {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 15px 0;
+        border-bottom: 2px solid #26a69a;
+        display: flex;
+        clear: both;
+    }
+
+    .holiday-tabs li {
+        margin-right: 5px;
+    }
+
+    .holiday-tabs a {
+        display: block;
+        padding: 10px 20px;
+        background: #eee;
+        color: #555;
+        text-decoration: none;
+        font-weight: bold;
+        border-radius: 4px 4px 0 0;
+    }
+
+    .holiday-tabs a.active {
+        background: #26a69a;
+        color: #fff;
+    }
+
+    .holiday-tabs a.has-error {
+        border-top: 3px solid #e74c3c;
+        color: #c0392b;
+    }
+
+    .tab-content-panel {
+        display: none;
+        clear: both !important;
+        width: 100% !important;
+    }
+
+    .tab-content-panel.active {
+        display: block;
+    }
+
+    .clearfix {
+        clear: both !important;
+        height: 0;
+        line-height: 0;
+    }
+</style>
+
+<?php sapp_Global::generateClientValidations($this->form); ?>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container"></div>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" method="post">
+            <?php echo $this->form->id; ?>
+            <?php echo $this->form->criteria_payload; ?>
+
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <!-- ============================================================== -->
+                    <!-- 1. MASTER HEADER SECTION (Balanced 3-Field Rows)               -->
+                    <!-- ============================================================== -->
+
+                    <!-- ROW 1: Name, Category (+Add), Tag (+Add) -->
+                    <div class="form-row-balanced">
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                            <div class="division">
+                                <?php echo $this->form->name; ?>
+                                <span class="errors" id="errors-<?php echo $this->escape($this->form->name->getId()); ?>"></span>
+                            </div>
+                        </div>
+
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->category_id->getLabel()); ?></label>
+                            <div class="division">
+                                <?php echo $this->form->category_id; ?>
+                                <span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL; ?>holidaycategory/addpopup/prev_cntrl/holiday', 'Add Holiday Category');">+ Add Category</span>
+                                <span class="errors" id="errors-<?php echo $this->escape($this->form->category_id->getId()); ?>"></span>
+                            </div>
+                        </div>
+
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->tag_id->getLabel()); ?></label>
+                            <div class="division">
+                                <?php echo $this->form->tag_id; ?>
+                                <span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL; ?>holidaytag/addpopup/prev_cntrl/holiday', 'Add Holiday Tag');">+ Add Tag</span>
+                                <span class="errors" id="errors-<?php echo $this->escape($this->form->tag_id->getId()); ?>"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ROW 2: Operational Policy, Multiplier, Priority -->
+                    <div class="form-row-balanced">
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->work_policy->getLabel()); ?></label>
+                            <div class="division">
+                                <?php echo $this->form->work_policy; ?>
+                                <span class="errors" id="errors-<?php echo $this->escape($this->form->work_policy->getId()); ?>"></span>
+                            </div>
+                        </div>
+
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->payroll_multiplier->getLabel()); ?></label>
+                            <div class="division">
+                                <?php echo $this->form->payroll_multiplier; ?>
+                                <span class="errors" id="errors-<?php echo $this->escape($this->form->payroll_multiplier->getId()); ?>"></span>
+                            </div>
+                        </div>
+
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->priority->getLabel()); ?></label>
+                            <div class="division">
+                                <?php echo $this->form->priority; ?>
+                                <span class="errors" id="errors-<?php echo $this->escape($this->form->priority->getId()); ?>"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ROW 3: Dedicated Time & Shift Hours Block with Timepicker Popups -->
+                    <div class="shift-hours-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <span style="font-weight: bold; color: #26a69a; font-size: 13px;">Shift & Working Hours</span>
+                            <button type="button" class="btn-quick-time" onclick="setFullDayHours();">⚡ Set Full Day (00:00 - 23:59)</button>
+                        </div>
+
+                        <div class="shift-row">
+                            <div class="new-form-ui">
+                                <label class="required"><?php echo $this->escape($this->form->duration_days->getLabel()); ?></label>
+                                <div class="division">
+                                    <?php echo $this->form->duration_days; ?>
+                                    <span class="errors" id="errors-<?php echo $this->escape($this->form->duration_days->getId()); ?>"></span>
+                                </div>
+                            </div>
+
+                            <div class="new-form-ui">
+                                <label class="required"><?php echo $this->escape($this->form->start_time->getLabel()); ?> <i class="fa fa-clock-o" style="color:#26a69a;"></i></label>
+                                <div class="division">
+                                    <?php echo $this->form->start_time; ?>
+                                    <span class="errors" id="errors-<?php echo $this->escape($this->form->start_time->getId()); ?>"></span>
+                                </div>
+                            </div>
+
+                            <div class="new-form-ui">
+                                <label class="required"><?php echo $this->escape($this->form->end_time->getLabel()); ?> <i class="fa fa-clock-o" style="color:#26a69a;"></i></label>
+                                <div class="division">
+                                    <?php echo $this->form->end_time; ?>
+                                    <span class="errors" id="errors-<?php echo $this->escape($this->form->end_time->getId()); ?>"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ROW 4: Observance Flags -->
+                    <div class="form-row-balanced" style="margin-top: 10px;">
+                        <div class="form-col-3">
+                            <div class="new-form-ui clearb">
+                                <label><?php echo $this->escape($this->form->is_paid->getLabel()); ?></label>
+                                <div class="division"><?php echo $this->form->is_paid; ?></div>
+                            </div>
+                        </div>
+
+                        <div class="form-col-3">
+                            <div class="new-form-ui clearb">
+                                <label><?php echo $this->escape($this->form->is_mandatory->getLabel()); ?></label>
+                                <div class="division"><?php echo $this->form->is_mandatory; ?></div>
+                            </div>
+                        </div>
+
+                        <div class="form-col-3">
+                            <!-- Empty slot for balanced spacing -->
+                        </div>
+                    </div>
+
+                    <!-- ============================================================== -->
+                    <!-- 2. CHILD TABS SECTION (Recurrence & Criteria)                  -->
+                    <!-- ============================================================== -->
+
+                    <div class="tabs-wrapper">
+                        <ul class="holiday-tabs">
+                            <li><a href="#tab-recurrence" class="tab-link active" data-tab="tab-recurrence">1. Recurrence & Weekends</a></li>
+                            <li><a href="#tab-criteria" class="tab-link" data-tab="tab-criteria">2. Eligibility & Targeting</a></li>
+                        </ul>
+
+                        <!-- Tab Panel 1: Recurrence Engine -->
+                        <div id="tab-recurrence" class="tab-content-panel active">
+                            <?php echo $this->render('holiday/_tab_recurrence.phtml'); ?>
+                        </div>
+
+                        <!-- Tab Panel 2: Targeting Criteria -->
+                        <div id="tab-criteria" class="tab-content-panel">
+                            <?php echo $this->render('holiday/_tab_criteria.phtml'); ?>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+
+                    <!-- ============================================================== -->
+                    <!-- 3. MASTER FOOTER SECTION                                       -->
+                    <!-- ============================================================== -->
+
+                    <div style="clear: both; width: 100%; margin-top: 25px;">
+                        <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+                    </div>
+
+                    <div class="new-form-ui clearb" style="clear: both; width: 100%; margin-top: 15px;">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                    </div>
+
+                    <!-- Submit Controls -->
+                    <div class="new-form-ui-submit" style="clear: both !important; width: 100%;">
+                        <div class="division">
+                            <?php echo $this->form->submit; ?>
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>holiday';" value="Cancel" type="button" class="reset" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ============================================================================== -->
+<!-- SSOT VIII: Hidden Iframe Containers for "On-The-Fly" Popups                   -->
+<!-- ============================================================================== -->
+
+<div id="holidaycategoryContainer" style="display: none; overflow: auto;">
+    <div class="heading">
+        <a href="javascript:void(0)"><img src="<?php echo MEDIA_PATH; ?>images/close.png" class="closeAttachPopup" align="right" border="0" style="margin: -24px 8px 0 0;"></a>
+    </div>
+    <iframe id="holidaycategoryCont" class="user_iframe" frameborder="0"></iframe>
+</div>
+
+<div id="holidaytagContainer" style="display: none; overflow: auto;">
+    <div class="heading">
+        <a href="javascript:void(0)"><img src="<?php echo MEDIA_PATH; ?>images/close.png" class="closeAttachPopup" align="right" border="0" style="margin: -24px 8px 0 0;"></a>
+    </div>
+    <iframe id="holidaytagCont" class="user_iframe" frameborder="0"></iframe>
+</div>
+
+<!-- ============================================================================== -->
+<!-- JavaScript Logic & Timepicker Initialization                                   -->
+<!-- ============================================================================== -->
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#description').jqte();
+
+        // Initialize Materialize Timepicker Popup for Shift Hours
+        if ($.isFunction($.fn.timepicker)) {
+            $('#start_time, #end_time').timepicker({
+                twelveHour: false, // 24-Hour Military Format per SSOT
+                autoclose: false,
+                vibrate: true,
+                afterDone: function() {
+                    var val = $(this).val();
+                    if (val && val.length === 5) {
+                        $(this).val(val + ':00'); // Ensure HH:MM:SS format
+                    }
+                }
+            });
+        }
+
+        // Tab Switching Logic
+        $('.holiday-tabs .tab-link').on('click', function(e) {
+            e.preventDefault();
+            switchTab($(this).data('tab'));
+        });
+
+        function switchTab(tabId) {
+            $('.holiday-tabs .tab-link').removeClass('active');
+            $('a[data-tab="' + tabId + '"]').addClass('active');
+
+            $('.tab-content-panel').hide();
+            $('#' + tabId).fadeIn(150);
+        }
+
+        // SSOT Explicit AJAX Handler with Tab-Aware Error Navigation
+        $('#submitbutton').off('click').on('click', function(e) {
+            e.preventDefault();
+
+            var $form = $('#formid');
+            $('.errors').text('');
+            $('#message_container').empty();
+            $('.holiday-tabs a').removeClass('has-error');
+
+            // Pack Criteria from Tab 2
+            if (typeof arrCriteria !== 'undefined') {
+                $('#criteria_payload').val(JSON.stringify(arrCriteria));
+            } else {
+                $('#criteria_payload').val('[]');
+            }
+
+            if (typeof $.blockUI === "function") {
+                $.blockUI({
+                    message: '<img src="<?php echo MEDIA_PATH; ?>images/loader2.gif" alt="Saving..." />'
+                });
+            }
+
+            var formData = new FormData($form[0]);
+
+            $.ajax({
+                url: base_url + '/holiday/save/format/json',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function(response) {
+                    if (typeof $.unblockUI === "function") $.unblockUI();
+
+                    if (response && response.result === 'saved') {
+                        window.location.href = base_url + '/holiday';
+                    } else if (response && response.result === 'exception') {
+                        $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>' + response.message + '</div>');
+                        $('html, body').animate({
+                            scrollTop: 0
+                        }, 'slow');
+                    } else if (response && typeof response === 'object') {
+                        $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Please correct the highlighted errors.</div>');
+
+                        var firstErrorTab = null;
+
+                        $.each(response, function(fieldId, errorMsg) {
+                            $('#errors-' + fieldId).text(errorMsg);
+
+                            var $field = $('#' + fieldId);
+                            var $tabPanel = $field.closest('.tab-content-panel');
+                            if ($tabPanel.length) {
+                                var tabId = $tabPanel.attr('id');
+                                $('a[data-tab="' + tabId + '"]').addClass('has-error');
+
+                                if (!firstErrorTab) {
+                                    firstErrorTab = tabId;
+                                }
+                            }
+                        });
+
+                        if (firstErrorTab) {
+                            switchTab(firstErrorTab);
+                        }
+
+                        $('html, body').animate({
+                            scrollTop: 0
+                        }, 'slow');
+                    }
+                },
+                error: function() {
+                    if (typeof $.unblockUI === "function") $.unblockUI();
+                    $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Server error during save.</div>');
+                }
+            });
+        });
+    });
+
+    function setFullDayHours() {
+        $('#start_time').val('00:00:00');
+        $('#end_time').val('23:59:59');
+        $('#duration_days').val('1.00');
+    }
+</script>

@@ -1,0 +1,158 @@
+<?php
+
+/**
+ * Phone Number View (Read-Only)
+ *
+ * Displays the read-only configuration details for a specific phone number 
+ * and lists all of its polymorphic mapped owners.
+ * Refactored to comply with SSOT v6.6.
+ *
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ * @author     Hablul Soft Solution < /hablul.in>
+ * @license    http://gnu.org GNU General Public License, version 3.0 (GPL-3.0)
+ * @version    Sentrifugo v3.2
+ */
+?>
+
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container">
+            <?php if (isset($this->nodata) && $this->nodata === 'nodata') : ?>
+                <div class="ml-alert-1-info">
+                    <div style="display:block;">
+                        <span class="style-1-icon info"></span>
+                        No data found.
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <?php if (isset($this->form)) : ?>
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <!-- Core Details -->
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->number->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->number; ?>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->type_id->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->type_id; ?>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->category_id->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->category_id; ?>
+                        </div>
+                    </div>
+
+                    <!-- SSOT v6.6: Read-Only Mapped Owners Display -->
+                    <div class="new-form-ui clearb" style="width: 100%; margin-top: 15px;">
+                        <label style="width: 100%; border-bottom: 1px solid #ccc; margin-bottom: 10px; padding-bottom: 5px;">Mapped Owners (Assignments)</label>
+                        <div class="division" style="width: 100%;">
+                            <?php if (empty($this->mappedOwners) || $this->_isMappedOwnersEmpty($this->mappedOwners)) : ?>
+                                <span class="view_label" style="font-style: italic; color: #9e9e9e;">
+                                    This phone number is currently unassigned (idle).
+                                </span>
+                            <?php else: ?>
+                                <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+                                    <?php
+                                    // Define the exact order we want the lists to appear
+                                    $displayOrder = ['company', 'sbunit', 'division', 'department', 'section', 'team', 'employee'];
+
+                                    foreach ($displayOrder as $type):
+                                        if (isset($this->mappedOwners[$type]) && !empty($this->mappedOwners[$type])):
+
+                                            // Format the title (e.g., 'sbunit' -> 'Business Units')
+                                            $title = ucfirst($type) . 's';
+                                            if ($type === 'sbunit') $title = 'Business Units';
+                                            if ($type === 'company') $title = 'Companies'; // Grammatical fix
+                                    ?>
+                                            <div style="flex: 1 1 300px; min-width: 250px;">
+                                                <h6 style="font-size: 13px; color: #26a69a; font-weight: bold; margin-bottom: 5px;">
+                                                    <?php echo $this->escape($title); ?>
+                                                </h6>
+                                                <ul class="collection" style="margin: 0; border-radius: 4px; border: 1px solid #ddd; max-height: 200px; overflow-y: auto;">
+                                                    <?php foreach ($this->mappedOwners[$type] as $owner) : ?>
+                                                        <li class="collection-item" style="padding: 5px 10px; font-size: 13px;">
+                                                            <?php echo $this->escape($owner['name']); ?>
+                                                        </li>
+                                                    <?php endforeach; ?>
+                                                </ul>
+                                            </div>
+                                    <?php
+                                        endif;
+                                    endforeach;
+                                    ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <!-- End Mapped Owners -->
+
+                    <!-- Description -->
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <!-- Active Status -->
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->isactive; ?>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Buttons -->
+                    <div class="new-form-ui-submit">
+                        <div class="division">
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>phonenumber/index';" value="Back to List" type="button" class="reset" />
+
+                            <?php if (sapp_Global::_checkprivileges(PHONENUMBER, $this->loginuserGroup, $this->loginuserRole, 'edit') === 'Yes') : ?>
+                                <input onclick="window.location.href='<?php echo BASE_URL; ?>phonenumber/edit/id/<?php echo $this->id; ?>';" value="Edit" type="button" class="reset" />
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#description').jqte();
+        $('.jqte_editor').attr('contenteditable', 'false'); // Lock WYSIWYG for view mode
+    });
+</script>
+
+<?php
+/**
+ * Helper function defined locally in the view script to check if the 
+ * multi-dimensional array actually contains any data across all its keys.
+ */
+function _isMappedOwnersEmpty($mappedOwners)
+{
+    foreach ($mappedOwners as $owners) {
+        if (!empty($owners)) {
+            return false;
+        }
+    }
+    return true;
+}
+?>

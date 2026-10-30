@@ -1,0 +1,173 @@
+<?php
+
+/**
+ * Business Unit Add Popup View
+ *
+ * Modal interface for adding business units "On-The-Fly".
+ * Refactored to comply with SSOT v6.4.
+ *
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ * @author     Hablul Soft Solution < /hablul.in>
+ * @license    http://gnu.org GNU General Public License, version 3.0 (GPL-3.0)
+ * @version    Sentrifugo v3.2
+ */
+?>
+
+<!-- Asset Inclusions (SSOT v6.4 Standard) -->
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/custompopup.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/custompopup.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<?php if (isset($this->popup) && $this->popup === 'close') : ?>
+
+    <!-- Success UI -->
+    <div class="ml-alert-1-success">
+        <div class="style-1-icon success"></div>
+        Business Unit added successfully. Closing...
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var optionsHtml = '<?php echo $this->escape(isset($this->optionsHtml) ? $this->optionsHtml : ''); ?>';
+            var prevCntrl = '<?php echo $this->escape(isset($this->prev_cntrl) ? $this->prev_cntrl : 'businessunit'); ?>';
+
+            setTimeout(function() {
+                // SSOT v6.4 "On-The-Fly" Popup Pattern closure
+                if (typeof parent.closeiframeAddPopup === 'function') {
+                    // Update dropdown in parent window and close modal
+                    parent.closeiframeAddPopup(optionsHtml, prevCntrl, 'businessunit_id', 'Business Unit');
+                } else {
+                    // Fallback close if parent doesn't have the handler
+                    parent.$('#businessunitContainer').dialog('close');
+                }
+            }, 1500);
+        });
+    </script>
+
+<?php else : ?>
+
+    <?php sapp_Global::generateClientValidations($this->form); ?>
+
+    <?php if (!empty($this->msgarray)) : ?>
+        <div class="ml-alert-1-error" style="margin: 10px;">
+            <div style="display:block;">
+                <span class="style-1-icon error"></span>
+                Please correct the errors highlighted below.
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" action="<?php echo $this->escape($this->form->getAction()); ?>" method="post">
+
+        <?php echo $this->form->id; ?>
+
+        <div class="total-form-controller" style="padding: 15px;">
+            <div class="division">
+
+                <!-- Code -->
+                <div class="new-form-ui clearb">
+                    <label class="required"><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+                    <div class="division">
+                        <?php echo $this->form->code; ?>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->code->getId()); ?>">
+                            <?php echo isset($this->msgarray['code']) ? $this->escape($this->msgarray['code']) : ''; ?>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Name -->
+                <div class="new-form-ui clearb">
+                    <label class="required"><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                    <div class="division">
+                        <?php echo $this->form->name; ?>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->name->getId()); ?>">
+                            <?php echo isset($this->msgarray['name']) ? $this->escape($this->msgarray['name']) : ''; ?>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Start Date -->
+                <div class="new-form-ui clearb">
+                    <label class="required"><?php echo $this->escape($this->form->startdate->getLabel()); ?></label>
+                    <div class="division">
+                        <?php echo $this->form->startdate; ?>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->startdate->getId()); ?>">
+                            <?php echo isset($this->msgarray['startdate']) ? $this->escape($this->msgarray['startdate']) : ''; ?>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Parent: Company -->
+                <div class="new-form-ui clearb">
+                    <label><?php echo $this->escape($this->form->company_id->getLabel()); ?></label>
+                    <div class="division">
+                        <?php echo $this->form->company_id; ?>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->company_id->getId()); ?>">
+                            <?php echo isset($this->msgarray['company_id']) ? $this->escape($this->msgarray['company_id']) : ''; ?>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Parent: Business Unit (Recursive) -->
+                <div class="new-form-ui clearb">
+                    <label><?php echo $this->escape($this->form->parent_id->getLabel()); ?></label>
+                    <div class="division">
+                        <?php echo $this->form->parent_id; ?>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->parent_id->getId()); ?>">
+                            <?php echo isset($this->msgarray['parent_id']) ? $this->escape($this->msgarray['parent_id']) : ''; ?>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                <!-- Active Status -->
+                <div class="new-form-ui clearb">
+                    <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                    <div class="division">
+                        <?php echo $this->form->isactive; ?>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="new-form-ui-submit">
+                    <div class="division">
+                        <?php echo $this->form->submit; ?>
+                        <!-- Standard Parent Modal Close Hook -->
+                        <input onclick="parent.$('#businessunitContainer').dialog('close');" value="Cancel" type="button" class="reset" />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </form>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // Initialize WYSIWYG for description field
+            $('#description').jqte();
+
+            // Initialize DatePicker
+            $('#startdate').datepicker({
+                showOn: 'both',
+                buttonImage: "<?php echo MEDIA_PATH; ?>images/cal.jpg",
+                buttonImageOnly: true,
+                dateFormat: '<?php echo DATEFORMAT_JS; ?>',
+                changeMonth: true,
+                changeYear: true
+            });
+
+            // Form-level error scrolling
+            <?php if (!empty($this->msgarray)) : ?>
+                $('html, body').animate({
+                    scrollTop: 0
+                }, 'slow');
+            <?php endif; ?>
+        });
+    </script>
+
+<?php endif; ?>

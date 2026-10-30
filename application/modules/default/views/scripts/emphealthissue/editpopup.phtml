@@ -1,0 +1,262 @@
+<?php 
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+?>
+  <link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH ?>css/custompopup.css" />
+    <script type="text/javascript" src="<?php echo MEDIA_PATH ?>js/custompopup.js"></script>
+<?php try {
+  
+    ?>
+<script type='text/javascript'>
+   function date_helper()
+	{
+	   var yearrange = <?php echo "'".YEAR.':'.date('Y')."'"; ?>;
+		//var yearrange = <?php echo "'".date("Y", strtotime("-50 years")).':'.date('Y')."'"; ?>;
+				$('#from_date,#to_date').datepicker({
+					showOn:'both',
+					maxDate: new Date, 
+					yearRange: yearrange,
+					dateFormat:"<?php echo DATEFORMAT_JS;?>",
+					buttonImage: "<?php echo $this->baseUrl("public/media/images/cal.jpg");?>",
+					buttonImageOnly: true,
+					buttonText: "",
+					changeMonth: true,
+					changeYear: true,
+                                        showButtonPanel: true ,
+					onClose:function(){
+                    var msg = "";
+					if(this.id == 'to_date')
+						msg = "To date should be greater than from date.";
+					else 
+						msg = "From date should be less than to date.";      
+                                            $('#from_date,#to_date').trigger('blur');
+                                            from_to_date_validation('from_date','to_date',this,msg);
+                                        }				
+				});
+	}
+   
+</script>
+
+
+<?php $baseUrl = $this->serverUrl().$this->baseUrl();
+sapp_Global::generateClientValidations($this->form);
+
+?>
+<?php if($this->successmessage != '') { ?>
+<div id="dispmsgnempadditional" class="ml-alert-1-success">
+<div class="style-1-icon success"></div>
+<?php echo $this->successmessage; ?>
+</div>
+<?php } else { ?>
+<div id="error_message" style="display:none;"></div>
+<?php		
+if($this->emptyFlag != 0)
+	{
+?>	 <div class="ml-alert-1-info m1-info-set">
+		<div class="style-1-icon info"></div>
+			The employee configurations are not yet set.Please configure them to add employee additional details.
+	</div>	
+<?php	}	?>
+
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction();?>" method="<?php echo $this->form->getMethod(); ?>">
+		<?php echo $this->form->id; 
+		echo $this->form->user_id;
+		?>
+        <div class="total-form-controller">
+		 	<div class="new-form-ui">
+				  <label class="required"><?php echo $this->form->healthissue_id->getLabel(); ?></label>
+				<div class="division"><?php echo $this->form->healthissue_id; ?>
+				<?php if($this->healthissueaddpermission == 'Yes') { ?>
+				<span class="add-coloum" onclick="displayNestedPopup('<?php echo BASE_URL . 'healthissue/addpopup' ?>','Health issue');"> Add Health Issue </span>
+				<?php }?>
+				</div>
+				<?php if(isset($this->msgarray['healthissue_id'])){?>
+				   <span class="errors" id="errors-<?php echo $this->form->healthissue_id->getId(); ?>"><?php echo $this->msgarray['healthissue_id'];?></span>
+				<?php }?>
+				</div>
+				
+				<div class="new-form-ui">
+				  <label><?php echo $this->form->severitylevel_id->getLabel(); ?></label>
+				<div class="division"><?php echo $this->form->severitylevel_id; ?>
+				<?php if($this->healthissueserverityaddpermission == 'Yes') { ?>
+					<span class="add-coloum" onclick="displayNestedPopup('<?php echo BASE_URL . 'healthseveritylevel/addpopup' ?>','Severity Level');"> Add Severity Level </span>
+				<?php }?> 	
+				</div>
+				<?php if(isset($this->msgarray['severitylevel_id'])){?>
+				   <span class="errors" id="errors-<?php echo $this->form->severitylevel_id->getId(); ?>"><?php echo $this->msgarray['severitylevel_id'];?></span>
+				<?php }?>
+				</div>
+		
+				<div class="new-form-ui">
+			   <label><?php echo $this->form->severitylevel->getLabel(); ?></label>
+				<div class="division"><?php echo $this->form->severitylevel; ?>
+                                    
+                                </div>
+				<?php if(isset($this->msgarray['severitylevel'])){?>
+				   <span class="errors" id="errors-<?php echo $this->form->severitylevel->getId(); ?>"><?php echo $this->msgarray['severitylevel'];?></span>
+				<?php }?>
+				</div>
+				
+			
+				
+				<?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+												
+				<div class="new-form-ui">
+				  <label ><?php echo $this->form->diagnosedon->getLabel(); ?><img class="tooltip" title="<?php echo DATE_DESCRIPTION;?>" src="<?php echo $this->baseUrl().'/public/media/';?>images/help.png"></label>
+				<div class="division"><?php echo $this->form->diagnosedon; ?></div>
+				<?php if(isset($this->msgarray['diagnosedon'])){?>
+				   <span class="errors" id="errors-<?php echo $this->form->to_dadiagnosedonte->getId(); ?>"><?php echo $this->msgarray['diagnosedon'];?></span>
+				<?php }?>
+				</div>	
+				
+				<div class="new-form-ui">
+			   <label ><?php echo $this->form->isactive->getLabel(); ?></label>
+				<div class="division"><?php echo $this->form->isactive; ?></div>
+				<?php if(isset($this->msgarray['isactive'])){?>
+				   <span class="errors" id="errors-<?php echo $this->form->isactive->getId(); ?>"><?php echo $this->msgarray['isactive'];?></span>
+				<?php }?>
+				</div>
+                <div class="new-form-ui org-logo-height logo-width-org clearall">
+		        <label>Attestation <img title="<?php echo 'Upload only .gif, .jpg, .jpeg, .png images';?>" src="<?php echo $this->baseUrl().'/public/media/';?>images/help.png" /></label>
+                    
+		     <div class="division">
+         <div class="org-img">
+
+		    		<?php if($this->org_image!=''){?>
+                       
+		    			<span><?php echo $this->org_image ;?></span>
+		    		<?php }else{?>
+		    			<span>No file found</span>
+		    		<?php }?>
+		    	</div>
+         <span id="org_image" class="uploadbut-org">Upload Attestation </span>
+		    	<input type="hidden" name="attestation_image_value" value="" id="attestation_image_value">
+		      	<input type="hidden" name="imgerr" value="" id="imgerr">
+		    	<input type="hidden" name="imgerrmsg" value="" id="imgerrmsg"><!--<span id="image_name"></span>-->
+		     <?php if(isset($this->msgarray['attestation_image_value'])){?>
+		      <span class="errors" id="errors-attestation_image_value"><?php echo $this->msgarray['attestation_image_value'];?></span>
+		      <?php }else {?>
+		    	<span style="display:none;" class="errors" id="errors-attestation_image_value"></span>
+		     <?php } ?>
+		     <div id="orgloaderimg" style="display:none;">
+         	<img src="<?php echo $this->baseUrl("public/media/images/loaderwhite_21X21.gif");?>" style="width:21px; height: 21px; float: none; "/>
+         </div>
+              </div>
+	</div>
+        <div class="new-form-ui-submit" id="formSubmit">
+        <?php echo $this->form->submit; ?>
+        <button onclick="closeiframepopup('emphealthissue','cancel');" type="button">Cancel</button>
+        </div>
+   		</div>     
+</form>
+
+<?php } ?>
+<script type='text/javascript'>
+		$('#description').jqte();
+
+<?php if($this->successmessage != '') { ?>
+        setTimeout(function(){
+		    closeiframepopup('<?php echo $this->controllername; ?>',''); 
+		},2000);
+<?php } ?>
+</script>
+
+<script type='text/javascript'>
+$(document).ready(function(){
+    hideselectortext('severitylevel','severitylevel_id');
+	hideselectortext('severitylevel','severitylevel_id');
+    var yearrange = <?php echo "'".YEAR.':'.date('Y')."'"; ?>;
+    $('#diagnosedon').datepicker({
+					showOn:'both',
+					// maxDate: new Date, 
+				    yearRange: yearrange,
+					dateFormat:"<?php echo DATEFORMAT_JS;?>",
+					buttonImage: "<?php echo $this->baseUrl("public/media/images/cal.jpg");?>",
+					buttonImageOnly: true,
+					buttonText: "",
+					changeMonth: true,
+					changeYear: true,
+                                        showButtonPanel: true ,
+                    onClose:function(){
+                                    $('#diagnosedon').trigger('blur');
+                                } 					
+	});
+    var btnUpload = $('#org_image');
+			new AjaxUpload(btnUpload, {	
+				action :  base_url+'/emphealthissue/uploadpreview',
+				name   : 'profile_photo',  //we can rename it 
+				dataType: 'json',
+				onSubmit: function(file,ext){		
+				if($("#errors-attestation_image_value").is(":visible"))
+				  $("#errors-attestation_image_value").hide();	
+				  $("#orgloaderimg").show();												 
+				},
+				onComplete: function(file, response){				
+					var result = JSON.parse(response);
+					if(result.result == 'success')
+					{						
+						$('#errors-attestation_image_value').html('');
+						$('#imgerr').val(result.result);						
+						$("#imgerrmsg").val(result.msg);	
+						$("#errors-attestation_image_value").css('display','block');
+						$("#attestation_image_value").val(result.img);
+						$('.org-img').html('<img src="'+domain_data+'/public/uploads/healthpreview/'+result.img+'" /><div id="org_image" class="caption uploadbut-org" style="top: -35px; display: none;">Upload image</div>');
+						$("#orgloaderimg").hide();						
+							
+	
+					}
+					else
+					{
+						$('.uploaderror').show();
+						$("#errors-attestation_image_value").css('display','block');
+						$('#errors-attestation_image_value').html(result.msg);
+						$('#imgerr').val(result.result);
+						$("#imgerrmsg").val(result.msg);
+						$("#orgloaderimg").hide();
+						setTimeout(function()
+						{
+						$('.uploaderror').fadeOut('slow');
+						},3000);
+					}
+				}
+			},'json');
+	
+	<?php 
+	if(count($_POST) > 0)
+	{
+	?>
+			$('#military_status').trigger('change');
+	<?php         
+	}
+	else if(isset($this->data[0]['military_status']) && $this->data[0]['military_status'] == 1){?>
+		  date_helper();
+	<?php }?>
+	
+});
+</script>
+
+<?php //code...
+} catch (\Throwable $th) {
+    Zend_Debug::dump($th->getMessage());
+} 
+?>

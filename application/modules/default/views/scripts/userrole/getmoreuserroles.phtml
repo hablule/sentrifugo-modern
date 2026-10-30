@@ -1,0 +1,54 @@
+<?php
+
+/**
+ * Get More User Roles Partial View
+ * This view is used to render additional user roles fetched via AJAX.
+ * Variables passed to this view:
+ * - $this->userroles : Array of user role data
+ * - $this->viewType  : 'card' or 'table' to determine the display format
+ * @package     Sentrifugo
+ * @subpackage  UserRoleModule
+ * @author      Hablul Soft Solution < /hablul.in>
+ * @license     http://opensource.org/licenses/BSD-3-Clause BSD-3-Clause
+ * @version     Sentrifugo v3.2
+ **/
+?>
+
+<?php
+$baseUrl = $this->serverUrl() . $this->baseUrl();
+?>
+<?php foreach ($this->userroles as $role) : ?>
+    <?php if ($this->viewType == 'card') : ?>
+        <div class="list-item">
+            <div class="li-head">
+                <div class="li-avatar">
+                    <!-- Using generic role icon or user profile if joined -->
+                    <img src="<?php echo $baseUrl; ?>/public/uploads/profile/<?php echo $role['profileimg']; ?>" onerror="this.src='<?php echo MEDIA_PATH; ?>images/profile_pic.png'" width="54" height="54" />                 
+                </div>
+                <div class="li-emp-details">
+                    <span class="emp-name"><?php echo $this->escape($role['userfullname']); ?></span>
+                    <span class="emp-designation"><?php echo $this->escape($role['rolename']); ?></span>
+                </div>
+                <div class="li-actions">
+                    <a class='dropdown-button dottedbtn' href='#' data-activates='actdbtn-<?php echo $role['userrole_id']; ?>'>
+                        <i class="fa fa-ellipsis-v"></i>
+                    </a>
+                    <ul id='actdbtn-<?php echo $role['userrole_id']; ?>' class='dropdown-content'>
+                        <li><a href="<?php echo BASE_URL . 'userrole/view/id/' . $role['userrole_id']; ?>"><i class="fa fa-eye"></i> View</a></li>
+                        <li><a href="<?php echo BASE_URL . 'userrole/edit/id/' . $role['userrole_id']; ?>"><i class="fa fa-edit"></i> Edit</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="li-body">
+                <ul>
+                    <li><i class="fa fa-calendar"></i> From: <?php echo sapp_Global::change_date($role['datefrom'], 'view'); ?></li>
+                    <li><i class="fa fa-clock-o"></i> To: <?php echo ($role['dateto']) ? sapp_Global::change_date($role['dateto'], 'view') : 'Ongoing'; ?></li>                    
+                    <li>
+                        <i class="fa fa-info-circle" aria-hidden="true"></i>
+                        <span>Status: <?php echo ($role['isactive'] == '1') ? 'Active' : 'Inactive'; ?></span>
+                    </li>
+                </ul>
+            </div>
+        </div>    
+    <?php endif; ?>
+<?php endforeach; ?>

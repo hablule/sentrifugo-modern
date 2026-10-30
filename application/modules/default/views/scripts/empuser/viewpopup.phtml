@@ -1,0 +1,12 @@
+<?php
+sapp_Helper::viewHeader();
+sapp_Helper::viewBody('alt','User Name',(!empty($this->data['username']))?$this->data['username']:"...",'Code',(!empty($this->data['code']))?$this->data['code']:"...");
+sapp_Helper::viewBody('alt','Description',(!empty($this->data['description']))?$this->data['description']:"...",'',"");
+
+sapp_Helper::viewFooter();
+
+?>
+
+<div class="new-form-ui-submit" id="formSubmit">
+<button onclick="closeiframepopup('empuser','cancel');" type="button">Cancel</button>
+</div>

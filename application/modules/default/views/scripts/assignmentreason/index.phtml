@@ -1,0 +1,56 @@
+<?php
+
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+?>
+
+<?php
+/**
+ * Assignment Reason Index View
+ * Complies with SSOT v6.7.7.
+ */
+?>
+<div id="message_container">
+    <?php if (isset($this->messages) && !empty($this->messages)) : ?>
+        <div id="dispmsg" class="settingssuccess">
+            <?php foreach ($this->messages as $message) : $key = key($message); ?>
+                <div class="ml-alert-1-<?php echo $key; ?>">
+                    <div style="display:block;"><span class="style-1-icon <?php echo $key; ?>"></span><?php echo $this->escape($message[$key]); ?></div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+</div>
+<div id="error_message" style="display:none;"></div>
+<?php if (isset($this->call) && $this->call === 'ajaxcall') : ?>
+    <?php echo $this->grid($this->dataArray[0]); ?>
+<?php else : ?>
+    <div id="grid_<?php echo $this->escape($this->dataArray[0]['objectname']); ?>" class="all-grid-control">
+        <div id="msg" style="display:none; font-style: oblique; font-weight: bold; color: green;"></div>
+        <?php echo $this->grid($this->dataArray[0]); ?>
+    </div>
+<?php endif; ?>
+<script type="text/javascript">
+    $(document).ready(function() {
+        setTimeout(function() {
+            $('#dispmsg').fadeOut('slow');
+        }, 4000);
+    });
+</script>

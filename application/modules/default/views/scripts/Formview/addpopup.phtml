@@ -1,0 +1,201 @@
+<?php
+$form = $this->form;
+
+?>
+<?php 
+?>
+<?php
+
+
+?>
+<?php if($this->popup == 'close') { ?>	
+	<div class="ml-alert-1-success">
+	<div class="style-1-icon success"></div>
+	Element <?php echo $this->eventact; ?> successfully
+	</div>
+
+	<?php } 
+else
+{
+    sapp_Global::generateClientValidations($this->form);
+    ?>
+ <link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+<div id="error_message" style="display:none;"></div>
+<form name="<?php echo $form->getName(); ?>" id="<?php echo $form->getId(); ?>" method="POST" action="<?php echo $form->getAction(); ?>">
+
+<div class="popup-model" id="popup-model">
+        <div class="popup-main-content">
+            <div class="new-form-ui ">
+                <label class="required"><?php echo $form->formName->getLabel(); ?></label>
+                <div class="division loca_state_div"><?php echo $form->formName; ?></div>
+                <?php if (isset($this->msgarray['formName'])) { ?>
+            <span class="errors" id="errors-<?php echo $form->formName->getId(); ?>"><?php echo $this->msgarray['formName']; ?></span>
+        <?php } ?>
+            </div>
+            <div class="new-form-ui ">
+                <label class="required"><?php echo $form->elementType->getLabel(); ?></label>
+                <div class="division loca_state_div"><?php echo $form->elementType; ?></div>
+                <?php if (isset($this->msgarray['elementType'])) { ?>
+            <span class="errors" id="errors-<?php echo $popup->elementType->getId(); ?>"><?php echo $this->msgarray['elementType']; ?></span>
+        <?php } ?>
+            </div>
+            <div class="new-form-ui ">
+                <label class="required"><?php echo $form->elementName->getLabel(); ?></label>
+                <div class="division loca_state_div"><?php echo $form->elementName; ?></div>
+                <?php if (isset($this->msgarray['elementName'])) { ?>
+            <span class="errors" id="errors-<?php echo $form->elementName->getId(); ?>"><?php echo $this->msgarray['elementName']; ?></span>
+        <?php } ?>
+            </div>
+
+            <div class="new-form-ui ">
+                <label class="required"><?php echo $form->elementLabel->getLabel(); ?></label>
+                <div class="division loca_state_div"><?php echo $form->elementLabel; ?></div>
+                <?php if (isset($this->msgarray['elementLabel'])) { ?>
+            <span class="errors" id="errors-<?php echo $form->elementLabel->getId(); ?>"><?php echo $this->msgarray['elementLabel']; ?></span>
+        <?php } ?>
+            </div>
+
+            <div class="new-form-ui " id="elementTable-form" style="display: none;" >
+                <label class="required"><?php echo $form->elementTable->getLabel(); ?></label>
+                <div class="division loca_state_div"><?php echo $form->elementTable; ?></div>
+                <?php if (isset($this->msgarray['elementTable'])) { ?>
+            <span class="errors" id="errors-<?php echo $form->elementTable->getId(); ?>"><?php echo $this->msgarray['elementTable']; ?></span>
+        <?php } ?>
+            </div>
+
+            <div class="new-form-ui ">
+                <label class="required"><?php echo $form->startNewLine->getLabel(); ?></label>
+                <div class="division loca_state_div"><?php echo $form->startNewLine; ?></div>
+                <?php if (isset($this->msgarray['startNewLine'])) { ?>
+            <span class="errors" id="errors-<?php echo $form->startNewLine->getId(); ?>"><?php echo $this->msgarray['startNewLine']; ?></span>
+        <?php } ?>
+            </div>
+
+            <div class="new-form-ui ">
+                <label class="required"><?php echo $form->occupyWholeLine->getLabel(); ?></label>
+                <div class="division loca_state_div"><?php echo $form->occupyWholeLine; ?></div>
+                <?php if (isset($this->msgarray['occupyWholeLine'])) { ?>
+            <span class="errors" id="errors-<?php echo $form->occupyWholeLine->getId(); ?>"><?php echo $this->msgarray['occupyWholeLine']; ?></span>
+        <?php } ?>
+            </div>
+
+            <div class="new-form-ui" id="getFrom-form" style="display: none;">
+                <label id="injuredDate" ><?php echo $form->getFrom->getLabel(); ?></label>
+                <div class="division loca_state_div"><?php echo $form->getFrom; ?></div>
+                <?php if (isset($this->msgarray['getFrom'])) { ?>
+            <span class="errors" id="errors-<?php echo $form->getFrom->getId(); ?>"><?php echo $this->msgarray['getFrom']; ?></span>
+        <?php } ?>
+            </div>
+
+            <div class="new-form-ui " id="get-form" style="display: none;">
+                <label id="injuredDate" ><?php echo $form->get->getLabel(); ?></label>
+                <div class="division loca_state_div"><?php echo $form->get; ?></div>
+                <?php if (isset($this->msgarray['get'])) { ?>
+            <span class="errors" id="errors-<?php echo $form->get->getId(); ?>"><?php echo $this->msgarray['get']; ?></span>
+        <?php } ?>
+            </div>
+
+            <div class="new-form-ui " id="parent-form" style="display: none;">
+                <label id="injuredDate" ><?php echo $form->parent->getLabel(); ?></label>
+                <div class="division loca_state_div"><?php echo $form->parent; ?></div>
+            </div>
+
+            <div class="new-form-ui " id="child-form" style="display: none;">
+                <label id="injuredDate" ><?php echo $form->child->getLabel(); ?></label>
+                <div class="division loca_state_div"><?php echo $form->child; ?></div>
+            </div>
+            <div class="new-form-ui ">
+        <label id="injuredDate" class="required"><?php echo $form->validators->getLabel(); ?></label>
+        <div class="division loca_state_div"><?php echo $form->validators; ?></div>
+        <?php if (isset($this->msgarray['validators'])) { ?>
+            <span class="errors" id="errors-<?php echo $form->validators->getId(); ?>"><?php echo $this->msgarray['validators']; ?></span>
+        <?php } ?>
+    </div>
+            <div class="new-form-ui-submit ">
+                <div class="division"><?php echo $form->submit; ?></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</form>
+<?php } ?>
+<div id="formviewContainer" style="display: none; overflow: auto;">
+	<div class="heading">
+		<a href="javascript:void(0)">
+			<img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+	</div>
+
+	<iframe id="formviewCont" class="business_units_iframe" frameborder="0"></iframe>
+</div>
+<script language='javascript' type='text/javascript'>
+
+	<?php if($this->popup != '') { ?>
+        closeiframeAddPopupaddelement('<?php echo $this->controllername; ?>','<?php echo $this->addelement; ?>'); 					
+	<?php } ?>
+	</script>
+<script type='text/javascript'>
+	$(document).ready(function() { 
+		<?php if (count($this->messages)) {?>
+			  setTimeout(function(){
+					$('#popupmessage').fadeOut('slow');
+				},3000);
+		<?php } ?>
+        
+
+      
+       
+
+	});
+    if(document.getElementById('elementType')!==null)
+        {
+    document.getElementById('elementType').onchange = function() {
+        var selected = document.getElementById('elementType').value;
+        if (selected == 'Select'||selected=='Multiselect') {
+            
+            document.getElementById('elementTable-form').style.display = 'block';
+            document.getElementById('getFrom-form').style.display = 'block';
+            document.getElementById('get-form').style.display = 'block';
+            document.getElementById('parent-form').style.display = 'block';
+            document.getElementById('child-form').style.display = 'block';
+
+        } else {
+           
+            document.getElementById('getFrom-form').style.display = 'none';
+            document.getElementById('get-form').style.display = 'none';
+            document.getElementById('parent-form').style.display = 'none';
+            document.getElementById('child-form').style.display = 'none';
+            document.getElementById('elementTable-form').style.display = 'none';
+
+        }
+    }
+}
+    //    if(document.getElementById('elementType')!==null)
+    //    {
+    //     var selected = document.getElementById('elementType').value;
+    //     if (selected == 'Select'||selected=='Multiselect') {
+            
+    //         document.getElementById('elementTable-form').style.display = 'block';
+    //         document.getElementById('getFrom-form').style.display = 'block';
+    //         document.getElementById('get-form').style.display = 'block';
+    //         document.getElementById('parent-form').style.display = 'block';
+    //         document.getElementById('child-form').style.display = 'block';
+
+    //     } else {
+           
+    //         document.getElementById('getFrom-form').style.display = 'none';
+    //         document.getElementById('get-form').style.display = 'none';
+    //         document.getElementById('parent-form').style.display = 'none';
+    //         document.getElementById('child-form').style.display = 'none';
+    //         document.getElementById('elementTable-form').style.display = 'none';
+
+    //     }
+    // }
+        
+    // }
+</script>
+
+
+
+

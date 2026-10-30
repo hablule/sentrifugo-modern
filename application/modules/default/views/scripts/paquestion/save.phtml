@@ -1,0 +1,201 @@
+<?php
+
+/**
+ * PA Question Save View
+ * Strictly adheres to SSOT v6.2. Integrates popups for Category and Rating.
+ * CORRECTED: Implements custom AJAX for multiselect and fixes UI bugs.
+ */
+$this->msgarray = isset($this->msgarray) ? $this->msgarray : array();
+sapp_Global::generateClientValidations($this->form);
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<!-- UI Bug Fixes -->
+<style>
+    /* FIX: Prevents Select2 from overlapping elements below it */
+    .new-form-ui .select2-container {
+        z-index: 1 !important;
+    }
+
+    .new-form-ui .select2-container.select2-container--open {
+        z-index: 9999 !important;
+        /* Must be high to appear over other elements when open */
+    }
+</style>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container">
+            <?php if (!empty($this->msgarray)) : ?>
+                <div class="ml-alert-1-error">
+                    <div style="display:block;"><span class="style-1-icon error"></span><?php echo isset($this->msgarray['error']) ? $this->escape($this->msgarray['error']) : 'Please correct the highlighted errors below.'; ?></div>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" method="<?php echo $this->escape($this->form->getMethod()); ?>">
+            <?php echo $this->form->id; ?>
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->category_id->getLabel()); ?></label>
+                            <div class="division">
+                                <?php echo $this->form->category_id; ?>
+                                <span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL . 'pacategory/addpopup' ?>','Add Category');"> Add Category</span>
+                            </div>
+                            <span class="errors" id="errors-category_id"><?php echo $this->escape($this->msgarray['category_id'] ?? ''); ?></span>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->rating_id->getLabel()); ?></label>
+                            <div class="division">
+                                <?php echo $this->form->rating_id; ?>
+                                <span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL . 'parating/addpopup' ?>','Add Rating Scale');"> Add Scale</span>
+                            </div>
+                            <span class="errors" id="errors-rating_id"><?php echo $this->escape($this->msgarray['rating_id'] ?? ''); ?></span>
+                        </div>
+                        <!-- The Weight Element -->
+                        <div class="row no-margin">
+                            <div class="new-form-ui clearb">
+                                <label class="required"><?php echo $this->escape($this->form->weight->getLabel()); ?></label>
+                                <div class="division">
+                                    <?php echo $this->form->weight; ?>
+                                    <span style="font-size: 11px; color: #888; display: block; margin-top: 5px;">
+                                        <i class="fa fa-info-circle"></i> Determines how much this question impacts the final score relative to others (e.g., 1.0 or 2.5).
+                                    </span>
+                                </div>
+                                <span class="errors" id="errors-weight"><?php echo $this->escape($this->msgarray['weight'] ?? ''); ?></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'name', '', 'fck_editor_height', '', array()); ?>
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <!-- M:M Multiselect -->
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->skill_ids->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->skill_ids; ?>
+
+                            <!-- The On-The-Fly Popup Trigger (Only in save.phtml) -->
+                            <?php if (sapp_Global::_checkprivileges(SKILL, $this->loginuserGroup, $this->loginuserRole, 'add') == 'Yes') : ?>
+                                <span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL . 'skill/addpopup' ?>', 'Skill');" style="cursor: pointer; color: #26a69a; font-size: 12px; margin-top: 5px; display: inline-block;">
+                                    <i class="fa fa-plus"></i> Create New Skill
+                                </span>
+                            <?php endif; ?>
+
+                        </div>
+                        <!-- FIX: Added missing error span for the skills multiselect -->
+                        <span class="errors" id="errors-skill_ids"><?php echo $this->escape($this->msgarray['skill_ids'] ?? ''); ?></span>
+
+                    </div>
+
+                    <div style="clear: both; width: 100%; height: 20px;"></div>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                    </div>
+
+                    <div class="new-form-ui-submit">
+                        <div class="division">
+                            <?php echo $this->form->submit; ?>
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>paquestion';" value="Cancel" type="button" class="reset" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Popup Containers -->
+<div id="pacategoryContainer" style="display: none; overflow: auto;">
+    <div class="heading"><a href="javascript:void(0)"><img src="<?php echo MEDIA_PATH; ?>images/close.png" class="closeAttachPopup" style="margin: -24px 8px 0 0;"></a></div><iframe id="pacategoryCont" class="user_iframe" frameborder="0"></iframe>
+</div>
+<div id="paratingContainer" style="display: none; overflow: auto;">
+    <div class="heading"><a href="javascript:void(0)"><img src="<?php echo MEDIA_PATH; ?>images/close.png" class="closeAttachPopup" style="margin: -24px 8px 0 0;"></a></div><iframe id="paratingCont" class="user_iframe" frameborder="0"></iframe>
+</div>
+<div id="skillContainer" style="display: none; overflow: auto;">
+    <div class="heading"><a href="javascript:void(0)"><img src="<?php echo MEDIA_PATH; ?>images/close.png" class="closeAttachPopup" style="margin: -24px 8px 0 0;"></a></div><iframe id="skillCont" class="user_iframe" frameborder="0"></iframe>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#name, #description').jqte();
+
+
+        if ($.isFunction($.fn.select2)) {
+            $('#category_id, #rating_id').select2({
+                // width: '100%'
+            });
+            $('#skill_ids').attr('multiple', 'multiple').select2({
+                // width: '100%',
+                placeholder: "Search and select skills..."
+            });
+        }
+
+
+        // --- Custom AJAX Submit for Multiselect ---
+        $('#submitbutton').click(function(e) {
+            e.preventDefault(); // Stop default HTML submission
+
+            var $form = $('#formid');
+
+            if (!$form.valid()) {
+                return false; // Stop if client validation fails
+            }
+
+            // SSOT VII.11: Block UI
+            $.blockUI({
+                message: '<img src="<?php echo MEDIA_PATH; ?>images/loader2.gif" alt="Loading" />'
+            });
+
+            // SSOT VII.10: Use FormData
+            var formData = new FormData($form[0]);
+
+            $.ajax({
+                url: base_url + '/paquestion/save/format/json',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function(response) {
+                    $.unblockUI();
+
+                    // Check for standard redirect success
+                    if (response.result === 'saved') {
+                        window.location.href = base_url + '/paquestion';
+                        return;
+                    }
+
+                    // SSOT V.6: Handle raw Zend Form error object
+                    $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Please fix the highlighted errors.</div>');
+                    $('.errors').html(''); // Clear old errors
+
+                    $.each(response, function(key, val) {
+                        var errMsg = (typeof val === 'object') ? val[Object.keys(val)[0]] : val;
+                        $('#errors-' + key).html(errMsg);
+                    });
+
+                    $('html, body').animate({
+                        scrollTop: 0
+                    }, 'slow');
+                },
+                error: function() {
+                    $.unblockUI();
+                    $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Server error occurred.</div>');
+                }
+            });
+        });
+    });
+</script>
