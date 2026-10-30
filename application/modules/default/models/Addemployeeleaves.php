@@ -27,7 +27,7 @@ class Default_Model_Addemployeeleaves extends Zend_Db_Table_Abstract
 	/*
 	   I. This query fetches employees data based on roles.
 	*/
-    public function getEmployeesData($sort,$by,$pageNo,$perPage,$searchQuery,$managerid='',$loginUserId)
+    public function getEmployeesData($sort,$by,$pageNo,$perPage,$searchQuery,$managerid='',$loginUserId = null)
     {
         //the below code is used to get data of employees from summary table.
         $employeesData="";                             
@@ -40,8 +40,8 @@ class Default_Model_Addemployeeleaves extends Zend_Db_Table_Abstract
 
         $employeesData = $this->select()
                                 ->setIntegrityCheck(false)	                                
-                                ->from(array('e' => 'employees_summary'),array('e.firstname','e.lastname'))
-                                ->joinLeft(array('el'=>'main_employeeleaves'), 'el.user_id=e.id',array('el.emp_leave_limit','el.used_leaves','el.alloted_year','el.createddate','el.isleavetrasnferset','remainingleaves'=>new Zend_Db_Expr('el.emp_leave_limit - el.used_leaves')))                                        
+                                ->from(['e' => 'employees_summary'],['e.firstname','e.lastname'])
+                                ->joinLeft(['el'=>'main_employeeleaves'], 'el.user_id=e.id',['el.emp_leave_limit','el.used_leaves','el.alloted_year','el.createddate','el.isleavetrasnferset','remainingleaves'=>new Zend_Db_Expr('el.emp_leave_limit - el.used_leaves')])                                        
                                 ->where($where)
                                 ->order("$by $sort") 
                                 ->limitPage($pageNo, $perPage);
@@ -54,11 +54,11 @@ class Default_Model_Addemployeeleaves extends Zend_Db_Table_Abstract
         $searchQuery = '';
         $tablecontent = '';
         $emptyroles=0;
-        $empstatus_opt = array();
-        $searchArray = array();
-        $data = array();
+        $empstatus_opt = [];
+        $searchArray = [];
+        $data = [];
         $id='';
-        $dataTmp = array();
+        $dataTmp = [];
 		
         if($searchData != '' && $searchData!='undefined')
         {
@@ -74,9 +74,9 @@ class Default_Model_Addemployeeleaves extends Zend_Db_Table_Abstract
         $objName = 'addemployeeleaves';
 				        
 			
-        $tableFields = array('action'=>'Action','firstname'=>'First Name','lastname'=>'Last Name',
+        $tableFields = ['action'=>'Action','firstname'=>'First Name','lastname'=>'Last Name',
                              'employeeId' =>'Employee ID','emp_leave_limit'=>'Allotted Leave Limit',
-                             'used_leaves'=>'Used Leaves','remainingleaves'=>'Leave Balance','alloted_year'=>'Allotted Year');
+                             'used_leaves'=>'Used Leaves','remainingleaves'=>'Leave Balance','alloted_year'=>'Allotted Year'];
 		   
         $tablecontent = $this->getEmployeesData($sort,$by,$pageNo,$perPage,$searchQuery,'',$exParam1);  
 			
@@ -85,7 +85,7 @@ class Default_Model_Addemployeeleaves extends Zend_Db_Table_Abstract
             $emptyroles=1;
         }
 		
-        $dataTmp = array(
+        $dataTmp = [
                         'userid'=>$id,
                         'sort' => $sort,
                         'by' => $by,
@@ -93,7 +93,7 @@ class Default_Model_Addemployeeleaves extends Zend_Db_Table_Abstract
                         'perPage' => $perPage,				
                         'tablecontent' => $tablecontent,
                         'objectname' => $objName,
-                        'extra' => array(),
+                        'extra' => [],
                         'tableheader' => $tableFields,
                         'jsGridFnName' => 'getAjaxgridData',                        
                         'jsFillFnName' => '',
@@ -103,7 +103,7 @@ class Default_Model_Addemployeeleaves extends Zend_Db_Table_Abstract
                         'add'=>'add',
                         'call'=>$call,
                         'emptyroles'=>$emptyroles
-                    );	
+                    ];	
 				
         return $dataTmp;
     }

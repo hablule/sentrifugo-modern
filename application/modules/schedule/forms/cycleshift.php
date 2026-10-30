@@ -22,7 +22,7 @@ class Schedule_Form_Cycleshift extends Zend_Form
         $shiftid = new Zend_Form_Element_Multiselect('shiftid');
         $shiftid->addMultiOption('','Select');
         $shiftid->setRequired(true);
-        $shiftid->addValidator('NotEmpty', false, array('messages'=>'Shift Required'));
+        $shiftid->addValidator('NotEmpty', false, ['messages'=>'Shift Required']);
         $shiftmodel = new Schedule_Model_Timetable();
         $shiftData = $shiftmodel->getallshifts();
         foreach($shiftData as $value)
@@ -45,8 +45,8 @@ class Schedule_Form_Cycleshift extends Zend_Form
         $isactive->setValue(1);
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('save');
-        $this->addElements(array($id, $shiftid, $description, $schedulecycle_id, $submit, $isactive));
-        $this->setElementDecorators(array('ViewHelper'));
+        $this->addElements([$id, $shiftid, $description, $schedulecycle_id, $submit, $isactive]);
+        $this->setElementDecorators(['ViewHelper']);
     }
 }
 

@@ -89,8 +89,8 @@ class Default_ListcandidatesController extends Zend_Controller_Action
 		$interview_round = $this->_getParam('interview_round',null);
         
         foreach ($ids as $key => $value) {
-            $cand_model->SaveorUpdateCandidateData(array('requisition_id'=>$requisition_id),'id='.$value);
-            $idata = array(
+            $cand_model->SaveorUpdateCandidateData(['requisition_id'=>$requisition_id],'id='.$value);
+            $idata = [
                 'req_id' => $requisition_id,
                 'candidate_id' => trim($value),
                 'interview_status' => trim($interview_status),				
@@ -99,10 +99,10 @@ class Default_ListcandidatesController extends Zend_Controller_Action
                 'modifiedby' => trim($loginUserId),
                 'createddate' => gmdate("Y-m-d H:i:s"),
                 'modifieddate' => gmdate("Y-m-d H:i:s"),
-            );
+            ];
           $iresult = $interviewmodel->SaveorUpdateInterviewData($idata, '');
         
-            $irdata = array(
+            $irdata = [
                 'interview_id' => $iresult,
                 'req_id' => $requisition_id,
                 'candidate_id' => $value,
@@ -121,21 +121,21 @@ class Default_ListcandidatesController extends Zend_Controller_Action
                 'modifiedby' => trim($loginUserId),
                 'createddate' => gmdate("Y-m-d H:i:s"),
                 'modifieddate' => gmdate("Y-m-d H:i:s"),
-        );
+        ];
         $ir_result = $interview_round_model->SaveorUpdateInterviewroundData($irdata,'');
 
         $candidateData = $cand_model->getCandidateForView($value);
-        $chdata = array(
+        $chdata = [
             'createdby' =>trim($loginUserId),
             'modifiedby' => trim($loginUserId),
             'requisition_id'=>$requisition_id,		
             
-    );	
+    ];	
     $where = "candidate_id = ".$value;
     $reqh_model = new Default_Model_Requisitionhistory();
    $history=$reqh_model->saveOrUpdateRequisitionHistory($chdata,$where);
     // to insert new recored
-    $ch_data = array(
+    $ch_data = [
             'createdby' =>trim($loginUserId),
             'modifiedby' => trim($loginUserId),
             'candidate_id' => trim($value),
@@ -144,7 +144,7 @@ class Default_ListcandidatesController extends Zend_Controller_Action
             'createddate' => gmdate("Y-m-d H:i:s"),
             'modifieddate' => gmdate("Y-m-d H:i:s"),
             'description' => 'Candidate:'.$candidateData["candidate_name"].' has been added to Requisition:'.$requisition_data['requisition_code'].' by ',
-    );	
+    ];	
     $iwhere="";
    $history=$reqh_model->saveOrUpdateRequisitionHistory($ch_data,$iwhere);
   
@@ -153,7 +153,7 @@ class Default_ListcandidatesController extends Zend_Controller_Action
 					$modifiedby =$loginUserId;
 					
 					$reqh_model = new Default_Model_Requisitionhistory();
-					$requisition_history = array(
+					$requisition_history = [
                                         'candidate_id' =>$value,
                                          'interview_id' =>$iresult,										
                                         'candidate_name'=>  $candidateData['candidate_name'],	
@@ -164,17 +164,17 @@ class Default_ListcandidatesController extends Zend_Controller_Action
 										'isactive' => 1,
 										'createddate' =>gmdate("Y-m-d H:i:s"),
 										'modifieddate'=> gmdate("Y-m-d H:i:s"),
-									);
+									];
 					$where = '';
 				  $historyId = $reqh_model->saveOrUpdateRequisitionHistory($requisition_history,$where);
               
                     
-                    $candData = array(
+                    $candData = [
 						'cand_status'=> 'Scheduled',		
 						'requisition_id'=>$requisition_id,
 						'modifiedby' => trim($loginUserId),
 						'modifieddate' => gmdate("Y-m-d H:i:s")
-				);
+				];
                 $where = "id = ".$value;
 				
 				$candResult = $cand_model->SaveorUpdateCandidateData($candData,$where);
@@ -183,9 +183,9 @@ class Default_ListcandidatesController extends Zend_Controller_Action
                 $requisition_data = $requi_model->getRequisitionDataById($requisition_id); 
                 $report_person_data = $user_model->getUserDataById($interviewer_id);
                 $cand_data = $cand_model->getCandidateById($value);
-                $mail_arr = array(  'HR'=>  defined('REQ_HR_'.$requisition_data['businessunit_id'])?constant('REQ_HR_'.$requisition_data['businessunit_id']):"",                                                        
+                $mail_arr = [  'HR'=>  defined('REQ_HR_'.$requisition_data['businessunit_id'])?constant('REQ_HR_'.$requisition_data['businessunit_id']):"",                                                        
                 $report_person_data['userfullname'] => $report_person_data['emailaddress']
-                    );
+                    ];
                     foreach($mail_arr as $ename => $email)
                     {
                         $base_url = 'http://'.$this->getRequest()->getHttpHost() . $this->getRequest()->getBaseUrl();
@@ -226,14 +226,14 @@ class Default_ListcandidatesController extends Zend_Controller_Action
         
        if($candResult=='update')
        {
-        $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Interview scheduled successfully."));
-         $this->_helper->json(array('result'=>'success')); 
+        $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Interview scheduled successfully."]);
+         $this->_helper->json(['result'=>'success']); 
 
          return 'success';
          
        }
        else{
-            $this->_helper->json(array('result'=>'error')); 
+            $this->_helper->json(['result'=>'error']); 
           
            return 'error';
        }

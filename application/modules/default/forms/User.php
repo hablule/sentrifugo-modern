@@ -34,66 +34,66 @@ class Default_Form_User extends Zend_Form
         // Code
         $code = new Zend_Form_Element_Text('code');
         $code->setLabel('User Code')
-             ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '60'))
+             ->setAttribs(['class' => 'formDataElement', 'maxlength' => '60'])
              ->setRequired(true)
              ->addFilter('StringTrim')
              ->addFilter('StripTags')
-             ->addValidator('NotEmpty', true, array('messages' => 'Code is required.'));
+             ->addValidator('NotEmpty', true, ['messages' => 'Code is required.']);
         
-        $codeVal = new Zend_Validate_Db_NoRecordExists(array(
+        $codeVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_users',
             'field'   => 'code',
-            'exclude' => ($idVal > 0) ? array('field' => 'id', 'value' => $idVal) : null
-        ));
+            'exclude' => ($idVal > 0) ? ['field' => 'id', 'value' => $idVal] : null
+        ]);
         $codeVal->setMessage('This code already exists.');
         $code->addValidator($codeVal);
 
         // Username
         $username = new Zend_Form_Element_Text('username');
         $username->setLabel('User Name')
-                 ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '15'))
+                 ->setAttribs(['class' => 'formDataElement', 'maxlength' => '15'])
                  ->setRequired(true)
                  ->addFilter('StringTrim')
                  ->addFilter('StripTags')
-                 ->addValidator('NotEmpty', true, array('messages' => 'Username is required.'));
+                 ->addValidator('NotEmpty', true, ['messages' => 'Username is required.']);
         
-        $userVal = new Zend_Validate_Db_NoRecordExists(array(
+        $userVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_users',
             'field'   => 'username',
-            'exclude' => ($idVal > 0) ? array('field' => 'id', 'value' => $idVal) : null
-        ));
+            'exclude' => ($idVal > 0) ? ['field' => 'id', 'value' => $idVal] : null
+        ]);
         $userVal->setMessage('This username already exists.');
         $username->addValidator($userVal);
 
         // ldapusername
         $ldapUserName = new Zend_Form_Element_Text('ldapUserName');
         $ldapUserName->setLabel('LDAP')
-                 ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '100'))
+                 ->setAttribs(['class' => 'formDataElement', 'maxlength' => '100'])
                  ->setRequired(false)
                  ->addFilter('StringTrim')
                  ->addFilter('StripTags');
         
-        $userLdapVal = new Zend_Validate_Db_NoRecordExists(array(
+        $userLdapVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_users',
             'field'   => 'ldapusername',
-            'exclude' => ($idVal > 0) ? array('field' => 'id', 'value' => $idVal) : null
-        ));
+            'exclude' => ($idVal > 0) ? ['field' => 'id', 'value' => $idVal] : null
+        ]);
         $userLdapVal->setMessage('This LDAP user already exists.');
         $ldapUserName->addValidator($userLdapVal);
 
         // Email
         $email = new Zend_Form_Element_Text('emailaddress');
         $email->setLabel('Email')
-              ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '255'))
+              ->setAttribs(['class' => 'formDataElement', 'maxlength' => '255'])
               ->setRequired(false)
               ->addFilter('StringTrim')
               ->addValidator('EmailAddress');
 
-        $emailVal = new Zend_Validate_Db_NoRecordExists(array(
+        $emailVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_users',
             'field'   => 'emailaddress',
-            'exclude' => ($idVal > 0) ? array('field' => 'id', 'value' => $idVal) : null
-        ));
+            'exclude' => ($idVal > 0) ? ['field' => 'id', 'value' => $idVal] : null
+        ]);
         $emailVal->setMessage('This email already exists.');
         $email->addValidator($emailVal);
 
@@ -102,20 +102,20 @@ class Default_Form_User extends Zend_Form
          * -------------------------------------------------------------- */
         $password = new Zend_Form_Element_Password('password');
         $password->setLabel('Password')
-                 ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '15'))
+                 ->setAttribs(['class' => 'formDataElement', 'maxlength' => '15'])
                  ->addFilter('StringTrim');
         
         $confirm = new Zend_Form_Element_Password('confirmpassword');
         $confirm->setLabel('Confirm Password')
-                ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '15'))
+                ->setAttribs(['class' => 'formDataElement', 'maxlength' => '15'])
                 ->addFilter('StringTrim');
 
         // Only require password if creating new user
         if ($idVal == 0) {
             $password->setRequired(true)
-                     ->addValidator('NotEmpty', true, array('messages' => 'Password is required.'));
+                     ->addValidator('NotEmpty', true, ['messages' => 'Password is required.']);
             $confirm->setRequired(true)
-                    ->addValidator('NotEmpty', true, array('messages' => 'Confirm Password is required.'));
+                    ->addValidator('NotEmpty', true, ['messages' => 'Confirm Password is required.']);
         }
 
         // Additional Regex/Length validators can be added here as per original code
@@ -129,18 +129,18 @@ class Default_Form_User extends Zend_Form
                     ->setAttrib('class', 'formDataElement')
                     ->setRegisterInArrayValidator(false);
         
-        $employeeVal = new Zend_Validate_Db_NoRecordExists(array(
+        $employeeVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_users',
             'field'   => 'empid',
-            'exclude' => ($idVal > 0) ? array('field' => 'id', 'value' => $idVal) : null
-        ));
+            'exclude' => ($idVal > 0) ? ['field' => 'id', 'value' => $idVal] : null
+        ]);
         $employeeVal->setMessage('This Employee already have a user.');
         $employee_id->addValidator($employeeVal);
 
         // Description
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Description')
-                    ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+                    ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
                     ->addFilter('StringTrim')
                     ->addFilter('StripTags');
 
@@ -161,11 +161,11 @@ class Default_Form_User extends Zend_Form
          * 5. Submit
          * -------------------------------------------------------------- */
         $submit = new Zend_Form_Element_Submit('submit');
-        $submit->setAttribs(array(
+        $submit->setAttribs([
                 'id'        => 'submitbutton', 
                 'class'     => 'actbtn_btn',
                 'onclick' => 'save()'
-                ))
+                ])
                ->setLabel('Save');
         
     //    $url        = "'user/save/format/json'";
@@ -173,12 +173,12 @@ class Default_Form_User extends Zend_Form
 
     //    $submit->setAttrib('onclick', "saveDetails($url, '', '', $jsFunction);");
 
-        $this->addElements(array(
+        $this->addElements([
             $idElement, $code, $username, $password, $confirm, 
             $email, $employee_id, $ldapUserName, $isLdapUser,    
             $description, $isactive, $submit
-        ));
+        ]);
 
-        $this->setElementDecorators(array('ViewHelper')); 
+        $this->setElementDecorators(['ViewHelper']); 
     }
 }

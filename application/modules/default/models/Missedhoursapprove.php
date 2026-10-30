@@ -12,10 +12,10 @@ class Default_Model_Missedhoursapprove extends Zend_Db_Table_Abstract
 
         $AdditionData = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('mh' => 'main_missed_hours'), array('id' => 'mh.missed_hours_id', 'amount_lost' => 'mh.amount_lost', 'submitted_date' => 'DATE_FORMAT(mh.submitted_date,"' . DATEFORMAT_MYSQL . '")', 'approved' => 'if(mh.approved="N","No","Yes")', 'processed' => 'if(mh.processed="N","No","Yes")'))
-            ->joinInner(array('ms' => 'main_schedule'), "ms.schedule_id = mh.sch_id ", array('schedule_name' => 'ms.name'))
-            ->joinInner(array('e' => 'main_employees'), "e.id = mh.emp_id ", array('emp_id' => 'e.id', 'userfullname' => 'e.userfullname', 'profileimg' => 'e.profileimg'))
-            ->joinInner(array('tt' => 'main_time_table'), "tt.time_id = mh.shift_id ", array('name' => 'tt.name'))
+            ->from(['mh' => 'main_missed_hours'], ['id' => 'mh.missed_hours_id', 'amount_lost' => 'mh.amount_lost', 'submitted_date' => 'DATE_FORMAT(mh.submitted_date,"' . DATEFORMAT_MYSQL . '")', 'approved' => 'if(mh.approved="N","No","Yes")', 'processed' => 'if(mh.processed="N","No","Yes")'])
+            ->joinInner(['ms' => 'main_schedule'], "ms.schedule_id = mh.sch_id ", ['schedule_name' => 'ms.name'])
+            ->joinInner(['e' => 'main_employees'], "e.id = mh.emp_id ", ['emp_id' => 'e.id', 'userfullname' => 'e.userfullname', 'profileimg' => 'e.profileimg'])
+            ->joinInner(['tt' => 'main_time_table'], "tt.time_id = mh.shift_id ", ['name' => 'tt.name'])
             ->where($where)
             ->order("$by $sort")
             ->limitPage($pageNo, $perPage);
@@ -25,8 +25,8 @@ class Default_Model_Missedhoursapprove extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $empids, $perm)
     {
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
         $db = Zend_Db_Table::getDefaultAdapter();
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
@@ -55,7 +55,7 @@ class Default_Model_Missedhoursapprove extends Zend_Db_Table_Abstract
 
         $objId = 'missedhoursapprove';
 
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'schedule_name' => 'Schedule Name',
             'name' => 'Shift Name',
@@ -68,10 +68,10 @@ class Default_Model_Missedhoursapprove extends Zend_Db_Table_Abstract
             // 'earned_time'=> 'Earned Minute',
 
 
-        );
+        ];
         $tablecontent = $this->getAdditionData($sort, $by, $pageNo, $perPage, $searchQuery, $empids, $perm);
 
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
@@ -80,7 +80,7 @@ class Default_Model_Missedhoursapprove extends Zend_Db_Table_Abstract
             'objectname' => $objName,
             'objectId' => $objId,
             'menuName' => 'Employee Missed Hours',
-            'extra' => array(),
+            'extra' => [],
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
             'jsFillFnName' => '',
@@ -89,19 +89,19 @@ class Default_Model_Missedhoursapprove extends Zend_Db_Table_Abstract
             'perm' => $perm,
             'call' => $call,
             'dashboardcall' => $dashboardcall,
-            'search_filters' => array(
-                'submitted_date' => array('type' => 'datepicker'),
-                'approved' => array(
+            'search_filters' => [
+                'submitted_date' => ['type' => 'datepicker'],
+                'approved' => [
                     'type' => 'select',
-                    'filter_data' => array('' => 'All', 'Y' => 'Yes', 'N' => 'No')
-                ),
-                'processed' => array(
+                    'filter_data' => ['' => 'All', 'Y' => 'Yes', 'N' => 'No']
+                ],
+                'processed' => [
                     'type' => 'select',
-                    'filter_data' => array('' => 'All', 'Y' => 'Yes', 'N' => 'No')
-                ),
-            ),
+                    'filter_data' => ['' => 'All', 'Y' => 'Yes', 'N' => 'No']
+                ],
+            ],
 
-        );
+        ];
         return $dataTmp;
     }
 
@@ -110,10 +110,10 @@ class Default_Model_Missedhoursapprove extends Zend_Db_Table_Abstract
     {
         $result = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('mh' => 'main_missed_hours'), array('missed_hours_id' => 'mh.missed_hours_id', 'amount_lost' => 'mh.amount_lost', 'emp_id' => 'mh.emp_id', 'submitted_date' => 'DATE_FORMAT(mh.submitted_date,"' . DATEFORMAT_MYSQL . '")'))
-            ->joinInner(array('ms' => 'main_schedule'), "ms.sch_id =mh.sch_id ", array('schedule_name' => 'ms.schedule_name'))
-            ->joinLeft(array('e' => 'main_employees'), "e.id = mh.emp_id ", array('userfullname' => 'e.userfullname'))
-            ->joinInner(array('tt' => 'main_time_table'), "tt.time_id = mh.shift_id ", array('name' => 'tt.name'))
+            ->from(['mh' => 'main_missed_hours'], ['missed_hours_id' => 'mh.missed_hours_id', 'amount_lost' => 'mh.amount_lost', 'emp_id' => 'mh.emp_id', 'submitted_date' => 'DATE_FORMAT(mh.submitted_date,"' . DATEFORMAT_MYSQL . '")'])
+            ->joinInner(['ms' => 'main_schedule'], "ms.sch_id =mh.sch_id ", ['schedule_name' => 'ms.schedule_name'])
+            ->joinLeft(['e' => 'main_employees'], "e.id = mh.emp_id ", ['userfullname' => 'e.userfullname'])
+            ->joinInner(['tt' => 'main_time_table'], "tt.time_id = mh.shift_id ", ['name' => 'tt.name'])
             ->where('mh.missed_hours_id=' . $id);
         //die($result."dddddd");
         return $this->fetchAll($result)->toArray();

@@ -53,14 +53,14 @@ class Default_Form_CountryNationality extends Zend_Form
         $country_id->setLabel('Country (Geography)')
             ->setAttrib('class', 'formDataElement')
             ->setRequired(true)
-            ->addValidator('NotEmpty', true, array('messages' => 'Please select a Country.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please select a Country.']);
 
         // Nationality ID (Jurisprudence Pillar)
         $nationality_id = new Zend_Form_Element_Select('nationality_id');
         $nationality_id->setLabel('Nationality (Legal Status)')
             ->setAttrib('class', 'formDataElement')
             ->setRequired(true)
-            ->addValidator('NotEmpty', true, array('messages' => 'Please select a Legal Status/Nationality.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please select a Legal Status/Nationality.']);
 
         // Primary Checkbox (Is this the default nationality for this country?)
         $is_default = new Zend_Form_Element_Checkbox('is_default');
@@ -76,7 +76,7 @@ class Default_Form_CountryNationality extends Zend_Form
         // Description
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Mapping Notes / Context')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -97,7 +97,7 @@ class Default_Form_CountryNationality extends Zend_Form
 
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save Mapping')
-            ->setAttribs(array('id' => 'submitbutton', 'class' => 'actbtn_btn'));
+            ->setAttribs(['id' => 'submitbutton', 'class' => 'actbtn_btn']);
 
         // SSOT AJAX Submission Pattern (Strict Quoting)
         $urlAction  = "'countrynationality/save/format/json'";
@@ -108,7 +108,7 @@ class Default_Form_CountryNationality extends Zend_Form
          * Build Form & Apply Decorators
          * -------------------------------------------------------------- */
 
-        $this->addElements(array(
+        $this->addElements([
             $idElement,
             $country_id,
             $nationality_id,
@@ -116,12 +116,12 @@ class Default_Form_CountryNationality extends Zend_Form
             $description,
             $isactive,
             $submit
-        ));
+        ]);
 
         // Strip default Zend Decorators and enforce ViewHelper universally
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
-            $element->setDecorators(array('ViewHelper'));
+            $element->setDecorators(['ViewHelper']);
         }
     }
 }

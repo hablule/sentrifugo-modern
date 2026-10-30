@@ -78,7 +78,7 @@ class Default_Model_DistributionList extends Zend_Db_Table_Abstract
      */
     public function getPairs($activeOnly = true)
     {
-        $select = $this->select()->from($this->_name, array('id', 'name'))->order('name ASC');
+        $select = $this->select()->from($this->_name, ['id', 'name'])->order('name ASC');
         if ($activeOnly) {
             $select->where('isactive = ?', 1);
         }
@@ -101,7 +101,7 @@ class Default_Model_DistributionList extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if (!empty($searchData) && $searchData !== 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -120,24 +120,24 @@ class Default_Model_DistributionList extends Zend_Db_Table_Abstract
         }
 
         // SSOT Mandatory: 'action' => 'Action' must be the first element
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'        => 'Action',
             'name'          => 'Inbox Name',
             'email_address' => 'Email Address',
             'unit_mapping'  => 'Mapped Unit',
             'status_text'   => 'Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
             'perPage'        => $perPage,
             'tablecontent'   => $tableContent,
             'objectname'     => 'distributionlist',
-            'extra'          => array(),
+            'extra'          => [],
             'tableheader'    => $tableHeaders,
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
@@ -145,10 +145,10 @@ class Default_Model_DistributionList extends Zend_Db_Table_Abstract
             'menuName'       => 'Distribution Lists',
             'call'           => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => array(
-                'status_text' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive'))
-            )
-        );
+            'search_filters' => [
+                'status_text' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']]
+            ]
+        ];
     }
 
     /**
@@ -185,23 +185,23 @@ class Default_Model_DistributionList extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from(
-                array('d' => $this->_name),
-                array(
+                ['d' => $this->_name],
+                [
                     'id' => 'd.id', // SSOT Aliasing requirement
                     'name',
                     'email_address',
                     'status_text'  => new Zend_Db_Expr("CASE WHEN d.isactive = 1 THEN 'Active' ELSE 'Inactive' END"),
                     'unit_mapping' => $unitMappingExpr
-                )
+                ]
             )
             // Left joins to resolve the mapped operational unit name
-            ->joinLeft(array('bu' => 'main_businessunits'), 'd.businessunit_id = bu.id', array())
-            ->joinLeft(array('divi' => 'main_division'), 'd.division_id = divi.division_id', array())
-            ->joinLeft(array('dept' => 'main_department'), 'd.department_id = dept.department_id', array())
-            ->joinLeft(array('sec' => 'main_section'), 'd.section_id = sec.section_id', array())
-            ->joinLeft(array('t' => 'main_team'), 'd.team_id = t.team_id', array())
-            ->joinLeft(array('p' => 'main_project'), 'd.project_id = p.project_id', array())
-            ->joinLeft(array('g' => 'main_group'), 'd.group_id = g.id', array())
+            ->joinLeft(['bu' => 'main_businessunits'], 'd.businessunit_id = bu.id', [])
+            ->joinLeft(['divi' => 'main_division'], 'd.division_id = divi.division_id', [])
+            ->joinLeft(['dept' => 'main_department'], 'd.department_id = dept.department_id', [])
+            ->joinLeft(['sec' => 'main_section'], 'd.section_id = sec.section_id', [])
+            ->joinLeft(['t' => 'main_team'], 'd.team_id = t.team_id', [])
+            ->joinLeft(['p' => 'main_project'], 'd.project_id = p.project_id', [])
+            ->joinLeft(['g' => 'main_group'], 'd.group_id = g.id', [])
             ->where('d.isactive != ?', 5);
 
         if (!empty($searchQuery)) {
@@ -234,7 +234,7 @@ class Default_Model_DistributionList extends Zend_Db_Table_Abstract
         if (!empty($id)) {
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = $currentDate;
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return 'update';
         }
         
@@ -259,13 +259,13 @@ class Default_Model_DistributionList extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => 5,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
+        ];
         
-        return $this->update($data, array('id = ?' => (int)$id));
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /**
@@ -280,13 +280,13 @@ class Default_Model_DistributionList extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => (int)$status,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
+        ];
 
-        return $this->update($data, array('id = ?' => (int)$id));
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* =================================================================================
@@ -338,7 +338,7 @@ class Default_Model_DistributionList extends Zend_Db_Table_Abstract
     public function getInboxByUnit($unitColumn, $unitId)
     {
         $select = $this->select()
-            ->from($this->_name, array('email_address'))
+            ->from($this->_name, ['email_address'])
             ->where("$unitColumn = ?", (int)$unitId)
             ->where('isactive = ?', 1);
             
@@ -355,7 +355,7 @@ class Default_Model_DistributionList extends Zend_Db_Table_Abstract
      */
     public function getEmailcontactsRecord()
     {
-        $select = $this->select()->from(array('i' => $this->_name), array('i.*'));
+        $select = $this->select()->from(['i' => $this->_name], ['i.*']);
         return $this->fetchAll($select)->toArray();
     }
 
@@ -365,6 +365,6 @@ class Default_Model_DistributionList extends Zend_Db_Table_Abstract
     public function getEmailcontactsRecord_i($id)
     {
         $record = $this->getRecordById((int)$id);
-        return $record ? array($record) : array();
+        return $record ? [$record] : [];
     }
 }

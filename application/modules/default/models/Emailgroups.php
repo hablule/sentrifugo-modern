@@ -42,7 +42,7 @@ class Default_Model_Emailgroups extends Zend_Db_Table_Abstract
     {
         
 		$data = $this->fetchAll("isactive = 1",'group_name')->toArray();
-        $options = array();
+        $options = [];
         if(count($data)>0)
         {
             foreach($data as $edata)

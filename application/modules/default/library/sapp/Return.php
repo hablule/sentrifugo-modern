@@ -36,7 +36,7 @@ class sapp_Return {
 	public function test()
 	{
 		
-		$testString = array('status'=>'0','message'=>'Created an action for restful web service.','result'=>'');
+		$testString = ['status'=>'0','message'=>'Created an action for restful web service.','result'=>''];
 		
 		return $testString;
 	}
@@ -57,15 +57,15 @@ class sapp_Return {
 			{			
 				if($userDet[0]['user_role_id'] != 2)
 				{
-					$userDetJson = array('status'=>'0','message'=>'Not a privileged user.','result'=>'');
+					$userDetJson = ['status'=>'0','message'=>'Not a privileged user.','result'=>''];
 				}
 				else if($userDet[0]['is_blocked'] == 1)
 				{
-					$userDetJson = array('status'=>'0','message'=>'User has been blocked.','result'=>'');
+					$userDetJson = ['status'=>'0','message'=>'User has been blocked.','result'=>''];
 				}
 				else if($userDet[0]['is_active'] == 0)
 				{
-					$userDetJson = array('status'=>'0','message'=>'Not an active user.','result'=>'');
+					$userDetJson = ['status'=>'0','message'=>'Not an active user.','result'=>''];
 				}
 				else
 				{
@@ -73,17 +73,17 @@ class sapp_Return {
 					unset($userDet[0]['is_blocked']);
 					unset($userDet[0]['is_active']);
 					
-					$userDetJson = array('status'=>'1','message'=>'Successfully logged in.','result'=>$userDet);
+					$userDetJson = ['status'=>'1','message'=>'Successfully logged in.','result'=>$userDet];
 				}
 			}
 			else
 			{
-				$userDetJson = array('status'=>'0','message'=>'No user exist with the credentials.','result'=>'');
+				$userDetJson = ['status'=>'0','message'=>'No user exist with the credentials.','result'=>''];
 			}
 		}
 		else
 		{
-			$userDetJson = array('status'=>'0','message'=>'Email and Password should not be empty.','result'=>'');
+			$userDetJson = ['status'=>'0','message'=>'Email and Password should not be empty.','result'=>''];
 		}		
 		
 		
@@ -119,12 +119,12 @@ class sapp_Return {
 
 			$final_arr = array_merge($alleventdetails[0],$alleventmethoddetails[0]);
 			
-			$userDetJson = array('status'=>'1','message'=>'Success','result'=>$final_arr);			
+			$userDetJson = ['status'=>'1','message'=>'Success','result'=>$final_arr];			
 					
 		}
 		else
 		{
-			$userDetJson = array('status'=>'0','message'=>'User Id should not be empty.','result'=>'');
+			$userDetJson = ['status'=>'0','message'=>'User Id should not be empty.','result'=>''];
 		}
 		return $userDetJson;	
 	
@@ -142,7 +142,7 @@ class sapp_Return {
 			$this->view->alleventdetails = $alleventdetails;
 			
 			/* Queries for Friends */	
-			 $Friendseventdetails = array();
+			 $Friendseventdetails = [];
 			
 			$trackModel = new User_Model_Tracks();			
 			
@@ -172,17 +172,17 @@ class sapp_Return {
 				$Friendseventdetails =  $alleventsModel->trackedUserStats($trackUsers);  
 			}	
 			
-			$final_arr = array();
+			$final_arr = [];
 			$final_arr['user'] = $alleventdetails;
 			$final_arr['friends'] = $Friendseventdetails;
 			
 			
 		
-			$userDetJson = array('status'=>'1','message'=>'Success','result'=>$final_arr);
+			$userDetJson = ['status'=>'1','message'=>'Success','result'=>$final_arr];
 		}
     	else
 		{
-			$userDetJson = array('status'=>'0','message'=>'User Id should not be empty.','result'=>'');
+			$userDetJson = ['status'=>'0','message'=>'User Id should not be empty.','result'=>''];
 		}
 		return $userDetJson;
 	}
@@ -196,11 +196,11 @@ class sapp_Return {
 		{
 			$alleventsModel = new User_Model_Events();
 			$allEvents = $alleventsModel->getallevents($postarray['userid']);					
-			$userDetJson = array('status'=>'1','message'=>'Success','result'=>$allEvents);
+			$userDetJson = ['status'=>'1','message'=>'Success','result'=>$allEvents];
 		}
     	else
 		{
-			$userDetJson = array('status'=>'0','message'=>'User Id should not be empty.','result'=>'');
+			$userDetJson = ['status'=>'0','message'=>'User Id should not be empty.','result'=>''];
 		}
 		
 		return $userDetJson;
@@ -212,11 +212,11 @@ class sapp_Return {
 		{
 			$allusereventsModel = new User_Model_UserEvents();
 			$alluserEvents = $allusereventsModel->getallUserEvents($postarray['userid']);			
-			$userDetJson = array('status'=>'1','message'=>'Success','result'=>$alluserEvents);
+			$userDetJson = ['status'=>'1','message'=>'Success','result'=>$alluserEvents];
 		}
     	else
 		{
-			$userDetJson = array('status'=>'0','message'=>'User Id should not be empty.','result'=>'');
+			$userDetJson = ['status'=>'0','message'=>'User Id should not be empty.','result'=>''];
 		}
 		
 		return $userDetJson;
@@ -252,15 +252,15 @@ class sapp_Return {
 			
 			
 			
-			$fastestfightsArray = array();
+			$fastestfightsArray = [];
 			$fastestfightsArray = $fastestFight;
 			
-			  $userDetJson = array('status'=>'1','message'=>'Success','result'=>$eventsDetails,'fastestfight'=>$fastestfightsArray);
+			  $userDetJson = ['status'=>'1','message'=>'Success','result'=>$eventsDetails,'fastestfight'=>$fastestfightsArray];
 					
 		}
 		else
 		{
-			$userDetJson = array('status'=>'0','message'=>'User Id should not be empty.','result'=>'');
+			$userDetJson = ['status'=>'0','message'=>'User Id should not be empty.','result'=>''];
 		}
 		return $userDetJson;
     	
@@ -289,12 +289,12 @@ class sapp_Return {
 			
 			
 			
-			$userDetJson = array('status'=>'1','message'=>'Success','result'=>$eventsDetails);			
+			$userDetJson = ['status'=>'1','message'=>'Success','result'=>$eventsDetails];			
 					
 		}
 		else
 		{
-			$userDetJson = array('status'=>'0','message'=>'User Id should not be empty.','result'=>'');
+			$userDetJson = ['status'=>'0','message'=>'User Id should not be empty.','result'=>''];
 		}
 		return $userDetJson;
     	
@@ -321,23 +321,23 @@ class sapp_Return {
 			$eventsModel = new User_Model_Events();
 			$fightersDetails =  $eventsModel->getAllFighters($postarray['userid'],$where);
 			
-			$data = array();
+			$data = [];
 		
 			for($i=0; $i<sizeof($fightersDetails);$i++){				
 				$data[] = $fightersDetails[$i]['fighter'];
 			} 
 				
-			$dataNew = array();
+			$dataNew = [];
 			$dataNew = array_count_values($data);
 			
 			arsort($dataNew);
 			
-			$userDetJson = array('status'=>'1','message'=>'Success','result'=>$dataNew);			
+			$userDetJson = ['status'=>'1','message'=>'Success','result'=>$dataNew];			
 					
 		}
 		else
 		{
-			$userDetJson = array('status'=>'0','message'=>'User Id should not be empty.','result'=>'');
+			$userDetJson = ['status'=>'0','message'=>'User Id should not be empty.','result'=>''];
 		}
 		return $userDetJson;
     	
@@ -367,12 +367,12 @@ class sapp_Return {
 			
 			
 			
-			$userDetJson = array('status'=>'1','message'=>'Success','result'=>$eventsDetails);			
+			$userDetJson = ['status'=>'1','message'=>'Success','result'=>$eventsDetails];			
 					
 		}
 		else
 		{
-			$userDetJson = array('status'=>'0','message'=>'User Id should not be empty.','result'=>'');
+			$userDetJson = ['status'=>'0','message'=>'User Id should not be empty.','result'=>''];
 		}
 		return $userDetJson;
     	
@@ -424,7 +424,7 @@ class sapp_Return {
 				}
 				else
 				{
-					$userDetJson = array('status'=>'0','message'=>'Invalid Type','result'=>'');
+					$userDetJson = ['status'=>'0','message'=>'Invalid Type','result'=>''];
 				}
 				
 				if($type == 'Decision')
@@ -436,7 +436,7 @@ class sapp_Return {
 					
 					
 				$methodDetails = $eventsModel->getMethodByUserId($postarray['userid'],$where);
-				$data = array();
+				$data = [];
 				for($i=0; $i<sizeof($methodDetails);$i++)
 					$data[] = htmlentities($methodDetails[$i]['method1']);
 					
@@ -444,20 +444,20 @@ class sapp_Return {
 			
 				
 				
-				$userDetJson = array('status'=>'1','message'=>'Success','result'=>$result);					
+				$userDetJson = ['status'=>'1','message'=>'Success','result'=>$result];					
 					
 					
 			}
 			else
 			{
-				$userDetJson = array('status'=>'0','message'=>'Not mentioned type of details you need.','result'=>'');
+				$userDetJson = ['status'=>'0','message'=>'Not mentioned type of details you need.','result'=>''];
 			}
     		
    						
 		}
 		else
 		{
-			$userDetJson = array('status'=>'0','message'=>'User Id should not be empty.','result'=>'');
+			$userDetJson = ['status'=>'0','message'=>'User Id should not be empty.','result'=>''];
 		}
 		return $userDetJson;
     	
@@ -482,11 +482,11 @@ class sapp_Return {
 			$usereventsModel = new User_Model_UserEvents();
 			$fightPlaces = $usereventsModel->getFightPlaces($postarray['userid'], $where);			
 			
-			$userDetJson = array('status'=>'1','message'=>'Success','result'=>$fightPlaces);					
+			$userDetJson = ['status'=>'1','message'=>'Success','result'=>$fightPlaces];					
 		}
 		else
 		{
-			$userDetJson = array('status'=>'0','message'=>'User Id should not be empty.','result'=>'');
+			$userDetJson = ['status'=>'0','message'=>'User Id should not be empty.','result'=>''];
 		}
 		return $userDetJson;	
 	}
@@ -505,8 +505,8 @@ class sapp_Return {
 			
 			if((isset($postarray['password']) && $postarray['password'] != '') || (isset($_FILES['profile_photo']['name']) && $_FILES['profile_photo']['name'] != ''))
 			{
-				$uploadresult = array();
-				$data = array();
+				$uploadresult = [];
+				$data = [];
 				if(isset($_FILES['profile_photo']['name']) && $_FILES['profile_photo']['name'] != '')
 				{				
 					$uploadresult = sapp_Global::imageUploadAfterResize();
@@ -524,17 +524,17 @@ class sapp_Return {
 				$where = 'id = "'.$postarray['userid'].'"';
 				$usersModel = new User_Model_Users();
 				$changepwd = $usersModel->edituserPassword($data, $where);				
-				$userDetJson = array('status'=>'1','message'=>'Success','result'=>'Updated successfully.');	
+				$userDetJson = ['status'=>'1','message'=>'Success','result'=>'Updated successfully.'];	
 			}
 			else
 			{
-				$userDetJson = array('status'=>'0','message'=>'Either Password or Profile Photo should change.','result'=>'');
+				$userDetJson = ['status'=>'0','message'=>'Either Password or Profile Photo should change.','result'=>''];
 			}
 							
 		}
 		else
 		{
-			$userDetJson = array('status'=>'0','message'=>'User Id should not be empty.','result'=>'');
+			$userDetJson = ['status'=>'0','message'=>'User Id should not be empty.','result'=>''];
 		}
 		return $userDetJson;	
 	}
@@ -542,7 +542,7 @@ class sapp_Return {
 	
     public 	function guid(){
 	        
-    	$charid = strtoupper(md5(uniqid(rand(), true)));
+    	$charid = strtoupper(md5(uniqid(random_int(0, mt_getrandmax()), true)));
 	    $hyphen = '';
         $uuid = substr($charid, 0, 8).$hyphen
 	           .substr($charid, 8, 4).$hyphen

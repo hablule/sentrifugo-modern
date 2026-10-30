@@ -32,7 +32,7 @@ class Default_EmpbankaccountController extends Zend_Controller_Action
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 
 				$employeeModal = new Default_Model_Employee();
 				try {
@@ -51,9 +51,9 @@ class Default_EmpbankaccountController extends Zend_Controller_Action
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall', null);
-								$data = array();
+								$data = [];
 								$searchQuery = '';
-								$searchArray = array();
+								$searchArray = [];
 								$tablecontent = '';
 								if ($refresh == 'refresh') {
 									if ($dashboardcall == 'Yes')
@@ -66,7 +66,7 @@ class Default_EmpbankaccountController extends Zend_Controller_Action
 									$pageNo = 1;
 									$searchData = '';
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 								} else {
 									$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 									$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'e.modifieddate';
@@ -122,7 +122,7 @@ class Default_EmpbankaccountController extends Zend_Controller_Action
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 
 				$employeeModal = new Default_Model_Employee();
 				$phoneno = new Default_Model_Phoneno();
@@ -142,9 +142,9 @@ class Default_EmpbankaccountController extends Zend_Controller_Action
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall', null);
-								$data = array();
+								$data = [];
 								$searchQuery = '';
-								$searchArray = array();
+								$searchArray = [];
 								$tablecontent = '';
 								if ($refresh == 'refresh') {
 									if ($dashboardcall == 'Yes')
@@ -157,7 +157,7 @@ class Default_EmpbankaccountController extends Zend_Controller_Action
 									$pageNo = 1;
 									$searchData = '';
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 								} else {
 									$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 									$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'e.modifieddate';
@@ -501,7 +501,7 @@ $this->view->bankpermission = $bankpermission;
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 
 				$employeeModal = new Default_Model_Employee();
 				try {
@@ -520,9 +520,9 @@ $this->view->bankpermission = $bankpermission;
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall', null);
-								$data = array();
+								$data = [];
 								$searchQuery = '';
-								$searchArray = array();
+								$searchArray = [];
 								$tablecontent = '';
 								if ($refresh == 'refresh') {
 									if ($dashboardcall == 'Yes')
@@ -535,7 +535,7 @@ $this->view->bankpermission = $bankpermission;
 									$pageNo = 1;
 									$searchData = '';
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 								} else {
 									$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 									$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'e.modifieddate';
@@ -601,7 +601,7 @@ $this->view->bankpermission = $bankpermission;
 
 			$actionflag = '';
 			if ($id != '') {
-				$where = array('empbankaccount_id=?' => $id);
+				$where = ['empbankaccount_id=?' => $id];
 				$actionflag = 2;
 				$data['modifiedby'] = $loginUserId;
 				$data['modifieddate'] = gmdate("Y-m-d H:i:s");
@@ -649,6 +649,6 @@ $this->view->bankpermission = $bankpermission;
 		$where = 'empbankaccount_id = ' . $id;
 		// $employeeleavesModel->SaveorUpdateEmpLeaves($data, $where);
 		$empbankaccount_model->deleteEmpBankAccount($where);
-		return $this->_helper->json(array('flagtype' => 'process', 'message' => 'Deleted'));
+		return $this->_helper->json(['flagtype' => 'process', 'message' => 'Deleted']);
 	}
 }

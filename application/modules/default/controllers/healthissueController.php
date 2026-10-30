@@ -20,7 +20,7 @@ class Default_healthissueController extends Zend_Controller_Action
             $refresh = $this->_getParam('refresh');
             $dashboradcall = $this->_getParam('dashboradcall');
 
-            $data = array();
+            $data = [];
 
             if ($refresh == 'refresh') {
                 if ($dashboradcall == 'Yes') {
@@ -81,23 +81,23 @@ class Default_healthissueController extends Zend_Controller_Action
         $healthseverity_data = $healthseverity_model->GetHealthSeverity();
         $issuetype_data = $issuetype_model->GetHealthIssueType();
      
-        $healthissue_Form->issuetype_id->addMultiOptions(array(''=>'Select issue type'));
+        $healthissue_Form->issuetype_id->addMultiOptions([''=>'Select issue type']);
         if(!empty($issuetype_data))
         {
             foreach ($issuetype_data  as $value) {
-                $healthissue_Form->issuetype_id->addMultiOptions(array($value['issuetype_id']=>$value['name']));
+                $healthissue_Form->issuetype_id->addMultiOptions([$value['issuetype_id']=>$value['name']]);
             }
         }
-        $healthissue_Form->healthseverity_id->addMultiOptions(array(''=>'Select health severity'));
+        $healthissue_Form->healthseverity_id->addMultiOptions([''=>'Select health severity']);
         if (!empty($healthseverity_data)) {
            foreach ($healthseverity_data as $value) {
-            $healthissue_Form->healthseverity_id->addMultiOptions(array($value['healthseverity_id']=>$value['name']));
+            $healthissue_Form->healthseverity_id->addMultiOptions([$value['healthseverity_id']=>$value['name']]);
            }
         }
-        $healthissue_Form->issuecategory_id->addMultiOptions(array(''=>'Select issue category'));
+        $healthissue_Form->issuecategory_id->addMultiOptions([''=>'Select issue category']);
         if (!empty($issuecategory_data)) {
             foreach ($issuecategory_data as  $value) {
-                $healthissue_Form->issuecategory_id->addMultiOptions(array($value['issuecategory_id']=>$value['name']));
+                $healthissue_Form->issuecategory_id->addMultiOptions([$value['issuecategory_id']=>$value['name']]);
             }
         }
         try {
@@ -144,23 +144,23 @@ class Default_healthissueController extends Zend_Controller_Action
         $healthseverity_data = $healthseverity_model->GetHealthSeverity();
         $issuetype_data = $issuetype_model->GetHealthIssueType();
      
-        $healthissue_Form->issuetype_id->addMultiOptions(array(''=>'Select issue type'));
+        $healthissue_Form->issuetype_id->addMultiOptions([''=>'Select issue type']);
         if(!empty($issuetype_data))
         {
             foreach ($issuetype_data  as $value) {
-                $healthissue_Form->issuetype_id->addMultiOptions(array($value['issuetype_id']=>$value['name']));
+                $healthissue_Form->issuetype_id->addMultiOptions([$value['issuetype_id']=>$value['name']]);
             }
         }
-        $healthissue_Form->healthseverity_id->addMultiOptions(array(''=>'Select health severity'));
+        $healthissue_Form->healthseverity_id->addMultiOptions([''=>'Select health severity']);
         if (!empty($healthseverity_data)) {
            foreach ($healthseverity_data as $value) {
-            $healthissue_Form->healthseverity_id->addMultiOptions(array($value['healthseverity_id']=>$value['name']));
+            $healthissue_Form->healthseverity_id->addMultiOptions([$value['healthseverity_id']=>$value['name']]);
            }
         }
-        $healthissue_Form->issuecategory_id->addMultiOptions(array(''=>'Select issue category'));
+        $healthissue_Form->issuecategory_id->addMultiOptions([''=>'Select issue category']);
         if (!empty($issuecategory_data)) {
             foreach ($issuecategory_data as  $value) {
-                $healthissue_Form->issuecategory_id->addMultiOptions(array($value['issuecategory_id']=>$value['name']));
+                $healthissue_Form->issuecategory_id->addMultiOptions([$value['issuecategory_id']=>$value['name']]);
             }
         }
         if($this->getRequest()->isPost())
@@ -194,7 +194,7 @@ class Default_healthissueController extends Zend_Controller_Action
 			$actionflag = '';
 			$tableid  = '';
 
-			$data = array(
+			$data = [
 				                 'name'=>$name,
 				                 'code'=>$code,
 								 'description'=>$description,
@@ -202,9 +202,9 @@ class Default_healthissueController extends Zend_Controller_Action
                                  'issuetype_id'=>$issue,
                                  'issuecategory_id'=> $issuecategory,
                                  'isactive'=>utlis::getcheckboxvalue($isactive)
-			);
+			];
 			if($id!=''){
-				$where = array('healthissue_id=?'=>$id);
+				$where = ['healthissue_id=?'=>$id];
                 $data['modifiedby'] = $loginUserId;
                 $data['modifieddate'] = gmdate("Y-m-d H:i:s");
 				$actionflag = 2;

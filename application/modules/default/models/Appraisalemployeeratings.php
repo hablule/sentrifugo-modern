@@ -29,7 +29,7 @@ class Default_Model_Appraisalemployeeratings extends Zend_Db_Table_Abstract
         $db = Zend_Db_Table::getDefaultAdapter();
         $query = "select id,rating_value from main_pa_ratings where isactive = 1 and pa_initialization_id = '".$init_id."'";
         $result = $db->query($query)->fetchAll();
-        $fin_arr = array();
+        $fin_arr = [];
         if(count($result) > 0)
         {
             foreach($result as $res)
@@ -48,9 +48,9 @@ class Default_Model_Appraisalemployeeratings extends Zend_Db_Table_Abstract
 		
 		$servicedeskDepartmentData = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('aer'=>'main_pa_employee_ratings'),array('es.userfullname','es.id','es.reporting_manager_name','aer.appraisal_status'))
-						   ->joinInner(array('es'=>'employees_summary'), 'es.id = aer.employee_id')
-                           ->joinInner(array('ai'=>'main_pa_initialization'), 'ai.id = aer.pa_initialization_id')
+                           ->from(['aer'=>'main_pa_employee_ratings'],['es.userfullname','es.id','es.reporting_manager_name','aer.appraisal_status'])
+						   ->joinInner(['es'=>'employees_summary'], 'es.id = aer.employee_id')
+                           ->joinInner(['ai'=>'main_pa_initialization'], 'ai.id = aer.pa_initialization_id')
                            ->where($where)
     					   ->order("$by $sort") 
     					   ->limitPage($pageNo, $perPage);
@@ -60,8 +60,8 @@ class Default_Model_Appraisalemployeeratings extends Zend_Db_Table_Abstract
 	public function getAppraisalEmployeeStatusGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{		
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		
 		if($searchData != '' && $searchData!='undefined')
 			{
@@ -76,18 +76,18 @@ class Default_Model_Appraisalemployeeratings extends Zend_Db_Table_Abstract
 			
 		$objName = 'appraisalstatusemployee';
 		
-		$tableFields = array('employeeId' => 'Employee ID','userfullname' => 'Employee Name','reporting_manager_name' => 'Line Manager','department_name' => 'Department','appraisal_status' => 'Status');
+		$tableFields = ['employeeId' => 'Employee ID','userfullname' => 'Employee Name','reporting_manager_name' => 'Line Manager','department_name' => 'Department','appraisal_status' => 'Status'];
 		
 		$tablecontent = $this->getAppraisalEmpStatusData($sort, $by, $pageNo, $perPage, $searchQuery, $a, $b);     
 		
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -95,7 +95,7 @@ class Default_Model_Appraisalemployeeratings extends Zend_Db_Table_Abstract
 			'add' =>'add',
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall,
-		);
+		];
 		return $dataTmp;
 	}
 	
@@ -108,9 +108,9 @@ class Default_Model_Appraisalemployeeratings extends Zend_Db_Table_Abstract
 		
 		$selfAppData = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('aer'=>'main_pa_employee_ratings'),array('aer.id','ai.appraisal_mode','es.userfullname','es.id','es.jobtitlename','aer.appraisal_status','ai.status'))
-						    ->joinInner(array('es'=>'employees_summary'), 'es.id = aer.employee_id', array())
-                           ->joinInner(array('ai'=>'main_pa_initialization'), 'ai.id = aer.pa_initialization_id', array())
+                           ->from(['aer'=>'main_pa_employee_ratings'],['aer.id','ai.appraisal_mode','es.userfullname','es.id','es.jobtitlename','aer.appraisal_status','ai.status'])
+						    ->joinInner(['es'=>'employees_summary'], 'es.id = aer.employee_id', [])
+                           ->joinInner(['ai'=>'main_pa_initialization'], 'ai.id = aer.pa_initialization_id', [])
                            ->where($where)
     					   ->order("$by $sort") 
     					   ->limitPage($pageNo, $perPage);
@@ -121,8 +121,8 @@ class Default_Model_Appraisalemployeeratings extends Zend_Db_Table_Abstract
 	public function getSelfAppraisalGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$employeeId)
 	{		
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		
 		if($searchData != '' && $searchData!='undefined')
 		{
@@ -140,18 +140,18 @@ class Default_Model_Appraisalemployeeratings extends Zend_Db_Table_Abstract
 			
 		$objName = 'appraisalself';
 		
-		$tableFields = array('action'=>'Action','appraisal_mode' => 'Appraisal Period','employeeId' => 'Employee ID','userfullname' => 'Employee Name','jobtitle_name' => 'Job Title','department_name' => 'Department','appraisal_status' => 'Status');
+		$tableFields = ['action'=>'Action','appraisal_mode' => 'Appraisal Period','employeeId' => 'Employee ID','userfullname' => 'Employee Name','jobtitle_name' => 'Job Title','department_name' => 'Department','appraisal_status' => 'Status'];
 		
 		$tablecontent = $this->getSelfAppraisalData($sort, $by, $pageNo, $perPage, $searchQuery, $employeeId);     
 		
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -160,15 +160,15 @@ class Default_Model_Appraisalemployeeratings extends Zend_Db_Table_Abstract
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall,
 			'search_filters' => 
-						array(
-                            'appraisal_status' => array(
+						[
+                            'appraisal_status' => [
                                 'type' => 'select',
-                                'filter_data' => array(''=>'All',1=>APP_PENDING_EMP,2=>APP_PENDING_L1,
+                                'filter_data' => [''=>'All',1=>APP_PENDING_EMP,2=>APP_PENDING_L1,
                                 						3=>APP_PENDING_L2,4=>APP_PENDING_L3,
-														5=>APP_PENDING_L4,6=>APP_PENDING_L5,7=>APP_COMPLETED),
-                           	),
-                        ),
-		);
+														5=>APP_PENDING_L4,6=>APP_PENDING_L5,7=>APP_COMPLETED],
+                           	],
+                        ],
+		];
 		return $dataTmp;
 	}
 	
@@ -188,7 +188,7 @@ class Default_Model_Appraisalemployeeratings extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('main_pa_employee_ratings'),array('empcount'=>'count(*)'))
+                           ->from(['main_pa_employee_ratings'],['empcount'=>'count(*)'])
                            ->where("isactive = 1 AND pa_initialization_id = $appraisalid AND employee_id=$employeeid");
 		                           
 		return $this->fetchAll($select)->toArray();       		
@@ -197,7 +197,7 @@ class Default_Model_Appraisalemployeeratings extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('aer'=>'main_pa_employee_ratings'),array('aer.id','aer.line_manager_1','aer.line_manager_2','aer.line_manager_3','aer.line_manager_4','aer.line_manager_5'))
+		->from(['aer'=>'main_pa_employee_ratings'],['aer.id','aer.line_manager_1','aer.line_manager_2','aer.line_manager_3','aer.line_manager_4','aer.line_manager_5'])
 		->where("isactive = 1 AND pa_initialization_id = $appraisal_id AND employee_id=$employee_id");
 		 
 		return $this->fetchAll($select)->toArray();
@@ -207,9 +207,9 @@ class Default_Model_Appraisalemployeeratings extends Zend_Db_Table_Abstract
 	
 	    $select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('aer'=>'main_pa_employee_ratings'))
-		->joinInner(array('es'=>'employees_summary'), 'es.id = aer.employee_id',array('es.userfullname','es.id','es.jobtitlename','ai.appraisal_period','ai.from_year','ai.to_year','ai.appraisal_mode'))
-        ->joinInner(array('ai'=>'main_pa_initialization'), 'ai.id = aer.pa_initialization_id', array())
+		->from(['aer'=>'main_pa_employee_ratings'])
+		->joinInner(['es'=>'employees_summary'], 'es.id = aer.employee_id',['es.userfullname','es.id','es.jobtitlename','ai.appraisal_period','ai.from_year','ai.to_year','ai.appraisal_mode'])
+        ->joinInner(['ai'=>'main_pa_initialization'], 'ai.id = aer.pa_initialization_id', [])
         ->where("aer.isactive = 1 AND aer.pa_initialization_id = $appraisal_id AND aer.employee_id=$employee_id");
 			
 		return $this->fetchAll($select)->toArray();
@@ -219,7 +219,7 @@ class Default_Model_Appraisalemployeeratings extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('main_pa_employee_ratings'),array('empresponse'=>'count(*)'))
+                           ->from(['main_pa_employee_ratings'],['empresponse'=>'count(*)'])
                            ->where("isactive = 1 AND pa_initialization_id = $appraisalid AND appraisal_status!=7");
 		                           
 		return $this->fetchAll($select)->toArray();       		
@@ -230,13 +230,13 @@ class Default_Model_Appraisalemployeeratings extends Zend_Db_Table_Abstract
 		$where = "aer.isactive = 1 AND ai.status = 1 AND ai.enable_step = 2 AND aer.employee_id = ".$employeeId;
 		$select = $this->select()
     					   ->setIntegrityCheck(false)
-                           ->from(array('aer'=>'main_pa_employee_ratings'),array('aer.id','aer.employee_id','ai.appraisal_mode','es.userfullname','es.id','es.jobtitle_name',
+                           ->from(['aer'=>'main_pa_employee_ratings'],['aer.id','aer.employee_id','ai.appraisal_mode','es.userfullname','es.id','es.jobtitle_name',
                            													'aer.appraisal_status','ai.status','ai.category_id','aer.pa_initialization_id','ai.pa_configured_id','aer.line_manager_1','aer.line_manager_2','aer.line_manager_3','aer.line_manager_4','aer.line_manager_5','aer.line_rating_1',
                            													'aer.line_rating_2','aer.line_rating_3','aer.line_rating_4','aer.line_rating_5','aer.line_comment_1','aer.line_comment_2',
                            													'aer.line_comment_3','aer.line_comment_4','aer.line_comment_5','aer.employee_response','aer.manager_response',
-                           													'ai.appraisal_period','ai.from_year','ai.to_year','ai.employees_due_date','es.profileimg','aer.consolidated_rating','aer.skill_response','ai.appraisal_ratings'))
-                           ->joinInner(array('es'=>'employees_summary'), 'es.id = aer.employee_id', array())
-                           ->joinInner(array('ai'=>'main_pa_initialization'), 'ai.id = aer.pa_initialization_id', array())
+                           													'ai.appraisal_period','ai.from_year','ai.to_year','ai.employees_due_date','es.profileimg','aer.consolidated_rating','aer.skill_response','ai.appraisal_ratings'])
+                           ->joinInner(['es'=>'employees_summary'], 'es.id = aer.employee_id', [])
+                           ->joinInner(['ai'=>'main_pa_initialization'], 'ai.id = aer.pa_initialization_id', [])
                            ->where($where);
                            
 		return $this->fetchAll($select)->toArray();       		
@@ -247,13 +247,13 @@ class Default_Model_Appraisalemployeeratings extends Zend_Db_Table_Abstract
 		$where = "aer.id = ".$id;
 		$select = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('aer'=>'main_pa_employee_ratings'),array('aer.id','aer.employee_id','ai.appraisal_mode','es.userfullname','es.id','es.jobtitle_name',
+                           ->from(['aer'=>'main_pa_employee_ratings'],['aer.id','aer.employee_id','ai.appraisal_mode','es.userfullname','es.id','es.jobtitle_name',
                            													'aer.appraisal_status','ai.status','ai.category_id','aer.pa_initialization_id','ai.pa_configured_id','aer.line_manager_1','aer.line_manager_2','aer.line_manager_3','aer.line_manager_4','aer.line_manager_5','aer.line_rating_1',
                            													'aer.line_rating_2','aer.line_rating_3','aer.line_rating_4','aer.line_rating_5','aer.line_comment_1','aer.line_comment_2',
                            													'aer.line_comment_3','aer.line_comment_4','aer.line_comment_5','aer.employee_response','aer.manager_response','es.businessunit_name',
-                           													'ai.appraisal_period','ai.from_year','ai.to_year','ai.employees_due_date','es.profileimg','aer.consolidated_rating','aer.skill_response','ai.appraisal_ratings'))
-                           ->joinInner(array('es'=>'employees_summary'), 'es.id = aer.employee_id', array())
-                           ->joinInner(array('ai'=>'main_pa_initialization'), 'ai.id = aer.pa_initialization_id', array())
+                           													'ai.appraisal_period','ai.from_year','ai.to_year','ai.employees_due_date','es.profileimg','aer.consolidated_rating','aer.skill_response','ai.appraisal_ratings'])
+                           ->joinInner(['es'=>'employees_summary'], 'es.id = aer.employee_id', [])
+                           ->joinInner(['ai'=>'main_pa_initialization'], 'ai.id = aer.pa_initialization_id', [])
                            ->where($where);
                            
 		return $this->fetchAll($select)->toArray();       		
@@ -264,11 +264,11 @@ class Default_Model_Appraisalemployeeratings extends Zend_Db_Table_Abstract
 		$where = "fer.isactive = 1 AND fi.status = 1 AND fer.employee_id = ".$employeeId;
 		 $select = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('fer'=>'main_pa_ff_employee_ratings'),array('fer.id','fer.employee_id','fi.ff_mode','es.userfullname','es.id','es.jobtitle_name',
+                           ->from(['fer'=>'main_pa_ff_employee_ratings'],['fer.id','fer.employee_id','fi.ff_mode','es.userfullname','es.id','es.jobtitle_name',
                            													'fer.ff_status','fi.status','fer.ff_initialization_id','fi.pa_configured_id','fer.employee_response',
-                           													'fi.ff_period','fi.ff_from_year','fi.ff_to_year','fi.ff_due_date','es.profileimg','fer.consolidated_rating'))
-                           ->joinInner(array('es'=>'employees_summary'), 'es.id = fer.employee_id', array())
-                           ->joinInner(array('fi'=>'main_pa_ff_initialization'), 'fi.id = fer.ff_initialization_id', array())
+                           													'fi.ff_period','fi.ff_from_year','fi.ff_to_year','fi.ff_due_date','es.profileimg','fer.consolidated_rating'])
+                           ->joinInner(['es'=>'employees_summary'], 'es.id = fer.employee_id', [])
+                           ->joinInner(['fi'=>'main_pa_ff_initialization'], 'fi.id = fer.ff_initialization_id', [])
                            ->where($where);
                            
 		return $this->fetchAll($select)->toArray();       		
@@ -278,7 +278,7 @@ class Default_Model_Appraisalemployeeratings extends Zend_Db_Table_Abstract
 	{
 		 $select = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('aqp'=>'main_pa_questions_privileges'),array('aqp.*'))
+                           ->from(['aqp'=>'main_pa_questions_privileges'],['aqp.*'])
                            ->where("aqp.isactive = 1 AND aqp.pa_initialization_id = ".$init_id." AND aqp.employee_id = ".$emp_id);
                            
 		return $this->fetchAll($select)->toArray();       		
@@ -288,7 +288,7 @@ class Default_Model_Appraisalemployeeratings extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('aq'=>'main_pa_questions'),array('aq.id','aq.pa_category_id','aq.question','aq.description'))
+                           ->from(['aq'=>'main_pa_questions'],['aq.id','aq.pa_category_id','aq.question','aq.description'])
                            ->where("aq.isactive = 1 AND aq.module_flag = 1 AND aq.id in (".$ques_ids.")");
                            
 		return $this->fetchAll($select)->toArray();       		
@@ -298,7 +298,7 @@ class Default_Model_Appraisalemployeeratings extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('ac'=>'main_pa_category'),array('ac.id','ac.category_name'))
+                           ->from(['ac'=>'main_pa_category'],['ac.id','ac.category_name'])
                            ->where("ac.isactive = 1 AND ac.id in (".$cate_ids.")");
 		                           
 		return $this->fetchAll($select)->toArray();       		
@@ -308,7 +308,7 @@ class Default_Model_Appraisalemployeeratings extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
                            ->setIntegrityCheck(false)	
-                           ->from(array('ar'=>'main_pa_ratings'),array('ar.id','ar.rating_type','ar.rating_value','ar.rating_text'))
+                           ->from(['ar'=>'main_pa_ratings'],['ar.id','ar.rating_type','ar.rating_value','ar.rating_text'])
                            ->where("ar.isactive = 1 and ar.pa_initialization_id = '".$init_id."'");                         
 		return $this->fetchAll($select)->toArray();       		
 	}
@@ -317,7 +317,7 @@ class Default_Model_Appraisalemployeeratings extends Zend_Db_Table_Abstract
 	{
 		 $select = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('u'=>'main_users'),array('u.id','u.userfullname'))
+                           ->from(['u'=>'main_users'],['u.id','u.userfullname'])
                            ->where("u.isactive = 1 AND u.id in (".$user_ids.")");
 		                           
 		return $this->fetchAll($select)->toArray();       		
@@ -327,7 +327,7 @@ class Default_Model_Appraisalemployeeratings extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('s'=>'main_pa_skills'),array('s.id','s.skill_name'))
+                           ->from(['s'=>'main_pa_skills'],['s.id','s.skill_name'])
                            ->where("s.isactive = 1 AND s.id in (".$skill_ids.")");
 		                           
 		return $this->fetchAll($select)->toArray();       		
@@ -340,7 +340,7 @@ class Default_Model_Appraisalemployeeratings extends Zend_Db_Table_Abstract
 	public function getAppEmpSkills($pa_init_id, $emp_id) {
 		$select = $this->select()
     					   ->setIntegrityCheck(false)
-                           ->from(array('er'=>'main_pa_employee_ratings'),array('er.skill_response'))
+                           ->from(['er'=>'main_pa_employee_ratings'],['er.skill_response'])
                            ->where("er.isactive = 1 AND er.pa_initialization_id = '".$pa_init_id."' AND employee_id = '".$emp_id."'")
                            ->limit(1, 0);
 		                           
@@ -354,7 +354,7 @@ class Default_Model_Appraisalemployeeratings extends Zend_Db_Table_Abstract
 	{
 		 $select = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('h'=>'main_pa_appraisalhistory'),array('h.*','hdate'=>'date(createddate)','htime'=>'time(createddate)',))
+                           ->from(['h'=>'main_pa_appraisalhistory'],['h.*','hdate'=>'date(createddate)','htime'=>'time(createddate)',])
                            ->where("h.isactive = 1 AND h.employee_id = $empId AND h.pa_initialization_id = $appInitID");
 		                           
 		return $this->fetchAll($select)->toArray();       		
@@ -370,15 +370,15 @@ class Default_Model_Appraisalemployeeratings extends Zend_Db_Table_Abstract
 		
 		$select = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('main_pa_employee_ratings'),array('employee_id','appraisal_status'))
+                           ->from(['main_pa_employee_ratings'],['employee_id','appraisal_status'])
                            ->where("isactive = 1 AND pa_initialization_id = $appInitID $where");
 		                           
 		return $this->fetchAll($select)->toArray();       		
 	}
 
-	public function getEmpRatings($startyear=0,$endyear=0,$department,$reportingmanager,$businessunit,$appraisalData,$employeeid)
+	public function getEmpRatings($startyear=0,$endyear=0,$department = null,$reportingmanager = null,$businessunit = null,$appraisalData = null,$employeeid = null)
 	{
-		$appraisalIds = array();
+		$appraisalIds = [];
 		if(!empty($appraisalData))
 		{
 			for($a = 0; $a < sizeof($appraisalData); $a++)
@@ -431,13 +431,13 @@ class Default_Model_Appraisalemployeeratings extends Zend_Db_Table_Abstract
 		}
 		else
 		{ 
-			return array();
+			return [];
 		}
 	}
 	//function to get the count of employees group by consolidated ratings
-	public function getEmpCountWithConsolidatedRatings($startyear=0,$endyear=0,$department,$reportingmanager,$businessunit,$appraisalData,$employeeid)
+	public function getEmpCountWithConsolidatedRatings($startyear=0,$endyear=0,$department = null,$reportingmanager = null,$businessunit = null,$appraisalData = null,$employeeid = null)
 	{
-		$appraisalIds = array();
+		$appraisalIds = [];
 		if(!empty($appraisalData))
 		{
 			for($a = 0; $a < sizeof($appraisalData); $a++)
@@ -495,11 +495,11 @@ class Default_Model_Appraisalemployeeratings extends Zend_Db_Table_Abstract
 		}
 		else
 		{ 
-			return array();
+			return [];
 		}
 	}
 	
-	public function getappraisalidsforperformance($startyear=0,$endyear=0,$department,$reportingmanager,$businessunit)
+	public function getappraisalidsforperformance($startyear=0,$endyear=0,$department = null,$reportingmanager = null,$businessunit = null)
 	{
 		$wherecondition = '';
 		if(isset($businessunit) && !empty($businessunit))
@@ -531,8 +531,8 @@ class Default_Model_Appraisalemployeeratings extends Zend_Db_Table_Abstract
 		{
 			$res = $this->select()
 					->setIntegrityCheck(false)
-					->from(array('a'=> 'main_pa_employee_ratings'),array('group_concat(concat_ws("_",b.id,b.appraisal_period,a.consolidated_rating)) as appraisalRatings','b.appraisal_mode', 'b.from_year','b.to_year',))
-					->joinInner(array('b' => 'main_pa_initialization'),'a.pa_initialization_id = b. id',array())
+					->from(['a'=> 'main_pa_employee_ratings'],['group_concat(concat_ws("_",b.id,b.appraisal_period,a.consolidated_rating)) as appraisalRatings','b.appraisal_mode', 'b.from_year','b.to_year',])
+					->joinInner(['b' => 'main_pa_initialization'],'a.pa_initialization_id = b. id',[])
 					->where('a.pa_initialization_id = b. id and a.employee_id = '.$empId.' and a.isactive = 1 and b.isactive = 1 and b.status = 2  AND a.appraisal_status = "Completed"')
 				    ->group('b.from_year')
 					->group('b.to_year');
@@ -548,7 +548,7 @@ class Default_Model_Appraisalemployeeratings extends Zend_Db_Table_Abstract
 		{
 			$res = $this->select()
 				->setIntegrityCheck(false)
-				->from(array('a' => 'main_pa_employee_ratings'),array('a.*',new Zend_Db_Expr("a.appraisal_status+0 as appstatus")))
+				->from(['a' => 'main_pa_employee_ratings'],['a.*',new Zend_Db_Expr("a.appraisal_status+0 as appstatus")])
 				->where('a.isactive = 1 and a.employee_id = '.$empId.' and a.pa_initialization_id = '.$appId);
 			return $this->fetchRow($res)->toArray();
 		}
@@ -560,8 +560,8 @@ class Default_Model_Appraisalemployeeratings extends Zend_Db_Table_Abstract
 		{
 			$res = $this->select()
 					->setIntegrityCheck(false)
-					->from(array('b' => 'main_pa_initialization'),array('a.employee_response','a.manager_response','a.line_manager_1','a.line_manager_2','a.line_manager_3','a.line_manager_4','a.line_manager_5','a.line_comment_1','a.line_comment_2','a.line_comment_3','a.line_comment_4','a.line_comment_5','a.line_rating_1','a.line_rating_2','a.line_rating_3','a.line_rating_4','a.line_rating_5','a.skill_response','b.appraisal_mode','b.appraisal_period','b.from_year','b.to_year','b.category_id','b.pa_configured_id'))
-					->joinInner(array('a' => 'main_pa_employee_ratings'),'a.pa_initialization_id = b.id',array())
+					->from(['b' => 'main_pa_initialization'],['a.employee_response','a.manager_response','a.line_manager_1','a.line_manager_2','a.line_manager_3','a.line_manager_4','a.line_manager_5','a.line_comment_1','a.line_comment_2','a.line_comment_3','a.line_comment_4','a.line_comment_5','a.line_rating_1','a.line_rating_2','a.line_rating_3','a.line_rating_4','a.line_rating_5','a.skill_response','b.appraisal_mode','b.appraisal_period','b.from_year','b.to_year','b.category_id','b.pa_configured_id'])
+					->joinInner(['a' => 'main_pa_employee_ratings'],'a.pa_initialization_id = b.id',[])
 //					->joinInner(array('ra' => 'main_pa_ratings'), 'ra.pa_initialization_id = b.id',array('ra.rating_type'))
 					->where('a.employee_id = '.$empId.' and a.pa_initialization_id = '.$appId.' and b.appraisal_period = '.$period );
 			return $this->fetchAll($res)->toArray();
@@ -574,7 +574,7 @@ class Default_Model_Appraisalemployeeratings extends Zend_Db_Table_Abstract
 		{
 			$res = $this->select()
 					->setIntegrityCheck(false)
-					->from(array('a' => 'main_pa_category'),array('a.*'))
+					->from(['a' => 'main_pa_category'],['a.*'])
 					->where('a.id in ('.$strCategories.') and a.isactive = 1');
 			return $this->fetchAll($res)->toArray();
 		}
@@ -586,7 +586,7 @@ class Default_Model_Appraisalemployeeratings extends Zend_Db_Table_Abstract
 		{
 			$res = $this->select()
 					->setIntegrityCheck(false)
-					->from(array('a' => 'employees_summary'),  array('a.id','a.businessunit_name','a.department_name','a.jobtitle_name','a.position_name','a.userfullname'))
+					->from(['a' => 'employees_summary'],  ['a.id','a.businessunit_name','a.department_name','a.jobtitle_name','a.position_name','a.userfullname'])
 					->where('id in ('.$strEmpIds.')');
 
 			return $this->fetchAll($res)->toArray();
@@ -599,7 +599,7 @@ class Default_Model_Appraisalemployeeratings extends Zend_Db_Table_Abstract
 		{
 			 $res = $this->select()
 					->setIntegrityCheck(false)
-					->from(array('a' => 'main_pa_questions'),  array('a.*'))
+					->from(['a' => 'main_pa_questions'],  ['a.*'])
 					->where('a.id in ('.$strQuestions.')');
 			return $this->fetchAll($res)->toArray();
 		}
@@ -613,7 +613,7 @@ class Default_Model_Appraisalemployeeratings extends Zend_Db_Table_Abstract
 			{
 				$res = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('a' => 'main_pa_ratings'),array('a.*'))	
+						->from(['a' => 'main_pa_ratings'],['a.*'])	
 						->where('a.id in ('.$ratingIdsStr.')')
 						->order('a.rating_value');
 				return $this->fetchAll($res)->toArray();

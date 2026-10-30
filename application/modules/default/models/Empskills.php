@@ -34,13 +34,13 @@ class Default_Model_Empskills extends Zend_Db_Table_Abstract
 
 		$empskillsData = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('es' => 'main_empskill'),array('id'=>'es.empskill_id','es.*','acquiredsince'=>'DATE_FORMAT(es.acquiredsince,"'.DATEFORMAT_MYSQL.'")','isactive'=>'if(es.isactive="Y","Yes","No")'))
-		->joinLeft(array('s'=>'main_skill'),'es.skill_id=s.skill_id',array('skillname'=>'COALESCE(s.name,es.skillname)'))
-		->joinLeft(array('sc'=>'main_skillcategory'),'s.skillcategory_id=sc.skillcategory_id',array('skillcategoryname'=>'sc.name'))
+		->from(['es' => 'main_empskill'],['id'=>'es.empskill_id','es.*','acquiredsince'=>'DATE_FORMAT(es.acquiredsince,"'.DATEFORMAT_MYSQL.'")','isactive'=>'if(es.isactive="Y","Yes","No")'])
+		->joinLeft(['s'=>'main_skill'],'es.skill_id=s.skill_id',['skillname'=>'COALESCE(s.name,es.skillname)'])
+		->joinLeft(['sc'=>'main_skillcategory'],'s.skillcategory_id=sc.skillcategory_id',['skillcategoryname'=>'sc.name'])
 
-		->joinLeft(array('ss'=>'main_skillsource'),'es.skillsource_id=ss.skillsource_id',array('skillsourcename'=>'ss.name'))
-		->joinLeft(array('mi'=>'main_measurementindex'),'es.measurementindex_id=mi.measurementindex_id',array('measurementvalue'=>'COALESCE(mi.value,measurementvalue)'))
-		->joinLeft(array('m'=>'main_measurement'),'mi.measurement_id=m.measurement_id',array('measurementname'=>'m.name'))
+		->joinLeft(['ss'=>'main_skillsource'],'es.skillsource_id=ss.skillsource_id',['skillsourcename'=>'ss.name'])
+		->joinLeft(['mi'=>'main_measurementindex'],'es.measurementindex_id=mi.measurementindex_id',['measurementvalue'=>'COALESCE(mi.value,measurementvalue)'])
+		->joinLeft(['m'=>'main_measurement'],'mi.measurement_id=m.measurement_id',['measurementname'=>'m.name'])
 
 		->where($where)
 		->order("$by $sort")
@@ -66,12 +66,12 @@ class Default_Model_Empskills extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('es' => 'main_empskill'),array('id'=>'es.empskill_id','es.*','acquiredsince'=>'DATE_FORMAT(es.acquiredsince,"'.DATEFORMAT_MYSQL.'")','isactive'=>'if(es.isactive="Y","Yes","No")'))
-		->joinLeft(array('s'=>'main_skill'),'es.skill_id=s.skill_id',array('skillname'=>'COALESCE(s.name,es.skillname)'))
-		->joinLeft(array('sc'=>'main_skillcategory'),'s.skillcategory_id=sc.skillcategory_id',array('skillcategoryname'=>'sc.name'))
-		->joinLeft(array('ss'=>'main_skillsource'),'es.skillsource_id=ss.skillsource_id',array('skillsourcename'=>'ss.name'))
-		->joinLeft(array('mi'=>'main_measurementindex'),'es.measurementindex_id=mi.measurementindex_id',array('measurementvalue'=>'COALESCE(mi.value,es.measurementvalue)'))
-		->joinLeft(array('m'=>'main_measurement'),'mi.measurement_id=m.measurement_id',array('measurementname'=>'m.name'))
+		->from(['es' => 'main_empskill'],['id'=>'es.empskill_id','es.*','acquiredsince'=>'DATE_FORMAT(es.acquiredsince,"'.DATEFORMAT_MYSQL.'")','isactive'=>'if(es.isactive="Y","Yes","No")'])
+		->joinLeft(['s'=>'main_skill'],'es.skill_id=s.skill_id',['skillname'=>'COALESCE(s.name,es.skillname)'])
+		->joinLeft(['sc'=>'main_skillcategory'],'s.skillcategory_id=sc.skillcategory_id',['skillcategoryname'=>'sc.name'])
+		->joinLeft(['ss'=>'main_skillsource'],'es.skillsource_id=ss.skillsource_id',['skillsourcename'=>'ss.name'])
+		->joinLeft(['mi'=>'main_measurementindex'],'es.measurementindex_id=mi.measurementindex_id',['measurementvalue'=>'COALESCE(mi.value,es.measurementvalue)'])
+		->joinLeft(['m'=>'main_measurement'],'mi.measurement_id=m.measurement_id',['measurementname'=>'m.name'])
 		->where('es.empskill_id='.$id.' AND es.isactive = "Y"');
 		return $this->fetchAll($select)->toArray();
 	}
@@ -79,7 +79,7 @@ class Default_Model_Empskills extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('es'=>'main_empskill'),array('es.*'))
+		->from(['es'=>'main_empskill'],['es.*'])
 		->where('es.empskill_id='.$id.' AND es.isactive = "Y"');
 			
 		return $this->fetchAll($select)->toArray();
@@ -101,7 +101,7 @@ class Default_Model_Empskills extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$exPadam4='')
 	{
 		$searchQuery = '';$tablecontent = '';
-		$searchArray = array();$data = array(); $dataTmp = array();
+		$searchArray = [];$data = []; $dataTmp = [];
 		/** search from grid - START **/
 		if($searchData != '' && $searchData!='undefined')
 		{
@@ -155,7 +155,7 @@ class Default_Model_Empskills extends Zend_Db_Table_Abstract
 		// }
 		$objName = 'empskills';
 
-		$tableFields = array('action'=>'Action','skillname'=>'Skill',
+		$tableFields = ['action'=>'Action','skillname'=>'Skill',
 		'skillcategoryname'=>'Skill Category',
 		'skillsourcename'=>'Skill Source',
 		'measurementname'=>'Measurement Name',
@@ -165,16 +165,16 @@ class Default_Model_Empskills extends Zend_Db_Table_Abstract
 		
 
 		
-	);
+	];
 			
 		$tablecontent = $this->getEmpSkillsData($sort,$by,$pageNo,$perPage,$searchQuery,$a);
-		$dataTmp = array( 'sort' => $sort,
+		$dataTmp = [ 'sort' => $sort,
 		'by' => $by,
 		'pageNo' => $pageNo,
 		'perPage' => $perPage,
 		'tablecontent' => $tablecontent,
 		'objectname' => $objName,
-		'extra' => array(),
+		'extra' => [],
 		'add' => 'add',
 		'tableheader' => $tableFields,
 		'jsGridFnName' => 'getEmployeeAjaxgridData',
@@ -188,14 +188,14 @@ class Default_Model_Empskills extends Zend_Db_Table_Abstract
 		'searchArray' => $searchArray,
 		'call' => $call,
 		'dashboardcall' => $dashboardcall,
-						'search_filters' => array(
-							'isactive' => array(
+						'search_filters' => [
+							'isactive' => [
 								'type' => 'select',
-								'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No'),
-							),	
-						'acquiredsince'=>array('type'=>'datepicker')
-		)
-		);
+								'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No'],
+							],	
+						'acquiredsince'=>['type'=>'datepicker']
+		]
+		];
 		return $dataTmp;
 	}
 

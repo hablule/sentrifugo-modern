@@ -28,7 +28,7 @@ class Default_Model_Emppersonaldetails extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('ep'=>'main_emppersonaldetails'),array('ep.*'))
+						->from(['ep'=>'main_emppersonaldetails'],['ep.*'])
 						->where('ep.emp_id='.$id.' AND ep.isactive = "Y"');
 					
 		return $this->fetchAll($select)->toArray();

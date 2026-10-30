@@ -33,7 +33,7 @@ class Default_Model_Employeedocs extends Zend_Db_Table_Abstract
 			
 		$select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('ed'=>'main_employeedocuments'),array('ed.*'))
+						->from(['ed'=>'main_employeedocuments'],['ed.*'])
 						->where('ed.isactive = 1'.$where);
 					
 		return $this->fetchAll($select)->toArray();
@@ -58,7 +58,7 @@ class Default_Model_Employeedocs extends Zend_Db_Table_Abstract
 			$where = ' AND id != '.$docId;
 		$select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('ed'=>'main_employeedocuments'),array('ed.*'))
+						->from(['ed'=>'main_employeedocuments'],['ed.*'])
 						->where('ed.isactive = 1 AND ed.user_id = '.$userId.' AND ed.name = "'.$docName.'"'.$where);
 					
 		return $this->fetchAll($select)->toArray();

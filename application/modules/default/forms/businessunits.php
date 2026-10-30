@@ -30,39 +30,39 @@ class Default_Form_businessunits extends Zend_Form
         $id = new Zend_Form_Element_Hidden('id');
         $name = new Zend_Form_Element_Text('name');
         $name->setLabel('Name');      
-        $name->addValidator('NotEmpty', false, array('messages' => 'Please fill the field.')); 
+        $name->addValidator('NotEmpty', false, ['messages' => 'Please fill the field.']); 
         $name->setRequired(true);
         $code = new Zend_Form_Element_Text('code');
         $code->setLabel('Name');      
-        $code->addValidator('NotEmpty', false, array('messages' => 'Please fill the field.')); 
+        $code->addValidator('NotEmpty', false, ['messages' => 'Please fill the field.']); 
         $code->setRequired(true);
       
             $code->addValidator(new Zend_Validate_Db_NoRecordExists(
-                array(
+                [
                     'table'=>'main_sbunit',
                     'field'=>'code'
-                )
+                ]
                 ));
       $code->getValidator('Db_NoRecordExists')->setMessage('Code already exists.');
    
-      $name->addValidators(array(
-        array(
+      $name->addValidators([
+        [
             'validator'   => 'Regex',
             'breakChainOnFailure' => true,
-            'options'     => array( 
+            'options'     => [ 
             
             'pattern'=> '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9\-\s]*)$/',
-                'messages' => array(
+                'messages' => [
                         'regexNotMatch'=>'Please enter valid Name.'
-                )
-            )
-        )
-    )); 	
+                ]
+            ]
+        ]
+    ]); 	
     
         
         $representative_id = new Zend_Form_Element_Select('representative_id');
         $representative_id->setLabel('Representative');      
-        $representative_id->addValidator('NotEmpty', false, array('messages' => 'Please select field.')); 
+        $representative_id->addValidator('NotEmpty', false, ['messages' => 'Please select field.']); 
         $representative_id->setRequired(true);
 
         $company_id = new Zend_Form_Element_Select('company_id');
@@ -96,10 +96,10 @@ class Default_Form_businessunits extends Zend_Form
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save');
         $code->addValidator(new Zend_Validate_Db_NoRecordExists(
-            array('table'=>'main_sbunit',
+            ['table'=>'main_sbunit',
                       'field'=>'code',
                     'exclude'=>'sbunit_id!="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('id').'"',    
-               ) )  
+               ] )  
   );
 
 $code->getValidator('Db_NoRecordExists')->setMessage('Code already exists.');
@@ -107,8 +107,8 @@ $code ->setAttrib('maxlength', '60');
 $name ->setAttrib('maxlength', '100');
 $description ->setAttrib('maxlength', '255');
 
-        $this->addElements(array($id,$code,$name,$description,$isactive,$representative_id,$company_id,$parentsbu_id,$submit));
-        $this->setElementDecorators(array('ViewHelper')); 
+        $this->addElements([$id,$code,$name,$description,$isactive,$representative_id,$company_id,$parentsbu_id,$submit]);
+        $this->setElementDecorators(['ViewHelper']); 
     }
 }
 ?>

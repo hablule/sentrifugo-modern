@@ -38,13 +38,13 @@ class Default_Form_Interviewroundrpt extends Zend_Form
         $req_id = new Zend_Form_Element_Select("req_id");      
         $req_id->setRegisterInArrayValidator(false); 
         $req_id->setLabel("Requisition Code")
-                            ->addMultiOptions(array('' => 'Select Requisition Code'));
+                            ->addMultiOptions(['' => 'Select Requisition Code']);
         
         
         $department_id = new Zend_Form_Element_Select("department_id");
         $department_id->setLabel("Department");
         $department_id->setRegisterInArrayValidator(false); 
-        $department_id->addMultiOptions(array('' => 'Select Department'));
+        $department_id->addMultiOptions(['' => 'Select Department']);
         
         $interviewer_id = new Zend_Form_Element_Text("interviewer_id");        
         $interviewer_id->setLabel("Interviewer");
@@ -60,7 +60,7 @@ class Default_Form_Interviewroundrpt extends Zend_Form
         $submit->setAttrib('id', 'idsubmitbutton');
         $submit->setLabel('Report'); 
         
-        $this->addElements(array($submit,$interview_date,$req_id,$department_id,$interviewer_id,$createdby));
-        $this->setElementDecorators(array('ViewHelper')); 
+        $this->addElements([$submit,$interview_date,$req_id,$department_id,$interviewer_id,$createdby]);
+        $this->setElementDecorators(['ViewHelper']); 
     }
 }

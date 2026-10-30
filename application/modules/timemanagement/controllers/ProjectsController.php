@@ -38,11 +38,11 @@ class Timemanagement_ProjectsController extends Zend_Controller_Action
 		if(!$checkTmEnable){
 			$this->_redirect('error');
 		}*/
-		
+
 		//check Time management module enable
 		if(!sapp_Helper::checkTmEnable())
 			$this->_redirect('error');
-			
+
 		$ajaxContext = $this->_helper->getHelper('AjaxContext');
 		$ajaxContext->addActionContext('addtasksproject', 'html')->initContext();
 		$ajaxContext->addActionContext('addtasks', 'html')->initContext();
@@ -64,9 +64,9 @@ class Timemanagement_ProjectsController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 
 		if($refresh == 'refresh')
@@ -127,7 +127,7 @@ class Timemanagement_ProjectsController extends Zend_Controller_Action
 					$data = $projectModel->getSingleProjectData($id);
 					if(!empty($data) && $data != "norows")
 					{
-						$data_arr = array();
+						$data_arr = [];
 						$call = $this->_getParam('call');
 						if($call == 'ajaxcall')
 						$this->_helper->layout->disableLayout();
@@ -138,7 +138,7 @@ class Timemanagement_ProjectsController extends Zend_Controller_Action
 
 						//$data = array();
 						$searchQuery = '';
-						$searchArray = array();
+						$searchArray = [];
 						$tablecontent='';
 
 						if($refresh == 'refresh')
@@ -227,8 +227,8 @@ class Timemanagement_ProjectsController extends Zend_Controller_Action
 			//check project is assigned to employee
 			$checkISAssigned = $projectModel->chkProjAssigned($id);
 			if($checkISAssigned==0){
-				$data = array('is_active'=>0,'modified'=>gmdate("Y-m-d H:i:s"));
-				$where = array('id=?'=>$id);
+				$data = ['is_active'=>0,'modified'=>gmdate("Y-m-d H:i:s")];
+				$where = ['id=?'=>$id];
 				$Id = $projectModel->SaveorUpdateProjectsData($data, $where);;
 				if($Id == 'update')
 				{
@@ -254,11 +254,11 @@ class Timemanagement_ProjectsController extends Zend_Controller_Action
 		{
 			if(	$messages['msgtype'] == 'error')
 			{
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
 			}
 			if(	$messages['msgtype'] == 'success')
 			{
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
 			}
 			
 		}
@@ -284,13 +284,13 @@ class Timemanagement_ProjectsController extends Zend_Controller_Action
 		if($callval == 'ajaxcall')
 		$this->_helper->layout->disableLayout();
 
-		$popConfigPermission = array();
+		$popConfigPermission = [];
 		$projectsForm = new Timemanagement_Form_Projects();
 		$projectModel = new Timemanagement_Model_Projects();
 
 		$clientModel = new Timemanagement_Model_Clients();
 		$clientData = $clientModel->getActiveClientsData();
-		$msgarray = array();
+		$msgarray = [];
 		array_push($popConfigPermission,'client');
 		if(sapp_Global::_checkprivileges(CURRENCY,$loginuserGroup,$loginuserRole,'add') == 'Yes'){
 		 		array_push($popConfigPermission,'currency');
@@ -386,7 +386,7 @@ class Timemanagement_ProjectsController extends Zend_Controller_Action
 					{
 						$this->view->form = $projectsForm;
 						$this->view->controllername = $objName;
-						$this->view->data = array();
+						$this->view->data = [];
 						$this->view->ermsg = 'norecord';
 						$this->view->inpage = 'Edit';
 					}
@@ -431,7 +431,7 @@ class Timemanagement_ProjectsController extends Zend_Controller_Action
 				$description = $this->_request->getParam('description');
 
 				$date = new Zend_Date();
-				$data = array('project_name'=>ucfirst(trim($project_name)),
+				$data = ['project_name'=>ucfirst(trim($project_name)),
 				              'project_status'=>trim($project_status),
 							  'base_project'=>(trim($base_project)!=''?$base_project:NUll),
 							  'start_date'=>(trim($start_date)!=''?$start_date:NUll),
@@ -443,7 +443,7 @@ class Timemanagement_ProjectsController extends Zend_Controller_Action
 							  'project_type'=>trim($project_type),
 				              'modified_by'=>$loginUserId,
 							  'modified'=>gmdate("Y-m-d H:i:s")
-				);
+				];
 
 				if($project_status == 'initiated'){
 					$data['initiated_date'] = gmdate("Y-m-d H:i:s");
@@ -456,7 +456,7 @@ class Timemanagement_ProjectsController extends Zend_Controller_Action
 				}
 
 				if($id!=''){
-					$where = array('id=?'=>$id);
+					$where = ['id=?'=>$id];
 				}
 				else
 				{
@@ -469,24 +469,24 @@ class Timemanagement_ProjectsController extends Zend_Controller_Action
 				$insertedId = $projectModel->SaveorUpdateProjectsData($data, $where);
 				if($insertedId == 'update')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Project updated successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Project updated successfully."]);
 				}
 				else
 				{
 					if(Zend_Registry::get( 'tm_role' ) == 'Manager'){
 						$projectResourcesModel = new Timemanagement_Model_Projectresources();
-						$projectResourceData = array( 'project_id'=>trim($insertedId),
+						$projectResourceData = [ 'project_id'=>trim($insertedId),
 										              'emp_id'=>$loginUserId, 
 													  'created_by' => $loginUserId,
 													  'created' =>gmdate("Y-m-d H:i:s"),
 													  'is_active' => 1,
 										   			  'modified_by'=>$loginUserId,
 													  'modified'=>gmdate("Y-m-d H:i:s")	
-						);
+						];
 						$result = $projectResourcesModel->SaveorUpdateProjectResourceData($projectResourceData,'');
 					}
 					$id = $insertedId;
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Project added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Project added successfully."]);
 				}
 
 				$this->_redirect('timemanagement/projects/tasks/projectid/'.$id);
@@ -523,7 +523,7 @@ class Timemanagement_ProjectsController extends Zend_Controller_Action
 			$loginuserRole = $auth->getStorage()->read()->emprole;
 			$loginuserGroup = $auth->getStorage()->read()->group_id;
 		}
-		$projectTasksData = $projectData = array();
+		$projectTasksData = $projectData = [];
 		$projectId = $this->getRequest()->getParam('projectid',null);
 
 		if($this->getRequest()->getPost()){
@@ -531,7 +531,7 @@ class Timemanagement_ProjectsController extends Zend_Controller_Action
 			$taskprojectIds = $this->getRequest()->getParam('hid_taskprojid');
 			$projectId = $this->getRequest()->getParam('project_id');
 			$taskIds = $this->getRequest()->getParam('hid_taskid');
-			$projectTaskData = array();
+			$projectTaskData = [];
 			$projectTasksModel = new Timemanagement_Model_Projecttasks();
 			if(count($taskprojectIds) > 0){
 				foreach($taskprojectIds as $key=>$taskProjectId){
@@ -550,7 +550,7 @@ class Timemanagement_ProjectsController extends Zend_Controller_Action
 					}else{
 						$is_billable =  0;
 					}
-					$projectTaskData = array( 'project_id'=>trim($projectId),
+					$projectTaskData = [ 'project_id'=>trim($projectId),
 				               'task_id'=>trim($taskIds[$key]), 
 							   'estimated_hrs'=> $estimated_hrs,
 							   'billable_rate'=>$billable_rate, 
@@ -558,12 +558,12 @@ class Timemanagement_ProjectsController extends Zend_Controller_Action
 							   'is_active' => 1,
 				   			   'modified_by'=>$loginUserId,
 							   'modified'=>gmdate("Y-m-d H:i:s")	
-					);
-					$where = array('id=?'=>$taskProjectId);
+					];
+					$where = ['id=?'=>$taskProjectId];
 					$projectTasksModel->SaveorUpdateProjectTaskData($projectTaskData,$where);
 				}
 			}
-			$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Task(s) updated successfully."));
+			$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Task(s) updated successfully."]);
 			$this->_redirect('timemanagement/projects/tasks/projectid/'.$projectId);
 		}
 
@@ -641,25 +641,25 @@ class Timemanagement_ProjectsController extends Zend_Controller_Action
 					$def_check = $this->_getParam('def_check');
 					$projectData = $projectModel->getSingleProjectData($projectId);
 
-					$newTaskData = array( 'task'=>trim($task_name),
+					$newTaskData = [ 'task'=>trim($task_name),
 				               'is_default'=>($def_check == 'true')?'1':'0', 
 							   'created_by' => $loginUserId,
 							   'created' =>gmdate("Y-m-d H:i:s"),
 							   'is_active' => 1,
 				   			   'modified_by'=>$loginUserId,
 							   'modified'=>gmdate("Y-m-d H:i:s")	
-					);
+					];
 					$insertedTaskId = $taskModel->SaveorUpdateTaskData($newTaskData, '');
 
 					if(is_numeric($insertedTaskId) && $insertedTaskId>0){
-						$projectTaskData = array( 'project_id'=>trim($projectId),
+						$projectTaskData = [ 'project_id'=>trim($projectId),
 				               'task_id'=>trim($insertedTaskId), 
 							   'created_by' => $loginUserId,
 							   'created' =>gmdate("Y-m-d H:i:s"),
 							   'is_active' => 1,
 				   			   'modified_by'=>$loginUserId,
 							   'modified'=>gmdate("Y-m-d H:i:s")	
-						);
+						];
 						$result = $projectTasksModel->SaveorUpdateProjectTaskData($projectTaskData,'');
 						//$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Task added successfully."));
 					}
@@ -671,16 +671,16 @@ class Timemanagement_ProjectsController extends Zend_Controller_Action
 					$defaultTaskIds = json_decode($taskids);
 					$projectData = $projectModel->getSingleProjectData($projectId);
 					if(count($defaultTaskIds) > 0){
-						$projectTaskData = array();
+						$projectTaskData = [];
 						foreach($defaultTaskIds as $defTaskId){
-							$projectTaskData = array( 'project_id'=>trim($projectId),
+							$projectTaskData = [ 'project_id'=>trim($projectId),
 				               'task_id'=>trim($defTaskId), 
 							   'created_by' => $loginUserId,
 							   'created' =>gmdate("Y-m-d H:i:s"),
 							   'is_active' => 1,
 				   			   'modified_by'=>$loginUserId,
 							   'modified'=>gmdate("Y-m-d H:i:s")	
-							);
+							];
 							$result = $projectTasksModel->SaveorUpdateProjectTaskData($projectTaskData,'');
 						}
 					}
@@ -692,23 +692,23 @@ class Timemanagement_ProjectsController extends Zend_Controller_Action
 					$mostTaskIds = json_decode($taskids);
 					$projectData = $projectModel->getSingleProjectData($projectId);
 					if(count($mostTaskIds) > 0){
-						$projectTaskData = array();
+						$projectTaskData = [];
 						foreach($mostTaskIds as $mostTaskId){
-							$projectTaskData = array( 'project_id'=>trim($projectId),
+							$projectTaskData = [ 'project_id'=>trim($projectId),
 				               'task_id'=>trim($mostTaskId), 
 							   'created_by' => $loginUserId,
 							   'created' =>gmdate("Y-m-d H:i:s"),
 							   'is_active' => 1,
 				   			   'modified_by'=>$loginUserId,
 							   'modified'=>gmdate("Y-m-d H:i:s")	
-							);
+							];
 							$result = $projectTasksModel->SaveorUpdateProjectTaskData($projectTaskData,'');
 						}
 					}
 
 				}
 
-				$projectTasksData = array();
+				$projectTasksData = [];
 				$projectTasksData = $projectTasksModel->getProjectTasksData($projectId); //echo '<pre>';print_r($projectTasksData); exit;
 				if($projectTasksData == 'norows')
 				{
@@ -732,9 +732,9 @@ class Timemanagement_ProjectsController extends Zend_Controller_Action
 			$projectModel = new Timemanagement_Model_Projects();
 			$checkISAssigned = $projectModel->chkProjAssigned($projectId);
 			if($checkISAssigned > 0){
-			   $this->_helper->json(array('exists'=>'yes'));
+			   $this->_helper->json(['exists'=>'yes']);
 			}else{
-			   $this->_helper->json(array('exists'=>'no'));
+			   $this->_helper->json(['exists'=>'no']);
 			}
 		}
 	}

@@ -23,9 +23,9 @@ class Schedule_AttendancereportController extends Zend_Controller_Action
         $objname = $this->_getParam('objname');
         $refresh = $this->_getParam('refresh');
         $dashboardcall = $this->_getParam('dashboardcall');
-        $data = array();
+        $data = [];
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if ($refresh == 'refresh') {
             if ($dashboardcall == 'Yes')
@@ -37,7 +37,7 @@ class Schedule_AttendancereportController extends Zend_Controller_Action
             $pageNo = 1;
             $searchData = '';
             $searchQuery = '';
-            $searchArray = array();
+            $searchArray = [];
         } else {
             $sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
             $by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'att.datetime';
@@ -78,7 +78,7 @@ class Schedule_AttendancereportController extends Zend_Controller_Action
         $schedule_datas = $attend_model->getschedule();
       
         foreach ($schedule_datas as $schedule_data) {
-            $form->schedule->addMultiOptions(array($schedule_data['sch_id'] => $schedule_data['schedule_name']));
+            $form->schedule->addMultiOptions([$schedule_data['sch_id'] => $schedule_data['schedule_name']]);
         }
         // die($schedule_datas);
         // $day_datas = $attend_model->getweekdays();
@@ -88,47 +88,47 @@ class Schedule_AttendancereportController extends Zend_Controller_Action
         $dpt_datas = $attend_model->getdepartements();
 
         foreach ($dpt_datas as $dpt_data) {
-            $form->dpt->addMultiOptions(array($dpt_data['department_id'] => $dpt_data['name']));
+            $form->dpt->addMultiOptions([$dpt_data['department_id'] => $dpt_data['name']]);
         }
      
         $sbunitdatas = $attend_model->getsbunits();
-        $form->sbunit->addMultiOptions(array('empty' => 'Select...'));
+        $form->sbunit->addMultiOptions(['empty' => 'Select...']);
         foreach ($sbunitdatas as $sbunitdata) {
-            $form->sbunit->addMultiOptions(array($sbunitdata['sbunit_id'] => $sbunitdata['name']));
+            $form->sbunit->addMultiOptions([$sbunitdata['sbunit_id'] => $sbunitdata['name']]);
         }
         $divdatas = $attend_model->getdivisions();
-        $form->division->addMultiOptions(array('empty' => 'Select...'));
+        $form->division->addMultiOptions(['empty' => 'Select...']);
 
         foreach ($divdatas as $divdata) {
-            $form->division->addMultiOptions(array($divdata['division_id'] => $divdata['name']));
+            $form->division->addMultiOptions([$divdata['division_id'] => $divdata['name']]);
         }
 
 
         $secdatas = $attend_model->getsections();
-        $form->section->addMultiOptions(array('empty' => 'Select...'));
+        $form->section->addMultiOptions(['empty' => 'Select...']);
 
         foreach ($secdatas as $secdata) {
-            $form->section->addMultiOptions(array($secdata['section_id'] => $secdata['name']));
+            $form->section->addMultiOptions([$secdata['section_id'] => $secdata['name']]);
         }
       
 
         $prodatas = $attend_model->getprojects();
-        $form->project->addMultiOptions(array('empty' => 'Select...'));
+        $form->project->addMultiOptions(['empty' => 'Select...']);
 
         foreach ($prodatas as $prodata) {
-            $form->project->addMultiOptions(array($prodata['project_id'] => $prodata['name']));
+            $form->project->addMultiOptions([$prodata['project_id'] => $prodata['name']]);
         }
         $teamdatas = $attend_model->getteams();
-        $form->team->addMultiOptions(array('empty' => 'Select...'));
+        $form->team->addMultiOptions(['empty' => 'Select...']);
 
         foreach ($teamdatas as $teamdata) {
-            $form->team->addMultiOptions(array($teamdata['team_id'] => $teamdata['name']));
+            $form->team->addMultiOptions([$teamdata['team_id'] => $teamdata['name']]);
         }
 
         $branches = $attend_model->getBranch();
-        $form->branch->addMultiOptions(array('empty' => 'Select...'));
+        $form->branch->addMultiOptions(['empty' => 'Select...']);
         foreach ($branches as $branch) {
-            $form->branch->addMultiOptions(array($branch['id'] . "" => $branch['branch']));
+            $form->branch->addMultiOptions([$branch['id'] . "" => $branch['branch']]);
         }
         
         if ($this->_request->isPost()) {

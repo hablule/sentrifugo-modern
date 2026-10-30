@@ -41,9 +41,9 @@ class Default_Model_CountryNationality extends Zend_Db_Table_Abstract
     {
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('mcn' => $this->_name), array('mcn.*'))
-            ->joinInner(array('c' => 'main_country'), 'mcn.country_id = c.id', array('country_name' => 'c.name'))
-            ->joinInner(array('n' => 'main_nationality'), 'mcn.nationality_id = n.id', array('nationality_name' => 'n.name'))
+            ->from(['mcn' => $this->_name], ['mcn.*'])
+            ->joinInner(['c' => 'main_country'], 'mcn.country_id = c.id', ['country_name' => 'c.name'])
+            ->joinInner(['n' => 'main_nationality'], 'mcn.nationality_id = n.id', ['nationality_name' => 'n.name'])
             ->where('mcn.isactive != 5');
 
         if ($activeStatus !== null) {
@@ -61,7 +61,7 @@ class Default_Model_CountryNationality extends Zend_Db_Table_Abstract
             }
         }
 
-        $select->order(array('c.name ASC', 'n.name ASC'));
+        $select->order(['c.name ASC', 'n.name ASC']);
 
         if ($limit !== null) {
             $select->limit($limit, (int)$offset);
@@ -86,7 +86,7 @@ class Default_Model_CountryNationality extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -116,17 +116,17 @@ class Default_Model_CountryNationality extends Zend_Db_Table_Abstract
         }
 
         // Must match exact column aliases defined in getGridData()
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'           => 'Action',
             'country_name'     => 'Country (Geography)',
             'nationality_name' => 'Nationality (Jurisprudence)',
             'default_text'     => 'Is Primary',
             'status_text'      => 'Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
@@ -134,18 +134,18 @@ class Default_Model_CountryNationality extends Zend_Db_Table_Abstract
             'tablecontent'   => $tableContent,
             'objectname'     => 'countrynationality',
             'tableheader'    => $tableHeaders,
-            'extra'          => array(),
+            'extra'          => [],
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
             'searchArray'    => $searchArray,
             'menuName'       => 'Country to Nationality Mappings',
             'call'           => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => array(
-                'status_text'  => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive')),
-                'default_text' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Yes' => 'Yes', 'No' => 'No'))
-            )
-        );
+            'search_filters' => [
+                'status_text'  => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']],
+                'default_text' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Yes' => 'Yes', 'No' => 'No']]
+            ]
+        ];
     }
 
     /**
@@ -173,15 +173,15 @@ class Default_Model_CountryNationality extends Zend_Db_Table_Abstract
 
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('mcn' => $this->_name), array(
+            ->from(['mcn' => $this->_name], [
                 'id' => 'mcn.id',
                 '*',
                 // Alias boolean columns for the UI Grid
                 'status_text'  => new Zend_Db_Expr("CASE WHEN mcn.isactive = 1 THEN 'Active' ELSE 'Inactive' END"),
                 'default_text' => new Zend_Db_Expr("CASE WHEN mcn.is_default = 1 THEN 'Yes' ELSE 'No' END")
-            ))
-            ->joinInner(array('c' => 'main_country'), 'mcn.country_id = c.id', array('country_name' => 'c.name'))
-            ->joinInner(array('n' => 'main_nationality'), 'mcn.nationality_id = n.id', array('nationality_name' => 'n.name'))
+            ])
+            ->joinInner(['c' => 'main_country'], 'mcn.country_id = c.id', ['country_name' => 'c.name'])
+            ->joinInner(['n' => 'main_nationality'], 'mcn.nationality_id = n.id', ['nationality_name' => 'n.name'])
             ->where('mcn.isactive != 5');
 
         if (!empty($searchQuery)) {
@@ -204,11 +204,11 @@ class Default_Model_CountryNationality extends Zend_Db_Table_Abstract
     {
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('mcn' => $this->_name), array('id' => 'mcn.id'))
-            ->joinInner(array('c' => 'main_country'), 'mcn.country_id = c.id', array())
-            ->joinInner(array('n' => 'main_nationality'), 'mcn.nationality_id = n.id', array())
-            ->columns(array('mapping_name' => new Zend_Db_Expr("CONCAT(c.name, ' - ', n.name)")))
-            ->order(array('c.name ASC', 'n.name ASC'));
+            ->from(['mcn' => $this->_name], ['id' => 'mcn.id'])
+            ->joinInner(['c' => 'main_country'], 'mcn.country_id = c.id', [])
+            ->joinInner(['n' => 'main_nationality'], 'mcn.nationality_id = n.id', [])
+            ->columns(['mapping_name' => new Zend_Db_Expr("CONCAT(c.name, ' - ', n.name)")])
+            ->order(['c.name ASC', 'n.name ASC']);
 
         if ($activeOnly) {
             $select->where("mcn.isactive = 1");
@@ -227,9 +227,9 @@ class Default_Model_CountryNationality extends Zend_Db_Table_Abstract
     {
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('mcn' => $this->_name), array('mcn.*'))
-            ->joinInner(array('c' => 'main_country'), 'mcn.country_id = c.id', array('country_name' => 'c.name'))
-            ->joinInner(array('n' => 'main_nationality'), 'mcn.nationality_id = n.id', array('nationality_name' => 'n.name'))
+            ->from(['mcn' => $this->_name], ['mcn.*'])
+            ->joinInner(['c' => 'main_country'], 'mcn.country_id = c.id', ['country_name' => 'c.name'])
+            ->joinInner(['n' => 'main_nationality'], 'mcn.nationality_id = n.id', ['nationality_name' => 'n.name'])
             ->where('mcn.id = ?', (int)$id)
             ->where('mcn.isactive != 5');
 
@@ -256,7 +256,7 @@ class Default_Model_CountryNationality extends Zend_Db_Table_Abstract
         if (!empty($id)) {
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = gmdate("Y-m-d H:i:s");
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return 'update';
         }
 
@@ -286,12 +286,12 @@ class Default_Model_CountryNationality extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => 5,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
-        return $this->update($data, array('id = ?' => (int)$id));
+        ];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /**
@@ -306,12 +306,12 @@ class Default_Model_CountryNationality extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => (int)$status,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
-        return $this->update($data, array('id = ?' => (int)$id));
+        ];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* =================================================================================

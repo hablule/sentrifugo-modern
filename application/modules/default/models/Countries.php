@@ -48,8 +48,8 @@ class Default_Model_Countries extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{		
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		
 		if($searchData != '' && $searchData!='undefined')
 			{
@@ -63,25 +63,25 @@ class Default_Model_Countries extends Zend_Db_Table_Abstract
 			}
 		$objName = 'countries';
 		
-		$tableFields = array('action'=>'Action','country' => 'Country','countrycode' =>'Country Code');
+		$tableFields = ['action'=>'Action','country' => 'Country','countrycode' =>'Country Code'];
 		
 		$tablecontent = $this->getCountriesData($sort, $by, $pageNo, $perPage,$searchQuery);     
 		
-$dataTmp = array(
+$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
 			'searchArray' => $searchArray,
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall
-		);
+		];
 		return $dataTmp;
 	}
 	public function getsingleCountriesData($id,$tbl='')
@@ -102,7 +102,7 @@ $dataTmp = array(
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('c'=>'main_country'),array('c.*'))
+						->from(['c'=>'main_country'],['c.*'])
 					    ->where('c.isactive = 1 AND c.id='.$id.' ');
 		return $this->fetchAll($select)->toArray();
 	
@@ -167,15 +167,15 @@ $dataTmp = array(
 		{
 			$select = $this->select()
                             ->setIntegrityCheck(false)
-                            ->from(array('c'=>'tbl_countries'),array('c.*'))
-							->joinLeft(array('m'=>'main_country'), "m.country_id_org = c.id and m.isactive = 1",array())
+                            ->from(['c'=>'tbl_countries'],['c.*'])
+							->joinLeft(['m'=>'main_country'], "m.country_id_org = c.id and m.isactive = 1",[])
 							->order('c.country_name');	
 		}
 		else
 		{
 			$select = $this->select()
                             ->setIntegrityCheck(false)
-                            ->from(array('c'=>'tbl_countries'),array('c.*'))
+                            ->from(['c'=>'tbl_countries'],['c.*'])
 							->order('c.country_name');			
 		}
 		
@@ -187,7 +187,7 @@ $dataTmp = array(
 	   
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('mc'=>'main_country'),array('count'=>'count(mc.id)'))
+						->from(['mc'=>'main_country'],['count'=>'count(mc.id)'])
 					    ->where('mc.country="'.$country.'" AND mc.isactive = 1');
 		return $this->fetchAll($select)->toArray();
 	
@@ -197,7 +197,7 @@ $dataTmp = array(
 	{
 	     $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('c'=>'tbl_countries'),array('c.id','c.country_code','c.country_name'))
+						->from(['c'=>'tbl_countries'],['c.id','c.country_code','c.country_name'])
 					    ->where('c.id="'.$countryid.'" AND c.is_active = 1');
 		return $this->fetchAll($select)->toArray();
 	
@@ -208,7 +208,7 @@ $dataTmp = array(
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('c'=>'main_country'),array('c.country_id_org'))
+						->from(['c'=>'main_country'],['c.country_id_org'])
 					    ->where('c.id="'.$id.'" AND c.isactive = 1');
 		
 		return $this->fetchAll($select)->toArray();
@@ -219,7 +219,7 @@ $dataTmp = array(
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('c'=>'main_country'),array('c.id','c.country','c.country_id_org'))
+						->from(['c'=>'main_country'],['c.id','c.country','c.country_id_org'])
 					    ->where('c.isactive = 1')
 						->order('c.country');
 		
@@ -241,7 +241,7 @@ $dataTmp = array(
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('c'=>'main_country'),array('c.id','c.country','c.country_id_org'))
+						->from(['c'=>'main_country'],['c.id','c.country','c.country_id_org'])
 					    ->where('c.isactive = 1 AND c.country_id_org = '.$countryid.' ')
 						->order('c.country');
 		
@@ -260,7 +260,7 @@ $dataTmp = array(
         $db = Zend_Db_Table::getDefaultAdapter();
         $qry = "select id,country,country_id_org from ".$this->_name." where isactive = 1";
         $result = $db->query($qry);
-        $options = array();
+        $options = [];
         while($row = $result->fetch())
         {
             
@@ -272,7 +272,7 @@ $dataTmp = array(
 	public function getCountryNamesByIds($countryIdArray)
 	{
 		$resultstring = implode(',', $countryIdArray);
-		$countryArray = array();
+		$countryArray = [];
 		if($resultstring)
 		{
 			try

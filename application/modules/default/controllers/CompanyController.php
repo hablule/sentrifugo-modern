@@ -50,7 +50,7 @@ class Default_CompanyController extends Zend_Controller_Action
         $session = sapp_Global::_readSession();
         if (!isset($session)) {
             if ($this->getRequest()->isXmlHttpRequest()) {
-                echo Zend_Json::encode(array('login' => 'failed'));
+                echo Zend_Json::encode(['login' => 'failed']);
                 exit;
             } else {
                 $this->_redirect('');
@@ -100,7 +100,7 @@ class Default_CompanyController extends Zend_Controller_Action
 
             $dataTmp = $this->_model->getGrid($sort, $by, $perPage, $page, rtrim($searchData, ','), $call, $dashboardcall);
 
-            $this->view->dataArray = array($dataTmp);
+            $this->view->dataArray = [$dataTmp];
             $this->view->call      = $call;
 
             $this->view->messages  = $this->_helper->flashMessenger->getMessages();
@@ -123,8 +123,8 @@ class Default_CompanyController extends Zend_Controller_Action
             // Fetch mapped Domains for display (Read-Only List)
             $db = Zend_Db_Table::getDefaultAdapter();
             $select = $db->select()
-                ->from(array('map' => 'map_company_businessdomain'), array())
-                ->joinInner(array('dom' => 'main_businessdomain'), 'map.businessdomain_id = dom.id', array('name', 'code'))
+                ->from(['map' => 'map_company_businessdomain'], [])
+                ->joinInner(['dom' => 'main_businessdomain'], 'map.businessdomain_id = dom.id', ['name', 'code'])
                 ->where('map.company_id = ?', $id)
                 ->where('map.isactive = ?', 1);
 
@@ -190,7 +190,7 @@ class Default_CompanyController extends Zend_Controller_Action
             $db->beginTransaction();
 
             try {
-                $data = array(
+                $data = [
                     'code'                => trim((string) $request->getParam('code', '')),
                     'name'                => trim((string) $request->getParam('name', '')),
                     'registration_number' => trim((string) $request->getParam('registration_number', '')),
@@ -199,7 +199,7 @@ class Default_CompanyController extends Zend_Controller_Action
                     'org_start_date'      => sapp_Global::change_date($request->getParam('org_start_date'), 'database'),
                     'description'         => trim((string) $request->getParam('description', '')),
                     'isactive'            => (int) $request->getParam('isactive', 1)
-                );
+                ];
 
                 // Handle File Upload 
                 if ($form->org_image->isUploaded()) {
@@ -222,22 +222,22 @@ class Default_CompanyController extends Zend_Controller_Action
                 }
 
                 // Many-to-Many Sync Logic: Company -> Business Domains
-                $selectedDomains = $request->getParam('businessdomain', array());
+                $selectedDomains = $request->getParam('businessdomain', []);
 
                 // 1. Hard Delete all existing mappings for this Company
                 // Note: The mapping table must be updated to `map_company_businessdomain` via DDL in your DB.
-                $db->delete('map_company_businessdomain', array('company_id = ?' => $syncId));
+                $db->delete('map_company_businessdomain', ['company_id = ?' => $syncId]);
 
                 // 2. Insert new mappings
                 if (!empty($selectedDomains)) {
                     foreach ($selectedDomains as $domainId) {
-                        $db->insert('map_company_businessdomain', array(
+                        $db->insert('map_company_businessdomain', [
                             'company_id'        => $syncId,
                             'businessdomain_id' => (int)$domainId,
                             'createdby'         => $this->_loginUserId,
                             'createddate'       => gmdate("Y-m-d H:i:s"),
                             'isactive'          => 1
-                        ));
+                        ]);
                     }
                 }
 
@@ -246,23 +246,23 @@ class Default_CompanyController extends Zend_Controller_Action
                 $db->commit();
 
                 // Set FlashMessenger for the redirect page
-                $this->_helper->flashMessenger->addMessage(array('success' => "Company {$saveMode} successfully."));
+                $this->_helper->flashMessenger->addMessage(['success' => "Company {$saveMode} successfully."]);
 
                 // SSOT v6.4 Strict AJAX JSON Response (Success with Redirect)
-                $this->_helper->json(array(
+                $this->_helper->json([
                     'result'    => 'saved',
                     'nomessage' => 'yes'
-                ));
+                ]);
             } catch (\Throwable $e) {
                 $db->rollBack();
                 error_log("Company Save Error: " . $e->getMessage());
 
                 // SSOT v6.4 Strict AJAX JSON Response (Exception)
-                $this->_helper->json(array(
+                $this->_helper->json([
                     'result'  => 'exception',
                     'message' => 'System error occurred.',
                     'msgtype' => 'error'
-                ));
+                ]);
             }
         } else {
             // SSOT v6.4 Strict AJAX JSON Response (Validation Error - Raw Array)
@@ -280,7 +280,7 @@ class Default_CompanyController extends Zend_Controller_Action
 
         if ($id) {
             if (sapp_Global::_checkprivileges(COMPANY_MENU_ID, $this->_loginuserGroup, $this->_loginuserRole, 'delete') !== 'Yes') {
-                return $this->_helper->json(array('result' => 'error', 'message' => 'Permission Denied.'));
+                return $this->_helper->json(['result' => 'error', 'message' => 'Permission Denied.']);
             }
 
             try {
@@ -293,14 +293,14 @@ class Default_CompanyController extends Zend_Controller_Action
                 sapp_Global::logManager(COMPANY_MENU_ID, 3, $this->_loginUserId, $id);
 
                 // Standard Success Response
-                return $this->_helper->json(array('result' => 'saved', 'nomessage' => 'no', 'message' => 'Record deleted successfully.', 'msgtype' => 'success'));
+                return $this->_helper->json(['result' => 'saved', 'nomessage' => 'no', 'message' => 'Record deleted successfully.', 'msgtype' => 'success']);
             } catch (\Throwable $e) {
                 error_log("Company Delete Error: " . $e->getMessage());
-                return $this->_helper->json(array('result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error'));
+                return $this->_helper->json(['result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error']);
             }
         }
 
-        return $this->_helper->json(array('result' => 'error', 'message' => 'Invalid request'));
+        return $this->_helper->json(['result' => 'error', 'message' => 'Invalid request']);
     }
 
     public function makeactiveinactiveAction()
@@ -312,10 +312,10 @@ class Default_CompanyController extends Zend_Controller_Action
             $this->_model->toggleStatus($id, $status);
             sapp_Global::logManager(COMPANY_MENU_ID, 4, $this->_loginUserId, $id);
 
-            $this->_helper->json(array('result' => 'saved', 'nomessage' => 'no', 'msgtype' => 'success', 'message' => 'Status updated successfully.'));
+            $this->_helper->json(['result' => 'saved', 'nomessage' => 'no', 'msgtype' => 'success', 'message' => 'Status updated successfully.']);
         } catch (\Throwable $e) {
             error_log("Company Toggle Error: " . $e->getMessage());
-            $this->_helper->json(array('result' => 'exception', 'msgtype' => 'error', 'message' => 'System error occurred.'));
+            $this->_helper->json(['result' => 'exception', 'msgtype' => 'error', 'message' => 'System error occurred.']);
         }
     }
 

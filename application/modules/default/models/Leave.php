@@ -13,8 +13,8 @@ class Default_Model_Leave extends Zend_Db_Table_Abstract{
 
         $bank = $this->select()
         ->setIntegrityCheck(false)
-        ->from(array('ml' => 'main_leave'), array('leave_id' => 'ml.leave_id', 'name' => 'ml.name', 'durationtype' => 'ml.durationtype', 'paytype' => 'ml.paytype','baseperiod'=>'ml.baseperiod','approvedrequired'=>'if(ml.approvedrequired="N","No","Yes")','ispreset'=>'if(ml.ispreset="N","No","Yes")','isactive'=>'if(ml.isactive="N","No","Yes")'))
-        ->joinInner(array('lc' => 'main_leavecategory'), "lc.leavecategory_id = ml.leavecategory_id", array('categoryname' => 'lc.name'))
+        ->from(['ml' => 'main_leave'], ['leave_id' => 'ml.leave_id', 'name' => 'ml.name', 'durationtype' => 'ml.durationtype', 'paytype' => 'ml.paytype','baseperiod'=>'ml.baseperiod','approvedrequired'=>'if(ml.approvedrequired="N","No","Yes")','ispreset'=>'if(ml.ispreset="N","No","Yes")','isactive'=>'if(ml.isactive="N","No","Yes")'])
+        ->joinInner(['lc' => 'main_leavecategory'], "lc.leavecategory_id = ml.leavecategory_id", ['categoryname' => 'lc.name'])
             ->order("$by $sort")
             ->where($where)
             ->limitPage($pageNo, $perPage);
@@ -23,7 +23,7 @@ class Default_Model_Leave extends Zend_Db_Table_Abstract{
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $a = '', $b = '', $c = '', $d = '')
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         if($searchData != '' && $searchData!='undefined')
         {
             $searchValues = json_decode($searchData);
@@ -70,7 +70,7 @@ class Default_Model_Leave extends Zend_Db_Table_Abstract{
             //die($searchQuery);				
         }
         $objName = 'leave';
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'name' => 'Leave Name',
             'categoryname' => 'Leave Category',
@@ -82,17 +82,17 @@ class Default_Model_Leave extends Zend_Db_Table_Abstract{
             'isactive'=>'Active',
 
 
-        );
+        ];
 
         $tablecontent = $this->getData($sort, $by, $pageNo, $perPage, $searchQuery);
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
             'perPage' => $perPage,
             'tablecontent' => $tablecontent,
             'objectname' => $objName,
-            'extra' => array(),
+            'extra' => [],
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
             'jsFillFnName' => '',
@@ -100,19 +100,19 @@ class Default_Model_Leave extends Zend_Db_Table_Abstract{
             'call' => $call,
             'add' =>'add',
             'dashboardcall' => $dashboardcall,
-            'search_filters' => array(
+            'search_filters' => [
               
-                'approvedrequired' => array(
+                'approvedrequired' => [
                     'type' => 'select',
-                    'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-                    'ispreset' => array(
+                    'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+                    'ispreset' => [
                         'type' => 'select',
-                        'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-                        'isactive' => array(
+                        'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+                        'isactive' => [
                             'type' => 'select',
-                            'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-            )
-        );
+                            'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+            ]
+        ];
         return $dataTmp;
     }
 
@@ -120,8 +120,8 @@ class Default_Model_Leave extends Zend_Db_Table_Abstract{
 	{
 		$select = $this->select()
 						->setIntegrityCheck(false)
-                        ->from(array('ml' => 'main_leave'), array('leave_id' => 'ml.leave_id','leavecategoryid' => 'ml.leavecategory_id', 'name' => 'ml.name','isact' => 'ml.isactive','isactivename' => 'if(ml.isactive="N","No","Yes")','duarationtype' => 'ml.durationtype', 'paytype' => 'ml.paytype','description'=>'ml.description','baseperiod'=>'ml.baseperiod','approvedrequired'=>'if(ml.approvedrequired="N","No","Yes")','isapprovecheck'=>'ml.approvedrequired','ispreset'=>'if(ml.ispreset="N","No","Yes")','isactivecheck'=>'ml.isactive','ispresetcheck'=>'ml.ispreset','allowday'=>'ml.alloteddays','classPath'=>'ml.classPath','classfun'=>'ml.method','parameters'=>'ml.parameters'))
-                        ->joinInner(array('lc' => 'main_leavecategory'), "lc.leavecategory_id = ml.leavecategory_id", array('categoryname' => 'lc.name'))
+                        ->from(['ml' => 'main_leave'], ['leave_id' => 'ml.leave_id','leavecategoryid' => 'ml.leavecategory_id', 'name' => 'ml.name','isact' => 'ml.isactive','isactivename' => 'if(ml.isactive="N","No","Yes")','duarationtype' => 'ml.durationtype', 'paytype' => 'ml.paytype','description'=>'ml.description','baseperiod'=>'ml.baseperiod','approvedrequired'=>'if(ml.approvedrequired="N","No","Yes")','isapprovecheck'=>'ml.approvedrequired','ispreset'=>'if(ml.ispreset="N","No","Yes")','isactivecheck'=>'ml.isactive','ispresetcheck'=>'ml.ispreset','allowday'=>'ml.alloteddays','classPath'=>'ml.classPath','classfun'=>'ml.method','parameters'=>'ml.parameters'])
+                        ->joinInner(['lc' => 'main_leavecategory'], "lc.leavecategory_id = ml.leavecategory_id", ['categoryname' => 'lc.name'])
 						->where('ml.leave_id='.$id.'');
 		return $this->fetchAll($select)->toArray();
 	}
@@ -142,8 +142,8 @@ class Default_Model_Leave extends Zend_Db_Table_Abstract{
 	{
 		$select = $this->select()
 						->setIntegrityCheck(false)
-                        ->from(array('ml' => 'main_leave'), array('leave_id' => 'ml.leave_id', 'name' => 'ml.name'))
-                        ->joinInner(array('lc' => 'main_leavecategory'), "lc.leavecategory_id = ml.leavecategory_id", array('category' => 'lc.name'));
+                        ->from(['ml' => 'main_leave'], ['leave_id' => 'ml.leave_id', 'name' => 'ml.name'])
+                        ->joinInner(['lc' => 'main_leavecategory'], "lc.leavecategory_id = ml.leavecategory_id", ['category' => 'lc.name']);
 		return $this->fetchAll($select)->toArray();
 	}
     public function DeleteData($where)

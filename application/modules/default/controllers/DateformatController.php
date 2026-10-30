@@ -45,9 +45,9 @@ class Default_DateformatController extends Zend_Controller_Action
 		$view = Zend_Layout::getMvcInstance()->getView();		
 		$objname = $this->_getParam('objname');
 		$refresh = $this->_getParam('refresh');
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 		
 		if($refresh == 'refresh')
@@ -77,24 +77,24 @@ class Default_DateformatController extends Zend_Controller_Action
 				
 		$objName = 'dateformat';
 		
-		$tableFields = array('action'=>'Action','dateformat' => 'Date Format','description' => 'Description','example'=>'Example');
+		$tableFields = ['action'=>'Action','dateformat' => 'Date Format','description' => 'Description','example'=>'Example'];
 		
 			
 		$tablecontent = $dateformat->getDateFormatData($sort, $by, $pageNo, $perPage,$searchQuery);     
 		
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
 			'searchArray' => $searchArray,'call'=>$call
-		);			
+		];			
 		array_push($data,$dataTmp);
 		$this->view->dataArray = $data;
 		$this->view->call = $call ;
@@ -192,15 +192,15 @@ class Default_DateformatController extends Zend_Controller_Action
 				$description = $this->_request->getParam('description');
                                 $example = $this->_request->getParam('example');
 				$date = new Zend_Date();
-				   $data = array('dateformat'=>trim($dateformat),
+				   $data = ['dateformat'=>trim($dateformat),
 						  'description'=>trim($description),
 						  'modifiedby'=>$loginUserId,
                                                   'example' => $example,
 						  'modifieddate'=>$date->get('yyyy-MM-dd HH:mm:ss')
-						);
+						];
 					if($id!='')
 					{
-						$where = array('id=?'=>$id);  
+						$where = ['id=?'=>$id];  
 						$actionflag = 2;
 					}
 					else
@@ -215,12 +215,12 @@ class Default_DateformatController extends Zend_Controller_Action
 					if($Id == 'update')
 					{
 					   $tableid = $id;
-					   $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Date Format updated successfully."));
+					   $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Date Format updated successfully."]);
 					}   
 					else
 					{
                        $tableid = $Id; 
-					   $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Date Format added successfully."));
+					   $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Date Format added successfully."]);
 					}   
 					$menuID =DATEFORMAT;
 					$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
@@ -260,15 +260,15 @@ class Default_DateformatController extends Zend_Controller_Action
 		
 		if($this->getRequest()->getPost()){
 		    if($dateformatform->isValid($this->_request->getPost())){
-				   $data = array('dateformat'=>trim($dateformat),
+				   $data = ['dateformat'=>trim($dateformat),
 						  'description'=>trim($description),
 						  'modifiedby'=>$loginUserId,
                                                   'example' => $example,
 						  'modifieddate'=>Zend_Registry::get('currentdate')
-						);
+						];
                                    print_r($data);exit;
 					if($id!=''){
-						$where = array('id=?'=>$id);  
+						$where = ['id=?'=>$id];  
 						$messages['message']='Date Format updated successfully';
 						$actionflag = 2;
 						
@@ -316,8 +316,8 @@ class Default_DateformatController extends Zend_Controller_Action
 		    if($id)
 			{
 			 $dateformatmodel = new Default_Model_Dateformat();
-			  $data = array('isactive'=>0);
-			  $where = array('id=?'=>$id);
+			  $data = ['isactive'=>0];
+			  $where = ['id=?'=>$id];
 			  $Id = $dateformatmodel->SaveorUpdateDateFormatData($data, $where);
 			    if($Id == 'update')
 				{

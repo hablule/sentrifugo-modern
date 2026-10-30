@@ -13,9 +13,9 @@ class Default_Model_Paymentcard extends Zend_Db_Table_Abstract{
 
         $bank = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('mp'=>'main_paymentcard'),array('mp.name as name', 'mp.code as code', 'mp.description as description', 'if(mp.isactive="Y","Yes","No") as isactive', 'mp.paymentcard_id as id'))
-            ->joinLeft(array('mcp'=>'main_cardprovider'),"mp.cardprovider_id = mcp.cardprovider_id",array('cardproviders'=>'mcp.name'))
-            ->joinLeft(array('mpct'=>'main_paymentcardtype'),"mp.paymentcardtype_id = mpct.paymentcardtype_id",array('type'=>'mpct.name'))
+            ->from(['mp'=>'main_paymentcard'],['mp.name as name', 'mp.code as code', 'mp.description as description', 'if(mp.isactive="Y","Yes","No") as isactive', 'mp.paymentcard_id as id'])
+            ->joinLeft(['mcp'=>'main_cardprovider'],"mp.cardprovider_id = mcp.cardprovider_id",['cardproviders'=>'mcp.name'])
+            ->joinLeft(['mpct'=>'main_paymentcardtype'],"mp.paymentcardtype_id = mpct.paymentcardtype_id",['type'=>'mpct.name'])
             ->order("$by $sort")
             ->where($where)
             ->limitPage($pageNo, $perPage);
@@ -24,7 +24,7 @@ class Default_Model_Paymentcard extends Zend_Db_Table_Abstract{
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $a = '', $b = '', $c = '', $d = '')
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
             foreach ($searchValues as $key => $val) {
@@ -45,7 +45,7 @@ class Default_Model_Paymentcard extends Zend_Db_Table_Abstract{
             $searchQuery = rtrim($searchQuery, " AND");
         }
         $objName = 'paymentcard';
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'code' => 'Code',
             'name' => 'Name',
@@ -53,17 +53,17 @@ class Default_Model_Paymentcard extends Zend_Db_Table_Abstract{
             'type'=>'Type ',
             'description' => 'Description',
             'isactive' => 'Active',
-        );
+        ];
 
         $tablecontent = $this->getData($sort, $by, $pageNo, $perPage, $searchQuery);
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
             'perPage' => $perPage,
             'tablecontent' => $tablecontent,
             'objectname' => $objName,
-            'extra' => array(),
+            'extra' => [],
             'add'=>'add',
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
@@ -71,12 +71,12 @@ class Default_Model_Paymentcard extends Zend_Db_Table_Abstract{
             'searchArray' => $searchArray,
             'call' => $call,
             'dashboardcall' => $dashboardcall,
-            'search_filters' => array(
-                'isactive' => array(
+            'search_filters' => [
+                'isactive' => [
                     'type' => 'select',
-                    'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-            )
-        );
+                    'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+            ]
+        ];
         return $dataTmp;
     }
 
@@ -105,7 +105,7 @@ class Default_Model_Paymentcard extends Zend_Db_Table_Abstract{
     {
         $linec = $this->select()
                       ->setIntegrityCheck(false)
-                      ->from(array('mp'=>'main_paymentcard'),array('mp.name as name', 'mp.paymentcard_id as paymentcard_id'))
+                      ->from(['mp'=>'main_paymentcard'],['mp.name as name', 'mp.paymentcard_id as paymentcard_id'])
                       ->where('mp.isactive="Y"');
         return $this->fetchAll($linec)->toArray();
     }

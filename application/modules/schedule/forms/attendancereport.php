@@ -10,39 +10,39 @@ class Schedule_Form_AttendanceReport extends Zend_Form{
         $id = new Zend_Form_Element_Hidden('id');
         $search_by = new Zend_Form_Element_Multiselect('search_by');
         $search_by->setLabel('Search by');
-        $search_by->addMultiOptions(array('Day'=>'Day','Branch'=>'Branch','sbunit'=>'Businessunit','Division'=>'Division','Department'=>'Department','Section'=>'Section','Project'=>'Project',
-                                            'Team'=>'Team'));
+        $search_by->addMultiOptions(['Day'=>'Day','Branch'=>'Branch','sbunit'=>'Businessunit','Division'=>'Division','Department'=>'Department','Section'=>'Section','Project'=>'Project',
+                                            'Team'=>'Team']);
         $schedule = new Zend_Form_Element_Multiselect('schedule');
-        $schedule->addMultiOptions(array('empty'=>'Select...'));
+        $schedule->addMultiOptions(['empty'=>'Select...']);
        
         $report_option = new Zend_Form_Element_Multiselect('report_option');
-        $report_option->addMultiOptions(array('All'=>'All','Attendance'=>'Attendance','Absent'=>'Absent','Late'=>'Late','Leave'=>'Leave'));
+        $report_option->addMultiOptions(['All'=>'All','Attendance'=>'Attendance','Absent'=>'Absent','Late'=>'Late','Leave'=>'Leave']);
         $report_option->setLabel("Report Option");
        
         $day= new Zend_Form_Element_Select('day');
-        $day->addMultiOptions(array('empty'=>'Select...','Monday'=>'Monday','Tuesday'=>'Tuesday','Wednesday'=>'Wednesday','Thursday'=>'Thursday','Friday'=>'Friday','Saturday'=>'Saturday','Sunday'=>'Sunday'));
+        $day->addMultiOptions(['empty'=>'Select...','Monday'=>'Monday','Tuesday'=>'Tuesday','Wednesday'=>'Wednesday','Thursday'=>'Thursday','Friday'=>'Friday','Saturday'=>'Saturday','Sunday'=>'Sunday']);
         $day->setLabel('Day');
-        $day->addMultiOptions(array('empty'=>'Select...'));
+        $day->addMultiOptions(['empty'=>'Select...']);
         $dpt= new Zend_Form_Element_Select('dpt');
         $dpt->setLabel('Departement');
-        $dpt->addMultiOptions(array('empty'=>'Select...'));
+        $dpt->addMultiOptions(['empty'=>'Select...']);
         $sbunit= new Zend_Form_Element_Select('sbunit');
         $sbunit->setLabel('Business Unit');
-        $sbunit->addMultiOptions(array('empty'=>'Select...'));
+        $sbunit->addMultiOptions(['empty'=>'Select...']);
         $division= new Zend_Form_Element_Select('division');
         $division->setLabel('Division');
-        $division->addMultiOptions(array('empty'=>'Select...'));
+        $division->addMultiOptions(['empty'=>'Select...']);
 
         $section= new Zend_Form_Element_Select('section');
         $section->setLabel('Section');
-        $section->addMultiOptions(array('empty'=>'Select...'));
+        $section->addMultiOptions(['empty'=>'Select...']);
 
         $project= new Zend_Form_Element_Select('project');
         $project->setLabel('Project');
-        $project->addMultiOptions(array('empty'=>'Select...'));
+        $project->addMultiOptions(['empty'=>'Select...']);
         $team= new Zend_Form_Element_Select('team');
         $team->setLabel('Team');
-        $team->addMultiOptions(array('empty'=>'Select...'));
+        $team->addMultiOptions(['empty'=>'Select...']);
 
         $branch = new Zend_Form_Element_Select('branch');
         $branch->setLabel('Branch');
@@ -60,8 +60,8 @@ class Schedule_Form_AttendanceReport extends Zend_Form{
        
 
 
-        $this->addElements(array($id,$search_by,$report_option,$query,$start_date,$end_date,$schedule,$dpt,$day,$branch,$submit,$sbunit,$division,$section,$project,$team));
-        $this->setElementDecorators(array('ViewHelper'));
+        $this->addElements([$id,$search_by,$report_option,$query,$start_date,$end_date,$schedule,$dpt,$day,$branch,$submit,$sbunit,$division,$section,$project,$team]);
+        $this->setElementDecorators(['ViewHelper']);
 
     }
 }

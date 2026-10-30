@@ -64,7 +64,7 @@ class Default_Model_Period extends Zend_Db_Table_Abstract
      */
     public function getPairs($activeOnly = true, $yearId = null)
     {
-        $select = $this->select()->from($this->_name, array('id', 'name'))->order('start_date ASC');
+        $select = $this->select()->from($this->_name, ['id', 'name'])->order('start_date ASC');
         if ($activeOnly) {
             $select->where('isactive = ?', 1);
         }
@@ -81,7 +81,7 @@ class Default_Model_Period extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $fiscalyearId = null)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if (!empty($searchData) && $searchData !== 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -103,7 +103,7 @@ class Default_Model_Period extends Zend_Db_Table_Abstract
             }
         }
 
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'          => 'Action',
             'period_sequence' => 'Sequence',
             'name'            => 'Period Name',
@@ -111,18 +111,18 @@ class Default_Model_Period extends Zend_Db_Table_Abstract
             'start_date'      => 'Start Date',
             'end_date'        => 'End Date',
             'status_text'     => 'Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery, $fiscalyearId);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
             'perPage'        => $perPage,
             'tablecontent'   => $tableContent,
             'objectname'     => 'period',
-            'extra'          => array(),
+            'extra'          => [],
             'tableheader'    => $tableHeaders,
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
@@ -130,18 +130,18 @@ class Default_Model_Period extends Zend_Db_Table_Abstract
             'menuName'       => 'Periods & Locks',
             'call'           => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => array(
-                'status_text' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive')),
-                'start_date'  => array('type' => 'datepicker'),
-                'end_date'    => array('type' => 'datepicker')
-            )
-        );
+            'search_filters' => [
+                'status_text' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']],
+                'start_date'  => ['type' => 'datepicker'],
+                'end_date'    => ['type' => 'datepicker']
+            ]
+        ];
     }
 
     public function getGridData($sort, $by, $pageNo, $perPage, $searchQuery = '', $fiscalyearId = null)
     {
         // 1. Determine the sort order array
-        $orderArray = array();
+        $orderArray = [];
 
         if ($by === 'default_sequence') {
             // The specific requirement: Sort by Fiscal Year (Start Date or Name) first, THEN by Period Sequence
@@ -160,20 +160,20 @@ class Default_Model_Period extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from(
-                array('p' => $this->_name),
-                array(
+                ['p' => $this->_name],
+                [
                     'id' => 'p.id',
                     'name',
                     'period_sequence', 
                     'start_date'  => new Zend_Db_Expr("DATE_FORMAT(p.start_date, '" . DATEFORMAT_MYSQL . "')"),
                     'end_date'    => new Zend_Db_Expr("DATE_FORMAT(p.end_date, '" . DATEFORMAT_MYSQL . "')"),
                     'status_text' => new Zend_Db_Expr("CASE WHEN p.isactive = 1 THEN 'Active' ELSE 'Inactive' END")
-                )
+                ]
             )
             ->joinInner(
-                array('y' => 'main_fiscalyear'),
+                ['y' => 'main_fiscalyear'],
                 'p.fiscalyear_id = y.id',
-                array('year_name' => 'y.name')
+                ['year_name' => 'y.name']
             )
             ->where('p.isactive != ?', 5);
 
@@ -239,7 +239,7 @@ class Default_Model_Period extends Zend_Db_Table_Abstract
         if (!empty($id)) {
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = $currentDate;
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return 'update';
         }
 
@@ -258,13 +258,13 @@ class Default_Model_Period extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => 5,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
+        ];
 
-        return $this->update($data, array('id = ?' => (int)$id));
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     public function toggleStatus($id, $status)
@@ -272,13 +272,13 @@ class Default_Model_Period extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => (int)$status,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
+        ];
 
-        return $this->update($data, array('id = ?' => (int)$id));
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* =================================================================================
@@ -304,7 +304,7 @@ class Default_Model_Period extends Zend_Db_Table_Abstract
 
         // 1. Check if Period has any active locks/controls
         $lockSelect = $db->select()
-            ->from('map_period_control', array('id'))
+            ->from('map_period_control', ['id'])
             ->where('period_id = ?', (int)$id)
             ->where('status != ?', 'Open') // If it's just 'Open', we can delete it. If Locked/Closed, block it.
             ->where('isactive != ?', 5);
@@ -371,47 +371,47 @@ class Default_Model_Period extends Zend_Db_Table_Abstract
 
         // 1. Get all Business Processes that require control
         $processSelect = $db->select()
-            ->from('main_business_process', array('id', 'name', 'code'))
+            ->from('main_business_process', ['id', 'name', 'code'])
             ->where('requires_period_control = ?', 1)
             ->where('isactive = ?', 1)
             ->order('name ASC');
         $processes = $db->fetchAll($processSelect);
 
-        $matrix = array();
+        $matrix = [];
 
         if (empty($periodId)) {
             // For a new period, all processes default to Open
             foreach ($processes as $proc) {
-                $matrix[$proc['id']] = array(
+                $matrix[$proc['id']] = [
                     'name'   => $proc['name'],
                     'code'   => $proc['code'],
                     'status' => 'Open',
                     'map_id' => 0
-                );
+                ];
             }
             return $matrix;
         }
 
         // 2. Fetch existing mappings for this period
         $lockSelect = $db->select()
-            ->from('map_period_control', array('id', 'process_id', 'status'))
+            ->from('map_period_control', ['id', 'process_id', 'status'])
             ->where('period_id = ?', (int)$periodId)
             ->where('isactive = ?', 1);
         $locks = $db->fetchAll($lockSelect);
 
-        $lockMap = array();
+        $lockMap = [];
         foreach ($locks as $lock) {
-            $lockMap[$lock['process_id']] = array('status' => $lock['status'], 'map_id' => $lock['id']);
+            $lockMap[$lock['process_id']] = ['status' => $lock['status'], 'map_id' => $lock['id']];
         }
 
         // 3. Merge the lists
         foreach ($processes as $proc) {
-            $matrix[$proc['id']] = array(
+            $matrix[$proc['id']] = [
                 'name'   => $proc['name'],
                 'code'   => $proc['code'],
                 'status' => isset($lockMap[$proc['id']]) ? $lockMap[$proc['id']]['status'] : 'Open',
                 'map_id' => isset($lockMap[$proc['id']]) ? $lockMap[$proc['id']]['map_id'] : 0
-            );
+            ];
         }
 
         return $matrix;
@@ -433,17 +433,17 @@ class Default_Model_Period extends Zend_Db_Table_Abstract
         $currentDate = gmdate("Y-m-d H:i:s");
 
         foreach ($locks as $lockData) {
-            $action    = isset($lockData['action']) ? $lockData['action'] : '';
+            $action    = $lockData['action'] ?? '';
             $mapId     = isset($lockData['id']) ? (int)$lockData['id'] : 0;
             $processId = isset($lockData['process_id']) ? (int)$lockData['process_id'] : 0;
-            $status    = isset($lockData['status']) ? $lockData['status'] : 'Open';
+            $status    = $lockData['status'] ?? 'Open';
 
             if (empty($processId) || !in_array($status, ['Open', 'Locked', 'Closed'])) continue;
 
             if ($action === 'delete') {
                 if ($mapId > 0) {
                     // Hard delete the mapping record
-                    $db->delete('map_period_control', array('id = ?' => $mapId));
+                    $db->delete('map_period_control', ['id = ?' => $mapId]);
                 }
             } 
             elseif ($action === 'update' && $mapId > 0) {
@@ -490,14 +490,14 @@ class Default_Model_Period extends Zend_Db_Table_Abstract
         $db = $this->getAdapter();
 
         foreach ($periodPayload as $period) {
-            $action = isset($period['action']) ? $period['action'] : '';
+            $action = $period['action'] ?? '';
             $pid    = isset($period['id']) ? (int)$period['id'] : 0;
 
             // Format dates
             $startDate = sapp_Global::change_date($period['start_date'], 'database');
             $endDate   = sapp_Global::change_date($period['end_date'], 'database');
 
-            $data = array(
+            $data = [
                 'fiscalyear_id'   => (int)$fiscalYearId,
                 'name'            => trim((string)$period['name']),
                 'period_sequence' => (int)$period['sequence'],
@@ -505,7 +505,7 @@ class Default_Model_Period extends Zend_Db_Table_Abstract
                 'end_date'        => $endDate,
                 'description'     => isset($period['description']) ? trim((string)$period['description']) : null,
                 'isactive'        => isset($period['isactive']) ? (int)$period['isactive'] : 1
-            );
+            ];
 
             // PROCESS ACTION
             if ($action === 'delete') {
@@ -517,15 +517,15 @@ class Default_Model_Period extends Zend_Db_Table_Abstract
 
                     // Soft Delete
                     $this->update(
-                        array('isactive' => 5, 'modifiedby' => $userId, 'modifieddate' => $currentDate),
-                        array('id = ?' => $pid)
+                        ['isactive' => 5, 'modifiedby' => $userId, 'modifieddate' => $currentDate],
+                        ['id = ?' => $pid]
                     );
                 }
             } elseif ($action === 'update' && $pid > 0) {
                 // Update
                 $data['modifiedby']   = $userId;
                 $data['modifieddate'] = $currentDate;
-                $this->update($data, array('id = ?' => $pid));
+                $this->update($data, ['id = ?' => $pid]);
             } elseif ($action === 'new' || $pid === 0) {
                 // Insert
                 $data['createdby']   = $userId;

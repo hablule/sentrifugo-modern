@@ -23,7 +23,7 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
 {
     protected $_name = 'main_requisition';
     protected $_primary = 'id';
-    
+
     /**
      * This function gives data for grid view.
      * @parameters
@@ -62,10 +62,10 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
 		}
 		else
 			$where .= " AND r.req_status = 1 ";
-			
+
         if($searchQuery)
             $where .= " AND ".$searchQuery; 
-			
+
 		if($usergroup == MANAGEMENT_GROUP || $usergroup == HR_GROUP)
 			$where .= "";
 		else if((  $usergroup == MANAGER_GROUP ) && $req_type == 1)
@@ -74,17 +74,17 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
 			$where .= " AND r.createdby = ".$userid." ";
 		else if($usergroup == MANAGER_GROUP && $req_type == 3)
 			$where .= " AND r.createdby = ".$userid." ";
-		
+
 
 		$auth = Zend_Auth::getInstance();
      	if($auth->hasIdentity()){
 			$loginUserId = $auth->getStorage()->read()->id;			
 			$loginuserGroup = $auth->getStorage()->read()->group_id;
 		} 
-	
+
         $roleData = $this->select()
                         ->setIntegrityCheck(false)
-                        ->from(array('r'=>"main_requisition_summary"),array('id'=>'req_id','requisition_code'=>'requisition_code',
+                        ->from(['r'=>"main_requisition_summary"],['id'=>'req_id','requisition_code'=>'requisition_code',
                                'onboard_date'=>'date_format(r.onboard_date,"'.DATEFORMAT_MYSQL.'")',
                                'req_no_positions'=>'r.req_no_positions','req_status'=>'r.req_status',
                                'filled_positions'=>'r.filled_positions','r.createdon'=>'DATE_FORMAT(r.createdon,"'.DATEFORMAT_MYSQL.'")' ,
@@ -93,25 +93,25 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
                                 'appstatus3' => new Zend_Db_Expr("if(appstatus3 ='Initiated',null,appstatus3)"),
                                 'position_name','reporting_manager_name','businessunit_name','department_name','jobtitle_name',
                                 'emp_type_name','approver1_name','approver2_name','approver3_name','createdby_name'
-                            ))
-                       
+                            ])
+
                         ->where($where)
                         ->order("$by $sort") 
                         ->limitPage($pageNo, $perPage);
         return $roleData;       		
     }
-    
+
     public function getOpeningrequisitionsCount($req_type)
     {
-		
+
 		$auth = Zend_Auth::getInstance();
      	if($auth->hasIdentity()){
 			$userid = $auth->getStorage()->read()->id;			
 			$usergroup = $auth->getStorage()->read()->group_id;
 		} 
-		
+
     	$db = Zend_Db_Table::getDefaultAdapter();
- 
+
     	if($req_type==2)
     	{
     		$where = "r.isactive = 1  AND r.req_status = 2";
@@ -124,7 +124,7 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
     	{
     		$where = "r.isactive = 1  AND r.req_status = 1";
     	}
-		
+
 		if($usergroup == MANAGEMENT_GROUP  || $usergroup == HR_GROUP)
 			$where .= "";
 		else if((  $usergroup == MANAGER_GROUP) && $req_type == 1)
@@ -133,20 +133,20 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
 			$where .= " AND r.createdby = ".$userid." ";
 		else if($usergroup == MANAGER_GROUP && $req_type == 3)
 			$where .= " AND r.createdby = ".$userid." ";
-		
-		
+
+
     	$requisitionsData = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('r'=>$this->_name), array("count"=>"count(*)"))
+		->from(['r'=>$this->_name], ["count"=>"count(*)"])
 		->where($where);
 		return $db->fetchRow($requisitionsData);
     }
-	
+
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$loginUserId,$loginuserGroup,$reqtype,$objName,$dashboardcall)
 	{
 		$searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		if($searchData != '' && $searchData!='undefined')
 		{
 			$searchValues = json_decode($searchData);
@@ -166,7 +166,7 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
 			}
 		}		
 
-        $tableFields = array('action'=>'Action',
+        $tableFields = ['action'=>'Action',
                              'requisition_code' => 'Requisition Code',
                             'jobtitle_name' => 'Job Title',
                             'req_status'=>'Requisition Status',
@@ -182,19 +182,19 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
                              'filled_positions' => 'Filled Positions',
                           //  'r.createdon'=> 'Raised On',
                           //  'onboard_date' => 'Due Date',
-                            );
+                            ];
 		$tablecontent = $this->getRequisitionData($sort, $by, $pageNo, $perPage,$searchQuery,$loginUserId,$loginuserGroup,$reqtype);     
-        $status_arr = array(''=>'All','Initiated' => 'Initiated','Approved' => 'Approved',
+        $status_arr = [''=>'All','Initiated' => 'Initiated','Approved' => 'Approved',
                             'Rejected' => 'Rejected','Closed' => 'Closed','On hold' => 'On hold',
-                            'Complete' => 'Complete','In process' => 'In process');
-        $dataTmp = array(
+                            'Complete' => 'Complete','In process' => 'In process'];
+        $dataTmp = [
                 'sort' => $sort,
                 'by' => $by,
                 'pageNo' => $pageNo,
                 'perPage' => $perPage,				
                 'tablecontent' => $tablecontent,
                 'objectname' => $objName,
-                'extra' => array(),
+                'extra' => [],
                 'tableheader' => $tableFields,
                 'jsGridFnName' => 'getAjaxgridData',
                 'jsFillFnName' => '',
@@ -203,27 +203,27 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
                 'searchArray' => $searchArray,
                 'call'=>$call,
 				'dashboardcall'=>$dashboardcall,
-                'search_filters' => array(
-                    'r.createdon' =>array('type'=>'datepicker'),
-                    'onboard_date'=>array('type'=>'datepicker'),
-                    'req_status' => array(
+                'search_filters' => [
+                    'r.createdon' =>['type'=>'datepicker'],
+                    'onboard_date'=>['type'=>'datepicker'],
+                    'req_status' => [
                         'type' => 'select',
                         'filter_data' => $status_arr,
-                    ),
-                    'appstatus1' => array(
+                    ],
+                    'appstatus1' => [
                         'type' => 'select',
                         'filter_data' => $status_arr,
-                    ),
-                    'appstatus2' => array(
+                    ],
+                    'appstatus2' => [
                         'type' => 'select',
                         'filter_data' => $status_arr,
-                    ),
-                    'appstatus3' => array(
+                    ],
+                    'appstatus3' => [
                         'type' => 'select',
                         'filter_data' => $status_arr,
-                    ),
-                ),
-        );	
+                    ],
+                ],
+        ];	
 		return $dataTmp;
 	}
     public function getRequisitionForEdit($id,$login_id)
@@ -232,7 +232,7 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
         $query = "select p.*,if(".$login_id." in (approver1,approver2,approver3),'approver','creator') aflag,
                   case when approver1 = ".$login_id." then '1' when approver2 = ".$login_id." then '2' when approver3 = ".$login_id." then '3' end aorder,j.client_name
                   from ".$this->_name." p
-				 
+
 				  left join tm_clients j on j.id = p.client_id and j.is_active = 1 
 				  where p.isactive = 1 and p.id =".$id;
         $result = $db->query($query);
@@ -260,16 +260,16 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
         $candidate_model = new Default_Model_Candidatedetails();
         $interview_model = new Default_Model_Interviewdetails();
         $iround_model = new Default_Model_Interviewrounddetails();
-        
-        $candidate_data = array('cand_status' => 'Requisition Closed/Completed');
+
+        $candidate_data = ['cand_status' => 'Requisition Closed/Completed'];
         $candidate_where = "requisition_id = ".$id." and isactive =1 and cand_status not in ('Recruited','Rejected','On hold','Disqualified')";
 
-        $interview_data = array('interview_status' => 'Requisition Closed/Completed');
+        $interview_data = ['interview_status' => 'Requisition Closed/Completed'];
         $interview_where = "isactive = 1 and req_id = ".$id." and interview_status != 'Completed'";
 
-        $iround_data = array('round_status' => 'Requisition Closed/Completed');
+        $iround_data = ['round_status' => 'Requisition Closed/Completed'];
         $iround_where = "isactive = 1 and req_id = ".$id." and (round_status not in ('Schedule for next round','Qualified','Selected') or round_status is null)";
-        
+
         if($id != '')
         {
             $candidate_model->SaveorUpdateCandidateData($candidate_data, $candidate_where);
@@ -287,7 +287,7 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
      */
     public function SaveorUpdateRequisitionData($data, $where)
     {
-		
+
         if($where != '')
         {
             $this->update($data, $where);
@@ -300,7 +300,7 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
             return $id;
         }
     }
-    
+
     /**
      * This function is used to get maximum requisition code.
      * @return {String} Max requisition code.
@@ -316,7 +316,7 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
         $result = $db->query($query);
         $row = $result->fetch();
         $req_id = $row['req_id'];
-        
+
         if($req_id == '')
         {
             $final_req_code = $prefix."001";
@@ -326,7 +326,7 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
             $final_req_code = $prefix.  str_pad(($req_id +1), 3, '0', STR_PAD_LEFT);
         }
 		return $final_req_code;
-                
+
     }
     /**
      * This function gives all active requisition codes with specified status.
@@ -341,7 +341,7 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
             $data = $this->fetchAll("isactive = 1 and req_status = '".$req_status."' ")->toArray();
         return $data;
     }
-    
+
     /**
      * This function gives full data for approve requisition based on requisition id.
      * @param Integer $id = id of requisition.
@@ -349,7 +349,7 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
      */
     public function getAppReqById($id)
     {
-        $req_arr = array();
+        $req_arr = [];
         $db = Zend_Db_Table::getDefaultAdapter();
         $query = "select r.onboard_date,r.req_skills,r.req_qualification,r.req_exp_years,
                   case when r.req_priority = 1 then 'High' when r.req_priority = 2 then 'Medium' 
@@ -372,7 +372,7 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
 	*	This function gives the list of all reporting managers, if the resource request is raised by HR
 	*	and only his own data, if the request is raised by the project manager
 	**/
-    public function getReportingmanagers($role = '',$loginid,$id='',$dept='',$flag = '')
+    public function getReportingmanagers($role = '',$loginid = null,$id='',$dept='',$flag = '')
     {       
 
         $db = Zend_Db_Table::getDefaultAdapter();
@@ -382,7 +382,7 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
 		{
 			$roleIdsData = $db->query("select role from main_privileges where editpermission = 'Yes' AND viewpermission = 'Yes' AND object = ".SCHEDULEINTERVIEWS." 
 										AND role is not null AND group_id in (".MANAGER_GROUP.",".HR_GROUP.",".EMPLOYEE_GROUP.",".SYSTEMADMIN_GROUP.")");				
-			
+
 			$roleIds = $roleIdsData->fetchAll();
 			$roles = '';
 			foreach($roleIds as $row) {
@@ -428,21 +428,21 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
                         LEFT join main_jobtitle j on ep.jobtitle_id = j.jobtitle_id
 						where r.".ROLE_ARRAY['colgroupid']." = ".MANAGEMENT_GROUP."  AND u.isactive=1 AND ".ROLE_ARRAY['colid']."='Y' ".$whereidText.") app order by app.name asc";
 				$managerData = $db->query($query);
-				$emp_options = array();
+				$emp_options = [];
                                 $emp_options = $managerData->fetchAll();
-                                				
+
 			}else{
-				
-                                
+
+
 				$managerData = $db->query("select e.id,e.userfullname as name from main_users u
                 INNER JOIN main_userrole ur ON u.id = ur.user_id 
                 INNER JOIN ".ROLE_ARRAY['tablename']." r ON ur.role_id = r.".ROLE_ARRAY['colid']." 
                 INNER JOIN main_employees e ON u.empid = e.id 
                                          where r.".ROLE_ARRAY['colgroupid']." = ".MANAGER_GROUP." AND userstatus='old';");// AND u.id=".$loginid."
-										
+
 				$emp_options = $managerData->fetch();
 			}
-			
+
 			return $emp_options;
 		}
 	}
@@ -495,7 +495,7 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
 
             $result = $db->query($query);
             $options = $result->fetchAll();
-        
+
         return $options;
     }
 	/**
@@ -513,14 +513,14 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
 			$empstatusData = $db->query("select mn.id,tb.employemnt_status from main_employmentstatus mn
 						inner join tbl_employmentstatus tb on mn.workcodename = tb.id where mn.isactive = 1;");
 			$data = $empstatusData->fetchAll();
-			$options = array();
+			$options = [];
 			foreach($data as $emp)
 			{
 				$options[$emp['id']] = $emp['employemnt_status'];
 			}
 			return $options;
 		}
-		
+
 	}
         public function getStatusOptionsForRequi()
         {
@@ -531,7 +531,7 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
                       where mn.isactive = 1 and tb.id not in (5,7,8,9,10) order by tb.employemnt_status;"; //mn.isactive = 1 and 
             $empstatusData = $db->query($query);
             $data = $empstatusData->fetchAll();
-            $options = array();
+            $options = [];
             if(count($data)>0)
             {
                 foreach($data as $emp)
@@ -555,7 +555,7 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
 		{
 			$BUData = $db->query("select * from main_sbunit where isactive = 'Y' order by name;");
 			$data = $BUData->fetchAll();
-			$options_arr = array();
+			$options_arr = [];
 			foreach($data as $option)
 			{
 				$options_arr[$option['sbunit_id']] = $option['name'];
@@ -578,7 +578,7 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
 		{
 			$titlesData = $db->query("select * from main_jobtitle where isactive = 'Y' order by name;");//where isactive = 1
 			$data = $titlesData->fetchAll();
-			$options_arr = array();
+			$options_arr = [];
 			foreach($data as $option)
 			{
 				$options_arr[$option['jobtitle_id']] = $option['name'];
@@ -586,12 +586,12 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
 			return $options_arr;
 		}
 	}
-	
+
 	/**
 	**/
 	public function getDepartmentList($bussinessunitid,$id='')
 	{
-	  
+
 		$db = Zend_Db_Table::getDefaultAdapter();	
 		if($id!='')
 		{
@@ -602,7 +602,7 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
 		{
 			$empstatusData = $db->query("select * from main_department where isactive = 'Y'  order by name;");
 			$data = $empstatusData->fetchAll();
-			$options_arr = array();
+			$options_arr = [];
 			foreach($data as $option)
 			{
 				$options_arr[$option['department_id']] = $option['name'];
@@ -610,7 +610,7 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
 			return $options_arr;
 		}
 	}
-	
+
 	/**
 	**/
 	public function getPositionOptions($jobtitle_id,$id='')
@@ -623,10 +623,10 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
 		}
 		else
 		{
-          
+
 			$empstatusData = $db->query("select * from main_position  order by position_id;");//isactive = 1 AND 
 			$data = $empstatusData->fetchAll();
-			$options_arr = array();
+			$options_arr = [];
 			foreach($data as $option)
 			{
 				$options_arr[$option['position_id']] = $option['name'];
@@ -634,7 +634,7 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
 			return $options_arr;
 		}
 	}
-	
+
 	public function getrequisitioncreatername($userid)
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();	
@@ -647,10 +647,10 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
             $get_query = "select selected_members from main_requisition where id = ".$req_id;
             $get_result = $db->query($get_query);
             $get_row = $get_result->fetch();
-            
+
             $selected_mem = $get_row['selected_members'] +1;
             $query = "update main_requisition set selected_members = ".$selected_mem." where id=".$req_id;
-            
+
             $result = $db->query($query);
         }
 	public function incrementfilledpositions($id)
@@ -690,8 +690,8 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
         public function getReqDataForView($req_id)
         {
             $db = Zend_Db_Table::getDefaultAdapter();
-            
-            
+
+
             $query = "select * from main_requisition_summary where req_id = ".$req_id." and isactive = 1";
             $result = $db->query($query);
             $rows = $result->fetchAll();
@@ -699,14 +699,14 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
         }
         public function getnamejobtitle($user_array)
         {
-            $jobname_arr = array();
+            $jobname_arr = [];
             if(count($user_array) >0)
             {
                 $db = Zend_Db_Table::getDefaultAdapter();
                 $user_str = implode(',', $user_array);
                 $query = "select user_id ,concat(userfullname,' ,',jobtitle_name) uname 
                           from employees_summary where user_id in (".$user_str.")";
-                
+
                 $result = $db->query($query);
                 while($row = $result->fetch())
                 {
@@ -741,7 +741,7 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
                         $search_str .= " and ".$key." = '".$value."'";
                 }
             }
-           
+
             $offset = ($per_page*$page_no) - $per_page;
             $limit_str = " limit ".$per_page." offset ".$offset;
             $db = Zend_Db_Table::getDefaultAdapter();
@@ -753,11 +753,11 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
             $count_row = $count_result->fetch();
             $count = $count_row['cnt'];
             $page_cnt = ceil($count/$per_page);
-            
-            if(in_array($sort_name, array('req_status','round_status','candidate_status','interview_status')))            
+
+            if(in_array($sort_name, ['req_status','round_status','candidate_status','interview_status']))            
                 $sort_name = " cast(".$sort_name." as char(100))";
-                        
-            
+
+
             $query = "select concat(rs.requisition_code,' ,',rs.jobtitle_name) requisition_code,
                       rs.position_name,rs.reporting_manager_name,
                       rs.businessunit_name,rs.department_name,rs.req_status,ins.candidate_name,ins.candidate_status,
@@ -770,7 +770,7 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
                       where rs.isactive = 1 ".$search_str." order by ".$sort_name." ".$sort_type." ".$limit_str;
             $result = $db->query($query);
             $rows = $result->fetchAll();
-            return array('rows' => $rows,'page_cnt' => $page_cnt);
+            return ['rows' => $rows,'page_cnt' => $page_cnt];
         }
 	public function getRequisitionStats()
 	{
@@ -814,12 +814,12 @@ count(case when req_status = 'On hold' then (id) end) as onhold_req, count(case 
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$sqlRes = $db->query($qry);
 		$count = $sqlRes->fetchAll();
-			
+
 		return $count[0]['count'];
 	}
 
 	// To generate report
-	
+
 	/* 
 	 * To get first year of Requisition raised
 	 * To show it in Requisition Report filters 
@@ -829,11 +829,11 @@ count(case when req_status = 'On hold' then (id) end) as onhold_req, count(case 
         $query = "select MIN(rs.createdon) first_requisition_raised_in from main_requisition_summary rs where 1";
         return $result = $db->query($query)->fetch();
 	}
-	
+
 	public function getReportData($param_arr,$per_page,$page_no,$sort_name,$sort_type, $userid, $usergroup,$req_type)
 	{
         $where = "isactive = 1 ";
-			
+
 		if($usergroup == MANAGEMENT_GROUP ){
 			$where .= "";
 		}else if((  $usergroup == MANAGER_GROUP || $usergroup == HR_GROUP) && $req_type == 1){
@@ -843,15 +843,15 @@ count(case when req_status = 'On hold' then (id) end) as onhold_req, count(case 
 		}else if($usergroup == MANAGER_GROUP && $req_type == 3){
 			$where .= " AND rs.createdby = ".$userid." ";
 		}
-		
+
 		// To remove unwanted post values in the query 
-		$remove_elements = array('search_criteria', 'previous_search', 'hid_raised_by_name', 'hid_reporting_manager_name');
+		$remove_elements = ['search_criteria', 'previous_search', 'hid_raised_by_name', 'hid_reporting_manager_name'];
 		foreach($remove_elements as $ele){
 			if(isset($param_arr[$ele])){
 				unset($param_arr[$ele]);
 			}
 		}
-		
+
 		if(!empty($param_arr)){
             foreach($param_arr as $field => $value){
 	            if(!empty($value)){
@@ -865,36 +865,36 @@ count(case when req_status = 'On hold' then (id) end) as onhold_req, count(case 
                 }
             }
 		}
-            
-            
+
+
             // To get count of total requisitions
             if(!empty($per_page)){
 	            $offset = ($per_page*$page_no) - $per_page;
 	            $limit_str = " limit ".$per_page." offset ".$offset;
             }
-            
+
             $count_query = "select count(id) cnt from main_requisition_summary rs where ".$where;
-            
+
             $db = Zend_Db_Table::getDefaultAdapter();
             $count_result = $db->query($count_query);
             $count_row = $count_result->fetch();
-            
+
             // To get requisitions data
             $count = $count_row['cnt'];
             $page_cnt = ceil($count/$per_page);
 
             // To sort Field of type Enum appropriately
-            $enum_fields = array('req_status', 'appstatus1'); 
+            $enum_fields = ['req_status', 'appstatus1']; 
             if(in_array($sort_name, $enum_fields)){
             	$sort_name = 'CAST('.$sort_name.' AS CHAR)';
             }
-            
+
             $query = "select rs.requisition_code requisition_code, rs.jobtitle_name job_title, rs.req_status req_status,  DATE_FORMAT(rs.onboard_date,'".DATEFORMAT_MYSQL."') onboard_date,  rs.reporting_manager_name reporting_manager_name, rs.approver1_name approver1, rs.appstatus1 appstatus1, rs.approver2_name approver2, rs.appstatus2 appstatus2, rs.approver3_name approver3, rs.appstatus3 appstatus3, rs.req_no_positions req_no_positions, rs.selected_members selected_members, rs.createdby_name created_by, DATE_FORMAT(rs.createdon,'".DATEFORMAT_MYSQL."') created_on from main_requisition_summary rs where $where order by $sort_name $sort_type $limit_str";
             $result = $db->query($query);
             $rows = $result->fetchAll();
-            return array('rows' => $rows,'page_cnt' => $page_cnt);
+            return ['rows' => $rows,'page_cnt' => $page_cnt];
     }      
-    
+
     public function getAutoReportRequisition($search_str)
     {
         $db = Zend_Db_Table::getDefaultAdapter();
@@ -904,11 +904,11 @@ count(case when req_status = 'On hold' then (id) end) as onhold_req, count(case 
                   order by requisition_code desc
                   limit 0,10";
         $result = $db->query($query);
-        $requisition_arr = array();
+        $requisition_arr = [];
         $requisition_arr = $result->fetchAll();
         return $requisition_arr;
     }  
-    
+
     /**
      * This function returns candidates and interviewers based on a particular requisition code.
      * @param integer $req_id          = id of requisition
@@ -918,14 +918,14 @@ count(case when req_status = 'On hold' then (id) end) as onhold_req, count(case 
      */
     public function getcandidates_forinterview($req_id,$loginUserGroup,$loginUserId)
     {
-        
+
         $jobtitleModel = new Default_Model_Jobtitles();
         $candsmodel = new Default_Model_Candidatedetails();			
-				
+
         $reqData = $this->getRequisitionDataById($req_id);	
         $candsData = $candsmodel->getnotscheduledcandidateData($req_id);
-        $candStr = '';$jobttlArr = array();$jobtitle = '';$managerStr = "";
-		
+        $candStr = '';$jobttlArr = [];$jobtitle = '';$managerStr = "";
+
         if(!empty($candsData))
         {
             foreach ($candsData as $cand)		                
@@ -935,7 +935,7 @@ count(case when req_status = 'On hold' then (id) end) as onhold_req, count(case 
         {
             $candStr = "nocandidates";
         }	
-        
+
         if(!empty($reqData))
         {
             $reqData['jobtitlename'] = '';
@@ -945,7 +945,7 @@ count(case when req_status = 'On hold' then (id) end) as onhold_req, count(case 
                 $jobtitle = $jobttlArr[0]['jobtitlename'];
                 $reqData['jobtitlename'] = $jobttlArr[0]['jobtitlename'];
             }
-			
+
             $repmanData = $this->getReportingmanagers($loginUserGroup,$loginUserId,'',$reqData['department_id'],'interviewer');
             if(!empty($repmanData))
             {				
@@ -956,8 +956,8 @@ count(case when req_status = 'On hold' then (id) end) as onhold_req, count(case 
             {
                 $managerStr = "nomanagers";
             }	
-            
+
         }
-        return array('candidates'=>$candStr,'managers'=>$managerStr,'jobtitle'=>$jobtitle);
+        return ['candidates'=>$candStr,'managers'=>$managerStr,'jobtitle'=>$jobtitle];
     }
 }//end of class

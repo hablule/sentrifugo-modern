@@ -45,7 +45,7 @@ class Default_Model_Appraisalskills extends Zend_Db_Table_Abstract
 		$db = Zend_Db_Table::getDefaultAdapter();		
 		$servicedeskDepartmentData = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('as'=>'main_pa_skills'),array('as.*'))
+                           ->from(['as'=>'main_pa_skills'],['as.*'])
                            ->where($where)
     					   ->order("$by $sort") 
     					   ->limitPage($pageNo, $perPage);
@@ -55,8 +55,8 @@ class Default_Model_Appraisalskills extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{		
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		
 		if($searchData != '' && $searchData!='undefined')
 			{
@@ -71,18 +71,18 @@ class Default_Model_Appraisalskills extends Zend_Db_Table_Abstract
 			
 		$objName = 'appraisalskills';
 		
-		$tableFields = array('action'=>'Action','skill_name' => 'Skill','description' => 'Description');
+		$tableFields = ['action'=>'Action','skill_name' => 'Skill','description' => 'Description'];
 		
 		$tablecontent = $this->getAppraisalSkillData($sort, $by, $pageNo, $perPage,$searchQuery);     
 		
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -90,7 +90,7 @@ class Default_Model_Appraisalskills extends Zend_Db_Table_Abstract
 			'add' =>'add',
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall,
-		);
+		];
 		return $dataTmp;
 	}
 	
@@ -99,7 +99,7 @@ class Default_Model_Appraisalskills extends Zend_Db_Table_Abstract
      	$where = 'as.isactive = 1 AND as.id='.$id.' ';
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('as'=>'main_pa_skills'),array('as.*'))
+						->from(['as'=>'main_pa_skills'],['as.*'])
 					    ->where($where);
 		return $this->fetchAll($select)->toArray();
 	
@@ -109,7 +109,7 @@ class Default_Model_Appraisalskills extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('as'=>'main_pa_skills'),array('as.*'))
+						->from(['as'=>'main_pa_skills'],['as.*'])
 					    ->where('as.isactive = 1');
 		return $this->fetchAll($select)->toArray();
 	
@@ -147,7 +147,7 @@ class Default_Model_Appraisalskills extends Zend_Db_Table_Abstract
 	{
 	    	$select = $this->select()
                             ->setIntegrityCheck(false)
-                            ->from(array('sk'=>'main_pa_skills'),array('grpcnt'=>'count(*)'))
+                            ->from(['sk'=>'main_pa_skills'],['grpcnt'=>'count(*)'])
                             ->where('sk.isactive=1 AND sk.skill_name = "'.$skillname.'" ');
             return $this->fetchAll($select)->toArray();	
 	}

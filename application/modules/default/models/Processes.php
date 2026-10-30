@@ -30,7 +30,7 @@ class Default_Model_Processes extends Zend_Db_Table_Abstract
 		{
 			$where = ' a.user_id = '.$userid;
 		}else $where = ' 1=1 ' ;
-		$idArr = array();
+		$idArr = [];
 		$idArr = explode('-',$idData);
 		$id = $idArr[0];$userflag = $idArr[1]; 
 		
@@ -43,12 +43,12 @@ class Default_Model_Processes extends Zend_Db_Table_Abstract
 		{
 			$empProcessData = $this->select()
     					   ->setIntegrityCheck(false)	 
-						   ->from(array('b' => 'main_bgcheckdetails'),array('id'=>'b.id','isactive'=>'if(b.isactive=1,"Active",if(b.isactive=2,"Agency deleted",if(b.isactive=3,"Agency User deleted",if(b.isactive=4,"POC deleted","Process deleted"))))','process_status'=>'b.process_status','bgcheck_status'=>'b.bgcheck_status','explanation'=>'b.explanation','enddate'=>'if(b.process_status="Complete",DATE_FORMAT(b.modifieddate,"'.DATEFORMAT_MYSQL.'"),if(b.process_status="On hold",DATE_FORMAT(b.modifieddate,"'.DATEFORMAT_MYSQL.'"),""))','startdate'=>'DATE_FORMAT(b.createddate,"'.DATEFORMAT_MYSQL.'")','recentlycommenteddate'=>'DATE_FORMAT(b.recentlycommenteddate,"'.DATEFORMAT_MYSQL.'")'))
-						   ->joinInner(array('a'=>'main_bgagencylist'),'b.bgagency_id = a.id',array('agencyname'=>'a.agencyname'))
-						   ->joinInner(array('p'=>'main_bgpocdetails'),'b.bgagency_pocid = p.id',array('email'=>'p.email'))
+						   ->from(['b' => 'main_bgcheckdetails'],['id'=>'b.id','isactive'=>'if(b.isactive=1,"Active",if(b.isactive=2,"Agency deleted",if(b.isactive=3,"Agency User deleted",if(b.isactive=4,"POC deleted","Process deleted"))))','process_status'=>'b.process_status','bgcheck_status'=>'b.bgcheck_status','explanation'=>'b.explanation','enddate'=>'if(b.process_status="Complete",DATE_FORMAT(b.modifieddate,"'.DATEFORMAT_MYSQL.'"),if(b.process_status="On hold",DATE_FORMAT(b.modifieddate,"'.DATEFORMAT_MYSQL.'"),""))','startdate'=>'DATE_FORMAT(b.createddate,"'.DATEFORMAT_MYSQL.'")','recentlycommenteddate'=>'DATE_FORMAT(b.recentlycommenteddate,"'.DATEFORMAT_MYSQL.'")'])
+						   ->joinInner(['a'=>'main_bgagencylist'],'b.bgagency_id = a.id',['agencyname'=>'a.agencyname'])
+						   ->joinInner(['p'=>'main_bgpocdetails'],'b.bgagency_pocid = p.id',['email'=>'p.email'])
 						   
-						   ->joinInner(array('mu'=>'main_users'),'b.specimen_id = mu.id',array('username'=>'mu.userfullname'))
-						   ->joinInner(array('t'=>'main_bgchecktype'),'b.bgcheck_type = t.id',array('type'=>'t.type'))
+						   ->joinInner(['mu'=>'main_users'],'b.specimen_id = mu.id',['username'=>'mu.userfullname'])
+						   ->joinInner(['t'=>'main_bgchecktype'],'b.bgcheck_type = t.id',['type'=>'t.type'])
 						   ->where($where)
     					   ->order("$by $sort") 
     					   ->limitPage($pageNo, $perPage);
@@ -56,11 +56,11 @@ class Default_Model_Processes extends Zend_Db_Table_Abstract
 			$empProcessData = $this->select()
     					   ->setIntegrityCheck(false)	 
 						  
-						   ->from(array('b' => 'main_bgcheckdetails'),array('id'=>'b.id','isactive'=>'if(b.isactive=1,"Active",if(b.isactive=2,"Agency deleted",if(b.isactive=3,"Agency User deleted",if(b.isactive=4,"POC deleted","Process deleted"))))','process_status'=>'b.process_status','bgcheck_status'=>'b.bgcheck_status','explanation'=>'b.explanation','enddate'=>'if(b.process_status="Complete",DATE_FORMAT(b.modifieddate,"'.DATEFORMAT_MYSQL.'"),if(b.process_status="On hold",DATE_FORMAT(b.modifieddate,"'.DATEFORMAT_MYSQL.'"),""))','startdate'=>'DATE_FORMAT(b.createddate,"'.DATEFORMAT_MYSQL.'")','recentlycommenteddate'=>'DATE_FORMAT(b.recentlycommenteddate,"'.DATEFORMAT_MYSQL.'")'))
-						   ->joinInner(array('a'=>'main_bgagencylist'),'b.bgagency_id = a.id',array('agencyname'=>'a.agencyname'))
-						   ->joinInner(array('p'=>'main_bgpocdetails'),'b.bgagency_pocid = p.id',array('email'=>'p.email'))
-						   ->joinInner(array('c'=>'main_candidatedetails'),'b.specimen_id = c.id',array('username'=>'c.candidate_name'))
-						   ->joinInner(array('t'=>'main_bgchecktype'),'b.bgcheck_type = t.id',array('type'=>'t.type'))
+						   ->from(['b' => 'main_bgcheckdetails'],['id'=>'b.id','isactive'=>'if(b.isactive=1,"Active",if(b.isactive=2,"Agency deleted",if(b.isactive=3,"Agency User deleted",if(b.isactive=4,"POC deleted","Process deleted"))))','process_status'=>'b.process_status','bgcheck_status'=>'b.bgcheck_status','explanation'=>'b.explanation','enddate'=>'if(b.process_status="Complete",DATE_FORMAT(b.modifieddate,"'.DATEFORMAT_MYSQL.'"),if(b.process_status="On hold",DATE_FORMAT(b.modifieddate,"'.DATEFORMAT_MYSQL.'"),""))','startdate'=>'DATE_FORMAT(b.createddate,"'.DATEFORMAT_MYSQL.'")','recentlycommenteddate'=>'DATE_FORMAT(b.recentlycommenteddate,"'.DATEFORMAT_MYSQL.'")'])
+						   ->joinInner(['a'=>'main_bgagencylist'],'b.bgagency_id = a.id',['agencyname'=>'a.agencyname'])
+						   ->joinInner(['p'=>'main_bgpocdetails'],'b.bgagency_pocid = p.id',['email'=>'p.email'])
+						   ->joinInner(['c'=>'main_candidatedetails'],'b.specimen_id = c.id',['username'=>'c.candidate_name'])
+						   ->joinInner(['t'=>'main_bgchecktype'],'b.bgcheck_type = t.id',['type'=>'t.type'])
 						   ->where($where)
     					   ->order("$by $sort") 
     					   ->limitPage($pageNo, $perPage);
@@ -73,14 +73,14 @@ class Default_Model_Processes extends Zend_Db_Table_Abstract
 	{
 		$empProcessData = $this->select()
     					   ->setIntegrityCheck(false)	 
-						   ->from(array('b' => 'main_bgcheckdetails'),array('id'=>'b.id','isactive'=>'b.isactive','process_status'=>'b.process_status','bgcheck_status'=>'b.bgcheck_status','createdHRId'=>'createdby', 'feedback_file'=>'b.feedback_file'))
-						   ->joinInner(array('a'=>'main_bgagencylist'),'b.bgagency_id = a.id',array('agencyid'=>'b.bgagency_id','agencyname'=>'a.agencyname'))
-						   ->joinInner(array('p'=>'main_bgpocdetails'),'b.bgagency_pocid = p.id',array('pocid'=>'b.bgagency_pocid','email'=>'p.email','first_name'=>'p.first_name','last_name'=>'p.last_name','contact_no'=>'p.contact_no','location'=>'p.location'))
-						   ->joinInner(array('t'=>'main_bgchecktype'),'b.bgcheck_type = t.id',array('checktypeid'=>'b.bgcheck_type','checktype'=>'t.type'))
+						   ->from(['b' => 'main_bgcheckdetails'],['id'=>'b.id','isactive'=>'b.isactive','process_status'=>'b.process_status','bgcheck_status'=>'b.bgcheck_status','createdHRId'=>'createdby', 'feedback_file'=>'b.feedback_file'])
+						   ->joinInner(['a'=>'main_bgagencylist'],'b.bgagency_id = a.id',['agencyid'=>'b.bgagency_id','agencyname'=>'a.agencyname'])
+						   ->joinInner(['p'=>'main_bgpocdetails'],'b.bgagency_pocid = p.id',['pocid'=>'b.bgagency_pocid','email'=>'p.email','first_name'=>'p.first_name','last_name'=>'p.last_name','contact_no'=>'p.contact_no','location'=>'p.location'])
+						   ->joinInner(['t'=>'main_bgchecktype'],'b.bgcheck_type = t.id',['checktypeid'=>'b.bgcheck_type','checktype'=>'t.type'])
 						   
-						   ->joinLeft(array('ct'=>'tbl_cities'),'p.city=ct.id',array('city'=>'ct.city_name'))
-						   ->joinLeft(array('st'=>'tbl_states'),'p.state=st.id',array('state'=>'st.state_name'))
-						   ->joinLeft(array('cnt'=>'tbl_countries'),'p.country=cnt.id',array('country'=>'cnt.country_name'))
+						   ->joinLeft(['ct'=>'tbl_cities'],'p.city=ct.id',['city'=>'ct.city_name'])
+						   ->joinLeft(['st'=>'tbl_states'],'p.state=st.id',['state'=>'st.state_name'])
+						   ->joinLeft(['cnt'=>'tbl_countries'],'p.country=cnt.id',['country'=>'cnt.country_name'])
 						   ->where('b.id = '.$id);
 		
 		

@@ -31,17 +31,17 @@ class Default_CvaddController extends Zend_Controller_Action
         $req = $res->getallrequistions();
         //Displaying forms from DB Start
         $cvElements = $FormModel->getActiveElements('CV');
-        $cvElementNames = array();
-        $cvElementLabels = array();
-        $cvElementOptions = array();
-        $cvElementTypes = array();
+        $cvElementNames = [];
+        $cvElementLabels = [];
+        $cvElementOptions = [];
+        $cvElementTypes = [];
         foreach($cvElements AS $element){
-            $elementOption = array();
+            $elementOption = [];
             if($element['occupyWholeLine']=='1'){
-                $elementOption = array('OccupyLine'=>'OccupyLine');
+                $elementOption = ['OccupyLine'=>'OccupyLine'];
             }
             else if($element['startNewLine']=='1'){
-                $elementOption = array('NewLine'=>'NewLine');
+                $elementOption = ['NewLine'=>'NewLine'];
             }
             $this->forms->addElement($element['dataType'],$element['elementNameOrID']);
             
@@ -59,7 +59,7 @@ class Default_CvaddController extends Zend_Controller_Action
         $this->view->cvElementOptions = $cvElementOptions;
         $this->view->cvElementTypes = $cvElementTypes;
         $this->view->candidate_id = $this->_request->getParam('candidate_id');
-        $this->view->count = array();
+        $this->view->count = [];
             //code...
     } catch (\Throwable $th) {
         Zend_Debug::dump($th->getMessage());
@@ -71,7 +71,7 @@ class Default_CvaddController extends Zend_Controller_Action
     {
         $FormModel = new Default_Model_Formview();
         $cvElements = $FormModel->getActiveElements('CV');
-        $cvdata = array();
+        $cvdata = [];
         foreach($cvElements AS $element){
             if (
                 !($element['dataType'] == "Button") && !($element['dataType'] == "Hidden") && !($element['dataType'] == "Captcha") &&
@@ -81,7 +81,7 @@ class Default_CvaddController extends Zend_Controller_Action
                     $cvdata[$element['elementNameOrID']] =  (int)$this->_request->getParam($element['elementNameOrID']);
                 }else{
                     
-                    if(strpos($element['elementNameOrID'],"date") !== false){
+                    if(str_contains($element['elementNameOrID'],"date")){
                         $date = $this->_request->getParam($element['elementNameOrID']);
                         
                         $cvdata[$element['elementNameOrID']] =  sapp_Global::change_date($date, 'database');
@@ -105,11 +105,11 @@ class Default_CvaddController extends Zend_Controller_Action
        $bool=$cvmodel->addcv($cvdata);
         if(false)
         {
-            $this->_helper->json(array('result'=>'success'));
-            return $this->_helper->json(array('result'=>'success'));
+            $this->_helper->json(['result'=>'success']);
+            return $this->_helper->json(['result'=>'success']);
         }
         else{
-            return $this->_helper->json(array('result'=>'error'));
+            return $this->_helper->json(['result'=>'error']);
         }
         
         
@@ -122,11 +122,11 @@ class Default_CvaddController extends Zend_Controller_Action
     public function uploadsaveAction() 
     {		
         $user_id = sapp_Global::_readSession('id');
-        $filedata = array();
+        $filedata = [];
         
     	// Validate file with size greater than default(Upload Max Filesize)limit
         if ($_FILES["myfile"]["size"] == 0 || $_FILES["myfile"]["size"] > (2*1024*1024)) {
-            $this->_helper->json(array('error' => 'filesize'));
+            $this->_helper->json(['error' => 'filesize']);
         } else if(isset($_FILES["myfile"])) {
             $fileName = $_FILES["myfile"]["name"];
             $fileName = preg_replace('/[^a-zA-Z0-9.\']/', '_', $fileName);			  	
@@ -141,7 +141,7 @@ class Default_CvaddController extends Zend_Controller_Action
         		move_uploaded_file($_FILES["myfile"]["tmp_name"],CV_UPLOAD_TEMP_PATH.$newName);
         	}
 
-            $this->_helper->json(array('filedata' => $filedata));
+            $this->_helper->json(['filedata' => $filedata]);
             
         }        
     }

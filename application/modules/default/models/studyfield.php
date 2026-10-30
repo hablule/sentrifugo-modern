@@ -13,7 +13,7 @@ class Default_Model_studyfield extends Zend_Db_Table_Abstract{
 
         $bank = $this->select()
             ->setIntegrityCheck(false)
-            ->from('main_studyfield',array('*','studyfield_id as id,if(isactive="Y","Yes","No") as isactive'))
+            ->from('main_studyfield',['*','studyfield_id as id,if(isactive="Y","Yes","No") as isactive'])
             ->where($where)
             ->order("$by $sort")
             ->limitPage($pageNo, $perPage);
@@ -23,7 +23,7 @@ class Default_Model_studyfield extends Zend_Db_Table_Abstract{
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $a = '', $b = '', $c = '', $d = '')
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
             foreach ($searchValues as $key => $val) {
@@ -33,36 +33,36 @@ class Default_Model_studyfield extends Zend_Db_Table_Abstract{
             $searchQuery = rtrim($searchQuery, " AND");
         }
         $objName = 'studyfield';
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
 
             'name' => 'Name',
             'code' => 'Code',
             'description' => 'Description',
             'isactive' => 'Active',
-        );
+        ];
 
         $tablecontent = $this->getData($sort, $by, $pageNo, $perPage, $searchQuery);
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
             'perPage' => $perPage,
             'tablecontent' => $tablecontent,
             'objectname' => $objName,
-            'extra' => array(),
+            'extra' => [],
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
             'jsFillFnName' => '',
             'searchArray' => $searchArray,
             'call' => $call,
             'dashboardcall' => $dashboardcall,
-            'search_filters' => array(
-                'isactive' => array(
+            'search_filters' => [
+                'isactive' => [
                     'type' => 'select',
-                    'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
+                    'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
 					
-            )        );
+            ]        ];
         return $dataTmp;
     }
 
@@ -91,7 +91,7 @@ class Default_Model_studyfield extends Zend_Db_Table_Abstract{
     {
         $select = $this->select()
                        ->setIntegrityCheck(false)
-                       ->from('main_studyfield',array('studyfield_id','name'))
+                       ->from('main_studyfield',['studyfield_id','name'])
                        ->where('isactive="Y"');
         return $this->fetchAll($select)->toArray();
     }

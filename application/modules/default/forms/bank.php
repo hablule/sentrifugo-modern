@@ -17,27 +17,27 @@ class Default_Form_Bank extends Zend_Form
         $name = new Zend_Form_Element_Text('name');
         $name->setAttrib('maxLength', 50);
         $name->setLabel('Bank Name');
-        $name->addValidator('NotEmpty', false, array('messages' => 'Please enter bank name.'));
-        $name->addValidators(array(
-            array(
+        $name->addValidator('NotEmpty', false, ['messages' => 'Please enter bank name.']);
+        $name->addValidators([
+            [
                 'validator'   => 'Regex',
                 'breakChainOnFailure' => true,
-                'options'     => array(
+                'options'     => [
 
                     'pattern' => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9\-\s]*)$/',
-                    'messages' => array(
+                    'messages' => [
                         'regexNotMatch' => 'Please enter valid bank account type.'
-                    )
-                )
-            )
-        ));
+                    ]
+                ]
+            ]
+        ]);
         if (!$isEdit) {
             $name->addValidator(
                 new Zend_Validate_Db_NoRecordExists(
-                    array(
+                    [
                         'table' => 'main_bank',
                         'field' => 'name',
-                    )
+                    ]
                 )
             );
             $name->getValidator('Db_NoRecordExists')->setMessage('Bank  already exists.');
@@ -47,29 +47,29 @@ class Default_Form_Bank extends Zend_Form
 
         $description = new Zend_Form_Element_Text('description');
         $description->setRequired(true);
-        $description->addValidator('NotEmpty', false, array('messages' => 'Please enter bank description.'));
+        $description->addValidator('NotEmpty', false, ['messages' => 'Please enter bank description.']);
         $description->setLabel('Description');
         $description->setRequired(true);
 
         $routingno = new Zend_Form_Element_Text('routingno');
         $routingno->setRequired(true);
-        $routingno->addValidator('NotEmpty', false, array('messages' => 'Please enter bank routing number.'));
+        $routingno->addValidator('NotEmpty', false, ['messages' => 'Please enter bank routing number.']);
         $routingno->setLabel('Routing Number');
         $routingno->setRequired(true);
 
         $swiftcode = new Zend_Form_Element_Text('swift_code');
         $swiftcode->setRequired(true);
-        $swiftcode->addValidator('NotEmpty', false, array('messages' => 'Please enter bank swift code.'));
+        $swiftcode->addValidator('NotEmpty', false, ['messages' => 'Please enter bank swift code.']);
         $swiftcode->setLabel('Swift Code');
         $swiftcode->setRequired(true);
 
         $verification_class = new Zend_Form_Element_Text('verification_class');
         $verification_class->setRequired(true);
-        $verification_class->addValidator('NotEmpty', false, array('messages' => 'Please enter bank verfication class.'));
+        $verification_class->addValidator('NotEmpty', false, ['messages' => 'Please enter bank verfication class.']);
         $verification_class->setLabel('Bank Verfication Class');
         $verification_class->setRequired(true);
         $submit = new Zend_Form_Element_Submit('submit');
-        $this->addElements(array($id, $name, $description, $swiftcode, $routingno, $verification_class, $submit));
-        $this->setElementDecorators(array('ViewHelper'));
+        $this->addElements([$id, $name, $description, $swiftcode, $routingno, $verification_class, $submit]);
+        $this->setElementDecorators(['ViewHelper']);
     }
 }

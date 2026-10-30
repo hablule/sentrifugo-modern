@@ -45,11 +45,11 @@ class Default_Model_Shortlistedcandidates extends Zend_Db_Table_Abstract
             $where .= " AND ".$searchQuery; 
 		 $shortlistedData = $this->select()
                         ->setIntegrityCheck(false)
-                        ->from(array('c'=>$this->_name),array('id'=>'c.id','cand_status'=>'c.cand_status','candidate_name'=>'c.candidate_name','emailid'=>'c.emailid','contact_number'=>'c.contact_number'))
-                        ->joinInner(array('r'=>'main_requisition'), "r.id = c.requisition_id and r.isactive = 1",array('requisition_code'=>'r.requisition_code'))
-                        ->joinLeft(array('p'=>'main_empposition'), "p.id = r.position_id",array('positionname'=>'p.description'))
-                        ->joinLeft(array('j'=>'main_jobtitle'), "j.jobtitle_id = r.jobtitle",array('jobtitlename'=>'j.name'))
-                        ->joinInner(array('m'=>'main_interviewdetails'), "m.candidate_id = c.id and m.isactive = 1",array('interview_status'=>'m.interview_status'))
+                        ->from(['c'=>$this->_name],['id'=>'c.id','cand_status'=>'c.cand_status','candidate_name'=>'c.candidate_name','emailid'=>'c.emailid','contact_number'=>'c.contact_number'])
+                        ->joinInner(['r'=>'main_requisition'], "r.id = c.requisition_id and r.isactive = 1",['requisition_code'=>'r.requisition_code'])
+                        ->joinLeft(['p'=>'main_empposition'], "p.id = r.position_id",['positionname'=>'p.description'])
+                        ->joinLeft(['j'=>'main_jobtitle'], "j.jobtitle_id = r.jobtitle",['jobtitlename'=>'j.name'])
+                        ->joinInner(['m'=>'main_interviewdetails'], "m.candidate_id = c.id and m.isactive = 1",['interview_status'=>'m.interview_status'])
                         ->where($where)
                         ->order("$by $sort") 
                         ->limitPage($pageNo, $perPage); 
@@ -79,7 +79,7 @@ class Default_Model_Shortlistedcandidates extends Zend_Db_Table_Abstract
 		
 		$candidateData = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('c'=>$this->_name), array("count"=>"count(*)"))
+		->from(['c'=>$this->_name], ["count"=>"count(*)"])
 		->where($where);
 		return $db->fetchRow($candidateData);;
 		
@@ -88,8 +88,8 @@ class Default_Model_Shortlistedcandidates extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$queryflag,$statusidstring,$formgrid,$a='')
 	{
 		$searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		if($searchData != '' && $searchData!='undefined')
 		{
 			$searchValues = json_decode($searchData);
@@ -105,34 +105,34 @@ class Default_Model_Shortlistedcandidates extends Zend_Db_Table_Abstract
 		}
 		$objName = 'shortlistedcandidates';
 
-        $tableFields = array('action'=>'Action',
+        $tableFields = ['action'=>'Action',
                              'requisition_code'=>'Requisition Code',
 							 'jobtitlename'=>'Job Title',
 							 'candidate_name' => 'Candidate Name',
                              'emailid' => 'Email',
                              'contact_number' => 'Contact Number',
 							 'cand_status' => 'Status'
-                            );
+                            ];
 	   $tablecontent = $this->getShortlistedData($sort, $by, $pageNo, $perPage,$searchQuery,$queryflag);     
 	   
-	   $search_filters = array();
+	   $search_filters = [];
 	   
-            $search_filters = array(
-                'cand_status' => array(
+            $search_filters = [
+                'cand_status' => [
                     'type' => 'select',
-                    'filter_data' => array('' => 'All','Selected' => 'Selected','Shortlisted' => 'Shortlisted','Rejected'=>'Rejected'),
-                ),
-            );
+                    'filter_data' => ['' => 'All','Selected' => 'Selected','Shortlisted' => 'Shortlisted','Rejected'=>'Rejected'],
+                ],
+            ];
       
 	  
-	  $dataTmp = array(
+	  $dataTmp = [
                 'sort' => $sort,
                 'by' => $by,
                 'pageNo' => $pageNo,
                 'perPage' => $perPage,				
                 'tablecontent' => $tablecontent,
                 'objectname' => $objName,
-                'extra' => array(),
+                'extra' => [],
                 'tableheader' => $tableFields,
                 'jsGridFnName' => 'getAjaxgridData',
                 'jsFillFnName' => '',
@@ -143,7 +143,7 @@ class Default_Model_Shortlistedcandidates extends Zend_Db_Table_Abstract
                 'unitId'=>$statusidstring,
                 'call'=>$call,
                 'search_filters' => $search_filters,
-        );			
+        ];			
 		return $dataTmp;
 	}
 	

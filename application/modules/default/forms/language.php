@@ -38,55 +38,55 @@ class Default_Form_Language extends Zend_Form
          * -------------------------------------------------------------- */
 
 		// SSOT VI.4 Mandatory Regex: Must contain letters, no leading space, no special chars
-		$ssotRegexValidator = array(
+		$ssotRegexValidator = [
 			'Regex',
 			true,
-			array(
+			[
 				'pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9 ]*)$/',
-				'messages' => array(
+				'messages' => [
 					Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space or contain special characters.'
-				)
-			)
-		);
+				]
+			]
+		];
 
 		// Language Code (e.g., 'en', 'am', 'es')
 		$code = new Zend_Form_Element_Text('code');
 		$code->setLabel('Language Code')
-			->setAttribs(array('class' => 'formDataElement', 'maxlength' => '10', 'placeholder' => 'e.g., en, am, fr'))
+			->setAttribs(['class' => 'formDataElement', 'maxlength' => '10', 'placeholder' => 'e.g., en, am, fr'])
 			->setRequired(true)
 			->addFilter('StringTrim')
 			->addFilter('StripTags')
 			->addFilter('StringToLower')
-			->addValidator('NotEmpty', false, array('messages' => 'Please enter a language code.'))
-			->addValidator('StringLength', false, array('max' => 10))
+			->addValidator('NotEmpty', false, ['messages' => 'Please enter a language code.'])
+			->addValidator('StringLength', false, ['max' => 10])
 			->addValidator($ssotRegexValidator[0], $ssotRegexValidator[1], $ssotRegexValidator[2]);
 
 		// Unique Validation for Code
-		$codeVal = new Zend_Validate_Db_NoRecordExists(array(
+		$codeVal = new Zend_Validate_Db_NoRecordExists([
 			'table'   => 'main_language',
 			'field'   => 'code',
-			'exclude' => ($idVal > 0) ? array('field' => 'id', 'value' => $idVal) : null
-		));
+			'exclude' => ($idVal > 0) ? ['field' => 'id', 'value' => $idVal] : null
+		]);
 		$codeVal->setMessage('This language code already exists.');
 		$code->addValidator($codeVal);
 
 		// Language Name
 		$name = new Zend_Form_Element_Text('name');
 		$name->setLabel('Language Name')
-			->setAttribs(array('class' => 'formDataElement', 'maxlength' => '100', 'placeholder' => 'e.g., English, Amharic'))
+			->setAttribs(['class' => 'formDataElement', 'maxlength' => '100', 'placeholder' => 'e.g., English, Amharic'])
 			->setRequired(true)
 			->addFilter('StringTrim')
 			->addFilter('StripTags')
-			->addValidator('NotEmpty', false, array('messages' => 'Please enter a language name.'))
-			->addValidator('StringLength', false, array('max' => 100))
+			->addValidator('NotEmpty', false, ['messages' => 'Please enter a language name.'])
+			->addValidator('StringLength', false, ['max' => 100])
 			->addValidator($ssotRegexValidator[0], $ssotRegexValidator[1], $ssotRegexValidator[2]);
 
 		// Unique Validation for Name
-		$nameVal = new Zend_Validate_Db_NoRecordExists(array(
+		$nameVal = new Zend_Validate_Db_NoRecordExists([
 			'table'   => 'main_language',
 			'field'   => 'name',
-			'exclude' => ($idVal > 0) ? array('field' => 'id', 'value' => $idVal) : null
-		));
+			'exclude' => ($idVal > 0) ? ['field' => 'id', 'value' => $idVal] : null
+		]);
 		$nameVal->setMessage('This language name already exists.');
 		$name->addValidator($nameVal);
 
@@ -95,7 +95,7 @@ class Default_Form_Language extends Zend_Form
          * -------------------------------------------------------------- */
 		$description = new Zend_Form_Element_Textarea('description');
 		$description->setLabel('Description')
-			->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+			->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
 			->addFilter('StringTrim')
 			->addFilter('StripTags');
 
@@ -113,7 +113,7 @@ class Default_Form_Language extends Zend_Form
          * -------------------------------------------------------------- */
 		$submit = new Zend_Form_Element_Submit('submit');
 		$submit->setLabel('Save')
-			->setAttribs(array('id' => 'submitbutton', 'class' => 'actbtn_btn'));
+			->setAttribs(['id' => 'submitbutton', 'class' => 'actbtn_btn']);
 
 		// SSOT VI.9: Strict String Quoting for standard AJAX saveDetails()
 		$urlAction  = "'language/save/format/json'";
@@ -123,19 +123,19 @@ class Default_Form_Language extends Zend_Form
 		/* --------------------------------------------------------------
          * Build Form
          * -------------------------------------------------------------- */
-		$this->addElements(array(
+		$this->addElements([
 			$idElement,
 			$code,
 			$name,
 			$description,
 			$isactive,
 			$submit
-		));
+		]);
 
 		// SSOT VI.7: Strip default Zend Decorators
 		$this->clearDecorators();
 		foreach ($this->getElements() as $element) {
-			$element->setDecorators(array('ViewHelper'));
+			$element->setDecorators(['ViewHelper']);
 		}
 	}
 }

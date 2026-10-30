@@ -23,7 +23,7 @@ class Default_DisabilitytypeController extends Zend_Controller_Action
       $refresh = $this->_getParam('refresh');
       $dashboradcall = $this->_getParam('dashboradcall');
 
-      $data = array();
+      $data = [];
 
       if ($refresh == 'refresh') {
           if ($dashboradcall == 'Yes') {
@@ -78,13 +78,13 @@ class Default_DisabilitytypeController extends Zend_Controller_Action
            
             
             if ($form->isValid($this->getRequest()->getPost())) {
-                $data = array(
+                $data = [
                     'name'=>$this->_request->getParam('name'),
                     'code'=>$this->_request->getParam('code'),
                     'description'=>$this->_request->getParam('description'),
                     'createdby'=>$loginUserId,
                     'createddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
                 $Id= $dmtmodel->SaveorUpdateData($data,'');
                 $tableid = $Id;
                 $actionflag = 1;
@@ -182,18 +182,18 @@ class Default_DisabilitytypeController extends Zend_Controller_Action
         
                         $date = gmdate("Y-m-d H:i:s");
         
-                        $data = array(
+                        $data = [
                                     'name'  => $name,
                                     'code'  => $code,
                                     'description'  => $description,
                                     'isactive'=>utlis::getcheckboxvalue($this->_request->getParam('isactive')),
         
-                                    );
+                                    ];
                         if($id!=''){
         
                             $data['modifiedby'] = $loginUserId;
                             $data['modifieddate'] = $date;
-                            $where = array('disabilitytype_id=?'=>$id);
+                            $where = ['disabilitytype_id=?'=>$id];
                         }
                         else
                         {
@@ -206,11 +206,11 @@ class Default_DisabilitytypeController extends Zend_Controller_Action
                         
                         if($Id == 'update')
                         {
-                            $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Disability Type updated successfully."));
+                            $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Disability Type updated successfully."]);
                         }
                         else
                         {
-                         $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Disability Type added successfully."));
+                         $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Disability Type added successfully."]);
                         }
                             
                         $this->_redirect('disabilitytype');

@@ -23,9 +23,9 @@ class Default_EmprecordaccessdetailController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 
 		if($refresh == 'refresh')
@@ -88,18 +88,18 @@ Zend_Debug::dump($th->getMessage());    }
                 $emprecordaccess_id=$this->_request->getParam('emprecordaccess_id');
                 for($i=0;$i<sizeof($emprecordaccess_id);$i++)
 				{   
-                $data = array(
+                $data = [
                     'emprecordaccess_id'=>$emprecordaccess_id[$i],
                     'description'=>$this->_request->getParam('description'),
                     'emp_id'=>$this->_request->getParam('emp_id'),
                     'createdby'=>$loginUserId,
                     'createddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
                 // die(json_encode($data));
 
                 $model->SaveorUpdateData($data,'');
             }
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array('success'=>'Record Access Added Successful'));
+                $this->_helper->getHelper("FlashMessenger")->addMessage(['success'=>'Record Access Added Successful']);
                 $this->_redirect('emprecordaccessdetail');
             
             
@@ -127,7 +127,7 @@ Zend_Debug::dump($th->getMessage());    }
         $msgArray['emprecordaccess_id']='Data already exist ';
         $this->view->msgarray = $msgarray;
     }	else{
-        $this->_helper->getHelper("FlashMessenger")->addMessage(array('success'=>'Record Access Added Successful'));
+        $this->_helper->getHelper("FlashMessenger")->addMessage(['success'=>'Record Access Added Successful']);
         $this->_redirect('emprecordaccessdetail');
             }					
 }
@@ -170,19 +170,19 @@ $this->view->msgarray = $msgArray;
         if ($this->getRequest()->isPost()) {
             if ($form->isValid($this->getRequest()->getPost())) {
                               
-                $data = array(
+                $data = [
                     // 'emprecordaccess_id'=>$this->_request->getParam('emprecordaccess_id2'),
                     'description'=>$this->_request->getParam('description'),
                     // 'emp_id'=>$this->_request->getParam('emp_id'),
                     'isactive'=>$util::getcheckboxvalue($this->_getParam('isactive')),
                     'modifiedby'=> $loginUserId,
                     'modifieddate'=> gmdate("Y-m-d H:i:s")
-                );
+                ];
                 // die(json_encode($data));
 
                 $model->SaveorUpdateData($data,'emprecordacessdetail_id='.$id);
                
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array('success'=>'Record Access Edited Successful'));
+                $this->_helper->getHelper("FlashMessenger")->addMessage(['success'=>'Record Access Edited Successful']);
                 $this->_redirect('emprecordaccessdetail');
             
             

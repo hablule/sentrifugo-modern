@@ -69,7 +69,7 @@ class Default_Model_Dateformat extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('d'=>'main_dateformat'),array('d.*'))
+						->from(['d'=>'main_dateformat'],['d.*'])
 					    ->where('d.isactive = 1 AND d.id='.$id.' ');
 		return $this->fetchAll($select)->toArray();
 	
@@ -79,7 +79,7 @@ class Default_Model_Dateformat extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('d'=>'main_dateformat'),array('d.id','d.dateformat'))
+						->from(['d'=>'main_dateformat'],['d.id','d.dateformat'])
 					    ->where('d.isactive = 1');
 		return $this->fetchAll($select)->toArray();
 	
@@ -88,7 +88,7 @@ class Default_Model_Dateformat extends Zend_Db_Table_Abstract
         {
             $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('d'=>'main_dateformat'),array('d.*'))
+						->from(['d'=>'main_dateformat'],['d.*'])
 					    ->where('d.isactive = 1');
 			return $this->fetchAll($select)->toArray();
         }

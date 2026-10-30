@@ -42,7 +42,7 @@ class Default_Model_Disciplinecase extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -62,18 +62,18 @@ class Default_Model_Disciplinecase extends Zend_Db_Table_Abstract
             $searchQuery = rtrim($searchQuery, " AND");
         }
 
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'             => 'Action',
             'employee_name'      => 'Employee',
             'date_of_occurrence' => 'Incident Date',
             'violation_name'     => 'Violation',
             'case_status'        => 'Case Status',
             'status_text'        => 'Active'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
@@ -81,18 +81,18 @@ class Default_Model_Disciplinecase extends Zend_Db_Table_Abstract
             'tablecontent'   => $tableContent,
             'objectname'     => 'disciplinecase',
             'tableheader'    => $tableHeaders,
-            'extra'          => array(),
+            'extra'          => [],
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
             'searchArray'    => $searchArray,
             'menuName'       => 'Disciplinary Cases',
             'call'           => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => array(
-                'status_text' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive')),
-                'case_status' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Initiated' => 'Initiated', 'Appealed' => 'Appealed', 'Closed' => 'Closed'))
-            )
-        );
+            'search_filters' => [
+                'status_text' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']],
+                'case_status' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Initiated' => 'Initiated', 'Appealed' => 'Appealed', 'Closed' => 'Closed']]
+            ]
+        ];
     }
 
     public function getGridData($sort, $by, $pageNo, $perPage, $searchQuery = '')
@@ -103,14 +103,14 @@ class Default_Model_Disciplinecase extends Zend_Db_Table_Abstract
 
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('dc' => $this->_name), array(
+            ->from(['dc' => $this->_name], [
                 'id'                 => 'dc.id',
                 'date_of_occurrence' => new Zend_Db_Expr("DATE_FORMAT(dc.date_of_occurrence, '" . DATEFORMAT_MYSQL . "')"),
                 'case_status'        => 'dc.case_status',
                 'status_text'        => new Zend_Db_Expr("CASE WHEN dc.isactive = 1 THEN 'Active' ELSE 'Inactive' END")
-            ))
-            ->joinInner(array('emp' => 'main_employee'), 'dc.employee_id = emp.id', array('employee_name' => 'emp.userfullname'))
-            ->joinInner(array('v' => 'main_discipline_violation'), 'dc.violation_id = v.id', array('violation_name' => 'v.name'))
+            ])
+            ->joinInner(['emp' => 'main_employee'], 'dc.employee_id = emp.id', ['employee_name' => 'emp.userfullname'])
+            ->joinInner(['v' => 'main_discipline_violation'], 'dc.violation_id = v.id', ['violation_name' => 'v.name'])
             ->where('dc.isactive != 5');
 
         if (!empty($searchQuery)) $select->where($searchQuery);
@@ -137,7 +137,7 @@ class Default_Model_Disciplinecase extends Zend_Db_Table_Abstract
         if (!empty($id)) {
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = gmdate("Y-m-d H:i:s");
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return (int)$id; // Returning ID instead of 'update' for Log linking in controller
         }
 
@@ -166,14 +166,14 @@ class Default_Model_Disciplinecase extends Zend_Db_Table_Abstract
     public function addCaseLog($caseId, $description, $userId)
     {
         $db = $this->getAdapter();
-        $db->insert('main_discipline_case_log', array(
+        $db->insert('main_discipline_case_log', [
             'case_id'       => (int)$caseId,
             'description'   => $description,
             'action_emp_id' => (int)$userId,
             'isactive'      => 1,
             'createdby'     => (int)$userId,
             'createddate'   => gmdate("Y-m-d H:i:s")
-        ));
+        ]);
     }
 
     /**
@@ -183,12 +183,12 @@ class Default_Model_Disciplinecase extends Zend_Db_Table_Abstract
     {
         $db = $this->getAdapter();
         $select = $db->select()
-            ->from(array('l' => 'main_discipline_case_log'), array(
+            ->from(['l' => 'main_discipline_case_log'], [
                 'description',
                 'createddate' => new Zend_Db_Expr("DATE_FORMAT(l.createddate, '%b %d, %Y %H:%i')")
-            ))
-            ->joinLeft(array('u' => 'main_users'), 'l.action_emp_id = u.id', array())
-            ->joinLeft(array('emp' => 'main_employee'), 'u.empid = emp.id', array('userfullname' => new Zend_Db_Expr("COALESCE(emp.userfullname, 'System')")))
+            ])
+            ->joinLeft(['u' => 'main_users'], 'l.action_emp_id = u.id', [])
+            ->joinLeft(['emp' => 'main_employee'], 'u.empid = emp.id', ['userfullname' => new Zend_Db_Expr("COALESCE(emp.userfullname, 'System')")])
             ->where('l.case_id = ?', (int)$caseId)
             ->where('l.isactive = 1')
             ->order('l.createddate DESC'); // Newest first
@@ -204,16 +204,16 @@ class Default_Model_Disciplinecase extends Zend_Db_Table_Abstract
     {
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
-        $data = array('isactive' => 5, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s"));
-        return $this->update($data, array('id = ?' => (int)$id));
+        $data = ['isactive' => 5, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s")];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     public function toggleStatus($id, $status)
     {
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
-        $data = array('isactive' => (int)$status, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s"));
-        return $this->update($data, array('id = ?' => (int)$id));
+        $data = ['isactive' => (int)$status, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s")];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     public function checkInUse($id)
@@ -232,13 +232,13 @@ class Default_Model_Disciplinecase extends Zend_Db_Table_Abstract
     {
         $db = $this->getAdapter();
         $select = $db->select()
-            ->from('main_empposition', array('sbunit_id', 'department_id', 'jobtitle_id', 'reportto_id'))
+            ->from('main_empposition', ['sbunit_id', 'department_id', 'jobtitle_id', 'reportto_id'])
             ->where('employee_id = ?', (int)$employeeId)
             ->where('isactive = ?', 'Y')
             ->order('datefrom DESC')
             ->limit(1);
 
         $row = $db->fetchRow($select);
-        return $row ? $row : array('sbunit_id' => null, 'department_id' => null, 'jobtitle_id' => null, 'reportto_id' => null);
+        return $row ?: ['sbunit_id' => null, 'department_id' => null, 'jobtitle_id' => null, 'reportto_id' => null];
     }
 }

@@ -44,7 +44,7 @@ class Default_Model_Controller extends Zend_Db_Table_Abstract
         if ($id) {
             $data['modifiedby'] = $userId;
             $data['modifieddate'] = gmdate("Y-m-d H:i:s");
-            return $this->update($data, array('id = ?' => (int)$id));
+            return $this->update($data, ['id = ?' => (int)$id]);
         }
         $data['createdby'] = $userId;
         $data['createddate'] = gmdate("Y-m-d H:i:s");
@@ -82,16 +82,16 @@ class Default_Model_Controller extends Zend_Db_Table_Abstract
     public function deleteRecord($id)
     {
         $userId = Zend_Auth::getInstance()->getStorage()->read()->id ?? 0;
-        $data = array('isactive' => 5, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s"));
-        return $this->update($data, array('id = ?' => (int)$id));
+        $data = ['isactive' => 5, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s")];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
     
     public function getPairs($activeOnly = true)
     {
-        $select = $this->select()->from($this->_name, array('id', 'controller'));
+        $select = $this->select()->from($this->_name, ['id', 'controller']);
         if ($activeOnly) $select->where("isactive = 1");
         $results = $this->fetchAll($select);
-        $data = array();
+        $data = [];
         foreach ($results as $row) { $data[$row->id] = $row->controller; }
         return $data;
     }
@@ -107,23 +107,23 @@ class Default_Model_Controller extends Zend_Db_Table_Abstract
             }
         }
 
-        $tableHeaders = array('id' => 'ID', 'module_name' => 'Module', 'controller' => 'Controller', 'status_text' => 'Status');
+        $tableHeaders = ['id' => 'ID', 'module_name' => 'Module', 'controller' => 'Controller', 'status_text' => 'Status'];
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
         
-        return array(
+        return [
             'sort' => $sort, 'by' => $by, 'pageNo' => $pageNo, 'perPage' => $perPage,
             'tablecontent' => $tableContent, 'objectname' => 'permissioncontroller', 'tableheader'  => $tableHeaders,
-            'extra' => array(), 'jsGridFnName' => 'getAjaxgridData', 'jsFillFnName' => '', 'searchArray' => array(),
-            'menuName' => 'Controllers', 'call' => $call, 'dashboardcall' => $dashboardcall, 'search_filters' => array()
-        );
+            'extra' => [], 'jsGridFnName' => 'getAjaxgridData', 'jsFillFnName' => '', 'searchArray' => [],
+            'menuName' => 'Controllers', 'call' => $call, 'dashboardcall' => $dashboardcall, 'search_filters' => []
+        ];
     }
 
     public function getGridData($sort, $by, $pageNo, $perPage, $searchQuery = '')
     {
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('c' => $this->_name), array('*', 'status_text' => new Zend_Db_Expr("CASE WHEN c.isactive = 1 THEN 'Active' ELSE 'Inactive' END")))
-            ->joinLeft(array('m' => 'main_module'), 'c.module_id = m.id', array('module_name' => 'm.name'))
+            ->from(['c' => $this->_name], ['*', 'status_text' => new Zend_Db_Expr("CASE WHEN c.isactive = 1 THEN 'Active' ELSE 'Inactive' END")])
+            ->joinLeft(['m' => 'main_module'], 'c.module_id = m.id', ['module_name' => 'm.name'])
             ->where('c.isactive != 5');
         
         if ($searchQuery) $select->where($searchQuery);

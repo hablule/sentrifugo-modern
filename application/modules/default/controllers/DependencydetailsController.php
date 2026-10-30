@@ -44,7 +44,7 @@ class Default_DependencydetailsController extends Zend_Controller_Action
 					$loginUserGroup = $auth->getStorage()->read()->group_id;
 		 	}
 		 	$userid = $this->getRequest()->getParam('userid');	//This is User_id taking from URL
-		 	$employeeData=array();$empdata=array();
+		 	$employeeData=[];$empdata=[];
 		 	$conText = "";
 		 	$call = $this->_getParam('call');
 		 	if($call == 'ajaxcall')
@@ -54,7 +54,7 @@ class Default_DependencydetailsController extends Zend_Controller_Action
 		 		$conText = ($this->_getParam('context') !='')? $this->_getParam('context'):$this->getRequest()->getParam('context');
 		 	}
 		 	if($userid == '') $userid = $userID;
-		 	$Uid = ($userid)?$userid:$userID;
+		 	$Uid = $userid ?: $userID;
 
 		 	$dependencydetailsModel = new Default_Model_Dependencydetails();
 		 	$employeeModal = new Default_Model_Employee();
@@ -77,7 +77,7 @@ class Default_DependencydetailsController extends Zend_Controller_Action
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
 
-							$data = array();	$searchQuery = '';	$searchArray = array();		$tablecontent = '';
+							$data = [];	$searchQuery = '';	$searchArray = [];		$tablecontent = '';
 
 							if($refresh == 'refresh')
 							{
@@ -111,10 +111,10 @@ class Default_DependencydetailsController extends Zend_Controller_Action
 								/** search from grid - END **/
 							}
 							$objName = 'dependencydetails';
-							$tableFields = array('action'=>'Action','dependent_name'=>'Dependent Name','dependent_relation'=>'Dependent Relation','dateofbirth'=>'Dependent DOB');
+							$tableFields = ['action'=>'Action','dependent_name'=>'Dependent Name','dependent_relation'=>'Dependent Relation','dateofbirth'=>'Dependent DOB'];
 
 							$tablecontent = $dependencydetailsModel->getdependencydetailsData($sort, $by, $pageNo, $perPage,$searchQuery,$Uid);
-							$dependencyRelationsArr = array(''=>'All',
+							$dependencyRelationsArr = [''=>'All',
 									'brother'=>"Brother" ,
 									'child'=>"Child",
 									'ex spouse'=>"Ex Spouse",
@@ -126,15 +126,15 @@ class Default_DependencydetailsController extends Zend_Controller_Action
 									'lifepartner mother'=>'LifePartner Mother',
 									'sister'=>"Sister",
 									'spouse'=>'Spouse'							
-									);
-									$dataTmp = array('userid'=>$Uid,
+									];
+									$dataTmp = ['userid'=>$Uid,
 										'sort' => $sort,
 										'by' => $by,
 										'pageNo' => $pageNo,
 										'perPage' => $perPage,				
 										'tablecontent' => $tablecontent,
 										'objectname' => $objName,
-										'extra' => array(),
+										'extra' => [],
 										'tableheader' => $tableFields,
 										'jsGridFnName' => 'getEmployeeAjaxgridData',
 										'jsFillFnName' => '',
@@ -145,14 +145,14 @@ class Default_DependencydetailsController extends Zend_Controller_Action
 										'unitId'=>$Uid,
 										'call'=>$call,
 										'context'=>$conText,
-										'search_filters' => array(
-										'dateofbirth' =>array('type'=>'datepicker'),
-																				'dependent_relation' => array(
+										'search_filters' => [
+										'dateofbirth' =>['type'=>'datepicker'],
+																				'dependent_relation' => [
 																					'type' => 'select',
 																					'filter_data' => $dependencyRelationsArr,
-									),
-									)
-									);
+									],
+									]
+									];
 
 									array_push($data,$dataTmp);
 									$this->view->id=$Uid;	
@@ -190,7 +190,7 @@ class Default_DependencydetailsController extends Zend_Controller_Action
 		 		$loginUserGroup = $auth->getStorage()->read()->group_id;
 		 	}
 		 	$userid = $this->getRequest()->getParam('userid');	
-		 	$employeeData=array();$empdata=array();
+		 	$employeeData=[];$empdata=[];
 		 	$conText = "";
 		 	$call = $this->_getParam('call');
 		 	if($call == 'ajaxcall')
@@ -222,7 +222,7 @@ class Default_DependencydetailsController extends Zend_Controller_Action
 		 			$objname = $this->_getParam('objname');
 		 			$refresh = $this->_getParam('refresh');
 
-		 			$data = array();	$searchQuery = '';	$searchArray = array();		$tablecontent = '';
+		 			$data = [];	$searchQuery = '';	$searchArray = [];		$tablecontent = '';
 
 		 			if($refresh == 'refresh')
 		 			{
@@ -251,9 +251,9 @@ class Default_DependencydetailsController extends Zend_Controller_Action
 		 				/** search from grid - END **/
 		 			}
 		 			$objName = 'dependencydetails';
-		 			$Uid = ($userid)?$userid:$userID;
+		 			$Uid = $userid ?: $userID;
 
-		 			$tableFields = array('action'=>'Action','firstname'=>'First Name','middlename'=>'Middle Name','name'=>'Relation','dateofbirth'=>'DOB');
+		 			$tableFields = ['action'=>'Action','firstname'=>'First Name','middlename'=>'Middle Name','name'=>'Relation','dateofbirth'=>'DOB'];
 					
 		 			$tablecontent = $dependencydetailsModel->getdependencydetailsData($sort, $by, $pageNo, $perPage,$searchQuery,$Uid);
 					 
@@ -263,14 +263,14 @@ class Default_DependencydetailsController extends Zend_Controller_Action
 		 				$employeeData = $usersModel->getUserDetailsByIDandFlag($Uid);
 		 			}
 					
-					$dataTmp = array('userid'=>$Uid,
+					$dataTmp = ['userid'=>$Uid,
 					'sort' => $sort,
 					'by' => $by,
 					'pageNo' => $pageNo,
 					'perPage' => $perPage,				
 					'tablecontent' => $tablecontent,
 					'objectname' => $objName,
-					'extra' => array(),
+					'extra' => [],
 					'tableheader' => $tableFields,
 					'jsGridFnName' => 'getEmployeeAjaxgridData',
 					'jsFillFnName' => '',
@@ -282,10 +282,10 @@ class Default_DependencydetailsController extends Zend_Controller_Action
 					'userAction'=>'edit',
 					'call'=>$call,
 					'context'=>$conText,
-					'search_filters' => array(
-									'dateofbirth' =>array('type'=>'datepicker')
-								)
-								);
+					'search_filters' => [
+									'dateofbirth' =>['type'=>'datepicker']
+								]
+								];
 							
 								array_push($data,$dataTmp);
 								$this->view->id=$Uid;	
@@ -325,7 +325,7 @@ class Default_DependencydetailsController extends Zend_Controller_Action
 		 		$loginUserGroup = $auth->getStorage()->read()->group_id;
 		 	}
 		 	$userid = $this->getRequest()->getParam('userid');	
-		 	$employeeData=array();$empdata=array();$userID ='';
+		 	$employeeData=[];$empdata=[];$userID ='';
 		 	$conText = "";
 		 	$call = $this->_getParam('call');
 		 	if($call == 'ajaxcall')
@@ -354,7 +354,7 @@ class Default_DependencydetailsController extends Zend_Controller_Action
 		 			$objname = $this->_getParam('objname');
 		 			$refresh = $this->_getParam('refresh');
 
-		 			$data = array();	$searchQuery = '';	$searchArray = array();		$tablecontent = '';
+		 			$data = [];	$searchQuery = '';	$searchArray = [];		$tablecontent = '';
 
 		 			if($refresh == 'refresh')
 		 			{
@@ -385,9 +385,9 @@ class Default_DependencydetailsController extends Zend_Controller_Action
 
 		 			$objName = 'dependencydetails';
 
-		 			$Uid = ($userid)?$userid:$userID;
+		 			$Uid = $userid ?: $userID;
 
-		 			$tableFields = array('action'=>'Action','firstname'=>'First Name','middlename'=>'Middle Name','name'=>'Relation','dateofbirth'=>'DOB');
+		 			$tableFields = ['action'=>'Action','firstname'=>'First Name','middlename'=>'Middle Name','name'=>'Relation','dateofbirth'=>'DOB'];
 
 
 		 			$tablecontent = $dependencydetailsModel->getdependencydetailsData($sort, $by, $pageNo, $perPage,$searchQuery,$Uid);
@@ -396,14 +396,14 @@ class Default_DependencydetailsController extends Zend_Controller_Action
 		 				$usersModel = new Default_Model_Users();
 		 				$employeeData = $usersModel->getUserDetailsByIDandFlag($Uid);
 		 			}
-		 			$dataTmp = array('userid'=>$Uid,
+		 			$dataTmp = ['userid'=>$Uid,
 					'sort' => $sort,
 					'by' => $by,
 					'pageNo' => $pageNo,
 					'perPage' => $perPage,				
 					'tablecontent' => $tablecontent,
 					'objectname' => $objName,
-					'extra' => array(),
+					'extra' => [],
 					'tableheader' => $tableFields,
 					'jsGridFnName' => 'getEmployeeAjaxgridData',
 					'jsFillFnName' => '',
@@ -413,7 +413,7 @@ class Default_DependencydetailsController extends Zend_Controller_Action
 					'formgrid' => 'true',
 					'unitId'=>$Uid,
 					'call'=>$call,
-					'context'=>$conText);			
+					'context'=>$conText];			
 
 		 			array_push($data,$dataTmp);
 		 			$this->view->id=$userid;	
@@ -450,7 +450,7 @@ class Default_DependencydetailsController extends Zend_Controller_Action
 			$relationpermission = sapp_Global::_checkprivileges(RELATIONSHIP,$loginuserGroup,$loginuserRole,'add');
 			$this->view->relationpermission = $relationpermission;
 			
-		$msgarray = array();
+		$msgarray = [];
 		$relationship_model = new Default_Model_relationship();
 		$gender_model = new Default_Model_Gender();
 		$gender_data = $gender_model->getGenderList();
@@ -478,13 +478,13 @@ class Default_DependencydetailsController extends Zend_Controller_Action
 										}
 									}
 								} */
-								$dependencyDetailsform->relationship_id->addMultiOptions(array(''=>'Select Relationship'));
+								$dependencyDetailsform->relationship_id->addMultiOptions([''=>'Select Relationship']);
 								foreach ($dependencyRelationsArr as $value) {
-									$dependencyDetailsform->relationship_id->addMultiOptions(array($value['relationship_id']=>$value['name']));
+									$dependencyDetailsform->relationship_id->addMultiOptions([$value['relationship_id']=>$value['name']]);
 								}
 								foreach($gender_data as $value)
 								{
-									$dependencyDetailsform->gender->addMultiOptions(array($value['id']=>$value['gendername']));
+									$dependencyDetailsform->gender->addMultiOptions([$value['id']=>$value['gendername']]);
 								}
 								$this->view->form = $dependencyDetailsform;
 								$this->view->msgarray = $msgarray;
@@ -529,13 +529,13 @@ class Default_DependencydetailsController extends Zend_Controller_Action
 								$gender_model = new Default_Model_Gender();
 								$gender_data = $gender_model->getGenderList();
 								$dependencyRelationsArr = $relationship_model->GetRelationship();
-								$dependencyDetailsform->relationship_id->addMultiOptions(array(''=>'Select Relationship'));
+								$dependencyDetailsform->relationship_id->addMultiOptions([''=>'Select Relationship']);
 								foreach ($dependencyRelationsArr as $value) {
-									$dependencyDetailsform->relationship_id->addMultiOptions(array($value['relationship_id']=>$value['name']));
+									$dependencyDetailsform->relationship_id->addMultiOptions([$value['relationship_id']=>$value['name']]);
 								}
 								foreach($gender_data as $value)
 								{
-									$dependencyDetailsform->gender->addMultiOptions(array($value['id']=>$value['gendername']));
+									$dependencyDetailsform->gender->addMultiOptions([$value['id']=>$value['gendername']]);
 								}
 								if($id)
 								{
@@ -589,7 +589,7 @@ class Default_DependencydetailsController extends Zend_Controller_Action
 			$isactive = $this->_request->getParam('isactive');
 			$isdependent = $this->_request->getParam('isdependent');
 			$bloodgroup = $this->_request->getParam('bloodgroup');
-			$data = array(  'firstname'=>$fname,
+			$data = [  'firstname'=>$fname,
 							'middlename'=>$mname,
 							'lastname'=>$lname,
 								'relationship_id'=>$relation,
@@ -602,11 +602,11 @@ class Default_DependencydetailsController extends Zend_Controller_Action
 								'isdependent'=>utlis::getcheckboxvalue($isdependent),
 								'isactive'=>utlis::getcheckboxvalue($isactive),
 			                    'modifieddate'=>gmdate("Y-m-d H:i:s")
-			);
+			];
 			
 			if($id!='')
 			{
-				$where = array('emprelationship_id=?'=>$id);
+				$where = ['emprelationship_id=?'=>$id];
 				$actionflag = 2;
 			}
 			else
@@ -660,7 +660,7 @@ class Default_DependencydetailsController extends Zend_Controller_Action
 		{
 			$loginUserId = $auth->getStorage()->read()->id;
 		}
-		$dependencyRelationsArr = array('brother'=>"Brother" ,
+		$dependencyRelationsArr = ['brother'=>"Brother" ,
 						        'child'=>"Child",
 								'ex spouse'=>"Ex Spouse",
 								'father'=>"Father",
@@ -671,7 +671,7 @@ class Default_DependencydetailsController extends Zend_Controller_Action
 								'lifepartner mother'=>'LifePartner Mother',
 								'sister'=>"Sister",
 								'spouse'=>'Spouse'							
-								);
+								];
 								Zend_Layout::getMvcInstance()->setLayoutPath(APPLICATION_PATH."/layouts/scripts/popup/");
 								$id = $this->_request->getParam('id');	//Taking Id(Primary key in table) from form....
 								$user_id = $this->getRequest()->getParam('unitId');	//This is User_id taking from URL set to form...
@@ -746,8 +746,8 @@ class Default_DependencydetailsController extends Zend_Controller_Action
 		 	if($id)
 		 	{
 		 		$dependencydetailsModel = new Default_Model_Dependencydetails();
-		 		$data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-		 		$where = array('id=?'=>$id);
+		 		$data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+		 		$where = ['id=?'=>$id];
 		 		$Id = $dependencydetailsModel->SaveorUpdateEmployeedependencyData($data,$where);
 		 		if($Id == 'update')
 		 		{

@@ -15,9 +15,9 @@ class Default_Model_Empbankaccount extends Zend_Db_Table_Abstract
 
 		$empbankaccount = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('e' => 'main_empbankaccount'), array('id' => 'e.empbankaccount_id', 'e.accountno', 'e.bank_account_type', 'isdefault'=>'if(e.isdefault="Y","Yes","No")', 'e.BBAN', 'e.IBAN', 'e.description','isactive'=>'if(e.isactive="Y","Yes","No")'))
-			->joinLeft(array('b' => 'main_bank'), 'b.bank_id=e.bank_id', array('bankname' => 'b.name'))
-			->joinLeft(array('l'=>'main_location'),'l.location_id=e.location_id',array('location'=>'l.address1'))
+			->from(['e' => 'main_empbankaccount'], ['id' => 'e.empbankaccount_id', 'e.accountno', 'e.bank_account_type', 'isdefault'=>'if(e.isdefault="Y","Yes","No")', 'e.BBAN', 'e.IBAN', 'e.description','isactive'=>'if(e.isactive="Y","Yes","No")'])
+			->joinLeft(['b' => 'main_bank'], 'b.bank_id=e.bank_id', ['bankname' => 'b.name'])
+			->joinLeft(['l'=>'main_location'],'l.location_id=e.location_id',['location'=>'l.address1'])
 			->where($where)
 			->order("$by $sort")
 			->limitPage($pageNo, $perPage);
@@ -28,8 +28,8 @@ class Default_Model_Empbankaccount extends Zend_Db_Table_Abstract
 	public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $exParam1 = '', $exParam2 = '', $exParam3 = '', $exParam4 = '')
 	{
 		$searchQuery = '';
-		$searchArray = array();
-		$data = array();
+		$searchArray = [];
+		$data = [];
 		if ($searchData != '' && $searchData != 'undefined') {
 			$searchValues = json_decode($searchData);
 		
@@ -50,7 +50,7 @@ class Default_Model_Empbankaccount extends Zend_Db_Table_Abstract
 		}
 		$objName = 'empbankaccount';
 
-		$tableFields = array(
+		$tableFields = [
 			'action' => 'Action',
 			'bankname' => 'Bank Name',
 			'accountno' => 'Account No.',
@@ -62,12 +62,12 @@ class Default_Model_Empbankaccount extends Zend_Db_Table_Abstract
 			'location' => 'Address',
 			'description' => 'Description',
 
-		);
+		];
 
 		$tablecontent = $this->getEmpBankAccountData($sort, $by, $pageNo, $perPage, $searchQuery, $exParam1);
 
-		$bool_arr = array('' => 'All', 1 => 'Yes', 2 => 'No');
-		$dataTmp = array(
+		$bool_arr = ['' => 'All', 1 => 'Yes', 2 => 'No'];
+		$dataTmp = [
 			'userid' => $exParam1,
 			'sort' => $sort,
 			'by' => $by,
@@ -75,7 +75,7 @@ class Default_Model_Empbankaccount extends Zend_Db_Table_Abstract
 			'perPage' => $perPage,
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getEmployeeAjaxgridData',
 			'jsFillFnName' => '',
@@ -88,16 +88,16 @@ class Default_Model_Empbankaccount extends Zend_Db_Table_Abstract
 			'userAction' => $exParam3,	
 
 			'context' => $exParam2,
-			'search_filters' => array(
-				'isdefault' => array(
+			'search_filters' => [
+				'isdefault' => [
 					'type' => 'select',
-					'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-					'isactive' => array(
+					'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+					'isactive' => [
 						'type' => 'select',
-						'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-		)
+						'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+		]
 			
-		);
+		];
 		return $dataTmp;
 	}
 
@@ -125,9 +125,9 @@ class Default_Model_Empbankaccount extends Zend_Db_Table_Abstract
 	{
 		$query = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('e' => 'main_empbankaccount'))
-			->joinLeft(array('b'=>'main_bank'),'b.bank_id=e.bank_id',array('bankname'=>'b.name'))
-			->joinLeft(array('l'=>'main_location'),'l.location_id=e.location_id',array('address1'=>'l.address1','address2'=>'l.address2','address3'=>'l.address3'))
+			->from(['e' => 'main_empbankaccount'])
+			->joinLeft(['b'=>'main_bank'],'b.bank_id=e.bank_id',['bankname'=>'b.name'])
+			->joinLeft(['l'=>'main_location'],'l.location_id=e.location_id',['address1'=>'l.address1','address2'=>'l.address2','address3'=>'l.address3'])
 			->where('e.empbankaccount_id=' . $account_id);
 		
 		return $this->fetchAll($query)->toArray();
@@ -135,7 +135,7 @@ class Default_Model_Empbankaccount extends Zend_Db_Table_Abstract
 	public function getEmpBankAccounts(){
 		$query = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('e'=>'main_empbankaccount'),array('e.empbankaccount_id', 'e.accountno'))
+		->from(['e'=>'main_empbankaccount'],['e.empbankaccount_id', 'e.accountno'])
 		->where("e.isactive='Y'");
 		return $this->fetchAll($query)->toArray();
 	}

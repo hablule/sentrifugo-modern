@@ -8,8 +8,8 @@ class Schedule_Model_Cycleshift extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $p1, $p2, $p3, $p4)
     {
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
         $db = Zend_Db_Table::getDefaultAdapter();
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
@@ -33,18 +33,18 @@ class Schedule_Model_Cycleshift extends Zend_Db_Table_Abstract
 
         $objName = 'cycleshift';
         $objID = 'cycleshift';
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'shift' => 'Shift',
             'description'=>'Description',
             'isactive' => 'Active'
             
-        );
+        ];
 
         $tablecontent = $this->getShiftCycle($sort, $by, $pageNo, $perPage, $searchQuery);
 
       
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
@@ -52,7 +52,7 @@ class Schedule_Model_Cycleshift extends Zend_Db_Table_Abstract
             'tablecontent' => $tablecontent,
             'objectname' => $objName,
             'objectId' => $objID,
-            'extra' => array(),
+            'extra' => [],
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
             'jsFillFnName' => '',
@@ -62,15 +62,15 @@ class Schedule_Model_Cycleshift extends Zend_Db_Table_Abstract
             'call' => $call,
             'menuName' => 'Schedule Cycle',
             'dashboardcall' => $dashboardcall,
-            'search_filters' => array(
-                'isactive' => array(
+            'search_filters' => [
+                'isactive' => [
                     'type' => 'select',
-                    'filter_data' => array('' => 'All', 'Y' => 'Yes', 'N' => 'No')
-                )
-            ),
+                    'filter_data' => ['' => 'All', 'Y' => 'Yes', 'N' => 'No']
+                ]
+            ],
 
 
-        );
+        ];
         return $dataTmp;
     }
 
@@ -82,8 +82,8 @@ class Schedule_Model_Cycleshift extends Zend_Db_Table_Abstract
       
         $select = $this->select()
                         ->setIntegrityCheck(false)
-                        ->from(array('sc'=>'main_schedulecycleshift'),array('sc.schedulecycleshift_id as id','sc.isactive'))
-                        ->join(array('s'=>'main_shift'),'s.shift_id = sc.shift_id',array('s.name as shift'))
+                        ->from(['sc'=>'main_schedulecycleshift'],['sc.schedulecycleshift_id as id','sc.isactive'])
+                        ->join(['s'=>'main_shift'],'s.shift_id = sc.shift_id',['s.name as shift'])
                         ->where($where)
                         ->order("$by $sort")
                         ->limitPage($pageNo, $perPage);

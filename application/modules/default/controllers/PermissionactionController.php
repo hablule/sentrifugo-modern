@@ -40,7 +40,7 @@ class Default_PermissionactionController extends Zend_Controller_Action
         $session = sapp_Global::_readSession();
         if (!isset($session)) {
             if ($this->getRequest()->isXmlHttpRequest()) {
-                echo Zend_Json::encode(array('login' => 'failed'));
+                echo Zend_Json::encode(['login' => 'failed']);
                 die();
             } else {
                 $this->_redirect('');
@@ -71,7 +71,7 @@ class Default_PermissionactionController extends Zend_Controller_Action
             $dataTmp = $this->_model->getGrid($sort, $by, $perPage, $page, rtrim($searchData, ','), $call, $dashboardcall);
             $dataTmp['tableheader']['action'] = 'View Details'; 
 
-            $this->view->dataArray = array($dataTmp);
+            $this->view->dataArray = [$dataTmp];
             $this->view->call      = $call;
             $this->view->messages  = $this->_helper->flashMessenger->getMessages();
         } catch (Exception $e) {
@@ -85,9 +85,9 @@ class Default_PermissionactionController extends Zend_Controller_Action
         
         $select = $this->_model->select()
             ->setIntegrityCheck(false)
-            ->from(array('a' => 'main_action'))
-            ->joinLeft(array('c' => 'main_controller'), 'a.controller_id = c.id', array('controller_name' => 'c.controller', 'module_id' => 'c.module_id'))
-            ->joinLeft(array('m' => 'main_module'), 'c.module_id = m.id', array('module_name' => 'm.name'))
+            ->from(['a' => 'main_action'])
+            ->joinLeft(['c' => 'main_controller'], 'a.controller_id = c.id', ['controller_name' => 'c.controller', 'module_id' => 'c.module_id'])
+            ->joinLeft(['m' => 'main_module'], 'c.module_id = m.id', ['module_name' => 'm.name'])
             ->where('a.id = ?', $id);
             
         $data = $this->_model->fetchRow($select);

@@ -30,7 +30,7 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
 	   II. If roles are not configured then to eliminate users and other vendors we are using jobtitle clause.
 	       As for jobtitle id for vendors and users will always be null.
 	*/
-    public function getEmployeesData($sort, $by, $pageNo, $perPage, $searchQuery, $managerid = '', $loginUserId)
+    public function getEmployeesData($sort, $by, $pageNo, $perPage, $searchQuery, $managerid = '', $loginUserId = null)
     {
         $auth = Zend_Auth::getInstance();
         $request = Zend_Controller_Front::getInstance();
@@ -53,10 +53,10 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
 
         $employeesData = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('e' => 'main_employees'), array('e.*', 'id' => 'e.id', 'extn' => new Zend_Db_Expr('case when e.extension_number is not null then concat(e.office_number," (ext ",e.extension_number,")") when e.extension_number is null then e.office_number end'), 'astatus' => new Zend_Db_Expr('case when e.isactive = 0 then "Inactive" when e.isactive = 1 then "Active" when e.isactive = 2 then "Resigned"  when e.isactive = 3 then "Left" when e.isactive = 4 then "Suspended" end')))
-            ->joinLeft(array('u' => 'main_users'), 'e.id=u.empid', array('user_id' => 'u.id'))
-            ->joinLeft(array('ur' => 'main_userrole'), 'u.id=ur.user_id', array('userrole_id' => 'ur.userrole_id'))
-            ->joinLeft(array('r' => 'main_role'), 'ur.role_id=r.id', array('role' => 'GROUP_CONCAT(r.name)'))
+            ->from(['e' => 'main_employees'], ['e.*', 'id' => 'e.id', 'extn' => new Zend_Db_Expr('case when e.extension_number is not null then concat(e.office_number," (ext ",e.extension_number,")") when e.extension_number is null then e.office_number end'), 'astatus' => new Zend_Db_Expr('case when e.isactive = 0 then "Inactive" when e.isactive = 1 then "Active" when e.isactive = 2 then "Resigned"  when e.isactive = 3 then "Left" when e.isactive = 4 then "Suspended" end')])
+            ->joinLeft(['u' => 'main_users'], 'e.id=u.empid', ['user_id' => 'u.id'])
+            ->joinLeft(['ur' => 'main_userrole'], 'u.id=ur.user_id', ['userrole_id' => 'ur.userrole_id'])
+            ->joinLeft(['r' => 'main_role'], 'ur.role_id=r.id', ['role' => 'GROUP_CONCAT(r.name)'])
             ->where($where)
             ->group("e.id")
 
@@ -69,7 +69,7 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
         return $employeesData;
     }
 
-    public function getEmployees($managerid = '', $loginUserId, $limit, $offset, $search_val, $search_str, $role_id, $empids = '')
+    public function getEmployees($managerid = '', $loginUserId = null, $limit = null, $offset = null, $search_val = null, $search_str = null, $role_id = null, $empids = '')
     {
         $auth = Zend_Auth::getInstance();
         $request = Zend_Controller_Front::getInstance();
@@ -108,10 +108,10 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
 
         $employeesData = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('e' => 'main_employees'), array('e.*', 'id' => 'e.id', 'extn' => new Zend_Db_Expr('case when e.extension_number is not null then concat(e.office_number," (ext ",e.extension_number,")") when e.extension_number is null then e.office_number end'), 'astatus' => new Zend_Db_Expr('case when e.isactive = 0 then "Inactive" when e.isactive = 1 then "Active" when e.isactive = 2 then "Resigned"  when e.isactive = 3 then "Left" when e.isactive = 4 then "Suspended" end')))
-            ->joinLeft(array('u' => 'main_users'), 'e.id=u.empid', array('u.*', 'user_id' => 'u.id'))
-            ->joinLeft(array('ur' => 'main_userrole'), 'u.id=ur.user_id', array('userrole_id' => 'ur.userrole_id'))
-            ->joinLeft(array('r' => 'main_role'), 'ur.role_id=r.id', array('role' => 'GROUP_CONCAT(r.name)'))
+            ->from(['e' => 'main_employees'], ['e.*', 'id' => 'e.id', 'extn' => new Zend_Db_Expr('case when e.extension_number is not null then concat(e.office_number," (ext ",e.extension_number,")") when e.extension_number is null then e.office_number end'), 'astatus' => new Zend_Db_Expr('case when e.isactive = 0 then "Inactive" when e.isactive = 1 then "Active" when e.isactive = 2 then "Resigned"  when e.isactive = 3 then "Left" when e.isactive = 4 then "Suspended" end')])
+            ->joinLeft(['u' => 'main_users'], 'e.id=u.empid', ['u.*', 'user_id' => 'u.id'])
+            ->joinLeft(['ur' => 'main_userrole'], 'u.id=ur.user_id', ['userrole_id' => 'ur.userrole_id'])
+            ->joinLeft(['r' => 'main_role'], 'ur.role_id=r.id', ['role' => 'GROUP_CONCAT(r.name)'])
             ->where($where)
             ->limit($limit, $offset)
             ->group("e.id")
@@ -457,7 +457,7 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
 
         $result = $db->query($query);
         $rows = $result->fetchAll();
-        return array('rows' => $rows, 'page_cnt' => $page_cnt, 'count_emp' => $count);
+        return ['rows' => $rows, 'page_cnt' => $page_cnt, 'count_emp' => $count];
     }
 
     /**
@@ -491,7 +491,7 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
             $result = $db->query($query);
             $rows = $result->fetchAll();
 
-            return array('rows' => $rows, 'page_cnt' => $page_cnt);
+            return ['rows' => $rows, 'page_cnt' => $page_cnt];
         } else {
             if ($role_id != '') {
                 $role_str = " and emprole in (" . $role_id . ")";
@@ -506,7 +506,7 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
             $query = "select * from employees_summary where isactive = 1 " . $role_str . " order by " . $sort_name . " " . $sort_type . " " . $limit_str;
             $result = $db->query($query);
             $rows = $result->fetchAll();
-            return array('rows' => $rows, 'page_cnt' => $page_cnt);
+            return ['rows' => $rows, 'page_cnt' => $page_cnt];
         }
     }
     
@@ -538,7 +538,7 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
     {
         $result =  $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('e' => 'main_employeeperk'), array('e.perk_id', 'e.amount'))
+            ->from(['e' => 'main_employeeperk'], ['e.perk_id', 'e.amount'])
             ->where("e.emp_id = " . $emp_id);
         return $this->fetchAll($result)->toArray();
     }
@@ -547,7 +547,7 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
     {
         $result =  $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('e' => 'main_employeeload'), array('e.load_id', 'e.amount'))
+            ->from(['e' => 'main_employeeload'], ['e.load_id', 'e.amount'])
             ->where("e.emp_id = " . $emp_id);
         return $this->fetchAll($result)->toArray();
     }
@@ -556,9 +556,9 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
     {
         $result = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('e' => 'main_employeeperk'), array('perk_name' => 'p.name', 'perk_description' => 'p.description', 'perk_start' => 'p.start', 'perk_end' => 'p.end', 'perk_type' => 'p.type', 'perk_amount' => 'p.amount', 'perk_active' => 'p.isactive', 'category_name' => 'pc.name', 'category_description' => 'pc.description'))
-            ->joinInner(array('p' => 'main_perk'), 'e.perk_id=p.perk_id')
-            ->joinInner(array('pc' => 'main_perkcategory'), 'pc.perkcategory_id=p.category')
+            ->from(['e' => 'main_employeeperk'], ['perk_name' => 'p.name', 'perk_description' => 'p.description', 'perk_start' => 'p.start', 'perk_end' => 'p.end', 'perk_type' => 'p.type', 'perk_amount' => 'p.amount', 'perk_active' => 'p.isactive', 'category_name' => 'pc.name', 'category_description' => 'pc.description'])
+            ->joinInner(['p' => 'main_perk'], 'e.perk_id=p.perk_id')
+            ->joinInner(['pc' => 'main_perkcategory'], 'pc.perkcategory_id=p.category')
             ->where("e.emp_id = " . $emp_id)
             ->group('perk_name');
         //die($result);
@@ -569,8 +569,8 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
     {
         $result = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('es' => 'main_emp_schedule'), array('schedule_name' => 's.schedule_name', 'start_date' => 's.start_date', 'end_date' => 's.end_date', 'isactive' => 's.isactive'))
-            ->joinInner(array('s' => 'main_schedule'), 's.sch_id=es.sch_id')
+            ->from(['es' => 'main_emp_schedule'], ['schedule_name' => 's.schedule_name', 'start_date' => 's.start_date', 'end_date' => 's.end_date', 'isactive' => 's.isactive'])
+            ->joinInner(['s' => 'main_schedule'], 's.sch_id=es.sch_id')
             ->where("es.emp_id = " . $emp_id);
         return $this->fetchAll($result)->toArray();
     }
@@ -579,9 +579,9 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
     {
         $result = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('e' => 'main_employeeload'), array('deductive_name' => 'p.name', 'deductive_description' => 'p.description', 'deductive_start' => 'p.start', 'deductive_end' => 'p.end', 'deductive_type' => 'p.type', 'deductive_amount' => 'p.amount', 'deductive_active' => 'p.isactive', 'category_name' => 'pc.name', 'category_description' => 'pc.description'))
-            ->joinInner(array('p' => 'main_load'), 'e.load_id=p.load_id')
-            ->joinInner(array('pc' => 'main_loadcategory'), 'pc.load_category_id=p.load_category_id')
+            ->from(['e' => 'main_employeeload'], ['deductive_name' => 'p.name', 'deductive_description' => 'p.description', 'deductive_start' => 'p.start', 'deductive_end' => 'p.end', 'deductive_type' => 'p.type', 'deductive_amount' => 'p.amount', 'deductive_active' => 'p.isactive', 'category_name' => 'pc.name', 'category_description' => 'pc.description'])
+            ->joinInner(['p' => 'main_load'], 'e.load_id=p.load_id')
+            ->joinInner(['pc' => 'main_loadcategory'], 'pc.load_category_id=p.load_category_id')
             ->where("e.emp_id = " . $emp_id)
             ->group('deductive_name');
         //die($result);
@@ -595,8 +595,8 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
 
             $result =  $this->select()
                 ->setIntegrityCheck(false)
-                ->from(array('e' => 'main_employees'), array('e.*'))
-                ->joinLeft(array('br' => 'main_emp_branch'), 'e.branch=br.emp_branch_id', 'br.branch as bname')
+                ->from(['e' => 'main_employees'], ['e.*'])
+                ->joinLeft(['br' => 'main_emp_branch'], 'e.branch=br.emp_branch_id', 'br.branch as bname')
                 ->where("e.isactive = 1 AND e.id = " . $id);
             // die($result);
             //die(json_encode($this->fetchAll($result)->toArray())); 
@@ -612,11 +612,11 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
         $searchQuery = '';
         $tablecontent = '';
         $emptyroles = 0;
-        $empstatus_opt = array();
-        $searchArray = array();
-        $data = array();
+        $empstatus_opt = [];
+        $searchArray = [];
+        $data = [];
         $id = '';
-        $dataTmp = array();
+        $dataTmp = [];
 
         $auth = Zend_Auth::getInstance();
         $request = Zend_Controller_Front::getInstance();
@@ -626,9 +626,9 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
         }
         $controllerName = $request->getRequest()->getControllerName();
         if ($controllerName == 'employee' && ($loginUserRole == SUPERADMINROLE || $loginUserGroup == HR_GROUP || $loginUserGroup == MANAGEMENT_GROUP))
-            $filterArray = array('' => 'All', 1 => 'Active', 0 => 'Inactive', 2 => 'Resigned', 3 => 'Left', 4 => 'Suspended');
+            $filterArray = ['' => 'All', 1 => 'Active', 0 => 'Inactive', 2 => 'Resigned', 3 => 'Left', 4 => 'Suspended'];
         else
-            $filterArray = array('' => 'All', 1 => 'Active');
+            $filterArray = ['' => 'All', 1 => 'Active'];
 
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
@@ -648,7 +648,7 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
         $objName = 'employee';
 
 
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'firstname' => 'First Name',
             'lastname' => 'Last Name',
@@ -663,7 +663,7 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
             'contactnumber' => 'Contact Number',
             'emp_status_name' => 'Employment Status',
             'emprole_name' => "Role"
-        );
+        ];
 
         $tablecontent = $this->getEmployeesData($sort, $by, $pageNo, $perPage, $searchQuery, '', $exParam1);
 
@@ -680,7 +680,7 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
             }
         }
 
-        $dataTmp = array(
+        $dataTmp = [
             'userid' => $id,
             'sort' => $sort,
             'by' => $by,
@@ -688,7 +688,7 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
             'perPage' => $perPage,
             'tablecontent' => $tablecontent,
             'objectname' => $objName,
-            'extra' => array(),
+            'extra' => [],
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
             'jsFillFnName' => '',
@@ -697,18 +697,18 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
             'dashboardcall' => $dashboardcall,
             'add' => 'add',
             'call' => $call,
-            'search_filters' => array(
-                'astatus' => array(
+            'search_filters' => [
+                'astatus' => [
                     'type' => 'select',
                     'filter_data' => $filterArray
-                ),
-                'emp_status_id' => array(
+                ],
+                'emp_status_id' => [
                     'type' => 'select',
-                    'filter_data' => array('' => 'All') + $empstatus_opt
-                ),
-            ),
+                    'filter_data' => ['' => 'All'] + $empstatus_opt
+                ],
+            ],
             'emptyroles' => $emptyroles
-        );
+        ];
 
         return $dataTmp;
     }
@@ -736,7 +736,7 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
                   order by emp desc
                   limit 0,10";
         $result = $db->query($query);
-        $emp_arr = array();
+        $emp_arr = [];
         $emp_arr = $result->fetchAll();
         return $emp_arr;
     }
@@ -758,7 +758,7 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
         		  WHERE u." . $params['field'] . " LIKE '%" . $params['term'] . "%' AND e.reporting_manager = $loginUserId
         		  order by u.emailaddress desc limit 0,10";
         $result = $db->query($query);
-        $emp_arr = array();
+        $emp_arr = [];
         $emp_arr = $result->fetchAll();
         return $emp_arr;
     }
@@ -777,7 +777,7 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
         if (!empty($eligibility)) $query .= ' and emp_status_id IN (' . $eligibility . ') ';
 
         $result = $db->query($query);
-        $emp_arr = array();
+        $emp_arr = [];
         $emp_arr = $result->fetchAll();
         return $emp_arr;
     }
@@ -787,7 +787,7 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
         $db = Zend_Db_Table::getDefaultAdapter();
         $query = "select id from main_employees where is_orghead = 1 and isactive = 1";
         $result = $db->query($query);
-        $emp_arr = array();
+        $emp_arr = [];
         $emp_arr = $result->fetchAll();
         return $emp_arr;
     }
@@ -803,21 +803,21 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
         $oldRMData = $this->getsingleEmployeeData($oldRM);
         try {
             if ($status == 'active') {
-                $data = array(
+                $data = [
                     'isactive' => 1,
                     'emptemplock' => 0,
                     'modifieddate' => gmdate("Y-m-d H:i:s"),
                     'modifiedby' => $loginUserId
-                );
+                ];
                 $Query1 = "UPDATE main_employees SET isactive = 1, modifieddate = '" . gmdate("Y-m-d H:i:s") . "', modifiedby = " . $loginUserId . " WHERE user_id=" . $oldRM . " ;";
                 $db->query($Query1);
             } else if ($status == 'inactive') {
-                $data = array(
+                $data = [
                     'isactive' => 0,
                     'emptemplock' => 1,
                     'modifieddate' => gmdate("Y-m-d H:i:s"),
                     'modifiedby' => $loginUserId
-                );
+                ];
             }
             $where = "id = " . $oldRM;
             $user_model = new Default_Model_Usermanagement();
@@ -912,7 +912,7 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
     public function getEmployeeDetails($useridstring = '')
     {
         $db = Zend_Db_Table::getDefaultAdapter();
-        $emparr = array();
+        $emparr = [];
 
         if ($useridstring != '' && $useridstring != 'null') {
             $qry = "select e.userfullname,e.user_id,e.emprole from employees_summary e where e.user_id IN(" . $useridstring . ")";
@@ -961,7 +961,7 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
     public function getPrefix_emp_excel()
     {
         $db = Zend_Db_Table::getDefaultAdapter();
-        $parray = array();
+        $parray = [];
         $query = "select prefix,id from main_prefix where isactive = 1";
         $res = $db->query($query)->fetchAll();
         if (!empty($res)) {
@@ -975,7 +975,7 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
     public function getRoles_emp_excel()
     {
         $db = Zend_Db_Table::getDefaultAdapter();
-        $parray = array();
+        $parray = [];
         $query = "select code,id from " . ROLE_ARRAY['tablename'] . " where isactive = 'Y'";
         $res = $db->query($query)->fetchAll();
         if (!empty($res)) {
@@ -989,7 +989,7 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
     public function getMngRoles_emp_excel()
     {
         $db = Zend_Db_Table::getDefaultAdapter();
-        $parray = array();
+        $parray = [];
         $query = "select code,id from " . ROLE_ARRAY['tablename'] . " where isactive = 'Y' and group_id = 1";
         $res = $db->query($query)->fetchAll();
         if (!empty($res)) {
@@ -1003,7 +1003,7 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
     public function getBU_emp_excel()
     {
         $db = Zend_Db_Table::getDefaultAdapter();
-        $parray = array();
+        $parray = [];
         $query = "select unitcode,id from main_businessunits where isactive = 1";
         $res = $db->query($query)->fetchAll();
         if (!empty($res)) {
@@ -1017,7 +1017,7 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
     public function getPayfrequency_excel()
     {
         $db = Zend_Db_Table::getDefaultAdapter();
-        $parray = array();
+        $parray = [];
         $query = "select id,freqcode from main_payfrequency where isactive = 1";
         $res = $db->query($query)->fetchAll();
         if (!empty($res)) {
@@ -1030,7 +1030,7 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
     public function getCurrency_excel()
     {
         $db = Zend_Db_Table::getDefaultAdapter();
-        $parray = array();
+        $parray = [];
         $query = "select id,currencycode from main_currency where isactive = 1";
         $res = $db->query($query)->fetchAll();
         if (!empty($res)) {
@@ -1044,7 +1044,7 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
     public function getDep_emp_excel()
     {
         $db = Zend_Db_Table::getDefaultAdapter();
-        $parray = array();
+        $parray = [];
         $query = "select deptcode,id from main_departments where isactive = 1";
         $res = $db->query($query)->fetchAll();
         if (!empty($res)) {
@@ -1058,7 +1058,7 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
     public function getJobs_emp_excel()
     {
         $db = Zend_Db_Table::getDefaultAdapter();
-        $parray = array();
+        $parray = [];
         $query = "select jobtitlecode,id from main_jobtitles where isactive = 1";
         $res = $db->query($query)->fetchAll();
         if (!empty($res)) {
@@ -1072,7 +1072,7 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
     public function getPositions_emp_excel()
     {
         $db = Zend_Db_Table::getDefaultAdapter();
-        $parray = array();
+        $parray = [];
         $query = "select positionname,id from main_positions where isactive = 1";
         $res = $db->query($query)->fetchAll();
         if (!empty($res)) {
@@ -1086,7 +1086,7 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
     public function getUsers_emp_excel()
     {
         $db = Zend_Db_Table::getDefaultAdapter();
-        $parray = array();
+        $parray = [];
         $query = "select employeeId,user_id from employees_summary where isactive = 1";
         $res = $db->query($query)->fetchAll();
         if (!empty($res)) {
@@ -1100,7 +1100,7 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
     public function getEstat_emp_excel()
     {
         $db = Zend_Db_Table::getDefaultAdapter();
-        $parray = array();
+        $parray = [];
         $query = "select workcode,workcodename from main_employmentstatus where isactive = 1";
         $res = $db->query($query)->fetchAll();
         if (!empty($res)) {
@@ -1113,7 +1113,7 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
     public function getDOLEstat_emp_excel()
     {
         $db = Zend_Db_Table::getDefaultAdapter();
-        $parray = array();
+        $parray = [];
         $query = "select workcode,workcodename from main_employmentstatus where isactive = 1 and workcodename in (8,9,10)";
         $res = $db->query($query)->fetchAll();
         if (!empty($res)) {
@@ -1127,8 +1127,8 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
     public function getEmps_emp_excel()
     {
         $db = Zend_Db_Table::getDefaultAdapter();
-        $earray = array();
-        $iarray = array();
+        $earray = [];
+        $iarray = [];
         // $query = "select user_id,emailaddress,employeeId from employees_summary where isactive = 1";
         $query = "select user_id,emailaddress,employeeId from employees_summary";
         $res = $db->query($query)->fetchAll();
@@ -1145,13 +1145,13 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
                 $earray[$row['user_id']] = strtolower($row['emailaddress']);
             }
         }
-        return array('email' => $earray, 'ids' => $iarray);
+        return ['email' => $earray, 'ids' => $iarray];
     }
 
     public function getEmpsDeptWise()
     {
         $db = Zend_Db_Table::getDefaultAdapter();
-        $emp_array = array();
+        $emp_array = [];
         $query = "select ifnull(department_id,0) department_id,employeeId from employees_summary where isactive = 1";
         $res = $db->query($query)->fetchAll();
         if (!empty($res)) {
@@ -1165,7 +1165,7 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
     public function getDeptBUWise()
     {
         $db = Zend_Db_Table::getDefaultAdapter();
-        $emp_array = array();
+        $emp_array = [];
         $query = "select unitid,deptcode from main_departments where isactive = 1";
         $res = $db->query($query)->fetchAll();
         if (!empty($res)) {
@@ -1179,7 +1179,7 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
     public function getPosJTWise()
     {
         $db = Zend_Db_Table::getDefaultAdapter();
-        $emp_array = array();
+        $emp_array = [];
         $query = "select jobtitleid,positionname from main_positions where isactive =1 order by jobtitleid";
         $res = $db->query($query)->fetchAll();
         if (!empty($res)) {
@@ -1254,7 +1254,7 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
     public function getPairs($activeOnly = true)
     {
         $select = $this->select()
-            ->from($this->_name, array('id', 'userfullname'))
+            ->from($this->_name, ['id', 'userfullname'])
             ->order('userfullname ASC');
             
         if ($activeOnly) {
@@ -1276,7 +1276,7 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
     {
         $db = $this->getAdapter();
         $select = $db->select()
-            ->from(array('e' => 'main_employee'), array('id'))
+            ->from(['e' => 'main_employee'], ['id'])
             ->where('e.isactive = ?', 1);
 
         if ($unitType === 'All') {
@@ -1284,13 +1284,13 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
         }
 
         if ($unitType === 'Employee') {
-            return array((int)$unitId); // Direct targeting
+            return [(int)$unitId]; // Direct targeting
         }
 
         if ($unitType === 'Role') {
             // Join userrole mapping
-            $select->joinInner(array('u' => 'main_users'), 'e.id = u.empid', array())
-                   ->joinInner(array('ur' => 'main_userrole'), 'u.id = ur.user_id', array())
+            $select->joinInner(['u' => 'main_users'], 'e.id = u.empid', [])
+                   ->joinInner(['ur' => 'main_userrole'], 'u.id = ur.user_id', [])
                    ->where('ur.role_id = ?', (int)$unitId)
                    ->where('ur.isactive = 1')
                    ->where('ur.datefrom <= CURDATE()')
@@ -1299,19 +1299,19 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
         }
 
         // For structural units, join the empposition table (Current active position)
-        $select->joinInner(array('pos' => 'main_empposition'), 'e.id = pos.employee_id', array())
+        $select->joinInner(['pos' => 'main_empposition'], 'e.id = pos.employee_id', [])
                ->where('pos.isactive = ?', 'Y')
                ->where('pos.datefrom <= CURDATE()')
                ->where('pos.dateto >= CURDATE()');
 
         // Map the Rulebook string to the actual DB column in main_empposition
-        $columnMap = array(
+        $columnMap = [
             'Company'      => 'company_id',
             'BusinessUnit' => 'sbunit_id',
             'Division'     => 'division_id',
             'Department'   => 'department_id',
             'Section'      => 'section_id'
-        );
+        ];
 
         if (isset($columnMap[$unitType])) {
             $select->where('pos.' . $columnMap[$unitType] . ' = ?', (int)$unitId);
@@ -1330,7 +1330,7 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
     public function getManagerIdByEmployee($employeeId)
     {
         $select = $this->getAdapter()->select()
-            ->from('main_empposition', array('reportto_id'))
+            ->from('main_empposition', ['reportto_id'])
             ->where('employee_id = ?', (int)$employeeId)
             ->where('isactive = ?', 'Y')
             ->order('datefrom DESC')
@@ -1350,8 +1350,8 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
     public function getDirectReportIdsByEmployee($managerId)
     {
         $select = $this->getAdapter()->select()
-            ->from(array('pos' => 'main_empposition'), array('employee_id'))
-            ->joinInner(array('e' => 'main_employee'), 'pos.employee_id = e.id', array())
+            ->from(['pos' => 'main_empposition'], ['employee_id'])
+            ->joinInner(['e' => 'main_employee'], 'pos.employee_id = e.id', [])
             ->where('pos.reportto_id = ?', (int)$managerId)
             ->where('pos.isactive = ?', 'Y')
             ->where('e.isactive = ?', 1);
@@ -1369,11 +1369,11 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
     public function getPeerIdsByEmployee($employeeId)
     {
         $managerId = $this->getManagerIdByEmployee($employeeId);
-        if (!$managerId) return array();
+        if (!$managerId) return [];
 
         $select = $this->getAdapter()->select()
-            ->from(array('pos' => 'main_empposition'), array('employee_id'))
-            ->joinInner(array('e' => 'main_employee'), 'pos.employee_id = e.id', array())
+            ->from(['pos' => 'main_empposition'], ['employee_id'])
+            ->joinInner(['e' => 'main_employee'], 'pos.employee_id = e.id', [])
             ->where('pos.reportto_id = ?', (int)$managerId)
             ->where('pos.employee_id != ?', (int)$employeeId) // Exclude self
             ->where('pos.isactive = ?', 'Y')

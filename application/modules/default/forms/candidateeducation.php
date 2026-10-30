@@ -67,8 +67,8 @@ class Default_Form_Candidateeducation extends Zend_Form{
         // $end_date->setAttrib('onfocus', 'this.blur()');
         // $this->addElements(array($id, $institution, $course, $education_level, $start_date, 
         //                      $end_date, $country, $state, $city,$prevbtn,$submit));
-        $this->addElements(array($id,$prevbtn,$submit));
-        $this->setElementDecorators(array('ViewHelper')); 
+        $this->addElements([$id,$prevbtn,$submit]);
+        $this->setElementDecorators(['ViewHelper']); 
 
     }
 }

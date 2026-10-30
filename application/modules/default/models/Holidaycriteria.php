@@ -30,7 +30,7 @@ class Default_Model_Holidaycriteria extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->where('holiday_id = ?', $holidayId)
             ->where('isactive != ?', 5)
-            ->order(array('group_id ASC', 'criteria_type ASC'));
+            ->order(['group_id ASC', 'criteria_type ASC']);
 
         return $this->fetchAll($select)->toArray();
     }
@@ -49,19 +49,19 @@ class Default_Model_Holidaycriteria extends Zend_Db_Table_Abstract
         $currentDate = gmdate("Y-m-d H:i:s");
 
         foreach ($criteriaPayload as $rule) {
-            $action = isset($rule['action']) ? $rule['action'] : 'new';
+            $action = $rule['action'] ?? 'new';
             $ruleId = isset($rule['id']) ? (int)$rule['id'] : 0;
 
             if ($action === 'delete' && $ruleId > 0) {
                 // Hard delete is safe for configuration criteria mapping per SSOT II.8
-                $this->delete(array('id = ?' => $ruleId));
+                $this->delete(['id = ?' => $ruleId]);
             } elseif ($action === 'new' || $ruleId === 0) {
                 // Prevent empty criteria values
                 if (empty($rule['criteria_value'])) {
                     continue;
                 }
 
-                $this->insert(array(
+                $this->insert([
                     'holiday_id'     => $holidayId,
                     'group_id'       => (int)$rule['group_id'],
                     'criteria_type'  => trim((string)$rule['criteria_type']),
@@ -70,7 +70,7 @@ class Default_Model_Holidaycriteria extends Zend_Db_Table_Abstract
                     'isactive'       => 1,
                     'createdby'      => $userId,
                     'createddate'    => $currentDate
-                ));
+                ]);
             }
         }
     }

@@ -48,7 +48,7 @@ class Default_Model_Action extends Zend_Db_Table_Abstract
         if ($id) {
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = gmdate("Y-m-d H:i:s");
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return 'update';
         }
         
@@ -93,7 +93,7 @@ class Default_Model_Action extends Zend_Db_Table_Abstract
 
     public function getPairs($activeOnly = true)
     {
-        $select = $this->select()->from($this->_name, array('id', 'name'))->order('name ASC');
+        $select = $this->select()->from($this->_name, ['id', 'name'])->order('name ASC');
         
         if ($activeOnly) {
             $select->where("isactive = 1");
@@ -106,23 +106,23 @@ class Default_Model_Action extends Zend_Db_Table_Abstract
     public function deleteRecord($id)
     {
         $userId = Zend_Auth::getInstance()->getStorage()->read()->id ?? 0;
-        $data = array(
+        $data = [
             'isactive'     => 5, 
             'modifiedby'   => $userId, 
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
-        return $this->update($data, array('id = ?' => (int)$id));
+        ];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     public function toggleStatus($id, $status)
     {
         $userId = Zend_Auth::getInstance()->getStorage()->read()->id ?? 0;
-        $data = array(
+        $data = [
             'isactive'     => (int)$status, 
             'modifiedby'   => $userId, 
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
-        return $this->update($data, array('id = ?' => (int)$id));
+        ];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* --------------------------------------------------------------
@@ -132,7 +132,7 @@ class Default_Model_Action extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -153,26 +153,26 @@ class Default_Model_Action extends Zend_Db_Table_Abstract
             }
         }
 
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'         => 'Action',
             'name'           => 'Method Name',
             'scanner_status' => 'Scanner Status',
             'status_text'    => 'Active Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort, 'by' => $by, 'pageNo' => $pageNo, 'perPage' => $perPage,
             'tablecontent'   => $tableContent, 'objectname' => 'permissionaction', 'tableheader' => $tableHeaders,
-            'extra'          => array(), 'jsGridFnName' => 'getAjaxgridData', 'jsFillFnName' => '',
+            'extra'          => [], 'jsGridFnName' => 'getAjaxgridData', 'jsFillFnName' => '',
             'searchArray'    => $searchArray, 'menuName' => 'Actions', 'call' => $call, 
             'dashboardcall'  => $dashboardcall, 
-            'search_filters' => array(
-                'status_text'    => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive')),
-                'scanner_status' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Mapped (Active)', 'New' => 'New', 'Obsolete' => 'Obsolete'))
-            )
-        );
+            'search_filters' => [
+                'status_text'    => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']],
+                'scanner_status' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Mapped (Active)', 'New' => 'New', 'Obsolete' => 'Obsolete']]
+            ]
+        ];
     }
 
     public function getGridData($sort, $by, $pageNo, $perPage, $searchQuery = '')
@@ -183,12 +183,12 @@ class Default_Model_Action extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from(
-                array('a' => $this->_name), 
-                array(
+                ['a' => $this->_name], 
+                [
                     '*', 
                     'status_text'    => new Zend_Db_Expr("CASE WHEN a.isactive = 1 THEN 'Active' ELSE 'Inactive' END"),
                     'scanner_status' => 'a.status'
-                )
+                ]
             )
             ->where("a.isactive != 5");
 
@@ -242,7 +242,7 @@ class Default_Model_Action extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->where('isactive = 1')
             ->where("status IN ('New', 'Active')")
-            ->order(array('controller_id ASC', 'name ASC'));
+            ->order(['controller_id ASC', 'name ASC']);
             
         return $this->fetchAll($select)->toArray();
     }
@@ -250,7 +250,7 @@ class Default_Model_Action extends Zend_Db_Table_Abstract
     public function getActionNamesByControllerId($controllerId)
     {
         $select = $this->select()
-            ->from($this->_name, array('name'))
+            ->from($this->_name, ['name'])
             ->where('controller_id = ?', (int)$controllerId)
             ->where("status != 'Obsolete'")
             ->where("isactive != 5");
@@ -263,15 +263,15 @@ class Default_Model_Action extends Zend_Db_Table_Abstract
         if (empty($actionNames)) return 0;
         
         $userId = Zend_Auth::getInstance()->getStorage()->read()->id ?? 0;
-        $data = array(
+        $data = [
             'status'       => 'Obsolete',
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
-        $where = array(
+        ];
+        $where = [
             'controller_id = ?' => (int)$controllerId,
             'name IN (?)'       => $actionNames
-        );
+        ];
         return $this->update($data, $where);
     }
 }

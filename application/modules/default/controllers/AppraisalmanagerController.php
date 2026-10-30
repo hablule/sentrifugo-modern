@@ -60,7 +60,7 @@ class Default_AppraisalmanagerController extends Zend_Controller_Action
              $loginUserEmpId = $auth->getStorage()->read()->employeeId;          
          }
         $post_values = $this->getRequest()->getPost();
-        $result = array('status' => 'fail','msg' => 'Something went wrong, please try again.');
+        $result = ['status' => 'fail','msg' => 'Something went wrong, please try again.'];
         $questions = '';
         if(count($post_values) > 0)
         {
@@ -135,7 +135,7 @@ class Default_AppraisalmanagerController extends Zend_Controller_Action
 						 		$dept_str = ($dept == '') ? " ":"and <b>$dept</b> department"; 
 								$emp_id_str = ($loginuserRole == SUPERADMINROLE) ? " ":"($loginUserEmpId)";
 						
-                				$empArr = array();
+                				$empArr = [];
 								if(!empty($employeeDetailsArr))
 								{
 									$empArrList = '';
@@ -168,7 +168,7 @@ class Default_AppraisalmanagerController extends Zend_Controller_Action
 					$trDb->commit();
                     $result['status'] = 'success';
                     $result['msg'] = "Submitted successfully";  
-                    $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Initialization Submitted successfully. "));
+                    $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Initialization Submitted successfully. "]);
                     
                 }
                 catch (Exception $e) 
@@ -193,7 +193,7 @@ class Default_AppraisalmanagerController extends Zend_Controller_Action
         {
             $loginUserId = $auth->getStorage()->read()->id;
         }    
-        $result = array('status' => 'fail','msg' => 'Something went wrong, please try again.','empcount'=>'','appraisalid'=>'','managerid'=>'');
+        $result = ['status' => 'fail','msg' => 'Something went wrong, please try again.','empcount'=>'','appraisalid'=>'','managerid'=>''];
         if(count($post_values) > 0)
         {
             $appraisal_id = $post_values['appraisal_id'];
@@ -241,22 +241,22 @@ class Default_AppraisalmanagerController extends Zend_Controller_Action
             $loginUserId = $auth->getStorage()->read()->id;
             $loginuserRole = $auth->getStorage()->read()->emprole;
             $loginuserGroup = $auth->getStorage()->read()->group_id;
-            $loginuserArr = array(
+            $loginuserArr = [
                 'loginuserid' => $loginUserId,
                 'loginuserrole'=>$loginuserRole,
                 'loginusergroup'=>$loginuserGroup,	
-            );            
+            ];            
         }
-        $finalarray = $deleted_emp_arr = $result = array();
+        $finalarray = $deleted_emp_arr = $result = [];
         $mgrIndex = 'MC';
         $mgrratIndex = 'MR';
         $empIndex = 'EC';
         $empratIndex = 'ER';
         $questionArr = $post_values['check'];
-        $managercmntsArr = isset($post_values['mgrcmnt'])?$post_values['mgrcmnt']:array();
-        $managerratingsArr = isset($post_values['mgrrating'])?$post_values['mgrrating']:array();
-        $empratingsArr = isset($post_values['empratings'])?$post_values['empratings']:array();
-        $empcmntsArr = isset($post_values['empcmnt'])?$post_values['empcmnt']:array();
+        $managercmntsArr = $post_values['mgrcmnt'] ?? [];
+        $managerratingsArr = $post_values['mgrrating'] ?? [];
+        $empratingsArr = $post_values['empratings'] ?? [];
+        $empcmntsArr = $post_values['empcmnt'] ?? [];
         $empids = $post_values['existetd_mem_str'];
         $groupid = $post_values['groupid'];
         $group_name = $post_values['group_name'];
@@ -289,7 +289,7 @@ class Default_AppraisalmanagerController extends Zend_Controller_Action
                 {    
                     if(!empty($original_mem_str))
                     {
-                        $privilegesdata = array(
+                        $privilegesdata = [
                             'manager_group_id' => null, 
                             'manager_qs' => null,
                             'manager_qs_privileges' => null,		
@@ -297,7 +297,7 @@ class Default_AppraisalmanagerController extends Zend_Controller_Action
                             'modifiedby_role' => $loginuserRole,
                             'modifiedby_group' => $loginuserGroup,
                             'modifieddate' => gmdate("Y-m-d H:i:s")
-                        );
+                        ];
                         $privielgeswhere = " pa_initialization_id = '".$appraisal_id."' and line_manager_1 = '".$manager_id."' and employee_id IN ($original_mem_str) and module_flag=1 and isactive= 1 ";
                                   
                         $updateprivileges = $appraisalPrivMainModel->SaveorUpdatePrivilegeData($privilegesdata, $privielgeswhere);
@@ -311,24 +311,24 @@ class Default_AppraisalmanagerController extends Zend_Controller_Action
                             $empratings = isset($empratingsArr[$questionArr[$i]])?1:0;                                                               
                             $empcomments = isset($empcmntsArr[$questionArr[$i]])?1:0;
                                                            
-                            $commntsarry = array($mgrratIndex=>$managerratings,$mgrIndex=>$managercomments,$empratIndex=>$empratings,$empIndex=>$empcomments);	
+                            $commntsarry = [$mgrratIndex=>$managerratings,$mgrIndex=>$managercomments,$empratIndex=>$empratings,$empIndex=>$empcomments];	
                             $finalarray[$questionArr[$i]] = $commntsarry;
 
                         }
                         $questions = implode(',', $questionArr);
                         $qsprivileges = json_encode($finalarray,true);
                         
-                        $groupdata = array(
+                        $groupdata = [
                             'pa_initialization_id'=>$appraisal_id,
                             'group_name'=>trim($group_name), 
                             'modifiedby'=>$loginUserId,
                             'modifiedby_role'=>$loginuserRole,
                             'modifiedby_group'=>$loginuserGroup,
                             'modifieddate'=>gmdate("Y-m-d H:i:s")
-                        );
+                        ];
                         if($groupid!='')
                         {
-                            $where = array('id=?'=>$groupid);  
+                            $where = ['id=?'=>$groupid];  
                             $actionflag = 2;
                         }
                         else
@@ -345,7 +345,7 @@ class Default_AppraisalmanagerController extends Zend_Controller_Action
                         if($Id != 'update')
                             $groupid = $Id;
                              
-                        $privilegesdata = array(
+                        $privilegesdata = [
                             'manager_group_id'=>$groupid, 
                             'manager_qs'=>$questions,
                             'manager_qs_privileges'=>$qsprivileges,		
@@ -353,7 +353,7 @@ class Default_AppraisalmanagerController extends Zend_Controller_Action
                             'modifiedby_role'=>$loginuserRole,
                             'modifiedby_group'=>$loginuserGroup,
                             'modifieddate'=>gmdate("Y-m-d H:i:s")
-                        );
+                        ];
                         $privielgeswhere = " pa_initialization_id = '".$appraisal_id."' and line_manager_1 = '".$manager_id."' and employee_id IN ($empids) and module_flag=1 and isactive= 1 ";
                                   
                         $updateprivileges = $appraisalPrivMainModel->SaveorUpdatePrivilegeData($privilegesdata, $privielgeswhere);
@@ -402,9 +402,9 @@ class Default_AppraisalmanagerController extends Zend_Controller_Action
         $refresh = $this->_getParam('refresh');
         $dashboardcall = $this->_getParam('dashboardcall');
 		
-        $data = array();
+        $data = [];
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         $tablecontent='';
 		
         if($refresh == 'refresh')
@@ -470,7 +470,7 @@ class Default_AppraisalmanagerController extends Zend_Controller_Action
 
                     $manager_emp = $app_manager_model->getmanager_emp($appraisal_id, $manager_id,$group_id);
                     $appraisaldata = $appraisal_init_model->getConfigData($appraisal_id);
-                    $appraisaldata = (isset($appraisaldata[0]) && !empty($appraisaldata[0]))?$appraisaldata[0]:array();
+                    $appraisaldata = (isset($appraisaldata[0]) && !empty($appraisaldata[0]))?$appraisaldata[0]:[];
                     if(!empty($appraisaldata) && !empty($manager_emp))
 					{
 						$ques_ids = $manager_emp[0]['manager_qs'];
@@ -537,7 +537,7 @@ class Default_AppraisalmanagerController extends Zend_Controller_Action
                 $app_manager_model = new Default_Model_Appraisalmanager();
                 $appraisal_init_model = new Default_Model_Appraisalinit();
                 $appraisal_qs_model = new Default_Model_Appraisalquestions();
-                $check_array = array();
+                $check_array = [];
                 $tablename = 'main_pa_questions_privileges';
                 $manager_emp = $app_manager_model->getmanager_emp($appraisal_id, $manager_id,'');
                                 
@@ -573,7 +573,7 @@ class Default_AppraisalmanagerController extends Zend_Controller_Action
                     $appraisaldata['poppermission'] = 'yes';
                 }
                 $appraisaldata['poppermission'] = 'yes';
-                $manager_emp_selected = array();
+                $manager_emp_selected = [];
                 $group_name = "";
                 if($flag == 'edit')
                 {
@@ -718,7 +718,7 @@ class Default_AppraisalmanagerController extends Zend_Controller_Action
             if($id != '')
             {
 			    $app_manager_model = new Default_Model_Appraisalmanager();
-				$line_managers = array();
+				$line_managers = [];
 				$line_managers = $app_manager_model->getLineManagers($id,$loginUserId);
 				$appraisal_init_model = new Default_Model_Appraisalinit();
 				$appraisal_data = $appraisal_init_model->getappdata_forview($id);

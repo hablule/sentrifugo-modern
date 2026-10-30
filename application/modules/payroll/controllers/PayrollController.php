@@ -17,7 +17,7 @@ class Payroll_PayrollController extends Zend_Controller_Action
         }
         $dashboardcall = $this->_getParam('dashboardcall');
         $refresh = $this->_getParam('refresh');
-        $data = array();
+        $data = [];
         if ($refresh == 'refresh') {
             if ($dashboardcall == 'Yes') {
                 $perPage = DASHBOARD_PERPAGE;

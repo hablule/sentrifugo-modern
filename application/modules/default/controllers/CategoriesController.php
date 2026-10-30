@@ -63,9 +63,9 @@ class Default_CategoriesController extends Zend_Controller_Action
 		$objname = $this->_getParam('objname');
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';	
 		
 		/** check for refresh button event 
@@ -192,7 +192,7 @@ class Default_CategoriesController extends Zend_Controller_Action
 				$categoryDesc = $this->_request->getParam('description');
 
 				/** prepare data to insert into database **/
-				$data = array(
+				$data = [
 						'category' => $categoryName,
 						'description' => $categoryDesc,
 						'isused'=> 0, //default value
@@ -201,7 +201,7 @@ class Default_CategoriesController extends Zend_Controller_Action
 						'createdby' => $this->loggedInUser,
 						'modifieddate'=> gmdate("Y-m-d H:i:s"),
 						'createddate'=> gmdate("Y-m-d H:i:s")
-				);
+				];
 				$res = $this->categoriesModel->addCategory($data);
 
 				if($res)
@@ -209,11 +209,11 @@ class Default_CategoriesController extends Zend_Controller_Action
 					/** insert into log manager table **/
 					sapp_Global::logManager(POLICY_DOCS_CATEGORIES,1,$this->loggedInUser,$res);
 					
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Category added successfully"));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Category added successfully"]);
 				}
 				else
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("failure" => "Failed to add new category. Please try again."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["failure" => "Failed to add new category. Please try again."]);
 				}
 
 				$this->_redirect('categories');
@@ -301,15 +301,15 @@ class Default_CategoriesController extends Zend_Controller_Action
 						$categoryDesc = $this->_request->getParam('description');
 
 						/** prepare data object and where clause **/
-						$data = array(
+						$data = [
 								'category' => $categoryName,
 								'description' => $categoryDesc,
 								'isactive'=> 1, //default value
 								'modifiedby'=> $this->loggedInUser,
 								'modifieddate'=> gmdate("Y-m-d H:i:s"),
 								
-						);
-						$where = array('id=?' => $id);
+						];
+						$where = ['id=?' => $id];
 
 						/** update category details **/
 						$res = $this->categoriesModel->editCategory($data,$where);
@@ -319,11 +319,11 @@ class Default_CategoriesController extends Zend_Controller_Action
 							/** insert into log manager table **/
 							sapp_Global::logManager(POLICY_DOCS_CATEGORIES,2,$this->loggedInUser,$id);
 
-							$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Category updated successfully"));
+							$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Category updated successfully"]);
 						}
 						else
 						{
-							$this->_helper->getHelper("FlashMessenger")->addMessage(array("failure" => "Failed to update category. Please try again."));
+							$this->_helper->getHelper("FlashMessenger")->addMessage(["failure" => "Failed to update category. Please try again."]);
 						}
 
 						$this->_redirect('categories');
@@ -424,7 +424,7 @@ class Default_CategoriesController extends Zend_Controller_Action
 	public function deleteAction()
 	{
 		
-		$messages = array('message' => '','msgtype' => '');
+		$messages = ['message' => '','msgtype' => ''];
 
 		/**
 		** check for logged in user role for delete privileges
@@ -449,12 +449,12 @@ class Default_CategoriesController extends Zend_Controller_Action
 			/** prepare data object and where clause 
 			** to update category details in database
 			**/
-			$data = array(
+			$data = [
 					'isactive'=> 0,
 					'modifiedby'=> $this->loggedInUser,
 					'modifieddate'=> gmdate("Y-m-d H:i:s")
-			);
-			$where = array('id=?' => $id);
+			];
+			$where = ['id=?' => $id];
 			$res = $this->categoriesModel->editCategory($data,$where);
 
 			if($res)
@@ -480,11 +480,11 @@ class Default_CategoriesController extends Zend_Controller_Action
 		{
 			if(	$messages['msgtype'] == 'error')
 			{
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
 			}
 			if(	$messages['msgtype'] == 'success')
 			{
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
 			}
 		
 		}
@@ -539,7 +539,7 @@ class Default_CategoriesController extends Zend_Controller_Action
 				$categoryDesc = $this->_request->getParam('description');
 
 				/** prepare data to insert into database **/
-				$data = array(
+				$data = [
 						'category' => $categoryName,
 						'description' => $categoryDesc,
 						'isused'=> 0, //default value
@@ -548,7 +548,7 @@ class Default_CategoriesController extends Zend_Controller_Action
 						'createdby' => $this->loggedInUser,
 						'modifieddate'=> gmdate("Y-m-d H:i:s"),
 						'createddate'=> gmdate("Y-m-d H:i:s")
-				);
+				];
 				$res = $this->categoriesModel->addCategory($data);
 
 				if($res)

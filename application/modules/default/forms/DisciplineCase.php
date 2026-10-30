@@ -35,13 +35,13 @@ class Default_Form_Disciplinecase extends Zend_Form
         $employee_id->setLabel('Employee Involved')
             ->setAttrib('class', 'formDataElement')
             ->setRequired(true)
-            ->addValidator('NotEmpty', true, array('messages' => 'Please select an employee.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please select an employee.']);
 
         $violation_id = new Zend_Form_Element_Select('violation_id');
         $violation_id->setLabel('Violation Type')
             ->setAttrib('class', 'formDataElement')
             ->setRequired(true)
-            ->addValidator('NotEmpty', true, array('messages' => 'Please select the violation type.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please select the violation type.']);
 
         $action_id = new Zend_Form_Element_Select('action_id');
         $action_id->setLabel('Corrective Action')
@@ -54,19 +54,19 @@ class Default_Form_Disciplinecase extends Zend_Form
         $case_status = new Zend_Form_Element_Select('case_status');
         $case_status->setLabel('Case Status')
             ->setAttrib('class', 'formDataElement')
-            ->addMultiOptions(array('Initiated' => 'Initiated', 'Appealed' => 'Appealed', 'Closed' => 'Closed'))
+            ->addMultiOptions(['Initiated' => 'Initiated', 'Appealed' => 'Appealed', 'Closed' => 'Closed'])
             ->setRequired(true);
 
         $cao_verdict = new Zend_Form_Element_Select('cao_verdict');
         $cao_verdict->setLabel('Verdict')
             ->setAttrib('class', 'formDataElement')
-            ->addMultiOptions(array('' => 'Pending / TBD', '1' => 'Guilty', '2' => 'Not Guilty'))
+            ->addMultiOptions(['' => 'Pending / TBD', '1' => 'Guilty', '2' => 'Not Guilty'])
             ->setRequired(false);
 
         $employee_appeal = new Zend_Form_Element_Select('employee_appeal');
         $employee_appeal->setLabel('Employee Appealed?')
             ->setAttrib('class', 'formDataElement')
-            ->addMultiOptions(array('2' => 'No', '1' => 'Yes'))
+            ->addMultiOptions(['2' => 'No', '1' => 'Yes'])
             ->setRequired(true);
 
         /* --------------------------------------------------------------
@@ -74,18 +74,18 @@ class Default_Form_Disciplinecase extends Zend_Form
          * -------------------------------------------------------------- */
         $date_of_occurrence = new Zend_Form_Element_Text('date_of_occurrence');
         $date_of_occurrence->setLabel('Date of Incident')
-            ->setAttribs(array('class' => 'formDataElement', 'readonly' => 'readonly', 'id' => 'date_of_occurrence'))
+            ->setAttribs(['class' => 'formDataElement', 'readonly' => 'readonly', 'id' => 'date_of_occurrence'])
             ->setRequired(true)
-            ->addValidator('NotEmpty', true, array('messages' => 'Please select the incident date.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please select the incident date.']);
 
         $violation_expiry = new Zend_Form_Element_Text('violation_expiry');
         $violation_expiry->setLabel('Action Expiry Date')
-            ->setAttribs(array('class' => 'formDataElement', 'readonly' => 'readonly', 'id' => 'violation_expiry'))
+            ->setAttribs(['class' => 'formDataElement', 'readonly' => 'readonly', 'id' => 'violation_expiry'])
             ->setRequired(false);
 
         $action_text = new Zend_Form_Element_Text('action_text');
         $action_text->setLabel('Action Details (If Other)')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '255'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '255'])
             ->setRequired(false)
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
@@ -95,18 +95,18 @@ class Default_Form_Disciplinecase extends Zend_Form
          * -------------------------------------------------------------- */
         $employer_statement = new Zend_Form_Element_Textarea('employer_statement');
         $employer_statement->setLabel('Employer Statement / Findings')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')->addFilter('StripTags');
 
         $employee_statement = new Zend_Form_Element_Textarea('employee_statement');
         $employee_statement->setLabel('Employee Statement')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')->addFilter('StripTags');
 
         // UNMAPPED FIELD FOR TIMELINE LOGGING
         $log_comment = new Zend_Form_Element_Textarea('log_comment');
         $log_comment->setLabel('Add Note to Timeline')
-            ->setAttribs(array('class' => 'formDataElement', 'rows' => 3, 'placeholder' => 'Explain any updates, status changes, or meetings here...'))
+            ->setAttribs(['class' => 'formDataElement', 'rows' => 3, 'placeholder' => 'Explain any updates, status changes, or meetings here...'])
             ->setRequired(false)
             ->addFilter('StringTrim')->addFilter('StripTags');
 
@@ -121,13 +121,13 @@ class Default_Form_Disciplinecase extends Zend_Form
          * -------------------------------------------------------------- */
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save Case')
-            ->setAttribs(array('id' => 'submitbutton', 'class' => 'actbtn_btn'));
+            ->setAttribs(['id' => 'submitbutton', 'class' => 'actbtn_btn']);
 
         $urlAction  = "'disciplinecase/save/format/json'";
         $jsFunction = "'redirecttocontroller(\\'disciplinecase\\');'";
         $submit->setAttrib('onclick', "saveDetails($urlAction, '', '', $jsFunction);");
 
-        $this->addElements(array(
+        $this->addElements([
             $idElement,
             $employee_id,
             $violation_id,
@@ -143,11 +143,11 @@ class Default_Form_Disciplinecase extends Zend_Form
             $log_comment,
             $isactive,
             $submit
-        ));
+        ]);
 
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
-            $element->setDecorators(array('ViewHelper'));
+            $element->setDecorators(['ViewHelper']);
         }
     }
 }

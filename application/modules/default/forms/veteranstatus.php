@@ -34,24 +34,24 @@ class Default_Form_veteranstatus extends Zend_Form
 		$veteranstatus = new Zend_Form_Element_Text('veteranstatus');
         $veteranstatus->setAttrib('maxLength', 20);
         $veteranstatus->setRequired(true);
-        $veteranstatus->addValidator('NotEmpty', false, array('messages' => 'Please enter veteran status.'));  
-		$veteranstatus->addValidators(array(
-						 array(
+        $veteranstatus->addValidator('NotEmpty', false, ['messages' => 'Please enter veteran status.']);  
+		$veteranstatus->addValidators([
+						 [
 							 'validator'   => 'Regex',
 							 'breakChainOnFailure' => true,
-							 'options'     => array( 
+							 'options'     => [ 
 							 'pattern'=> '/^(?=.*[a-zA-Z])([^ ][a-zA-Z\s]*)$/',
-								 'messages' => array(
+								 'messages' => [
 										 'regexNotMatch'=>'Please enter valid veteran status.'
-								 )
-							 )
-						 )
-					 )); 	
+								 ]
+							 ]
+						 ]
+					 ]); 	
 		$veteranstatus->addValidator(new Zend_Validate_Db_NoRecordExists(
-                                              array('table'=>'main_veteranstatus',
+                                              ['table'=>'main_veteranstatus',
                                                         'field'=>'veteranstatus',
                                                       'exclude'=>'id!="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('id').'" and isactive=1',    
-                                                 ) )  
+                                                 ] )  
                                     );
         $veteranstatus->getValidator('Db_NoRecordExists')->setMessage('Veteran status already exists.');
 		
@@ -70,7 +70,7 @@ class Default_Form_veteranstatus extends Zend_Form
 		$toggleDivId = "''";
 		$jsFunction = "'redirecttocontroller(\'gender\');'";;
 
-		 $this->addElements(array($id,$veteranstatus,$description,$submit));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 $this->addElements([$id,$veteranstatus,$description,$submit]);
+         $this->setElementDecorators(['ViewHelper']); 
 	}
 }

@@ -39,19 +39,19 @@ class Default_Form_servicedeskconf extends Zend_Form
 			$businessunit_id->setAttrib('onchange', 'displayemployees(this)');
 			$bunitModel = new Default_Model_Businessunits();
 			$bunitdata = $bunitModel->fetchAll('isactive="Y"','name');
-	    	$businessunit_id->addMultiOptions(array(''=>'Select Business unit',
-                                            '0'=>'No Business Unit'));
+	    	$businessunit_id->addMultiOptions([''=>'Select Business unit',
+                                            '0'=>'No Business Unit']);
                 
 	    	foreach ($bunitdata->toArray() as $data){
 				$businessunit_id->addMultiOption($data['sbunit_id'],$data['name']);
 	    	}
 		}else
 		{
-			$businessunit_id->addMultiOptions(array(''=>'Select Business unit'));
+			$businessunit_id->addMultiOptions([''=>'Select Business unit']);
 		}	
         $businessunit_id->setRegisterInArrayValidator(false);
         $businessunit_id->setRequired(true);
-		$businessunit_id->addValidator('NotEmpty', false, array('messages' => 'Please select business unit.'));
+		$businessunit_id->addValidator('NotEmpty', false, ['messages' => 'Please select business unit.']);
 		
 		
 		$department_id = new Zend_Form_Element_Select('department_id');
@@ -65,27 +65,27 @@ class Default_Form_servicedeskconf extends Zend_Form
 		$service_desk_flag = new Zend_Form_Element_Radio('service_desk_flag');
 		$service_desk_flag->setLabel("Applicability");
         $service_desk_flag->setAttrib('onclick', 'changeimplementation(this)');
-        $service_desk_flag->addMultiOptions(array(
+        $service_desk_flag->addMultiOptions([
 										        '1' => 'Business unit wise',
 										        '0' => 'Department wise',
-    									   ));
+    									   ]);
 		$service_desk_flag->setSeparator('');
 		$service_desk_flag->setValue(1);    									   
 		$service_desk_flag->setRegisterInArrayValidator(false);
 		$service_desk_flag->setRequired(true);
-		$service_desk_flag->addValidator('NotEmpty', false, array('messages' => 'Please select applicability.'));
+		$service_desk_flag->addValidator('NotEmpty', false, ['messages' => 'Please select applicability.']);
 		
 		$request_for = new Zend_Form_Element_Select('request_for');
 		$request_for->setLabel("Request For");
 		$request_for->setRegisterInArrayValidator(false);
 		$request_for->setRequired(true);
-		$request_for->addValidator('NotEmpty', false, array('messages' => 'Please select request for.'));
+		$request_for->addValidator('NotEmpty', false, ['messages' => 'Please select request for.']);
 		$request_for->setAttrib('onchange', 'displayemployees(this)');
-		$request_for->addMultiOptions(array(
+		$request_for->addMultiOptions([
 				'1' => 'Service',
 				'2' => 'Asset',
 				
-		));
+		]);
 		
 		
 		$service_desk_id = new Zend_Form_Element_Multiselect('service_desk_id');
@@ -94,7 +94,7 @@ class Default_Form_servicedeskconf extends Zend_Form
         //$service_desk_id->addMultiOption('','Select category');
 		$service_desk_id->setRegisterInArrayValidator(false);
 		$service_desk_id->setRequired(true);
-		$service_desk_id->addValidator('NotEmpty', false, array('messages' => 'Please select category.'));
+		$service_desk_id->addValidator('NotEmpty', false, ['messages' => 'Please select category.']);
           
 		
 		$request_recievers = new Zend_Form_Element_Multiselect('request_recievers');
@@ -102,21 +102,21 @@ class Default_Form_servicedeskconf extends Zend_Form
         $request_recievers->setAttrib('class', 'selectoption');
         $request_recievers->setRegisterInArrayValidator(false);
         $request_recievers->setRequired(true);
-		$request_recievers->addValidator('NotEmpty', false, array('messages' => 'Please select executor.'));
+		$request_recievers->addValidator('NotEmpty', false, ['messages' => 'Please select executor.']);
 		
 		$approvingauthority = new Zend_Form_Element_Select('approvingauthority');
 		$approvingauthority->setLabel("No. of Approvers");
         $approvingauthority->setAttrib('class', 'selectoption');
         $approvingauthority->setAttrib('onchange', 'displayapprovingauthority(this)');
-        $approvingauthority->addMultiOptions(array(
+        $approvingauthority->addMultiOptions([
         										'' => 'Select no. of approvers',	
 										        '1' => '1',
 										        '2' => '2',
         										'3' => '3',				
-    									   ));
+    									   ]);
 		$approvingauthority->setRegisterInArrayValidator(false);
 		$approvingauthority->setRequired(true);
-		$approvingauthority->addValidator('NotEmpty', false, array('messages' => 'Please select no. of approvers.'));
+		$approvingauthority->addValidator('NotEmpty', false, ['messages' => 'Please select no. of approvers.']);
 		
 		$approver_1 = new Zend_Form_Element_Select('approver_1');
 		$approver_1->setLabel("Approver 1");
@@ -145,10 +145,10 @@ class Default_Form_servicedeskconf extends Zend_Form
         
         $attachment = new Zend_Form_Element_Radio('attachment');
 		$attachment->setLabel("Attachment");
-        $attachment->addMultiOptions(array(
+        $attachment->addMultiOptions([
 										        '1' => 'Yes',
 										        '0' => 'No',
-    									   ));
+    									   ]);
 		$attachment->setSeparator('');    
 		$attachment->setValue(0);									   
 		$attachment->setRegisterInArrayValidator(false);
@@ -163,8 +163,8 @@ class Default_Form_servicedeskconf extends Zend_Form
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 
-		 $this->addElements(array($id,$businessunit_id,$department_id,$description,$service_desk_flag,$service_desk_id,$request_recievers,$approvingauthority,$approver_1,$approver_2,$approver_3,$cc_mail_recievers,$attachment,$request_for,$submit));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 $this->addElements([$id,$businessunit_id,$department_id,$description,$service_desk_flag,$service_desk_id,$request_recievers,$approvingauthority,$approver_1,$approver_2,$approver_3,$cc_mail_recievers,$attachment,$request_for,$submit]);
+         $this->setElementDecorators(['ViewHelper']); 
 		
 	}
 }

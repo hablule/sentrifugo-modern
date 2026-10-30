@@ -50,92 +50,92 @@ class Default_Form_Country extends Zend_Form
         // Country Name (Geography)
         $name = new Zend_Form_Element_Text('name');
         $name->setLabel('Country Name')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '100', 'placeholder' => 'e.g., United States, Great Britain'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '100', 'placeholder' => 'e.g., United States, Great Britain'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', true, array('messages' => 'Please enter a country name.'))
-            ->addValidator('Regex', true, array(
+            ->addValidator('NotEmpty', true, ['messages' => 'Please enter a country name.'])
+            ->addValidator('Regex', true, [
                 'pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9 \-]*)$/', // Allowed hyphens for countries like Guinea-Bissau
-                'messages' => array(Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space or contain special characters.')
-            ));
+                'messages' => [Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space or contain special characters.']
+            ]);
 
         $excludeClauseName = ($idVal > 0) ? "id != $idVal AND isactive != 5" : "isactive != 5";
-        $nameVal = new Zend_Validate_Db_NoRecordExists(array(
+        $nameVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_country',
             'field'   => 'name',
             'exclude' => $excludeClauseName
-        ));
+        ]);
         $nameVal->setMessage('This country name already exists.');
         $name->addValidator($nameVal);
 
         // ISO Alpha-2 Code
         $iso_alpha2 = new Zend_Form_Element_Text('iso_alpha2');
         $iso_alpha2->setLabel('ISO Alpha-2 Code')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '2', 'placeholder' => 'e.g., US, GB'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '2', 'placeholder' => 'e.g., US, GB'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
             ->addFilter('StringToUpper') // Force uppercase
-            ->addValidator('NotEmpty', true, array('messages' => 'Please enter the 2-letter ISO code.'))
-            ->addValidator('Alpha', true, array('messages' => array(Zend_Validate_Alpha::NOT_ALPHA => 'The code must contain only letters.')))
-            ->addValidator('StringLength', true, array(
+            ->addValidator('NotEmpty', true, ['messages' => 'Please enter the 2-letter ISO code.'])
+            ->addValidator('Alpha', true, ['messages' => [Zend_Validate_Alpha::NOT_ALPHA => 'The code must contain only letters.']])
+            ->addValidator('StringLength', true, [
                 'min' => 2,
                 'max' => 2,
-                'messages' => array(
+                'messages' => [
                     Zend_Validate_StringLength::TOO_SHORT => 'The Alpha-2 code must be exactly 2 letters.',
                     Zend_Validate_StringLength::TOO_LONG  => 'The Alpha-2 code must be exactly 2 letters.'
-                )
-            ));
+                ]
+            ]);
 
         $excludeClauseIso2 = ($idVal > 0) ? "id != $idVal AND isactive != 5" : "isactive != 5";
-        $iso2Val = new Zend_Validate_Db_NoRecordExists(array(
+        $iso2Val = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_country',
             'field'   => 'iso_alpha2',
             'exclude' => $excludeClauseIso2
-        ));
+        ]);
         $iso2Val->setMessage('This Alpha-2 code already exists in the system.');
         $iso_alpha2->addValidator($iso2Val);
 
         // ISO Alpha-3 Code
         $iso_alpha3 = new Zend_Form_Element_Text('iso_alpha3');
         $iso_alpha3->setLabel('ISO Alpha-3 Code')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '3', 'placeholder' => 'e.g., USA, GBR'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '3', 'placeholder' => 'e.g., USA, GBR'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
             ->addFilter('StringToUpper') // Force uppercase
-            ->addValidator('NotEmpty', true, array('messages' => 'Please enter the 3-letter ISO code.'))
-            ->addValidator('Alpha', true, array('messages' => array(Zend_Validate_Alpha::NOT_ALPHA => 'The code must contain only letters.')))
-            ->addValidator('StringLength', true, array(
+            ->addValidator('NotEmpty', true, ['messages' => 'Please enter the 3-letter ISO code.'])
+            ->addValidator('Alpha', true, ['messages' => [Zend_Validate_Alpha::NOT_ALPHA => 'The code must contain only letters.']])
+            ->addValidator('StringLength', true, [
                 'min' => 3,
                 'max' => 3,
-                'messages' => array(
+                'messages' => [
                     Zend_Validate_StringLength::TOO_SHORT => 'The Alpha-3 code must be exactly 3 letters.',
                     Zend_Validate_StringLength::TOO_LONG  => 'The Alpha-3 code must be exactly 3 letters.'
-                )
-            ));
+                ]
+            ]);
 
         $excludeClauseIso3 = ($idVal > 0) ? "id != $idVal AND isactive != 5" : "isactive != 5";
-        $iso3Val = new Zend_Validate_Db_NoRecordExists(array(
+        $iso3Val = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_country',
             'field'   => 'iso_alpha3',
             'exclude' => $excludeClauseIso3
-        ));
+        ]);
         $iso3Val->setMessage('This Alpha-3 code already exists in the system.');
         $iso_alpha3->addValidator($iso3Val);
 
         // Phone Dialing Code
         $phone_code = new Zend_Form_Element_Text('phone_code');
         $phone_code->setLabel('Dialing Code')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '10', 'placeholder' => 'e.g., +1, +44'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '10', 'placeholder' => 'e.g., +1, +44'])
             ->setRequired(false) // Optional
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('Regex', true, array(
+            ->addValidator('Regex', true, [
                 'pattern'  => '/^\+?[0-9\s\-]+$/', // Allows optional +, numbers, spaces, and hyphens
-                'messages' => array(Zend_Validate_Regex::NOT_MATCH => 'Please enter a valid international dialing code (e.g., +1).')
-            ));
+                'messages' => [Zend_Validate_Regex::NOT_MATCH => 'Please enter a valid international dialing code (e.g., +1).']
+            ]);
 
         /* --------------------------------------------------------------
          * Multi-Select Elements (The Junction Linkers)
@@ -144,22 +144,22 @@ class Default_Form_Country extends Zend_Form
         // Mapped Nationalities (Jurisprudence Pillar)
         $mapped_nationalities = new Zend_Form_Element_Multiselect('mapped_nationalities');
         $mapped_nationalities->setLabel('Associated Nationalities (Legal Statuses)')
-            ->setAttribs(array(
+            ->setAttribs([
                 'class' => 'formDataElement',
                 'size'  => 5,
                 'title' => 'Select the legal statuses associated with this physical country. The first nationality selected will be marked as Primary.'
-            ))
+            ])
             ->setRegisterInArrayValidator(false) // Required when populating dynamically in the controller
             ->setRequired(false);
 
         // Mapped Geography Groups
         $geographygroup_id = new Zend_Form_Element_Multiselect('geographygroup_id');
         $geographygroup_id->setLabel('Geography Groups (Clusters)')
-            ->setAttribs(array(
+            ->setAttribs([
                 'class' => 'formDataElement',
                 'size'  => 5,
                 'title' => 'Select the policy groups this country belongs to (e.g., North America, EMEA).'
-            ))
+            ])
             ->setRegisterInArrayValidator(false)
             ->setRequired(false);
 
@@ -170,7 +170,7 @@ class Default_Form_Country extends Zend_Form
         // Description (Optional)
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Description')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -191,7 +191,7 @@ class Default_Form_Country extends Zend_Form
 
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save')
-            ->setAttribs(array('id' => 'submitbutton', 'class' => 'actbtn_btn'));
+            ->setAttribs(['id' => 'submitbutton', 'class' => 'actbtn_btn']);
 
         // SSOT AJAX Submission Pattern (Strict Quoting)
         $urlAction  = "'country/save/format/json'";
@@ -202,7 +202,7 @@ class Default_Form_Country extends Zend_Form
          * Build Form & Apply Decorators
          * -------------------------------------------------------------- */
 
-        $this->addElements(array(
+        $this->addElements([
             $idElement,
             $name,
             $iso_alpha2,
@@ -213,12 +213,12 @@ class Default_Form_Country extends Zend_Form
             $description,
             $isactive,
             $submit
-        ));
+        ]);
 
         // Strip default Zend Decorators and enforce ViewHelper universally
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
-            $element->setDecorators(array('ViewHelper'));
+            $element->setDecorators(['ViewHelper']);
         }
     }
 }

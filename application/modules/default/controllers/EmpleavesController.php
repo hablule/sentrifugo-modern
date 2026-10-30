@@ -56,7 +56,7 @@ class Default_EmpleavesController extends Zend_Controller_Action
 				
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 				if ($Uid != "") {
 					$employeeData = $usersModel->getUserDetailsByIDandFlag($Uid);
 				}
@@ -76,9 +76,9 @@ class Default_EmpleavesController extends Zend_Controller_Action
 					$objname = $this->_getParam('objname');
 					$refresh = $this->_getParam('refresh');
 					$dashboardcall = $this->_getParam('dashboardcall', null);
-					$data = array();
+					$data = [];
 					$searchQuery = '';
-					$searchArray = array();
+					$searchArray = [];
 					$tablecontent = '';
 					if ($refresh == 'refresh') {
 						if ($dashboardcall == 'Yes')
@@ -91,7 +91,7 @@ class Default_EmpleavesController extends Zend_Controller_Action
 						$pageNo = 1;
 						$searchData = '';
 						$searchQuery = '';
-						$searchArray = array();
+						$searchArray = [];
 					} else {
 						$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 						$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'ls.modifieddate';
@@ -465,7 +465,7 @@ class Default_EmpleavesController extends Zend_Controller_Action
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 				if ($Uid != "") {
 					$employeeData = $usersModel->getUserDetailsByIDandFlag($Uid);
 				}
@@ -486,9 +486,9 @@ class Default_EmpleavesController extends Zend_Controller_Action
 					$objname = $this->_getParam('objname');
 					$refresh = $this->_getParam('refresh');
 					$dashboardcall = $this->_getParam('dashboardcall', null);
-					$data = array();
+					$data = [];
 					$searchQuery = '';
-					$searchArray = array();
+					$searchArray = [];
 					$tablecontent = '';
 					if ($refresh == 'refresh') {
 						if ($dashboardcall == 'Yes')
@@ -501,7 +501,7 @@ class Default_EmpleavesController extends Zend_Controller_Action
 						$pageNo = 1;
 						$searchData = '';
 						$searchQuery = '';
-						$searchArray = array();
+						$searchArray = [];
 					} else {
 						$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 						$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'ls.modifieddate';
@@ -556,7 +556,7 @@ class Default_EmpleavesController extends Zend_Controller_Action
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 				if ($Uid != "") {
 					$employeeData = $usersModel->getUserDetailsByIDandFlag($Uid);
 				}
@@ -576,9 +576,9 @@ class Default_EmpleavesController extends Zend_Controller_Action
 					$objname = $this->_getParam('objname');
 					$refresh = $this->_getParam('refresh');
 					$dashboardcall = $this->_getParam('dashboardcall', null);
-					$data = array();
+					$data = [];
 					$searchQuery = '';
-					$searchArray = array();
+					$searchArray = [];
 					$tablecontent = '';
 					if ($refresh == 'refresh') {
 						if ($dashboardcall == 'Yes')
@@ -591,7 +591,7 @@ class Default_EmpleavesController extends Zend_Controller_Action
 						$pageNo = 1;
 						$searchData = '';
 						$searchQuery = '';
-						$searchArray = array();
+						$searchArray = [];
 					} else {
 						$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 						$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'ls.modifieddate';
@@ -649,7 +649,7 @@ class Default_EmpleavesController extends Zend_Controller_Action
 			$actionflag = '';
 			$tableid  = '';
 			/* Save employee leaves in allotted leaves log */
-			$postedArr = array();
+			$postedArr = [];
 			$postedArr = $_POST;
 			// $saveID = $employeeleavesModel->saveallotedleaves($postedArr, $emp_leave_limit, $user_id, $loginUserId);
 			/* END */
@@ -745,12 +745,12 @@ class Default_EmpleavesController extends Zend_Controller_Action
 		$employeeleavesModel = new Default_Model_Employeeleaves();
 		$id = $this->getRequest()->getParam('objid');
 
-		$data = array(
+		$data = [
 			'isactive' => 'N'
-		);
+		];
 		$where = 'leave_setting_id = ' . $id;
 		// $employeeleavesModel->SaveorUpdateEmpLeaves($data, $where);
 		$employeeleavesModel->deleteEmpLeave($where);
-		return $this->_helper->json(array('flagtype' => 'process', 'message' => 'Deleted'));
+		return $this->_helper->json(['flagtype' => 'process', 'message' => 'Deleted']);
 	}
 }

@@ -21,7 +21,7 @@ class Default_Model_fingerprintconfig extends Zend_Db_Table_Abstract{
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $a = '', $b = '', $c = '', $d = '')
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
             foreach ($searchValues as $key => $val) {
@@ -31,30 +31,30 @@ class Default_Model_fingerprintconfig extends Zend_Db_Table_Abstract{
             $searchQuery = rtrim($searchQuery, " AND");
         }
         $objName = 'fingerprintconfig';
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'security_level' => 'Security Level',
             'fast_mode' => 'Fast Mode',
             'sensor_mode' => 'Sensor Mode',
             'scan_timeout' => 'Scan TimeOut',
-        );
+        ];
 
         $tablecontent = $this->getData($sort, $by, $pageNo, $perPage, $searchQuery);
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
             'perPage' => $perPage,
             'tablecontent' => $tablecontent,
             'objectname' => $objName,
-            'extra' => array(),
+            'extra' => [],
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
             'jsFillFnName' => '',
             'searchArray' => $searchArray,
             'call' => $call,
             'dashboardcall' => $dashboardcall
-        );
+        ];
         return $dataTmp;
     }
 
@@ -75,7 +75,7 @@ class Default_Model_fingerprintconfig extends Zend_Db_Table_Abstract{
     {
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('mfc' => 'main_fingerprint_config'))
+            ->from(['mfc' => 'main_fingerprint_config'])
             ->where('mfc.id = ?', $id);
         $result = $this->fetchRow($select)->toArray();
         return $result;

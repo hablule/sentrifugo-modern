@@ -30,7 +30,7 @@ class Default_emphealthissueController extends Zend_Controller_Action
 		 	if($id == '')		
 			  $id = $userID;
 			  
-		 	$Uid = ($id)?$id:$userID;
+		 	$Uid = $id ?: $userID;
 		 	 
 		 	$employeeModal = new Default_Model_Employee();
 		 	try
@@ -55,7 +55,7 @@ class Default_emphealthissueController extends Zend_Controller_Action
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
 							$dashboardcall = $this->_getParam('dashboardcall',null);
-							$data = array();	$searchQuery = '';	$searchArray = array();		$tablecontent = '';
+							$data = [];	$searchQuery = '';	$searchArray = [];		$tablecontent = '';
 							if($refresh == 'refresh')
 							{
 								if($dashboardcall == 'Yes')
@@ -119,19 +119,19 @@ class Default_emphealthissueController extends Zend_Controller_Action
         $severitylevel_model = new Default_Model_healthseveritylevel();
         $severitylevel_data = $severitylevel_model->GetHealthseveritylevelSelect();
         $healthissue_data = $healthissue_model->GetHealthIssue();
-        $emphealthissue_Form->healthissue_id->addMultiOptions(array(''=>'Select Health Issue'));
+        $emphealthissue_Form->healthissue_id->addMultiOptions([''=>'Select Health Issue']);
 
         if(!empty($healthissue_data))
         {
             foreach ($healthissue_data as  $value) {
-                $emphealthissue_Form->healthissue_id->addMultiOptions(array($value['healthissue_id']=>$value['name']));
+                $emphealthissue_Form->healthissue_id->addMultiOptions([$value['healthissue_id']=>$value['name']]);
             }
         }
-        $emphealthissue_Form->severitylevel_id->addMultiOptions(array(''=>'Select Severity level'));
+        $emphealthissue_Form->severitylevel_id->addMultiOptions([''=>'Select Severity level']);
         if(!empty($severitylevel_data))
         {
             foreach ($severitylevel_data as $value) {
-                $emphealthissue_Form->severitylevel_id->addMultiOptions(array($value['severitylevel_id']=>$value['value']));
+                $emphealthissue_Form->severitylevel_id->addMultiOptions([$value['severitylevel_id']=>$value['value']]);
             }
         }
 
@@ -170,7 +170,7 @@ class Default_emphealthissueController extends Zend_Controller_Action
 
 		// Allowed image types
 		//$allowtype = array('gif', 'jpg', 'jpeg', 'png');
-		$allowtype = array('docx', 'doc','PDF','pdf');
+		$allowtype = ['docx', 'doc','PDF','pdf'];
 
 		/** Uploading the image **/
 
@@ -201,7 +201,7 @@ class Default_emphealthissueController extends Zend_Controller_Action
 							$rezultat = $filename;
 							$setWidth = 265;
 							$setHeight = 40;
-							list($imgwidth, $imgheight) = getimagesize($newfilename);
+							[$imgwidth, $imgheight] = getimagesize($newfilename);
 							if ($imgwidth < 265) {
 								$setWidth = $imgwidth;
 							}
@@ -232,11 +232,11 @@ class Default_emphealthissueController extends Zend_Controller_Action
 			$result_msg = 'Please upload only .gif, .jpg, .jpeg, .png images.';
 		}
 
-		$result = array(
+		$result = [
 			'result' => $result_status,
 			'img' => $rezultat,
 			'msg' => $result_msg
-		);
+		];
 		return $result;
 	}
     public function save($healthissuetype_Form)
@@ -258,7 +258,7 @@ class Default_emphealthissueController extends Zend_Controller_Action
 				if (sizeof($imageArr) > 1) {
 					$imagename = $imageArr[0];
 					$imageext = $imageArr[1];
-					$extArr = array('pdf', 'doc', 'docx');
+					$extArr = ['pdf', 'doc', 'docx'];
 					if (!in_array($imageext, $extArr)) {
 						$msgarray['attestation_image_value'] = 'Please upload an appropriate image file.';
 						$flag = 'false';
@@ -290,14 +290,14 @@ class Default_emphealthissueController extends Zend_Controller_Action
 			$actionflag = '';
 			$tableid  = '';
 
-			$data = array(
+			$data = [
 				                 'emp_id'=>$empid,
 				                 'healthissue_id'=>$healthissue_id,
 								 'description'=>$description,
                                  'diagnosedon'=>sapp_Global::change_date($diagnosedon,'database'),
                                  'isactive'=>utlis::getcheckboxvalue($isactive),
                                  'attention'=>$imagepath
-			);
+			];
             if($severitylevel_id!='')
             {
                 $data['severitylevel_id']=$severitylevel_id;
@@ -306,7 +306,7 @@ class Default_emphealthissueController extends Zend_Controller_Action
                 $data['severitylevel'] = $severitylevel;
             }
 			if($id!=''){
-				$where = array('emphealthissue_id=?'=>$id);
+				$where = ['emphealthissue_id=?'=>$id];
                 $data['modifiedby'] = $loginUserId;
                 $data['modifieddate'] = gmdate("Y-m-d H:i:s");
 				$actionflag = 2;
@@ -402,7 +402,7 @@ class Default_emphealthissueController extends Zend_Controller_Action
 		 	if($id == '')		
 			  $id = $userID;
 			  
-		 	$Uid = ($id)?$id:$userID;
+		 	$Uid = $id ?: $userID;
 		 	 
 		 	$employeeModal = new Default_Model_Employee();
 		 	try
@@ -427,7 +427,7 @@ class Default_emphealthissueController extends Zend_Controller_Action
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
 							$dashboardcall = $this->_getParam('dashboardcall',null);
-							$data = array();	$searchQuery = '';	$searchArray = array();		$tablecontent = '';
+							$data = [];	$searchQuery = '';	$searchArray = [];		$tablecontent = '';
 							if($refresh == 'refresh')
 							{
 								if($dashboardcall == 'Yes')
@@ -492,7 +492,7 @@ class Default_emphealthissueController extends Zend_Controller_Action
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 
 				$employeeModal = new Default_Model_Employee();
 				try {
@@ -511,9 +511,9 @@ class Default_emphealthissueController extends Zend_Controller_Action
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall', null);
-								$data = array();
+								$data = [];
 								$searchQuery = '';
-								$searchArray = array();
+								$searchArray = [];
 								$tablecontent = '';
 								if ($refresh == 'refresh') {
 									if ($dashboardcall == 'Yes')
@@ -526,7 +526,7 @@ class Default_emphealthissueController extends Zend_Controller_Action
 									$pageNo = 1;
 									$searchData = '';
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 								} else {
 									$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 									$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'ehi.isactive';
@@ -589,19 +589,19 @@ class Default_emphealthissueController extends Zend_Controller_Action
             $severitylevel_model = new Default_Model_healthseveritylevel();
             $severitylevel_data = $severitylevel_model->GetHealthseveritylevelSelect();
             $healthissue_data = $healthissue_model->GetHealthIssue();
-            $emphealthissue_Form->healthissue_id->addMultiOptions(array(''=>'Select Health Issue'));
+            $emphealthissue_Form->healthissue_id->addMultiOptions([''=>'Select Health Issue']);
             $this->view->org_image = $emphealthissue_data[0]['attention'];
             if(!empty($healthissue_data))
             {
                 foreach ($healthissue_data as  $value) {
-                    $emphealthissue_Form->healthissue_id->addMultiOptions(array($value['healthissue_id']=>$value['name']));
+                    $emphealthissue_Form->healthissue_id->addMultiOptions([$value['healthissue_id']=>$value['name']]);
                 }
             }
-            $emphealthissue_Form->severitylevel_id->addMultiOptions(array(''=>'Select Severity level'));
+            $emphealthissue_Form->severitylevel_id->addMultiOptions([''=>'Select Severity level']);
             if(!empty($severitylevel_data))
             {
                 foreach ($severitylevel_data as $value) {
-                    $emphealthissue_Form->severitylevel_id->addMultiOptions(array($value['severitylevel_id']=>$value['value']));
+                    $emphealthissue_Form->severitylevel_id->addMultiOptions([$value['severitylevel_id']=>$value['value']]);
                 }
             }
     

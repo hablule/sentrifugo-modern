@@ -35,21 +35,21 @@ class Default_Form_employmentstatus extends Zend_Form
         $workcode->setAttrib('maxLength', 20);
         
         $workcode->setRequired(true);
-        $workcode->addValidator('NotEmpty', false, array('messages' => 'Please enter work short code.')); 
-        $workcode->addValidator("regex",true,array(
+        $workcode->addValidator('NotEmpty', false, ['messages' => 'Please enter work short code.']); 
+        $workcode->addValidator("regex",true,[
 									
 									'pattern'=> '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9 ]*)$/',
 								   
-								   'messages'=>array(
+								   'messages'=>[
 									   'regexNotMatch'=>'Please enter valid work short code.'
-								   )
-					)); 		
+								   ]
+					]); 		
       
 		$workcodename = new Zend_Form_Element_Select('workcodename');
         $workcodename->setAttrib('class', 'selectoption');
         $workcodename->setRegisterInArrayValidator(false);
         $workcodename->setRequired(true);
-		$workcodename->addValidator('NotEmpty', false, array('messages' => 'Please select work code.'));
+		$workcodename->addValidator('NotEmpty', false, ['messages' => 'Please select work code.']);
 		
 
 		$description = new Zend_Form_Element_Textarea('description');
@@ -61,7 +61,7 @@ class Default_Form_employmentstatus extends Zend_Form
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 
-		 $this->addElements(array($id,$workcode,$workcodename,$description,$submit));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 $this->addElements([$id,$workcode,$workcodename,$description,$submit]);
+         $this->setElementDecorators(['ViewHelper']); 
 	}
 }

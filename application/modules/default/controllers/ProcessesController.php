@@ -59,9 +59,9 @@ class Default_ProcessesController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$unitId = $this->_getParam('unitId');
 		
-		if(!isset($unitId))$unitId = '';
-		$data = array();
-		$searchArray = array();
+		$unitId ??= '';
+		$data = [];
+		$searchArray = [];
 		if($refresh == 'refresh')
 		{
 			if($dashboardcall == 'Yes')
@@ -81,7 +81,7 @@ class Default_ProcessesController extends Zend_Controller_Action
 			$searchData = $this->_getParam('searchData');
 			$searchData = rtrim($searchData,',');
 			$searchQuery = '';
-			$searchArray = array();
+			$searchArray = [];
 			$tablecontent='';
 			if($searchData != '' && $searchData!='undefined')
 			{	
@@ -109,7 +109,7 @@ class Default_ProcessesController extends Zend_Controller_Action
 				$searchQuery = rtrim($searchQuery," AND");		
 			}			
 		}
-		$idArr = array();
+		$idArr = [];
 		
 		$idArr = explode('-',$unitId);
 		
@@ -123,20 +123,20 @@ class Default_ProcessesController extends Zend_Controller_Action
 		
 		$personalData = $empModel->getEmpPersonalData($specimenId,$flag);		
 		$objName = 'processes';
-		$tableFields = array('action'=>'Action','type' => 'Check Type','agencyname' =>'Agency Name','email'=>'POC Email','process_status'=>'Process Status','explanation'=>'Explanation','isactive'=>'Active Status','startdate'=> 'Started On','enddate'=>'Ended On','recentlycommenteddate'=>'Recently Commented On');
+		$tableFields = ['action'=>'Action','type' => 'Check Type','agencyname' =>'Agency Name','email'=>'POC Email','process_status'=>'Process Status','explanation'=>'Explanation','isactive'=>'Active Status','startdate'=> 'Started On','enddate'=>'Ended On','recentlycommenteddate'=>'Recently Commented On'];
 		
 	   
 		$tablecontent = $empscreeningModel->getProcessesData($sort, $by, $pageNo, $perPage,$searchQuery,$unitId,$loginUserId,$loginuserGroup);     
 		
 		if(isset($unitId) && $unitId != '') $formgrid = 'true'; else $formgrid = '';
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -146,16 +146,16 @@ class Default_ProcessesController extends Zend_Controller_Action
 			'unitId'=>$unitId,
 			'empstatus'=>$personalData[0]['ustatus'],
 			'add'=>'add',
-			'search_filters' => array(
-                    'isactive' => array('type'=>'select',
-                        'filter_data'=>array(''=>'All',1 => 'Active','2'=>'Agency deleted','3'=>'Agency User deleted','4'=>'POC deleted',0 => 'Process deleted' )),
-					'startdate' =>array('type'=>'datepicker'),
-					'enddate' =>array('type'=>'datepicker'),
-					'recentlycommenteddate' =>array('type'=>'datepicker')
-                ),
+			'search_filters' => [
+                    'isactive' => ['type'=>'select',
+                        'filter_data'=>[''=>'All',1 => 'Active','2'=>'Agency deleted','3'=>'Agency User deleted','4'=>'POC deleted',0 => 'Process deleted' ]],
+					'startdate' =>['type'=>'datepicker'],
+					'enddate' =>['type'=>'datepicker'],
+					'recentlycommenteddate' =>['type'=>'datepicker']
+                ],
 			'dashboardcall'=>$dashboardcall,
 			'call'=>$call
-		);			
+		];			
 		array_push($data,$dataTmp);
 		$this->view->dataArray = $data;
 		$this->view->call = $call ;
@@ -174,7 +174,7 @@ class Default_ProcessesController extends Zend_Controller_Action
 		$hrem = 'true';
 		$mngmntem = 'true';
 		$idData = $this->getRequest()->getParam('unitId');
-		$idArr = array();
+		$idArr = [];
 		$idArr = explode('-',$idData);
 		$specimen_id = $idArr[0];
 		$userflag = $idArr[1]; 
@@ -192,7 +192,7 @@ class Default_ProcessesController extends Zend_Controller_Action
         $submitButon->setAttrib('style', 'display:none;');
 		$empscreeningform->setAttrib('action',BASE_URL.'processes/addpopup/unitId/'.$idData);
 		$empscreeningform->removeElement("employee");
-		$processdata = array();
+		$processdata = [];
 		$empscreeningform->removeElement("bgcheck_status");
 		if($loginuserGroup != HR_GROUP && $loginuserGroup != '' && $loginuserGroup != MANAGEMENT_GROUP)
 		{
@@ -209,7 +209,7 @@ class Default_ProcessesController extends Zend_Controller_Action
 		}	
 		/* */
 		/* Checking for configurations - screening type and agencies*/
-		$msgarray = array(); $errorflag = 'true';
+		$msgarray = []; $errorflag = 'true';
 		$checktypeModal = new Default_Model_Bgscreeningtype();
 		$agencymodel = new Default_Model_Agencylist();
 	    $typesData = $checktypeModal->fetchAll('isactive=1','type')->toArray();		
@@ -239,13 +239,13 @@ class Default_ProcessesController extends Zend_Controller_Action
 		   $hremailId = explode(",",constant('BG_CHECKS_HR_'.$bid));
 		else {  
 		   $hrem = 'false';
-		   $hremailId = array();	   
+		   $hremailId = [];	   
 		}
 		if (defined('BG_CHECKS_MNGMNT_'.$bid) && $bid !='')
 		   $mngmntemailId = explode(",",constant('BG_CHECKS_MNGMNT_'.$bid));
 		else {  
 		   $mngmntem = 'false';
-		   $mngmntemailId = array();	   
+		   $mngmntemailId = [];	   
 		}
 		if($specimen_id == $loginUserId)
 			$displaymsg = 'nodata';
@@ -281,12 +281,12 @@ class Default_ProcessesController extends Zend_Controller_Action
 		$id = $this->getRequest()->getParam('id');
 		$idData = $this->getRequest()->getParam('unitId');
 		$hrem = 'true';$mngmntem = 'true';
-		$idArr = array();
+		$idArr = [];
 		$idArr = explode('-',$idData);
 		$specimen_id = $idArr[0];
 		$userflag = $idArr[1]; 
 		
-		$statusFlag = '';$useridsArr = array();$usernamesArr = array();$usernames = '';
+		$statusFlag = '';$useridsArr = [];$usernamesArr = [];$usernames = '';
 		$processesform = new Default_Form_processes();
 		$processesmodel = new Default_Model_Processes();
 		$commentsModel = new Default_Model_Comments();
@@ -356,13 +356,13 @@ class Default_ProcessesController extends Zend_Controller_Action
 			   $hremailId = explode(",",constant('BG_CHECKS_HR_'.$bid));
 			else {  
 			   $hrem = 'false';
-			   $hremailId = array();	   
+			   $hremailId = [];	   
 			}
 			if (defined('BG_CHECKS_MNGMNT_'.$bid) && $bid !='')
 			   $mngmntemailId = explode(",",constant('BG_CHECKS_MNGMNT_'.$bid));
 			else {  
 			   $mngmntem = 'false';
-			   $mngmntemailId = array();	   
+			   $mngmntemailId = [];	   
 			}			
 			
 			if($specimen_id == $loginUserId)
@@ -400,11 +400,11 @@ class Default_ProcessesController extends Zend_Controller_Action
 		$agencyEmail = '';$lmanager1Email = '';$lmanager1Name = 'Manager';$agencysalutationName = 'Agency';
 		$id = $this->getRequest()->getParam('id');
 		$idData = $this->getRequest()->getParam('unitId');	
-		$idArr = array();
+		$idArr = [];
 		$idArr = explode('-',$idData);
 		$specimen_id = $idArr[0];
 		$userflag = $idArr[1]; 
-		$msgarray = array(); 
+		$msgarray = []; 
 		if($idArr[1] == 2) {	$flag = 'cand'; $person='candidate'; }else { $flag = 'emp'; $person = 'employee'; }
 		$processesmodel = new Default_Model_Processes();
 		$empscreeningModel = new Default_Model_Empscreening();
@@ -449,7 +449,7 @@ class Default_ProcessesController extends Zend_Controller_Action
 			$radio_pocId = $this->_request->getParam('contactRadio');			
 			$agencyid = $this->_request->getParam('agencyids');
 			$newStatus = 'In process';
-			$agencyData = array();$agencyPOCData = array();		
+			$agencyData = [];$agencyPOCData = [];		
 		
 			if(empty($checktype) && $checktype == '')
 			{
@@ -463,7 +463,7 @@ class Default_ProcessesController extends Zend_Controller_Action
 			}
 			if($checktype)
 			{
-				$agencyArr = array();
+				$agencyArr = [];
 				$agencyArr = $checktype;
 				$agencyData = $empscreeningModel->getAgencyData($agencyArr,'','');				
 			}
@@ -512,7 +512,7 @@ class Default_ProcessesController extends Zend_Controller_Action
 			{
 				for($i=0;$i<sizeof($checktype);$i++)
 				{
-					$processStatus = array();
+					$processStatus = [];
 					$processStatus = $processesmodel->getProcessStatus($specimen_id,$userflag,$agencyid,$checktype[$i]);		
 					if(!empty($processStatus) && sizeof($processStatus > 0))
 					{
@@ -546,35 +546,35 @@ class Default_ProcessesController extends Zend_Controller_Action
 			/*	A New process is created for a user whose background check status is in 'Complete' status. Then updating the bg status to 'In process' */
 			if(($BGStatus == 'Complete' || $oldbgstatus == 'Complete' || $BGStatus == 'On hold' || $oldbgstatus == 'On hold' ) && ($newStatus == 'In process'))
 			{
-				$totalstatusData = array(
+				$totalstatusData = [
 						'bgcheck_status'	=>		'In process',
 						'modifiedby'		=>		$loginUserId,
 						'modifieddate'		=>		gmdate("Y-m-d H:i:s")
-					);
-				$totalstatusWhere = array(
+					];
+				$totalstatusWhere = [
 						'specimen_id=?'		=>		$specimen_id,
 						'flag=?'			=>		$userflag
-					);
+					];
 				$empscreeningModel->SaveorUpdateDetails($totalstatusData, $totalstatusWhere);		
 				
 				/* Updating back ground check status to In process in employees/candidates status */
 				if($userflag == 1){
-					$empData = array(
+					$empData = [
 							'backgroundchk_status' => 	'In process',
 							'modifiedby'		=>		$loginUserId,
 							'modifieddate'		=>		gmdate("Y-m-d H:i:s")
-						);
-					$empWhere = array('id=?'=>$specimen_id);
+						];
+					$empWhere = ['id=?'=>$specimen_id];
 					$usermodel->addOrUpdateUserModel($empData, $empWhere);
 				}
 				else {
 					$candModel = new Default_Model_Candidatedetails();
-					$candData = array(
+					$candData = [
 							'backgroundchk_status' => 	'In process',
 							'modifiedby'		=>		$loginUserId,
 							'modifieddate'		=>		gmdate("Y-m-d H:i:s")
-						);
-					$candWhere = array('id=?'=>$specimen_id);
+						];
+					$candWhere = ['id=?'=>$specimen_id];
 					$candModel->SaveorUpdateUserData($candData, $candWhere);
 				}
 				/* END */
@@ -599,28 +599,28 @@ class Default_ProcessesController extends Zend_Controller_Action
 
 					if(isset($lmanager1Email) && $lmanager1Email != '')	
 					{	
-						$manager1 = array($lmanager1Email);
+						$manager1 = [$lmanager1Email];
 					}
-					else $manager1 = array();
+					else $manager1 = [];
 					
 					if(isset($agencyEmail) && $agencyEmail != '')	
 					{	
-						$agencyemail1 = array($agencyEmail);
+						$agencyemail1 = [$agencyEmail];
 					}
-					else $agencyemail1 = array();
+					else $agencyemail1 = [];
 					
 					if (defined('BG_CHECKS_MNGMNT_'.$bid) && $bid !='')
 					   $mngmntemailId = explode(",",constant('BG_CHECKS_MNGMNT_'.$bid));
 					else {
 						$mngmntem = 'false';
-					    $mngmntemailId = array();
+					    $mngmntemailId = [];
 					}
 					
 					if (defined('BG_CHECKS_HR_'.$bid) && $bid !='')
 					   $hremailId = explode(",",constant('BG_CHECKS_HR_'.$bid));
 					else {  
 					   $hrem = 'false';
-					   $hremailId = array();	   
+					   $hremailId = [];	   
 					}			
 					
 					$emailArr =  array_merge($agencyemail1,$manager1,$mngmntemailId,$hremailId);
@@ -672,18 +672,18 @@ class Default_ProcessesController extends Zend_Controller_Action
 				/* END */
 			}	
 			/* END */
-			$data = array(  
+			$data = [  
 						'specimen_id'		=>		$specimen_id,
 						'flag'				=>		$userflag,
 						'bgagency_id'		=>		$agencyid,
 						'modifiedby'		=>		$loginUserId,
 						'modifieddate'		=>		gmdate("Y-m-d H:i:s")
-					);
+					];
 			if($id!='') 
 			{
 				$data['process_status']	=	$newStatus;
 				$data['explanation']	=	NULL;
-				$where = array('id=?'=>$id);  
+				$where = ['id=?'=>$id];  
 				$actionflag = 2;
 			}else 
 			{
@@ -763,36 +763,36 @@ class Default_ProcessesController extends Zend_Controller_Action
 			}			
 			if($completecount == sizeof($checkAllprocesses))
 			{	
-				$totalstatusData = array(
+				$totalstatusData = [
 						'bgcheck_status'	=>		'Complete',
 						'modifiedby'		=>		$loginUserId,
 						'modifieddate'		=>		gmdate("Y-m-d H:i:s")
-					);
-				$totalstatusWhere = array(
+					];
+				$totalstatusWhere = [
 						'specimen_id=?'		=>		$specimen_id,
 						'flag=?'			=>		$userflag
-					);
+					];
 				$empscreeningModel->SaveorUpdateDetails($totalstatusData, $totalstatusWhere);
 				
 				/* Updating back ground check status to Completed in employees/candidates status */
 				if($userflag == 1){
 					$usermodel = new Default_Model_Users();
-					$empData = array(
+					$empData = [
 							'backgroundchk_status' => 	'Completed',
 							'modifiedby'		=>		$loginUserId,
 							'modifieddate'		=>		gmdate("Y-m-d H:i:s")
-						);
-					$empWhere = array('id=?'=>$specimen_id);
+						];
+					$empWhere = ['id=?'=>$specimen_id];
 					$usermodel->addOrUpdateUserModel($empData, $empWhere);
 				}
 				else {
 					$candModel = new Default_Model_Candidatedetails();
-					$candData = array(
+					$candData = [
 							'backgroundchk_status' => 	'Completed',
 							'modifiedby'		=>		$loginUserId,
 							'modifieddate'		=>		gmdate("Y-m-d H:i:s")
-						);
-					$candWhere = array('id=?'=>$specimen_id);
+						];
+					$candWhere = ['id=?'=>$specimen_id];
 					$candModel->SaveorUpdateUserData($candData, $candWhere);
 				}
 				/* END */
@@ -818,19 +818,19 @@ class Default_ProcessesController extends Zend_Controller_Action
 
 					if(isset($lmanager1Email) && $lmanager1Email != '')	
 					{	
-						$manager1 = array($lmanager1Email);
+						$manager1 = [$lmanager1Email];
 					}
-					else $manager1 = array();				
+					else $manager1 = [];				
 					
 					if (defined('BG_CHECKS_MNGMNT_'.$bid) && $bid !='')
 					   $mngmntemailId = explode(",",constant('BG_CHECKS_MNGMNT_'.$bid));
 					else   
-					   $mngmntemailId = array();
+					   $mngmntemailId = [];
 					
 					if (defined('BG_CHECKS_HR_'.$bid) && $bid !='')
 					   $hremailId = explode(",",constant('BG_CHECKS_HR_'.$bid));
 					else   
-					   $hremailId = array();	   
+					   $hremailId = [];	   
 					
 					
 					$emailArr =  array_merge($manager1,$mngmntemailId,$hremailId);
@@ -876,35 +876,35 @@ class Default_ProcessesController extends Zend_Controller_Action
 			}
 			if($onholdcount == sizeof($checkAllprocesses))
 			{
-				$totalstatusData = array(
+				$totalstatusData = [
 						'bgcheck_status'	=>		'On hold',
 						'modifiedby'		=>		$loginUserId,
 						'modifieddate'		=>		gmdate("Y-m-d H:i:s")
-					);
-				$totalstatusWhere = array(
+					];
+				$totalstatusWhere = [
 						'specimen_id=?'		=>		$specimen_id,
 						'flag=?'			=>		$userflag
-					);
+					];
 				$empscreeningModel->SaveorUpdateDetails($totalstatusData, $totalstatusWhere);
 				/* Updating back ground check status to Completed in employees/candidates status */
 				if($userflag == 1){
 					$usermodel = new Default_Model_Users();
-					$empData = array(
+					$empData = [
 							'backgroundchk_status' => 	'On hold',
 							'modifiedby'		=>		$loginUserId,
 							'modifieddate'		=>		gmdate("Y-m-d H:i:s")
-						);
-					$empWhere = array('id=?'=>$specimen_id);
+						];
+					$empWhere = ['id=?'=>$specimen_id];
 					$usermodel->addOrUpdateUserModel($empData, $empWhere);
 				}
 				else {
 					$candModel = new Default_Model_Candidatedetails();
-					$candData = array(
+					$candData = [
 							'backgroundchk_status' => 	'On hold',
 							'modifiedby'		=>		$loginUserId,
 							'modifieddate'		=>		gmdate("Y-m-d H:i:s")
-						);
-					$candWhere = array('id=?'=>$specimen_id);
+						];
+					$candWhere = ['id=?'=>$specimen_id];
 					$candModel->SaveorUpdateUserData($candData, $candWhere);
 				}
 				/* END */
@@ -960,12 +960,12 @@ class Default_ProcessesController extends Zend_Controller_Action
 		$id = $this->getRequest()->getParam('id');
 		$idData = $this->getRequest()->getParam('unitId');	
 		
-		$idArr = array();
+		$idArr = [];
 		$idArr = explode('-',$idData);
 		$specimen_id = $idArr[0];
 		$userflag = $idArr[1]; 
 		
-		$statusFlag = ''; $useridsArr = array();$usernamesArr = array();$usernames = '';
+		$statusFlag = ''; $useridsArr = [];$usernamesArr = [];$usernames = '';
 		$processesform = new Default_Form_processes();
 		$processesmodel = new Default_Model_Processes();
 		$commentsModel = new Default_Model_Comments();		
@@ -1056,8 +1056,8 @@ class Default_ProcessesController extends Zend_Controller_Action
 				  {
 						$empmodel->updatebgstatus('onhold',$specimen_id,$flag);	
 				  }	
-				  $data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-				  $where = array('id=?'=>$id);
+				  $data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+				  $where = ['id=?'=>$id];
 				  $Id = $empscreeningModel->SaveorUpdateDetails($data, $where);
 					if($Id == 'update')
 					{
@@ -1107,20 +1107,20 @@ class Default_ProcessesController extends Zend_Controller_Action
 			{
 				if($loginuserGroup == HR_GROUP || $loginuserGroup == MANAGEMENT_GROUP) $toId = $agency_id; else $toId = $hr_id;
 				$date = new Zend_Date();	
-				$data = array(  
+				$data = [  
 								'bgdet_id'			=>		$detailId,
 								'comment'			=>		$comment,
 								'from_id'			=>		$loginUserId,
 								'to_id'				=>		$toId,
 								'createddate'		=>		gmdate("Y-m-d H:i:s")						
-							);
+							];
 				$where = '';
 				$commentsModel = new Default_Model_Comments();		
 				$tableid = $commentsModel->SaveorUpdateComments($data, $where);
-				$commData = array(
+				$commData = [
 								'recentlycommentedby'		=> 	$loginUserId,
 								'recentlycommenteddate'		=>	gmdate("Y-m-d H:i:s")
-						);
+						];
 				$commwhere = "id='$detailId'";
 				$emp_screening_model->SaveorUpdateDetails($commData, $commwhere);
 				$actualcommentData = $commentsModel->getComments($detailId,'all');
@@ -1148,9 +1148,9 @@ class Default_ProcessesController extends Zend_Controller_Action
 				$loginUserId = $auth->getStorage()->read()->id;
 				$loginuserRole = $auth->getStorage()->read()->emprole;	
 		}
-		$useridsArr = array();
-		$usernamesArr = array();
-		$usernames = array();
+		$useridsArr = [];
+		$usernamesArr = [];
+		$usernames = [];
 		$userids = '';
 		$commentsModel = new Default_Model_Comments();	
 		$id = $this->_request->getParam('detailid');
@@ -1201,7 +1201,7 @@ class Default_ProcessesController extends Zend_Controller_Action
 			// To save feedback file name in the database
 			$feedback_file = $this->_request->getParam('feedback_file', NULL);
 			if(!empty($feedback_file)){
-				$data = array('feedback_file'=>$feedback_file);
+				$data = ['feedback_file'=>$feedback_file];
 				$where = "id='$detailId'";			
 				$result = $emp_screening_model->SaveorUpdateDetails($data, $where);
 				$updateresult['feedback_file'] = $result;

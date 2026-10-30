@@ -40,7 +40,7 @@ class Default_EmppresenceController extends Zend_Controller_Action
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 				if ($Uid != "") {
 					$employeeData = $usersModel->getUserDetailsByIDandFlag($Uid);
 				}
@@ -60,9 +60,9 @@ class Default_EmppresenceController extends Zend_Controller_Action
 					$objname = $this->_getParam('objname');
 					$refresh = $this->_getParam('refresh');
 					$dashboardcall = $this->_getParam('dashboardcall', null);
-					$data = array();
+					$data = [];
 					$searchQuery = '';
-					$searchArray = array();
+					$searchArray = [];
 					$tablecontent = '';
 					if ($refresh == 'refresh') {
 						if ($dashboardcall == 'Yes')
@@ -75,7 +75,7 @@ class Default_EmppresenceController extends Zend_Controller_Action
 						$pageNo = 1;
 						$searchData = '';
 						$searchQuery = '';
-						$searchArray = array();
+						$searchArray = [];
 					} else {
 						$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 						$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'digitaladdress';
@@ -88,7 +88,7 @@ class Default_EmppresenceController extends Zend_Controller_Action
 						$searchData = $this->_getParam('searchData');
 						$searchData = rtrim($searchData, ',');
 					}
-					$dataTmp = $employeeleavesModel->getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $Uid, $conText,'edit');
+					$dataTmp = $employeeleavesModel->getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall);
 
 					array_push($data, $dataTmp);
 					$permission = sapp_Global::_checkprivileges(EMPLOYEE, $loginuserGroup, $loginUserRole, 'edit');
@@ -151,14 +151,14 @@ class Default_EmppresenceController extends Zend_Controller_Action
 				$tableid  = '';
 				
 				
-				$data = array(
+				$data = [
                     'digitalmedia_id'=>$this->_getParam('digitalmedia_id'),
                     'digitaladdress'=>$this->_getParam('digitaladdress'),
                     'description'=>$this->_getParam('description'),
                     'createdby'=>$loginUserId,
                     'createddate'=>gmdate('Y-m-d H:i:s'),
 					'employee_id'=>$unitid
-                );
+                ];
 
 				$where = '';
 				$actionflag = 1;
@@ -239,7 +239,7 @@ class Default_EmppresenceController extends Zend_Controller_Action
 				//session_start();
 			
                 
-				$data = array(
+				$data = [
                     'digitalmedia_id'=>$this->_getParam('digitalmedia_id'),
                     'digitaladdress'=>$this->_getParam('digitaladdress'),
                     'description'=>$this->_getParam('description'),
@@ -247,7 +247,7 @@ class Default_EmppresenceController extends Zend_Controller_Action
 					'isactive'=>$util::getcheckboxvalue($this->_getParam('isactive')),
                     'createddate'=>gmdate('Y-m-d H:i:s'),
 					'employee_id'=>$unitid
-                );
+                ];
                // die(Zend_Debug::dump($data));
 				$data['modifiedby'] = $loginUserId;
 				$data['modifieddate'] = gmdate("Y-m-d H:i:s");
@@ -321,7 +321,7 @@ class Default_EmppresenceController extends Zend_Controller_Action
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 
 				$employeeModal = new Default_Model_Employee();
 				try {
@@ -340,9 +340,9 @@ class Default_EmppresenceController extends Zend_Controller_Action
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall', null);
-								$data = array();
+								$data = [];
 								$searchQuery = '';
-								$searchArray = array();
+								$searchArray = [];
 								$tablecontent = '';
 								if ($refresh == 'refresh') {
 									if ($dashboardcall == 'Yes')
@@ -355,7 +355,7 @@ class Default_EmppresenceController extends Zend_Controller_Action
 									$pageNo = 1;
 									$searchData = '';
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 								} else {
 									$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 									$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'digitaladdress';
@@ -368,7 +368,7 @@ class Default_EmppresenceController extends Zend_Controller_Action
 									$searchData = $this->_getParam('searchData');
 									$searchData = rtrim($searchData, ',');
 								}
-								$dataTmp = $empaddressmodel->getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $Uid, $conText);
+								$dataTmp = $empaddressmodel->getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall);
 
 								array_push($data, $dataTmp);
 								$this->view->dataArray = $data;

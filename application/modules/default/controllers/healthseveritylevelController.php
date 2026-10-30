@@ -20,7 +20,7 @@ class Default_healthseveritylevelController extends Zend_Controller_Action
             $refresh = $this->_getParam('refresh');
             $dashboradcall = $this->_getParam('dashboradcall');
 
-            $data = array();
+            $data = [];
 
             if ($refresh == 'refresh') {
                 if ($dashboradcall == 'Yes') {
@@ -63,11 +63,11 @@ class Default_healthseveritylevelController extends Zend_Controller_Action
         try {
         $healthseverity_model = new Default_Model_healthseverity();
         $healthseverity_data = $healthseverity_model->GetHealthSeverity();
-        $healthseveritylevel_Form->healthseverity_id->addMultiOptions(array(''=>'Select severity')); 
+        $healthseveritylevel_Form->healthseverity_id->addMultiOptions([''=>'Select severity']); 
         if (!empty($healthseverity_data)) {
             foreach ($healthseverity_data as  $value) {
               
-               $healthseveritylevel_Form->healthseverity_id->addMultiOptions(array($value['healthseverity_id']=>$value['name']));
+               $healthseveritylevel_Form->healthseverity_id->addMultiOptions([$value['healthseverity_id']=>$value['name']]);
             }
             
 
@@ -99,11 +99,11 @@ class Default_healthseveritylevelController extends Zend_Controller_Action
         try {
         $healthseverity_model = new Default_Model_healthseverity();
         $healthseverity_data = $healthseverity_model->GetHealthSeverity();
-        $healthseveritylevel_Form->healthseverity_id->addMultiOptions(array(''=>'Select severity')); 
+        $healthseveritylevel_Form->healthseverity_id->addMultiOptions([''=>'Select severity']); 
         if (!empty($healthseverity_data)) {
             foreach ($healthseverity_data as  $value) {
               
-               $healthseveritylevel_Form->healthseverity_id->addMultiOptions(array($value['healthseverity_id']=>$value['name']));
+               $healthseveritylevel_Form->healthseverity_id->addMultiOptions([$value['healthseverity_id']=>$value['name']]);
             }
             
 
@@ -158,14 +158,14 @@ class Default_healthseveritylevelController extends Zend_Controller_Action
 			$actionflag = '';
 			$tableid  = '';
         
-			$data = array(
+			$data = [
 				                 'healthseverity_id'=>$severity,
 				                 'value'=>$value,
 								 'description'=>$description,
                                  'isactive'=>utlis::getcheckboxvalue($isactive)
-			);
+			];
 			if($id!=''){
-				$where = array('severitylevel_id=?'=>$id);
+				$where = ['severitylevel_id=?'=>$id];
                 $data['modifiedby'] = $loginUserId;
                 $data['modifieddate'] = gmdate("Y-m-d H:i:s");
 				$actionflag = 2;

@@ -63,41 +63,41 @@ class Default_Form_identitydocuments extends Zend_Form
 		$documentname->setAttrib('maxlength',50);
 		$documentname->setLabel('Document Name');
 		$documentname->setRequired(true);
-        $documentname->addValidator('NotEmpty', false, array('messages' => 'Please enter document name.'));
-		$documentname->addValidator("regex",true,array(
+        $documentname->addValidator('NotEmpty', false, ['messages' => 'Please enter document name.']);
+		$documentname->addValidator("regex",true,[
 							'pattern'=> '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9\-\s]*)$/',
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter valid document name.'
-                           )
-        	));
+                           ]
+        	]);
 		$documentname->addValidator(new Zend_Validate_Db_NoRecordExists(
-	                                            array(  'table'=>'main_identitydocuments',
+	                                            [  'table'=>'main_identitydocuments',
 	                                                     'field'=>'document_name',
 	                                                     'exclude'=>'id!="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('id').'" AND isactive=1',    
 	
-	                                                      ) ) );
+	                                                      ] ) );
 		$documentname->getValidator('Db_NoRecordExists')->setMessage('Document name already exists.');
 		
 		$mandatory = new Zend_Form_Element_Radio('mandatory');
 		$mandatory->setLabel("Mandatory");
-        $mandatory->addMultiOptions(array(
+        $mandatory->addMultiOptions([
 										        '1' => 'Yes',
 										        '0' => 'No',
-    									   ));
+    									   ]);
 		$mandatory->setRequired(true);
-        $mandatory->addValidator('NotEmpty', false, array('messages' => 'Please select mandatory.'));    									   
+        $mandatory->addValidator('NotEmpty', false, ['messages' => 'Please select mandatory.']);    									   
 		$mandatory->setSeparator('');    
 		$mandatory->setValue(0);									   
 		$mandatory->setRegisterInArrayValidator(false);
 		
 		$expiry = new Zend_Form_Element_Radio('expiry');
 		$expiry->setLabel("Expiry");
-        $expiry->addMultiOptions(array(
+        $expiry->addMultiOptions([
 										        '1' => 'Yes',
 										        '0' => 'No',
-    									   ));
+    									   ]);
 		$expiry->setRequired(true);
-        $expiry->addValidator('NotEmpty', false, array('messages' => 'Please select expiry.'));    									   
+        $expiry->addValidator('NotEmpty', false, ['messages' => 'Please select expiry.']);    									   
 		$expiry->setSeparator('');    
 		$expiry->setValue(0);									   
 		$expiry->setRegisterInArrayValidator(false);
@@ -115,7 +115,7 @@ class Default_Form_identitydocuments extends Zend_Form
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 
-		 $this->addElements(array($id,$documentname,$mandatory,$expiry,$description,$submit));
-        $this->setElementDecorators(array('ViewHelper')); 
+		 $this->addElements([$id,$documentname,$mandatory,$expiry,$description,$submit]);
+        $this->setElementDecorators(['ViewHelper']); 
 	}
 }

@@ -21,7 +21,7 @@ class Default_MeasurementindexController extends Zend_Controller_Action
       $refresh = $this->_getParam('refresh');
       $dashboradcall = $this->_getParam('dashboradcall');
 
-      $data = array();
+      $data = [];
 
       if ($refresh == 'refresh') {
           if ($dashboradcall == 'Yes') {
@@ -73,7 +73,7 @@ class Default_MeasurementindexController extends Zend_Controller_Action
             $msgarray['measurement_id'] = 'Measurement is not configured yet.';
         } else {
             foreach ($add as $adds) {
-                $form->measurement_id->addMultiOptions(array($adds['measurement_id'] => $adds['name']));
+                $form->measurement_id->addMultiOptions([$adds['measurement_id'] => $adds['name']]);
             }
         }
         if ($this->getRequest()->isPost()) {
@@ -81,19 +81,19 @@ class Default_MeasurementindexController extends Zend_Controller_Action
            
             if ($form->isValid($this->getRequest()->getPost())) {
 
-                $data = array(
+                $data = [
                     'value'=>$this->_request->getParam('value'),
                     'measurement_id'=>$this->_request->getParam('measurement_id'),
                     'description'=>$this->_request->getParam('description'),
                     'createdby'=>$loginUserId,
                     'createddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
 
                 $Id=$dmtmodel->SaveorUpdateData($data,'');
                 $tableid = $Id;
                 $actionflag = 1;
                 $result = sapp_Global::logManager(291,$actionflag,$loginUserId,$tableid);
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array('success'=>'Measurement Index Added Successful'));
+                $this->_helper->getHelper("FlashMessenger")->addMessage(['success'=>'Measurement Index Added Successful']);
                 $this->_redirect('measurementindex');
             }
             $messages = $form->getMessages();
@@ -126,7 +126,7 @@ try {
             $msgarray['measurement_id'] = 'Measurement is not configured yet.';
         } else {
             foreach ($add as $adds) {
-                $form->measurement_id->addMultiOptions(array($adds['measurement_id'] => $adds['name']));
+                $form->measurement_id->addMultiOptions([$adds['measurement_id'] => $adds['name']]);
             }
         }
         if ($this->getRequest()->getPost()) {
@@ -136,13 +136,13 @@ try {
                     $loginUserId = $auth->getStorage()->read()->id;
                 }
                 $model = new Default_Model_Measurementindex();
-                $data = array(
+                $data = [
                     'value'=>$this->_request->getParam('value'),
                     'measurement_id'=>$this->_request->getParam('measurement_id'),
                     'description'=>$this->_request->getParam('description'),
                     'createdby'=>$loginUserId,
                     'createddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
 
                 $tableid=$model->SaveorUpdateData($data, '');
                 sapp_Global::logManager(318,1,$loginUserId,$tableid);
@@ -187,7 +187,7 @@ Zend_Debug::dump($th->getMessage());    }
             $msgarray['measurement_id'] = 'Measurement is not configured yet.';
         } else {
             foreach ($add as $adds) {
-                $form->measurement_id->addMultiOptions(array($adds['measurement_id'] => $adds['name']));
+                $form->measurement_id->addMultiOptions([$adds['measurement_id'] => $adds['name']]);
             }
         }
 
@@ -200,19 +200,19 @@ Zend_Debug::dump($th->getMessage());    }
         $form->isactive->setValue(utlis::getcheckboxvalue($dmtdata['isactive'],'form'));
         if ($this->getRequest()->isPost()) {
             if ($form->isValid($this->getRequest()->getPost())) {
-                $data = array(
+                $data = [
                     'value'=>$this->_request->getParam('value'),
                     'measurement_id'=>$this->_request->getParam('measurement_id'),
                     'description'=>$this->_request->getParam('description'),
                     'isactive'=>utlis::getcheckboxvalue($this->_request->getParam('isactive')),
                     'modifiedby'=>$loginUserId,
                     'modifieddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
                 $dmtmodel->SaveorUpdateData($data,'measurementindex_id='.$id);
                 $tableid = $id;
                 $actionflag = 2;
                 $result = sapp_Global::logManager(291,$actionflag,$loginUserId,$tableid);
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array('success'=>'Measurement Index Updated Successful'));
+                $this->_helper->getHelper("FlashMessenger")->addMessage(['success'=>'Measurement Index Updated Successful']);
                 $this->_redirect('measurementindex');
             }
             $messages = $form->getMessages();

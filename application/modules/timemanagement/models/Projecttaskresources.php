@@ -52,19 +52,19 @@ class Timemanagement_Model_Projecttaskresources extends Zend_Db_Table_Abstract
 		if($auth->hasIdentity()){
 			$loginUserId = $auth->getStorage()->read()->id;
 		}
-		$dataArray = array( 'project_id'=>trim($projectId),
+		$dataArray = [ 'project_id'=>trim($projectId),
 				               'task_id'=>trim($task_id), 
 							   'project_task_id'=> $ProjectTaskId,
 							   'emp_id'=>$employeeId, 
 							   'created_by'=>$loginUserId, 
 			     	           'is_active' => 1,
 				   			   'created'=>gmdate("Y-m-d H:i:s")
-		);
+		];
 		$where='';
 		if($for_update>0)
 		{
-			$dataArray = array('is_active'=>0,'modified'=>gmdate("Y-m-d H:i:s"),'modified_by'=>$loginUserId);
-			$where = array('id=?'=>$ProjectTaskId);//here $ProjectTaskId is primary key in tm_project_task_employees table.
+			$dataArray = ['is_active'=>0,'modified'=>gmdate("Y-m-d H:i:s"),'modified_by'=>$loginUserId];
+			$where = ['id=?'=>$ProjectTaskId];//here $ProjectTaskId is primary key in tm_project_task_employees table.
 		}
 		$id = $this->SaveorUpdateProjectTaskResourceData($dataArray,$where);
 		return $id;

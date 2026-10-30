@@ -20,7 +20,7 @@ class Default_iddocumentstatusController extends Zend_Controller_Action
             $refresh = $this->_getParam('refresh');
             $dashboradcall = $this->_getParam('dashboradcall');
 
-            $data = array();
+            $data = [];
 
             if ($refresh == 'refresh') {
                 if ($dashboradcall == 'Yes') {
@@ -134,15 +134,15 @@ class Default_iddocumentstatusController extends Zend_Controller_Action
 			$actionflag = '';
 			$tableid  = '';
 
-			$data = array(
+			$data = [
 				                 'name'=>$name,
 				                 'code'=>$code,
 								 'description'=>$description,
                                  'valuetype'=>$valuetype,
                                  'isactive'=>utlis::getcheckboxvalue($isactive)
-			);
+			];
 			if($id!=''){
-				$where = array('iddocumentstatus_id=?'=>$id);
+				$where = ['iddocumentstatus_id=?'=>$id];
                 $data['modifiedby'] = $loginUserId;
                 $data['modifieddate'] = gmdate("Y-m-d H:i:s");
 				$actionflag = 2;

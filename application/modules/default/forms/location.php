@@ -39,7 +39,7 @@ class Default_Form_location extends Zend_Form
         $address1->setAttrib('maxLength', 60);
         $address1->setLabel('Address One');    
         $address1->setRequired(true);
-        $address1->addValidator('NotEmpty', false, array('messages' => 'Please the Address.'));  
+        $address1->addValidator('NotEmpty', false, ['messages' => 'Please the Address.']);  
         $address2 = new Zend_Form_Element_Text('address2');
         $address2->setAttrib('maxLength', 60);
         $address2->setLabel('Address Two');    
@@ -54,7 +54,7 @@ class Default_Form_location extends Zend_Form
         $postal->setLabel('Postal');  
   
         $country = new Zend_Form_Element_Select("country");
-        $country->addValidator('NotEmpty',false,array('messages'=>'Select country'));
+        $country->addValidator('NotEmpty',false,['messages'=>'Select country']);
         $country->setRegisterInArrayValidator(false);
         $country->setLabel("Country");		
         $country->setAttrib("class", "formDataElement"); 
@@ -65,7 +65,7 @@ class Default_Form_location extends Zend_Form
         	$country->setRequired(true);
         }
         $country->setRequired(true);
-        $country->addValidator('NotEmpty', false, array('messages' => 'Please select country.'));
+        $country->addValidator('NotEmpty', false, ['messages' => 'Please select country.']);
         $state = new Zend_Form_Element_Select("state");
         $state->setRegisterInArrayValidator(false);
         
@@ -73,8 +73,8 @@ class Default_Form_location extends Zend_Form
 			$state->setRequired(true);
         }
         
-		$state->addValidator('NotEmpty', false, array('messages' => 'Please select state.')); 
-        $state->addMultiOptions(array(''=>'Select State'));
+		$state->addValidator('NotEmpty', false, ['messages' => 'Please select state.']); 
+        $state->addMultiOptions([''=>'Select State']);
         $state->setLabel("State");		
         $state->setAttrib("class", "formDataElement"); 
         $state->setAttrib('onchange', 'displayParticularCity_normal(this,"","city","")');
@@ -83,7 +83,7 @@ class Default_Form_location extends Zend_Form
         
         $city = new Zend_Form_Element_Select("city");
         $city->setRegisterInArrayValidator(false);
-        $city->addMultiOptions(array(''=>'Select City'));
+        $city->addMultiOptions([''=>'Select City']);
         $city->setLabel("City");		
         $city->setAttrib("class", "formDataElement");         
         $city->setAttrib('title', 'City');
@@ -92,7 +92,7 @@ class Default_Form_location extends Zend_Form
 			$city->setRequired(true);
         }
         
-		$city->addValidator('NotEmpty', false, array('messages' => 'Please select city.'));
+		$city->addValidator('NotEmpty', false, ['messages' => 'Please select city.']);
         $city->setRequired(true);
 
         $map_coordinate = new Zend_Form_Element_Text('map_coordinate');
@@ -101,13 +101,13 @@ class Default_Form_location extends Zend_Form
         $map_coordinate->setLabel('map_coordinate');      
         $isactive = new Zend_Form_Element_Checkbox('isactive');
                     $isactive->setLabel('Active');
-        $map_coordinate->addValidator('NotEmpty', false, array('messages' => 'Please enter map coordinate.')); 
+        $map_coordinate->addValidator('NotEmpty', false, ['messages' => 'Please enter map coordinate.']); 
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save');
         
       
 		
-        $this->addElements(array($address1,$address2,$address3,$address4,$isactive,$postal,$country,$state,$city,$map_coordinate,$submit));
-        $this->setElementDecorators(array('ViewHelper'));
+        $this->addElements([$address1,$address2,$address3,$address4,$isactive,$postal,$country,$state,$city,$map_coordinate,$submit]);
+        $this->setElementDecorators(['ViewHelper']);
     }
 }

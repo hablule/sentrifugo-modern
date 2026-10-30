@@ -52,7 +52,7 @@ class Default_PerformanceController extends Zend_Controller_Action
         }
 
         // 3. Failsafe: No permissions for ANY child menus.
-        $this->_helper->flashMessenger->addMessage(array('error' => "You do not have permission to view any modules within Performance."));
+        $this->_helper->flashMessenger->addMessage(['error' => "You do not have permission to view any modules within Performance."]);
         $this->_redirect('dashboard');
     }
 }

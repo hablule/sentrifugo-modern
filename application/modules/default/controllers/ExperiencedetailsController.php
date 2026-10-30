@@ -56,7 +56,7 @@ class Default_ExperiencedetailsController extends Zend_Controller_Action
 		 	}
 
 		 	if($userid == '') $userid =$userID;
-		 	$Uid = ($userid)?$userid:$userID;//die;
+		 	$Uid = $userid ?: $userID;//die;
 
 		 	//Check for this user id record exists or not....
 		 	$experiencedetailsModel = new Default_Model_Experiencedetails();
@@ -82,7 +82,7 @@ class Default_ExperiencedetailsController extends Zend_Controller_Action
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
 							$dashboardcall = $this->_getParam('dashboardcall',null);
-							$data = array();$searchQuery = '';$searchArray = array();	$tablecontent = '';
+							$data = [];$searchQuery = '';$searchArray = [];	$tablecontent = '';
 
 							if($refresh == 'refresh')
 							{
@@ -152,7 +152,7 @@ class Default_ExperiencedetailsController extends Zend_Controller_Action
 		 	}
 
 		 	if($userid == '') $userid =$userID;
-		 	$Uid = ($userid)?$userid:$userID;
+		 	$Uid = $userid ?: $userID;
 
 		 	//Check for this user id record exists or not....
 		 	$experiencedetailsModel = new Default_Model_Experiencedetails();
@@ -179,7 +179,7 @@ class Default_ExperiencedetailsController extends Zend_Controller_Action
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
 							$dashboardcall = $this->_getParam('dashboardcall',null);
-							$data = array();$searchQuery = '';$searchArray = array();	$tablecontent = '';
+							$data = [];$searchQuery = '';$searchArray = [];	$tablecontent = '';
 
 							if($refresh == 'refresh')
 							{
@@ -246,7 +246,7 @@ class Default_ExperiencedetailsController extends Zend_Controller_Action
 					$conText = ($this->_getParam('context') !='')? $this->_getParam('context'):$this->getRequest()->getParam('context');
 				}
 				if($userid == '') $userid =$userID;
-				$Uid = ($userid)?$userid:$userID;
+				$Uid = $userid ?: $userID;
 				$experiencedetailsModel = new Default_Model_Experiencedetails();
 				$employeeModal = new Default_Model_Employee();
 				try
@@ -270,7 +270,7 @@ class Default_ExperiencedetailsController extends Zend_Controller_Action
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall',null);
-								$data = array();$searchQuery = '';$searchArray = array();	$tablecontent = '';
+								$data = [];$searchQuery = '';$searchArray = [];	$tablecontent = '';
 
 								if($refresh == 'refresh')
 								{
@@ -327,7 +327,7 @@ class Default_ExperiencedetailsController extends Zend_Controller_Action
 		try {
 			//code...
 		
-		$msgarray = array();
+		$msgarray = [];
 		$auth = Zend_Auth::getInstance();
 		if($auth->hasIdentity())
 		{
@@ -360,7 +360,7 @@ Zend_Debug::dump($th->getMessage());	}
 	}
 	public function validatereferrercontact($postParams)
 	{
-		$msgarray =array();$fieldValues=array();$totArr=array();
+		$msgarray =[];$fieldValues=[];$totArr=[];
 		if(!empty($postParams))
 		{
 			if($postParams['reference_contact'] != "" && $postParams['reference_contact'] == '0000000000')
@@ -466,7 +466,7 @@ Zend_Debug::dump($th->getMessage());	}
 			$reason_for_leaving = $this->_request->getParam('reason_for_leaving');
 			$responsibility = $this->_request->getParam('responsibility');
 
-			$data = array(  'comp_name'=>$comp_name,
+			$data = [  'comp_name'=>$comp_name,
 								'comp_website'=>$comp_website,
 								'designation'=>$designation,
 								'from_date'=>sapp_Global::change_date($fromdate,'database'),
@@ -479,10 +479,10 @@ Zend_Debug::dump($th->getMessage());	}
 								'emp_id'=>$user_id,
 								'modifiedby'=>$loginUserId,
 								'modifieddate'=>gmdate("Y-m-d H:i:s")
-			);
+			];
 			if($id!='')
 			{
-				$where = array('id=?'=>$id);
+				$where = ['id=?'=>$id];
 				$actionflag = 2;
 				$data['isactive'] = utlis::getcheckboxvalue($this->_getParam('isactive'));
 
@@ -595,8 +595,8 @@ Zend_Debug::dump($th->getMessage());	}
 		if($id)
 		{
 			$experienceDetailsModel = new Default_Model_Experiencedetails();
-			$data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-			$where = array('id=?'=>$id);
+			$data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+			$where = ['id=?'=>$id];
 			$Id = $experienceDetailsModel->SaveorUpdateEmployeeexperienceData($data, $where);
 			if($Id == 'update')
 			{

@@ -42,7 +42,7 @@ class Default_CreditcarddetailsController extends Zend_Controller_Action
 	public function addAction()
 	{
 		
-		 	$msgarray = array();
+		 	$msgarray = [];
 		 	$auth = Zend_Auth::getInstance();
 		 	if($auth->hasIdentity())
 		 	{
@@ -66,7 +66,7 @@ class Default_CreditcarddetailsController extends Zend_Controller_Action
 		try {
 			//code...
 	
-		 	$userID='';$empdata=array(); $conText = "";$objName = 'creditcarddetails';
+		 	$userID='';$empdata=[]; $conText = "";$objName = 'creditcarddetails';
 		 	$auth = Zend_Auth::getInstance();
 		 	if($auth->hasIdentity()){
 		 		$loginUserId = $auth->getStorage()->read()->id;
@@ -82,7 +82,7 @@ class Default_CreditcarddetailsController extends Zend_Controller_Action
 		 		$conText = ($this->_getParam('context') !='')? $this->_getParam('context'):$this->getRequest()->getParam('context');
 		 	}
 		 	if($userid == '') $userid =$userID;
-		 	$Uid = ($userid)?$userid:$userID;
+		 	$Uid = $userid ?: $userID;
 		 	$employeeModal = new Default_Model_Employee();
 		 	try
 		 	{
@@ -108,7 +108,7 @@ class Default_CreditcarddetailsController extends Zend_Controller_Action
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
 							$dashboardcall = $this->_getParam('dashboardcall',null);
-							$data = array();	$searchQuery = '';	$searchArray = array();		$tablecontent = '';
+							$data = [];	$searchQuery = '';	$searchArray = [];		$tablecontent = '';
 
 							if($refresh == 'refresh')
 							{
@@ -117,7 +117,7 @@ class Default_CreditcarddetailsController extends Zend_Controller_Action
 								else
 								$perPage = PERPAGE;
 
-								$sort = 'DESC';$by = 'epc.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = array();
+								$sort = 'DESC';$by = 'epc.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = [];
 							}
 							else
 							{
@@ -164,7 +164,7 @@ Zend_Debug::dump($th->getMessage());	}
 			//code...
 	
 	
-		 	$userID='';$empdata=array(); $conText = "";$objName = 'creditcarddetails';
+		 	$userID='';$empdata=[]; $conText = "";$objName = 'creditcarddetails';
 		 	$auth = Zend_Auth::getInstance();
 		 	if($auth->hasIdentity()){
 		 		$loginUserId = $auth->getStorage()->read()->id;
@@ -180,7 +180,7 @@ Zend_Debug::dump($th->getMessage());	}
 		 		$conText = ($this->_getParam('context') !='')? $this->_getParam('context'):$this->getRequest()->getParam('context');
 		 	}
 		 	if($userid == '') $userid =$userID;
-		 	$Uid = ($userid)?$userid:$userID;
+		 	$Uid = $userid ?: $userID;
 		 	$employeeModal = new Default_Model_Employee();
 		 	try
 		 	{
@@ -206,7 +206,7 @@ Zend_Debug::dump($th->getMessage());	}
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
 							$dashboardcall = $this->_getParam('dashboardcall',null);
-							$data = array();	$searchQuery = '';	$searchArray = array();		$tablecontent = '';
+							$data = [];	$searchQuery = '';	$searchArray = [];		$tablecontent = '';
 
 							if($refresh == 'refresh')
 							{
@@ -215,7 +215,7 @@ Zend_Debug::dump($th->getMessage());	}
 								else
 								$perPage = PERPAGE;
 
-								$sort = 'DESC';$by = 'epc.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = array();
+								$sort = 'DESC';$by = 'epc.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = [];
 							}
 							else
 							{
@@ -261,7 +261,7 @@ Zend_Debug::dump($th->getMessage());	}
 		try {
 			//code...
 	
-		$msgarray = array();
+		$msgarray = [];
 		$auth = Zend_Auth::getInstance();
 		if ($auth->hasIdentity()) {
 			$loginUserId = $auth->getStorage()->read()->id;
@@ -282,8 +282,8 @@ Zend_Debug::dump($th->getMessage());	}
 		$modela = new Default_Model_Paymentcard();
 //---------------
 $level1Arr = $modela->getallpaymentcard();
-$msgarray = array();
-$optionClass=array();
+$msgarray = [];
+$optionClass=[];
 $TandCDetailsform->paymentcard_id->addMultiOption('', 'Select Paymentcard');
 if (!empty($level1Arr)) {
 
@@ -318,7 +318,7 @@ Zend_Debug::dump($th->getMessage());	}
 		try {
 			//code...
 	
-		$msgarray = array();
+		$msgarray = [];
 		$auth = Zend_Auth::getInstance();
 		if ($auth->hasIdentity()) {
 			$loginUserId = $auth->getStorage()->read()->id;
@@ -340,8 +340,8 @@ Zend_Debug::dump($th->getMessage());	}
 		$modela = new Default_Model_Paymentcard();
 //---------------
 $level1Arr = $modela->getallpaymentcard();
-$msgarray = array();
-$optionClass=array();
+$msgarray = [];
+$optionClass=[];
 $TandCDetailsform->paymentcard_id->addMultiOption('', 'Select Paymentcard');
 if (!empty($level1Arr)) {
 
@@ -418,7 +418,7 @@ Zend_Debug::dump($th->getMessage());	}
 		
 					try {
 
-						$data = array('paymentcard_id'=>$paymentcard_id,
+						$data = ['paymentcard_id'=>$paymentcard_id,
 														'description'=>$description,
 														'nameoncard'=>$nameoncard,
 														'cardnumber'=>$cardnumber,
@@ -428,7 +428,7 @@ Zend_Debug::dump($th->getMessage());	}
 														'emp_id' => $unitid,
 														'modifiedby'=>$loginUserId,
 									                    'modifieddate'=>gmdate("Y-m-d H:i:s")
-									);
+									];
 						if ($id != '') {
 
 							$where = 'emppaymentcard_id= ' . $id;

@@ -43,7 +43,7 @@ class Default_empposController extends Zend_Controller_Action
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 				if ($Uid != "") {
 					$employeeData = $usersModel->getUserDetailsByIDandFlag($Uid);
 				}
@@ -63,9 +63,9 @@ class Default_empposController extends Zend_Controller_Action
 					$objname = $this->_getParam('objname');
 					$refresh = $this->_getParam('refresh');
 					$dashboardcall = $this->_getParam('dashboardcall', null);
-					$data = array();
+					$data = [];
 					$searchQuery = '';
-					$searchArray = array();
+					$searchArray = [];
 					$tablecontent = '';
 					if ($refresh == 'refresh') {
 						if ($dashboardcall == 'Yes')
@@ -78,7 +78,7 @@ class Default_empposController extends Zend_Controller_Action
 						$pageNo = 1;
 						$searchData = '';
 						$searchQuery = '';
-						$searchArray = array();
+						$searchArray = [];
 					} else {
 						$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 						$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'position_id';
@@ -211,7 +211,7 @@ $empdatas=$modelemp->getEmplistexclude($unitid);
 			else{
 			if ($form->isValid($this->_request->getPost())) {
 		
-                $data = array(
+                $data = [
                     'position_id'=>$this->_getParam('position_id'),
                     'jobtitle_id'=>$this->_getParam('jobtitle_id'),
 					'reportto_id'=>$this->_getParam('reportto_id'),
@@ -230,7 +230,7 @@ $empdatas=$modelemp->getEmplistexclude($unitid);
                     'createdby'=>$loginUserid,
                     'createddate'=>gmdate('Y-m-d H:i:s'),
 					'isactive'=>'Y'
-                );
+                ];
 
 				$where = '';
 				$actionflag = 1;
@@ -461,7 +461,7 @@ $empdatas=$modelemp->getEmplistexclude($unitid);
 
 				if ($form->isValid($this->_request->getPost())) {
 		
-                $data = array(
+                $data = [
                     'position_id'=>$this->_getParam('position_id'),
                     'jobtitle_id'=>$this->_getParam('jobtitle_id'),
 					'reportto_id'=>$this->_getParam('reportto_id'),
@@ -480,7 +480,7 @@ $empdatas=$modelemp->getEmplistexclude($unitid);
 					'isactive'=>$util::getcheckboxvalue($this->_getParam('isactive'))
 
                   
-                );
+                ];
                 $data['modifiedby'] = $loginUserId;
                 		$data['modifieddate'] = gmdate("Y-m-d H:i:s");
             		$where = 'id='.$id;
@@ -565,7 +565,7 @@ $empdatas=$modelemp->getEmplistexclude($unitid);
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 
 				$employeeModal = new Default_Model_Employee();
 				try {
@@ -584,9 +584,9 @@ $empdatas=$modelemp->getEmplistexclude($unitid);
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall', null);
-								$data = array();
+								$data = [];
 								$searchQuery = '';
-								$searchArray = array();
+								$searchArray = [];
 								$tablecontent = '';
 								if ($refresh == 'refresh') {
 									if ($dashboardcall == 'Yes')
@@ -599,7 +599,7 @@ $empdatas=$modelemp->getEmplistexclude($unitid);
 									$pageNo = 1;
 									$searchData = '';
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 								} else {
 									$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 									$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'isactive';

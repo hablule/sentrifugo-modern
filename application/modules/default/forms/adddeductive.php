@@ -11,8 +11,8 @@ class Default_Form_adddeductive extends Zend_Form{
         $submit = new Zend_Form_Element_Submit('submit');
 
         $submit->setLabel('Assign Deductive');
-        $this->addElements(array($id,$submit));
-        $this->setElementDecorators(array('ViewHelper'));  
+        $this->addElements([$id,$submit]);
+        $this->setElementDecorators(['ViewHelper']);  
     }
 }
 ?>

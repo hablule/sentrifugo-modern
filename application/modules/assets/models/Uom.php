@@ -13,7 +13,7 @@ class Assets_Model_Uom extends Zend_Db_Table_Abstract{
 
         $bank = $this->select()
             ->setIntegrityCheck(false)
-            ->from('main_uom',array('name as name', 'code as code','stdprecision as stdprecision', 'symbol as symobl',  'description as description', 'if(isactive="Y","Yes","No") as isactive', 'uom_id as id'))
+            ->from('main_uom',['name as name', 'code as code','stdprecision as stdprecision', 'symbol as symobl',  'description as description', 'if(isactive="Y","Yes","No") as isactive', 'uom_id as id'])
             ->order("$by $sort")
             ->where($where)
             ->limitPage($pageNo, $perPage);
@@ -22,7 +22,7 @@ class Assets_Model_Uom extends Zend_Db_Table_Abstract{
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $a = '', $b = '', $c = '', $d = '')
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
             foreach ($searchValues as $key => $val) {
@@ -32,7 +32,7 @@ class Assets_Model_Uom extends Zend_Db_Table_Abstract{
             $searchQuery = rtrim($searchQuery, " AND");
         }
         $objName = 'uom';
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'code' => 'Code',
             'name' => 'Name',
@@ -40,17 +40,17 @@ class Assets_Model_Uom extends Zend_Db_Table_Abstract{
             'symbol' => 'Symbol',
             'description' => 'Description',
             'isactive' => 'Active',
-        );
+        ];
 
         $tablecontent = $this->getData($sort, $by, $pageNo, $perPage, $searchQuery);
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
 				'by' => $by,
 				'pageNo' => $pageNo,
 				'perPage' => $perPage,
 				'tablecontent' => $tablecontent,
 				'objectname' => $objName,
-				'extra' => array(),
+				'extra' => [],
 				'tableheader' => $tableFields,
 				'jsGridFnName' => 'getAjaxgridData',
 				'jsFillFnName' => '',
@@ -58,12 +58,12 @@ class Assets_Model_Uom extends Zend_Db_Table_Abstract{
 				'call'=>$call,
 				'dashboardcall'=>$dashboardcall,
 				'menuName' => 'UOM',
-            'search_filters' => array(
-                'isactive' => array(
+            'search_filters' => [
+                'isactive' => [
                     'type' => 'select',
-                    'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-            )
-        );
+                    'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+            ]
+        ];
         return $dataTmp;
     }
 
@@ -85,7 +85,7 @@ class Assets_Model_Uom extends Zend_Db_Table_Abstract{
        
         $assetsubcategoriesData = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('c1'=>$this->_name),array('c1.*','c1.uom_id as id'))	
+		->from(['c1'=>$this->_name],['c1.*','c1.uom_id as id'])	
 		->where('c1.uom_id='.$id.'');
 		return $this->fetchAll($assetsubcategoriesData)->toArray();
 	

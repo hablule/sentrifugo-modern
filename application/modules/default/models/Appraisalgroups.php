@@ -33,7 +33,7 @@ class Default_Model_Appraisalgroups extends Zend_Db_Table_Abstract
 		
 		$servicedeskDepartmentData = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('ag'=>'main_pa_groups'),array('ag.*'))
+                           ->from(['ag'=>'main_pa_groups'],['ag.*'])
                            ->where($where)
     					   ->order("$by $sort") 
     					   ->limitPage($pageNo, $perPage);
@@ -43,8 +43,8 @@ class Default_Model_Appraisalgroups extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{		
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		
 		if($searchData != '' && $searchData!='undefined')
 			{
@@ -59,18 +59,18 @@ class Default_Model_Appraisalgroups extends Zend_Db_Table_Abstract
 			
 		$objName = 'appraisalgroups';
 		
-		$tableFields = array('action'=>'Action','group_name' => 'Group','description' => 'Description');
+		$tableFields = ['action'=>'Action','group_name' => 'Group','description' => 'Description'];
 		
 		$tablecontent = $this->getAppraisalGroupData($sort, $by, $pageNo, $perPage,$searchQuery);     
 		
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -78,7 +78,7 @@ class Default_Model_Appraisalgroups extends Zend_Db_Table_Abstract
 			'add' =>'add',
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall,
-		);
+		];
 		return $dataTmp;
 	}
 	
@@ -86,14 +86,14 @@ class Default_Model_Appraisalgroups extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
                             ->setIntegrityCheck(false)
-                            ->from(array('ag'=>'main_pa_groups'),array('ag.*'))
+                            ->from(['ag'=>'main_pa_groups'],['ag.*'])
                             ->where('ag.isactive = 1 AND ag.id='.$id.' ');
             return $this->fetchAll($select)->toArray();	
 	}
 	
 	public function getAppraisalGroupsName($groupids)
 	{
-		$options = array();
+		$options = [];
             $db = Zend_Db_Table::getDefaultAdapter();
             $query = "select id,group_name from main_pa_groups 
                       where isactive = 1 and id IN ($groupids) ";
@@ -112,7 +112,7 @@ class Default_Model_Appraisalgroups extends Zend_Db_Table_Abstract
 		}
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('ag'=>'main_pa_groups'),array('ag.*'))
+						->from(['ag'=>'main_pa_groups'],['ag.*'])
 					    ->where($where);
 		return $this->fetchAll($select)->toArray();
 	
@@ -136,7 +136,7 @@ class Default_Model_Appraisalgroups extends Zend_Db_Table_Abstract
                 
 	    $select = $this->select()
                             ->setIntegrityCheck(false)
-                            ->from(array('ag'=>'main_pa_groups'),array('grpcnt'=>'count(*)'))
+                            ->from(['ag'=>'main_pa_groups'],['grpcnt'=>'count(*)'])
                             ->where($where);
             return $this->fetchAll($select)->toArray();	
 	}

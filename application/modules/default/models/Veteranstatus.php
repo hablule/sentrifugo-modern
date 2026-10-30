@@ -45,8 +45,8 @@ class Default_Model_Veteranstatus extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{		
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		
 		if($searchData != '' && $searchData!='undefined')
 			{
@@ -60,23 +60,23 @@ class Default_Model_Veteranstatus extends Zend_Db_Table_Abstract
 			}
 			
 		$objName = 'veteranstatus';
-		$tableFields = array('action'=>'Action','veteranstatus' => 'Veteran Status','description' => 'Description');
+		$tableFields = ['action'=>'Action','veteranstatus' => 'Veteran Status','description' => 'Description'];
 		
 		$tablecontent = $this->getVeteranStatusData($sort, $by, $pageNo, $perPage,$searchQuery);     
 		
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
 			'searchArray' => $searchArray,'call'=>$call
-		);	
+		];	
 		return $dataTmp;
 	}
 	
@@ -93,7 +93,7 @@ class Default_Model_Veteranstatus extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('v'=>'main_veteranstatus'),array('v.*'))
+						->from(['v'=>'main_veteranstatus'],['v.*'])
 					    ->where('v.isactive = 1 AND v.id='.$id.' ');
 		return $this->fetchAll($select)->toArray();
 	
@@ -103,7 +103,7 @@ class Default_Model_Veteranstatus extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('v'=>'main_veteranstatus'),array('v.*'))
+						->from(['v'=>'main_veteranstatus'],['v.*'])
 					    ->where('v.isactive = 1')
 						->order('v.veteranstatus');
 		return $this->fetchAll($select)->toArray();

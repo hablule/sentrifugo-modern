@@ -30,8 +30,8 @@ class Expenses_Model_Categories extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{
 		$searchQuery = '';
-		$searchArray = array();
-		$data = array();
+		$searchArray = [];
+		$data = [];
 
 		  if($searchData != '' && $searchData!='undefined')
         {
@@ -52,22 +52,22 @@ class Expenses_Model_Categories extends Zend_Db_Table_Abstract
 			
 		$objName = 'expensecategories';
 		
-		$tableFields = array(
+		$tableFields = [
 					'action'=>'Action',
 					'expense_category_name' => 'Expense Category Name',
 					'userfullname' => 'Created By',
 					'created_date' => 'Created Date',
-		);
+		];
 	
 		$tablecontent = $this->getCategoriesData($sort, $by, $pageNo, $perPage,$searchQuery);
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -75,13 +75,13 @@ class Expenses_Model_Categories extends Zend_Db_Table_Abstract
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall,
 			'menuName' => 'Category',
-			  'search_filters' => array(
+			  'search_filters' => [
                    
-                            'created_date'=>array('type'=>'datepicker'),
+                            'created_date'=>['type'=>'datepicker'],
                             
-                        ),
+                        ],
 			
-			);
+			];
 			return $dataTmp;
 	}
 
@@ -110,11 +110,11 @@ class Expenses_Model_Categories extends Zend_Db_Table_Abstract
 		
 		 $Category_modes = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('c' => 'expense_categories'),array('c.*','created_date'=>'DATE_FORMAT(created_date,"'.DATEFORMAT_MYSQL.'")','expense_category_name'=>'c.expense_category_name'))
-	    ->joinInner(array('u'=>'main_users'), "u.id = c.createdby and
-	    u.isactive = 1",array('id'=>'c.id'))
-		->joinInner(array('e'=>'main_employees'),'u.empid = e.id',array('userfullname'=>
-	    'e.userfullname'))
+		->from(['c' => 'expense_categories'],['c.*','created_date'=>'DATE_FORMAT(created_date,"'.DATEFORMAT_MYSQL.'")','expense_category_name'=>'c.expense_category_name'])
+	    ->joinInner(['u'=>'main_users'], "u.id = c.createdby and
+	    u.isactive = 1",['id'=>'c.id'])
+		->joinInner(['e'=>'main_employees'],'u.empid = e.id',['userfullname'=>
+	    'e.userfullname'])
 		->where($where)
 		->order("$by $sort")
 		->limitPage($pageNo, $perPage);
@@ -148,7 +148,7 @@ class Expenses_Model_Categories extends Zend_Db_Table_Abstract
 		$row = $this->fetchRow("id = '".$id."' and isactive = 1");
 		if (!$row) {
 			
-                    return array();
+                    return [];
 		}
                 else
 		return $row->toArray();
@@ -170,7 +170,7 @@ class Expenses_Model_Categories extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('c'=>$this->_name),array('c.id','expense_category_name'))
+		->from(['c'=>$this->_name],['c.id','expense_category_name'])
 		->where('c.isactive = 1 ')
 		->order('c.expense_category_name');
 		return $this->fetchAll($select)->toArray();

@@ -11,7 +11,7 @@ class Default_Model_theme extends Zend_Db_Table_Abstract{
             $where .= " AND " . $searchQuery;
         $bank = $this->select()
         ->setIntegrityCheck(false)
-        ->from(array('t' => 'main_theme'), array('theme_id' => 't.theme_id', 'name'=>'t.theme_name','font'=>'t.font_style','menustyle'=>'t.menu_style','headercolor'=>'t.header_color','sidebarcolor'=>'t.sidebar_color','sidebarfgcolor'=>'t.sidebarfg_color','tableheadercolor'=>'t.tableheader_color','tableheaderfgcolor'=>'t.tableheaderfg_color','menucolor'=>'t.menu_color','bodycolor'=>'t.body_color','tablebgcolor'=>'t.tablebg_color','tablefgcolor'=>'t.tablefg_color','isactive'=>'if(t.isactive="N","No","Yes")','isdefault'=>'if(t.isdefault="N","No","Yes")'))
+        ->from(['t' => 'main_theme'], ['theme_id' => 't.theme_id', 'name'=>'t.theme_name','font'=>'t.font_style','menustyle'=>'t.menu_style','headercolor'=>'t.header_color','sidebarcolor'=>'t.sidebar_color','sidebarfgcolor'=>'t.sidebarfg_color','tableheadercolor'=>'t.tableheader_color','tableheaderfgcolor'=>'t.tableheaderfg_color','menucolor'=>'t.menu_color','bodycolor'=>'t.body_color','tablebgcolor'=>'t.tablebg_color','tablefgcolor'=>'t.tablefg_color','isactive'=>'if(t.isactive="N","No","Yes")','isdefault'=>'if(t.isdefault="N","No","Yes")'])
         ->where($where)
         ->order("$by $sort")
         ->limitPage($pageNo, $perPage);
@@ -21,7 +21,7 @@ class Default_Model_theme extends Zend_Db_Table_Abstract{
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $a = '', $b = '', $c = '', $d = '')
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
             foreach ($searchValues as $key => $val) {
@@ -59,7 +59,7 @@ class Default_Model_theme extends Zend_Db_Table_Abstract{
             $searchQuery = rtrim($searchQuery, " AND");
         }
         $objName = 'theme';
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
 
             'name' => 'Theam Name',
@@ -78,17 +78,17 @@ class Default_Model_theme extends Zend_Db_Table_Abstract{
             'isdefault' => 'Default',
 
 
-        );
+        ];
 
         $tablecontent = $this->getData($sort, $by, $pageNo, $perPage, $searchQuery);
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
             'perPage' => $perPage,
             'tablecontent' => $tablecontent,
             'objectname' => $objName,
-            'extra' => array(),
+            'extra' => [],
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
             'jsFillFnName' => '',
@@ -96,15 +96,15 @@ class Default_Model_theme extends Zend_Db_Table_Abstract{
             'call' => $call,
               'add'=>'add',
             'dashboardcall' => $dashboardcall,
-            'search_filters' => array(
-                'isactive' => array(
+            'search_filters' => [
+                'isactive' => [
                     'type' => 'select',
-                    'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-                    'isdefault' => array(
+                    'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+                    'isdefault' => [
                         'type' => 'select',
-                        'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-    )
-        );
+                        'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+    ]
+        ];
         return $dataTmp;
     }
 
@@ -128,9 +128,9 @@ if(empty($check)){
 else{
     $def=$this->getdefaulttheme();
 $id=$def[0]['theme_id'];
-$datab = array(
+$datab = [
 'isdefault'=>'N',
-);
+];
 $this->update($datab, $id);
 $this->update($data, $where);
 return 'update';
@@ -158,21 +158,21 @@ else{
 	
 		$select = $this->select()
 						->setIntegrityCheck(false)
-                        ->from(array('t' => 'main_theme'), array('theme_id' => 't.theme_id', 'name'=>'t.theme_name','menustyle'=>'t.menu_style','font'=>'t.font_style','headercolor'=>'t.header_color','menucolor'=>'t.menu_color','menufgcolor'=>'t.menufg_color','menuhocolor'=>'t.menuho_color','bodycolor'=>'t.body_color','tablebgcolor'=>'t.tablebg_color','tablefgcolor'=>'t.tablefg_color','tableheadercolor'=>'t.tableheader_color','tableheaderfgcolor'=>'t.tableheaderfg_color','sidebarcolor'=>'t.sidebar_color','sidebarfgcolor'=>'t.sidebarfg_color','sidebarhocolor'=>'t.sidebarho_color','isactivecheck'=>'t.isactive','isdefaultcheck'=>'t.isdefault','menuorentation'=>'t.menu_orentation'))
+                        ->from(['t' => 'main_theme'], ['theme_id' => 't.theme_id', 'name'=>'t.theme_name','menustyle'=>'t.menu_style','font'=>'t.font_style','headercolor'=>'t.header_color','menucolor'=>'t.menu_color','menufgcolor'=>'t.menufg_color','menuhocolor'=>'t.menuho_color','bodycolor'=>'t.body_color','tablebgcolor'=>'t.tablebg_color','tablefgcolor'=>'t.tablefg_color','tableheadercolor'=>'t.tableheader_color','tableheaderfgcolor'=>'t.tableheaderfg_color','sidebarcolor'=>'t.sidebar_color','sidebarfgcolor'=>'t.sidebarfg_color','sidebarhocolor'=>'t.sidebarho_color','isactivecheck'=>'t.isactive','isdefaultcheck'=>'t.isdefault','menuorentation'=>'t.menu_orentation'])
 						->where('t.theme_id='.$id.'');
 		return $this->fetchAll($select)->toArray();
 	}
     public function getactivetheme(){
         $query = $this->select()
                    ->setIntegrityCheck(false)
-                   ->from(array('t'=>'main_theme'))
+                   ->from(['t'=>'main_theme'])
                    ->where('t.isactive="Y"');
        return $this->fetchAll($query)->toArray();
     }
     public function getdefaulttheme(){
         $query = $this->select()
                    ->setIntegrityCheck(false)
-                   ->from(array('t'=>'main_theme'))
+                   ->from(['t'=>'main_theme'])
                    ->where('t.isactive="Y" and t.isdefault="Y"');
        return $this->fetchAll($query)->toArray();
     }

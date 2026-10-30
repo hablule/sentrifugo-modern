@@ -37,71 +37,71 @@ class Default_Form_Businessunit extends Zend_Form
          * 2. Text Elements
          * -------------------------------------------------------------- */
 
-        $ssotRegexValidator = array(
+        $ssotRegexValidator = [
             'Regex',
             true,
-            array(
+            [
                 'pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9 ]*)$/',
-                'messages' => array(
+                'messages' => [
                     Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space or contain special characters.'
-                )
-            )
-        );
+                ]
+            ]
+        ];
 
         // Code
         $code = new Zend_Form_Element_Text('code');
         $code->setLabel('Code')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '50'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '50'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', false, array('messages' => 'Please enter a code.'))
-            ->addValidator('StringLength', false, array('max' => 50))
+            ->addValidator('NotEmpty', false, ['messages' => 'Please enter a code.'])
+            ->addValidator('StringLength', false, ['max' => 50])
             ->addValidator($ssotRegexValidator[0], $ssotRegexValidator[1], $ssotRegexValidator[2]);
 
-        $codeVal = new Zend_Validate_Db_NoRecordExists(array(
+        $codeVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_businessunit',
             'field'   => 'code',
-            'exclude' => ($idVal > 0) ? array('field' => 'id', 'value' => $idVal) : null
-        ));
+            'exclude' => ($idVal > 0) ? ['field' => 'id', 'value' => $idVal] : null
+        ]);
         $codeVal->setMessage('This code already exists.');
         $code->addValidator($codeVal);
 
         // Name
         $name = new Zend_Form_Element_Text('name');
         $name->setLabel('Name')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '255'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '255'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', false, array('messages' => 'Please enter a name.'))
-            ->addValidator('StringLength', false, array('max' => 255))
+            ->addValidator('NotEmpty', false, ['messages' => 'Please enter a name.'])
+            ->addValidator('StringLength', false, ['max' => 255])
             ->addValidator($ssotRegexValidator[0], $ssotRegexValidator[1], $ssotRegexValidator[2]);
 
-        $nameVal = new Zend_Validate_Db_NoRecordExists(array(
+        $nameVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_businessunit',
             'field'   => 'name',
-            'exclude' => ($idVal > 0) ? array('field' => 'id', 'value' => $idVal) : null
-        ));
+            'exclude' => ($idVal > 0) ? ['field' => 'id', 'value' => $idVal] : null
+        ]);
         $nameVal->setMessage('This name already exists.');
         $name->addValidator($nameVal);
 
         // Address 1, 2, 3
         $address1 = new Zend_Form_Element_Textarea('address1');
         $address1->setLabel('Address Line 1')
-            ->setAttribs(array('class' => 'formDataElement', 'rows' => 2))
+            ->setAttribs(['class' => 'formDataElement', 'rows' => 2])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
         $address2 = new Zend_Form_Element_Textarea('address2');
         $address2->setLabel('Address Line 2')
-            ->setAttribs(array('class' => 'formDataElement', 'rows' => 2))
+            ->setAttribs(['class' => 'formDataElement', 'rows' => 2])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
         $address3 = new Zend_Form_Element_Textarea('address3');
         $address3->setLabel('Address Line 3')
-            ->setAttribs(array('class' => 'formDataElement', 'rows' => 2))
+            ->setAttribs(['class' => 'formDataElement', 'rows' => 2])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -151,11 +151,11 @@ class Default_Form_Businessunit extends Zend_Form
         // Business Domains
         $businessdomain = new Zend_Form_Element_Multiselect('businessdomain');
         $businessdomain->setLabel('Business Domains')
-            ->setAttribs(array(
+            ->setAttribs([
                 'class' => 'formDataElement',
                 'size'  => 5, // Shows 5 rows in standard HTML multiselect
                 'title' => 'Select the domains associated with this business unit.'
-            ))
+            ])
             ->setRegisterInArrayValidator(false) // Required when populating dynamically in the controller
             ->setRequired(false); // A nationality might not have a specific country yet
 
@@ -164,20 +164,20 @@ class Default_Form_Businessunit extends Zend_Form
          * -------------------------------------------------------------- */
         $startdate = new ZendX_JQuery_Form_Element_DatePicker('startdate');
         $startdate->setLabel('Start Date')
-            ->setAttribs(array(
+            ->setAttribs([
                 'class'    => 'brdr_none formDataElement',
                 'readonly' => 'true',
                 'onfocus'  => 'this.blur()'
-            ))
+            ])
             ->setRequired(true)
-            ->addValidator('NotEmpty', false, array('messages' => 'Please select a start date.'));
+            ->addValidator('NotEmpty', false, ['messages' => 'Please select a start date.']);
 
         /* --------------------------------------------------------------
          * 5. Textarea / Config Elements
          * -------------------------------------------------------------- */
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Description')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -185,10 +185,10 @@ class Default_Form_Businessunit extends Zend_Form
         $service_desk_flag = new Zend_Form_Element_Select('service_desk_flag');
         $service_desk_flag->setLabel('Service Desk Configuration')
             ->setAttrib('class', 'formDataElement')
-            ->addMultiOptions(array(
+            ->addMultiOptions([
                 '1' => 'Business Unit Wise',
                 '0' => 'Department Wise'
-            ));
+            ]);
 
         $isactive = new Zend_Form_Element_Checkbox('isactive');
         $isactive->setLabel('Active')
@@ -201,7 +201,7 @@ class Default_Form_Businessunit extends Zend_Form
          * -------------------------------------------------------------- */
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save')
-            ->setAttribs(array('id' => 'submitbutton', 'class' => 'actbtn_btn'));
+            ->setAttribs(['id' => 'submitbutton', 'class' => 'actbtn_btn']);
 
         // SSOT v6.4 Strict Format for AJAX save binding
         $urlAction  = "'businessunit/save/format/json'";
@@ -211,7 +211,7 @@ class Default_Form_Businessunit extends Zend_Form
         /* --------------------------------------------------------------
          * Build Form
          * -------------------------------------------------------------- */
-        $this->addElements(array(
+        $this->addElements([
             $idElement,
             $code,
             $name,
@@ -231,15 +231,15 @@ class Default_Form_Businessunit extends Zend_Form
             $description,
             $isactive,
             $submit
-        ));
+        ]);
 
         // Strip default Zend Decorators per SSOT
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
             if ($element instanceof ZendX_JQuery_Form_Element_DatePicker) {
-                $element->setDecorators(array('UiWidgetElement'));
+                $element->setDecorators(['UiWidgetElement']);
             } else {
-                $element->setDecorators(array('ViewHelper'));
+                $element->setDecorators(['ViewHelper']);
             }
         }
     }

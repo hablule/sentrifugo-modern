@@ -57,15 +57,15 @@ class Default_Model_Servicerequests extends Zend_Db_Table_Abstract
         {
             $loginUserId = $auth->getStorage()->read()->id;            
         }
-        $status_value_arr = array(1 => 'Open',2 => 'Closed',3 => 'Cancelled',4 => 'Overdue',5 => 'Duetoday',
+        $status_value_arr = [1 => 'Open',2 => 'Closed',3 => 'Cancelled',4 => 'Overdue',5 => 'Duetoday',
                                 6 => 'To approve',7 => 'Approved',8 => 'Rec_pending',9 => 'Rec_wapproval',
                                 10 => 'Rec_toapprove',11 => 'To approve',12 => 'App_approved',13 => 'To manager approve',
                                 14 => 'Rept_approved',15 => 'Req_pending',16 => 'Rejected',17 => 'Raiser_open',18 => 'Manager approved',
                                 19 => 'Manager rejected',20 => 'Rec_app_approved',21 => 'Rec_app_rejected',
                                 22 => 'Rec_app_closed',23 => 'To management approve',24 => 'Management approved',25 => 'Management rejected'
-            );
+            ];
         
-        $status_search_arr = array(6 =>" (status = 'To management approve' or status = 'To manager approve') ",
+        $status_search_arr = [6 =>" (status = 'To management approve' or status = 'To manager approve') ",
             9 => " (status = 'To management approve' or status = 'To manager approve') ",
             7 => " (status = 'Manager approved' or status = 'Management Approved' or status = 'Manager rejected' or status = 'Management Rejected') ",
             8 => " (status = 'Manager approved' or status = 'Management Approved' or status = 'Manager rejected' or status = 'Management Rejected') ",
@@ -79,7 +79,7 @@ class Default_Model_Servicerequests extends Zend_Db_Table_Abstract
             20 => " (status = 'Manager approved' or status = 'Management Approved') ",
             21 => " (status = 'Manager rejected' or status = 'Management Rejected')" ,
             22 => " (status = 'Closed' or status = 'Rejected')",
-            );
+            ];
         
         $grid_type_arr = $this->getGridtypearr();
         
@@ -89,7 +89,7 @@ class Default_Model_Servicerequests extends Zend_Db_Table_Abstract
         
         $status_value = sapp_Global::_decrypt($status_value);
         $searchQuery = '';
-        $searchArray = array();        
+        $searchArray = [];        
         
         if($searchData != '' && $searchData!='undefined')
         {
@@ -146,7 +146,7 @@ class Default_Model_Servicerequests extends Zend_Db_Table_Abstract
         
         $objName = 'servicerequests';
 
-        $tableFields = array('action'=>'Action',
+        $tableFields = ['action'=>'Action',
                         'ticket_number' => 'Ticket#',
         		        'request_for'=>'Request For',
                         'category_name' => 'Category',
@@ -156,18 +156,18 @@ class Default_Model_Servicerequests extends Zend_Db_Table_Abstract
                         'raised_by_name' => 'Raised By',
                         'createddate' => 'Raised On',
                         'status' => 'Status',
-                        );
+                        ];
         
         if($status_value != '')
             unset($tableFields['status']);
-        $bool_arr = array('' => 'All',1=>'Low',2=>'Medium',3=>'High');                
+        $bool_arr = ['' => 'All',1=>'Low',2=>'Medium',3=>'High'];                
  
         $tablecontent = $this->getRequestData($sort, $by, $pageNo, $perPage,$searchQuery,$grid_type,$status_value);                    
         
         $menu_name_arr = $this->getServicemenunames();        
         $menuName = $menu_name_arr[$grid_type];
         
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             
@@ -177,7 +177,7 @@ class Default_Model_Servicerequests extends Zend_Db_Table_Abstract
             'tablecontent' => $tablecontent['table_content'],
             'row_count' => $tablecontent['count'],
             'objectname' => $objName,
-            'extra' => array(),
+            'extra' => [],
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
             'jsFillFnName' => '',
@@ -188,18 +188,18 @@ class Default_Model_Servicerequests extends Zend_Db_Table_Abstract
             'view_link' => BASE_URL.'servicerequests/view/id/{{id}}/t/'.sapp_Global::_encrypt($grid_type).($status_value != ''?"/v/".sapp_Global::_encrypt($status_value):""),
             'add_link' => BASE_URL.'servicerequests/add/t/'.sapp_Global::_encrypt($grid_type).($status_value != ''?"/v/".sapp_Global::_encrypt($status_value):""),
             'dashboardcall' => $dashboardcall,
-            'search_filters' => array(
-                            'priority' => array(
+            'search_filters' => [
+                            'priority' => [
                                 'type' => 'select',
                                 'filter_data' => $bool_arr,
-                            ),
-                            'createddate'=>array('type'=>'datepicker'),
-            	         	'request_for'=> array(
+                            ],
+                            'createddate'=>['type'=>'datepicker'],
+            	         	'request_for'=> [
             				'type' => 'select',
-            				'filter_data' => array('' => 'All',1 => 'Service', 2 => 'Asset'),
-            		),
-                        ),
-        );
+            				'filter_data' => ['' => 'All',1 => 'Service', 2 => 'Asset'],
+            		],
+                        ],
+        ];
         if($grid_type_arr[$grid_type] == 'request')             
             $dataTmp['add'] ='add';
         return $dataTmp;
@@ -210,9 +210,9 @@ class Default_Model_Servicerequests extends Zend_Db_Table_Abstract
     */
    public function getServicemenunames()
    {
-       return array(1=> 'My request summary',2=>'My action summary',3=>'My action summary', 
+       return [1=> 'My request summary',2=>'My action summary',3=>'My action summary', 
                     4 => 'My action summary',5=> 'My action summary',6 => 'My action summary',
-                    7=> 'My action summary',8 => 'My action summary',9 => 'All request summary');
+                    7=> 'My action summary',8 => 'My action summary',9 => 'All request summary'];
    }
    /**
     * This function will return array of grid types
@@ -220,7 +220,7 @@ class Default_Model_Servicerequests extends Zend_Db_Table_Abstract
     */
    public function getGridtypearr()
    {
-       return array(1 =>'request',2 => 'receiver',3 => 'all',4 => 'reporting',5=> 'approver',6=> 'rec_rept',7 => 'all_rec_rept',8 => 'rept_app',9 => 'org_head');
+       return [1 =>'request',2 => 'receiver',3 => 'all',4 => 'reporting',5=> 'approver',6=> 'rec_rept',7 => 'all_rec_rept',8 => 'rept_app',9 => 'org_head'];
    }
    /**
     * 
@@ -228,7 +228,7 @@ class Default_Model_Servicerequests extends Zend_Db_Table_Abstract
     */
    public function getGridtypearr_rev()
    {
-       return array('request' => 1,'receiver' => 2,'all' => 3,'reporting' => 4,'approver' => 5,'rec_rept' => 6,'all_rec_rept' => 7,'rept_app' => 8,'org_head' => 9);
+       return ['request' => 1,'receiver' => 2,'all' => 3,'reporting' => 4,'approver' => 5,'rec_rept' => 6,'all_rec_rept' => 7,'rept_app' => 8,'org_head' => 9];
    }
    /**
     * This function gives data for grid view.    
@@ -306,32 +306,32 @@ class Default_Model_Servicerequests extends Zend_Db_Table_Abstract
         	
     $requestData = $this->select()
                 ->setIntegrityCheck(false)
-                ->from(array('r'=>'main_sd_requests_summary'),array('r.service_desk_name','r.request_for'=>'request_for','r.service_request_name','r.raised_by_name','id' => 'r.sd_requests_id','priority' =>new Zend_Db_Expr("case  when r.priority = 1 then 'Low' when r.priority = 2 then 'Medium' when r.priority = 3 then 'High' end "),
+                ->from(['r'=>'main_sd_requests_summary'],['r.service_desk_name','r.request_for'=>'request_for','r.service_request_name','r.raised_by_name','id' => 'r.sd_requests_id','priority' =>new Zend_Db_Expr("case  when r.priority = 1 then 'Low' when r.priority = 2 then 'Medium' when r.priority = 3 then 'High' end "),
                     'description'=>"CONCAT(UCASE(LEFT(r.description, 1)), SUBSTRING(r.description, 2))",'status' => 'r.status','ticket_number'=>'r.ticket_number',
-                    'executor_comments'=>"r.executor_comments",'createddate' => 'DATE_FORMAT(r.createddate,"'.DATEFORMAT_MYSQL.'")','r.modifieddate','request_for'=>'if(r.request_for=1,"Service","Asset")','category_name'=>'if(r.request_for=1,r.service_desk_name,a.name)','request_name'=>'if(r.request_for=1,r.service_request_name,ac.name)'))                                
-                ->joinInner(array('sdc' => 'main_sd_configurations'), "sdc.id = r.service_desk_conf_id and sdc.isactive = 1 and find_in_set(".$loginUserId.",sdc.request_recievers)",array())
-                 ->joinLeft(array('ac'=>'assets'), 'r.service_desk_id = ac.id and ac.isactive=1 ', array('ac.name'))
-               ->joinLeft(array('a'=>'assets_categories'), 'r.service_request_id = a.id AND a.is_active=1 and a.parent=0 ', array('a.name'))
+                    'executor_comments'=>"r.executor_comments",'createddate' => 'DATE_FORMAT(r.createddate,"'.DATEFORMAT_MYSQL.'")','r.modifieddate','request_for'=>'if(r.request_for=1,"Service","Asset")','category_name'=>'if(r.request_for=1,r.service_desk_name,a.name)','request_name'=>'if(r.request_for=1,r.service_request_name,ac.name)'])                                
+                ->joinInner(['sdc' => 'main_sd_configurations'], "sdc.id = r.service_desk_conf_id and sdc.isactive = 1 and find_in_set(".$loginUserId.",sdc.request_recievers)",[])
+                 ->joinLeft(['ac'=>'assets'], 'r.service_desk_id = ac.id and ac.isactive=1 ', ['ac.name'])
+               ->joinLeft(['a'=>'assets_categories'], 'r.service_request_id = a.id AND a.is_active=1 and a.parent=0 ', ['a.name'])
                 ->where($where." and r.createdby != ".$loginUserId);
             
             if($grid_type_arr[$grid_type] == 'rec_rept')
             {
             
-                $rec_rept_arr = array(10,18,19,22);
+                $rec_rept_arr = [10,18,19,22];
                 $sql1 = $requestData;
                  $sql2 = $this->select()
                         ->setIntegrityCheck(false)
-                        ->from(array('r'=>'main_sd_requests_summary'),array('r.service_desk_name','r.request_for'=>'request_for','r.service_request_name','r.raised_by_name','id' => 'r.sd_requests_id','priority' =>new Zend_Db_Expr("case  when r.priority = 1 then 'Low' when r.priority = 2 then 'Medium' when r.priority = 3 then 'High' end "),
+                        ->from(['r'=>'main_sd_requests_summary'],['r.service_desk_name','r.request_for'=>'request_for','r.service_request_name','r.raised_by_name','id' => 'r.sd_requests_id','priority' =>new Zend_Db_Expr("case  when r.priority = 1 then 'Low' when r.priority = 2 then 'Medium' when r.priority = 3 then 'High' end "),
                     'description'=>"CONCAT(UCASE(LEFT(r.description, 1)), SUBSTRING(r.description, 2))",'status' => 'r.status','ticket_number'=>'r.ticket_number',
-                    'executor_comments'=>"r.executor_comments",'createddate' => 'DATE_FORMAT(r.createddate,"'.DATEFORMAT_MYSQL.'")','r.modifieddate','request_for'=>'if(r.request_for=1,"Service","Asset")','category_name'=>'if(r.request_for=1,r.service_desk_name,a.name)','request_name'=>'if(r.request_for=1,r.service_request_name,ac.name)'))
-                     ->joinLeft(array('ac'=>'assets'), 'r.service_desk_id = ac.id and ac.isactive=1 ', array('ac.name'))
-               		->joinLeft(array('a'=>'assets_categories'), 'r.service_request_id = a.id AND a.is_active=1 and a.parent=0 ', array('a.name'))
+                    'executor_comments'=>"r.executor_comments",'createddate' => 'DATE_FORMAT(r.createddate,"'.DATEFORMAT_MYSQL.'")','r.modifieddate','request_for'=>'if(r.request_for=1,"Service","Asset")','category_name'=>'if(r.request_for=1,r.service_desk_name,a.name)','request_name'=>'if(r.request_for=1,r.service_request_name,ac.name)'])
+                     ->joinLeft(['ac'=>'assets'], 'r.service_desk_id = ac.id and ac.isactive=1 ', ['ac.name'])
+               		->joinLeft(['a'=>'assets_categories'], 'r.service_request_id = a.id AND a.is_active=1 and a.parent=0 ', ['a.name'])
                         ->where($where." and r.reporting_manager_id = ".$loginUserId." and r.status in ('To manager approve','Manager approved','Manager rejected','Rejected','Closed')");
                 if($status_value == '')
                 {     
                     $requestData = $this->select()
                             ->setIntegrityCheck(false)
-                            ->union(array($sql1,$sql2));
+                            ->union([$sql1,$sql2]);
                 }
                 else if(in_array($status_value, $rec_rept_arr))
                 {
@@ -367,11 +367,11 @@ class Default_Model_Servicerequests extends Zend_Db_Table_Abstract
         	
         	$requestData = $this->select()
                 ->setIntegrityCheck(false)                   
-                ->from(array('r'=>'main_sd_requests_summary'),array('r.service_desk_name','r.request_for'=>'request_for','r.service_request_name','r.raised_by_name','id' => 'r.sd_requests_id','priority' =>new Zend_Db_Expr("case  when r.priority = 1 then 'Low' when r.priority = 2 then 'Medium' when r.priority = 3 then 'High' end "),
+                ->from(['r'=>'main_sd_requests_summary'],['r.service_desk_name','r.request_for'=>'request_for','r.service_request_name','r.raised_by_name','id' => 'r.sd_requests_id','priority' =>new Zend_Db_Expr("case  when r.priority = 1 then 'Low' when r.priority = 2 then 'Medium' when r.priority = 3 then 'High' end "),
                     'description'=>"CONCAT(UCASE(LEFT(r.description, 1)), SUBSTRING(r.description, 2))",'r.ticket_number','status' => 'r.status','ticket_number'=>'r.ticket_number',
-                    'executor_comments'=>"r.executor_comments",'createddate' => 'DATE_FORMAT(r.createddate,"'.DATEFORMAT_MYSQL.'")','r.modifieddate','request_for'=>'if(r.request_for=1,"Service","Asset")','category_name'=>'if(r.request_for=1,r.service_desk_name,a.name)','request_name'=>'if(r.request_for=1,r.service_request_name,ac.name)'))
-                ->joinLeft(array('ac'=>'assets'), 'r.service_desk_id = ac.id and ac.isactive=1 ', array('ac.name'))
-               ->joinLeft(array('a'=>'assets_categories'), 'r.service_request_id = a.id AND a.is_active=1 and a.parent=0 ', array('a.name'))
+                    'executor_comments'=>"r.executor_comments",'createddate' => 'DATE_FORMAT(r.createddate,"'.DATEFORMAT_MYSQL.'")','r.modifieddate','request_for'=>'if(r.request_for=1,"Service","Asset")','category_name'=>'if(r.request_for=1,r.service_desk_name,a.name)','request_name'=>'if(r.request_for=1,r.service_request_name,ac.name)'])
+                ->joinLeft(['ac'=>'assets'], 'r.service_desk_id = ac.id and ac.isactive=1 ', ['ac.name'])
+               ->joinLeft(['a'=>'assets_categories'], 'r.service_request_id = a.id AND a.is_active=1 and a.parent=0 ', ['a.name'])
                 ->where($where);
             $count_query = $requestData;
             $result = $db->query($count_query);
@@ -383,7 +383,7 @@ class Default_Model_Servicerequests extends Zend_Db_Table_Abstract
            
         }      
        
-        return array('count' => $count,'table_content' => $requestData);
+        return ['count' => $count,'table_content' => $requestData];
     }
     
     /**
@@ -394,7 +394,7 @@ class Default_Model_Servicerequests extends Zend_Db_Table_Abstract
      */
     public function getRequestsCnt($emp_id,$grid_type)
     {
-        $counts = array();
+        $counts = [];
         if($emp_id != '')
         {
             $db = Zend_Db_Table::getDefaultAdapter();
@@ -441,8 +441,8 @@ class Default_Model_Servicerequests extends Zend_Db_Table_Abstract
                     
                     if(count($toapprove_row) > 0)
                     {
-                        $disp_st = array('To manager approve' => 'to_approve','Manager approved' => 'manager_approved',
-                            'Manager rejected' => 'manager_rejected','Rejected' => 'mrejected','Closed' => 'mclosed');
+                        $disp_st = ['To manager approve' => 'to_approve','Manager approved' => 'manager_approved',
+                            'Manager rejected' => 'manager_rejected','Rejected' => 'mrejected','Closed' => 'mclosed'];
                         foreach($toapprove_row as $cnt)
                         {                              
                             $counts[$disp_st[$cnt['status']]] = $cnt['cnt'];
@@ -687,7 +687,7 @@ class Default_Model_Servicerequests extends Zend_Db_Table_Abstract
      */
     public function getRequestById($id)
     {
-        $data = array();
+        $data = [];
         if($id != '')
         {
             $db = Zend_Db_Table::getDefaultAdapter();
@@ -768,7 +768,7 @@ class Default_Model_Servicerequests extends Zend_Db_Table_Abstract
      */
     public function getApprovers($request_id,$flag)
     {
-        $appr_arr = array();
+        $appr_arr = [];
         if($request_id != '')
         {
             $db = Zend_Db_Table::getDefaultAdapter();
@@ -846,7 +846,7 @@ class Default_Model_Servicerequests extends Zend_Db_Table_Abstract
                     }
                     if($approver_level != 'view')
                     {
-                        $approver_level = array('app_pos' => $app_pos,'max_app' => $max_app);
+                        $approver_level = ['app_pos' => $app_pos,'max_app' => $max_app];
                     }
                 }
             }
@@ -861,7 +861,7 @@ class Default_Model_Servicerequests extends Zend_Db_Table_Abstract
      */
     public function getCC_mails($config_id)
     {
-        $mails_arr = array();
+        $mails_arr = [];
         if($config_id != '')
         {
             $db = Zend_Db_Table::getDefaultAdapter();
@@ -880,7 +880,7 @@ class Default_Model_Servicerequests extends Zend_Db_Table_Abstract
      */
     public function getEmailIds($total_ids)
     {
-        $mails_arr = array();
+        $mails_arr = [];
         if($total_ids != '')
         {
             $db = Zend_Db_Table::getDefaultAdapter();
@@ -906,7 +906,7 @@ class Default_Model_Servicerequests extends Zend_Db_Table_Abstract
      */
     public function getDataSummary($req_id)
     {
-        $sdata = array();
+        $sdata = [];
         if($req_id != '')
         {
             $db = Zend_Db_Table::getDefaultAdapter();
@@ -956,7 +956,7 @@ class Default_Model_Servicerequests extends Zend_Db_Table_Abstract
      */
     public function getRequestHistory($request_id)
     {
-        $history = array();
+        $history = [];
         if($request_id != '')
         {
             $db = Zend_Db_Table::getDefaultAdapter();
@@ -972,7 +972,7 @@ class Default_Model_Servicerequests extends Zend_Db_Table_Abstract
     {
     	 $userdata=	$this->select()
     	->setIntegrityCheck(false)
-    	->from(array('c'=>'assets_categories'),array('c.*'))
+    	->from(['c'=>'assets_categories'],['c.*'])
     	->order('c.id')
     	->where('c.is_active =1 and c.parent=0 ');
     	return $this->fetchAll($userdata)->toArray();

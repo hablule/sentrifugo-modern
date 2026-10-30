@@ -47,7 +47,7 @@ class Default_Form_Digitalpresence extends Zend_Form
         $digitalmedia_id->setLabel('Digital Media Platform')
             ->setAttrib('class', 'formDataElement')
             ->setRequired(true)
-            ->addValidator('NotEmpty', true, array('messages' => 'Please select a Digital Media Platform.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please select a Digital Media Platform.']);
 
         /* --------------------------------------------------------------
          * Polymorphic Parent Select Elements (All Required=False here, enforced in Controller)
@@ -81,11 +81,11 @@ class Default_Form_Digitalpresence extends Zend_Form
          * -------------------------------------------------------------- */
         $digitaladdress = new Zend_Form_Element_Text('digitaladdress');
         $digitaladdress->setLabel('URL / Handle')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '255', 'placeholder' => 'e.g., https://linkedin.com/in/username or @handle'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '255', 'placeholder' => 'e.g., https://linkedin.com/in/username or @handle'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', true, array('messages' => 'Please enter the URL or Handle.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please enter the URL or Handle.']);
         // Note: SSOT Regex omitted intentionally here as this field contains URLs/Handles with special characters.
 
         /* --------------------------------------------------------------
@@ -93,7 +93,7 @@ class Default_Form_Digitalpresence extends Zend_Form
          * -------------------------------------------------------------- */
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Description')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -111,7 +111,7 @@ class Default_Form_Digitalpresence extends Zend_Form
          * -------------------------------------------------------------- */
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save')
-            ->setAttribs(array('id' => 'submitbutton', 'class' => 'actbtn_btn'));
+            ->setAttribs(['id' => 'submitbutton', 'class' => 'actbtn_btn']);
 
         $urlAction  = "'digitalpresence/save/format/json'";
         $jsFunction = "'redirecttocontroller(\\'digitalpresence\\');'";
@@ -120,7 +120,7 @@ class Default_Form_Digitalpresence extends Zend_Form
         /* --------------------------------------------------------------
          * Build Form & Apply Decorators (SSOT VI.7)
          * -------------------------------------------------------------- */
-        $this->addElements(array(
+        $this->addElements([
             $idElement,
             $digitalmedia_id,
             $company_id,
@@ -135,11 +135,11 @@ class Default_Form_Digitalpresence extends Zend_Form
             $description,
             $isactive,
             $submit
-        ));
+        ]);
 
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
-            $element->setDecorators(array('ViewHelper'));
+            $element->setDecorators(['ViewHelper']);
         }
     }
 }

@@ -33,19 +33,19 @@ class Default_Form_Hierarchy extends Zend_Form
 		$level_1 = new Zend_Form_Element_Multiselect('level_1');
         $level_1->setLabel('Level one');	
 		$level_1->setRequired(true);
-		$level_1->addValidator('NotEmpty', false, array('messages' => 'Please select level one employees.')); 
+		$level_1->addValidator('NotEmpty', false, ['messages' => 'Please select level one employees.']); 
 		$level_1->setRegisterInArrayValidator(false);
 
 		$level_2 = new Zend_Form_Element_Multiselect('level_2');
         $level_2->setLabel('Level two');
 		$level_2->setRequired(true);
-		$level_2->addValidator('NotEmpty', false, array('messages' => 'Please select level two employees.')); 		
+		$level_2->addValidator('NotEmpty', false, ['messages' => 'Please select level two employees.']); 		
 		$level_2->setRegisterInArrayValidator(false);
 		
 		$level_3 = new Zend_Form_Element_Multiselect('level_3');
         $level_3->setLabel('Level three');	
 		$level_3->setRequired(true);
-		$level_3->addValidator('NotEmpty', false, array('messages' => 'Please select level three employees.')); 		
+		$level_3->addValidator('NotEmpty', false, ['messages' => 'Please select level three employees.']); 		
 		$level_3->setRegisterInArrayValidator(false);
 		
 		$level_4 = new Zend_Form_Element_Multiselect('level_4');
@@ -80,10 +80,10 @@ class Default_Form_Hierarchy extends Zend_Form
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 		
-		$this->addElements(array($id,$level_1,$level_2,$level_3,$level_4,$level_5,$level_6,$level_7,$level_8,$level_9,$level_10,$submit));
-        $this->setElementDecorators(array('ViewHelper')); 
-		$this->setElementDecorators(array(
+		$this->addElements([$id,$level_1,$level_2,$level_3,$level_4,$level_5,$level_6,$level_7,$level_8,$level_9,$level_10,$submit]);
+        $this->setElementDecorators(['ViewHelper']); 
+		$this->setElementDecorators([
                     'UiWidgetElement',
-        ),array('start_date'));
+        ],['start_date']);
 	}
 }

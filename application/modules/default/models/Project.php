@@ -63,7 +63,7 @@ class Default_Model_Project extends Zend_Db_Table_Abstract
      */
     public function getPairs($activeOnly = true)
     {
-        $select = $this->select()->from($this->_name, array('id', 'name'))->order('name ASC');
+        $select = $this->select()->from($this->_name, ['id', 'name'])->order('name ASC');
         if ($activeOnly) {
             $select->where('isactive = ?', 1);
         }
@@ -73,7 +73,7 @@ class Default_Model_Project extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if (!empty($searchData) && $searchData !== 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -94,24 +94,24 @@ class Default_Model_Project extends Zend_Db_Table_Abstract
         }
 
         // SSOT Mandatory: 'action' => 'Action' must be the first element
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'              => 'Action',
             'code'                => 'Code',
             'name'                => 'Project Name',
             'representative_name' => 'Project Manager',
             'status_text'         => 'Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
             'perPage'        => $perPage,
             'tablecontent'   => $tableContent,
             'objectname'     => 'project',
-            'extra'          => array(),
+            'extra'          => [],
             'tableheader'    => $tableHeaders,
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
@@ -119,10 +119,10 @@ class Default_Model_Project extends Zend_Db_Table_Abstract
             'menuName'       => 'Projects',
             'call'           => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => array(
-                'status_text' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive'))
-            )
-        );
+            'search_filters' => [
+                'status_text' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']]
+            ]
+        ];
     }
 
     public function getGridData($sort, $by, $pageNo, $perPage, $searchQuery = '')
@@ -136,18 +136,18 @@ class Default_Model_Project extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from(
-                array('p' => $this->_name),
-                array(
+                ['p' => $this->_name],
+                [
                     'id' => 'p.id',
                     'code',
                     'name',
                     'status_text' => new Zend_Db_Expr("CASE WHEN p.isactive = 1 THEN 'Active' ELSE 'Inactive' END")
-                )
+                ]
             )
             ->joinInner( // Inner join as representative_id is NOT NULL
-                array('e' => 'main_employee'),
+                ['e' => 'main_employee'],
                 'p.representative_id = e.id',
-                array('representative_name' => 'e.userfullname')
+                ['representative_name' => 'e.userfullname']
             )
             ->where('p.isactive != ?', 5);
 
@@ -174,7 +174,7 @@ class Default_Model_Project extends Zend_Db_Table_Abstract
         if (!empty($id)) {
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = $currentDate;
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return 'update';
         }
 
@@ -193,13 +193,13 @@ class Default_Model_Project extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => 5,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
+        ];
 
-        return $this->update($data, array('id = ?' => (int)$id));
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     public function toggleStatus($id, $status)
@@ -207,13 +207,13 @@ class Default_Model_Project extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => (int)$status,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
+        ];
 
-        return $this->update($data, array('id = ?' => (int)$id));
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* =================================================================================
@@ -239,7 +239,7 @@ class Default_Model_Project extends Zend_Db_Table_Abstract
 
         // Check if mapped to any participants in the participant mapping table
         $mapSelect = $db->select()
-            ->from('map_project_participant', array('id'))
+            ->from('map_project_participant', ['id'])
             ->where('project_id = ?', (int)$id)
             ->where('isactive = ?', 1);
 
@@ -247,7 +247,7 @@ class Default_Model_Project extends Zend_Db_Table_Abstract
 
         // Check if mapped to a Distribution List
         $distSelect = $db->select()
-            ->from('main_distribution_list', array('id'))
+            ->from('main_distribution_list', ['id'])
             ->where('project_id = ?', (int)$id)
             ->where('isactive = ?', 1);
         if ($db->fetchRow($distSelect)) return true;
@@ -320,7 +320,7 @@ class Default_Model_Project extends Zend_Db_Table_Abstract
         $currentDate = gmdate("Y-m-d H:i:s");
 
         // 1. Hard-delete all existing participant mappings for this project.
-        $db->delete('map_project_participant', array('project_id = ?' => (int)$projectId));
+        $db->delete('map_project_participant', ['project_id = ?' => (int)$projectId]);
 
         // 2. Iterate through the submitted participant types and IDs, and insert the new mappings.
         foreach ($participants as $type => $ids) {

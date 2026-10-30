@@ -13,8 +13,8 @@ class Schedudle_Form_Logreport extends Zend_Form
         $uploadFile = new Zend_Form_Element_File('uploadFile');
         $submit = new Zend_Form_Element_Submit('submit');
 
-        $this->addElements(array($id,$uploadFile,$submit));
-         $this->setElementDecorators(array('ViewHelper'));
+        $this->addElements([$id,$uploadFile,$submit]);
+         $this->setElementDecorators(['ViewHelper']);
     }
 }
 ?>

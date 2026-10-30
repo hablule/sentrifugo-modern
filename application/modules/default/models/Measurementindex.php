@@ -37,8 +37,8 @@ class Default_Model_Measurementindex extends Zend_Db_Table_Abstract
 
         $bank = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('mi'=>'main_measurementindex'),array('id'=>'mi.measurementindex_id','isactivee'=>'if(mi.isactive="Y","Yes","No")','mi.*'))
-			->joinLeft(array('m'=>'main_measurement'),'mi.measurement_id=m.measurement_id',array('name'=>'m.name','valuetype'=>'m.valuetype'))
+            ->from(['mi'=>'main_measurementindex'],['id'=>'mi.measurementindex_id','isactivee'=>'if(mi.isactive="Y","Yes","No")','mi.*'])
+			->joinLeft(['m'=>'main_measurement'],'mi.measurement_id=m.measurement_id',['name'=>'m.name','valuetype'=>'m.valuetype'])
             ->order("$by $sort")
             ->where($where)
             ->limitPage($pageNo, $perPage);
@@ -48,7 +48,7 @@ class Default_Model_Measurementindex extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $a = '', $b = '', $c = '', $d = '')
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
             foreach ($searchValues as $key => $val) {
@@ -58,24 +58,24 @@ class Default_Model_Measurementindex extends Zend_Db_Table_Abstract
             $searchQuery = rtrim($searchQuery, " AND");
         }
         $objName = 'measurementindex';
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'name' => 'Measurement',
             'valuetype' => 'Value Type',
 			'value' => 'value',
             'description' => 'Description',
             'isactivee' => 'Active',
-        );
+        ];
 
         $tablecontent = $this->getData($sort, $by, $pageNo, $perPage, $searchQuery);
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
             'perPage' => $perPage,
             'tablecontent' => $tablecontent,
             'objectname' => $objName,
-            'extra' => array(),
+            'extra' => [],
             'add'=>'add',
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
@@ -83,22 +83,22 @@ class Default_Model_Measurementindex extends Zend_Db_Table_Abstract
             'searchArray' => $searchArray,
             'call' => $call,
             'dashboardcall' => $dashboardcall,
-            'search_filters' => array(
-                'isactivee' => array(
+            'search_filters' => [
+                'isactivee' => [
                     'type' => 'select',
-                    'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-					'valuetype' => array(
+                    'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+					'valuetype' => [
 						'type' => 'select',
-						'filter_data' => array(''=>'All','SPECIFIC'=>'SPECIFIC','LIST'=>'LIST')),
-            )
-        );
+						'filter_data' => [''=>'All','SPECIFIC'=>'SPECIFIC','LIST'=>'LIST']],
+            ]
+        ];
         return $dataTmp;
     }
     public function getskillsourcelist()
 	{
 	     $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('sc'=>'main_measurement'),array('measurement_id'=>'sc.measurement_id','name'=>'sc.name'))
+						->from(['sc'=>'main_measurement'],['measurement_id'=>'sc.measurement_id','name'=>'sc.name'])
 						->where('sc.isactive="Y" ');
 						
 		
@@ -123,7 +123,7 @@ class Default_Model_Measurementindex extends Zend_Db_Table_Abstract
 	{
 	     $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('m'=>'main_measurementindex'),array('measurementindex_id'=>'m.measurementindex_id','name'=>'m.value'))
+						->from(['m'=>'main_measurementindex'],['measurementindex_id'=>'m.measurementindex_id','name'=>'m.value'])
 						->where('m.isactive="Y" ');
 						
 		

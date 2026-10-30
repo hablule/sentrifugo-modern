@@ -60,13 +60,13 @@ class Default_Model_Projectparticipant extends Zend_Db_Table_Abstract
      */
     public function getPairs($activeOnly = true)
     {
-        return array();
+        return [];
     }
 
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if (!empty($searchData) && $searchData !== 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -89,25 +89,25 @@ class Default_Model_Projectparticipant extends Zend_Db_Table_Abstract
             }
         }
 
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'           => 'Action',
             'project_name'     => 'Project Name',
             'participant_type' => 'Participant Type',
             'participant_name' => 'Participant Name',
             'description'      => 'Description',
             'status_text'      => 'Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
             'perPage'        => $perPage,
             'tablecontent'   => $tableContent,
             'objectname'     => 'projectparticipant', // Controller name
-            'extra'          => array(),
+            'extra'          => [],
             'tableheader'    => $tableHeaders,
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
@@ -115,10 +115,10 @@ class Default_Model_Projectparticipant extends Zend_Db_Table_Abstract
             'menuName'       => 'Project Participants',
             'call'           => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => array(
-                'status_text' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive'))
-            )
-        );
+            'search_filters' => [
+                'status_text' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']]
+            ]
+        ];
     }
 
     /**
@@ -140,8 +140,8 @@ class Default_Model_Projectparticipant extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from(
-                array('m' => $this->_name),
-                array(
+                ['m' => $this->_name],
+                [
                     'id' => 'm.id',
                     'description',
                     'participant_type' => new Zend_Db_Expr("
@@ -158,22 +158,22 @@ class Default_Model_Projectparticipant extends Zend_Db_Table_Abstract
                     "),
                     'participant_name' => new Zend_Db_Expr("COALESCE(emp.userfullname, comp.name, sbu.name, divi.name, dept.name, sec.name, team.name, '—')"),
                     'status_text' => new Zend_Db_Expr("CASE WHEN m.isactive = 1 THEN 'Active' ELSE 'Inactive' END")
-                )
+                ]
             )
             // Primary Project Join
             ->joinInner(
-                array('proj' => 'main_project'),
+                ['proj' => 'main_project'],
                 'm.project_id = proj.id',
-                array('project_name' => 'proj.name')
+                ['project_name' => 'proj.name']
             )
             // Poly-Participant Resolution Joins
-            ->joinLeft(array('emp' => 'main_employee'), 'm.employee_id = emp.id', array())
-            ->joinLeft(array('comp' => 'main_company'), 'm.company_id = comp.id', array())
-            ->joinLeft(array('sbu' => 'main_businessunit'), 'm.sbunit_id = sbu.id', array())
-            ->joinLeft(array('divi' => 'main_division'), 'm.division_id = divi.id', array())
-            ->joinLeft(array('dept' => 'main_department'), 'm.department_id = dept.id', array())
-            ->joinLeft(array('sec' => 'main_section'), 'm.section_id = sec.id', array())
-            ->joinLeft(array('team' => 'main_team'), 'm.team_id = team.id', array())
+            ->joinLeft(['emp' => 'main_employee'], 'm.employee_id = emp.id', [])
+            ->joinLeft(['comp' => 'main_company'], 'm.company_id = comp.id', [])
+            ->joinLeft(['sbu' => 'main_businessunit'], 'm.sbunit_id = sbu.id', [])
+            ->joinLeft(['divi' => 'main_division'], 'm.division_id = divi.id', [])
+            ->joinLeft(['dept' => 'main_department'], 'm.department_id = dept.id', [])
+            ->joinLeft(['sec' => 'main_section'], 'm.section_id = sec.id', [])
+            ->joinLeft(['team' => 'main_team'], 'm.team_id = team.id', [])
             ->where('m.isactive != ?', 5);
 
         if (!empty($searchQuery)) {
@@ -199,7 +199,7 @@ class Default_Model_Projectparticipant extends Zend_Db_Table_Abstract
         if (!empty($id)) {
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = $currentDate;
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return 'update';
         }
 
@@ -218,13 +218,13 @@ class Default_Model_Projectparticipant extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => 5,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
+        ];
 
-        return $this->update($data, array('id = ?' => (int)$id));
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     public function toggleStatus($id, $status)
@@ -232,13 +232,13 @@ class Default_Model_Projectparticipant extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => (int)$status,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
+        ];
 
-        return $this->update($data, array('id = ?' => (int)$id));
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* =================================================================================

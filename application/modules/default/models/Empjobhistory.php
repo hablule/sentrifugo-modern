@@ -34,11 +34,11 @@ class Default_Model_Empjobhistory extends Zend_Db_Table_Abstract
 		
 		$empjobhistoryData = $this->select()
     					   ->setIntegrityCheck(false)	 
-						   ->from(array('e' => 'main_empjobhistory'),array('id'=>'e.id','active_company'=>'if(e.active_company = 1,"Yes","No")','start_date'=>'DATE_FORMAT(e.start_date,"'.DATEFORMAT_MYSQL.'")','end_date'=>'DATE_FORMAT(e.end_date,"'.DATEFORMAT_MYSQL.'")'))
+						   ->from(['e' => 'main_empjobhistory'],['id'=>'e.id','active_company'=>'if(e.active_company = 1,"Yes","No")','start_date'=>'DATE_FORMAT(e.start_date,"'.DATEFORMAT_MYSQL.'")','end_date'=>'DATE_FORMAT(e.end_date,"'.DATEFORMAT_MYSQL.'")'])
 						//    ->joinLeft(array('p'=>'main_positions'),'e.positionheld=p.id AND p.isactive = 1',array('positionheld'=>'p.positionname'))
 						//    ->joinLeft(array('d'=>'main_departments'),'e.department=d.id AND d.isactive = 1',array('department'=>'d.deptname'))
 						//    ->joinLeft(array('j'=>'main_jobtitles'),'e.jobtitleid=j.id AND j.isactive = 1',array('jobtitleid'=>'j.jobtitlename'))
-						   ->joinLeft(array('c'=>'tm_clients'),'c.id=e.client_id AND c.is_active = 1',array('client_id'=>'c.client_name'))
+						   ->joinLeft(['c'=>'tm_clients'],'c.id=e.client_id AND c.is_active = 1',['client_id'=>'c.client_name'])
 						   ->where($where)
     					   ->order("$by $sort") 
     					   ->limitPage($pageNo, $perPage);
@@ -49,7 +49,7 @@ class Default_Model_Empjobhistory extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('ej'=>'main_empjobhistory'),array('ej.*'))
+						->from(['ej'=>'main_empjobhistory'],['ej.*'])
 						->where('ej.id='.$id.' AND ej.isactive = 1');		
 		return $this->fetchAll($select)->toArray();
 	}
@@ -68,7 +68,7 @@ class Default_Model_Empjobhistory extends Zend_Db_Table_Abstract
 	}
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$exParam1='',$exParam2='',$exParam3='',$exParam4='')
 	{		
-        $searchQuery = '';  $searchArray = array();       $data = array();		
+        $searchQuery = '';  $searchArray = [];       $data = [];		
 		if($searchData != '' && $searchData!='undefined')
 		{
 			$searchValues = json_decode($searchData);
@@ -104,19 +104,19 @@ class Default_Model_Empjobhistory extends Zend_Db_Table_Abstract
 		}
 		$objName = 'empjobhistory';
 		
-		$tableFields = array('action'=>'Action','department'=>'Department','client_id'=>'Client','start_date'=>'From','end_date'=>'To');
+		$tableFields = ['action'=>'Action','department'=>'Department','client_id'=>'Client','start_date'=>'From','end_date'=>'To'];
 		
 		$tablecontent = $this->getEmpJobHistoryData($sort, $by, $pageNo, $perPage,$searchQuery,$exParam1);     
 		
-		$bool_arr = array('' => 'All',1 => 'Yes',2 => 'No');
-		$dataTmp = array('userid'=>$exParam1,
+		$bool_arr = ['' => 'All',1 => 'Yes',2 => 'No'];
+		$dataTmp = ['userid'=>$exParam1,
 						'sort' => $sort,
 						'by' => $by,
 						'pageNo' => $pageNo,
 						'perPage' => $perPage,				
 						'tablecontent' => $tablecontent,
 						'objectname' => $objName,
-						'extra' => array(),
+						'extra' => [],
 						'tableheader' => $tableFields,
 						'jsGridFnName' => 'getEmployeeAjaxgridData',
 						'jsFillFnName' => '',
@@ -129,15 +129,15 @@ class Default_Model_Empjobhistory extends Zend_Db_Table_Abstract
 
 						'call'=>$call,
 						'context'=>$exParam2,
-						'search_filters' => array(
-						  'active_company' => array(
+						'search_filters' => [
+						  'active_company' => [
                                 'type' => 'select',
                                 'filter_data' => $bool_arr,
-                            ), 
-						  'start_date'=>array('type'=>'datepicker'),
-						  'end_date'=>array('type'=>'datepicker')
-						)
-					);			
+                            ], 
+						  'start_date'=>['type'=>'datepicker'],
+						  'end_date'=>['type'=>'datepicker']
+						]
+					];			
 		return $dataTmp;
 	}
 	

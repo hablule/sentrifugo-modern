@@ -47,7 +47,7 @@ class Default_Form_Disciplinaryincident extends Zend_Form
                 $employee_name->setRegisterInArrayValidator(false);
                 $employee_name->setRequired(true);
                 $employee_name->addMultiOption('','Select An Employee');
-                $employee_name->addValidator('NotEmpty', false, array('messages' => 'Please Select the Employee Name.'));
+                $employee_name->addValidator('NotEmpty', false, ['messages' => 'Please Select the Employee Name.']);
 
                 $employee_id = new Zend_Form_Element_Text("emp_id");        
                 $employee_id->setLabel("Employee Id");
@@ -56,7 +56,7 @@ class Default_Form_Disciplinaryincident extends Zend_Form
                 $employee_id->setAttrib('readonly', 'true');
                 $employee_id->setRequired(true);
                 $employee_id->setAttrib('onfocus', 'this.blur()');
-                $employee_id->addValidator('NotEmpty', false, array('messages' => 'Employee Id can\'t be empty.'));        
+                $employee_id->addValidator('NotEmpty', false, ['messages' => 'Employee Id can\'t be empty.']);        
 
                 $businessunit_name = new Zend_Form_Element_Select("employee_bu_id"); 
                 $businessunit_name->setAttrib('onchange', 'displayEmployeeDepartments(this,"employee_dept_id","")');
@@ -64,7 +64,7 @@ class Default_Form_Disciplinaryincident extends Zend_Form
                 $businessunit_name->setAttrib('name', 'employee_bu_id');
                 $businessunit_name->setAttrib('id', 'employee_bu_id');
                 $businessunit_name->setRequired(true);
-                $businessunit_name->addValidator('NotEmpty', false, array('messages' => 'Please Select Business Unit.'));
+                $businessunit_name->addValidator('NotEmpty', false, ['messages' => 'Please Select Business Unit.']);
                 $bunitModel = new Default_Model_Businessunits();
                 $bunitdata = $bunitModel->fetchAll('isactive="Y"','name');
                 $businessunit_name->addMultiOption('','Select Business Unit');
@@ -100,29 +100,29 @@ class Default_Form_Disciplinaryincident extends Zend_Form
                 $reporting_manager->setRequired(true);
                 $reporting_manager->setAttrib('readonly', 'true');
                 $reporting_manager->setAttrib('onfocus', 'this.blur()');
-                $reporting_manager->addValidator('NotEmpty', false, array('messages' => 'Reporting Manager can\'t be empty.'));
+                $reporting_manager->addValidator('NotEmpty', false, ['messages' => 'Reporting Manager can\'t be empty.']);
 
                 $date_of_occurrence = new ZendX_JQuery_Form_Element_DatePicker('date_of_occurrence');
                 $date_of_occurrence->setLabel("Date of Occurrence");
-                $date_of_occurrence->setOptions(array('class' => 'brdr_none'));
+                $date_of_occurrence->setOptions(['class' => 'brdr_none']);
                 $date_of_occurrence->setRequired(true);
                 $date_of_occurrence->setAttrib('onfocus', 'this.blur()');
-                $date_of_occurrence->addValidator('NotEmpty', false, array('messages' => 'Please Select Date of Occurrence.'));
+                $date_of_occurrence->addValidator('NotEmpty', false, ['messages' => 'Please Select Date of Occurrence.']);
 
                 $expiry_date = new ZendX_JQuery_Form_Element_DatePicker('violation_expiry');
                 $expiry_date->setLabel("Expiry Date");
-                $expiry_date->setOptions(array('class' => 'brdr_none'));
+                $expiry_date->setOptions(['class' => 'brdr_none']);
                 $expiry_date->setRequired(true);
                 $expiry_date->setAttrib('onfocus', 'this.blur()');
                 $expiry_date->setRequired(true);
-                $expiry_date->addValidator('NotEmpty', false, array('messages' => 'Please Select Expiry Date.'));	        
+                $expiry_date->addValidator('NotEmpty', false, ['messages' => 'Please Select Expiry Date.']);	        
 
                 $type_of_violation = new Zend_Form_Element_Select("violation_id");        
                 $type_of_violation->setLabel("Type of Violation");
                 $type_of_violation->setAttrib('name', 'violation_id');
                 $type_of_violation->setAttrib('id', 'violation_id');
                 $type_of_violation->setRequired(true);
-                $type_of_violation->addValidator('NotEmpty', false, array('messages' => 'Please Select Type of Violation.'));
+                $type_of_violation->addValidator('NotEmpty', false, ['messages' => 'Please Select Type of Violation.']);
 
                 $violation_description = new Zend_Form_Element_Textarea("employer_statement");
                 $violation_description->setLabel("Violation Description");
@@ -131,26 +131,26 @@ class Default_Form_Disciplinaryincident extends Zend_Form
                 $violation_description->setRequired(true);
                 $violation_description->setAttrib('rows', 10);
                 $violation_description->setAttrib('cols', 50);
-                $violation_description->addValidator('NotEmpty', false, array('messages' => 'Please Enter Violation Description.'));                
+                $violation_description->addValidator('NotEmpty', false, ['messages' => 'Please Enter Violation Description.']);                
 
                 $employee_appeal = new Zend_Form_Element_Radio("employee_appeal");
                 $employee_appeal->setLabel("Employee Appeal");
                 $employee_appeal->setAttrib('name', 'employee_appeal');
                 $employee_appeal->setAttrib('id', 'employee_appeal');
-                $employee_appeal->addMultiOptions(array(
+                $employee_appeal->addMultiOptions([
                         '1' => 'Yes',
                         '2' => 'No',
-                ));
+                ]);
                 $employee_appeal->setSeparator('');
                 $employee_appeal->setValue(1); 							   
                 $employee_appeal->setRegisterInArrayValidator(false);
                 if(defined('sentrifugo_gilbert')) {
                 	$employee_appeal->setRequired(true);
-		            $employee_appeal->addValidator('NotEmpty', false, array('messages' => 'Please select the Employee Appeal.'));
+		            $employee_appeal->addValidator('NotEmpty', false, ['messages' => 'Please select the Employee Appeal.']);
                 }else{
 	                if($id_val!='') {
 		                $employee_appeal->setRequired(true);
-		                $employee_appeal->addValidator('NotEmpty', false, array('messages' => 'Please select the Employee Appeal.'));
+		                $employee_appeal->addValidator('NotEmpty', false, ['messages' => 'Please select the Employee Appeal.']);
 	                }
                 }    
 
@@ -163,11 +163,11 @@ class Default_Form_Disciplinaryincident extends Zend_Form
                 $employee_statement->setAttrib('cols', 50);
                 if(defined('sentrifugo_gilbert')) {
                 	$employee_statement->setRequired(true);
-	                $employee_statement->addValidator('NotEmpty', false, array('messages' => 'Please Enter Employee Statement.'));
+	                $employee_statement->addValidator('NotEmpty', false, ['messages' => 'Please Enter Employee Statement.']);
                 }else {
 	                if($id_val!='') {
 	                	$employee_statement->setRequired(true);
-	                	$employee_statement->addValidator('NotEmpty', false, array('messages' => 'Please Enter Employee Statement.'));
+	                	$employee_statement->addValidator('NotEmpty', false, ['messages' => 'Please Enter Employee Statement.']);
 	                }
                 }                                
 
@@ -183,20 +183,20 @@ class Default_Form_Disciplinaryincident extends Zend_Form
                 }
                 $verdict->setAttrib('name', 'cao_verdict');
                 $verdict->setAttrib('id', 'cao_verdict');
-                $verdict->addMultiOptions(array(
+                $verdict->addMultiOptions([
                         '1' => 'Guilty',
                         '2' => 'Not Guilty',
-                ));
+                ]);
                 $verdict->setSeparator('');
                 $verdict->setValue(1); 									   
                 $verdict->setRegisterInArrayValidator(false);
                 if(defined('sentrifugo_gilbert')) {
                 	$verdict->setRequired(true);
-		            $verdict->addValidator('NotEmpty', false, array('messages' => 'Please select the Verdict.'));
+		            $verdict->addValidator('NotEmpty', false, ['messages' => 'Please select the Verdict.']);
                 }else {
 	                if($id_val!='') {
 		                $verdict->setRequired(true);
-		                $verdict->addValidator('NotEmpty', false, array('messages' => 'Please select the Verdict.'));
+		                $verdict->addValidator('NotEmpty', false, ['messages' => 'Please select the Verdict.']);
 	                }
                 }
 
@@ -211,11 +211,11 @@ class Default_Form_Disciplinaryincident extends Zend_Form
                 $corrective_action->addMultiOption('Other','Other');
                 if(defined('sentrifugo_gilbert')) {
                 	$corrective_action->setRequired(true);
-		            $corrective_action->addValidator('NotEmpty', false, array('messages' => 'Please Select Corrective Action.'));
+		            $corrective_action->addValidator('NotEmpty', false, ['messages' => 'Please Select Corrective Action.']);
                 }else{
 	                if($id_val!='') {
 		                $corrective_action->setRequired(true);
-		                $corrective_action->addValidator('NotEmpty', false, array('messages' => 'Please Select Corrective Action.'));
+		                $corrective_action->addValidator('NotEmpty', false, ['messages' => 'Please Select Corrective Action.']);
 	                }
                 }                          
                 $corrective_action_other = new Zend_Form_Element_Text("corrective_action_text");
@@ -234,19 +234,19 @@ class Default_Form_Disciplinaryincident extends Zend_Form
 
                 if(defined('sentrifugo_gilbert'))
                 {
-                        $this->addElements(array($id,$incident_raised_by,$employee_name,$employee_id,$businessunit_name, $department_name,$job_title,$reporting_manager,$date_of_occurrence,$type_of_violation,$violation_description,$employee_appeal,$employee_statement,$verdict,$corrective_action,$corrective_action_other,$submit));
+                        $this->addElements([$id,$incident_raised_by,$employee_name,$employee_id,$businessunit_name, $department_name,$job_title,$reporting_manager,$date_of_occurrence,$type_of_violation,$violation_description,$employee_appeal,$employee_statement,$verdict,$corrective_action,$corrective_action_other,$submit]);
 
-                        $this->setElementDecorators(array('ViewHelper')); 
-                        $this->setElementDecorators(array(
+                        $this->setElementDecorators(['ViewHelper']); 
+                        $this->setElementDecorators([
                         'UiWidgetElement',
-                        ),array('date_of_occurrence')); 
+                        ],['date_of_occurrence']); 
                 }
                 else
                 {
-                        $this->addElements(array($id,$incident_raised_by,$employee_name,$employee_id,$businessunit_name, $department_name,$job_title,$reporting_manager,$date_of_occurrence,$type_of_violation,$violation_description,$employee_appeal,$employee_statement,$verdict,$corrective_action,$corrective_action_other,$expiry_date,$submit));
+                        $this->addElements([$id,$incident_raised_by,$employee_name,$employee_id,$businessunit_name, $department_name,$job_title,$reporting_manager,$date_of_occurrence,$type_of_violation,$violation_description,$employee_appeal,$employee_statement,$verdict,$corrective_action,$corrective_action_other,$expiry_date,$submit]);
 
-                        $this->setElementDecorators(array('ViewHelper')); 
-                        $this->setElementDecorators(array('UiWidgetElement',),array('date_of_occurrence','violation_expiry')); 		
+                        $this->setElementDecorators(['ViewHelper']); 
+                        $this->setElementDecorators(['UiWidgetElement',],['date_of_occurrence','violation_expiry']); 		
                 }
         }
 }

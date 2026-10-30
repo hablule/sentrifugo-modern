@@ -21,7 +21,7 @@ class Default_Form_Resume extends Zend_Form{
         // $candidatename = new Zend_Form_Element_Text('candidatename');
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Next');
-        $this->addElements(array($id,$submit));
+        $this->addElements([$id,$submit]);
         
     }
 }

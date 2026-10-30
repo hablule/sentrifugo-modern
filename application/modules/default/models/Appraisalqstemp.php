@@ -23,9 +23,9 @@ class Default_Model_Appraisalqstemp extends Zend_Db_Table_Abstract
 {
     protected $_name = 'main_pa_questions_privileges_temp';
     protected $_primary = 'id';
-    
-    	
-    
+
+
+
     /**
      * This function is used to save/update data in database.
      * @parameters
@@ -38,13 +38,13 @@ class Default_Model_Appraisalqstemp extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('qp'=>'main_pa_questions_privileges_temp'),array('qp.hr_qs'))
+						->from(['qp'=>'main_pa_questions_privileges_temp'],['qp.hr_qs'])
 					    ->where('qp.isactive = 1 AND qp.pa_initialization_id='.$appraisalid.' ');
 		return $this->fetchAll($select)->toArray();	
 	}
     public function SaveorUpdateData($data, $where)
     {
-		
+
         if($where != '')
         {
             $this->update($data, $where);
@@ -57,12 +57,12 @@ class Default_Model_Appraisalqstemp extends Zend_Db_Table_Abstract
             return $id;
         }
     }
-    
+
 	public function getAssignedGroupsData($appraisalid)
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();
-		$options = array();
-		
+		$options = [];
+
 		if($appraisalid !='')
 		{
 		 	$query = "select group_id,employee_id,hr_qs,hr_group_qs_privileges,line_manager_1,line_manager_2,line_manager_3,
@@ -71,15 +71,15 @@ class Default_Model_Appraisalqstemp extends Zend_Db_Table_Abstract
             $result = $db->query($query);
             $options = $result->fetchAll();
 		}   
-            
+
             return $options;
 	}
-	
+
 	public function getLine1ManagerId($appraisalid)
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();
-		$options = array();
-		
+		$options = [];
+
 		if($appraisalid !='')
 		{
 		 	$query = "select t.line_manager_1,e.userfullname,e.emailaddress from main_pa_questions_privileges_temp t
@@ -89,10 +89,10 @@ class Default_Model_Appraisalqstemp extends Zend_Db_Table_Abstract
             $result = $db->query($query);
             $options = $result->fetchAll();
 		}   
-            
+
             return $options;
 	}
-	
+
 	public function updateQsTempData($appraisalid,$logindetails)
 	{
 		$group = $logindetails['loginusergroup'];
@@ -103,12 +103,12 @@ class Default_Model_Appraisalqstemp extends Zend_Db_Table_Abstract
 					modifiedby_role=".$logindetails['loginuserrole'].",modifiedby_group=".$group.",modifieddate=now()  
 					where pa_initialization_id = $appraisalid and module_flag = 1");
 	}
-	
+
 	public function getTempEmployeeIds($appraisalid,$line1id)
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();
-		$options = array();
-		
+		$options = [];
+
 		if($appraisalid !='' && $line1id!='')
 		{
 		 	$query = "select group_concat(t.employee_id) empids from main_pa_questions_privileges_temp t
@@ -117,9 +117,9 @@ class Default_Model_Appraisalqstemp extends Zend_Db_Table_Abstract
             $result = $db->query($query);
             $options = $result->fetchAll();
 		}   
-            
+
             return $options;
 	}
-    
-    
+
+
 }//end of class

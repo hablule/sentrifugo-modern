@@ -32,7 +32,7 @@ class Default_Model_Settings extends Zend_Db_Table_Abstract{
 	  
       $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('m'=>'main_menu'),array('m.menuName','m.url','m.iconPath','m.id'))
+						->from(['m'=>'main_menu'],['m.menuName','m.url','m.iconPath','m.id'])
 						
 	                    ->where('m.url != "'.$sign.'" '.$query.' AND m.id IN(?)',$menuIdsArr);
 
@@ -47,7 +47,7 @@ class Default_Model_Settings extends Zend_Db_Table_Abstract{
 	  $sign = '/#';
       $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('m'=>'main_menu'),array('m.menuName','m.url','m.iconPath'))
+						->from(['m'=>'main_menu'],['m.menuName','m.url','m.iconPath'])
 						->where('m.id="'.$menuid.'" AND m.url != "'.$sign.'"');
 	                    
         
@@ -67,7 +67,7 @@ class Default_Model_Settings extends Zend_Db_Table_Abstract{
 	public function getMenuIdCount($userid){
       $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('s'=>'main_settings'), array('count'=>'COUNT(s.id)'))
+						->from(['s'=>'main_settings'], ['count'=>'COUNT(s.id)'])
 						->where('s.userid="'.$userid.'" AND s.flag=1 AND s.isactive=1');
 	  
 		return $this->fetchAll($select)->toArray();
@@ -78,7 +78,7 @@ class Default_Model_Settings extends Zend_Db_Table_Abstract{
 
 		$select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('s'=>'main_settings'),array('s.menuid'))
+						->from(['s'=>'main_settings'],['s.menuid'])
 						->where('s.userid='.$userid.' AND s.flag="'.$flag.'" AND s.isactive=1');
 		return $this->fetchAll($select)->toArray();
 
@@ -88,7 +88,7 @@ class Default_Model_Settings extends Zend_Db_Table_Abstract{
 
 		$select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('s'=>'main_settings'),array('s.menuid','s.menuicon'))
+						->from(['s'=>'main_settings'],['s.menuid','s.menuicon'])
 						->where('s.userid="'.$userid.'" AND s.flag=2 AND s.isactive=1');
 		return $this->fetchAll($select)->toArray();
 
@@ -97,7 +97,7 @@ class Default_Model_Settings extends Zend_Db_Table_Abstract{
 	public function getActivemenuCount($userid){
        $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('s'=>'main_settings'), array('count'=>'COUNT(s.id)'))
+						->from(['s'=>'main_settings'], ['count'=>'COUNT(s.id)'])
 						->where('s.userid="'.$userid.'" AND s.flag=1 AND s.isactive=1 AND s.menuid <> ""');
 	  
 		return $this->fetchAll($select)->toArray();
@@ -108,7 +108,7 @@ class Default_Model_Settings extends Zend_Db_Table_Abstract{
 	public function getActiveiconCount($userid){
       $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('s'=>'main_settings'), array('count'=>'COUNT(s.id)'))
+						->from(['s'=>'main_settings'], ['count'=>'COUNT(s.id)'])
 						->where('s.userid='.$userid.' AND s.flag=2 AND s.isactive=1 AND s.menuid <> ""');
 	  
 		return $this->fetchAll($select)->toArray();
@@ -118,10 +118,10 @@ class Default_Model_Settings extends Zend_Db_Table_Abstract{
 	
 	public function getMenucountwithflag($userid){
 	
-	   $flagArr = array(1,2);
+	   $flagArr = [1,2];
        $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('s'=>'main_settings'), array('flag','count'=>'COUNT(s.id)'))
+						->from(['s'=>'main_settings'], ['flag','count'=>'COUNT(s.id)'])
 						->where('s.userid="'.$userid.'" AND s.isactive=1 AND s.menuid <> ""  AND s.flag IN(?)',$flagArr)
 						->group('s.flag');
 	    
@@ -133,7 +133,7 @@ class Default_Model_Settings extends Zend_Db_Table_Abstract{
 	public function getActiveCountSettings($userid,$flag){
        $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('s'=>'main_settings'), array('count'=>'COUNT(s.id)'))
+						->from(['s'=>'main_settings'], ['count'=>'COUNT(s.id)'])
 						->where('s.userid="'.$userid.'" AND s.flag="'.$flag.'" AND s.isactive=1');
 	  
 		return $this->fetchAll($select)->toArray();
@@ -157,8 +157,8 @@ class Default_Model_Settings extends Zend_Db_Table_Abstract{
 	{
 		$select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('a' => 'main_objmenu'),array('menuId', 'parent'))
-						->join(array('b'=>'main_menu'),'b.id = a.menuId');
+						->from(['a' => 'main_objmenu'],['menuId', 'parent'])
+						->join(['b'=>'main_menu'],'b.id = a.menuId');
 		try{
 			return $this->fetchAll($select)->toArray();		
 		}
@@ -179,7 +179,7 @@ class Default_Model_Settings extends Zend_Db_Table_Abstract{
 	{
 		$select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('rp' => 'recruitmentpositions'),array('recrpostitle'))
+						->from(['rp' => 'recruitmentpositions'],['recrpostitle'])
 						->where('date(rp.recrposenddate) <=now() AND rp.sentrifugo_status = 1');
 		
 		try{
@@ -194,7 +194,7 @@ class Default_Model_Settings extends Zend_Db_Table_Abstract{
 	{	
 		$select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('s'=>'main_settings'),array('s.menuid','s.flag'))
+						->from(['s'=>'main_settings'],['s.menuid','s.flag'])
 						->where('s.userid='.$userid.' AND s.isactive=1');
 		$data = $this->fetchAll($select)->toArray();		
 		return $data;

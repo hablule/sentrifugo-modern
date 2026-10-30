@@ -54,7 +54,7 @@ class Default_Form_Forgotpassword extends Zend_Form
         $username->setRequired(true);
         $username->addFilter('StripTags');
         $username->addFilter('StringTrim');
-        $username->addValidator('NotEmpty', false, array('messages' => 'Please enter email.'));
+        $username->addValidator('NotEmpty', false, ['messages' => 'Please enter email.']);
         $username->addValidator('EmailAddress');		
 			   
 		$submit = new Zend_Form_Element_Submit('submit');
@@ -68,11 +68,11 @@ class Default_Form_Forgotpassword extends Zend_Form
 		$jsFunction = "''";
 		 
 
-		 $submit->setOptions(array('onclick' => "saveDetails($url,$dialogMsg,$toggleDivId,$jsFunction);"
-		));
+		 $submit->setOptions(['onclick' => "saveDetails($url,$dialogMsg,$toggleDivId,$jsFunction);"
+		]);
 
-		 $this->addElements(array($id,$username,$submit));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 $this->addElements([$id,$username,$submit]);
+         $this->setElementDecorators(['ViewHelper']); 
     }
 }
 

@@ -61,7 +61,7 @@ class Default_EmpadditionaldetailsController extends Zend_Controller_Action
 		 	if($id == '')		
 			  $id = $userID;
 			  
-		 	$Uid = ($id)?$id:$userID;
+		 	$Uid = $id ?: $userID;
 		 	 
 		 	$employeeModal = new Default_Model_Employee();
 		 	try
@@ -86,7 +86,7 @@ class Default_EmpadditionaldetailsController extends Zend_Controller_Action
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
 							$dashboardcall = $this->_getParam('dashboardcall',null);
-							$data = array();	$searchQuery = '';	$searchArray = array();		$tablecontent = '';
+							$data = [];	$searchQuery = '';	$searchArray = [];		$tablecontent = '';
 							if($refresh == 'refresh')
 							{
 								if($dashboardcall == 'Yes')
@@ -160,7 +160,7 @@ class Default_EmpadditionaldetailsController extends Zend_Controller_Action
 		 	if($id == '')		
 			  $id = $userID;
 			  
-		 	$Uid = ($id)?$id:$userID;
+		 	$Uid = $id ?: $userID;
 		 	 
 		 	$employeeModal = new Default_Model_Employee();
 		 	try
@@ -185,7 +185,7 @@ class Default_EmpadditionaldetailsController extends Zend_Controller_Action
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
 							$dashboardcall = $this->_getParam('dashboardcall',null);
-							$data = array();	$searchQuery = '';	$searchArray = array();		$tablecontent = '';
+							$data = [];	$searchQuery = '';	$searchArray = [];		$tablecontent = '';
 							if($refresh == 'refresh')
 							{
 								if($dashboardcall == 'Yes')
@@ -270,7 +270,7 @@ class Default_EmpadditionaldetailsController extends Zend_Controller_Action
 		$militaryDischargedata = $militaryDischargeModel->GetMilitaryDischargeType();
 		$militarybranchArra = $militaryBranchModel->GetMilitaryBranch();
 		$militaryrankArr = $militaryRankModel->GetMilitaryRank();
-		$msgarray = array();
+		$msgarray = [];
 	
 		$countrieslistArr = $countriesModel->getTotalCountriesList();
         $empadditionaldetailsform->countries_served->addMultiOption('','Select Country');
@@ -390,7 +390,7 @@ class Default_EmpadditionaldetailsController extends Zend_Controller_Action
 
 		// Allowed image types
 		//$allowtype = array('pdf', 'PDF', 'doc', 'docx', 'xls');
-		$allowtype = array('pdf', 'PDF', 'doc', 'docx', 'xls');
+		$allowtype = ['pdf', 'PDF', 'doc', 'docx', 'xls'];
 
 		/** Uploading the image **/
 
@@ -421,7 +421,7 @@ class Default_EmpadditionaldetailsController extends Zend_Controller_Action
 							$rezultat = $filename;
 							$setWidth = 265;
 							$setHeight = 40;
-							list($imgwidth, $imgheight) = getimagesize($newfilename);
+							[$imgwidth, $imgheight] = getimagesize($newfilename);
 							if ($imgwidth < 265) {
 								$setWidth = $imgwidth;
 							}
@@ -452,12 +452,12 @@ class Default_EmpadditionaldetailsController extends Zend_Controller_Action
 			$result_msg = 'Please upload only .gif, .jpg, .jpeg, .png images.';
 		}
 
-		$result = array(
+		$result = [
 			'result' => $result_status,
 			'img' => $rezultat,
 			'filename'=>$_FILES['profile_photo']['name'],
 			'msg' => $result_msg
-		);
+		];
 		return $result;
 	}
 
@@ -587,14 +587,14 @@ class Default_EmpadditionaldetailsController extends Zend_Controller_Action
 	}
 
 
-	function downloadfilesAction()
+	public function downloadfilesAction()
 	{
 		try {
 			
 		if($_POST){
 			
 			$doc_id = $_POST['doc_id'];
-			$file_name = isset($_POST['file_name'])? $_POST['file_name'] : '';
+			$file_name = $_POST['file_name'] ?? '';
 			$empDocuModel = new Default_Model_Employeedocs();
 			$empDocuments = $_POST['doc'];
 			if (!empty($empDocuments)) {
@@ -603,7 +603,7 @@ class Default_EmpadditionaldetailsController extends Zend_Controller_Action
 					//Downloading single file
 					
 					if($file_name)
-					{	$new = array();$ori = array();
+					{	$new = [];$ori = [];
 
 							foreach ($attachments as $k => $v){
 							 if($file_name == $v["new_name"])
@@ -616,7 +616,7 @@ class Default_EmpadditionaldetailsController extends Zend_Controller_Action
 					else 
 					{
 					  if(count($attachments)>0){
-				    	$new = array();$ori = array();
+				    	$new = [];$ori = [];
 				       
 							$new[] = $attachments["newName"];
 							$ori[] = $attachments["originalName"];
@@ -860,7 +860,7 @@ class Default_EmpadditionaldetailsController extends Zend_Controller_Action
 				if (sizeof($imageArr) > 1) {
 					$imagename = $imageArr[0];
 					$imageext = $imageArr[1];
-					$extArr = array('gif', 'jpg', 'jpeg', 'png');
+					$extArr = ['gif', 'jpg', 'jpeg', 'png'];
 					if (!in_array($imageext, $extArr)) {
 						$msgarray['attestation_image_value'] = 'Please upload an appropriate image file.';
 						$flag = 'false';
@@ -899,7 +899,7 @@ class Default_EmpadditionaldetailsController extends Zend_Controller_Action
 			$date = new Zend_Date();
 			$actionflag = '';
 			$tableid  = '';
-			$data = array('emp_id'=>$user_id,
+			$data = ['emp_id'=>$user_id,
 								 'countries_served'=>$countries_served,
                                  'branch_service'=>($branch_service!=''?$branch_service:NULL),
                                  'rank_achieved'=>($rank_achieved!=''?$rank_achieved:NULL),
@@ -910,14 +910,14 @@ class Default_EmpadditionaldetailsController extends Zend_Controller_Action
 								 'discharge_status'=>$discharge_status,
 								 'servicenumber'=>($service_number!=''?$service_number:NULL),
                                  'rank'=>($rank!=''?$rank:NULL), 
-                                 'verification_report'=>json_encode(array('newName'=>$imagepath,'originalName'=>$orginalfilename)), 								 
+                                 'verification_report'=>json_encode(['newName'=>$imagepath,'originalName'=>$orginalfilename]), 								 
 				      			 'military_servicetype'=> $military_servicetype,
 								 'veteranstatus'=> $veteran_status,
 								 'modifiedby'=>$loginUserId,
 								 'modifieddate'=>gmdate("Y-m-d H:i:s")
-			);
+			];
 			if($id!=''){
-				$where = array('id=?'=>$id);
+				$where = ['id=?'=>$id];
 				$actionflag = 2;
 			}
 			else
@@ -972,8 +972,8 @@ class Default_EmpadditionaldetailsController extends Zend_Controller_Action
 		if($id)
 		{
 			$empadditionaldetailsModal = new Default_Model_Empadditionaldetails();
-			$data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-			$where = array('id=?'=>$id);
+			$data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+			$where = ['id=?'=>$id];
 			$Id = $empadditionaldetailsModal->SaveorUpdateEmpAdditionalData($data, $where);
 			if($Id == 'update')
 			{

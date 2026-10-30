@@ -64,8 +64,8 @@ class Default_Form_workexp extends Zend_Form
         $submit = new Zend_Form_Element_Submit('submit');
 
         $submit->setLabel('Save and Next');
-        $this->addElements(array($id,$prevbtn,$submit));
-        $this->setElementDecorators(array('ViewHelper'));  
+        $this->addElements([$id,$prevbtn,$submit]);
+        $this->setElementDecorators(['ViewHelper']);  
 
     }
 

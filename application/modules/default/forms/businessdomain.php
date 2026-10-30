@@ -37,68 +37,68 @@ class Default_Form_Businessdomain extends Zend_Form
          * 2. Text Elements
          * -------------------------------------------------------------- */
         
-        $ssotRegexValidator = array(
-            'Regex', true, array(
+        $ssotRegexValidator = [
+            'Regex', true, [
                 'pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9 ]*)$/',
-                'messages' => array(
+                'messages' => [
                     Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space or contain special characters.'
-                )
-            )
-        );
+                ]
+            ]
+        ];
 
-        $lengthValidatorCode = array(
-            'StringLength', false, array(
+        $lengthValidatorCode = [
+            'StringLength', false, [
                 'max' => 60,
-                'messages' => array(
+                'messages' => [
                     Zend_Validate_StringLength::TOO_LONG  => 'Entry must contain at most %max% characters.'
-                )
-            )
-        );
+                ]
+            ]
+        ];
 
-        $lengthValidatorName = array(
-            'StringLength', false, array(
+        $lengthValidatorName = [
+            'StringLength', false, [
                 'max' => 100,
-                'messages' => array(
+                'messages' => [
                     Zend_Validate_StringLength::TOO_LONG  => 'Entry must contain at most %max% characters.'
-                )
-            )
-        );
+                ]
+            ]
+        ];
 
         // Code
         $code = new Zend_Form_Element_Text('code');
         $code->setLabel('Code')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '60'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '60'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', false, array('messages' => 'Please enter a code.'))
+            ->addValidator('NotEmpty', false, ['messages' => 'Please enter a code.'])
             ->addValidator($lengthValidatorCode[0], $lengthValidatorCode[1], $lengthValidatorCode[2])
             ->addValidator($ssotRegexValidator[0], $ssotRegexValidator[1], $ssotRegexValidator[2]);
 
-        $codeVal = new Zend_Validate_Db_NoRecordExists(array(
+        $codeVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_businessdomain',
             'field'   => 'code',
-            'exclude' => ($idVal > 0) ? array('field' => 'id', 'value' => $idVal) : null
-        ));
+            'exclude' => ($idVal > 0) ? ['field' => 'id', 'value' => $idVal] : null
+        ]);
         $codeVal->setMessage('This code already exists.');
         $code->addValidator($codeVal);
 
         // Name
         $name = new Zend_Form_Element_Text('name');
         $name->setLabel('Name')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '100'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '100'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', false, array('messages' => 'Please enter a name.'))
+            ->addValidator('NotEmpty', false, ['messages' => 'Please enter a name.'])
             ->addValidator($lengthValidatorName[0], $lengthValidatorName[1], $lengthValidatorName[2])
             ->addValidator($ssotRegexValidator[0], $ssotRegexValidator[1], $ssotRegexValidator[2]);
 
-        $nameVal = new Zend_Validate_Db_NoRecordExists(array(
+        $nameVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_businessdomain',
             'field'   => 'name',
-            'exclude' => ($idVal > 0) ? array('field' => 'id', 'value' => $idVal) : null
-        ));
+            'exclude' => ($idVal > 0) ? ['field' => 'id', 'value' => $idVal] : null
+        ]);
         $nameVal->setMessage('This name already exists.');
         $name->addValidator($nameVal);
 
@@ -107,7 +107,7 @@ class Default_Form_Businessdomain extends Zend_Form
          * -------------------------------------------------------------- */
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Description')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -125,7 +125,7 @@ class Default_Form_Businessdomain extends Zend_Form
          * -------------------------------------------------------------- */
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save')
-               ->setAttribs(array('id' => 'submitbutton', 'class' => 'actbtn_btn'));
+               ->setAttribs(['id' => 'submitbutton', 'class' => 'actbtn_btn']);
 
         // SSOT v6.3 Strict Format for AJAX save binding
         $urlAction  = "'businessdomain/save/format/json'";
@@ -135,19 +135,19 @@ class Default_Form_Businessdomain extends Zend_Form
         /* --------------------------------------------------------------
          * Build Form
          * -------------------------------------------------------------- */
-        $this->addElements(array(
+        $this->addElements([
             $idElement,
             $code,
             $name,
             $description,
             $isactive,
             $submit
-        ));
+        ]);
 
         // Strip default Zend Decorators per SSOT
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
-            $element->setDecorators(array('ViewHelper'));
+            $element->setDecorators(['ViewHelper']);
         }
     }
 }

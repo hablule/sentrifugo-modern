@@ -29,7 +29,7 @@ class sapp_Mail
 		// private - should not be used
 	}
 	
-	public static function _email($options = array()) {
+	public static function _email($options = []) {
 		
 		$options['fromEmail'] = (!empty($options['fromEmail']))?$options['fromEmail']:SUPERADMIN_EMAIL;
 		$options['fromName'] = (!empty($options['fromName']))?$options['fromName']:DONOTREPLYNAME;
@@ -50,25 +50,25 @@ class sapp_Mail
 		$header="";
 		$footer="";
         $smtpServer = "";
-		$config = array();
+		$config = [];
 
 		if(!empty($options['server_name']) && !empty($options['auth']) && !empty($options['port']) )
 		{
 			if( $options['auth'] == 'true' && !empty($options['username']) && !empty($options['password']))
 			{
-				$config = array(
+				$config = [
 							'auth' => $options['auth']
 							,'username' => $options['username']
 							,'password' => $options['password']
 							,'port' => $options['port']
-				);   
+				];   
 			}
 			else if($options['auth'] == 'false')
 			{
-				$config = array(
+				$config = [
 							'auth' => $options['auth']
 							,'port' => $options['port']
-				);   
+				];   
 			}
 			if(!empty($options['tls']))
 			{
@@ -97,13 +97,13 @@ class sapp_Mail
 			  if(!defined('MAIL_SMTP')){
 				define('MAIL_SMTP','');
 			  }
-			   $config = array(
+			   $config = [
 					'tls' => MAIL_TLS
 					,'auth' => MAIL_AUTH
 					,'username' => MAIL_USERNAME
 					,'password' => MAIL_PASSWORD
 					,'port' => MAIL_PORT
-			   );   
+			   ];   
 			   $smtpServer = MAIL_SMTP;
 		}               
 		
@@ -111,7 +111,7 @@ class sapp_Mail
 		return self::send_php_mail($config, $smtpServer, $imgsource, $options);
 }	
 
-public static function _checkMail($options = array()) {
+public static function _checkMail($options = []) {
 		
 		$options['fromEmail'] = (!empty($options['fromEmail']))?$options['fromEmail']:SUPERADMIN_EMAIL;
 		$options['fromName'] = (!empty($options['fromName']))?$options['fromName']:DONOTREPLYNAME;
@@ -136,19 +136,19 @@ public static function _checkMail($options = array()) {
 		{
 			if( $options['auth'] == 'true' && !empty($options['username']) && !empty($options['password']))
 			{
-				$config = array(
+				$config = [
 							'auth' => $options['auth']
 							,'username' => $options['username']
 							,'password' => $options['password']
 							,'port' => $options['port']
-				);   
+				];   
 			}
 			else if($options['auth'] == 'false')
 			{
-				$config = array(
+				$config = [
 							'auth' => $options['auth']
 							,'port' => $options['port']
-				);   
+				];   
 			}
 			if(!empty($options['tls']))
 			{
@@ -169,7 +169,7 @@ public static function _checkMail($options = array()) {
 	 * @param String $imgsource - Image source of application logo
 	 * @param Array $options - List of mail options
 	 */
-	public static function send_php_mail($config = array(), $smtpserver='', $imgsource='', $options = array())
+	public static function send_php_mail($config = [], $smtpserver='', $imgsource='', $options = [])
 	{
 			
     	$htmlcontentdata = '
@@ -206,7 +206,7 @@ public static function _checkMail($options = array()) {
 			$mail->Password = $config['password'];
 	    }
 		$mail->Port = $config['port']; // or 587
-		$mail->SMTPOptions = array('ssl' => array('verify_peer' => false,'verify_peer_name' => false,'allow_self_signed' => true));
+		$mail->SMTPOptions = ['ssl' => ['verify_peer' => false,'verify_peer_name' => false,'allow_self_signed' => true]];
 	
 	    $yahoo_smtp = strpos($config['username'], 'yahoo');
 		if($yahoo_smtp !== false) {

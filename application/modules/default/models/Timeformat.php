@@ -65,7 +65,7 @@ class Default_Model_Timeformat extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('t'=>'main_timeformat'),array('t.*'))
+						->from(['t'=>'main_timeformat'],['t.*'])
 					    ->where('t.isactive = 1 AND t.id='.$id.' ');
 		return $this->fetchAll($select)->toArray();
 	
@@ -75,7 +75,7 @@ class Default_Model_Timeformat extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('t'=>'main_timeformat'),array('t.id','t.timeformat'))
+						->from(['t'=>'main_timeformat'],['t.id','t.timeformat'])
 					    ->where('t.isactive = 1');
 		return $this->fetchAll($select)->toArray();
 	

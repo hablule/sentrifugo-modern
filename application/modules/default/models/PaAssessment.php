@@ -57,7 +57,7 @@ class Default_Model_Paassessment extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $context = 'mine', $employeeID = 0)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -73,37 +73,37 @@ class Default_Model_Paassessment extends Zend_Db_Table_Abstract
 
         // 3-PRONGED HEADERS
         if ($context === 'mine') {
-            $tableHeaders = array(
+            $tableHeaders = [
                 'action' => 'Action',
                 'appraisal_name' => 'Campaign',
                 'evaluator_name' => 'Evaluated By',
                 'evaluator_type' => 'Review Type',
                 'status' => 'Status'
-            );
+            ];
             $menuName = 'My Appraisals';
         } elseif ($context === 'tasks') {
-            $tableHeaders = array(
+            $tableHeaders = [
                 'action' => 'Action',
                 'appraisal_name' => 'Campaign',
                 'evaluatee_name' => 'Review Target',
                 'evaluator_type' => 'Your Role',
                 'status' => 'Status'
-            );
+            ];
             $menuName = 'My Tasks';
         } else {
             // team
-            $tableHeaders = array(
+            $tableHeaders = [
                 'action' => 'Action',
                 'appraisal_name' => 'Campaign',
                 'evaluatee_name' => 'Team Member',
                 'evaluator_name' => 'Evaluator',
                 'evaluator_type' => 'Review Type',
                 'status' => 'Status'
-            );
+            ];
             $menuName = 'Team Oversight';
         }
 
-        return array(
+        return [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
@@ -111,27 +111,27 @@ class Default_Model_Paassessment extends Zend_Db_Table_Abstract
             'tablecontent' => $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery, $context, $employeeID),
             'objectname' => 'paassessment',
             'tableheader' => $tableHeaders,
-            'extra' => array(),
+            'extra' => [],
             'jsGridFnName' => 'getAjaxgridData',
             'jsFillFnName' => '',
             'searchArray' => $searchArray,
             'menuName' => $menuName,
             'call' => $call,
             'dashboardcall' => $dashboardcall,
-            'search_filters' => array(
-                'status' => array(
+            'search_filters' => [
+                'status' => [
                     'type' => 'select',
-                    'filter_data' => array(
+                    'filter_data' => [
                         '' => 'All',
                         'Pending' => 'Pending',
                         'In Progress' => 'In Progress',
                         'Submitted' => 'Submitted',
                         'Completed' => 'Completed',
                         'Acknowledged' => 'Acknowledged'
-                    )
-                )
-            )
-        );
+                    ]
+                ]
+            ]
+        ];
     }
 
     public function getGridData($sort, $by, $pageNo, $perPage, $searchQuery = '', $context = 'mine', $employeeID = 0)
@@ -139,14 +139,14 @@ class Default_Model_Paassessment extends Zend_Db_Table_Abstract
         if ($by == 'appraisal_name') $by = 'appr.name';
         if ($by == 'evaluatee_name') $by = 'ee.userfullname';
         if ($by == 'evaluator_name') $by = 'er.userfullname';
-        if (in_array($by, array('evaluator_type', 'status'))) $by = 'ass.' . $by;
+        if (in_array($by, ['evaluator_type', 'status'])) $by = 'ass.' . $by;
 
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('ass' => $this->_name), array('id' => 'ass.id', 'evaluator_type' => 'ass.evaluator_type', 'status' => 'ass.status'))
-            ->joinInner(array('appr' => 'main_pa_appraisal'), 'ass.appraisal_id = appr.id', array('appraisal_name' => 'appr.name'))
-            ->joinInner(array('er' => 'main_employee'), 'ass.evaluator_id = er.id', array('evaluator_name' => 'er.userfullname'))
-            ->joinInner(array('ee' => 'main_employee'), 'ass.evaluatee_id = ee.id', array('evaluatee_name' => 'ee.userfullname'))
+            ->from(['ass' => $this->_name], ['id' => 'ass.id', 'evaluator_type' => 'ass.evaluator_type', 'status' => 'ass.status'])
+            ->joinInner(['appr' => 'main_pa_appraisal'], 'ass.appraisal_id = appr.id', ['appraisal_name' => 'appr.name'])
+            ->joinInner(['er' => 'main_employee'], 'ass.evaluator_id = er.id', ['evaluator_name' => 'er.userfullname'])
+            ->joinInner(['ee' => 'main_employee'], 'ass.evaluatee_id = ee.id', ['evaluatee_name' => 'ee.userfullname'])
             ->where('ass.isactive != 5');
 
         // 3-PRONGED DATA FILTERING
@@ -159,7 +159,7 @@ class Default_Model_Paassessment extends Zend_Db_Table_Abstract
                 // Only show in In progress record for grading to be done
                 ->where("ass.status IN ('Pending', 'In Progress')");
         } elseif ($context === 'team') {
-            $select->joinInner(array('pos' => 'main_empposition'), 'ee.id = pos.employee_id', array())
+            $select->joinInner(['pos' => 'main_empposition'], 'ee.id = pos.employee_id', [])
                 ->where('pos.reportto_id = ?', (int)$employeeID)
                 ->where('pos.isactive = ?', 'Y');
         }
@@ -172,7 +172,7 @@ class Default_Model_Paassessment extends Zend_Db_Table_Abstract
     public function getPairs($activeOnly = true)
     {
         // Concatenate IDs to satisfy the mandatory method requirement safely
-        $select = $this->select()->from($this->_name, array('id', 'name' => new Zend_Db_Expr("CONCAT('Assessment #', id)")));
+        $select = $this->select()->from($this->_name, ['id', 'name' => new Zend_Db_Expr("CONCAT('Assessment #', id)")]);
         if ($activeOnly) $select->where("isactive = 1");
         return $this->getAdapter()->fetchPairs($select);
     }
@@ -181,10 +181,10 @@ class Default_Model_Paassessment extends Zend_Db_Table_Abstract
     {
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('ass' => $this->_name))
-            ->joinInner(array('appr' => 'main_pa_appraisal'), 'ass.appraisal_id = appr.id', array('appraisal_name' => 'appr.name'))
-            ->joinInner(array('ee' => 'main_employee'), 'ass.evaluatee_id = ee.id', array('evaluatee_name' => 'ee.userfullname'))
-            ->joinInner(array('er' => 'main_employee'), 'ass.evaluator_id = er.id', array('evaluator_name' => 'er.userfullname'))
+            ->from(['ass' => $this->_name])
+            ->joinInner(['appr' => 'main_pa_appraisal'], 'ass.appraisal_id = appr.id', ['appraisal_name' => 'appr.name'])
+            ->joinInner(['ee' => 'main_employee'], 'ass.evaluatee_id = ee.id', ['evaluatee_name' => 'ee.userfullname'])
+            ->joinInner(['er' => 'main_employee'], 'ass.evaluator_id = er.id', ['evaluator_name' => 'er.userfullname'])
             ->where('ass.id = ?', (int)$id)
             ->where('ass.isactive != 5');
 
@@ -197,7 +197,7 @@ class Default_Model_Paassessment extends Zend_Db_Table_Abstract
      */
     public function getPairsByAppraisal($appraisalId, $activeOnly = true)
     {
-        $select = $this->select()->from($this->_name, array('id', 'name' => new Zend_Db_Expr("CONCAT('Assessment #', id)")))
+        $select = $this->select()->from($this->_name, ['id', 'name' => new Zend_Db_Expr("CONCAT('Assessment #', id)")])
             ->where('appraisal_id = ?', (int)$appraisalId);
         if ($activeOnly) $select->where("isactive = 1");
         return $this->getAdapter()->fetchPairs($select);
@@ -214,7 +214,7 @@ class Default_Model_Paassessment extends Zend_Db_Table_Abstract
         if (!empty($id)) {
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = gmdate("Y-m-d H:i:s");
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return (int)$id;
         }
 
@@ -235,15 +235,15 @@ class Default_Model_Paassessment extends Zend_Db_Table_Abstract
         }
 
         $userId = Zend_Auth::getInstance()->getStorage()->read()->id ?? 0;
-        $data = array('isactive' => 5, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s"));
-        return $this->update($data, array('id = ?' => (int)$id));
+        $data = ['isactive' => 5, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s")];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     public function toggleStatus($id, $status)
     {
         $userId = Zend_Auth::getInstance()->getStorage()->read()->id ?? 0;
-        $data = array('isactive' => (int)$status, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s"));
-        return $this->update($data, array('id = ?' => (int)$id));
+        $data = ['isactive' => (int)$status, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s")];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* =================================================================================
@@ -260,7 +260,7 @@ class Default_Model_Paassessment extends Zend_Db_Table_Abstract
     {
         // Protect assessments that have already been worked on
         $record = $this->getRecordById($id);
-        if ($record && in_array($record['status'], array('Submitted', 'Completed', 'Acknowledged'))) {
+        if ($record && in_array($record['status'], ['Submitted', 'Completed', 'Acknowledged'])) {
             return true;
         }
         return false;
@@ -284,33 +284,33 @@ class Default_Model_Paassessment extends Zend_Db_Table_Abstract
         $db = $this->getAdapter();
 
         $select = $db->select()
-            ->from(array('maq' => 'map_pa_appraisal_question'), array('map_question_id' => 'maq.id', 'weight' => 'maq.weight'))
-            ->joinInner(array('q' => 'main_pa_question'), 'maq.question_id = q.id', array('question_name' => 'q.name', 'question_desc' => 'q.description'))
-            ->joinInner(array('c' => 'main_pa_category'), 'q.category_id = c.id', array('category_name' => 'c.name'))
+            ->from(['maq' => 'map_pa_appraisal_question'], ['map_question_id' => 'maq.id', 'weight' => 'maq.weight'])
+            ->joinInner(['q' => 'main_pa_question'], 'maq.question_id = q.id', ['question_name' => 'q.name', 'question_desc' => 'q.description'])
+            ->joinInner(['c' => 'main_pa_category'], 'q.category_id = c.id', ['category_name' => 'c.name'])
 
             // Read rating_id from the Snapshot (maq), NOT the master question table
-            ->joinInner(array('r' => 'main_pa_rating'), 'maq.rating_id = r.id', array('data_type' => 'r.data_type', 'ui_widget' => 'r.ui_widget', 'rating_id' => 'r.id', 'step_value' => 'r.step_value'))
+            ->joinInner(['r' => 'main_pa_rating'], 'maq.rating_id = r.id', ['data_type' => 'r.data_type', 'ui_widget' => 'r.ui_widget', 'rating_id' => 'r.id', 'step_value' => 'r.step_value'])
 
             ->joinLeft(
-                array('al' => 'main_pa_assessment_line'),
+                ['al' => 'main_pa_assessment_line'],
                 $db->quoteInto("al.map_question_id = maq.id AND al.assessment_id = ?", (int)$assessmentId),
-                array('answer_rating_id' => 'al.rating_option_id', 'answer_numeric_value' => 'al.numeric_value', 'answer_comments' => 'al.comments')
+                ['answer_rating_id' => 'al.rating_option_id', 'answer_numeric_value' => 'al.numeric_value', 'answer_comments' => 'al.comments']
             )
             ->where('maq.appraisal_id = ?', (int)$appraisalId)
-            ->order(array('c.name ASC', 'q.id ASC'));
+            ->order(['c.name ASC', 'q.id ASC']);
 
         $questions = $db->fetchAll($select);
 
         foreach ($questions as &$q) {
             if ($q['data_type'] === 'Structured') {
                 $optSelect = $db->select()
-                    ->from('main_pa_rating_option', array('id', 'name', 'value', 'icon_class', 'normalized_value'))
+                    ->from('main_pa_rating_option', ['id', 'name', 'value', 'icon_class', 'normalized_value'])
                     ->where('rating_id = ?', (int)$q['rating_id'])
                     ->where('isactive = 1')
                     ->order('value ASC');
                 $q['options'] = $db->fetchAll($optSelect);
             } else {
-                $q['options'] = array();
+                $q['options'] = [];
             }
         }
         return $questions;
@@ -332,14 +332,14 @@ class Default_Model_Paassessment extends Zend_Db_Table_Abstract
                 JOIN map_pa_appraisal_question maq ON al.map_question_id = maq.id
                 WHERE al.assessment_id = ? AND al.normalized_value IS NOT NULL";
 
-        $result = $db->fetchRow($sql, array((int)$assessmentId));
+        $result = $db->fetchRow($sql, [(int)$assessmentId]);
 
         if ($result && $result['total_weight'] > 0) {
             $percentage = $result['total_weighted_score'] / $result['total_weight'];
             $fivePointScale = ($percentage / 100) * 5;
-            $db->update('main_pa_assessment', array('consolidated_score' => round($fivePointScale, 2)), array('id = ?' => (int)$assessmentId));
+            $db->update('main_pa_assessment', ['consolidated_score' => round($fivePointScale, 2)], ['id = ?' => (int)$assessmentId]);
         } else {
-            $db->update('main_pa_assessment', array('consolidated_score' => null), array('id = ?' => (int)$assessmentId));
+            $db->update('main_pa_assessment', ['consolidated_score' => null], ['id = ?' => (int)$assessmentId]);
         }
     }
 
@@ -372,11 +372,11 @@ class Default_Model_Paassessment extends Zend_Db_Table_Abstract
 
                 // Fetch the Min and Max bounds from the DB to calculate the percentage
                 $boundsSelect = $db->select()
-                    ->from(array('ro' => 'main_pa_rating_option'), array(
+                    ->from(['ro' => 'main_pa_rating_option'], [
                         'min_val' => new Zend_Db_Expr('MIN(ro.value)'),
                         'max_val' => new Zend_Db_Expr('MAX(ro.value)')
-                    ))
-                    ->joinInner(array('maq' => 'map_pa_appraisal_question'), 'maq.rating_id = ro.rating_id', array())
+                    ])
+                    ->joinInner(['maq' => 'map_pa_appraisal_question'], 'maq.rating_id = ro.rating_id', [])
                     ->where('maq.id = ?', (int)$mapQuestionId)
                     ->where('ro.isactive = 1');
                     
@@ -414,17 +414,17 @@ class Default_Model_Paassessment extends Zend_Db_Table_Abstract
             $select = $db->select()->from('main_pa_assessment_line', 'id')->where('assessment_id = ?', (int)$assessmentId)->where('map_question_id = ?', (int)$mapQuestionId)->limit(1);
             $lineId = $db->fetchOne($select);
 
-            $payload = array(
+            $payload = [
                 'rating_option_id' => $ratingOptionId,
                 'numeric_value'    => $numericValue,
                 'normalized_value' => $normalizedValue,
                 'comments'         => $comments,
                 'modifiedby'       => $userId,
                 'modifieddate'     => $date
-            );
+            ];
 
             if ($lineId) {
-                $db->update('main_pa_assessment_line', $payload, array('id = ?' => $lineId));
+                $db->update('main_pa_assessment_line', $payload, ['id = ?' => $lineId]);
             } else {
                 $payload['assessment_id']   = (int)$assessmentId;
                 $payload['map_question_id'] = (int)$mapQuestionId;
@@ -446,7 +446,7 @@ class Default_Model_Paassessment extends Zend_Db_Table_Abstract
     {
         $userId = Zend_Auth::getInstance()->getStorage()->read()->id ?? 0;
 
-        $this->getAdapter()->insert('main_pa_audit_log', array(
+        $this->getAdapter()->insert('main_pa_audit_log', [
             'assessment_id' => (int)$assessmentId,
             'action_taken'  => $actionTaken,
             'actor_id'      => (int)$userId,
@@ -454,7 +454,7 @@ class Default_Model_Paassessment extends Zend_Db_Table_Abstract
             'isactive'      => 1,
             'createdby'     => (int)$userId,
             'createddate'   => gmdate("Y-m-d H:i:s")
-        ));
+        ]);
     }
 
     /**
@@ -464,12 +464,12 @@ class Default_Model_Paassessment extends Zend_Db_Table_Abstract
     {
         $db = $this->getAdapter();
         $select = $db->select()
-            ->from(array('l' => 'main_pa_audit_log'), array(
+            ->from(['l' => 'main_pa_audit_log'], [
                 'action_taken',
                 'description',
                 'createddate' => new Zend_Db_Expr("DATE_FORMAT(l.createddate, '%b %d, %Y %H:%i')")
-            ))
-            ->joinLeft(array('emp' => 'main_employee'), 'l.actor_id = emp.id', array('actor_name' => 'emp.userfullname'))
+            ])
+            ->joinLeft(['emp' => 'main_employee'], 'l.actor_id = emp.id', ['actor_name' => 'emp.userfullname'])
             ->where('l.assessment_id = ?', (int)$assessmentId)
             ->order('l.createddate DESC');
 

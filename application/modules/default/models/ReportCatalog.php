@@ -41,7 +41,7 @@ class Default_Model_Reportcatalog extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -61,16 +61,16 @@ class Default_Model_Reportcatalog extends Zend_Db_Table_Abstract
         }
 
         // SSOT IV.3: Strict headers. Action must be first.
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'        => 'Action',
             'menugroup_name' => 'Dashboard Group',
             'category_name' => 'Report Category',
             'code'          => 'Report Code',
             'name'          => 'Report Name',
             'status_text'   => 'Status'
-        );
+        ];
 
-        return array(
+        return [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
@@ -78,7 +78,7 @@ class Default_Model_Reportcatalog extends Zend_Db_Table_Abstract
             'tablecontent'   => $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery),
             'objectname'     => 'reportcatalog',
             'tableheader'    => $tableHeaders,
-            'extra'          => array(),
+            'extra'          => [],
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
             'searchArray'    => $searchArray,
@@ -86,10 +86,10 @@ class Default_Model_Reportcatalog extends Zend_Db_Table_Abstract
             'menuName'       => 'Report Catalog',
             'call'           => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => array(
-                'status_text' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive'))
-            )
-        );
+            'search_filters' => [
+                'status_text' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']]
+            ]
+        ];
     }
 
     public function getGridData($sort, $by, $pageNo, $perPage, $searchQuery = '')
@@ -97,22 +97,22 @@ class Default_Model_Reportcatalog extends Zend_Db_Table_Abstract
         if ($by == 'status_text')   $by = 'r.isactive';
         if ($by == 'category_name') $by = 'c.name';
         if ($by == 'menugroup_name') $by = 'mg.name';
-        if (in_array($by, array('code', 'name', 'menugroup_id', 'category_id'))) {
+        if (in_array($by, ['code', 'name', 'menugroup_id', 'category_id'])) {
             $by = 'r.' . $by;
         }
 
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('r' => $this->_name), array(
+            ->from(['r' => $this->_name], [
                 'id'          => 'r.id', 
                 'menugroup_id'   => 'r.menugroup_id',
                 'category_id'    => 'r.category_id',
                 'code'        => 'r.code',
                 'name'        => 'r.name',
                 'status_text' => new Zend_Db_Expr("CASE WHEN r.isactive = 1 THEN 'Active' ELSE 'Inactive' END")
-            ))
-            ->joinInner(array('c' => 'main_report_category'), 'r.category_id = c.id', array('category_name' => 'c.name'))
-            ->joinLeft(array('mg' => 'main_menugroup'), 'r.menugroup_id = mg.id', array('menugroup_name' => 'mg.name'))
+            ])
+            ->joinInner(['c' => 'main_report_category'], 'r.category_id = c.id', ['category_name' => 'c.name'])
+            ->joinLeft(['mg' => 'main_menugroup'], 'r.menugroup_id = mg.id', ['menugroup_name' => 'mg.name'])
             ->where('r.isactive != 5');
 
         if (!empty($searchQuery)) $select->where($searchQuery);
@@ -122,7 +122,7 @@ class Default_Model_Reportcatalog extends Zend_Db_Table_Abstract
 
     public function getPairs($activeOnly = true)
     {
-        $select = $this->select()->from($this->_name, array('id', 'name'))->order('name ASC');
+        $select = $this->select()->from($this->_name, ['id', 'name'])->order('name ASC');
         if ($activeOnly) $select->where("isactive = 1");
         return $this->getAdapter()->fetchPairs($select);
     }
@@ -144,7 +144,7 @@ class Default_Model_Reportcatalog extends Zend_Db_Table_Abstract
         if (!empty($id)) {
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = gmdate("Y-m-d H:i:s");
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return (int)$id;
         }
         $data['createdby']   = $userId;
@@ -164,15 +164,15 @@ class Default_Model_Reportcatalog extends Zend_Db_Table_Abstract
             throw new Exception("Cannot delete this Report. There are active ACL mappings tied to it.");
         }
         $userId = Zend_Auth::getInstance()->getStorage()->read()->id ?? 0;
-        $data = array('isactive' => 5, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s"));
-        return $this->update($data, array('id = ?' => (int)$id));
+        $data = ['isactive' => 5, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s")];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     public function toggleStatus($id, $status)
     {
         $userId = Zend_Auth::getInstance()->getStorage()->read()->id ?? 0;
-        $data = array('isactive' => (int)$status, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s"));
-        return $this->update($data, array('id = ?' => (int)$id));
+        $data = ['isactive' => (int)$status, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s")];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* =================================================================================
@@ -215,7 +215,7 @@ class Default_Model_Reportcatalog extends Zend_Db_Table_Abstract
 
         // 1. Base query: Get active reports for the requested module
         $select = $db->select()
-            ->from(array('rc' => $this->_name), array('code'))
+            ->from(['rc' => $this->_name], ['code'])
             ->where('rc.isactive = 1')
             ->where('rc.menugroup_id = ?', (int)$menuGroupId);
 
@@ -223,9 +223,9 @@ class Default_Model_Reportcatalog extends Zend_Db_Table_Abstract
         // If a report has 0 rules in the map_report_acl table, it is "locked down" and only 
         // Super Admins (Role 1) should see it.
         $select->joinInner(
-            array('acl' => 'map_report_acl'),
+            ['acl' => 'map_report_acl'],
             'rc.id = acl.report_id AND acl.isactive = 1',
-            array()
+            []
         );
 
         // 3. The Polymorphic OR-Gate
@@ -234,11 +234,11 @@ class Default_Model_Reportcatalog extends Zend_Db_Table_Abstract
         // OR B) Their exact Role is mapped
         // OR C) Their exact Group is mapped
 
-        $whereGate = array(
+        $whereGate = [
             $db->quoteInto("(acl.target_type = 'Employee' AND acl.target_id = ?)", (int)$empId),
             $db->quoteInto("(acl.target_type = 'Role' AND acl.target_id = ?)", (int)$roleId),
             $db->quoteInto("(acl.target_type = 'Group' AND acl.target_id = ?)", (int)$groupId)
-        );
+        ];
 
         $select->where(implode(' OR ', $whereGate));
 
@@ -259,29 +259,29 @@ class Default_Model_Reportcatalog extends Zend_Db_Table_Abstract
         $date = gmdate("Y-m-d H:i:s");
 
         // 1. Atomic Purge
-        $db->delete('map_report_acl', array('report_id = ?' => (int)$reportId));
+        $db->delete('map_report_acl', ['report_id = ?' => (int)$reportId]);
 
-        $insertions = array();
+        $insertions = [];
         foreach ($groups as $g) {
-            if ((int)$g['target_id'] > 0) $insertions[] = array('type' => 'Group', 'id' => (int)$g['target_id']);
+            if ((int)$g['target_id'] > 0) $insertions[] = ['type' => 'Group', 'id' => (int)$g['target_id']];
         }
         foreach ($roles as $r) {
-            if ((int)$r['target_id'] > 0) $insertions[] = array('type' => 'Role', 'id' => (int)$r['target_id']);
+            if ((int)$r['target_id'] > 0) $insertions[] = ['type' => 'Role', 'id' => (int)$r['target_id']];
         }
         foreach ($employees as $e) {
-            if ((int)$e['target_id'] > 0) $insertions[] = array('type' => 'Employee', 'id' => (int)$e['target_id']);
+            if ((int)$e['target_id'] > 0) $insertions[] = ['type' => 'Employee', 'id' => (int)$e['target_id']];
         }
 
         foreach ($insertions as $target) {
             try {
-                $db->insert('map_report_acl', array(
+                $db->insert('map_report_acl', [
                     'report_id'   => (int)$reportId,
                     'target_type' => $target['type'],
                     'target_id'   => $target['id'],
                     'isactive'    => 1,
                     'createdby'   => $userId,
                     'createddate' => $date
-                ));
+                ]);
             } catch (Exception $dup) {
                 // Ignore duplicates if the UI submitted the same ID twice
             }
@@ -291,10 +291,10 @@ class Default_Model_Reportcatalog extends Zend_Db_Table_Abstract
     public function getExistingAclMappings($reportId)
     {
         $db = $this->getAdapter();
-        $mappings = array('Group' => array(), 'Role' => array(), 'Employee' => array());
+        $mappings = ['Group' => [], 'Role' => [], 'Employee' => []];
 
         $select = $db->select()
-            ->from(array('acl' => 'map_report_acl'), array(
+            ->from(['acl' => 'map_report_acl'], [
                 'target_type',
                 'target_id',
                 'target_name' => new Zend_Db_Expr("
@@ -305,10 +305,10 @@ class Default_Model_Reportcatalog extends Zend_Db_Table_Abstract
                         ELSE CONCAT('ID: ', acl.target_id)
                     END
                 ")
-            ))
-            ->joinLeft(array('g' => 'main_group'),    "acl.target_type = 'Group' AND acl.target_id = g.id", array())
-            ->joinLeft(array('r' => 'main_role'),     "acl.target_type = 'Role' AND acl.target_id = r.id", array())
-            ->joinLeft(array('e' => 'main_employee'), "acl.target_type = 'Employee' AND acl.target_id = e.id", array())
+            ])
+            ->joinLeft(['g' => 'main_group'],    "acl.target_type = 'Group' AND acl.target_id = g.id", [])
+            ->joinLeft(['r' => 'main_role'],     "acl.target_type = 'Role' AND acl.target_id = r.id", [])
+            ->joinLeft(['e' => 'main_employee'], "acl.target_type = 'Employee' AND acl.target_id = e.id", [])
             ->where('acl.report_id = ?', (int)$reportId)
             ->where('acl.isactive = 1');
 
@@ -317,7 +317,7 @@ class Default_Model_Reportcatalog extends Zend_Db_Table_Abstract
         foreach ($results as $row) {
             $type = $row['target_type'];
             if (isset($mappings[$type])) {
-                $mappings[$type][] = array('target_id' => $row['target_id'], 'target_name' => $row['target_name']);
+                $mappings[$type][] = ['target_id' => $row['target_id'], 'target_name' => $row['target_name']];
             }
         }
         return $mappings;

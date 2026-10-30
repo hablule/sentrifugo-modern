@@ -23,7 +23,7 @@ class Default_Model_Interviewdetails extends Zend_Db_Table_Abstract
 {
     protected $_name = 'main_interviewdetails';
     protected $_primary = 'id';
-    
+
     /**
      * This function gives data for grid view.
      * @parameters
@@ -45,33 +45,33 @@ class Default_Model_Interviewdetails extends Zend_Db_Table_Abstract
         $session = $auth->getStorage()->read();
         $loginUserId = $session->id;
         $loginGroupid = $session->group_id;
-                
+
         $roleData = $this->select()
                         ->setIntegrityCheck(false)
-                        ->from(array('c'=>$this->_name),array('c.*',))
-                        ->joinInner(array('r'=>'main_requisition'), "r.id = c.req_id and r.isactive = 1",array('requisition_code'=>'r.requisition_code'))
-                        ->joinInner(array('d'=>'main_candidatedetails'), "d.id = c.candidate_id and d.isactive = 1",array('candidate_name'=>'d.candidate_name','emailid'=>'d.emailid','contact_number'=>'d.contact_number','cand_status'=>'d.cand_status'))                        
-                        ->joinLeft(array('j'=>'main_jobtitle'), "j.jobtitle_id = r.jobtitle",array('jobtitlename'=>'j.name'))
-                        
+                        ->from(['c'=>$this->_name],['c.*',])
+                        ->joinInner(['r'=>'main_requisition'], "r.id = c.req_id and r.isactive = 1",['requisition_code'=>'r.requisition_code'])
+                        ->joinInner(['d'=>'main_candidatedetails'], "d.id = c.candidate_id and d.isactive = 1",['candidate_name'=>'d.candidate_name','emailid'=>'d.emailid','contact_number'=>'d.contact_number','cand_status'=>'d.cand_status'])                        
+                        ->joinLeft(['j'=>'main_jobtitle'], "j.jobtitle_id = r.jobtitle",['jobtitlename'=>'j.name'])
+
                         ->order("$by $sort") 
                         ->limitPage($pageNo, $perPage); 
         if($loginGroupid == MANAGER_GROUP || $loginGroupid == EMPLOYEE_GROUP || $loginGroupid == SYSTEMADMIN_GROUP)//for manager login
         {
-            $roleData = $roleData->joinInner(array('ir' => 'main_interviewrounddetails'),"ir.isactive = 1 and ir.interview_id = c.id and ir.interviewer_id = ".$loginUserId,array('interviewer_id' => 'ir.interviewer_id'));
+            $roleData = $roleData->joinInner(['ir' => 'main_interviewrounddetails'],"ir.isactive = 1 and ir.interview_id = c.id and ir.interviewer_id = ".$loginUserId,['interviewer_id' => 'ir.interviewer_id']);
             $roleData = $roleData->group('d.id');
-			
+
 			$where .= " and c.interview_status not in ('On hold')";
         }
 		$roleData = $roleData->where($where);
-        
+
 		return $roleData;       		
     }
- 
+
     public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{
 		$searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		if($searchData != '' && $searchData!='undefined')
 		{
 			$searchValues = json_decode($searchData);
@@ -87,25 +87,25 @@ class Default_Model_Interviewdetails extends Zend_Db_Table_Abstract
 		}
 		$objName = 'scheduleinterviews';
 
-        $tableFields = array('action'=>'Action',
+        $tableFields = ['action'=>'Action',
                              'requisition_code' => 'Requisition Code',
                              'jobtitlename' => 'Job Title',
                              'candidate_name' => 'Candidate Name',
                              'emailid' => 'Email',
                              'contact_number' => 'Mobile',
                              'interview_status' => 'Status',
-                            );
+                            ];
 		$tablecontent = $this->getCandidatesData($sort, $by, $pageNo, $perPage,$searchQuery);     
-		$inter_arr = array( ''=>'All','In process' => 'In process','Completed' => 'Complete',
-                            'On hold' => 'On hold','Requisition Closed/Completed' => 'Requisition Closed/Completed');
-        $dataTmp = array(
+		$inter_arr = [ ''=>'All','In process' => 'In process','Completed' => 'Complete',
+                            'On hold' => 'On hold','Requisition Closed/Completed' => 'Requisition Closed/Completed'];
+        $dataTmp = [
                 'sort' => $sort,
                 'by' => $by,
                 'pageNo' => $pageNo,
                 'perPage' => $perPage,				
                 'tablecontent' => $tablecontent,
                 'objectname' => $objName,
-                'extra' => array(),
+                'extra' => [],
                 'tableheader' => $tableFields,
                 'jsGridFnName' => 'getAjaxgridData',
                 'jsFillFnName' => '',
@@ -113,16 +113,16 @@ class Default_Model_Interviewdetails extends Zend_Db_Table_Abstract
                 'add' => 'add',
                 'menuName' => 'Interviews',
                 'call'=>$call,
-                'search_filters' => array(
-                    'interview_status' => array(
+                'search_filters' => [
+                    'interview_status' => [
                         'type' => 'select',
                         'filter_data' => $inter_arr,
-                    ),
-                ),
-        );	
+                    ],
+                ],
+        ];	
 		return $dataTmp;
 	}
-	
+
     /**
      * This function is used to save/update data in database.
      * @parameters
@@ -153,8 +153,8 @@ class Default_Model_Interviewdetails extends Zend_Db_Table_Abstract
     {
         return $this->_name;
     }
-  
-    
+
+
 	 public function getReqByintrvwID($intrvwid)
 	 {
 		$db = Zend_Db_Table::getDefaultAdapter();		
@@ -164,7 +164,7 @@ class Default_Model_Interviewdetails extends Zend_Db_Table_Abstract
         $row = $result->fetch();
         return $row;
 	 }
-	
+
 	public function getCandidateDetailsById($intId)
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();		
@@ -172,12 +172,12 @@ class Default_Model_Interviewdetails extends Zend_Db_Table_Abstract
 					inner join main_interviewdetails i on c.id=i.candidate_id
 					inner join main_requisition r on r.id = i.req_id
 					where i.id=".$intId." and r.isactive = 1 and c.isactive = 1 and i.isactive = 1";
-        
+
         $result = $db->query($query);
         $row = $result->fetch();
         return $row;
 	}
-	
+
 	public function getSingleInterviewData($id)
 	{
 		$row = $this->fetchRow("id = '".$id."' and isactive = 1");
@@ -190,8 +190,8 @@ class Default_Model_Interviewdetails extends Zend_Db_Table_Abstract
 	{
 		$row = $this->fetchRow("candidate_id = '".$cand_id."' and isactive = 1");
 		if (!$row) {
-			
-        return array();
+
+        return [];
 		}
                 else 
 		return $row->toArray();
@@ -205,7 +205,7 @@ class Default_Model_Interviewdetails extends Zend_Db_Table_Abstract
         $row = $result->fetch();
         return $row;
 	}
-	
+
     public function getCandidateInInterviewProcess($candidateid)
 	 {
 		$db = Zend_Db_Table::getDefaultAdapter();		
@@ -215,15 +215,15 @@ class Default_Model_Interviewdetails extends Zend_Db_Table_Abstract
         $row = $result->fetch();
         return $row['cnt'];
 	 }
-	 
+
     public function getCandidateIdById($intId)
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();		
          $query = "select i.candidate_id candid from main_interviewdetails i where i.id=".$intId." and i.isactive = 1";
-       
+
         $result = $db->query($query);
         $row = $result->fetch();
         return $row['candid'];
 	}
-	 
+
 }//end of class

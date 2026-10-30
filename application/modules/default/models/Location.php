@@ -12,10 +12,10 @@ class Default_Model_Location extends Zend_Db_Table_Abstract
 
         $adress = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('l' => 'main_location'), array('location_id' => 'l.location_id', 'address1' => 'l.address1', 'address2' => 'l.address2'))
-            ->joinInner(array('c' => 'tbl_countries'), "c.id = l.country_id ", array('country' => 'c.country_name'))
-            ->joinInner(array('s' => 'tbl_states'), "s.id = l.region_id ", array('region' => 's.state_name'))
-            ->joinInner(array('ci' => 'tbl_cities'), "ci.id = l.city_id ", array('city' => 'ci.city_name'))
+            ->from(['l' => 'main_location'], ['location_id' => 'l.location_id', 'address1' => 'l.address1', 'address2' => 'l.address2'])
+            ->joinInner(['c' => 'tbl_countries'], "c.id = l.country_id ", ['country' => 'c.country_name'])
+            ->joinInner(['s' => 'tbl_states'], "s.id = l.region_id ", ['region' => 's.state_name'])
+            ->joinInner(['ci' => 'tbl_cities'], "ci.id = l.city_id ", ['city' => 'ci.city_name'])
             ->where($where)
             ->order("$by $sort")
             ->limitPage($pageNo, $perPage);
@@ -24,7 +24,7 @@ class Default_Model_Location extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $a = '', $b = '', $c = '', $d = '')
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
             foreach ($searchValues as $key => $val) {
@@ -45,7 +45,7 @@ class Default_Model_Location extends Zend_Db_Table_Abstract
             $searchQuery = rtrim($searchQuery, " AND");
         }
         $objName = 'location';
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'address1' => 'Address One',
             'address2' => 'Addres Two',
@@ -53,17 +53,17 @@ class Default_Model_Location extends Zend_Db_Table_Abstract
             'country' => 'Country',
             'region' => 'Region',
             'city' => 'city',
-        );
+        ];
 
         $tablecontent = $this->getAddress($sort, $by, $pageNo, $perPage, $searchQuery);
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
             'perPage' => $perPage,
             'tablecontent' => $tablecontent,
             'objectname' => $objName,
-            'extra' => array(),
+            'extra' => [],
             'tableheader' => $tableFields,
             'add' => 'add',
             'jsGridFnName' => 'getAjaxgridData',
@@ -72,7 +72,7 @@ class Default_Model_Location extends Zend_Db_Table_Abstract
 
             'call' => $call,
             'dashboardcall' => $dashboardcall
-        );
+        ];
         return $dataTmp;
     }
     public function SaveorUpdatelocationData($data, $where)
@@ -96,7 +96,7 @@ class Default_Model_Location extends Zend_Db_Table_Abstract
     {
         $query = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('l' => 'main_location'), array('id' => 'l.location_id', 'location' => 'l.address1'))
+            ->from(['l' => 'main_location'], ['id' => 'l.location_id', 'location' => 'l.address1'])
             ->where('l.isactive="Y"');
 
         return $this->fetchAll($query)->toArray();
@@ -105,7 +105,7 @@ class Default_Model_Location extends Zend_Db_Table_Abstract
     {
         $query = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('l' => 'main_location'))
+            ->from(['l' => 'main_location'])
             ->where('l.isactive="Y" and l.location_id=' . $id);
 
         return $this->fetchAll($query)->toArray();
@@ -125,10 +125,10 @@ class Default_Model_Location extends Zend_Db_Table_Abstract
         $where = "l.location_id = " . $id . " AND l.isactive='Y'";
         $adress = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('l' => 'main_location'), array('location_id' => 'l.location_id', 'address1' => 'l.address1', 'address2' => 'l.address2', 'address3' => 'l.address3', 'address4' => 'l.address4', 'map' => 'l.map_coordinate', 'isactive' => 'if(l.isactive="N","No","Yes")'))
-            ->joinInner(array('c' => 'tbl_countries'), "c.id = l.country_id ", array('country' => 'c.country_name'))
-            ->joinInner(array('s' => 'tbl_states'), "s.id = l.region_id ", array('state' => 's.state_name'))
-            ->joinInner(array('ci' => 'tbl_cities'), "ci.id = l.city_id ", array('city' => 'ci.city_name'))
+            ->from(['l' => 'main_location'], ['location_id' => 'l.location_id', 'address1' => 'l.address1', 'address2' => 'l.address2', 'address3' => 'l.address3', 'address4' => 'l.address4', 'map' => 'l.map_coordinate', 'isactive' => 'if(l.isactive="N","No","Yes")'])
+            ->joinInner(['c' => 'tbl_countries'], "c.id = l.country_id ", ['country' => 'c.country_name'])
+            ->joinInner(['s' => 'tbl_states'], "s.id = l.region_id ", ['state' => 's.state_name'])
+            ->joinInner(['ci' => 'tbl_cities'], "ci.id = l.city_id ", ['city' => 'ci.city_name'])
             ->where($where);
         return $this->fetchAll($adress)->toArray();
     }
@@ -136,7 +136,7 @@ class Default_Model_Location extends Zend_Db_Table_Abstract
     {
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from($this->_name, array('location_id', 'address1', 'address2', 'address3'))
+            ->from($this->_name, ['location_id', 'address1', 'address2', 'address3'])
             ->where('isactive = ?', 'Y');
         return $this->fetchAll($select)->toArray();
     }
@@ -151,11 +151,11 @@ class Default_Model_Location extends Zend_Db_Table_Abstract
     public function getPairs($activeOnly = true)
     {
         $select = $this->select()
-            ->from($this->_name, array(
+            ->from($this->_name, [
                 'id'   => 'location_id', // Map the PK
                 // Build a readable label: e.g., "123 Main St, Suite 400"
                 'name' => new Zend_Db_Expr("TRIM(CONCAT_WS(', ', NULLIF(address1, ''), NULLIF(address2, '')))")
-            ))
+            ])
             ->order('name ASC');
 
         if ($activeOnly) {

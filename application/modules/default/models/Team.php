@@ -64,7 +64,7 @@ class Default_Model_Team extends Zend_Db_Table_Abstract
      */
     public function getPairs($activeOnly = true, $excludeId = null)
     {
-        $select = $this->select()->from($this->_name, array('id', 'name'))->order('name ASC');
+        $select = $this->select()->from($this->_name, ['id', 'name'])->order('name ASC');
         if ($activeOnly) {
             $select->where('isactive = ?', 1);
         }
@@ -77,7 +77,7 @@ class Default_Model_Team extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if (!empty($searchData) && $searchData !== 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -101,7 +101,7 @@ class Default_Model_Team extends Zend_Db_Table_Abstract
         }
 
         // SSOT Mandatory: 'action' => 'Action' must be the first element
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'              => 'Action',
             'code'                => 'Code',
             'name'                => 'Team Name',
@@ -109,18 +109,18 @@ class Default_Model_Team extends Zend_Db_Table_Abstract
             'parent_name'         => 'Parent Name',
             'representative_name' => 'Representative',
             'status_text'         => 'Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
             'perPage'        => $perPage,
             'tablecontent'   => $tableContent,
             'objectname'     => 'team',
-            'extra'          => array(),
+            'extra'          => [],
             'tableheader'    => $tableHeaders,
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
@@ -128,10 +128,10 @@ class Default_Model_Team extends Zend_Db_Table_Abstract
             'menuName'       => 'Teams',
             'call'           => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => array(
-                'status_text' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive'))
-            )
-        );
+            'search_filters' => [
+                'status_text' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']]
+            ]
+        ];
     }
 
     /**
@@ -153,8 +153,8 @@ class Default_Model_Team extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from(
-                array('t' => $this->_name),
-                array(
+                ['t' => $this->_name],
+                [
                     'id' => 't.id',
                     'code',
                     'name',
@@ -172,22 +172,22 @@ class Default_Model_Team extends Zend_Db_Table_Abstract
                     "),
                     'parent_name' => new Zend_Db_Expr("COALESCE(comp.name, sbu.name, divi.name, dept.name, sec.name, proj.name, pteam.name, '—')"),
                     'status_text' => new Zend_Db_Expr("CASE WHEN t.isactive = 1 THEN 'Active' ELSE 'Inactive' END")
-                )
+                ]
             )
             // Representative
             ->joinInner( // Inner join because representative_id is NOT NULL
-                array('e' => 'main_employee'),
+                ['e' => 'main_employee'],
                 't.representative_id = e.id',
-                array('representative_name' => 'e.userfullname')
+                ['representative_name' => 'e.userfullname']
             )
             // Poly-Hierarchical Parents
-            ->joinLeft(array('comp' => 'main_company'), 't.company_id = comp.id', array())
-            ->joinLeft(array('sbu' => 'main_businessunit'), 't.sbunit_id = sbu.id', array())
-            ->joinLeft(array('divi' => 'main_division'), 't.division_id = divi.id', array())
-            ->joinLeft(array('dept' => 'main_department'), 't.department_id = dept.id', array())
-            ->joinLeft(array('sec' => 'main_section'), 't.section_id = sec.id', array())
-            ->joinLeft(array('proj' => 'main_project'), 't.project_id = proj.id', array())
-            ->joinLeft(array('pteam' => $this->_name), 't.parent_id = pteam.id', array()) // Self-join
+            ->joinLeft(['comp' => 'main_company'], 't.company_id = comp.id', [])
+            ->joinLeft(['sbu' => 'main_businessunit'], 't.sbunit_id = sbu.id', [])
+            ->joinLeft(['divi' => 'main_division'], 't.division_id = divi.id', [])
+            ->joinLeft(['dept' => 'main_department'], 't.department_id = dept.id', [])
+            ->joinLeft(['sec' => 'main_section'], 't.section_id = sec.id', [])
+            ->joinLeft(['proj' => 'main_project'], 't.project_id = proj.id', [])
+            ->joinLeft(['pteam' => $this->_name], 't.parent_id = pteam.id', []) // Self-join
             ->where('t.isactive != ?', 5);
 
         if (!empty($searchQuery)) {
@@ -213,7 +213,7 @@ class Default_Model_Team extends Zend_Db_Table_Abstract
         if (!empty($id)) {
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = $currentDate;
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return 'update';
         }
 
@@ -232,13 +232,13 @@ class Default_Model_Team extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => 5,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
+        ];
 
-        return $this->update($data, array('id = ?' => (int)$id));
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     public function toggleStatus($id, $status)
@@ -246,13 +246,13 @@ class Default_Model_Team extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => (int)$status,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
+        ];
 
-        return $this->update($data, array('id = ?' => (int)$id));
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* =================================================================================
@@ -284,21 +284,21 @@ class Default_Model_Team extends Zend_Db_Table_Abstract
 
         // 2. Check if mapped to a Distribution List
         $distSelect = $db->select()
-            ->from('main_distribution_list', array('id'))
+            ->from('main_distribution_list', ['id'])
             ->where('team_id = ?', (int)$id)
             ->where('isactive = ?', 1);
         if ($db->fetchRow($distSelect)) return true;
 
         // 3. Check if mapped to Employee Routing
         $empSelect = $db->select()
-            ->from('main_employee', array('id'))
+            ->from('main_employee', ['id'])
             ->where('team_id = ?', (int)$id) // Assumes team_id exists in employee table
             ->where('isactive != ?', 5);
         if ($db->fetchRow($empSelect)) return true;
 
         // 4. Check if mapped to a Project
         $projSelect = $db->select()
-            ->from('map_project_participant', array('id'))
+            ->from('map_project_participant', ['id'])
             ->where('team_id = ?', (int)$id)
             ->where('isactive = ?', 1);
         if ($db->fetchRow($projSelect)) return true;

@@ -53,8 +53,8 @@ class Default_AppraisalstatusController extends Zend_Controller_Action
         }	
         
     	$errorMsg = '';
-    	$msgarray = array();
-    	$bunitdataArr = array();
+    	$msgarray = [];
+    	$bunitdataArr = [];
     	$flag = '';
         $appInitModel = new Default_Model_Appraisalinit();
         if($loginuserRole != SUPERADMINROLE && $loginuserGroup != MANAGEMENT_GROUP && $loginuserGroup != HR_GROUP)
@@ -94,7 +94,7 @@ class Default_AppraisalstatusController extends Zend_Controller_Action
         {
         	$bunitModel = new Default_Model_Businessunits();
         	$buids = '';
-        	$bunitdataArr = array();
+        	$bunitdataArr = [];
         	$activeAppraisalManagerArr = $appInitModel->getAppraisalForMgrEmp(1);
         	if(!empty($activeAppraisalManagerArr))
         	{
@@ -136,9 +136,9 @@ class Default_AppraisalstatusController extends Zend_Controller_Action
         $appempModel = new Default_Model_Appraisalgroupemployees();
         $appInitModel = new Default_Model_Appraisalinit();
         $managerIds = '';
-        $msgarray = array();
-        $employeeArr = array();
-        $budeptArr = array();
+        $msgarray = [];
+        $employeeArr = [];
+        $budeptArr = [];
         $errorMsg = '';
         
         if($flag == 1)
@@ -157,7 +157,7 @@ class Default_AppraisalstatusController extends Zend_Controller_Action
         			$errorMsg = 'Line Manager(s) not configured for the appraisal.';
         		} 
         		if($managerIds !='')
-        		 $employeeArr = $appempModel->getEmployeeList(array(), $managerIds,2);
+        		 $employeeArr = $appempModel->getEmployeeList([], $managerIds,2);
         		 
         		 //$budeptArr = $this->getbudeptname($appraisalid);
         		 $budeptArr =  sapp_Global::getbudeptname($appraisalid);
@@ -178,7 +178,7 @@ class Default_AppraisalstatusController extends Zend_Controller_Action
 		        		 	$managerIds = rtrim($managerIds,',');		
 		        		} 
 		        		if($managerIds !='')
-		        		 $employeeArr = $appempModel->getEmployeeList(array(), $managerIds,2);
+		        		 $employeeArr = $appempModel->getEmployeeList([], $managerIds,2);
 		        		 
 		        		 $completedmgrids = array_unique(explode(',', $checkActiveApp['manager_ids']));
 					}
@@ -212,7 +212,7 @@ class Default_AppraisalstatusController extends Zend_Controller_Action
     	$ajaxContext = $this->_helper->getHelper('AjaxContext');
 		$ajaxContext->addActionContext('savegroupedemployeesajax','json')->initContext();
 		$this->_helper->layout->disableLayout();
-		$result = array();
+		$result = [];
 		$model = new Default_Model_Appraisalinit();
 		$departmentsmodel = new Default_Model_Departments();
 		$businessunit_id = $this->_request->getParam('buid');
@@ -270,12 +270,12 @@ class Default_AppraisalstatusController extends Zend_Controller_Action
         }	
         
     	$errorMsg = '';
-    	$msgarray = array();
-    	$bunitdataArr = array();
+    	$msgarray = [];
+    	$bunitdataArr = [];
     	$flag = '';
         $appInitModel = new Default_Model_Appraisalinit();
-        $app_status_array = array(1=>APP_PENDING_EMP, 2=>APP_PENDING_L1, 3=>APP_PENDING_L2, 4=>APP_PENDING_L3,
-										5=>APP_PENDING_L4, 6=>APP_PENDING_L5, 7=>APP_COMPLETED);
+        $app_status_array = [1=>APP_PENDING_EMP, 2=>APP_PENDING_L1, 3=>APP_PENDING_L2, 4=>APP_PENDING_L3,
+										5=>APP_PENDING_L4, 6=>APP_PENDING_L5, 7=>APP_COMPLETED];
         if($loginuserRole != SUPERADMINROLE && $loginuserGroup != MANAGEMENT_GROUP && $loginuserGroup != HR_GROUP)
         {
             $appImpleData = sapp_PerformanceHelper::check_per_implmentation($businessunit_id, $department_id);
@@ -313,7 +313,7 @@ class Default_AppraisalstatusController extends Zend_Controller_Action
         {
         	$bunitModel = new Default_Model_Businessunits();
 			$buids = '';
-        	$bunitdataArr = array();
+        	$bunitdataArr = [];
         	$activeAppraisalManagerArr = $appInitModel->getAppraisalForMgrEmp(2);
         	if(!empty($activeAppraisalManagerArr))
         	{
@@ -354,11 +354,11 @@ class Default_AppraisalstatusController extends Zend_Controller_Action
         $appInitModel = new Default_Model_Appraisalinit();
         $empratingsModel = new Default_Model_Appraisalemployeeratings();
         $employeeIds = '';
-        $msgarray = array();
-        $employeeArr = array();
-        $getEmployeeRatingsArr = array();
+        $msgarray = [];
+        $employeeArr = [];
+        $getEmployeeRatingsArr = [];
         $errorMsg = '';
-        $budeptArr = array();
+        $budeptArr = [];
         
         if($flag == 1)
         {
@@ -372,7 +372,7 @@ class Default_AppraisalstatusController extends Zend_Controller_Action
         		 	$employeeIds = rtrim($employeeIds,',');		
         		} 
         		if($employeeIds !='')
-				$employeedetailsArr = $appempModel->getEmployeeList(array(), $employeeIds,2);
+				$employeedetailsArr = $appempModel->getEmployeeList([], $employeeIds,2);
 				if(!empty($employeedetailsArr))
 				{
 					foreach($employeedetailsArr as $key => $val)
@@ -400,7 +400,7 @@ class Default_AppraisalstatusController extends Zend_Controller_Action
 			        		 	$employeeIds = rtrim($employeeIds,',');		
 			        		} 
 			        		if($employeeIds !='')
-			        		 $employeedetailsArr = $appempModel->getEmployeeList(array(), $employeeIds,2);
+			        		 $employeedetailsArr = $appempModel->getEmployeeList([], $employeeIds,2);
 			        		 if(!empty($employeedetailsArr))
 			        		 {
 			        		 	foreach($employeedetailsArr as $key => $val)
@@ -452,9 +452,9 @@ class Default_AppraisalstatusController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 		
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 		
 		if($refresh == 'refresh')
@@ -497,7 +497,7 @@ class Default_AppraisalstatusController extends Zend_Controller_Action
     	$buname = '';
     	$deptname ='';
     	$perf_impl_flag = '';
-    	$appraisaldataArr = array();
+    	$appraisaldataArr = [];
     	if($appraisalid)
     	{
     		$appraisaldataArr = $appInitModel->getAppDataById($appraisalid);
@@ -529,7 +529,7 @@ class Default_AppraisalstatusController extends Zend_Controller_Action
     		}
     	}
     	
-    	return array('buname' => $buname,'deptname'=>$deptname,'perf_app_flag'=>$perf_impl_flag,'appdata'=>$appraisaldataArr);
+    	return ['buname' => $buname,'deptname'=>$deptname,'perf_app_flag'=>$perf_impl_flag,'appdata'=>$appraisaldataArr];
     
     }
     
@@ -596,8 +596,8 @@ public function displaymanagersAction()
     {
     	$ajaxContext = $this->_helper->getHelper('AjaxContext');
 		$ajaxContext->addActionContext('displaymanagers', 'html')->initContext();
-        $line1_data = array();
-        $line_managers = array();
+        $line1_data = [];
+        $line_managers = [];
         $type = $this->_getParam('type',null);
         $levels = $this->_getParam('levels',null);
         $init_id = $this->_getParam('init_id',null);
@@ -698,7 +698,7 @@ public function displaymanagersAction()
 		      	{
 		      		$preLine_mgr = "preLine_".$i."_mgr";
 		      		$line_mgr    = "line_".$i."_mgr";
-		      		if($$line_mgr != $$preLine_mgr)
+		      		if(${$line_mgr} != ${$preLine_mgr})
 		      		{  
 		      			$send_mails = true;
 		      			
@@ -717,7 +717,7 @@ public function displaymanagersAction()
 	        $trDb->beginTransaction();
 	        try 
 	        {
-				$data = array( 'line_manager_1' =>  $line_1_mgr!=''?$line_1_mgr:NULL,
+				$data = [ 'line_manager_1' =>  $line_1_mgr!=''?$line_1_mgr:NULL,
 								'line_manager_2' => $line_2_mgr!=''?$line_2_mgr:NULL,
 								'line_manager_3' => $line_3_mgr!=''?$line_3_mgr:NULL,
 								'line_manager_4' => $line_4_mgr!=''?$line_4_mgr:NULL,
@@ -727,7 +727,7 @@ public function displaymanagersAction()
 	                            'modifiedby_role' => $loginuserRole,
 	                            'modifiedby_group' => $loginuserGroup,
 	                            'modifieddate' => gmdate("Y-m-d H:i:s"),
-	                                    );
+	                                    ];
 	           $privilegeswhere = " employee_id = '".$employeeid."' and pa_initialization_id='".$appraisalid."' and module_flag=1 and isactive=1 ";
 	           $empratingswhere = " employee_id = '".$employeeid."' and pa_initialization_id='".$appraisalid."' and isactive=1 ";
 	           $appraisalPrivMainModel->SaveorUpdatePrivilegeData($data, $privilegeswhere);
@@ -742,14 +742,14 @@ public function displaymanagersAction()
 					 * Sending Mails to employees
 					 */
 						$emp_id_str = ($loginuserRole == SUPERADMINROLE) ? " ":"($loginUserEmpId)";
-						
+
 						//Preparing string with line manager ids
 						$mgrStr = '';
 						for($i=1;$i<=$levels;$i++)
 						{
 							$mgr_str = 'line_'.$i.'_mgr';//$line_1_mgr
-							if(is_numeric($$mgr_str))
-								$mgrStr .= $$mgr_str.',';
+							if(is_numeric(${$mgr_str}))
+								$mgrStr .= ${$mgr_str}.',';
 						}
 						$mgrStr = rtrim($mgrStr, ",");
 						$appraisalratingsmodel = new Default_Model_Appraisalratings();
@@ -759,20 +759,20 @@ public function displaymanagersAction()
 							$to_year = $appraisal_details['to_year'];
 						}
 						$employeeDetailsArr = $appraisalPrivMainModel ->getManagerDetailsByIds($employeeid,$mgrStr); 
-						$mgr_array = array();
+						$mgr_array = [];
 						$mgr_array = explode(",",$mgrStr);
-						
+
 						//Preparing Employee array for Bcc
-								$empArr = array();
+								$empArr = [];
 								if(!empty($employeeDetailsArr))
 								{
 									$empArrList = '';
-									$empUserIdArr = array();
+									$empUserIdArr = [];
 									$toEmailId = '';
 									$toEmailName = '';
 									foreach($employeeDetailsArr as $emp)
 									{  
-										
+
 										array_push($empArr,$emp['emailaddress']); //preparing Bcc array
 										array_push($empUserIdArr,$emp['user_id']);
 										if($emp['user_id'] == $employeeid)    // checking employeeId to prepare toemailAddress
@@ -781,10 +781,10 @@ public function displaymanagersAction()
 											$toEmailName = $emp['userfullname'];
 											$toEmpId = $emp['employeeId'];
 											array_pop($empArr);
-											
+
 										}
-										
-										
+
+
 									}
 									$index = array_search($employeeid,$empUserIdArr);
 									unset($employeeDetailsArr[$index]);
@@ -802,16 +802,16 @@ public function displaymanagersAction()
 												else
 												$src = MEDIA_PATH."images/default-profile-pic.jpg";
 												 $mail_str .= "<div style='padding:20px 0 0 0;color:#3b3b3b;'>Line $cnt Manager : ".$employee['userfullname']." <img src=".$src." onError=this.src=".MEDIA_PATH."images/default-profile-pic.jpg width='30px' height='30px' /></div>";
-											
-								
+
+
 											}
 										} 
-										
+
 									}
 								}
 								//pushing loginUserEmail to Bcc array 
 								array_push($empArr,$loginUserEmail);
-								
+
 								$options['subject'] = APPLICATION_NAME.': Change in Line Managers' ;
                                 $options['header'] 	= 'Performance Appraisal : '.$to_year;
                                 $options['bcc'] 	= $empArr; 
@@ -824,7 +824,7 @@ public function displaymanagersAction()
 														<div style='padding:20px 0 10px 0;'>Please <a href=".BASE_URL." target='_blank' style='color:#b3512f;'>click here</a> to login  to your <b>".APPLICATION_NAME."</b> account and check the details.</div>
 														</div> ";
                                 $mail_id 			=  sapp_Global::_sendEmail($options);
-							 
+
 					/**
 					 * End mails sending
 					 */	

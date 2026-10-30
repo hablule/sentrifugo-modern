@@ -53,7 +53,7 @@ class Default_Form_State extends Zend_Form
             ->setAttrib('class', 'formDataElement')
             ->setRegisterInArrayValidator(false) // Dynamic population in controller
             ->setRequired(true)
-            ->addValidator('NotEmpty', true, array('messages' => 'Please select a Country.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please select a Country.']);
 
         /* --------------------------------------------------------------
          * Text Elements (Alphabetical Order)
@@ -62,44 +62,44 @@ class Default_Form_State extends Zend_Form
         // State/Province Code
         $code = new Zend_Form_Element_Text('code');
         $code->setLabel('State Code')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '60', 'placeholder' => 'e.g., CA, ON'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '60', 'placeholder' => 'e.g., CA, ON'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', true, array('messages' => 'Please enter a state code.'))
-            ->addValidator('Regex', true, array(
+            ->addValidator('NotEmpty', true, ['messages' => 'Please enter a state code.'])
+            ->addValidator('Regex', true, [
                 'pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9 ]*)$/',
-                'messages' => array(Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space or contain special characters.')
-            ));
+                'messages' => [Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space or contain special characters.']
+            ]);
 
         $excludeClauseCode = ($idVal > 0) ? "id != $idVal AND isactive != 5" : "isactive != 5";
-        $codeVal = new Zend_Validate_Db_NoRecordExists(array(
+        $codeVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_state',
             'field'   => 'code',
             'exclude' => $excludeClauseCode
-        ));
+        ]);
         $codeVal->setMessage('This state code already exists.');
         $code->addValidator($codeVal);
 
         // State/Province Name
         $name = new Zend_Form_Element_Text('name');
         $name->setLabel('State/Province Name')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '100', 'placeholder' => 'e.g., California, Ontario'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '100', 'placeholder' => 'e.g., California, Ontario'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', true, array('messages' => 'Please enter a state/province name.'))
-            ->addValidator('Regex', true, array(
+            ->addValidator('NotEmpty', true, ['messages' => 'Please enter a state/province name.'])
+            ->addValidator('Regex', true, [
                 'pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9 ]*)$/',
-                'messages' => array(Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space or contain special characters.')
-            ));
+                'messages' => [Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space or contain special characters.']
+            ]);
 
         $excludeClauseName = ($idVal > 0) ? "id != $idVal AND isactive != 5" : "isactive != 5";
-        $nameVal = new Zend_Validate_Db_NoRecordExists(array(
+        $nameVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_state',
             'field'   => 'name',
             'exclude' => $excludeClauseName
-        ));
+        ]);
         $nameVal->setMessage('This state name already exists.');
         $name->addValidator($nameVal);
 
@@ -110,11 +110,11 @@ class Default_Form_State extends Zend_Form
         // Mapped Geography Groups (Polymorphic Junction)
         $geographygroup_id = new Zend_Form_Element_Multiselect('geographygroup_id');
         $geographygroup_id->setLabel('Geography Groups (Clusters)')
-            ->setAttribs(array(
+            ->setAttribs([
                 'class' => 'formDataElement', 
                 'size'  => 5, 
                 'title' => 'Select the policy groups this country belongs to (e.g., North America, EMEA).'
-            ))
+            ])
             ->setRegisterInArrayValidator(false) 
             ->setRequired(false);
 
@@ -125,7 +125,7 @@ class Default_Form_State extends Zend_Form
         // Description (Optional)
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Description')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -146,7 +146,7 @@ class Default_Form_State extends Zend_Form
 
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save')
-            ->setAttribs(array('id' => 'submitbutton', 'class' => 'actbtn_btn'));
+            ->setAttribs(['id' => 'submitbutton', 'class' => 'actbtn_btn']);
 
         // SSOT AJAX Submission Pattern (Correct Controller Target)
         $urlAction  = "'state/save/format/json'";
@@ -157,7 +157,7 @@ class Default_Form_State extends Zend_Form
          * Build Form & Apply Decorators
          * -------------------------------------------------------------- */
 
-        $this->addElements(array(
+        $this->addElements([
             $idElement,
             $country_id,
             $name,
@@ -166,12 +166,12 @@ class Default_Form_State extends Zend_Form
             $description,
             $isactive,
             $submit
-        ));
+        ]);
 
         // Strip default Zend Decorators and enforce ViewHelper universally
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
-            $element->setDecorators(array('ViewHelper'));
+            $element->setDecorators(['ViewHelper']);
         }
     }
 }

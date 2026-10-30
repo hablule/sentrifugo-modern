@@ -33,10 +33,10 @@ class Default_Model_Educationdetails extends Zend_Db_Table_Abstract
 			$where .= " AND ".$searchQuery;		
 		$empeducationDetails = $this->select()
 		                ->setIntegrityCheck(false)
-						->from(array('e'=>'main_empeducationdetails'),array('id'=>'id','institution_name'=>'coalesce(ed.name,e.institution_name)','course'=>'coalesce(s.name,e.studyfield)','start_date'=>'DATE_FORMAT(start_date,"'.DATEFORMAT_MYSQL.'")','end_date'=>'DATE_FORMAT(end_date,"'.DATEFORMAT_MYSQL.'")','status'=>'status'))
-						->joinLeft(array('ed'=>'main_institution'), 'ed.institution_id=e.institution_id AND ed.isactive = 1',array('iname'=>'ed.name'))
-						->joinLeft(array('s'=>'main_studyfield'),'s.studyfield_id = e.studyfield_id',array('sname'=>'s.name'))
-						->joinLeft(array('sl'=>'main_studylevel'),'sl.studylevel_id = e.studylevel_id',array('slname'=>'sl.name'))							   
+						->from(['e'=>'main_empeducationdetails'],['id'=>'id','institution_name'=>'coalesce(ed.name,e.institution_name)','course'=>'coalesce(s.name,e.studyfield)','start_date'=>'DATE_FORMAT(start_date,"'.DATEFORMAT_MYSQL.'")','end_date'=>'DATE_FORMAT(end_date,"'.DATEFORMAT_MYSQL.'")','status'=>'status'])
+						->joinLeft(['ed'=>'main_institution'], 'ed.institution_id=e.institution_id AND ed.isactive = 1',['iname'=>'ed.name'])
+						->joinLeft(['s'=>'main_studyfield'],'s.studyfield_id = e.studyfield_id',['sname'=>'s.name'])
+						->joinLeft(['sl'=>'main_studylevel'],'sl.studylevel_id = e.studylevel_id',['slname'=>'sl.name'])							   
 						->where($where)
 						->order("$by $sort") 
 						->limitPage($pageNo, $perPage);
@@ -52,7 +52,7 @@ class Default_Model_Educationdetails extends Zend_Db_Table_Abstract
 		{
 			$where = "id =".$id;
 			$empeducationDetails = $this->select()
-									->from(array('e'=>'main_empeducationdetails'))
+									->from(['e'=>'main_empeducationdetails'])
 									->where($where);
 		
 			
@@ -92,19 +92,19 @@ class Default_Model_Educationdetails extends Zend_Db_Table_Abstract
 		// FOr particular Employee if record exists get the data.....
 		$empeducationDetails = $this->select()
 		                ->setIntegrityCheck(false)
-						->from(array('e'=>'main_empeducationdetails'),array('e.*','id'=>'id','institution_name'=>'coalesce(ed.name,e.institution_name)','course'=>'coalesce(s.name,e.studyfield)','start_date'=>'DATE_FORMAT(start_date,"'.DATEFORMAT_MYSQL.'")','end_date'=>'DATE_FORMAT(end_date,"'.DATEFORMAT_MYSQL.'")','status'=>'status'))
-						->joinLeft(array('ed'=>'main_institution'), 'ed.institution_id=e.institution_id AND ed.isactive = 1',array('iname'=>'ed.name'))
-						->joinLeft(array('s'=>'main_studyfield'),'s.studyfield_id = e.studyfield_id',array('sname'=>'s.name'))
-						->joinLeft(array('sl'=>'main_studylevel'),'sl.studylevel_id = e.studylevel_id',array('slname'=>'sl.name'))							   
+						->from(['e'=>'main_empeducationdetails'],['e.*','id'=>'id','institution_name'=>'coalesce(ed.name,e.institution_name)','course'=>'coalesce(s.name,e.studyfield)','start_date'=>'DATE_FORMAT(start_date,"'.DATEFORMAT_MYSQL.'")','end_date'=>'DATE_FORMAT(end_date,"'.DATEFORMAT_MYSQL.'")','status'=>'status'])
+						->joinLeft(['ed'=>'main_institution'], 'ed.institution_id=e.institution_id AND ed.isactive = 1',['iname'=>'ed.name'])
+						->joinLeft(['s'=>'main_studyfield'],'s.studyfield_id = e.studyfield_id',['sname'=>'s.name'])
+						->joinLeft(['sl'=>'main_studylevel'],'sl.studylevel_id = e.studylevel_id',['slname'=>'sl.name'])							   
 						->where("e.id=".$id);
 			
 						return $this->fetchAll($empeducationDetails)->toArray();
 					}
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$exParam1='',$exParam2='',$exParam3='',$exParam4='')
 	{		
-        $searchQuery = '';$tablecontent = '';$level_opt = array();
-        $searchArray = array();$data = array();$id='';
-        $dataTmp = array();
+        $searchQuery = '';$tablecontent = '';$level_opt = [];
+        $searchArray = [];$data = [];$id='';
+        $dataTmp = [];
 		if($searchData != '' && $searchData!='undefined')
 		{
 			$searchValues = json_decode($searchData);
@@ -123,8 +123,8 @@ class Default_Model_Educationdetails extends Zend_Db_Table_Abstract
 		/** search from grid - END **/
 		$objName = 'educationdetails';
 				
-		$tableFields = array('action'=>'Action','institution_name'=>'Institution Name','course'=>'Study Field',
-							 'start_date'=>'Start Date',"end_date"=>"End Date","status"=>"Status");	
+		$tableFields = ['action'=>'Action','institution_name'=>'Institution Name','course'=>'Study Field',
+							 'start_date'=>'Start Date',"end_date"=>"End Date","status"=>"Status"];	
 		
 		$tablecontent = $this->geteducationdetails($sort, $by,$pageNo,$perPage,$searchQuery,$exParam1);     
 		
@@ -137,14 +137,14 @@ class Default_Model_Educationdetails extends Zend_Db_Table_Abstract
 				$level_opt[$educationlevelres['id']] = $educationlevelres['educationlevelcode'];
 			}
 		}
-		$dataTmp = array('userid'=>$exParam1,
+		$dataTmp = ['userid'=>$exParam1,
 						'sort' => $sort,
 						'by' => $by,
 						'pageNo' => $pageNo,
 						'perPage' => $perPage,				
 						'tablecontent' => $tablecontent,
 						'objectname' => $objName,
-						'extra' => array(),
+						'extra' => [],
 						'tableheader' => $tableFields,
 						'jsGridFnName' => 'getEmployeeAjaxgridData',
 						'jsFillFnName' => '',
@@ -158,14 +158,14 @@ class Default_Model_Educationdetails extends Zend_Db_Table_Abstract
 
 						'call'=>$call,
 						'context'=>$exParam2,
-						'search_filters' => array('from_date' =>array('type'=>'datepicker'),
-													'to_date' =>array('type'=>'datepicker'),
-                                                            'educationlevel' => array(
+						'search_filters' => ['from_date' =>['type'=>'datepicker'],
+													'to_date' =>['type'=>'datepicker'],
+                                                            'educationlevel' => [
                                                                 'type' => 'select',
-                                                                'filter_data' => array('' => 'All')+$level_opt,
-                                                            ),
-                                                )									
-						);	
+                                                                'filter_data' => ['' => 'All']+$level_opt,
+                                                            ],
+                                                ]									
+						];	
 		return $dataTmp;
 	}
 }

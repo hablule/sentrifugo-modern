@@ -94,7 +94,7 @@ class Default_Model_Currency extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -115,18 +115,18 @@ class Default_Model_Currency extends Zend_Db_Table_Abstract
         }
 
         // Must match exact column aliases defined in getGridData()
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'      => 'Action',
             'code'        => 'ISO Code',
             'name'        => 'Currency Name',
             'symbol'      => 'Symbol',
             'description' => 'Description',
             'status_text' => 'Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
@@ -134,7 +134,7 @@ class Default_Model_Currency extends Zend_Db_Table_Abstract
             'tablecontent'   => $tableContent,
             'objectname'     => 'currency', // Matches Controller naming convention
             'tableheader'    => $tableHeaders,
-            'extra'          => array(),
+            'extra'          => [],
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
             'searchArray'    => $searchArray,
@@ -142,10 +142,10 @@ class Default_Model_Currency extends Zend_Db_Table_Abstract
             'menuName'       => 'Currencies',
             'call'           => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => array(
-                'status_text' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive'))
-            )
-        );
+            'search_filters' => [
+                'status_text' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']]
+            ]
+        ];
     }
 
     /**
@@ -166,12 +166,12 @@ class Default_Model_Currency extends Zend_Db_Table_Abstract
 
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('c' => $this->_name), array(
+            ->from(['c' => $this->_name], [
                 'id' => 'c.id',
                 '*',
                 // Alias status text so the grid helper displays words instead of 1/0
                 'status_text' => new Zend_Db_Expr("CASE WHEN c.isactive = 1 THEN 'Active' ELSE 'Inactive' END")
-            ))
+            ])
             ->where('c.isactive != 5');
 
         if (!empty($searchQuery)) {
@@ -193,10 +193,10 @@ class Default_Model_Currency extends Zend_Db_Table_Abstract
     public function getPairs($activeOnly = true)
     {
         $select = $this->select()
-            ->from($this->_name, array(
+            ->from($this->_name, [
                 'id',
                 'display_name' => new Zend_Db_Expr("CONCAT(code, ' - ', name)")
-            ))
+            ])
             ->order('code ASC');
 
         if ($activeOnly) {
@@ -238,7 +238,7 @@ class Default_Model_Currency extends Zend_Db_Table_Abstract
         if (!empty($id)) {
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = gmdate("Y-m-d H:i:s");
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return 'update';
         }
 
@@ -268,12 +268,12 @@ class Default_Model_Currency extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => 5,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
-        return $this->update($data, array('id = ?' => (int)$id));
+        ];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /**
@@ -288,12 +288,12 @@ class Default_Model_Currency extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => (int)$status,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
-        return $this->update($data, array('id = ?' => (int)$id));
+        ];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* =================================================================================

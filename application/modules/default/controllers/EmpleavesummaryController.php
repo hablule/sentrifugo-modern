@@ -38,7 +38,7 @@ class Default_EmpleavesummaryController extends Zend_Controller_Action
     public function indexAction()
     {
 		try {
-		
+
 	    $auth = Zend_Auth::getInstance();
      		if($auth->hasIdentity()){
 					$loginUserId = $auth->getStorage()->read()->id;
@@ -48,7 +48,7 @@ class Default_EmpleavesummaryController extends Zend_Controller_Action
 		$leaverequestmodel = new Default_Model_Leaverequest();	
 		$queryflag = '';
 		$errorstring = ''; 
-		$statusidarr = array('1','2','3','4');
+		$statusidarr = ['1','2','3','4'];
         $call = $this->_getParam('call');
 		$statusidstring = $this->_request->getParam('status');
 		$unitId = '';
@@ -57,9 +57,9 @@ class Default_EmpleavesummaryController extends Zend_Controller_Action
 			$unitId = $this->_request->getParam('unitId');
 			$statusidstring = $unitId;
 		}
-		
+
 		$statusid =  sapp_Global::_decrypt($statusidstring);
-		
+
 		if(isset($statusid) && $statusid !='' && $statusidstring != 'ASC')
 		{
 			if(!in_array($statusid,$statusidarr))
@@ -68,20 +68,20 @@ class Default_EmpleavesummaryController extends Zend_Controller_Action
 			}
 			$_SESSION['emp_leaves'] = $statusidstring;
 		}
-			  
+
 		if($call == 'ajaxcall')
 				$this->_helper->layout->disableLayout();
-		
+
 		$view = Zend_Layout::getMvcInstance()->getView();		
 		$objname = $this->_getParam('objname');
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
-		
-		$data = array();
+
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
-		
+
 		if($refresh == 'refresh')
 		{
 		    if($dashboardcall == 'Yes')
@@ -104,13 +104,13 @@ class Default_EmpleavesummaryController extends Zend_Controller_Action
 			$searchData = rtrim($searchData,',');
 			// search from grid - END 
 		}
-				
+
 		$objName = 'empleavesummary';
 		$access = Zend_Session::namespaceGet('access_control');
 		$empids = $access['empids'];
 		$perm = $access['perm'];
 		$dataTmp = $leaverequestmodel->getGrid($sort, $by, $perPage, $pageNo, $searchData,$call,$dashboardcall,$objName,$statusid,'',$empids,$perm);      		
-		
+
 		array_push($data,$dataTmp);
 		$this->view->dataArray = $data;
 		$this->view->call = $call ;
@@ -235,8 +235,8 @@ Zend_Debug::dump($th->getMessage())	;	}
 		    if($id)
 			{
 			$leaverequestmodel = new Default_Model_Leaverequest();
-			  $data = array('leavestatus'=>4);
-			  $where = array('id=?'=>$id);
+			  $data = ['leavestatus'=>4];
+			  $where = ['id=?'=>$id];
 			  $Id = $leaverequestmodel->SaveorUpdateLeaveRequest($data, $where);
 			    if($Id == 'update')
 				{

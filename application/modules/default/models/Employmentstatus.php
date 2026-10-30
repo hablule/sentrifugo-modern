@@ -38,8 +38,8 @@ class Default_Model_Employmentstatus extends Zend_Db_Table_Abstract
 		
 		$employmentstatus = $this->select()
     					   ->setIntegrityCheck(false)
-                           ->from(array('e'=>'main_employment_type'),array( 'e.*'))
-                           ->joinLeft(array('es'=>'tbl_employmentstatus'), 'es.id=e.workcodename',array('employemnt_status'=>'es.employemnt_status'))  						   
+                           ->from(['e'=>'main_employment_type'],[ 'e.*'])
+                           ->joinLeft(['es'=>'tbl_employmentstatus'], 'es.id=e.workcodename',['employemnt_status'=>'es.employemnt_status'])  						   
 						   ->where($where)
     					   ->order("$by $sort") 
     					   ->limitPage($pageNo, $perPage);
@@ -51,7 +51,7 @@ class Default_Model_Employmentstatus extends Zend_Db_Table_Abstract
 		$row = $this->fetchRow("id = '".$id."' and isactive = 1");
 		if (!$row) {
 			
-                    return array();
+                    return [];
 		}
                 else
 		return $row->toArray();
@@ -80,7 +80,7 @@ class Default_Model_Employmentstatus extends Zend_Db_Table_Abstract
         public function getEmpStatusOptions()
         {
             $data = $this->fetchAll("isactive = 1")->toArray();
-            $options = array();
+            $options = [];
             foreach($data as $emp)
             {
                 $options[$emp['id']] = $emp['workcodename'];
@@ -92,7 +92,7 @@ class Default_Model_Employmentstatus extends Zend_Db_Table_Abstract
         {
             $select = $this->select()
                             ->setIntegrityCheck(false)
-                            ->from(array('e'=>'main_employment_type'),array('e.id','e.workcodename','e.default_leaves','e.workcode'))
+                            ->from(['e'=>'main_employment_type'],['e.id','e.workcodename','e.default_leaves','e.workcode'])
                             ->where('e.isactive = 1')
                             ->order('e.workcodename');
                 return $this->fetchAll($select)->toArray();
@@ -106,7 +106,7 @@ class Default_Model_Employmentstatus extends Zend_Db_Table_Abstract
 		  
 		  $select = $this->select()
 							->setIntegrityCheck(false)
-							->from(array('e'=>'tbl_employmentstatus'),array('e.*'))
+							->from(['e'=>'tbl_employmentstatus'],['e.*'])
 							->where('e.isactive = 1 AND id NOT IN(?)', $params)
 							->order('e.employemnt_status');
 			return $this->fetchAll($select)->toArray();
@@ -117,7 +117,7 @@ class Default_Model_Employmentstatus extends Zend_Db_Table_Abstract
 		{
 		  $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('e'=>'tbl_employmentstatus'),array('e.*'))
+						->from(['e'=>'tbl_employmentstatus'],['e.*'])
 					    ->where('e.isactive = 1 ')
 						->order('e.employemnt_status');
 		  return $this->fetchAll($select)->toArray();
@@ -129,7 +129,7 @@ class Default_Model_Employmentstatus extends Zend_Db_Table_Abstract
 		{
 		  $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('e'=>'tbl_employmentstatus'),array('e.*'))
+						->from(['e'=>'tbl_employmentstatus'],['e.*'])
 					    ->where('e.isactive = 1 AND e.id ='.$id.' ');
 		  return $this->fetchAll($select)->toArray();
 		
@@ -139,7 +139,7 @@ class Default_Model_Employmentstatus extends Zend_Db_Table_Abstract
 		{
 		 $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('e'=>'main_employees'),array('e.user_id'))
+						->from(['e'=>'main_employees'],['e.user_id'])
 					    ->where('e.isactive = 1 AND e.emp_status_id ='.$id.' ');
 		  return $this->fetchAll($select)->toArray();
 		}
@@ -157,8 +157,8 @@ class Default_Model_Employmentstatus extends Zend_Db_Table_Abstract
 		{
 		  $select = $this->select()
 							->setIntegrityCheck(false)
-							->from(array('e'=>'main_employment_type'),array('e.*'))
-							->joinLeft(array('es'=>'tbl_employmentstatus'), 'es.id=e.workcodename',array('statusname'=>'es.employemnt_status'))  						   
+							->from(['e'=>'main_employment_type'],['e.*'])
+							->joinLeft(['es'=>'tbl_employmentstatus'], 'es.id=e.workcodename',['statusname'=>'es.employemnt_status'])  						   
 							->where('e.isactive = 1');
 			return $this->fetchAll($select)->toArray();
 		
@@ -166,11 +166,11 @@ class Default_Model_Employmentstatus extends Zend_Db_Table_Abstract
 		
 		public function getempstatusActivelist()
 		{
-		   $statusArr =array(8,9,10);
+		   $statusArr =[8,9,10];
 		   $select = $this->select()
 							->setIntegrityCheck(false)
-							->from(array('e'=>'main_employment_type'),array('e.*'))
-							->joinLeft(array('es'=>'tbl_employmentstatus'), 'es.id=e.workcodename',array('statusname'=>'es.employemnt_status'))  						   
+							->from(['e'=>'main_employment_type'],['e.*'])
+							->joinLeft(['es'=>'tbl_employmentstatus'], 'es.id=e.workcodename',['statusname'=>'es.employemnt_status'])  						   
 							->where('e.isactive = 1 AND es.id NOT IN(?)',$statusArr)
 							->order('es.employemnt_status');
 			return $this->fetchAll($select)->toArray();
@@ -179,14 +179,14 @@ class Default_Model_Employmentstatus extends Zend_Db_Table_Abstract
 		
 	public function getEmploymentStatusName($empstatusids)
 	{
-	   $empstatusArr = array();	
+	   $empstatusArr = [];	
 	   if($empstatusids !='')
 	   $empstatusArr = explode(",",$empstatusids);
 	   
 	   $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('e'=>'main_employment_type'),array('e.*'))
-						->joinLeft(array('es'=>'tbl_employmentstatus'), 'es.id=e.workcodename',array('statusname'=>'es.employemnt_status'))  						   
+						->from(['e'=>'main_employment_type'],['e.*'])
+						->joinLeft(['es'=>'tbl_employmentstatus'], 'es.id=e.workcodename',['statusname'=>'es.employemnt_status'])  						   
 						->where('e.isactive = 1 AND es.id IN(?)',$empstatusArr)
 						->order('es.employemnt_status');
 		return $this->fetchAll($select)->toArray(); 
@@ -194,8 +194,8 @@ class Default_Model_Employmentstatus extends Zend_Db_Table_Abstract
 	}
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$exParam1='',$exParam2='',$exParam3='',$exParam4='')
 	{		
-        $searchQuery = '';$tablecontent = '';  $searchArray = array();$data = array();$id='';
-        $dataTmp = array();
+        $searchQuery = '';$tablecontent = '';  $searchArray = [];$data = [];$id='';
+        $dataTmp = [];
 		if($searchData != '' && $searchData!='undefined')
 		{
 			$searchValues = json_decode($searchData);
@@ -210,24 +210,24 @@ class Default_Model_Employmentstatus extends Zend_Db_Table_Abstract
 		/** search from grid - END **/
 		$objName = 'employmentstatus';
 				
-		$tableFields = array('action'=>'Action','employemnt_status' =>'Work Code','workcode' => 'Work Short Code','description' => 'Description');
+		$tableFields = ['action'=>'Action','employemnt_status' =>'Work Code','workcode' => 'Work Short Code','description' => 'Description'];
 		
 		$tablecontent = $this->getEmploymentstatusData($sort, $by,$pageNo,$perPage,$searchQuery);     
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
 
 			'searchArray' => $searchArray,
 			'call'=>$call,'dashboardcall'=>$dashboardcall
-		);		
+		];		
 			
 		return $dataTmp;
 	}

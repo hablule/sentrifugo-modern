@@ -38,45 +38,45 @@ class Default_Form_Address extends Zend_Form
          * 2. Text Elements (Core Identity)
          * -------------------------------------------------------------- */
 
-        $ssotRegexValidator = array(
+        $ssotRegexValidator = [
             'Regex',
             true,
-            array(
+            [
                 'pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9 ]*)$/',
-                'messages' => array(
+                'messages' => [
                     Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space or contain special characters.'
-                )
-            )
-        );
+                ]
+            ]
+        ];
 
         // Code
         $code = new Zend_Form_Element_Text('code');
         $code->setLabel('Address Code')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '60', 'placeholder' => 'e.g., HQ-NY-01'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '60', 'placeholder' => 'e.g., HQ-NY-01'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', false, array('messages' => 'Please enter an address code.'))
-            ->addValidator('StringLength', false, array('max' => 60))
+            ->addValidator('NotEmpty', false, ['messages' => 'Please enter an address code.'])
+            ->addValidator('StringLength', false, ['max' => 60])
             ->addValidator($ssotRegexValidator[0], $ssotRegexValidator[1], $ssotRegexValidator[2]);
 
-        $codeVal = new Zend_Validate_Db_NoRecordExists(array(
+        $codeVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_address',
             'field'   => 'code',
-            'exclude' => ($idVal > 0) ? array('field' => 'id', 'value' => $idVal) : null
-        ));
+            'exclude' => ($idVal > 0) ? ['field' => 'id', 'value' => $idVal] : null
+        ]);
         $codeVal->setMessage('This address code already exists.');
         $code->addValidator($codeVal);
 
         // Name (Label)
         $name = new Zend_Form_Element_Text('name');
         $name->setLabel('Address Label / Name')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '100', 'placeholder' => 'e.g., New York Headquarters'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '100', 'placeholder' => 'e.g., New York Headquarters'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', false, array('messages' => 'Please enter an address label.'))
-            ->addValidator('StringLength', false, array('max' => 100))
+            ->addValidator('NotEmpty', false, ['messages' => 'Please enter an address label.'])
+            ->addValidator('StringLength', false, ['max' => 100])
             ->addValidator($ssotRegexValidator[0], $ssotRegexValidator[1], $ssotRegexValidator[2]);
 
         // Address Type
@@ -85,7 +85,7 @@ class Default_Form_Address extends Zend_Form
             ->setAttrib('class', 'formDataElement')
             ->setRequired(true)
             ->setRegisterInArrayValidator(false) // Populated in Controller
-            ->addValidator('NotEmpty', false, array('messages' => 'Please select an Address Type.'));
+            ->addValidator('NotEmpty', false, ['messages' => 'Please select an Address Type.']);
 
         /* --------------------------------------------------------------
          * 3. Text Elements (Physical Street Data)
@@ -93,21 +93,21 @@ class Default_Form_Address extends Zend_Form
 
         $address_line_1 = new Zend_Form_Element_Text('address_line_1');
         $address_line_1->setLabel('Street Address 1')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '255'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '255'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', false, array('messages' => 'Street Address is required.'));
+            ->addValidator('NotEmpty', false, ['messages' => 'Street Address is required.']);
 
         $address_line_2 = new Zend_Form_Element_Text('address_line_2');
         $address_line_2->setLabel('Street Address 2')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '255'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '255'])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
         $address_line_3 = new Zend_Form_Element_Text('address_line_3');
         $address_line_3->setLabel('Street Address 3')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '255'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '255'])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -117,33 +117,33 @@ class Default_Form_Address extends Zend_Form
 
         $country_id = new Zend_Form_Element_Select('country_id');
         $country_id->setLabel('Country')
-            ->setAttribs(array(
+            ->setAttribs([
                 'class'    => 'formDataElement',
                 'onchange' => 'getStatesByCountry(this.value);'
-            ))
+            ])
             ->setRequired(true)
             ->setRegisterInArrayValidator(false) // Populated in Controller
-            ->addValidator('NotEmpty', false, array('messages' => 'Please select a Country.'));
+            ->addValidator('NotEmpty', false, ['messages' => 'Please select a Country.']);
 
         $state_id = new Zend_Form_Element_Select('state_id');
         $state_id->setLabel('State / Province')
-            ->setAttribs(array(
+            ->setAttribs([
                 'class'    => 'formDataElement',
                 'onchange' => 'getCitiesByState(this.value);'
-            ))
+            ])
             ->setRequired(true)
             ->setRegisterInArrayValidator(false) // Populated via AJAX/Controller
-            ->addValidator('NotEmpty', false, array('messages' => 'Please select a State.'));
+            ->addValidator('NotEmpty', false, ['messages' => 'Please select a State.']);
 
         $city_id = new Zend_Form_Element_Select('city_id');
         $city_id->setLabel('City')
-            ->setAttribs(array(
+            ->setAttribs([
                 'class'    => 'formDataElement',
                 'onchange' => 'getPostalCodesByCity(this.value);'
-            ))
+            ])
             ->setRequired(true)
             ->setRegisterInArrayValidator(false) // Populated via AJAX/Controller
-            ->addValidator('NotEmpty', false, array('messages' => 'Please select a City.'));
+            ->addValidator('NotEmpty', false, ['messages' => 'Please select a City.']);
 
         $postal_code_id = new Zend_Form_Element_Select('postal_code_id');
         $postal_code_id->setLabel('Postal / ZIP Code')
@@ -152,7 +152,7 @@ class Default_Form_Address extends Zend_Form
 
         $map_coordinate = new Zend_Form_Element_Text('map_coordinate');
         $map_coordinate->setLabel('GPS Coordinates')
-            ->setAttribs(array('class' => 'formDataElement', 'placeholder' => 'e.g., 40.7128, -74.0060'))
+            ->setAttribs(['class' => 'formDataElement', 'placeholder' => 'e.g., 40.7128, -74.0060'])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -200,7 +200,7 @@ class Default_Form_Address extends Zend_Form
          * -------------------------------------------------------------- */
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Description / Notes')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -218,7 +218,7 @@ class Default_Form_Address extends Zend_Form
          * -------------------------------------------------------------- */
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save Address')
-            ->setAttribs(array('id' => 'submitbutton', 'class' => 'actbtn_btn'));
+            ->setAttribs(['id' => 'submitbutton', 'class' => 'actbtn_btn']);
 
         // This is a complex form with cascading logic and explicit AJAX submission.
         // The onclick is handled in the save.phtml script, NOT here.
@@ -226,7 +226,7 @@ class Default_Form_Address extends Zend_Form
         /* --------------------------------------------------------------
          * Build Form
          * -------------------------------------------------------------- */
-        $this->addElements(array(
+        $this->addElements([
             $idElement,
             $code,
             $name,
@@ -252,12 +252,12 @@ class Default_Form_Address extends Zend_Form
             $description,
             $isactive,
             $submit
-        ));
+        ]);
 
         // Strip default Zend Decorators per SSOT
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
-            $element->setDecorators(array('ViewHelper'));
+            $element->setDecorators(['ViewHelper']);
         }
     }
 }

@@ -51,9 +51,9 @@ class Default_AddemployeeleavesController extends Zend_Controller_Action
 		$objname = $this->_getParam('objname');
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall',null);
-		$data = array();$id='';
+		$data = [];$id='';
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent = '';
 		if($refresh == 'refresh')
 		{
@@ -99,7 +99,7 @@ Zend_Debug::dump($th->getMessage());}
 			$loginuserGroup = $auth->getStorage()->read()->group_id;
 			// $loginuserbusinessunit_id = $auth->getStorage()->read()->businessunit_id;
 		}
-		$msgarray = array();
+		$msgarray = [];
 		$callval = $this->getRequest()->getParam('call');
 		if($callval == 'ajaxcall')
 			$this->_helper->layout->disableLayout();
@@ -140,7 +140,7 @@ Zend_Debug::dump($th->getMessage());}
 		{
             try
             {
-            	$postedArr = array();
+            	$postedArr = [];
 	            $id = $this->_request->getParam('id');
 				$postedArr = $this->_request->getPost();
 				$actionflag = 1;
@@ -176,7 +176,7 @@ Zend_Debug::dump($th->getMessage());}
 							$empLeaveLimit = '';
 					} 
 				}
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Employee Leave details added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Employee Leave details added successfully."]);
 					$this->_redirect('addemployeeleaves');
 					
 			}
@@ -233,7 +233,7 @@ Zend_Debug::dump($th->getMessage());}
 		}
 		
 		$id = $this->getRequest()->getParam('id');
-		$msgarray = array();
+		$msgarray = [];
 		$callval = $this->getRequest()->getParam('call');
 		if($callval == 'ajaxcall')
 			$this->_helper->layout->disableLayout();
@@ -305,14 +305,14 @@ Zend_Debug::dump($th->getMessage());}
 			}
 			if(empty($currentYearData)) {
 				$emp_leave_limit = ($emp_leave_limit+$leavetransfercount);
-				$postedArr = array('leave_limit'=>$emp_leave_limit,'alloted_year'=>$alloted_year);
+				$postedArr = ['leave_limit'=>$emp_leave_limit,'alloted_year'=>$alloted_year];
 				$logID = $employeeleavesModel->saveallotedleaves($postedArr,$emp_leave_limit,$userId,$loginUserId);
 			}	
 			else	
 				$emp_leave_limit = ($emp_leave_limit+$currentYearData[0]['emp_leave_limit']);
 				
 			$Id = $employeeleavesModel->SaveorUpdateEmployeeLeaves($userId, $emp_leave_limit,$isleavetrasnferset,$loginUserId);
-			$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Employee Leave details updated successfully."));
+			$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Employee Leave details updated successfully."]);
 			$this->_redirect('addemployeeleaves');
 					
 		}else {
@@ -341,7 +341,7 @@ Zend_Debug::dump($th->getMessage());}
 		}
 		$objName = 'addemployeeleaves';
 		$id = $this->getRequest()->getParam('id');
-		$msgarray = array();
+		$msgarray = [];
 		$callval = $this->getRequest()->getParam('call');
 		if($callval == 'ajaxcall')
 			$this->_helper->layout->disableLayout();

@@ -51,7 +51,7 @@ class Default_PerkapproveController extends Zend_Controller_Action
         $perm = $access['perm'];
 
         $this->view->perm = $perm;
-        $inter_options = array();
+        $inter_options = [];
         $call = $this->_getParam('call');
         if ($call == 'ajaxcall'){
             $this->_helper->layout->disableLayout();
@@ -59,9 +59,9 @@ class Default_PerkapproveController extends Zend_Controller_Action
         $view = Zend_Layout::getMvcInstance()->getView();
         $objname = $this->_getParam('objname');
         $refresh = $this->_getParam('refresh');
-        $data = array();
+        $data = [];
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         $tablecontent = '';
         
 
@@ -79,8 +79,8 @@ class Default_PerkapproveController extends Zend_Controller_Action
             $searchData = '';
             $searchQuery = '';
             $sort2 = 'DESC';
-            $searchArray = array();
-            $searchArray2 = array();
+            $searchArray = [];
+            $searchArray2 = [];
         } else {
             $sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
           
@@ -171,12 +171,12 @@ $popo=$empperk[0];
              if($form->isValid($this->_request->getpost())){
 
             
-                $where = array('employeeperk_id=?'=>$id);
-                $data = array(
+                $where = ['employeeperk_id=?'=>$id];
+                $data = [
                
                     'modifiedby'=>$loginUserId,
                     'modifieddate'=>gmdate("Y-m-d H:i:s")
-                );
+                ];
                 if(isset($_POST['approvedamount']))
                 {
                 $amount=$this->getRequest()->getParam('approvedamount');
@@ -244,7 +244,7 @@ $this->view->previlage=$previlage;
 			$model = new Default_Model_Perkapprove();
 
 			
-			$where = array('employeeperk_id=?' => $id);
+			$where = ['employeeperk_id=?' => $id];
 			$Id = $model->DeleteData($where);
 			if ($Id == 'delete') {
 				$messages['message'] = 'Perk Request deleted successfully.';
@@ -259,10 +259,10 @@ $this->view->previlage=$previlage;
 		}
 		if ($deleteflag == 1) {
 			if ($messages['msgtype'] == 'error') {
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("error" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["error" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag]);
 			}
 			if ($messages['msgtype'] == 'success') {
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag]);
 			}
 		}
 		$this->_helper->json($messages);

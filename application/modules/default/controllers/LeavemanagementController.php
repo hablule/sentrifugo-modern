@@ -50,9 +50,9 @@ class Default_LeavemanagementController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 		
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 		
 		if($refresh == 'refresh')
@@ -87,16 +87,16 @@ class Default_LeavemanagementController extends Zend_Controller_Action
 	 public function addAction()
 	{
 		try {
-			
+
 	   $auth = Zend_Auth::getInstance();
      	if($auth->hasIdentity()){
 					$loginUserId = $auth->getStorage()->read()->id;
 		}
-		
+
 		$callval = $this->getRequest()->getParam('call');
 		if($callval == 'ajaxcall')
 			$this->_helper->layout->disableLayout();
-			
+
 		$leavemanagementform = new Default_Form_leavemanagement();
 		$leavemanagementmodel = new Default_Model_Leavemanagement();
 		$requi_model = new Default_Model_Requisition();  
@@ -104,11 +104,11 @@ class Default_LeavemanagementController extends Zend_Controller_Action
 		$weekdaysmodel = new Default_Model_Weekdays();
 		$busineesUnitModel = new Default_Model_Businessunits();
 		$departmentsmodel = new Default_Model_Departments();
-		$msgarray = array();
+		$msgarray = [];
 		$bu_msg = ''; 
 		$months_msg = ''; 
 		$days_msg = '';
-		
+
 		    $businessunitData = $busineesUnitModel->getDeparmentList(); //getDeparmentList --- gets the business units			
 		   if(sizeof($businessunitData) > 0)
             { 			
@@ -129,7 +129,7 @@ class Default_LeavemanagementController extends Zend_Controller_Action
                 {
 				    $msgarray['department_id'] = 'Departments are not added yet.';
                 } 				
-				
+
 				if(isset($_POST['businessunit']) && $_POST['businessunit']!='')
 				{
 				    $departments_list = $departmentsmodel->getUniqueDepartmentList($deptstr,$_POST['businessunit']);	
@@ -150,7 +150,7 @@ class Default_LeavemanagementController extends Zend_Controller_Action
                                 $msgarray['department_id'] = 'Departments are not added yet.';
 				$bu_msg = 'no bu';
 			} 
-				
+
 			/*  if(isset($_POST['hrmanager']) && $_POST['hrmanager']!='')
 			{ */
 				if(isset($_POST['businessunit']) && $_POST['businessunit']!='')
@@ -163,7 +163,7 @@ class Default_LeavemanagementController extends Zend_Controller_Action
 					$leavemanagementform->setDefault('hrmanager',$_POST['hrmanager']);	
 				}
 			//} 
-		
+
 			$monthslistdata = $monthslistmodel->getMonthlistData();
 				if(sizeof($monthslistdata) > 0)
 				{
@@ -175,9 +175,9 @@ class Default_LeavemanagementController extends Zend_Controller_Action
                     $msgarray['cal_startmonth'] = 'Months list is not configured yet.';					
 					$months_msg = 'no months';
 				}
-			
+
             $weekdaysdata = $weekdaysmodel->getWeeklistData();
-			
+
 				if(sizeof($weekdaysdata) > 0)
 				{
 					foreach ($weekdaysdata as $weekdaysres){
@@ -389,7 +389,7 @@ class Default_LeavemanagementController extends Zend_Controller_Action
 		
 		$leavemanagementform = new Default_Form_leavemanagement();
 		$leavemanagementform->submit->setLabel('Update'); 
-		$msgarray = array();
+		$msgarray = [];
 			try
 			{
 				if($id)
@@ -540,7 +540,7 @@ class Default_LeavemanagementController extends Zend_Controller_Action
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = ''; 
-				   $data = array( 'cal_startmonth'=>$cal_startmonth,
+				   $data = [ 'cal_startmonth'=>$cal_startmonth,
 				                 'weekend_startday'=>$weekend_startday,
 								 'weekend_endday'=>$weekend_endday,
 								 'businessunit_id'=>$businessunit_id,
@@ -553,9 +553,9 @@ class Default_LeavemanagementController extends Zend_Controller_Action
 				      			 'description'=>$description,
 								 'modifiedby'=>$loginUserId,
 								 'modifieddate'=>gmdate("Y-m-d H:i:s")
-						);
+						];
 					if($id!=''){
-						$where = array('id=?'=>$id);  
+						$where = ['id=?'=>$id];  
 						$actionflag = 2;
 					}
 					else
@@ -612,8 +612,8 @@ class Default_LeavemanagementController extends Zend_Controller_Action
 		    if($id)
 			{
 			$leavemanagementmodel = new Default_Model_Leavemanagement();
-			  $data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-			  $where = array('id=?'=>$id);
+			  $data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+			  $where = ['id=?'=>$id];
 			  $Id = $leavemanagementmodel->SaveorUpdateLeaveManagementData($data, $where);
 			    if($Id == 'update')
 				{
@@ -638,11 +638,11 @@ class Default_LeavemanagementController extends Zend_Controller_Action
 			{
 				if(	$messages['msgtype'] == 'error')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
 				}
 				if(	$messages['msgtype'] == 'success')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
 				}
 			}
 			$this->_helper->json($messages);
@@ -657,7 +657,7 @@ class Default_LeavemanagementController extends Zend_Controller_Action
 		   $departmentidsArr = $leavemanagementmodel->getActiveDepartmentIds();
 		   $departmentsmodel = new Default_Model_Departments();
 			$depatrmentidstr = '';
-			$newarr = array();
+			$newarr = [];
 			if(!empty($departmentidsArr))
 				{
 					$where = '';

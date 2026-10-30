@@ -54,7 +54,7 @@ class Default_PayrollrunController extends Zend_Controller_Action
         $session = sapp_Global::_readSession();
         if (!isset($session)) {
             if ($this->getRequest()->isXmlHttpRequest()) {
-                echo Zend_Json::encode(array('login' => 'failed'));
+                echo Zend_Json::encode(['login' => 'failed']);
                 exit;
             } else {
                 $this->_redirect('');
@@ -105,7 +105,7 @@ class Default_PayrollrunController extends Zend_Controller_Action
 
             // Note: Ad-hoc manual add/edit is usually suppressed for Master Ledgers, but retained for exception handling
 
-            $this->view->dataArray = array($dataTmp);
+            $this->view->dataArray = [$dataTmp];
             $this->view->call      = $call;
             $this->view->messages  = $this->_helper->flashMessenger->getMessages();
         } catch (\Throwable $e) {
@@ -196,7 +196,7 @@ class Default_PayrollrunController extends Zend_Controller_Action
                     throw new Exception("An active payroll run already exists for this Pay Group with these exact dates.");
                 }
 
-                $data = array(
+                $data = [
                     'pay_group_id'     => $payGroupId,
                     'cycle_start_date' => $startDate,
                     'cycle_end_date'   => $endDate,
@@ -205,7 +205,7 @@ class Default_PayrollrunController extends Zend_Controller_Action
                     'run_status'       => trim((string) $request->getParam('run_status', 'Scheduled')),
                     'description'      => trim((string) $request->getParam('description', '')),
                     'isactive'         => 1 // Ad-hoc runs are always active when created
-                );
+                ];
 
                 $actionFlag = 2;
                 $saveMode   = 'updated';
@@ -219,7 +219,7 @@ class Default_PayrollrunController extends Zend_Controller_Action
                 } else {
                     $data['modifiedby']   = $this->_loginUserId;
                     $data['modifieddate'] = gmdate("Y-m-d H:i:s");
-                    $this->_model->update($data, array('id = ?' => $id));
+                    $this->_model->update($data, ['id = ?' => $id]);
                     $savedId = $id;
                 }
 
@@ -228,14 +228,14 @@ class Default_PayrollrunController extends Zend_Controller_Action
                 }
 
                 $db->commit();
-                $this->_helper->json(array('result' => 'saved', 'nomessage' => 'yes'));
+                $this->_helper->json(['result' => 'saved', 'nomessage' => 'yes']);
             } catch (\Throwable $e) {
                 $db->rollBack();
                 error_log("Payroll Run Save Error: " . $e->getMessage());
-                $this->_helper->json(array('result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error'));
+                $this->_helper->json(['result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error']);
             }
         } else {
-            $msgarray = array();
+            $msgarray = [];
             foreach ($form->getMessages() as $field => $errors) {
                 $msgarray[$field] = current($errors);
             }
@@ -261,24 +261,24 @@ class Default_PayrollrunController extends Zend_Controller_Action
                     throw new Exception("This Payroll Run has already been Locked or Closed. It cannot be cancelled. Corrections must be handled via Arrears.");
                 }
 
-                $data = array(
+                $data = [
                     'run_status'   => 'Cancelled',
                     'modifiedby'   => $this->_loginUserId,
                     'modifieddate' => gmdate("Y-m-d H:i:s")
-                );
+                ];
 
-                $this->_model->update($data, array('id = ?' => $id));
+                $this->_model->update($data, ['id = ?' => $id]);
 
                 if (defined('PAYROLLRUN_MENU_ID')) {
                     sapp_Global::logManager(PAYROLLRUN_MENU_ID, 2, $this->_loginUserId, $id); // 2 = Edit/Update
                 }
 
-                return $this->_helper->json(array('result' => 'saved', 'nomessage' => 'no', 'message' => 'Payroll Run successfully cancelled.', 'msgtype' => 'success'));
+                return $this->_helper->json(['result' => 'saved', 'nomessage' => 'no', 'message' => 'Payroll Run successfully cancelled.', 'msgtype' => 'success']);
             } catch (\Throwable $e) {
-                return $this->_helper->json(array('result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error'));
+                return $this->_helper->json(['result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error']);
             }
         }
-        return $this->_helper->json(array('result' => 'error', 'message' => 'Invalid request'));
+        return $this->_helper->json(['result' => 'error', 'message' => 'Invalid request']);
     }
 
     /**
@@ -295,24 +295,24 @@ class Default_PayrollrunController extends Zend_Controller_Action
                     throw new Exception("Only un-initiated 'Scheduled' runs can be deleted. Once a run begins processing, it must be Cancelled instead to preserve the audit trail.");
                 }
 
-                $data = array(
+                $data = [
                     'isactive'     => 5,
                     'modifiedby'   => $this->_loginUserId,
                     'modifieddate' => gmdate("Y-m-d H:i:s")
-                );
+                ];
 
-                $this->_model->update($data, array('id = ?' => $id));
+                $this->_model->update($data, ['id = ?' => $id]);
 
                 if (defined('PAYROLLRUN_MENU_ID')) {
                     sapp_Global::logManager(PAYROLLRUN_MENU_ID, 3, $this->_loginUserId, $id);
                 }
 
-                return $this->_helper->json(array('result' => 'saved', 'nomessage' => 'no', 'message' => 'Scheduled run deleted successfully.', 'msgtype' => 'success'));
+                return $this->_helper->json(['result' => 'saved', 'nomessage' => 'no', 'message' => 'Scheduled run deleted successfully.', 'msgtype' => 'success']);
             } catch (\Throwable $e) {
-                return $this->_helper->json(array('result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error'));
+                return $this->_helper->json(['result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error']);
             }
         }
-        return $this->_helper->json(array('result' => 'error', 'message' => 'Invalid request'));
+        return $this->_helper->json(['result' => 'error', 'message' => 'Invalid request']);
     }
 
     /* =================================================================================
@@ -363,7 +363,7 @@ class Default_PayrollrunController extends Zend_Controller_Action
 
             // State Machine Lock (UI Level): 
             // If the run is Locked or Closed, all edits are disabled.
-            if (in_array($data['run_status'], array('Locked', 'Closed', 'Cancelled'))) {
+            if (in_array($data['run_status'], ['Locked', 'Closed', 'Cancelled'])) {
                 $readonly = true;
             }
         }

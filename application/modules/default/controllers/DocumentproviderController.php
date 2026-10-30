@@ -23,7 +23,7 @@ class Default_DocumentproviderController extends Zend_Controller_Action
       $refresh = $this->_getParam('refresh');
       $dashboradcall = $this->_getParam('dashboradcall');
 
-      $data = array();
+      $data = [];
 
       if ($refresh == 'refresh') {
           if ($dashboradcall == 'Yes') {
@@ -84,24 +84,24 @@ try {
         if (isset($_POST['country']) && $_POST['country'] != '') {
             $statesmodel = new Default_Model_States();
             $statesmodeldata = $statesmodel->getStatesList(intval($_POST['country']));
-            $st_opt = array();
+            $st_opt = [];
             if (count($statesmodeldata) > 0) {
                 foreach ($statesmodeldata as $dstate) {
                     $st_opt[$dstate['id'] . '!@#' . $dstate['state_name']] = $dstate['state_name'];
                 }
             }
-            $form->state->addMultiOptions(array('' => 'Select State') + $st_opt);
+            $form->state->addMultiOptions(['' => 'Select State'] + $st_opt);
         }
         if (isset($_POST['state']) && $_POST['state'] != '') {
             $citiesmodel = new Default_Model_Cities();
             $citiesmodeldata = $citiesmodel->getCitiesList(intval($_POST['state']));
-            $ct_opt = array();
+            $ct_opt = [];
             if (count($citiesmodeldata) > 0) {
                 foreach ($citiesmodeldata as $dcity) {
                     $ct_opt[$dcity['id'] . '!@#' . $dcity['city_name']] = $dcity['city_name'];
                 }
             }
-            $form->city->addMultiOptions(array('' => 'Select City') + $ct_opt);
+            $form->city->addMultiOptions(['' => 'Select City'] + $ct_opt);
         }
         if ($this->getRequest()->getPost()) {
             if ($form->isValid($this->getRequest()->getPost())) {
@@ -112,7 +112,7 @@ try {
                 $model = new Default_Model_Documentprovider();
 
               
-                $data = array(
+                $data = [
                     'name'=>$this->_request->getParam('name'),
                     'code'=>$this->_request->getParam('code'),
                     'country_id'=>$this->_request->getParam('country'),
@@ -121,7 +121,7 @@ try {
                     'description'=>$this->_request->getParam('description'),
                     'createdby'=>$loginUserId,
                     'createddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
 
                 $tableid=$model->SaveorUpdateData($data, '');
                 sapp_Global::logManager(350,1,$loginUserId,$tableid);
@@ -182,24 +182,24 @@ Zend_Debug::dump($th->getMessage());    }
 		if (isset($_POST['country']) && $_POST['country'] != '') {
 			$statesmodel = new Default_Model_States();
 			$statesmodeldata = $statesmodel->getStatesList(intval($_POST['country']));
-			$st_opt = array();
+			$st_opt = [];
 			if (count($statesmodeldata) > 0) {
 				foreach ($statesmodeldata as $dstate) {
 					$st_opt[$dstate['id'] . '!@#' . $dstate['state_name']] = $dstate['state_name'];
 				}
 			}
-			$Form->state->addMultiOptions(array('' => 'Select State') + $st_opt);
+			$Form->state->addMultiOptions(['' => 'Select State'] + $st_opt);
 		}
 		if (isset($_POST['state']) && $_POST['state'] != '') {
 			$citiesmodel = new Default_Model_Cities();
 			$citiesmodeldata = $citiesmodel->getCitiesList(intval($_POST['state']));
-			$ct_opt = array();
+			$ct_opt = [];
 			if (count($citiesmodeldata) > 0) {
 				foreach ($citiesmodeldata as $dcity) {
 					$ct_opt[$dcity['id'] . '!@#' . $dcity['city_name']] = $dcity['city_name'];
 				}
 			}
-			$Form->city->addMultiOptions(array('' => 'Select City') + $ct_opt);
+			$Form->city->addMultiOptions(['' => 'Select City'] + $ct_opt);
 		}
 		$country_model = new Default_Model_Countries();
 
@@ -304,7 +304,7 @@ Zend_Debug::dump($th->getMessage());    }
 
 				$date = gmdate("Y-m-d H:i:s");
 
-				$data = array(
+				$data = [
 							'name'  => $name,
                             'code'  => $code,
                             'country_id'  => $country,
@@ -313,12 +313,12 @@ Zend_Debug::dump($th->getMessage());    }
                             'description'  => $description,
                             'isactive'=>utlis::getcheckboxvalue($this->_request->getParam('isactive')),
 
-							);
+							];
 				if($id!=''){
 
 					$data['modifiedby'] = $loginUserId;
 					$data['modifieddate'] = $date;
-					$where = array('iddocumentprovider_id=?'=>$id);
+					$where = ['iddocumentprovider_id=?'=>$id];
 				}
 				else
 				{
@@ -332,11 +332,11 @@ Zend_Debug::dump($th->getMessage());    }
 				
 				if($Id == 'update')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Document Provider updated successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Document Provider updated successfully."]);
 				}
 				else
 				{
-			     $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Document Provider added successfully."));
+			     $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Document Provider added successfully."]);
 				}
 					
 				$this->_redirect('documentprovider');

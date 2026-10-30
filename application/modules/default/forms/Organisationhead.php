@@ -39,39 +39,39 @@ class Default_Form_Organisationhead extends Zend_Form
         $firstname_orghead->setAttrib('maxLength', 50);
         $firstname_orghead->addFilter(new Zend_Filter_StringTrim());
         $firstname_orghead->setRequired(true);
-        $firstname_orghead->addValidator('NotEmpty', false, array('messages' => 'Please enter first name of organization head.'));  
-		$firstname_orghead->addValidator("regex",true,array(                           
+        $firstname_orghead->addValidator('NotEmpty', false, ['messages' => 'Please enter first name of organization head.']);  
+		$firstname_orghead->addValidator("regex",true,[                           
                            'pattern'=>'/^[a-zA-Z.\- ?]+$/',
-                           'messages'=>array(
+                           'messages'=>[
                                
 							   'regexNotMatch'=>'Please enter valid first name.'
-                           )
-        	));
+                           ]
+        	]);
         $lastname_orghead = new Zend_Form_Element_Text('lastname_orghead');
         $lastname_orghead->setAttrib('maxLength', 50);
         $lastname_orghead->addFilter(new Zend_Filter_StringTrim());
         $lastname_orghead->setRequired(true);
-        $lastname_orghead->addValidator('NotEmpty', false, array('messages' => 'Please enter last name of organization head.'));  
-		$lastname_orghead->addValidator("regex",true,array(                           
+        $lastname_orghead->addValidator('NotEmpty', false, ['messages' => 'Please enter last name of organization head.']);  
+		$lastname_orghead->addValidator("regex",true,[                           
                            'pattern'=>'/^[a-zA-Z.\- ?]+$/',
-                           'messages'=>array(
+                           'messages'=>[
                                
 							   'regexNotMatch'=>'Please enter valid last name.'
-                           )
-        	));
+                           ]
+        	]);
 			
 		$designation = new Zend_Form_Element_Text('designation');
         $designation->setAttrib('maxLength', 50);
         $designation->addFilter(new Zend_Filter_StringTrim());
         
         
-		$designation->addValidator("regex",true,array(                           
+		$designation->addValidator("regex",true,[                           
                            'pattern'=>'/^[a-zA-Z.\- ?]+$/',
-                           'messages'=>array(
+                           'messages'=>[
 
 							   'regexNotMatch'=>'Please enter valid designation.'
-                           )
-        	));
+                           ]
+        	]);
 
 		$employeeId = new Zend_Form_Element_Text("employeeId");
         $employeeId->setRequired("true");
@@ -79,7 +79,7 @@ class Default_Form_Organisationhead extends Zend_Form
         $employeeId->setAttrib("class", "formDataElement");
         $employeeId->setAttrib("readonly", "readonly");
 		$employeeId->setAttrib('onfocus', 'this.blur()');
-		$employeeId->addValidator('NotEmpty', false, array('messages' => 'Identity codes are not configured yet.'));
+		$employeeId->addValidator('NotEmpty', false, ['messages' => 'Identity codes are not configured yet.']);
 
         //for emp id
         $employeeNumId = new Zend_Form_Element_Text("employeeNumId");
@@ -87,12 +87,12 @@ class Default_Form_Organisationhead extends Zend_Form
         $employeeNumId->setLabel("Employee Id");
         $employeeNumId->setAttrib('maxLength', 5);       
         $employeeNumId->setAttrib("class", "formDataElement");
-        $employeeNumId->addValidator('NotEmpty', false, array('messages' => 'Please enter the Employee Id.'));
-        $employeeNumId->addValidator("regex",true,array(                          
+        $employeeNumId->addValidator('NotEmpty', false, ['messages' => 'Please enter the Employee Id.']);
+        $employeeNumId->addValidator("regex",true,[                          
                    'pattern'=>'/^[0-9]+$/',
-                   'messages'=>array(
+                   'messages'=>[
                        'regexNotMatch'=>'Please enter only numbers.'
-                   )));   		
+                   ]]);   		
 		
 		/*$employeeId = new Zend_Form_Element_Text("employeeId");
 		$employeeId->setRequired("true");
@@ -111,33 +111,33 @@ class Default_Form_Organisationhead extends Zend_Form
 		$location->setRequired(true);		
 		$location->setLabel("address1");
 		$location->setAttrib("class", "formDataElement");
-		$location->addValidator('NotEmpty', false, array('messages' => 'Please select location.'));
+		$location->addValidator('NotEmpty', false, ['messages' => 'Please select location.']);
 		
 		$emprole = new Zend_Form_Element_Select("emprole");        
 		$emprole->setRegisterInArrayValidator(false);
 		$emprole->setRequired(true);		
 		$emprole->setLabel("Role");
 		$emprole->setAttrib("class", "formDataElement");
-		$emprole->addValidator('NotEmpty', false, array('messages' => 'Please select role.'));
+		$emprole->addValidator('NotEmpty', false, ['messages' => 'Please select role.']);
 		
 		$emailaddress = new Zend_Form_Element_Text("emailaddress");
 		$emailaddress->setRequired(true);
-		$emailaddress->addValidator('NotEmpty', false, array('messages' => 'Please enter email.'));
+		$emailaddress->addValidator('NotEmpty', false, ['messages' => 'Please enter email.']);
 		
-		$emailaddress->addValidator("regex",true,array(
+		$emailaddress->addValidator("regex",true,[
                            
 						    'pattern'=>'/^(?!.*\.{2})[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/',                            
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter valid email.'
-                           )
-        	));
+                           ]
+        	]);
 		$emailaddress->setLabel("Email");
 		$emailaddress->setAttrib("class", "formDataElement");              
 		$emailaddress->addValidator(new Zend_Validate_Db_NoRecordExists(
-															array('table' => 'main_users',
+															['table' => 'main_users',
 															'field' => 'emailaddress',
 															'exclude'=>'id!="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('user_id',0).'" and isactive!=0'
-															)));
+															]));
 		$emailaddress->getValidator('Db_NoRecordExists')->setMessage('Email already exists.');
 		
 
@@ -159,17 +159,17 @@ class Default_Form_Organisationhead extends Zend_Form
 		
 		$date_of_joining = new ZendX_JQuery_Form_Element_DatePicker('date_of_joining_head');
         $date_of_joining->setLabel("Date of Joining");
-		$date_of_joining->setOptions(array('class' => 'brdr_none'));	
+		$date_of_joining->setOptions(['class' => 'brdr_none']);	
 		$date_of_joining->setRequired(true);
 		$date_of_joining->setAttrib('readonly', 'true');
 		$date_of_joining->setAttrib('onfocus', 'this.blur()');
-        $date_of_joining->addValidator('NotEmpty', false, array('messages' => 'Please select date of joining.'));	
+        $date_of_joining->addValidator('NotEmpty', false, ['messages' => 'Please select date of joining.']);	
 		
         $submit = new Zend_Form_Element_Submit('submit');
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 		
-		 $this->addElements(array($id,
+		 $this->addElements([$id,
 		 							$description,
 									$lastname_orghead,
 									$firstname_orghead,
@@ -184,11 +184,11 @@ class Default_Form_Organisationhead extends Zend_Form
 									$position,
 									$date_of_joining,
 									$submit,
-									$employeeNumId));//$email,$secondaryemail,
+									$employeeNumId]);//$email,$secondaryemail,
 		 
-		 $this->setElementDecorators(array('ViewHelper')); 
-		 $this->setElementDecorators(array('File'),array('org_image'));
-		 $this->setElementDecorators(array('UiWidgetElement',),array('org_startdate','date_of_joining_head'));
+		 $this->setElementDecorators(['ViewHelper']); 
+		 $this->setElementDecorators(['File'],['org_image']);
+		 $this->setElementDecorators(['UiWidgetElement',],['org_startdate','date_of_joining_head']);
 		 
 	}
 }

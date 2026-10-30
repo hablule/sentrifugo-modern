@@ -19,9 +19,9 @@ class Schedule_SchedulecycleshiftController extends Zend_Controller_Action
         $view = Zend_Layout::getMvcInstance()->getView();
         $objname = $this->_getParam('objname');
         $refresh = $this->_getParam('refresh');
-        $data = array();
+        $data = [];
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         $tablecontent = '';
         $dashboardcall = $this->_getParam('dashboardcall');
 
@@ -35,7 +35,7 @@ class Schedule_SchedulecycleshiftController extends Zend_Controller_Action
             $pageNo = 1;
             $searchData = '';
             $searchQuery = '';
-            $searchArray = array();
+            $searchArray = [];
         } else {
             $sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
             $by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'sc.modifieddate  ';

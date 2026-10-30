@@ -88,9 +88,9 @@ class Default_PolicydocumentsController extends Zend_Controller_Action
 					$objname = $this->_getParam('objname');
 					$refresh = $this->_getParam('refresh');
 					$dashboardcall = $this->_getParam('dashboardcall');
-					$data = array();
+					$data = [];
 					$searchQuery = '';
-					$searchArray = array();
+					$searchArray = [];
 					$tablecontent='';	
 					
 					/** check for refresh button event 
@@ -144,7 +144,7 @@ class Default_PolicydocumentsController extends Zend_Controller_Action
 					/**
 					** to display "Add Multiple Documents" link, check add privileges for the logged in user 
 					**/
-					$popConfigPermission = array();
+					$popConfigPermission = [];
 					if(sapp_Global::_checkprivileges(MANAGE_POLICY_DOCS,$this->loggedInUserGroup,$this->loggedInUserRole,'add') == 'Yes'){
 								array_push($popConfigPermission,'addmultiple');
 					}  
@@ -190,7 +190,7 @@ class Default_PolicydocumentsController extends Zend_Controller_Action
 		{
 			$httpReferrer = $_SERVER['HTTP_REFERER'];
 			$redirectUrl = str_replace(BASE_URL,'',$httpReferrer);
-			if(strpos($redirectUrl,'add') === false)
+			if(!str_contains($redirectUrl,'add'))
 				$this->view->redirectUrl = $redirectUrl;
 		}
 		
@@ -243,7 +243,7 @@ class Default_PolicydocumentsController extends Zend_Controller_Action
 		/**
 		** to display "Add category" link, check add privileges for the logged in user 
 		**/
-		$popConfigPermission = array();
+		$popConfigPermission = [];
 		if(sapp_Global::_checkprivileges(POLICY_DOCS_CATEGORIES,$this->loggedInUserGroup,$this->loggedInUserRole,'add') == 'Yes'){
 					array_push($popConfigPermission,'category');
 		}  
@@ -285,12 +285,12 @@ class Default_PolicydocumentsController extends Zend_Controller_Action
 			
 			$org_names = $this->_getParam('file_original_names',null);
 			$new_names = $this->_getParam('file_new_names',null);
-			$documents_array = array();
+			$documents_array = [];
 			if($new_names != '')
-					$documents_array[] = array("original_name" => $org_names, "new_name" => $new_names);
+					$documents_array[] = ["original_name" => $org_names, "new_name" => $new_names];
 		  
 			/** prepare data array to insert into database **/
-			$data = array(
+			$data = [
 						'document_name' => $document_name,
 						'category_id' => $category_id,
 						'document_version' => $document_version,
@@ -301,7 +301,7 @@ class Default_PolicydocumentsController extends Zend_Controller_Action
 						'createdby' =>  $this->loggedInUser,
 						'modifieddate' => gmdate("Y-m-d H:i:s"),
 						'createddate' =>  gmdate("Y-m-d H:i:s"),
-			);
+			];
 
 			/** save document details **/
 			$id = $this->documentsModel->savePolicyDocument($data);
@@ -321,11 +321,11 @@ class Default_PolicydocumentsController extends Zend_Controller_Action
 					unlink(POLICY_DOC_TEMP_UPLOAD_PATH.$new_names);
 				}
 				
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Policy document added successfully"));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Policy document added successfully"]);
 			}
 			else
 			{
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("failure" => "Failed to add policy document. Please try again."));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["failure" => "Failed to add policy document. Please try again."]);
 			}
 
 			/**
@@ -391,7 +391,7 @@ class Default_PolicydocumentsController extends Zend_Controller_Action
 			{
 				$httpReferrer = $_SERVER['HTTP_REFERER'];
 				$redirectUrl = str_replace(BASE_URL,'',$httpReferrer);
-				if(strpos($redirectUrl,'edit') === false)
+				if(!str_contains($redirectUrl,'edit'))
 					$this->view->redirectUrl = $redirectUrl;
 			}
 
@@ -410,8 +410,8 @@ class Default_PolicydocumentsController extends Zend_Controller_Action
 				/** populate edit form **/
 				$documentsAddForm->populate($res);	
 				if($res['file_name']){
-					$new = array();
-					$ori = array();
+					$new = [];
+					$ori = [];
 
 					$attachments = json_decode($res['file_name'],true);
 					foreach ($attachments as $k => $v) {
@@ -427,7 +427,7 @@ class Default_PolicydocumentsController extends Zend_Controller_Action
 				/**
 				** to display "Add category" link, check add privileges for the logged in user 
 				**/
-				$popConfigPermission = array();
+				$popConfigPermission = [];
 				if(sapp_Global::_checkprivileges(POLICY_DOCS_CATEGORIES,$this->loggedInUserGroup,$this->loggedInUserRole,'add') == 'Yes'){
 							array_push($popConfigPermission,'category');
 				} 
@@ -503,12 +503,12 @@ class Default_PolicydocumentsController extends Zend_Controller_Action
 			
 			$org_names = $this->_getParam('file_original_names',null);
 			$new_names = $this->_getParam('file_new_names',null);
-			$documents_array = array();
+			$documents_array = [];
 			if($new_names != '')
-					$documents_array[] = array("original_name" => $org_names, "new_name" => $new_names);
+					$documents_array[] = ["original_name" => $org_names, "new_name" => $new_names];
 		  
 			/** prepare data array **/
-			$data = array(
+			$data = [
 						'document_name' => $document_name,
 						'category_id' => $category_id,
 						'document_version' => $document_version,
@@ -516,10 +516,10 @@ class Default_PolicydocumentsController extends Zend_Controller_Action
 						'file_name' => count($documents_array) > 0?json_encode($documents_array):null,
 						'modifiedby' =>  $this->loggedInUser,
 						'modifieddate' => gmdate("Y-m-d H:i:s"),						
-			);
+			];
 			
 			/** prepare where clause data **/
-			$where = array('id=?'=>$id);  
+			$where = ['id=?'=>$id];  
 			
 			/** update document details **/
 			$res = $this->documentsModel->savePolicyDocument($data,$where);
@@ -538,11 +538,11 @@ class Default_PolicydocumentsController extends Zend_Controller_Action
 					unlink(POLICY_DOC_TEMP_UPLOAD_PATH.$new_names);
 				}
 
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Policy document updated successfully"));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Policy document updated successfully"]);
 			}
 			else
 			{
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("failure" => "Failed to update policy document. Please try again."));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["failure" => "Failed to update policy document. Please try again."]);
 			}
 
 			//if($redirectUrl)
@@ -597,7 +597,7 @@ class Default_PolicydocumentsController extends Zend_Controller_Action
 			/**
 			** to display "edit" button, check add privileges for the logged in user 
 			**/
-			$popConfigPermission = array();
+			$popConfigPermission = [];
 			if(sapp_Global::_checkprivileges(MANAGE_POLICY_DOCS,$this->loggedInUserGroup,$this->loggedInUserRole,'edit') == 'Yes'){
 						array_push($popConfigPermission,'edit');
 			}  
@@ -678,12 +678,12 @@ class Default_PolicydocumentsController extends Zend_Controller_Action
 				/** prepare data array  and where clause
 				** to update document isactive status to 0
 				**/
-				$data = array(
+				$data = [
 						'isactive' => 0,
 						'modifiedby' =>  $this->loggedInUser,
 						'modifieddate' => gmdate("Y-m-d H:i:s")
-				);
-				$where = array('id=?'=>$docId);
+				];
+				$where = ['id=?'=>$docId];
 				
 				/** update document details **/
 			  $res = $this->documentsModel->savePolicyDocument($data, $where);
@@ -706,11 +706,11 @@ class Default_PolicydocumentsController extends Zend_Controller_Action
 			{
 				if(	$messages['msgtype'] == 'error')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
 				}
 				if(	$messages['msgtype'] == 'success')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
 				}
 					
 			}
@@ -738,7 +738,7 @@ class Default_PolicydocumentsController extends Zend_Controller_Action
 		
 		// Validate file with size greater than default(Upload Max Filesize)limit
 		if (isset($_FILES["myfile"]) && ($_FILES["myfile"]["size"] == 0 || $_FILES["myfile"]["size"] > (2*1024*1024))) {
-			$this->_helper->json(array('error' => 'filesize'));
+			$this->_helper->json(['error' => 'filesize']);
 		}
 		else if(isset($_FILES["myfile"])) 
 		{
@@ -750,7 +750,7 @@ class Default_PolicydocumentsController extends Zend_Controller_Action
 
             $filedata['original_name'] = $fileName;
             $filedata['new_name'] = $newName;
-            $this->_helper->json(array('filedata'=>$filedata));
+            $this->_helper->json(['filedata'=>$filedata]);
 		}
 	}
 	/**
@@ -781,8 +781,8 @@ class Default_PolicydocumentsController extends Zend_Controller_Action
 						}
 					}
 					
-					$data = array('file_name'=>(count($fileData)>0)?json_encode($fileData):null);
-					$where = array('id=?'=>$_POST["a_id"]);
+					$data = ['file_name'=>(count($fileData)>0)?json_encode($fileData):null];
+					$where = ['id=?'=>$_POST["a_id"]];
 					$this->documentsModel->savePolicyDocument($data, $where);
 				}
 				
@@ -802,7 +802,7 @@ class Default_PolicydocumentsController extends Zend_Controller_Action
 	            if (file_exists($filePath)) {
 	                unlink($filePath);
 	            }
-		    	$this->_helper->json(array());
+		    	$this->_helper->json([]);
         	}
         }
 	}
@@ -817,7 +817,7 @@ class Default_PolicydocumentsController extends Zend_Controller_Action
 			/**
 			** to display "Add Multiple Documents" link, check add privileges for the logged in user 
 			**/
-			$popConfigPermission = array();
+			$popConfigPermission = [];
 			if(sapp_Global::_checkprivileges(MANAGE_POLICY_DOCS,$this->loggedInUserGroup,$this->loggedInUserRole,'add') == 'Yes'){
 							
 				/**
@@ -828,7 +828,7 @@ class Default_PolicydocumentsController extends Zend_Controller_Action
 				{
 					$httpReferrer = $_SERVER['HTTP_REFERER'];
 					$redirectUrl = str_replace(BASE_URL,'',$httpReferrer);
-					if(strpos($redirectUrl,'addmultiple') === false)
+					if(!str_contains($redirectUrl,'addmultiple'))
 						$this->view->redirectUrl = $redirectUrl;
 				}
 				
@@ -909,12 +909,12 @@ class Default_PolicydocumentsController extends Zend_Controller_Action
 					$org_names = $org_namesArr[$i];
 					$new_names = $new_namesArr[$i];
 
-					$documents_array = array();
+					$documents_array = [];
 					if($new_names != '')
-							$documents_array[] = array("original_name" => $org_names, "new_name" => $new_names);
+							$documents_array[] = ["original_name" => $org_names, "new_name" => $new_names];
 				  
 					/** prepare data array to insert into database **/
-					$data = array(
+					$data = [
 								'document_name' => $document_name,
 								'category_id' => $category_id,
 								'document_version' => $document_version,
@@ -925,7 +925,7 @@ class Default_PolicydocumentsController extends Zend_Controller_Action
 								'createdby' =>  $this->loggedInUser,
 								'modifieddate' => gmdate("Y-m-d H:i:s"),
 								'createddate' =>  gmdate("Y-m-d H:i:s"),
-					);
+					];
 					
 					/** save document details **/
 					$id = $this->documentsModel->savePolicyDocument($data);
@@ -974,7 +974,7 @@ class Default_PolicydocumentsController extends Zend_Controller_Action
 		
 		// Validate file with size greater than default(Upload Max Filesize)limit
 		if ($_FILES["fileupload"]["size"] == 0 || $_FILES["fileupload"]["size"] > (2*1024*1024)) {
-			$this->_helper->json(array('error' => 'filesize'));
+			$this->_helper->json(['error' => 'filesize']);
 		}
 		else if(isset($_FILES["fileupload"])) 
 		{
@@ -986,7 +986,7 @@ class Default_PolicydocumentsController extends Zend_Controller_Action
 
             $filedata['original_name'] = $fileName;
             $filedata['new_name'] = $newName;
-            $this->_helper->json(array('filedata'=>$filedata));
+            $this->_helper->json(['filedata'=>$filedata]);
 		}
 	}
 }

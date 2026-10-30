@@ -71,7 +71,7 @@ class Default_IdentitycodesController extends Zend_Controller_Action
         if (!isset($session)) {
             if ($this->getRequest()->isXmlHttpRequest()) {
                 // Return valid JSON for expired session
-                $this->_helper->json(array('login' => 'failed'));
+                $this->_helper->json(['login' => 'failed']);
             } else {
                 $this->_redirect('');
             }
@@ -117,7 +117,7 @@ class Default_IdentitycodesController extends Zend_Controller_Action
 
             $dataTmp = $this->_model->getGrid($sort, $by, $perPage, $page, rtrim($searchData, ','), $call, $dashboardcall);
             
-            $this->view->dataArray = array($dataTmp);
+            $this->view->dataArray = [$dataTmp];
             $this->view->call      = $call;
 
             $this->view->messages  = $this->_helper->flashMessenger->getMessages();
@@ -157,7 +157,7 @@ class Default_IdentitycodesController extends Zend_Controller_Action
         // Configuration tables generally only need one record
         $existingRecords = $this->_model->getAllRecords(1);
         if (!empty($existingRecords)) {
-            $this->_helper->flashMessenger->addMessage(array('info' => 'Configuration already exists. Redirected to edit mode.'));
+            $this->_helper->flashMessenger->addMessage(['info' => 'Configuration already exists. Redirected to edit mode.']);
             return $this->_redirect('identitycodes/edit/id/' . $existingRecords[0]['id']);
         }
 
@@ -199,7 +199,7 @@ class Default_IdentitycodesController extends Zend_Controller_Action
             $db->beginTransaction();
 
             try {
-                $data = array(
+                $data = [
                     'employee_code'         => trim((string) $request->getParam('employee_code', '')),
                     'backgroundagency_code' => trim((string) $request->getParam('backgroundagency_code', '')),
                     'vendors_code'          => trim((string) $request->getParam('vendors_code', '')),
@@ -208,7 +208,7 @@ class Default_IdentitycodesController extends Zend_Controller_Action
                     'requisition_code'      => trim((string) $request->getParam('requisition_code', '')),
                     'description'           => trim((string) $request->getParam('description', '')),
                     'isactive'              => (int) $request->getParam('isactive', 1)
-                );
+                ];
 
                 // Legacy Logic: Remove un-active module codes
                 if (!sapp_Global::_isactivemodule(BGCHECKS)) {
@@ -235,24 +235,24 @@ class Default_IdentitycodesController extends Zend_Controller_Action
                 $db->commit();
 
                 // Set FlashMessenger for standard non-AJAX fallback/redirect scenarios
-                $this->_helper->flashMessenger->addMessage(array('success' => "Identity codes {$saveMode} successfully."));
+                $this->_helper->flashMessenger->addMessage(['success' => "Identity codes {$saveMode} successfully."]);
 
                 // SSOT v6.2 Strict AJAX JSON Response (Success)
-                $this->_helper->json(array(
+                $this->_helper->json([
                     'result'    => 'saved',
                     'nomessage' => 'no',
                     'message'   => "Identity codes {$saveMode} successfully."
-                ));
+                ]);
 
             } catch (\Throwable $e) {
                 $db->rollBack();
                 error_log("IdentityCodes Save Error: " . $e->getMessage()); 
                 
                 // SSOT v6.2 Strict AJAX JSON Response (Exception)
-                $this->_helper->json(array(
+                $this->_helper->json([
                     'result'  => 'exception', 
                     'message' => 'System error occurred.'
-                ));
+                ]);
             }
         } else {
             // SSOT v6.2 Strict AJAX JSON Response (Validation Error - Raw Array)
@@ -272,7 +272,7 @@ class Default_IdentitycodesController extends Zend_Controller_Action
         
         if ($id) {
             if (sapp_Global::_checkprivileges(IDENTITYCODES, $this->_loginuserGroup, $this->_loginuserRole, 'delete') !== 'Yes') {
-                return $this->_helper->json(array('result' => 'error', 'message' => 'Permission Denied.'));
+                return $this->_helper->json(['result' => 'error', 'message' => 'Permission Denied.']);
             }
 
             try {
@@ -285,15 +285,15 @@ class Default_IdentitycodesController extends Zend_Controller_Action
                 sapp_Global::logManager(IDENTITYCODES, 3, $this->_loginUserId, $id);
                 
                 // Standard Success Response
-                return $this->_helper->json(array('result' => 'saved', 'nomessage' => 'no', 'message' => 'Record deleted successfully.'));
+                return $this->_helper->json(['result' => 'saved', 'nomessage' => 'no', 'message' => 'Record deleted successfully.']);
                 
             } catch (\Throwable $e) {
                 error_log("IdentityCodes Delete Error: " . $e->getMessage());
-                return $this->_helper->json(array('result' => 'exception', 'message' => $e->getMessage()));
+                return $this->_helper->json(['result' => 'exception', 'message' => $e->getMessage()]);
             }
         }
         
-        return $this->_helper->json(array('result' => 'error', 'message' => 'Invalid request'));
+        return $this->_helper->json(['result' => 'error', 'message' => 'Invalid request']);
     }
 
     public function makeactiveinactiveAction()
@@ -305,10 +305,10 @@ class Default_IdentitycodesController extends Zend_Controller_Action
             $this->_model->toggleStatus($id, $status);
             sapp_Global::logManager(IDENTITYCODES, 4, $this->_loginUserId, $id);
             
-            $this->_helper->json(array('result' => 'saved', 'nomessage' => 'no', 'message' => 'Status updated successfully.'));
+            $this->_helper->json(['result' => 'saved', 'nomessage' => 'no', 'message' => 'Status updated successfully.']);
         } catch (\Throwable $e) {
             error_log("IdentityCodes Toggle Error: " . $e->getMessage());
-            $this->_helper->json(array('result' => 'exception', 'message' => 'System error occurred.'));
+            $this->_helper->json(['result' => 'exception', 'message' => 'System error occurred.']);
         }
     }
 

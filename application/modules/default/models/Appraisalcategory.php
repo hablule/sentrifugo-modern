@@ -33,7 +33,7 @@ class Default_Model_Appraisalcategory extends Zend_Db_Table_Abstract
 		
 		$servicedeskDepartmentData = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('ac'=>'main_pa_category'),array('ac.*'))
+                           ->from(['ac'=>'main_pa_category'],['ac.*'])
                            ->where($where)
     					   ->order("$by $sort") 
     					   ->limitPage($pageNo, $perPage);
@@ -43,8 +43,8 @@ class Default_Model_Appraisalcategory extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{		
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		
 		if($searchData != '' && $searchData!='undefined')
 			{
@@ -59,18 +59,18 @@ class Default_Model_Appraisalcategory extends Zend_Db_Table_Abstract
 			
 		$objName = 'appraisalcategory';
 		
-		$tableFields = array('action'=>'Action','category_name' => 'Parameter','description' => 'Description');
+		$tableFields = ['action'=>'Action','category_name' => 'Parameter','description' => 'Description'];
 		
 		$tablecontent = $this->getAppraisalCategoryData($sort, $by, $pageNo, $perPage,$searchQuery);     
 		
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -78,7 +78,7 @@ class Default_Model_Appraisalcategory extends Zend_Db_Table_Abstract
 			'add' =>'add',
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall,
-		);
+		];
 		return $dataTmp;
 	}
 	
@@ -86,7 +86,7 @@ class Default_Model_Appraisalcategory extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('ac'=>'main_pa_category'),array('ac.*'))
+						->from(['ac'=>'main_pa_category'],['ac.*'])
 					    ->where('ac.isactive = 1 AND ac.id='.$id.' ');
 		return $this->fetchAll($select)->toArray();
 	
@@ -96,7 +96,7 @@ class Default_Model_Appraisalcategory extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('ac'=>'main_pa_category'),array('ac.*'))
+						->from(['ac'=>'main_pa_category'],['ac.*'])
 					    ->where('ac.isactive = 1');
 		return $this->fetchAll($select)->toArray();
 	
@@ -126,13 +126,13 @@ class Default_Model_Appraisalcategory extends Zend_Db_Table_Abstract
 	
 	public function getCategoryNameByIds($categoryids)
 		{
-		   $categoryArr = array();		
+		   $categoryArr = [];		
 		   if($categoryids !='')
 		   	$categoryArr = explode(",",$categoryids);
 		   
 		   $select = $this->select()
 							->setIntegrityCheck(false)
-							->from(array('c'=>'main_pa_category'),array('c.*'))
+							->from(['c'=>'main_pa_category'],['c.*'])
 							->where('c.isactive = 1 AND c.id IN(?)',$categoryArr);
 			return $this->fetchAll($select)->toArray();
 		

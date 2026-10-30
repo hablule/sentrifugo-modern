@@ -23,9 +23,9 @@ class Default_LeavecategoryController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 
 		if($refresh == 'refresh')
@@ -64,14 +64,14 @@ class Default_LeavecategoryController extends Zend_Controller_Action
 			$loginUserId = $auth->getStorage()->read()->id;
 		}
 
-		$msgarray = array();
+		$msgarray = [];
 		$controllername = 'leavecategory';
 		$form = new Default_Form_Leavecategory();
 		$form->name->addValidator(new Zend_Validate_Db_NoRecordExists(
-			array(
+			[
 				'table'=>'main_leavecategory',
 				'field'=>'name'
-			)
+			]
 			));
 	  $form->name->getValidator('Db_NoRecordExists')->setMessage('Name already exists.');
 	 	
@@ -84,9 +84,9 @@ class Default_LeavecategoryController extends Zend_Controller_Action
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = '';
-				$data = array('name'=>$name,
+				$data = ['name'=>$name,
 				 				'description'=>$description,	       
-				);
+				];
 
 					$data['createdby'] = $loginUserId;
 					$data['createddate'] = gmdate("Y-m-d H:i:s");
@@ -98,7 +98,7 @@ class Default_LeavecategoryController extends Zend_Controller_Action
 				
 				$tableid = $Id;
 				$result = sapp_Global::logManager(LEAVECATEGORY,1,$loginUserId,$tableid);
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Leave Category  added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Leave Category  added successfully."]);
 
 				
 				$this->_redirect('leavecategory');
@@ -131,7 +131,7 @@ class Default_LeavecategoryController extends Zend_Controller_Action
 		}
 		$id = $this->getRequest()->getParam('id');
 
-		$msgarray = array();
+		$msgarray = [];
 		$controllername = 'leavecategory';
 		$form = new Default_Form_Leavecategory();
 		$model = new Default_Model_Leavecategory();
@@ -144,14 +144,14 @@ class Default_LeavecategoryController extends Zend_Controller_Action
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = '';
-				$data = array('name'=>$name,
+				$data = ['name'=>$name,
 				 				'description'=>$description,
 						        'modifiedby'=>$loginUserId,
 								'modifieddate'=>gmdate("Y-m-d H:i:s")
-				);
+				];
 
 				if($id!=''){
-					$where = array('leavecategory_id=?'=>$id);
+					$where = ['leavecategory_id=?'=>$id];
 					$actionflag = 2;
 				}
 				else
@@ -255,13 +255,13 @@ class Default_LeavecategoryController extends Zend_Controller_Action
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = '';
-				$data = array('name'=>$name,
+				$data = ['name'=>$name,
 				 				'description'=>$description,
 						        'modifiedby'=>$loginUserId,
 								'isactive'=>$isactive,
 
 								'modifieddate'=>gmdate("Y-m-d H:i:s")
-				);
+				];
 				
 					$where = 'leavecategory_id='.$id;
 			$Id = $model->SaveorUpdateData($data, $where);
@@ -269,12 +269,12 @@ class Default_LeavecategoryController extends Zend_Controller_Action
 				if($Id == 'update')
 				{
 					$tableid = $id;
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Leave Category updated successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Leave Category updated successfully."]);
 				}
 				else
 				{
 					$tableid = $Id;
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Leave Category  added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Leave Category  added successfully."]);
 				}
 				$result = sapp_Global::logManager(LEAVECATEGORY,2,$loginUserId,$tableid);
 				$this->_redirect('leavecategory');
@@ -309,12 +309,12 @@ class Default_LeavecategoryController extends Zend_Controller_Action
 		if ($id) {
 			$model = new Default_Model_Leavecategory();
 
-			$data = array(
+			$data = [
 				'isactive' => 'N',
 				'modifiedby' => $loginUserId,
 				'modifieddate' => gmdate("Y-m-d H:i:s"),
-			);
-			$where = array('leavecategory_id=?' => $id);
+			];
+			$where = ['leavecategory_id=?' => $id];
 			$Id = $model->SaveorUpdateData($data, $where);
 			$tableid=$id;	
 			$result = sapp_Global::logManager(LEAVECATEGORY,3,$loginUserId,$tableid);
@@ -331,10 +331,10 @@ class Default_LeavecategoryController extends Zend_Controller_Action
 		}
 		if ($deleteflag == 1) {
 			if ($messages['msgtype'] == 'error') {
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("error" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["error" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag]);
 			}
 			if ($messages['msgtype'] == 'success') {
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag]);
 			}
 		}
 		$this->_helper->json($messages);

@@ -24,8 +24,8 @@ class Default_Form_cvadd extends Zend_Form
         $prevbtn->setAttrib('onClick', "parent.location='" . Zend_Controller_Front::getInstance()->getBaseUrl() .'/education/index' ."'");
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Next');
-        $this->addElements(array($id,$prevbtn,$submit));
-        $this->setElementDecorators(array('ViewHelper')); 
+        $this->addElements([$id,$prevbtn,$submit]);
+        $this->setElementDecorators(['ViewHelper']); 
 
     }
 

@@ -58,7 +58,7 @@ class sapp_PerformanceHelper
     }
     public static function check_per_implmentation($businessunit_id,$department_id)
     {
-        $output = array();
+        $output = [];
         if($businessunit_id != '')
         {
             $model = new Default_Model_Appraisalinit();
@@ -852,7 +852,7 @@ class sapp_PerformanceHelper
 <?php 
 			   }
 			   
-			   public static function getAppraisalText($appraisalInfo = array()) {
+			   public static function getAppraisalText($appraisalInfo = []) {
 			   		$appperiod = '';
 					$appmode = $appraisalInfo['appraisal_mode'].' Appraisal';
 			 		
@@ -1279,20 +1279,20 @@ public static function manager_questions_privileges($questionarray,$appraisalid,
 		    		
 		    		if($questions!='')
 		    		{
-			    		$QsdataArr = array('isused'=>1, 
+			    		$QsdataArr = ['isused'=>1, 
 								  'modifiedby'=>$loginUserId,
 								  'modifieddate'=>gmdate("Y-m-d H:i:s")
-						);
+						];
 						$Qswhere = " id IN($questions) ";
 						$QsId = $appraisalQsModel->SaveorUpdateAppraisalQuestionData($QsdataArr, $Qswhere);
 		    		}
 					
 					if($categoryids!='')
 					{
-						$CatdataArr = array('isused'=>1, 
+						$CatdataArr = ['isused'=>1, 
 								  'modifiedby'=>$loginUserId,
 								  'modifieddate'=>gmdate("Y-m-d H:i:s")
-						);
+						];
 						$Catwhere = " id IN($categoryids) ";
 						$CatId = $appraisalCategoryModel->SaveorUpdateAppraisalCategoryData($CatdataArr, $Catwhere);
 					}

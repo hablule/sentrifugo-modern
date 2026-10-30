@@ -56,19 +56,19 @@ class Default_Form_empsalarydetails extends Zend_Form
 		$salary->addFilter(new Zend_Filter_StringTrim());
 		$salary->setRequired(true);
 
-		$salary->addValidators(array(
-			array(
+		$salary->addValidators([
+			[
 				'validator'   => 'Regex',
 				'breakChainOnFailure' => true,
-				'options'     => array(
+				'options'     => [
 
 					'pattern' => '/^[0-9\.]*$/',
-					'messages' => array(
+					'messages' => [
 						'regexNotMatch' => 'Please enter only numbers.'
-					)
-				)
-			)
-		));
+					]
+				]
+			]
+		]);
 
 
 		$bank_account = new Zend_Form_Element_Select('bank_account');
@@ -95,15 +95,15 @@ class Default_Form_empsalarydetails extends Zend_Form
 		$isactive = new Zend_Form_Element_Checkbox('isactive');
 		$isactive->setLabel('Active');
 
-		$this->addElements(array(
+		$this->addElements([
 			$id, $userid, $currencyid, $salarytype, $salary,
 			$description, $bank_account,
 			$start_date, $end_date,  $submit,
 			$isactive
-		));
-		$this->setElementDecorators(array('ViewHelper'));
-		$this->setElementDecorators(array(
+		]);
+		$this->setElementDecorators(['ViewHelper']);
+		$this->setElementDecorators([
 			'UiWidgetElement',
-		), array('accountholding'));
+		], ['accountholding']);
 	}
 }

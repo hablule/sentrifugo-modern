@@ -46,8 +46,8 @@ class Default_Model_Tabroles extends Zend_Db_Table_Abstract
 
 		$roleData = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('r' => $this->_name), array('id' => 'r.' . ROLE_ARRAY['colid'], 'name' => 'r.' . ROLE_ARRAY['colname'], 'code' => 'r.' . ROLE_ARRAY['colcode'], 'description' => 'r.' . ROLE_ARRAY['coldescription']))
-			->joinInner(array('g' => GROUP_ARRAY['tablename']), "g." . GROUP_ARRAY['colid'] . " = r." . ROLE_ARRAY['colgroupid'] . " and g." . GROUP_ARRAY['colisactive'] . " = 'Y'", array('group_name' => 'g.' . GROUP_ARRAY['colname'] . ''))
+			->from(['r' => $this->_name], ['id' => 'r.' . ROLE_ARRAY['colid'], 'name' => 'r.' . ROLE_ARRAY['colname'], 'code' => 'r.' . ROLE_ARRAY['colcode'], 'description' => 'r.' . ROLE_ARRAY['coldescription']])
+			->joinInner(['g' => GROUP_ARRAY['tablename']], "g." . GROUP_ARRAY['colid'] . " = r." . ROLE_ARRAY['colgroupid'] . " and g." . GROUP_ARRAY['colisactive'] . " = 'Y'", ['group_name' => 'g.' . GROUP_ARRAY['colname'] . ''])
 			->where($where)
 			->order("$by $sort")
 			->limitPage($pageNo, $perPage);
@@ -65,7 +65,7 @@ class Default_Model_Tabroles extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('r' => ROLE_ARRAY['tablename']), array('r.' . ROLE_ARRAY['colid'] . ' as id', 'r.*'))
+			->from(['r' => ROLE_ARRAY['tablename']], ['r.' . ROLE_ARRAY['colid'] . ' as id', 'r.*'])
 			->where('r.' . ROLE_ARRAY['colisactive'] . ' = "Y" AND r.' . ROLE_ARRAY['colid'] . '=' . $id . ' ');
 		//die($select);
 		return $this->fetchRow($select)->toArray();
@@ -74,7 +74,7 @@ class Default_Model_Tabroles extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('g' => GROUP_ARRAY['tablename']), array('g.' . GROUP_ARRAY['colid'] . ' as id', 'g.' . GROUP_ARRAY['colisactive'] . ' as activename', 'g.*'))
+			->from(['g' => GROUP_ARRAY['tablename']], ['g.' . GROUP_ARRAY['colid'] . ' as id', 'g.' . GROUP_ARRAY['colisactive'] . ' as activename', 'g.*'])
 			->where('g.' . GROUP_ARRAY['colisactive'] . ' = "Y" AND g.' . GROUP_ARRAY['colid'] . '=' . $id . ' ');
 		return $this->fetchRow($select)->toArray();
 	}
@@ -108,7 +108,7 @@ class Default_Model_Tabroles extends Zend_Db_Table_Abstract
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$query = "select " . ROLE_ARRAY['colid'] . "," . ROLE_ARRAY['colcode'] . "," . ROLE_ARRAY['colgroupid'] . " from " . ROLE_ARRAY['tablename'] . " where " . ROLE_ARRAY['colid'] . " > 1 and " . ROLE_ARRAY['colisactive'] . " = 'Y'";
 		$result = $db->query($query);
-		$role_arr = array();
+		$role_arr = [];
 		while ($row = $result->fetch()) {
 			$role_arr[$row[ROLE_ARRAY['colid']]]['roletype'] = $row[ROLE_ARRAY['colcode']];
 			$role_arr[$row[ROLE_ARRAY['colid']]]['group_id'] = $row[ROLE_ARRAY['colgroupid']];
@@ -129,7 +129,7 @@ class Default_Model_Tabroles extends Zend_Db_Table_Abstract
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$query = "select " . ROLE_ARRAY['colid'] . "," . ROLE_ARRAY['colname'] . " from " . ROLE_ARRAY['tablename'] . " where " . ROLE_ARRAY['colisactive'] . " ='Y' and " . ROLE_ARRAY['colgroupid'] . " is not null order by " . ROLE_ARRAY['colname'];
 		$result = $db->query($query);
-		$role_arr = array();
+		$role_arr = [];
 		while ($row = $result->fetch()) {
 			$role_arr[$row[ROLE_ARRAY['colid']]] = $row[ROLE_ARRAY['colname']];
 		}
@@ -153,7 +153,7 @@ class Default_Model_Tabroles extends Zend_Db_Table_Abstract
 					  and p.role not in (select distinct role from main_privileges where object = " . EMPSCREENING . " and role is not null 
 					  and isactive = 'Y' and group_id = " . USERS_GROUP . ") group by r." . ROLE_ARRAY['colid'] . " order by r." . ROLE_ARRAY['colname'];
 		} else {
-			if (strpos($type, 'Background Agency') !== false) {
+			if (str_contains($type, 'Background Agency')) {
 
 				$query = "select r." . ROLE_ARRAY['colid'] . ",r." . ROLE_ARRAY['colname'] . " from main_privileges p
 							inner join " . ROLE_ARRAY['tablename'] . " r on r." . ROLE_ARRAY['colid'] . " = p.role
@@ -170,7 +170,7 @@ class Default_Model_Tabroles extends Zend_Db_Table_Abstract
 		}
 
 		$result = $db->query($query);
-		$role_arr = array();
+		$role_arr = [];
 		while ($row = $result->fetch()) {
 			$role_arr[$row[ROLE_ARRAY['colid']]] = $row[ROLE_ARRAY['colname']];
 		}
@@ -189,7 +189,7 @@ class Default_Model_Tabroles extends Zend_Db_Table_Abstract
                   where r." . ROLE_ARRAY['colisactive'] . " = 'Y' and r." . ROLE_ARRAY['colgroupid'] . " is not null 
                   and r." . ROLE_ARRAY['colgroupid'] . " not in (" . USERS_GROUP . ") order by r." . ROLE_ARRAY['colname'] . " asc";
 		$result = $db->query($query);
-		$role_arr = array();
+		$role_arr = [];
 		while ($row = $result->fetch()) {
 			$role_arr[$row[ROLE_ARRAY['colid']]] = $row[ROLE_ARRAY['colname']];
 		}
@@ -208,7 +208,7 @@ class Default_Model_Tabroles extends Zend_Db_Table_Abstract
                       where r." . ROLE_ARRAY['colisactive'] . " = 'Y' and r." . ROLE_ARRAY['colgroupid'] . " is not null 
                       and r." . ROLE_ARRAY['colgroupid'] . " in (" . MANAGEMENT_GROUP . ") order by r." . ROLE_ARRAY['colname'] . " asc";
 		$result = $db->query($query);
-		$role_arr = array();
+		$role_arr = [];
 		while ($row = $result->fetch()) {
 			$role_arr[$row[ROLE_ARRAY['colid']]] = $row[ROLE_ARRAY['colname']];
 		}
@@ -233,7 +233,7 @@ class Default_Model_Tabroles extends Zend_Db_Table_Abstract
                   and r." . ROLE_ARRAY['colgroupid'] . " not in (" . USERS_GROUP . ") order by r." . ROLE_ARRAY['colname'] . " asc";
 		}
 		$result = $db->query($query);
-		$role_arr = array();
+		$role_arr = [];
 		while ($row = $result->fetch()) {
 			$role_arr[ROLE_ARRAY['colid'] . '_' . $row[ROLE_ARRAY['colgroupid']]] = $row[ROLE_ARRAY['colname']];
 		}
@@ -244,7 +244,7 @@ class Default_Model_Tabroles extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('e' => 'main_role'), array('e.*'))
+			->from(['e' => 'main_role'], ['e.*'])
 			->where('e.isactive = "Y"');
 		return $this->fetchAll($select)->toArray();
 	}
@@ -255,7 +255,7 @@ class Default_Model_Tabroles extends Zend_Db_Table_Abstract
                   where r." . ROLE_ARRAY['colisactive'] . " = 'Y' and r." . ROLE_ARRAY['colgroupid'] . " is not null 
                   and r." . ROLE_ARRAY['colgroupid'] . " = " . $groupID . " order by r." . ROLE_ARRAY['colname'] . " asc";
 		$result = $db->query($query);
-		$role_arr = array();
+		$role_arr = [];
 		while ($row = $result->fetch()) {
 			$role_arr[ROLE_ARRAY['colid'] . '_' . $row[ROLE_ARRAY['colgroupid']]] = $row[ROLE_ARRAY['colname']];
 		}
@@ -273,7 +273,7 @@ class Default_Model_Tabroles extends Zend_Db_Table_Abstract
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$query = "select " . ROLE_ARRAY['colid'] . "," . ROLE_ARRAY['colname'] . " from " . ROLE_ARRAY['tablename'] . " where " . ROLE_ARRAY['colisactive'] . " ='Y' order by " . ROLE_ARRAY['colname'];
 		$result = $db->query($query);
-		$role_arr = array();
+		$role_arr = [];
 		while ($row = $result->fetch()) {
 			$role_arr[$row[ROLE_ARRAY['colid']]] = $row[ROLE_ARRAY['colname']];
 		}
@@ -287,12 +287,12 @@ class Default_Model_Tabroles extends Zend_Db_Table_Abstract
 	 */
 	public function getRolegroup($roleId)
 	{
-		$role_arr = array();
+		$role_arr = [];
 		$db = Zend_Db_Table::getDefaultAdapter();
 		if ($roleId != "") {
 			$query = "select " . ROLE_ARRAY['colid'] . "," . ROLE_ARRAY['colgroupid'] . " from " . ROLE_ARRAY['tablename'] . " where " . ROLE_ARRAY['colisactive'] . " = 'Y' and " . ROLE_ARRAY['colid'] . "=" . $roleId;
 			$result = $db->query($query);
-			$role_arr = array();
+			$role_arr = [];
 			while ($row = $result->fetch()) {
 				$role_arr[$row[ROLE_ARRAY['colid']]] = $row[ROLE_ARRAY['colgroupid']];
 			}
@@ -304,7 +304,7 @@ class Default_Model_Tabroles extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('r' => ROLE_ARRAY['tablename']), array('r.*'))
+			->from(['r' => ROLE_ARRAY['tablename']], ['r.*'])
 			->where('r.' . ROLE_ARRAY['colisactive'] . ' = "Y" AND r.' . ROLE_ARRAY['colid'] . '=' . $id . ' ');
 		return $this->fetchAll($select)->toArray();
 	}
@@ -323,8 +323,8 @@ class Default_Model_Tabroles extends Zend_Db_Table_Abstract
 	{
 		$group_model = new Default_Model_Groups();
 		$searchQuery = '';
-		$searchArray = array();
-		$data = array();
+		$searchArray = [];
+		$data = [];
 
 		if ($searchData != '' && $searchData != 'undefined') {
 			$searchValues = json_decode($searchData);
@@ -338,42 +338,42 @@ class Default_Model_Tabroles extends Zend_Db_Table_Abstract
 		}
 		$objName = 'tabroles';
 
-		$tableFields = array(
+		$tableFields = [
 			'action' => 'Action',
 			ROLE_ARRAY['colname'] => 'Role Name',
 			ROLE_ARRAY['colcode'] => 'Code',
 			ROLE_ARRAY['coldescription'] => 'Role Description',
 			'group_name' => 'Group'
-		);
+		];
 
 		$tablecontent = $this->getRolesData($sort, $by, $pageNo, $perPage, $searchQuery);
 		$group_data = $group_model->getGroupsListForRoles();
-		$group_arr = array();
+		$group_arr = [];
 
 		foreach ($group_data as $gkey => $gdata) {
 			$group_arr[$gdata['name']] = $gdata['name'];
 		}
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
 			'searchArray' => $searchArray,
 			'call' => $call,
 			'dashboardcall' => $dashboardcall,
-			'search_filters' => array(
-				'group_name' => array(
+			'search_filters' => [
+				'group_name' => [
 					'type' => 'select',
-					'filter_data' => array('' => 'All') + $group_arr,
-				)
-			),
-		);
+					'filter_data' => ['' => 'All'] + $group_arr,
+				]
+			],
+		];
 
 		return $dataTmp;
 	}
@@ -389,7 +389,7 @@ class Default_Model_Tabroles extends Zend_Db_Table_Abstract
 		$query = "select r." . ROLE_ARRAY['colid'] . ",r." . ROLE_ARRAY['colname'] . ",(select count(*) from main_userloginlog where emprole = r." . ROLE_ARRAY['colid'] . ") cnt
                from " . ROLE_ARRAY['tablename'] . " r where r." . ROLE_ARRAY['colisactive'] . " = 'Y'";
 		$result = $db->query($query);
-		$role_arr = array();
+		$role_arr = [];
 		while ($row = $result->fetch()) {
 			$role_arr[$row[ROLE_ARRAY['colid']]]['name'] = $row[ROLE_ARRAY['colname']];
 			$role_arr[$row[ROLE_ARRAY['colid']]]['cnt'] = $row['cnt'];
@@ -418,7 +418,7 @@ class Default_Model_Tabroles extends Zend_Db_Table_Abstract
                   and ur.role_id = " . SUPERADMINROLE . " 
                   where u.isactive = 1  ";
 		$result = $db->query($query);
-		$emp_arr = array();
+		$emp_arr = [];
 		while ($row = $result->fetch()) {
 			$emp_arr[$row['id']]['userfullname'] = $row['userfullname'];
 			$emp_arr[$row['id']]['emailaddress'] = $row['emailaddress'];
@@ -431,7 +431,7 @@ class Default_Model_Tabroles extends Zend_Db_Table_Abstract
 	public function getEmpRoleNamesByIds($empRoleIdArray)
 	{
 		$resultstring = implode(',', $empRoleIdArray);
-		$empRoleArray = array();
+		$empRoleArray = [];
 		if ($resultstring) {
 			try {
 				$qry = "select ob." . ROLE_ARRAY['colid'] . ", ob." . ROLE_ARRAY['colname'] . " from " . ROLE_ARRAY['tablename'] . " ob
@@ -517,7 +517,7 @@ class Default_Model_Tabroles extends Zend_Db_Table_Abstract
 				  where r." . ROLE_ARRAY['colisactive'] . " = 'Y' and r." . ROLE_ARRAY['colgroupid'] . " is not null $role_str
 				  order by r." . ROLE_ARRAY['colname'] . " asc";  //#
 		$result = $db->query($query);
-		$role_arr = array();
+		$role_arr = [];
 		while ($row = $result->fetch()) {
 			$role_arr[ROLE_ARRAY['colid'] . '_' . $row[ROLE_ARRAY['colgroupid']]] = $row[ROLE_ARRAY['colname']];
 		}

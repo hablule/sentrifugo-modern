@@ -34,8 +34,8 @@ class Default_Model_Dependencydetails extends Zend_Db_Table_Abstract
 		
 		$dependencyData = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('d'=>'main_emprelationship'),array('emprelationship_id as id','firstname'=>'firstname','middlename'=>'middlename','relationship_id'=>'relationship_id','dateofbirth'=>'DATE_FORMAT(dateofbirth,"'.DATEFORMAT_MYSQL.'")'))
-						->join(array('r'=>'main_relationship'),'r.relationship_id = d.relationship_id')
+						->from(['d'=>'main_emprelationship'],['emprelationship_id as id','firstname'=>'firstname','middlename'=>'middlename','relationship_id'=>'relationship_id','dateofbirth'=>'DATE_FORMAT(dateofbirth,"'.DATEFORMAT_MYSQL.'")'])
+						->join(['r'=>'main_relationship'],'r.relationship_id = d.relationship_id')
 					   ->where($where)
 					   ->order("$by $sort") 
 					   ->limitPage($pageNo, $perPage);
@@ -51,9 +51,9 @@ class Default_Model_Dependencydetails extends Zend_Db_Table_Abstract
 			$where = "emprelationship_id =".$id;
 			$empdependencyDetails = $this->select()
 										 ->setIntegrityCheck(false)
-									->from(array('d'=>'main_emprelationship'))
-									->join(array('r'=>'main_relationship'),'d.relationship_id = r.relationship_id',array('r.name as rname'))
-									->join(array('g'=>'main_gender'),'g.id = d.gender',array('g.gendername'))
+									->from(['d'=>'main_emprelationship'])
+									->join(['r'=>'main_relationship'],'d.relationship_id = r.relationship_id',['r.name as rname'])
+									->join(['g'=>'main_gender'],'g.id = d.gender',['g.gendername'])
 									->where($where);
 		
 			
@@ -82,7 +82,7 @@ class Default_Model_Dependencydetails extends Zend_Db_Table_Abstract
 		{
 			$where = "emp_id =".$userId;
 			$empdependencyDetails = $this->select()
-									->from(array('d'=>'main_emprelationship'),array('dependent_relation'=>'d.relationship_id'))
+									->from(['d'=>'main_emprelationship'],['dependent_relation'=>'d.relationship_id'])
 									->where($where)
 									->order("d.relationship_id");
 		

@@ -33,7 +33,7 @@ class Default_Model_Holidaygroups extends Zend_Db_Table_Abstract
 		$db = Zend_Db_Table::getDefaultAdapter();		
 		$groupData = $this->select()
 		->setIntegrityCheck(false)
-		->from('main_holidaycategory',array('holidaycategory_id as id','name as name','description as description','if(isactive="Y","Yes","No") as isactive'))
+		->from('main_holidaycategory',['holidaycategory_id as id','name as name','description as description','if(isactive="Y","Yes","No") as isactive'])
 		->order("$by $sort")
 		->where($where)
 		->limitPage($pageNo, $perPage);
@@ -46,8 +46,8 @@ class Default_Model_Holidaygroups extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{		
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		
 		if($searchData != '' && $searchData!='undefined')
 			{
@@ -60,24 +60,24 @@ class Default_Model_Holidaygroups extends Zend_Db_Table_Abstract
 				$searchQuery = rtrim($searchQuery," AND");					
 			}
 		$objName = 'holidaygroups';
-		$tableFields = array('action'=>'Action','name' => 'Category Name','description' => 'Description','isactive' => 'Active');
+		$tableFields = ['action'=>'Action','name' => 'Category Name','description' => 'Description','isactive' => 'Active'];
 		$tablecontent = $this->getGroupData($sort, $by, $pageNo, $perPage,$searchQuery);     
 		
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
 			'searchArray' => $searchArray,
 			'add' =>'add',
 			'call'=>$call
-		);		
+		];		
 		return $dataTmp;
 	}
 	public function getsingleGroupData($id)
@@ -107,7 +107,7 @@ class Default_Model_Holidaygroups extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('h'=>'main_holidaycategory'),array('h.holidaycategory_id as id','h.name'))
+						->from(['h'=>'main_holidaycategory'],['h.holidaycategory_id as id','h.name'])
 					    ->where("h.isactive = 'Y'")
 						->order("h.name");
 		return $this->fetchAll($select)->toArray();
@@ -120,12 +120,12 @@ class Default_Model_Holidaygroups extends Zend_Db_Table_Abstract
             {
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('h'=>'main_holidaycategory'),array('h.*'))
+						->from(['h'=>'main_holidaycategory'],['h.*'])
 					    ->where("h.holidaycategory_id=".$id." ");
 		return $this->fetchAll($select)->toArray();
             }
             else 
-                return array();
+                return [];
 	
 	}
 	

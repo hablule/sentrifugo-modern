@@ -79,7 +79,7 @@ class Default_Model_Businessunit extends Zend_Db_Table_Abstract
      */
     public function getPairs($activeOnly = true, $excludeId = null)
     {
-        $select = $this->select()->from($this->_name, array('id', 'name'))->order('name ASC');
+        $select = $this->select()->from($this->_name, ['id', 'name'])->order('name ASC');
         if ($activeOnly) {
             $select->where('isactive = ?', 1);
         }
@@ -105,7 +105,7 @@ class Default_Model_Businessunit extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if (!empty($searchData) && $searchData !== 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -126,7 +126,7 @@ class Default_Model_Businessunit extends Zend_Db_Table_Abstract
         }
 
         // SSOT Mandatory: 'action' => 'Action' must be the first element
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'        => 'Action',
             'code'          => 'Code',
             'name'          => 'Name',
@@ -134,18 +134,18 @@ class Default_Model_Businessunit extends Zend_Db_Table_Abstract
             'parent_name'   => 'Parent Name', // NEW
             'head_name'     => 'Unit Head',
             'status_text'   => 'Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
             'perPage'        => $perPage,
             'tablecontent'   => $tableContent,
             'objectname'     => 'businessunit', // Singular
-            'extra'          => array(),
+            'extra'          => [],
             'tableheader'    => $tableHeaders,
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
@@ -153,10 +153,10 @@ class Default_Model_Businessunit extends Zend_Db_Table_Abstract
             'menuName'       => 'Business Units',
             'call'           => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => array(
-                'status_text' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive'))
-            )
-        );
+            'search_filters' => [
+                'status_text' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']]
+            ]
+        ];
     }
 
     /**
@@ -185,8 +185,8 @@ class Default_Model_Businessunit extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from(
-                array('b' => $this->_name),
-                array(
+                ['b' => $this->_name],
+                [
                     'id' => 'b.id', // SSOT Aliasing requirement
                     'code',
                     'name',
@@ -200,24 +200,24 @@ class Default_Model_Businessunit extends Zend_Db_Table_Abstract
                     "),
                     'parent_name' => new Zend_Db_Expr("COALESCE(comp.name, psbu.name, '—')"),
                     'status_text' => new Zend_Db_Expr("CASE WHEN b.isactive = 1 THEN 'Active' ELSE 'Inactive' END")
-                )
+                ]
             )
             // Join for Unit Head
             ->joinLeft(
-                array('e' => 'main_employee'), // Updated to singular SSOT name
+                ['e' => 'main_employee'], // Updated to singular SSOT name
                 'b.unithead_id = e.id',
-                array('head_name' => 'e.userfullname')
+                ['head_name' => 'e.userfullname']
             )
             // Left Joins for ALL possible parents in this tier
             ->joinLeft(
-                array('comp' => 'main_company'),
+                ['comp' => 'main_company'],
                 'b.company_id = comp.id',
-                array()
+                []
             )
             ->joinLeft(
-                array('psbu' => $this->_name), // Self-join for recursive parent
+                ['psbu' => $this->_name], // Self-join for recursive parent
                 'b.parent_id = psbu.id',
-                array()
+                []
             )
             ->where('b.isactive != ?', 5);
 
@@ -251,7 +251,7 @@ class Default_Model_Businessunit extends Zend_Db_Table_Abstract
         if (!empty($id)) {
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = $currentDate;
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return 'update';
         }
 
@@ -276,13 +276,13 @@ class Default_Model_Businessunit extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => 5,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
+        ];
 
-        return $this->update($data, array('id = ?' => (int)$id));
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /**
@@ -297,13 +297,13 @@ class Default_Model_Businessunit extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => (int)$status,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
+        ];
 
-        return $this->update($data, array('id = ?' => (int)$id));
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* =================================================================================
@@ -345,7 +345,7 @@ class Default_Model_Businessunit extends Zend_Db_Table_Abstract
         // Check Employee routing assignments (main_employees_summary or similar)
         // Adjust table/column names if your employee org assignment structure differs
         $select = $db->select()
-            ->from('main_employees_summary', array('id'))
+            ->from('main_employees_summary', ['id'])
             ->where('businessunit_id = ?', (int)$id)
             ->where('isactive = ?', 1);
 
@@ -354,7 +354,7 @@ class Default_Model_Businessunit extends Zend_Db_Table_Abstract
 
         // Check Distribution List routing assignments
         $distSelect = $db->select()
-            ->from('main_distribution_list', array('id'))
+            ->from('main_distribution_list', ['id'])
             ->where('businessunit_id = ?', (int)$id)
             ->where('isactive = ?', 1);
 

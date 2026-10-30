@@ -38,12 +38,12 @@ class Default_Model_Reports extends Zend_Db_Table_Abstract
                 
 		$leaveStatusData = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('l'=>'empleave_summary'),
-		array( 'l.*','from_date'=>'DATE_FORMAT(l.leavefrom,"'.DATEFORMAT_MYSQL.'")',
+		->from(['l'=>'empleave_summary'],
+		[ 'l.*','from_date'=>'DATE_FORMAT(l.leavefrom,"'.DATEFORMAT_MYSQL.'")',
 								         'to_date'=>'DATE_FORMAT(l.leaveto,"'.DATEFORMAT_MYSQL.'")',
 										 'applieddate'=>'DATE_FORMAT(l.requested,"'.DATEFORMAT_MYSQL.'")',
                                           										 
-		))
+		])
 		
 		->where($where)
 		->order("$sort $by ")
@@ -61,7 +61,7 @@ class Default_Model_Reports extends Zend_Db_Table_Abstract
 			
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('l'=>'empleave_summary'), array('count'=>'COUNT(*)'))
+		->from(['l'=>'empleave_summary'], ['count'=>'COUNT(*)'])
 		
 		->where($where);
 			
@@ -82,12 +82,12 @@ class Default_Model_Reports extends Zend_Db_Table_Abstract
 		
      	$leaveManagementData = 	$this->select()
 								->setIntegrityCheck(false)
-								->from(array('l'=>'main_leavemanagement_summary'),
-								array( 'l.*',
+								->from(['l'=>'main_leavemanagement_summary'],
+								[ 'l.*',
 									   'halfday'=>'if(l.is_halfday = 1,"Yes","No")',
 									   'leavetransfer'=>'if(l.is_leavetransfer = 1,"Yes","No")',
 									   'skipholidays'=>'if(l.is_skipholidays = 1,"Yes","No")', 			   
-								))
+								])
 								->where($where)
 								->order("$sort $by ")
 								->limitPage($pageNo, $perPage);
@@ -154,7 +154,7 @@ class Default_Model_Reports extends Zend_Db_Table_Abstract
        //exit;
         $result = $db->query($query);
         $rows = $result->fetchAll();
-        return array('rows' => $rows,'page_cnt' => $page_cnt);
+        return ['rows' => $rows,'page_cnt' => $page_cnt];
 	}
 	
 	public function getLeaveManagementCount($searchQuery='')
@@ -165,7 +165,7 @@ class Default_Model_Reports extends Zend_Db_Table_Abstract
 			
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('l'=>'main_leavemanagement_summary'), array('count'=>'COUNT(l.id)'))
+		->from(['l'=>'main_leavemanagement_summary'], ['count'=>'COUNT(l.id)'])
 		->where($where);
 			
 		return $this->fetchAll($select)->toArray();
@@ -175,10 +175,10 @@ class Default_Model_Reports extends Zend_Db_Table_Abstract
 	{
 		if(!empty($empleavetypesArray))
 		{
-			$empLeavetypeArray = array();
+			$empLeavetypeArray = [];
 			$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('et'=>'main_employeeleavetypes'),array('et.id','leavetype'=>'et.leavetype'))
+			->from(['et'=>'main_employeeleavetypes'],['et.id','leavetype'=>'et.leavetype'])
 			->where('et.id IN(?)',$empleavetypesArray);
 
 			$result =  $this->fetchAll($select)->toArray();
@@ -199,10 +199,10 @@ class Default_Model_Reports extends Zend_Db_Table_Abstract
 	{
 		if(!empty($usersArray))
 		{
-			$usernameArray = array();
+			$usernameArray = [];
 			$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('mu'=>'main_users'),array('mu.id','employeename'=>'mu.userfullname'))
+			->from(['mu'=>'main_users'],['mu.id','employeename'=>'mu.userfullname'])
 			->where('mu.id IN(?)',$usersArray);
 
 			$result =  $this->fetchAll($select)->toArray();
@@ -223,10 +223,10 @@ class Default_Model_Reports extends Zend_Db_Table_Abstract
 	{
 		if(!empty($repmanagerArray))
 		{
-			$repmanagernameArray = array();
+			$repmanagernameArray = [];
 			$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('u'=>'main_users'),array('u.id','reportingmanagername'=>'u.userfullname'))
+			->from(['u'=>'main_users'],['u.id','reportingmanagername'=>'u.userfullname'])
 			->where('u.id IN(?)',$repmanagerArray);
 
 			$result =  $this->fetchAll($select)->toArray();
@@ -370,7 +370,7 @@ class Default_Model_Reports extends Zend_Db_Table_Abstract
 					".$where." order by uname desc
 					limit 0,10";		
 		$result = $db->query($query);
-		$res_arr = array();
+		$res_arr = [];
 		$res_arr = $result->fetchAll();
 		return $res_arr;
 	}
@@ -391,7 +391,7 @@ class Default_Model_Reports extends Zend_Db_Table_Abstract
 					limit 0,10";
 
 		$result = $db->query($query);
-		$res_arr = array();
+		$res_arr = [];
 		$res_arr = $result->fetchAll();
 		return $res_arr;
 	}
@@ -412,7 +412,7 @@ class Default_Model_Reports extends Zend_Db_Table_Abstract
 					limit 0,10";
 
 		$result = $db->query($query);
-		$res_arr = array();
+		$res_arr = [];
 		$res_arr = $result->fetchAll();
 		return $res_arr;
 	}
@@ -432,7 +432,7 @@ class Default_Model_Reports extends Zend_Db_Table_Abstract
 					and d.department_id<>0 order by dname desc
 					limit 0,10";
 		$result = $db->query($query);
-		$res_arr = array();
+		$res_arr = [];
 		$res_arr = $result->fetchAll();
 		return $res_arr;
 	}
@@ -485,7 +485,7 @@ class Default_Model_Reports extends Zend_Db_Table_Abstract
 		$sqlRes = $db->query($qry);
 		$emprole = $sqlRes->fetchAll();
 
-		$roleorderidArray = array();
+		$roleorderidArray = [];
 		foreach($emprole as $key => $roleid){
 			$roleorderidArray[] = $roleid['id'];
 
@@ -501,7 +501,7 @@ class Default_Model_Reports extends Zend_Db_Table_Abstract
 		$sqlRes = $db->query($qry);
 		$empgroup = $sqlRes->fetchAll();
 
-		$grouporderidArray = array();
+		$grouporderidArray = [];
 		foreach($empgroup as $key => $groupid){
 			$grouporderidArray[] = $groupid['id'];
 
@@ -521,7 +521,7 @@ class Default_Model_Reports extends Zend_Db_Table_Abstract
 	 *
 	 * @return  ResultSet;
 	 */
-	public function getUserWiseLogData($by="logindatetime",$order="desc",$pageNo=1, $perPage=20,$searchQuery=1,$selectfield=array('*'))
+	public function getUserWiseLogData($by="logindatetime",$order="desc",$pageNo=1, $perPage=20,$searchQuery=1,$selectfield=['*'])
 	{
 		$where = "1";
 		$by = trim($by);
@@ -533,14 +533,14 @@ class Default_Model_Reports extends Zend_Db_Table_Abstract
 
 			$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array($this->_name),$selectfield)
+			->from([$this->_name],$selectfield)
 			->where($where)
 			->order($order)
 			->limitPage($pageNo, $perPage);
 		}else{
 			$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array($this->_name),$selectfield)
+			->from([$this->_name],$selectfield)
 			->where($where)
 			->order("$by $order")
 			->limitPage($pageNo, $perPage);
@@ -691,7 +691,7 @@ where role_id in (select ".ROLE_ARRAY['colid']." as id from ".ROLE_ARRAY['tablen
 	 *
 	 * @return  ResultSet;
 	 */
-	public function getAgencyListReportData($by="agencyname",$order="asc",$pageNo=1, $perPage=20,$searchQuery=1,$selectfield=array('*'))
+	public function getAgencyListReportData($by="agencyname",$order="asc",$pageNo=1, $perPage=20,$searchQuery=1,$selectfield=['*'])
 	{
 		$where = "isactive = 1";
 		$by = trim($by);
@@ -703,7 +703,7 @@ where role_id in (select ".ROLE_ARRAY['colid']." as id from ".ROLE_ARRAY['tablen
 
 			$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('main_bgagencylist'),$selectfield)
+			->from(['main_bgagencylist'],$selectfield)
 			->where($where)
 			->order($order)
 			->limitPage($pageNo, $perPage);
@@ -711,13 +711,13 @@ where role_id in (select ".ROLE_ARRAY['colid']." as id from ".ROLE_ARRAY['tablen
 		else if($pageNo == ''){
 			$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('main_bgagencylist'),$selectfield)
+			->from(['main_bgagencylist'],$selectfield)
 			->where($where);
 
 		}else{
 			$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('main_bgagencylist'),$selectfield)
+			->from(['main_bgagencylist'],$selectfield)
 			->where($where)
 			->order("$by $order")
 			->limitPage($pageNo, $perPage);
@@ -747,7 +747,7 @@ where role_id in (select ".ROLE_ARRAY['colid']." as id from ".ROLE_ARRAY['tablen
 
 	public function getBgCheckNamesByIds($bgcheckidArray){
 		$resultstring = implode(',', $bgcheckidArray);
-		$bgcheckArray = array();
+		$bgcheckArray = [];
 		if($resultstring)
 		{
 			try
@@ -807,7 +807,7 @@ where role_id in (select ".ROLE_ARRAY['colid']." as id from ".ROLE_ARRAY['tablen
                   order by agency desc
                   limit 0,10";
 		$result = $db->query($query);
-		$agency_arr = array();
+		$agency_arr = [];
 		$agency_arr = $result->fetchAll();
 		return $agency_arr;
 	}
@@ -826,7 +826,7 @@ where role_id in (select ".ROLE_ARRAY['colid']." as id from ".ROLE_ARRAY['tablen
                   order by agency desc
                   limit 0,10";
 		$result = $db->query($query);
-		$agency_arr = array();
+		$agency_arr = [];
 		$agency_arr = $result->fetchAll();
 		return $agency_arr;
 	}
@@ -919,7 +919,7 @@ where role_id in (select ".ROLE_ARRAY['colid']." as id from ".ROLE_ARRAY['tablen
 					group by sname order by sname desc
 					limit 0,10";		
 		$result = $db->query($query);
-		$res_arr = array();
+		$res_arr = [];
 		$res_arr = $result->fetchAll();
 		return $res_arr;
 	}
@@ -939,7 +939,7 @@ where role_id in (select ".ROLE_ARRAY['colid']." as id from ".ROLE_ARRAY['tablen
 					group by aname order by aname desc
 					limit 0,10";		
 		$result = $db->query($query);
-		$res_arr = array();
+		$res_arr = [];
 		$res_arr = $result->fetchAll();
 		return $res_arr;
 	}

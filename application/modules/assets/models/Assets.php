@@ -14,10 +14,10 @@ class Assets_Model_Assets extends Zend_Db_Table_Abstract
 				
 		   $AssetsData = $this->select()
                        ->setIntegrityCheck(false)
-                       ->from(array('a'=>'main_asset'), array('a.*','id'=>'a.asset_id','category_name'=>'ac.name','type_name'=>'at.name','uom_name'=>'u.name','isactive'=>'if(a.isactive="Y","Yes","No")'))
-                       ->joinLeft(array('ac'=>'main_assetcategory'),"a.assetcategory_id = ac.assetcategory_id ",array())
-					   ->joinLeft(array('at'=>'main_assettype'),"a.assettype_id = at.assettype_id ",array())
-					   ->joinleft(array('u'=>'main_uom'),"a.uom_id = u.uom_id",array())
+                       ->from(['a'=>'main_asset'], ['a.*','id'=>'a.asset_id','category_name'=>'ac.name','type_name'=>'at.name','uom_name'=>'u.name','isactive'=>'if(a.isactive="Y","Yes","No")'])
+                       ->joinLeft(['ac'=>'main_assetcategory'],"a.assetcategory_id = ac.assetcategory_id ",[])
+					   ->joinLeft(['at'=>'main_assettype'],"a.assettype_id = at.assettype_id ",[])
+					   ->joinleft(['u'=>'main_uom'],"a.uom_id = u.uom_id",[])
                        ->where($where)
                        ->order("$by $sort")
                        ->limitPage($pageNo, $perPage);
@@ -28,8 +28,8 @@ class Assets_Model_Assets extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{
 		$searchQuery = '';
-		$searchArray = array();
-		$data = array();
+		$searchArray = [];
+		$data = [];
 
 		if($searchData != '' && $searchData!='undefined')
 		{
@@ -62,7 +62,7 @@ class Assets_Model_Assets extends Zend_Db_Table_Abstract
 			
 		$objName = 'assets';
 
-		$tableFields = array(
+		$tableFields = [
 		
 					'action'=>'Action',
 							'name'  => 'Name',
@@ -86,18 +86,18 @@ class Assets_Model_Assets extends Zend_Db_Table_Abstract
 							'warenty_status'  => 'warenty_status',
 							'warenty_end_date'  => 'warenty_end_date',
 							'notes'=>'notes' */
-		);
+		];
 
 		$tablecontent = $this->getAssetsData($sort, $by, $pageNo, $perPage,$searchQuery);
 
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -105,7 +105,7 @@ class Assets_Model_Assets extends Zend_Db_Table_Abstract
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall,
 			'menuName' => 'Asset'
-			);
+			];
 			return $dataTmp;
 	}
 	
@@ -146,7 +146,7 @@ class Assets_Model_Assets extends Zend_Db_Table_Abstract
 	
 		 $select = $this->select()
 					->setIntegrityCheck(false)
-						->from(array('a'=>'main_asset'),array('a.*','id'=>'a.asset_id'))
+						->from(['a'=>'main_asset'],['a.*','id'=>'a.asset_id'])
 						->where('a.asset_id='.$id.' '); 
 		return $this->fetchAll($select)->toArray();	
 	}
@@ -155,10 +155,10 @@ class Assets_Model_Assets extends Zend_Db_Table_Abstract
 	
 		 $select = $this->select()
 		 ->setIntegrityCheck(false)
-		 ->from(array('a'=>'main_asset'), array('a.*','id'=>'a.asset_id','category_name'=>'ac.name','type_name'=>'at.name','uom_name'=>'u.name'))
-		 ->joinLeft(array('ac'=>'main_assetcategory'),"a.assetcategory_id = ac.assetcategory_id ",array())
-		 ->joinLeft(array('at'=>'main_assettype'),"a.assettype_id = at.assettype_id ",array())
-		 ->joinleft(array('u'=>'main_uom'),"a.uom_id = u.uom_id",array())
+		 ->from(['a'=>'main_asset'], ['a.*','id'=>'a.asset_id','category_name'=>'ac.name','type_name'=>'at.name','uom_name'=>'u.name'])
+		 ->joinLeft(['ac'=>'main_assetcategory'],"a.assetcategory_id = ac.assetcategory_id ",[])
+		 ->joinLeft(['at'=>'main_assettype'],"a.assettype_id = at.assettype_id ",[])
+		 ->joinleft(['u'=>'main_uom'],"a.uom_id = u.uom_id",[])
 						->where('a.asset_id='.$id.' '); 
 		return $this->fetchAll($select)->toArray();	
 	}
@@ -167,7 +167,7 @@ class Assets_Model_Assets extends Zend_Db_Table_Abstract
 		
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('c'=>$this->_name),array('c.id','c.client_name'))
+		->from(['c'=>$this->_name],['c.id','c.client_name'])
 		->where('c.is_active = 1 ')
 		->order('c.client_name');
 		return $this->fetchAll($select)->toArray();
@@ -207,8 +207,8 @@ class Assets_Model_Assets extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('c'=>'assets_history'),array('c.*'))
-		->joinLeft(array('mc'=>'main_employees'),"mc.id = c.createdby ",array('userfullname'=>'mc.userfullname'))
+		->from(['c'=>'assets_history'],['c.*'])
+		->joinLeft(['mc'=>'main_employees'],"mc.id = c.createdby ",['userfullname'=>'mc.userfullname'])
 		->where('c.isactive = 1 and asset_id = '.$id);
 		return $this->fetchAll($select)->toArray();
 	}
@@ -223,7 +223,7 @@ public function	isAssetExistForSetting($id){
 public function getAllAssetForCategory($assetcategory_id){
  $assetsData = $this->select()
 					->setIntegrityCheck(false)
-					->from(array('c'=>$this->_name),array('c.id','c.name'))
+					->from(['c'=>$this->_name],['c.id','c.name'])
 					->where('c.isactive = 1 AND c.category='.$assetcategory_id.' ');
 		return $this->fetchAll($assetsData)->toArray();
  } 

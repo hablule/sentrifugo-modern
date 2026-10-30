@@ -59,7 +59,7 @@ class Default_PafeedforwardController extends Zend_Controller_Action
     {
         $session = sapp_Global::_readSession();
         if (!isset($session)) {
-            if ($this->getRequest()->isXmlHttpRequest()) die(Zend_Json::encode(array('login' => 'failed')));
+            if ($this->getRequest()->isXmlHttpRequest()) die(Zend_Json::encode(['login' => 'failed']));
             else $this->_redirect('');
         }
 
@@ -95,7 +95,7 @@ class Default_PafeedforwardController extends Zend_Controller_Action
 
             $dataTmp = $this->_model->getGrid($sort, $by, $perPage, $page, rtrim($searchData, ','), $call, null, $this->_loginEmpId);
 
-            $this->view->dataArray = array($dataTmp);
+            $this->view->dataArray = [$dataTmp];
             $this->view->call      = $call;
             $this->view->messages  = $this->_helper->flashMessenger->getMessages();
         } catch (\Throwable $e) {
@@ -185,13 +185,13 @@ class Default_PafeedforwardController extends Zend_Controller_Action
                     $db->commit();
 
                     $redirectUrl = BASE_URL . "paassessment/edit/id/$assessmentId/context/mine";
-                    $this->_helper->json(array('result' => 'saved', 'nomessage' => 'yes', 'redirect_url' => $redirectUrl));
+                    $this->_helper->json(['result' => 'saved', 'nomessage' => 'yes', 'redirect_url' => $redirectUrl]);
                 } catch (\Throwable $e) {
                     $db->rollBack();
-                    $this->_helper->json(array('result' => 'exception', 'message' => $e->getMessage()));
+                    $this->_helper->json(['result' => 'exception', 'message' => $e->getMessage()]);
                 }
             } else {
-                $msgarray = array();
+                $msgarray = [];
                 foreach ($form->getMessages() as $field => $errors) {
                     $msgarray[$field] = current($errors);
                 }

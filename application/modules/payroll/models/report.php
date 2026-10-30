@@ -15,9 +15,9 @@ class Payroll_Model_report extends Zend_Db_Table
 
         $payrollsdetail = $this->select()
                                ->setIntegrityCheck(false)
-                               ->from(array('pr'=>'main_payroll'),array('pr.docment_no','DATE_FORMAT(pr.paydate,"'.DATEFORMAT_MYSQL.'") as paydate','DATE_FORMAT(pr.approved,"'.DATEFORMAT_MYSQL.'") as approved'))
-                               ->joinInner(array('prl'=>'main_payroll_line'),'pr.id = prl.payroll_id')
-                               ->joinInner(array('prd'=>'main_payroll_detail'),'prl.id=prd.pay_line_id')
+                               ->from(['pr'=>'main_payroll'],['pr.docment_no','DATE_FORMAT(pr.paydate,"'.DATEFORMAT_MYSQL.'") as paydate','DATE_FORMAT(pr.approved,"'.DATEFORMAT_MYSQL.'") as approved'])
+                               ->joinInner(['prl'=>'main_payroll_line'],'pr.id = prl.payroll_id')
+                               ->joinInner(['prd'=>'main_payroll_detail'],'prl.id=prd.pay_line_id')
                                ->where($where)
                                ->order("$by $sort")
                                ->limitPage($pageNo,$perPage);
@@ -28,7 +28,7 @@ class Payroll_Model_report extends Zend_Db_Table
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
             foreach ($searchValues as $key => $val) {
@@ -48,7 +48,7 @@ class Payroll_Model_report extends Zend_Db_Table
         $objName = 'report';
 
         $objId = 'report';
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'docment_no' => 'Document No.',
             'paydate' => 'Pay Date',
@@ -56,9 +56,9 @@ class Payroll_Model_report extends Zend_Db_Table
             // 'earned_time'=> 'Earned Minute',
          
 
-        );
+        ];
         $tablecontent = $this->getPayrollDetails($sort, $by, $pageNo, $perPage, $searchQuery);
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
@@ -67,7 +67,7 @@ class Payroll_Model_report extends Zend_Db_Table
             'objectname' => $objName,
             'objectId' => $objId,
             'menuName' => 'Payroll List',
-            'extra' => array(),
+            'extra' => [],
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
             'jsFillFnName' => '',
@@ -75,12 +75,12 @@ class Payroll_Model_report extends Zend_Db_Table
             'searchArray' => $searchArray,
             'call' => $call,
             'dashboardcall' => $dashboardcall,
-            'search_filters' => array(
-                'paydate' =>array('type'=>'datepicker'),
-                'approved'=>array('type'=>'datepicker')
-            )
+            'search_filters' => [
+                'paydate' =>['type'=>'datepicker'],
+                'approved'=>['type'=>'datepicker']
+            ]
             
-        );
+        ];
         return $dataTmp;
     }
 
@@ -88,7 +88,7 @@ class Payroll_Model_report extends Zend_Db_Table
     {
         $payrollsdetail = $this->select()
         ->setIntegrityCheck(false)
-        ->from(array('pr'=>'main_payroll'))
+        ->from(['pr'=>'main_payroll'])
         ->where('pr.id = '.$id);
    
         return $this->fetchAll($payrollsdetail)->toArray();
@@ -98,7 +98,7 @@ class Payroll_Model_report extends Zend_Db_Table
     {
         $paydetail = $this->select()
                           ->setIntegrityCheck(false)
-                          ->from(array('pd'=>'main_payroll_detail'))
+                          ->from(['pd'=>'main_payroll_detail'])
                           ->where('pay_line_id = '.$id);
                           
         return $this->fetchAll($paydetail)->toArray();
@@ -109,21 +109,21 @@ class Payroll_Model_report extends Zend_Db_Table
     {
         $paydet = $this->select()
                        ->setIntegrityCheck(false)
-                       ->from(array('pl'=>'main_payroll_line'))
+                       ->from(['pl'=>'main_payroll_line'])
                        ->where('payroll_id = '.$id.' AND emp_id = '.$empid);
         return $this->fetchRow($paydet)->toArray();
     }
 
     public function getemp()
     {
-        $config = array(
+        $config = [
             'name'=>'main_employees',
             'primary'=>'id'
-        );
+        ];
         $table = new Zend_Db_Table($config);
         $emp = $table->select()
                      ->setIntegrityCheck(false)
-                     ->from('main_employees',array('id','userfullname'))
+                     ->from('main_employees',['id','userfullname'])
                      ->where('isactive = 1 AND id!=0 AND id!=1');
                   
         return $table->fetchAll($emp)->toArray();
@@ -135,7 +135,7 @@ class Payroll_Model_report extends Zend_Db_Table
    
         $emp = $this->select()
                      ->setIntegrityCheck(false)
-                     ->from('main_users',array('id','userfullname'))
+                     ->from('main_users',['id','userfullname'])
                      ->where('isactive = 1 AND id = '.$empid);
                   
         return $this->fetchRow($emp)->toArray();

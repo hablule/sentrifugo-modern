@@ -52,23 +52,23 @@ class Timemanagement_NotificationsController extends Zend_Controller_Action
 		if($auth->hasIdentity()){
 			$loginUserId = $auth->getStorage()->read()->id;
 		}
-		$yet_to_submit_dates = array();
+		$yet_to_submit_dates = [];
 		$notificationModel = new Timemanagement_Model_Notifications();
 		$usersModel = new Timemanagement_Model_Users();
 		$employeeDOJ = $usersModel->getEmployeeDoj($loginUserId);
 		$loginUserGroupId = $employeeDOJ['holiday_group'];
 		$department_id = $employeeDOJ['department_id'];
 		$weekend_date = date('Y-m-d', strtotime('last saturday'));
-		$notificationArray = array();
-		$submitted_notificationArray = array();
-		$final_notification_Arry = array();
+		$notificationArray = [];
+		$submitted_notificationArray = [];
+		$final_notification_Arry = [];
 		$notificationArray = $notificationModel->getnotifications($loginUserId,$weekend_date);
 		$submitted_notificationArray = $notificationModel->getSubmittedNotifications($loginUserId,$weekend_date);
-		$employeeLeaves = array();
-		$getWeekends = array();
+		$employeeLeaves = [];
+		$getWeekends = [];
 		$employeeLeaves = $usersModel->getEmpLeaves($loginUserId,$employeeDOJ['date_of_joining'],$weekend_date);
 		$getWeekends = $usersModel->getWeekend($employeeDOJ['date_of_joining'],$weekend_date,$department_id);
-		$between_days = array();
+		$between_days = [];
 		
 		$doj_date = strtotime($employeeDOJ['date_of_joining']);
 		$created_date = strtotime($employeeDOJ['createddate']);
@@ -80,8 +80,8 @@ class Timemanagement_NotificationsController extends Zend_Controller_Action
 		//$between_days = sapp_Global::createDateRangeArray($employeeDOJ['date_of_joining'],$weekend_date);
 		
 		
-		$holidayDatesArr =  array();
-		$holidayDateslistArr=array();
+		$holidayDatesArr =  [];
+		$holidayDateslistArr=[];
 		if( isset($loginUserId) && $loginUserId !=''){
 			$holidaydatesmodel = new Default_Model_Holidaydates();
 			if($loginUserGroupId>0)
@@ -97,14 +97,14 @@ class Timemanagement_NotificationsController extends Zend_Controller_Action
 			}
 		}
 
-		$emp_leave_days = array();
+		$emp_leave_days = [];
 		foreach($employeeLeaves as $empleave)
 		{
 			$emplev_start_date = $empleave['from_date'];
 			$emplev_endt_date = $empleave['to_date'];
 			$emp_leave_days[] = sapp_Global::createDateRangeArray($emplev_start_date,$emplev_endt_date);
 		}
-		$employee_leave_days = array();
+		$employee_leave_days = [];
 		foreach($emp_leave_days as $lev_days)
 		{
 			foreach($lev_days as $days)
@@ -113,18 +113,18 @@ class Timemanagement_NotificationsController extends Zend_Controller_Action
 			}
 		}
 		//merge all dates holidays,weekends,leaves
-		$hol_leav_weknd = array();
+		$hol_leav_weknd = [];
 		$hol_leav_weknd = array_merge($holidayDatesArr,$employee_leave_days,$getWeekends);
-		$working_days = array();
-		$dates_with_status = array();
-		$yet_to_submit_array = array();
-		$rejected_array=array();
-		$blocked_array=array();
-		$enabled_array=array();
-		$dates_without_status = array();
+		$working_days = [];
+		$dates_with_status = [];
+		$yet_to_submit_array = [];
+		$rejected_array=[];
+		$blocked_array=[];
+		$enabled_array=[];
+		$dates_without_status = [];
 		//remove holidays,weekend,leaves from between days
 		$working_days = array_diff($between_days, $hol_leav_weknd);
-		$tsEnteredDatesArray = array();
+		$tsEnteredDatesArray = [];
 		if(count($submitted_notificationArray)>0)
 		{
 			$submittes_ts_dates_with_status = '';
@@ -157,9 +157,9 @@ class Timemanagement_NotificationsController extends Zend_Controller_Action
 			{
 				$timesheetEnteredDatesArray = array_merge($timesheetEnteredDates_Array,$tsEnteredDatesArray);
 			}
-			$enteredDatesArray = array();
-			$statusArray = array('saved','enabled','rejected','blocked','no_entry','submitted','approved');
-			$enteredDateStatusArr = array();
+			$enteredDatesArray = [];
+			$statusArray = ['saved','enabled','rejected','blocked','no_entry','submitted','approved'];
+			$enteredDateStatusArr = [];
 			foreach($timesheetEnteredDatesArray as $date)
 			{
 				if(!empty($date))
@@ -174,7 +174,7 @@ class Timemanagement_NotificationsController extends Zend_Controller_Action
 					}
 				}
 			}
-			$not_ts_weekend_ts = array();
+			$not_ts_weekend_ts = [];
 			foreach($enteredDatesArray as $key=>$value)
 			{
 				if(isset($key)){
@@ -216,7 +216,7 @@ class Timemanagement_NotificationsController extends Zend_Controller_Action
 			}
 			$display_dates = $dates_without_status;
 		}
-		$display_dates_array = array();
+		$display_dates_array = [];
 		foreach($display_dates as $keydate => $statusarr)
 		{
 			if($keydate>=$employeeDOJ['date_of_joining'] && !($display_dates[$keydate]=='no_entry' && in_array($keydate,$hol_leav_weknd)))
@@ -230,7 +230,7 @@ class Timemanagement_NotificationsController extends Zend_Controller_Action
 		$this->view->enabledCount = count($enabled_array);
 		$this->view->rejectedCount = count($rejected_array);
 		$this->view->blockedCount = count($blocked_array);
-		$yet_to_submit_arr = array();
+		$yet_to_submit_arr = [];
 		foreach($yet_to_submit_array as $key =>$valu)
 		{
 			if($key>=$employeeDOJ['date_of_joining'])
@@ -254,22 +254,22 @@ class Timemanagement_NotificationsController extends Zend_Controller_Action
 		if($auth->hasIdentity()){
 			$loginUserId = $auth->getStorage()->read()->id;
 		}
-		$yet_to_submit_dates = array();
+		$yet_to_submit_dates = [];
 		$notificationModel = new Timemanagement_Model_Notifications();
 		$usersModel = new Timemanagement_Model_Users();
 		$employeeDOJ = $usersModel->getEmployeeDoj($loginUserId);
 		$loginUserGroupId = $employeeDOJ['holiday_group'];
 		$department_id = $employeeDOJ['department_id'];
 		$weekend_date = date('Y-m-d', strtotime('last saturday'));
-		$notificationArray=array();
-		$submitted_notificationArray = array();
+		$notificationArray=[];
+		$submitted_notificationArray = [];
 		$notificationArray = $notificationModel->getnotifications($loginUserId,$weekend_date);
 		$submitted_notificationArray = $notificationModel->getSubmittedNotifications($loginUserId,$weekend_date);
-		$employeeLeaves = array();
-		$getWeekends=array();
+		$employeeLeaves = [];
+		$getWeekends=[];
 		$employeeLeaves = $usersModel->getEmpLeaves($loginUserId,$employeeDOJ['date_of_joining'],$weekend_date);
 		$getWeekends = $usersModel->getWeekend($employeeDOJ['date_of_joining'],$weekend_date,$department_id);
-		$between_days=array();
+		$between_days=[];
 		
 		$doj_date = strtotime($employeeDOJ['date_of_joining']);
 		$created_date = strtotime($employeeDOJ['createddate']);
@@ -279,7 +279,7 @@ class Timemanagement_NotificationsController extends Zend_Controller_Action
 			$between_days = sapp_Global::createDateRangeArray($employeeDOJ['createddate'],$weekend_date);
 
 		//$between_days = sapp_Global::createDateRangeArray($employeeDOJ['date_of_joining'],$weekend_date);
-		$holidayDatesArr =  array();
+		$holidayDatesArr =  [];
 		if( isset($loginUserId) && $loginUserId !=''){
 			$holidaydatesmodel = new Default_Model_Holidaydates();
 			if($loginUserGroupId>0)
@@ -295,14 +295,14 @@ class Timemanagement_NotificationsController extends Zend_Controller_Action
 			}
 		}
 
-		$emp_leave_days = array();
+		$emp_leave_days = [];
 		foreach($employeeLeaves as $empleave)
 		{
 			$emplev_start_date = $empleave['from_date'];
 			$emplev_endt_date = $empleave['to_date'];
 			$emp_leave_days[] = sapp_Global::createDateRangeArray($emplev_start_date,$emplev_endt_date);
 		}
-		$employee_leave_days = array();
+		$employee_leave_days = [];
 		foreach($emp_leave_days as $lev_days)
 		{
 			foreach($lev_days as $days)
@@ -311,20 +311,20 @@ class Timemanagement_NotificationsController extends Zend_Controller_Action
 			}
 		}
 		//merge all dates holidays,weekends,leaves
-		$hol_leav_weknd = array();
+		$hol_leav_weknd = [];
 		$hol_leav_weknd = array_merge($holidayDatesArr,$employee_leave_days,$getWeekends);
 
-		$working_days = array();
-		$dates_with_status = array();
-		$yet_to_submit_array = array();
-		$enabled_array = array();
-		$rejected_array = array();
-		$blocked_array = array();
-		$dates_without_status = array();
+		$working_days = [];
+		$dates_with_status = [];
+		$yet_to_submit_array = [];
+		$enabled_array = [];
+		$rejected_array = [];
+		$blocked_array = [];
+		$dates_without_status = [];
 		//remove holidays,weekend,leaves from between days
 		$working_days = array_diff($between_days, $hol_leav_weknd);
 
-		$tsEnteredDatesArray = array();
+		$tsEnteredDatesArray = [];
 		if(count($submitted_notificationArray)>0)
 		{
 			$submittes_ts_dates_with_status = '';
@@ -356,10 +356,10 @@ class Timemanagement_NotificationsController extends Zend_Controller_Action
 			{
 				$timesheetEnteredDatesArray = array_merge($timesheetEnteredDates_Array,$tsEnteredDatesArray);
 			}
-			$enteredDatesArray = array();
+			$enteredDatesArray = [];
 			//$statusArray = array('saved','enabled','rejected','blocked','no_entry');
-			$statusArray = array('saved','enabled','rejected','blocked','no_entry','submitted','approved');
-			$enteredDateStatusArr = array();
+			$statusArray = ['saved','enabled','rejected','blocked','no_entry','submitted','approved'];
+			$enteredDateStatusArr = [];
 			foreach($timesheetEnteredDatesArray as $date)
 			{
 				if(!empty($date))
@@ -430,7 +430,7 @@ class Timemanagement_NotificationsController extends Zend_Controller_Action
 			$display_dates = $dates_without_status;
 		}
 
-		$display_dates_array = array();
+		$display_dates_array = [];
 		foreach($display_dates as $keydate => $statusarr)
 		{
 			if($keydate>=$employeeDOJ['date_of_joining'] && !($display_dates[$keydate]=='no_entry' && in_array($keydate,$hol_leav_weknd)))
@@ -482,9 +482,9 @@ class Timemanagement_NotificationsController extends Zend_Controller_Action
 		}
 		$weekend_date = date('Y-m-d', strtotime('last saturday'));
 		$notificationModel = new Timemanagement_Model_Notifications();
-		$getManagerEmployees = array();
+		$getManagerEmployees = [];
 		$getManagerEmployees = $notificationModel->getManagerEmployees($loginUserId);
-		$concat_array = array();
+		$concat_array = [];
 		if(count($getManagerEmployees)>0)
 		{
 			$is_current_week = 1;
@@ -533,8 +533,8 @@ class Timemanagement_NotificationsController extends Zend_Controller_Action
 			{
 				$prevweeks[count($prevweeks)+1] = $concat_array;
 			}
-			$prev_week_status = array();
-			$emp_names = array();
+			$prev_week_status = [];
+			$emp_names = [];
 			foreach($getManagerEmployees as $emp)
 			{
 				$emp_names[$emp['user_id']] = $emp['userfullname'];

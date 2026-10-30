@@ -51,14 +51,14 @@ class Default_Model_Leaverequesthistory extends Zend_Db_Table_Abstract
 	}	//end 
     public function getLeaveRequestHistory($id)
     {
-        $history = array();
+        $history = [];
   		$db = Zend_Db_Table::getDefaultAdapter();
 		$where = " e.leaverequest_id = ".$id." AND e.isactive = 1 ";
 		$by=" e.createddate desc ";
 	    $history = $this->select()
 					->setIntegrityCheck(false)
-					->from(array('e' => 'main_leaverequest_history'),array('history'=>"concat(e.description,c.userfullname)",'hdate'=>"date(e.createddate)",'htime'=>"time(e.createddate)"))
-				    ->joinLeft(array('c'=>'main_users'), 'c.id=e.createdby',array('emp_profile_img'=>'c.profileimg','emp_name'=>'c.userfullname'))	
+					->from(['e' => 'main_leaverequest_history'],['history'=>"concat(e.description,c.userfullname)",'hdate'=>"date(e.createddate)",'htime'=>"time(e.createddate)"])
+				    ->joinLeft(['c'=>'main_users'], 'c.id=e.createdby',['emp_profile_img'=>'c.profileimg','emp_name'=>'c.userfullname'])	
 					->where($where)
 					->order($by);
 		

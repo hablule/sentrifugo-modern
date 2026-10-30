@@ -45,9 +45,9 @@ class Default_CitiesController extends Zend_Controller_Action
 		$objname = $this->_getParam('objname');
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 		if($refresh == 'refresh')
 		{
@@ -155,7 +155,7 @@ class Default_CitiesController extends Zend_Controller_Action
 	public function editAction()
 	{	
 	    $auth = Zend_Auth::getInstance();
-		$popConfigPermission = array();
+		$popConfigPermission = [];
      	if($auth->hasIdentity()){
 					$loginUserId = $auth->getStorage()->read()->id;
 					$loginuserRole = $auth->getStorage()->read()->emprole;
@@ -175,7 +175,7 @@ class Default_CitiesController extends Zend_Controller_Action
 		$citiesmodel = new Default_Model_Cities();
 		$countriesModel = new Default_Model_Countries();
 		$statesmodel = new Default_Model_States();
-		$msgarray = array();
+		$msgarray = [];
 		
 		$countrieslistArr = $countriesModel->getActiveCountriesList();
 			if(sizeof($countrieslistArr)>0)
@@ -241,8 +241,8 @@ class Default_CitiesController extends Zend_Controller_Action
 		if($this->getRequest()->getPost()){
 		        $id = $this->_request->getParam('id'); 
 				$errorflag = "true";
-				$msgarray = array();
-				$newcityArr = array();
+				$msgarray = [];
+				$newcityArr = [];
 				$dbstate = '';
 				$citystring = '';
 				$dbcountryid ='';
@@ -342,7 +342,7 @@ class Default_CitiesController extends Zend_Controller_Action
 							}
 						$actionflag = 1;
 						$tableid = $NewCityInsertedId;
-						$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"City  added successfully.")); 
+						$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"City  added successfully."]); 
 					   }	
 					}
 				   else
@@ -353,16 +353,16 @@ class Default_CitiesController extends Zend_Controller_Action
 					   }
 					   if($id)
 					   {
-					 	 $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"City  updated successfully."));
+					 	 $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"City  updated successfully."]);
 						 $actionflag = 2;
 					     $tableid = $id;
 					   }
 					   else
 					   {	
 						   if(sizeof($cityid)>1)
-							$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Cities  added successfully."));
+							$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Cities  added successfully."]);
 						   else
-							$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"City  added successfully.")); 					   
+							$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"City  added successfully."]); 					   
 						 $actionflag = 1;
 					     $tableid = $Id;	
 						}	
@@ -425,8 +425,8 @@ class Default_CitiesController extends Zend_Controller_Action
 			{
 			 $citiesmodel = new Default_Model_Cities();
 			  $citydata = $citiesmodel->getCitiesDataByID($id);
-			  $data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-			  $where = array('id=?'=>$id);
+			  $data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+			  $where = ['id=?'=>$id];
 			  $Id = $citiesmodel->deleteCityData($data, $where);
 			    if($Id == 'update')
 				{
@@ -451,11 +451,11 @@ class Default_CitiesController extends Zend_Controller_Action
 			{
 				if(	$messages['msgtype'] == 'error')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
 				}
 				if(	$messages['msgtype'] == 'success')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
 				}
 					
 			}
@@ -476,7 +476,7 @@ class Default_CitiesController extends Zend_Controller_Action
                     $city_options .= sapp_Global::selectOptionBuilder($data['city_org_id'], $data['city']);
                 }
             }
-            $this->_helper->_json(array('options'=>$city_options));
+            $this->_helper->_json(['options'=>$city_options]);
         }
 	
 	public function addpopupAction()
@@ -489,7 +489,7 @@ class Default_CitiesController extends Zend_Controller_Action
 		$id = $this->getRequest()->getParam('id');
 		$selectedcountryid = $this->_request->getParam('selectcountryid');
 		$selectedstateid = $this->_request->getParam('selectstateid');
-		$msgarray = array();$setDefaultString = '';$citystring = '';$controllername = 'cities';
+		$msgarray = [];$setDefaultString = '';$citystring = '';$controllername = 'cities';
 		$citiesform = new Default_Form_cities();
 		$citiesmodel = new Default_Model_Cities();
 		$countriesModel = new Default_Model_Countries();
@@ -557,8 +557,8 @@ class Default_CitiesController extends Zend_Controller_Action
 		{
 			$id = $this->_request->getParam('id'); 
 			$errorflag = "true";
-			$msgarray = array();
-			$newcityArr = array();
+			$msgarray = [];
+			$newcityArr = [];
 			$dbstate = '';							
 			$dbcountryid ='';
 			$countryid = $this->_request->getParam('countryid');
@@ -675,7 +675,7 @@ class Default_CitiesController extends Zend_Controller_Action
 				{
 					$cityData = $citiesmodel->fetchAll('isactive = 1 and state = '.$selectedstateid.' and countryid = '.$selectedcountryid,'city')->toArray();
 				}
-				else $cityData = array();				
+				else $cityData = [];				
 				
 				$opt ='';   
 				foreach($cityData as $record)
@@ -745,7 +745,7 @@ class Default_CitiesController extends Zend_Controller_Action
 		$selectedcountryid = $this->_request->getParam('selectcountryid');
 		$selectedstateid = $this->_request->getParam('selectstateid');
 		
-		$msgarray = array();$setDefaultString = '';$citystring = '';$controllername = 'cities';
+		$msgarray = [];$setDefaultString = '';$citystring = '';$controllername = 'cities';
 		
 		$citiesform = new Default_Form_cities();
 		$citiesmodel = new Default_Model_Cities();
@@ -755,13 +755,13 @@ class Default_CitiesController extends Zend_Controller_Action
 		/* Changing the form */		
 		$citiesform->setAction(BASE_URL.'cities/addnewcity/selectcountryid/'.$selectedcountryid.'/selectstateid/'.$selectedstateid);
 		$citiesform->removeElement('city');
-		$citiesform->addElement('text', 'city',array(
+		$citiesform->addElement('text', 'city',[
 					'label'      => 'City',
 					'maxlength'		=> '20',
 					'required'   => true,
-					'validators' => array(
-						array('validator' => 'NotEmpty','options'=> array('messages' => 'Please enter city name.')
-         ))));
+					'validators' => [
+						['validator' => 'NotEmpty','options'=> ['messages' => 'Please enter city name.']
+         ]]]);
 		
 		/* END */
 		$countrieslistArr = $countriesModel->getTotalCountriesList('');
@@ -820,7 +820,7 @@ class Default_CitiesController extends Zend_Controller_Action
 		{
 			$id = $this->_request->getParam('id'); 
 			$errorflag = "true";
-			$msgarray = array();
+			$msgarray = [];
 			$dbstate = '';							
 			$dbcountryid ='';			
 			$stateidstr = $this->_request->getParam('state');
@@ -852,7 +852,7 @@ class Default_CitiesController extends Zend_Controller_Action
 				{
 					$cityData = $citiesmodel->getCitiesList($selectedstateid,'city');
 				}
-				else $cityData = array();				
+				else $cityData = [];				
 				
 				$opt ='';   
 				foreach($cityData as $record)

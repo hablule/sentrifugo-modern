@@ -13,8 +13,8 @@ class Default_Model_healthseveritylevel extends Zend_Db_Table_Abstract{
 
         $bank = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('hsl'=>'main_healthseveritylevel'),array('hsl.*','hsl.severitylevel_id as id,if(hsl.isactive="Y","Yes","No") as isactive'))
-            ->join(array('hs'=>'main_healthseverity'),'hsl.healthseverity_id=hs.healthseverity_id',array('hs.name'))
+            ->from(['hsl'=>'main_healthseveritylevel'],['hsl.*','hsl.severitylevel_id as id,if(hsl.isactive="Y","Yes","No") as isactive'])
+            ->join(['hs'=>'main_healthseverity'],'hsl.healthseverity_id=hs.healthseverity_id',['hs.name'])
             ->order("$by $sort")
             ->limitPage($pageNo, $perPage);
        
@@ -23,7 +23,7 @@ class Default_Model_healthseveritylevel extends Zend_Db_Table_Abstract{
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $a = '', $b = '', $c = '', $d = '')
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
             foreach ($searchValues as $key => $val) {
@@ -33,36 +33,36 @@ class Default_Model_healthseveritylevel extends Zend_Db_Table_Abstract{
             $searchQuery = rtrim($searchQuery, " AND");
         }
         $objName = 'healthseveritylevel';
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'name' => 'Severity',
             'value' => 'Value',
             'description' => 'Description',
             'isactive' => 'Active',
-        );
+        ];
 
         $tablecontent = $this->getData($sort, $by, $pageNo, $perPage, $searchQuery);
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
             'perPage' => $perPage,
             'tablecontent' => $tablecontent,
             'objectname' => $objName,
-            'extra' => array(),
+            'extra' => [],
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
             'jsFillFnName' => '',
             'searchArray' => $searchArray,
             'call' => $call,
             'dashboardcall' => $dashboardcall,
-            'search_filters' => array(
-                'isactive' => array(
+            'search_filters' => [
+                'isactive' => [
                     'type' => 'select',
-                    'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
+                    'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
                    
-            )
-        );
+            ]
+        ];
         return $dataTmp;
     }
 

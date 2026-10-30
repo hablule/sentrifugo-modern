@@ -39,7 +39,7 @@ class Default_Model_Projects extends Zend_Db_Table_Abstract
 		INNER JOIN tm_projects p ON p.id = pe.project_id
 					WHERE emp_id=$to_id"; 			
 	
-		$project_data  = $this->_db->fetchAll($sql,array("param1"=>$to_id,"param2"=>1));
+		$project_data  = $this->_db->fetchAll($sql,["param1"=>$to_id,"param2"=>1]);
 		return $project_data;
 	}
 	
@@ -79,12 +79,12 @@ class Default_Model_Projects extends Zend_Db_Table_Abstract
 
 		$projectsData = $this->select()->distinct()
 		->setIntegrityCheck(false)
-		->from(array('p' => $this->_name),array('id'=>'p.id','project_name'=>'p.project_name','project_status'=>'if(p.project_status = "initiated", "Initiated",if(p.project_status = "draft" , "Draft",if (p.project_status = "in-progress","In Progress",if(p.project_status = "hold","Hold",if(p.project_status = "completed","Completed","")))))','start_date'=>'p.start_date','end_date'=>'p.end_date','parent_project'=>'p2.project_name','project_type'=>'IF(p.project_type="billable","Billable",IF(p.project_type="non_billable","Non billable","Revenue generation"))'))
-		->joinLeft(array('p2' => $this->_name),'p.base_project = p2.id',array())
-		->joinLeft(array('c'=>'tm_clients'),'p.client_id=c.id',array('client_name'=>'c.client_name'))
-		->joinLeft(array('cur'=>'main_currency'),'p.currency_id = cur.id',array('currencyname'=>'cur.currencyname'));
+		->from(['p' => $this->_name],['id'=>'p.id','project_name'=>'p.project_name','project_status'=>'if(p.project_status = "initiated", "Initiated",if(p.project_status = "draft" , "Draft",if (p.project_status = "in-progress","In Progress",if(p.project_status = "hold","Hold",if(p.project_status = "completed","Completed","")))))','start_date'=>'p.start_date','end_date'=>'p.end_date','parent_project'=>'p2.project_name','project_type'=>'IF(p.project_type="billable","Billable",IF(p.project_type="non_billable","Non billable","Revenue generation"))'])
+		->joinLeft(['p2' => $this->_name],'p.base_project = p2.id',[])
+		->joinLeft(['c'=>'tm_clients'],'p.client_id=c.id',['client_name'=>'c.client_name'])
+		->joinLeft(['cur'=>'main_currency'],'p.currency_id = cur.id',['currencyname'=>'cur.currencyname']);
 		if(Zend_Registry::get( 'tm_role' ) == 'Manager'){
-			$projectsData->joinLeft(array('pe'=>'tm_project_employees'),'pe.project_id = p.id',array());
+			$projectsData->joinLeft(['pe'=>'tm_project_employees'],'pe.project_id = p.id',[]);
 		}
 		$projectsData->where($where)
 		->order("$by $sort")
@@ -111,8 +111,8 @@ class Default_Model_Projects extends Zend_Db_Table_Abstract
 	{
 		
 		$searchQuery = '';
-		$searchArray = array();
-		$data = array();
+		$searchArray = [];
+		$data = [];
 
 		if($searchData != '' && $searchData!='undefined')
 		{
@@ -137,13 +137,13 @@ class Default_Model_Projects extends Zend_Db_Table_Abstract
 //echo $searchQuery;exit;
 		$objName = 'projects';
 
-		$tableFields = array('action'=>'Action','project_name' => 'Project','project_status'=>'Status','parent_project'=>'Base Project','client_name' => 'Client','currencyname'=>'Currency','project_type'=>'Project Type');
+		$tableFields = ['action'=>'Action','project_name' => 'Project','project_status'=>'Status','parent_project'=>'Base Project','client_name' => 'Client','currencyname'=>'Currency','project_type'=>'Project Type'];
 
 		$tablecontent = $this->getProjectsData($sort, $by, $pageNo, $perPage,$searchQuery);
 
 		$clientModel = new Default_Model_Clients();
 		$clientData = $clientModel->getActiveClientsData();
-		$clientArray = array(''=>'All');
+		$clientArray = [''=>'All'];
 		if(sizeof($clientData) > 0)
 		{
 			foreach ($clientData as $client){
@@ -153,7 +153,7 @@ class Default_Model_Projects extends Zend_Db_Table_Abstract
 		}
 
 		$base_projectData = $this->getProjectList();
-		$base_projectArray = array(''=>'All');
+		$base_projectArray = [''=>'All'];
 		if(sizeof($base_projectData) > 0)
 		{
 			foreach ($base_projectData as $base_project){
@@ -163,7 +163,7 @@ class Default_Model_Projects extends Zend_Db_Table_Abstract
 
 		$currencyModel = new Default_Model_Currency();
 		$currencyData = $currencyModel->getCurrencyList();
-		$currencyArray = array(''=>'All');
+		$currencyArray = [''=>'All'];
 		if(sizeof($currencyData) > 0)
 		{
 			foreach ($currencyData as $currency){
@@ -171,7 +171,7 @@ class Default_Model_Projects extends Zend_Db_Table_Abstract
 			}
 		}
 		/* if(isset($unitId) && $unitId != '') $formgrid = 'true'; else $formgrid = ''; */
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
@@ -179,50 +179,50 @@ class Default_Model_Projects extends Zend_Db_Table_Abstract
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
 		    'menuName' => 'Projects',
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
 			'searchArray' => $searchArray,
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall,
-			'search_filters' => array(
-                    'client_name' => array(
+			'search_filters' => [
+                    'client_name' => [
                         'type' => 'select',
                         'filter_data' => $clientArray,
-		),
-                    'currencyname' => array(
+		],
+                    'currencyname' => [
                         'type' => 'select',
                         'filter_data' => $currencyArray,
-		),
-					'parent_project' => array(
+		],
+					'parent_project' => [
 			                        'type' => 'select',
 			                        'filter_data' => $base_projectArray,
-		),
-                    'category' => array(
+		],
+                    'category' => [
                         'type' => 'select',
-                        'filter_data' => array(''=>'All','billable' => 'Billable','non_billable' => 'Non Billable','revenue' => 'Revenue generation'),
-		),
-					 'project_status' => array(
+                        'filter_data' => [''=>'All','billable' => 'Billable','non_billable' => 'Non Billable','revenue' => 'Revenue generation'],
+		],
+					 'project_status' => [
 			                        'type' => 'select',
-			                        'filter_data' => array(''=>'All','initiated' => 'Initiated','draft' => 'Draft','in-progress' => 'In Progress','hold'=>'Hold','completed'=>'Completed'),
-		),
-					'project_type' => array('type' => 'select',
-						                      'filter_data' => array(''=>'All','billable' => 'Billable','non_billable' => 'Non Billable','revenue' => 'Revenue generation'),
-		),
+			                        'filter_data' => [''=>'All','initiated' => 'Initiated','draft' => 'Draft','in-progress' => 'In Progress','hold'=>'Hold','completed'=>'Completed'],
+		],
+					'project_type' => ['type' => 'select',
+						                      'filter_data' => [''=>'All','billable' => 'Billable','non_billable' => 'Non Billable','revenue' => 'Revenue generation'],
+		],
 		//'start_date'=>array('type'=>'datepicker'),
 		//	  'end_date'=>array('type'=>'datepicker')
-		),
-		);
+		],
+		];
 		return $dataTmp;
 	}
 
 	public function getSingleProjectData($id){
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('p'=>$this->_name),array('p.*'))
-		->joinLeft(array('c'=>'tm_clients'),'p.client_id=c.id',array('client_name'=>'c.client_name'))
-		->joinLeft(array('cur'=>'main_currency'),'p.currency_id=cur.id',array('currencyname'=>'cur.currencyname','currencycode'=>'cur.currencycode'))
+		->from(['p'=>$this->_name],['p.*'])
+		->joinLeft(['c'=>'tm_clients'],'p.client_id=c.id',['client_name'=>'c.client_name'])
+		->joinLeft(['cur'=>'main_currency'],'p.currency_id=cur.id',['currencyname'=>'cur.currencyname','currencycode'=>'cur.currencycode'])
 		->where('p.is_active = 1 AND p.id='.$id.' ');
 		$res = $this->fetchAll($select)->toArray();
 		if (isset($res) && !empty($res))
@@ -265,7 +265,7 @@ class Default_Model_Projects extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('p'=>$this->_name),array('p.id','project_name'))
+		->from(['p'=>$this->_name],['p.id','project_name'])
 		//->where('p.is_active = 1 ')
 		->order('p.project_name');
 		return $this->fetchAll($select)->toArray();
@@ -282,7 +282,7 @@ class Default_Model_Projects extends Zend_Db_Table_Abstract
 	{
 	$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('p'=>$this->_name),array('p.id','project_name'))
+		->from(['p'=>$this->_name],['p.id','project_name'])
 		->where('p.is_active = 1 and p.client_id = '.$clientID)
 		->order('p.project_name');
 		return $this->fetchAll($select)->toArray();
@@ -302,8 +302,8 @@ public function getclientname($unitid)
 	public function getEmpGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$employee_id,$tm_role = '')
 	{
 		$searchQuery = '';
-		$searchArray = array();
-		$data = array();
+		$searchArray = [];
+		$data = [];
 
 		if($searchData != '' && $searchData!='undefined')
 		{
@@ -329,13 +329,13 @@ public function getclientname($unitid)
 		 $objName = 'leadprojects';
 		}
 
-		$tableFields = array('action'=>'Action','project_name' => 'Project','start_date' => 'Start Date','end_date' => 'End Date','client_name' => 'Client');
+		$tableFields = ['action'=>'Action','project_name' => 'Project','start_date' => 'Start Date','end_date' => 'End Date','client_name' => 'Client'];
 
 		$tablecontent = $this->getEmpProjectsData($sort, $by, $pageNo, $perPage,$searchQuery,$employee_id);
 
 		$clientModel = new Timemanagement_Model_Clients();
 		$clientData = $clientModel->getActiveClientsData();
-		$clientArray = array(''=>'All');
+		$clientArray = [''=>'All'];
 		if(sizeof($clientData) > 0)
 		{
 			foreach ($clientData as $client){
@@ -345,7 +345,7 @@ public function getclientname($unitid)
 		}
 
 		$base_projectData = $this->getProjectList();
-		$base_projectArray = array(''=>'All');
+		$base_projectArray = [''=>'All'];
 		if(sizeof($base_projectData) > 0)
 		{
 			foreach ($base_projectData as $base_project){
@@ -355,7 +355,7 @@ public function getclientname($unitid)
 
 		$currencyModel = new Default_Model_Currency();
 		$currencyData = $currencyModel->getCurrencyList();
-		$currencyArray = array(''=>'All');
+		$currencyArray = [''=>'All'];
 		if(sizeof($currencyData) > 0)
 		{
 			foreach ($currencyData as $currency){
@@ -363,7 +363,7 @@ public function getclientname($unitid)
 			}
 		}
 
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
@@ -371,38 +371,38 @@ public function getclientname($unitid)
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
 		    'menuName' => 'Projects',
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
 			'searchArray' => $searchArray,
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall,
-		    'search_filters' => array(
-                    'client_name' => array(
+		    'search_filters' => [
+                    'client_name' => [
                         'type' => 'select',
                         'filter_data' => $clientArray,
-		),
-                    'currencyname' => array(
+		],
+                    'currencyname' => [
                         'type' => 'select',
                         'filter_data' => $currencyArray,
-		),
-					'base_project' => array(
+		],
+					'base_project' => [
 			                        'type' => 'select',
 			                        'filter_data' => $base_projectArray,
-		),
-                    'category' => array(
+		],
+                    'category' => [
                         'type' => 'select',
-                        'filter_data' => array(''=>'All','billable' => 'Billable','non_billable' => 'Non Billable','revenue' => 'Revenue generation'),
-		),
-					 'project_status' => array(
+                        'filter_data' => [''=>'All','billable' => 'Billable','non_billable' => 'Non Billable','revenue' => 'Revenue generation'],
+		],
+					 'project_status' => [
 			                        'type' => 'select',
-			                        'filter_data' => array(''=>'All','initiated' => 'Initiated','draft' => 'Draft','in-progress' => 'In Progress','hold'=>'Hold','completed'=>'Completed'),
-		),
-		 'start_date'=>array('type'=>'datepicker'),
-						  'end_date'=>array('type'=>'datepicker')
-		),
-		);
+			                        'filter_data' => [''=>'All','initiated' => 'Initiated','draft' => 'Draft','in-progress' => 'In Progress','hold'=>'Hold','completed'=>'Completed'],
+		],
+		 'start_date'=>['type'=>'datepicker'],
+						  'end_date'=>['type'=>'datepicker']
+		],
+		];
 		return $dataTmp;
 	}
 	public function getEmpProjectsData($sort, $by, $pageNo, $perPage,$searchQuery,$employee_id)
@@ -415,10 +415,10 @@ public function getclientname($unitid)
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$projectsData = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('tpe' => 'tm_project_employees'),array('tpe.*'))
-		->joinLeft(array('p' => $this->_name),'tpe.project_id=p.id',array('id'=>'p.id','project_name'=>'p.project_name','project_status'=>'p.project_status','start_date'=>'p.start_date','end_date'=>'p.end_date','base_project'=>'p.base_project','project_type'=>'IF(p.project_type="billable","Billable",IF(p.project_type="non_billable","Non billable","Revenue generation"))'))
-		->joinLeft(array('c'=>'tm_clients'),'p.client_id=c.id',array('client_name'=>'c.client_name'))
-		->joinLeft(array('cur'=>'main_currency'),'p.currency_id = cur.id',array('currencyname'=>'cur.currencyname'))
+		->from(['tpe' => 'tm_project_employees'],['tpe.*'])
+		->joinLeft(['p' => $this->_name],'tpe.project_id=p.id',['id'=>'p.id','project_name'=>'p.project_name','project_status'=>'p.project_status','start_date'=>'p.start_date','end_date'=>'p.end_date','base_project'=>'p.base_project','project_type'=>'IF(p.project_type="billable","Billable",IF(p.project_type="non_billable","Non billable","Revenue generation"))'])
+		->joinLeft(['c'=>'tm_clients'],'p.client_id=c.id',['client_name'=>'c.client_name'])
+		->joinLeft(['cur'=>'main_currency'],'p.currency_id = cur.id',['currencyname'=>'cur.currencyname'])
 		->where($where)
 		->order("$by $sort")
 		->limitPage($pageNo, $perPage);

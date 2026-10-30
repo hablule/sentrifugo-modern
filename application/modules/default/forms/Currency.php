@@ -70,57 +70,57 @@ class Default_Form_Currency extends Zend_Form
         // Currency Code (ISO 4217)
         $code = new Zend_Form_Element_Text('code');
         $code->setLabel('ISO Code')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '3', 'placeholder' => 'e.g., USD, EUR'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '3', 'placeholder' => 'e.g., USD, EUR'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
             ->addFilter('StringToUpper') // ISO codes are always uppercase
-            ->addValidator('NotEmpty', true, array('messages' => 'Please enter the 3-letter ISO code.'))
-            ->addValidator('Alpha', true, array('messages' => array(Zend_Validate_Alpha::NOT_ALPHA => 'The code must contain only letters.')))
-            ->addValidator('StringLength', true, array(
+            ->addValidator('NotEmpty', true, ['messages' => 'Please enter the 3-letter ISO code.'])
+            ->addValidator('Alpha', true, ['messages' => [Zend_Validate_Alpha::NOT_ALPHA => 'The code must contain only letters.']])
+            ->addValidator('StringLength', true, [
                 'min' => 3,
                 'max' => 3,
-                'messages' => array(
+                'messages' => [
                     Zend_Validate_StringLength::TOO_SHORT => 'The ISO code must be exactly 3 letters.',
                     Zend_Validate_StringLength::TOO_LONG  => 'The ISO code must be exactly 3 letters.'
-                )
-            ));
+                ]
+            ]);
 
         $excludeClauseCode = ($idVal > 0) ? "id != $idVal AND isactive != 5" : "isactive != 5";
-        $codeVal = new Zend_Validate_Db_NoRecordExists(array(
+        $codeVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_currency',
             'field'   => 'code',
             'exclude' => $excludeClauseCode
-        ));
+        ]);
         $codeVal->setMessage('This ISO code already exists.');
         $code->addValidator($codeVal);
 
         // Currency Name
         $name = new Zend_Form_Element_Text('name');
         $name->setLabel('Currency Name')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '100', 'placeholder' => 'e.g., United States Dollar'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '100', 'placeholder' => 'e.g., United States Dollar'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', true, array('messages' => 'Please enter a currency name.'))
-            ->addValidator('Regex', true, array(
+            ->addValidator('NotEmpty', true, ['messages' => 'Please enter a currency name.'])
+            ->addValidator('Regex', true, [
                 'pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9 ]*)$/',
-                'messages' => array(Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space or contain special characters.')
-            ));
+                'messages' => [Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space or contain special characters.']
+            ]);
 
         $excludeClauseName = ($idVal > 0) ? "id != $idVal AND isactive != 5" : "isactive != 5";
-        $nameVal = new Zend_Validate_Db_NoRecordExists(array(
+        $nameVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_currency',
             'field'   => 'name',
             'exclude' => $excludeClauseName
-        ));
+        ]);
         $nameVal->setMessage('This currency name already exists.');
         $name->addValidator($nameVal);
 
         // Currency Symbol
         $symbol = new Zend_Form_Element_Text('symbol');
         $symbol->setLabel('Symbol')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '10', 'placeholder' => 'e.g., $, €'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '10', 'placeholder' => 'e.g., $, €'])
             ->setRequired(false) // Not all currencies have a simple symbol
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
@@ -132,7 +132,7 @@ class Default_Form_Currency extends Zend_Form
         // Description (Optional)
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Description')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -153,7 +153,7 @@ class Default_Form_Currency extends Zend_Form
 
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save')
-            ->setAttribs(array('id' => 'submitbutton', 'class' => 'actbtn_btn'));
+            ->setAttribs(['id' => 'submitbutton', 'class' => 'actbtn_btn']);
 
         // SSOT AJAX Submission Pattern (Strict Quoting & Escaping)
         $urlAction  = "'currency/save/format/json'";
@@ -164,7 +164,7 @@ class Default_Form_Currency extends Zend_Form
          * Build Form & Apply Decorators
          * -------------------------------------------------------------- */
 
-        $this->addElements(array(
+        $this->addElements([
             $idElement,
             $code,
             $name,
@@ -172,12 +172,12 @@ class Default_Form_Currency extends Zend_Form
             $description,
             $isactive,
             $submit
-        ));
+        ]);
 
         // Strip default Zend Decorators and enforce ViewHelper universally
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
-            $element->setDecorators(array('ViewHelper'));
+            $element->setDecorators(['ViewHelper']);
         }
     }
 }

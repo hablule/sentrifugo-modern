@@ -32,7 +32,7 @@ class Default_Model_Activitylog extends Zend_Db_Table_Abstract
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('cc'=>'main_logmanager'),array('cc.*'))
+		->from(['cc'=>'main_logmanager'],['cc.*'])
 		->where('cc.is_active = 1 and cc.user_action != 4')
 		->order("cc.id DESC")
 		->limitPage($pageNo, $perPage);
@@ -40,14 +40,14 @@ class Default_Model_Activitylog extends Zend_Db_Table_Abstract
 		return $this->fetchAll($select)->toArray();
 	}
 
-	public function getLogManagerDataSort($page=0,$perPage = 20,$sortfield,$order)
+	public function getLogManagerDataSort($page=0,$perPage = 20,$sortfield = null,$order = null)
 	{
 		$by = 'cc.'.$sortfield;
 
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('cc'=>'main_logmanager'),array('cc.*'))
+		->from(['cc'=>'main_logmanager'],['cc.*'])
 		->where('cc.is_active = 1 and cc.user_action != 4')
 		->order("$by $order")
 		->limitPage($page, $perPage);
@@ -69,7 +69,7 @@ class Default_Model_Activitylog extends Zend_Db_Table_Abstract
 
 	public function getMenuNamesByIds($menuIdArray)
 	{
-		$menuArray = array();
+		$menuArray = [];
 	    if(count($menuIdArray) > 0){
 		    $resultstring = implode(',', $menuIdArray);
 			
@@ -105,7 +105,7 @@ class Default_Model_Activitylog extends Zend_Db_Table_Abstract
 	public function getuserNamesByIds($userArray)
 	{
 	
-		$userResultArray = array();			
+		$userResultArray = [];			
 		if(count($userArray) > 0){
 		    $resultstring = implode(',', $userArray);
 			
@@ -142,7 +142,7 @@ class Default_Model_Activitylog extends Zend_Db_Table_Abstract
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('cc'=>'main_userloginlog'),array('cc.*'))
+		->from(['cc'=>'main_userloginlog'],['cc.*'])
 		->order("cc.logindatetime DESC")
 		->limitPage($page, $perPage);
 			
@@ -154,7 +154,7 @@ class Default_Model_Activitylog extends Zend_Db_Table_Abstract
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('cc'=>'main_userloginlog'),array('cc.*'))
+		->from(['cc'=>'main_userloginlog'],['cc.*'])
 		->where($where)
 		->order("cc.logindatetime DESC")
 		->limitPage($page, $perPage);
@@ -162,7 +162,7 @@ class Default_Model_Activitylog extends Zend_Db_Table_Abstract
 		return $this->fetchAll($select)->toArray();
 	}
 
-	public function getUserLogManagerSort($page=0,$perPage = 1,$sortfield,$order)
+	public function getUserLogManagerSort($page=0,$perPage = 1,$sortfield = null,$order = null)
 	{
 		
 		$by = 'cc.'.$sortfield;
@@ -170,7 +170,7 @@ class Default_Model_Activitylog extends Zend_Db_Table_Abstract
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('cc'=>'main_userloginlog'),array('cc.*'))
+		->from(['cc'=>'main_userloginlog'],['cc.*'])
 		->order("$by $order")
 		->limitPage($page, $perPage);
 
@@ -191,7 +191,7 @@ class Default_Model_Activitylog extends Zend_Db_Table_Abstract
 
 	
 	public function getgroupIdByString($searchString){
-		$groupArray = array();
+		$groupArray = [];
 		$groupArray[0] = 0;
 		if($searchString)
 		{
@@ -221,7 +221,7 @@ class Default_Model_Activitylog extends Zend_Db_Table_Abstract
 	}
 
 	public function getemproleIdByString($searchString){
-		$empRoleArray = array();
+		$empRoleArray = [];
 		$empRoleArray[0] = 0;
 		if($searchString)
 		{
@@ -266,8 +266,8 @@ class Default_Model_Activitylog extends Zend_Db_Table_Abstract
 		$menu_model = new Default_Model_Menu();
 		$user_model = new Default_Model_Users();
 		$searchQuery = '';
-		$searchArray = array();
-		$data = array();
+		$searchArray = [];
+		$data = [];
 
 		if($searchData != '' && $searchData!='undefined')
 		{
@@ -288,7 +288,7 @@ class Default_Model_Activitylog extends Zend_Db_Table_Abstract
 		}
 		$objName = 'logmanager';
 
-		$tableFields = array('action'=>'Action',
+		$tableFields = ['action'=>'Action',
 		                     'menuName' => 'Menu Name',
 		                     'id' => 'ID',
                              'userfullname' => 'Last Modified By',
@@ -299,12 +299,12 @@ class Default_Model_Activitylog extends Zend_Db_Table_Abstract
 		                     'key_flag' =>'Last Modified Record',		
                              'last_modifieddate' => 'Last Modified Date',
 
-		);
+		];
 
 		$tablecontent = $this->getActivitylogData($sort, $by, $pageNo, $perPage,$searchQuery);
 
 		$menu_data = $menu_model->getMenusListForActivitylog();
-		$menu_arr = array();
+		$menu_arr = [];
 
 		foreach($menu_data as $gkey => $gdata)
 		{
@@ -312,13 +312,13 @@ class Default_Model_Activitylog extends Zend_Db_Table_Abstract
 			$menu_arr[$gdata['menuname']] = $gdata['menuname'];
 		}
 		$user_data = $user_model->getUserListForActivitylog();
-		$user_arr = array();
+		$user_arr = [];
 		foreach($user_data as $gkey => $gdata)
 		{
 			$user_arr[$gdata['userfullname']] = $gdata['userfullname'];
 		}
-        $useractionArray = array('1' => 'Add','5'=>'Cancel','3'=> 'Delete','2' => 'Edit');
-		$dataTmp = array(
+        $useractionArray = ['1' => 'Add','5'=>'Cancel','3'=> 'Delete','2' => 'Edit'];
+		$dataTmp = [
                 'sort' => $sort,
                 'by' => $by,
                 'pageNo' => $pageNo,
@@ -326,28 +326,28 @@ class Default_Model_Activitylog extends Zend_Db_Table_Abstract
                 'tablecontent' => $tablecontent,
                 'objectname' => $objName,
 		        'menuName'=>'Activity log',
-                'extra' => array(),
+                'extra' => [],
                 'tableheader' => $tableFields,
                 'jsGridFnName' => 'getAjaxgridData',
                 'jsFillFnName' => '',
                 'searchArray' => $searchArray,
                 'call'=>$call,
-                'search_filters' => array(
-                    'menuname' =>array(
+                'search_filters' => [
+                    'menuname' =>[
                         'type'=>'select',
-                        'filter_data' => array(''=>'All')+$menu_arr,
-		             ),
-					'userfullname' =>array(
+                        'filter_data' => [''=>'All']+$menu_arr,
+		             ],
+					'userfullname' =>[
 			                        'type'=>'select',
-			                        'filter_data' => array(''=>'All')+$user_arr,
-		            ),
-		            'last_modifieddate' =>array('type'=>'datepicker'),
-		            'user_action' =>array(
+			                        'filter_data' => [''=>'All']+$user_arr,
+		            ],
+		            'last_modifieddate' =>['type'=>'datepicker'],
+		            'user_action' =>[
 			                        'type'=>'select',
-			                        'filter_data' => array(''=>'All')+$useractionArray,
-		            ),	
-		),
-		);
+			                        'filter_data' => [''=>'All']+$useractionArray,
+		            ],	
+		],
+		];
 		
 		return $dataTmp;
 	}
@@ -393,18 +393,18 @@ class Default_Model_Activitylog extends Zend_Db_Table_Abstract
 		{
 			$activitylogData = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('r'=>$this->_name),array('r.*',))
-			->joinInner(array('m'=>'main_menu'), "m.id = r.menuId and m.isactive = 1",array('menuName'=>'m.menuName','menuUrl'=>'if(m.url="/addperk","/perk",if(m.url="/adddeductive","deductive",m.url))'))
-			->joinInner(array('u'=>'main_users'), "u.id = r.last_modifiedby and u.isactive = 1",array('userfullname'=>'u.username','employeeId'=>'u.empid'))
+			->from(['r'=>$this->_name],['r.*',])
+			->joinInner(['m'=>'main_menu'], "m.id = r.menuId and m.isactive = 1",['menuName'=>'m.menuName','menuUrl'=>'if(m.url="/addperk","/perk",if(m.url="/adddeductive","deductive",m.url))'])
+			->joinInner(['u'=>'main_users'], "u.id = r.last_modifiedby and u.isactive = 1",['userfullname'=>'u.username','employeeId'=>'u.empid'])
 			->where($where)			
 			->order(new Zend_Db_Expr($str))
 			->limitPage($pageNo, $perPage);		
 		}else{
 			$activitylogData = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('r'=>$this->_name),array('r.*',))
-		->joinInner(array('m'=>'main_menu'), "m.id = r.menuId and m.isactive = 1",array('menuName'=>'m.menuName','menuUrl'=>'if(m.url="/addperk","/perk",if(m.url="/adddeductive","deductive",m.url))'))
-		->joinInner(array('u'=>'main_users'), "u.id = r.last_modifiedby and u.isactive = 1",array('userfullname'=>'u.username','employeeId'=>'u.empid'))
+		->from(['r'=>$this->_name],['r.*',])
+		->joinInner(['m'=>'main_menu'], "m.id = r.menuId and m.isactive = 1",['menuName'=>'m.menuName','menuUrl'=>'if(m.url="/addperk","/perk",if(m.url="/adddeductive","deductive",m.url))'])
+		->joinInner(['u'=>'main_users'], "u.id = r.last_modifiedby and u.isactive = 1",['userfullname'=>'u.username','employeeId'=>'u.empid'])
 		->where($where)
 		->order("$by $sort")
 		->limitPage($pageNo, $perPage);

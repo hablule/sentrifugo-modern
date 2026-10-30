@@ -13,7 +13,7 @@ class Default_Model_Countrylist extends Zend_Db_Table_Abstract
     {
         $select = $this->select()
         ->setIntegrityCheck(false)
-        ->from(array('n'=>'main_country'),array('n.id','n.country_name'))
+        ->from(['n'=>'main_country'],['n.id','n.country_name'])
         ->where('n.isactive = 1')
         ->order('n.country_name');
         return $this->fetchAll($select)->toArray();

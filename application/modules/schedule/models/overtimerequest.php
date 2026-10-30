@@ -33,10 +33,10 @@ class Schedule_Model_Overtimerequest extends Zend_Db_Table_Abstract
 
         $AdditionData = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('oa' => 'main_overtime_approval'), array('id' => 'oa.OT_approval_id', 'OT_id' => 'oa.OT_id', 'processed' => 'if(oa.processed="N","No","Yes")', 'start_time' => 'DATE_FORMAT(oa.start_time,"' . DATEFORMAT_MYSQL . '")', 'end_time' => 'DATE_FORMAT(oa.end_time,"' . DATEFORMAT_MYSQL . '")', 'earned_time' => 'oa.earned_time', 'amount_due' => 'oa.amount_due', 'approved' => 'if(oa.approved="N","Rejected",if(approved="Y","Approved","Pending"))'))
-            ->joinInner(array('mo' => 'main_overtime'), "mo.overtime_id = oa.OT_id ", array('name' => 'mo.name', 'base' => 'mo.base'))
-            ->joinInner(array('e' => 'main_employees'), "e.id = oa.emp_id ", array('emp_id' => 'e.id', 'userfullname' => 'e.userfullname', 'profileimg' => 'e.profileimg'))
-            ->joinInner(array('oc' => 'main_overtime_category'), "mo.OT_category_id = oc.OT_category_id ", array('c_name' => 'oc.name', 'c_description' => 'oc.description'))
+            ->from(['oa' => 'main_overtime_approval'], ['id' => 'oa.OT_approval_id', 'OT_id' => 'oa.OT_id', 'processed' => 'if(oa.processed="N","No","Yes")', 'start_time' => 'DATE_FORMAT(oa.start_time,"' . DATEFORMAT_MYSQL . '")', 'end_time' => 'DATE_FORMAT(oa.end_time,"' . DATEFORMAT_MYSQL . '")', 'earned_time' => 'oa.earned_time', 'amount_due' => 'oa.amount_due', 'approved' => 'if(oa.approved="N","Rejected",if(approved="Y","Approved","Pending"))'])
+            ->joinInner(['mo' => 'main_overtime'], "mo.overtime_id = oa.OT_id ", ['name' => 'mo.name', 'base' => 'mo.base'])
+            ->joinInner(['e' => 'main_employees'], "e.id = oa.emp_id ", ['emp_id' => 'e.id', 'userfullname' => 'e.userfullname', 'profileimg' => 'e.profileimg'])
+            ->joinInner(['oc' => 'main_overtime_category'], "mo.OT_category_id = oc.OT_category_id ", ['c_name' => 'oc.name', 'c_description' => 'oc.description'])
             ->where($where)
             ->order("$by $sort")
             ->limitPage($pageNo, $perPage);
@@ -46,8 +46,8 @@ class Schedule_Model_Overtimerequest extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $empids, $perm)
     {
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
         $db = Zend_Db_Table::getDefaultAdapter();
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
@@ -81,7 +81,7 @@ class Schedule_Model_Overtimerequest extends Zend_Db_Table_Abstract
 
         $objId = 'manageremployeeovertime';
 
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'name' => 'Overtime Name',
             'userfullname' => 'Employeee Name',
@@ -97,12 +97,12 @@ class Schedule_Model_Overtimerequest extends Zend_Db_Table_Abstract
             'amount_due' => 'Payment Amount',
 
 
-        );
+        ];
         $tablecontent = $this->getAdditionData($sort, $by, $pageNo, $perPage, $searchQuery, $empids, $perm);
         $group_model = new Schedule_Model_Overtimerequest();
         $group_data = $group_model->getAllOTreguest();
         //die(json_encode($group_data));
-        $group_arr = array();
+        $group_arr = [];
 
         foreach ($group_data as $gkey => $gdata) {
             $group_arr[$gdata['name']] = $gdata['name'];
@@ -112,7 +112,7 @@ class Schedule_Model_Overtimerequest extends Zend_Db_Table_Abstract
         $log_model = new Schedule_Model_Logreport();
         $emp_data = $log_model->getempLis();
 
-        $emp_arr = array();
+        $emp_arr = [];
 
         foreach ($emp_data as $ekey => $edata) {
             $emp_arr[$edata['userfullname']] = $edata['userfullname'];
@@ -121,7 +121,7 @@ class Schedule_Model_Overtimerequest extends Zend_Db_Table_Abstract
         $over_model = new Schedule_Model_Overtime();
         $over_data = $over_model->getAllOTCategories();
         //die(json_encode($over_data));
-        $over_arr = array();
+        $over_arr = [];
 
         //code...
 
@@ -134,7 +134,7 @@ class Schedule_Model_Overtimerequest extends Zend_Db_Table_Abstract
 
 
 
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
@@ -143,7 +143,7 @@ class Schedule_Model_Overtimerequest extends Zend_Db_Table_Abstract
             'objectname' => $objName,
             'objectId' => $objId,
             'menuName' => 'Employee Overtime Request List',
-            'extra' => array(),
+            'extra' => [],
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
             'jsFillFnName' => '',
@@ -153,32 +153,32 @@ class Schedule_Model_Overtimerequest extends Zend_Db_Table_Abstract
             'perm' => $perm,
             'call' => $call,
             'dashboardcall' => $dashboardcall,
-            'search_filters' => array(
-                'start_time' => array('type' => 'datepicker'),
-                'end_time' => array('type' => 'datepicker'),
+            'search_filters' => [
+                'start_time' => ['type' => 'datepicker'],
+                'end_time' => ['type' => 'datepicker'],
 
-                'name' => array(
+                'name' => [
                     'type' => 'select',
                     'filter_data' => $group_arr
-                ),
-                'c_name' => array(
+                ],
+                'c_name' => [
                     'type' => 'select',
                     'filter_data' => $over_arr
-                ),
-                'base' => array(
+                ],
+                'base' => [
                     'type' => 'select',
-                    'filter_data' => array('' => 'All', 'Time' => 'Time', 'Date' => 'Date', 'OffShift' => 'OffShift', 'Holidays' => 'Holidays', 'Day' => 'Day', 'Period' => 'Period')
-                ),
-                'processed' => array(
+                    'filter_data' => ['' => 'All', 'Time' => 'Time', 'Date' => 'Date', 'OffShift' => 'OffShift', 'Holidays' => 'Holidays', 'Day' => 'Day', 'Period' => 'Period']
+                ],
+                'processed' => [
                     'type' => 'select',
-                    'filter_data' => array('' => 'All', 'Y' => 'Yes', 'N' => 'No')
-                ),
-                'approved' => array(
+                    'filter_data' => ['' => 'All', 'Y' => 'Yes', 'N' => 'No']
+                ],
+                'approved' => [
                     'type' => 'select',
-                    'filter_data' => array('' => 'All', 'Y' => 'Approved', 'N' => 'Rejected', 'P' => 'Pending')
-                ),
-            ),
-        );
+                    'filter_data' => ['' => 'All', 'Y' => 'Approved', 'N' => 'Rejected', 'P' => 'Pending']
+                ],
+            ],
+        ];
 
         return $dataTmp;
     }
@@ -192,9 +192,9 @@ class Schedule_Model_Overtimerequest extends Zend_Db_Table_Abstract
     {
         $query = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('oa' => 'main_overtime_approval'), 'oa.*')
-            ->joinInner(array('mo' => 'main_overtime'), "mo.overtime_id = oa.OT_id ", array('name' => 'mo.name'))
-            ->joinInner(array('oc' => 'main_overtime_category'), "mo.OT_category_id = oc.OT_category_id ", array('c_name' => 'oc.name'))
+            ->from(['oa' => 'main_overtime_approval'], 'oa.*')
+            ->joinInner(['mo' => 'main_overtime'], "mo.overtime_id = oa.OT_id ", ['name' => 'mo.name'])
+            ->joinInner(['oc' => 'main_overtime_category'], "mo.OT_category_id = oc.OT_category_id ", ['c_name' => 'oc.name'])
             ->where('mo.isActive="Y"');
         return $this->fetchAll($query)->toArray();
     }
@@ -202,10 +202,10 @@ class Schedule_Model_Overtimerequest extends Zend_Db_Table_Abstract
     {
         $result = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('oa' => 'main_overtime_approval'), array('OT_id' => 'oa.OT_id', 'processed' => 'oa.processed', 'emp_idb' => 'oa.emp_id', 'start_time' => 'oa.start_time', 'end_time' => 'oa.end_time', 'earned_time' => 'oa.earned_time', 'amount_due' => 'oa.amount_due', 'approved' => 'oa.approved', 'status' => 'if(oa.approved="N","No","Yes")', 'approved_amount' => 'oa.approved_amount'))
-            ->joinInner(array('mo' => 'main_overtime'), "mo.overtime_id = oa.OT_id ", array('name' => 'mo.name', 'base' => 'mo.base'))
-            ->joinInner(array('e' => 'main_employees'), "e.id = oa.emp_id ", array('emp_id' => 'e.id', 'userfullname' => 'e.userfullname'))
-            ->joinInner(array('oc' => 'main_overtime_category'), "mo.OT_category_id = oc.OT_category_id ", array('c_name' => 'oc.name', 'c_description' => 'oc.description'))
+            ->from(['oa' => 'main_overtime_approval'], ['OT_id' => 'oa.OT_id', 'processed' => 'oa.processed', 'emp_idb' => 'oa.emp_id', 'start_time' => 'oa.start_time', 'end_time' => 'oa.end_time', 'earned_time' => 'oa.earned_time', 'amount_due' => 'oa.amount_due', 'approved' => 'oa.approved', 'status' => 'if(oa.approved="N","No","Yes")', 'approved_amount' => 'oa.approved_amount'])
+            ->joinInner(['mo' => 'main_overtime'], "mo.overtime_id = oa.OT_id ", ['name' => 'mo.name', 'base' => 'mo.base'])
+            ->joinInner(['e' => 'main_employees'], "e.id = oa.emp_id ", ['emp_id' => 'e.id', 'userfullname' => 'e.userfullname'])
+            ->joinInner(['oc' => 'main_overtime_category'], "mo.OT_category_id = oc.OT_category_id ", ['c_name' => 'oc.name', 'c_description' => 'oc.description'])
             ->where('oa.OT_approval_id=' . $id);
         return $this->fetchAll($result)->toArray();
     }

@@ -19,7 +19,7 @@ class Default_Model_CompanyBusinessdomain extends Zend_Db_Table_Abstract
     protected $_name = 'map_company_businessdomain';
 
     /** @var array Composite Primary key */
-    protected $_primary = array('company_id', 'businessdomain_id');
+    protected $_primary = ['company_id', 'businessdomain_id'];
 
     /* =================================================================================
      * GROUP 2: DATA DISPLAY & RETRIEVAL
@@ -88,14 +88,14 @@ class Default_Model_CompanyBusinessdomain extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from(
-                array('m' => $this->_name),
-                array(
+                ['m' => $this->_name],
+                [
                     'id' => new Zend_Db_Expr("CONCAT(m.company_id, '_', m.businessdomain_id)"),
                     'name' => new Zend_Db_Expr("CONCAT(comp.name, ' - ', dom.name)")
-                )
+                ]
             )
-            ->joinInner(array('comp' => 'main_company'), 'm.company_id = comp.id', array())
-            ->joinInner(array('dom' => 'main_businessdomain'), 'm.businessdomain_id = dom.id', array())
+            ->joinInner(['comp' => 'main_company'], 'm.company_id = comp.id', [])
+            ->joinInner(['dom' => 'main_businessdomain'], 'm.businessdomain_id = dom.id', [])
             ->order('comp.name ASC');
 
         if ($activeOnly) {
@@ -121,7 +121,7 @@ class Default_Model_CompanyBusinessdomain extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if (!empty($searchData) && $searchData !== 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -144,24 +144,24 @@ class Default_Model_CompanyBusinessdomain extends Zend_Db_Table_Abstract
         }
 
         // SSOT Mandatory: 'action' => 'Action' must be the first element
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'       => 'Action',
             'company_name' => 'Company',
             'domain_name'  => 'Business Domain',
             'description'  => 'Description',
             'status_text'  => 'Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
             'perPage'        => $perPage,
             'tablecontent'   => $tableContent,
             'objectname'     => 'companybusinessdomain', // Controller namespace target
-            'extra'          => array(),
+            'extra'          => [],
             'tableheader'    => $tableHeaders,
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
@@ -169,10 +169,10 @@ class Default_Model_CompanyBusinessdomain extends Zend_Db_Table_Abstract
             'menuName'       => 'Company Domain Engagements',
             'call'           => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => array(
-                'status_text' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive'))
-            )
-        );
+            'search_filters' => [
+                'status_text' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']]
+            ]
+        ];
     }
 
     /**
@@ -199,16 +199,16 @@ class Default_Model_CompanyBusinessdomain extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from(
-                array('m' => $this->_name),
-                array(
+                ['m' => $this->_name],
+                [
                     // SSOT Aliasing requirement mapped to composite key
                     'id'          => new Zend_Db_Expr("CONCAT(m.company_id, '_', m.businessdomain_id)"),
                     'description',
                     'status_text' => new Zend_Db_Expr("CASE WHEN m.isactive = 1 THEN 'Active' ELSE 'Inactive' END")
-                )
+                ]
             )
-            ->joinInner(array('comp' => 'main_company'), 'm.company_id = comp.id', array('company_name' => 'comp.name'))
-            ->joinInner(array('dom' => 'main_businessdomain'), 'm.businessdomain_id = dom.id', array('domain_name' => 'dom.name'))
+            ->joinInner(['comp' => 'main_company'], 'm.company_id = comp.id', ['company_name' => 'comp.name'])
+            ->joinInner(['dom' => 'main_businessdomain'], 'm.businessdomain_id = dom.id', ['domain_name' => 'dom.name'])
             ->where('m.isactive != ?', 5);
 
         if (!empty($searchQuery)) {
@@ -245,10 +245,10 @@ class Default_Model_CompanyBusinessdomain extends Zend_Db_Table_Abstract
                 $data['modifiedby']   = $userId;
                 $data['modifieddate'] = $currentDate;
 
-                $where = array(
+                $where = [
                     'company_id = ?'        => (int)$keys[0],
                     'businessdomain_id = ?' => (int)$keys[1]
-                );
+                ];
 
                 $this->update($data, $where);
                 return 'update';
@@ -281,16 +281,16 @@ class Default_Model_CompanyBusinessdomain extends Zend_Db_Table_Abstract
         $keys = explode('_', (string)$id);
         if (count($keys) !== 2) return 0;
 
-        $data = array(
+        $data = [
             'isactive'     => 5,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
+        ];
 
-        $where = array(
+        $where = [
             'company_id = ?'        => (int)$keys[0],
             'businessdomain_id = ?' => (int)$keys[1]
-        );
+        ];
 
         return $this->update($data, $where);
     }
@@ -310,16 +310,16 @@ class Default_Model_CompanyBusinessdomain extends Zend_Db_Table_Abstract
         $keys = explode('_', (string)$id);
         if (count($keys) !== 2) return 0;
 
-        $data = array(
+        $data = [
             'isactive'     => (int)$status,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
+        ];
 
-        $where = array(
+        $where = [
             'company_id = ?'        => (int)$keys[0],
             'businessdomain_id = ?' => (int)$keys[1]
-        );
+        ];
 
         return $this->update($data, $where);
     }

@@ -8,8 +8,8 @@ class Default_Form_gech extends Zend_Form{
 
         $id = new Zend_Form_Element_Hidden('id');
         
-		 $this->addElements(array($id));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 $this->addElements([$id]);
+         $this->setElementDecorators(['ViewHelper']); 
     }
 }
 ?>

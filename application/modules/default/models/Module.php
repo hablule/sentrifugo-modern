@@ -49,7 +49,7 @@ class Default_Model_Module extends Zend_Db_Table_Abstract
         if ($id) {
             $data['modifiedby'] = $userId;
             $data['modifieddate'] = gmdate("Y-m-d H:i:s");
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return 'update';
         }
         $data['createdby'] = $userId;
@@ -75,11 +75,11 @@ class Default_Model_Module extends Zend_Db_Table_Abstract
     
     public function getPairs($activeOnly = true)
     {
-        $select = $this->select()->from($this->_name, array('id', 'name'))->order('name ASC');
+        $select = $this->select()->from($this->_name, ['id', 'name'])->order('name ASC');
         if ($activeOnly) $select->where("isactive = 1");
         
         $results = $this->fetchAll($select);
-        $data = array();
+        $data = [];
         foreach ($results as $row) { $data[$row->id] = $row->name; }
         return $data;
     }
@@ -87,15 +87,15 @@ class Default_Model_Module extends Zend_Db_Table_Abstract
     public function deleteRecord($id)
     {
         $userId = Zend_Auth::getInstance()->getStorage()->read()->id ?? 0;
-        $data = array('isactive' => 5, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s"));
-        return $this->update($data, array('id = ?' => (int)$id));
+        $data = ['isactive' => 5, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s")];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     public function toggleStatus($id, $status)
     {
         $userId = Zend_Auth::getInstance()->getStorage()->read()->id ?? 0;
-        $data = array('isactive' => $status, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s"));
-        return $this->update($data, array('id = ?' => (int)$id));
+        $data = ['isactive' => $status, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s")];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* --------------------------------------------------------------
@@ -113,21 +113,21 @@ class Default_Model_Module extends Zend_Db_Table_Abstract
             }
         }
 
-        $tableHeaders = array('id' => 'ID', 'name' => 'Module Name', 'status_text' => 'Status');
+        $tableHeaders = ['id' => 'ID', 'name' => 'Module Name', 'status_text' => 'Status'];
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort' => $sort, 'by' => $by, 'pageNo' => $pageNo, 'perPage' => $perPage,
             'tablecontent' => $tableContent, 'objectname' => 'module', 'tableheader'  => $tableHeaders,
-            'extra' => array(), 'jsGridFnName'   => 'getAjaxgridData', 'jsFillFnName' => '',
-            'searchArray' => array(), 'menuName' => 'Modules', 'call' => $call, 
-            'dashboardcall'  => $dashboardcall, 'search_filters' => array()
-        );
+            'extra' => [], 'jsGridFnName'   => 'getAjaxgridData', 'jsFillFnName' => '',
+            'searchArray' => [], 'menuName' => 'Modules', 'call' => $call, 
+            'dashboardcall'  => $dashboardcall, 'search_filters' => []
+        ];
     }
 
     public function getGridData($sort, $by, $pageNo, $perPage, $searchQuery = '')
     {
-        $select = $this->select()->from($this->_name, array('*', 'status_text' => new Zend_Db_Expr("CASE WHEN isactive = 1 THEN 'Active' ELSE 'Inactive' END")))->where('isactive != 5');
+        $select = $this->select()->from($this->_name, ['*', 'status_text' => new Zend_Db_Expr("CASE WHEN isactive = 1 THEN 'Active' ELSE 'Inactive' END")])->where('isactive != 5');
         if ($searchQuery) $select->where($searchQuery);
         $select->order("$by $sort")->limitPage((int)$pageNo, (int)$perPage);
         return $select;
@@ -150,6 +150,6 @@ class Default_Model_Module extends Zend_Db_Table_Abstract
         if ($record) {
             return $record['id'];
         }
-        return $this->saveRecord(array('name' => $name));
+        return $this->saveRecord(['name' => $name]);
     }
 }

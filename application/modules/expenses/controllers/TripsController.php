@@ -67,7 +67,7 @@ class Expenses_TripsController extends Zend_Controller_Action
 	 */
 	public function indexAction()
 	{
-		
+
 		$tripsModel = new Expenses_Model_Trips();		
 		$call = $this->_getParam('call');
 		if($call == 'ajaxcall')
@@ -77,11 +77,11 @@ class Expenses_TripsController extends Zend_Controller_Action
 		$objname = $this->_getParam('objname');
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
-		
-		
-		$data = array();
+
+
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 
 		if($refresh == 'refresh')
@@ -110,13 +110,13 @@ class Expenses_TripsController extends Zend_Controller_Action
 		}
 		//echo "here";exit;
 		$dataTmp = $tripsModel->getGrid($sort, $by, $perPage, $pageNo, $searchData,$call,$dashboardcall);
-		
-		
+
+
 		array_push($data,$dataTmp);
 		$this->view->dataArray = $data;
 		$this->view->call = $call ;
 		$this->view->messages = $this->_helper->flashMessenger->getMessages();
-		
+
 		//echo $call;exit;
 		
 	}
@@ -217,16 +217,16 @@ class Expenses_TripsController extends Zend_Controller_Action
 				
 				$date = gmdate("Y-m-d H:i:s");
 
-				$data = array(
+				$data = [
 							'description'  => $description,
 							'trip_name'  => $trip_name,							
 							'from_date'  =>	$from_date,
 							'to_date'  => $to_date,							
-				);
+				];
 				if($id!=''){
 					$data['modifiedby'] = $loginUserId;
 					$data['modifieddate'] = $date;
-					$where = array('id=?'=>$id);
+					$where = ['id=?'=>$id];
 				}
 				else
 				{
@@ -246,16 +246,16 @@ class Expenses_TripsController extends Zend_Controller_Action
 						//$format = 'Associated with Trip %s';
 						//$history = sprintf($format, '"Trip to Boston"');
 						$history = 'Modified';
-						$history_data = array(											
+						$history_data = [											
 											'trip_id' => $id,
 											'history' => $history,
 											'createdby' => $loginUserId,
 											'createddate'=> $date
-										);
+										];
 						$history_where = '';
 						$historyId = $tripHistoryModel->saveOrUpdateTripHistory($history_data,$history_where); 
 					//End
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Trip updated successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Trip updated successfully."]);
 				}
 				else
 				{
@@ -265,16 +265,16 @@ class Expenses_TripsController extends Zend_Controller_Action
 						//$format = 'Associated with Trip %s';
 						//$history = sprintf($format, '"Trip to Boston"');
 						$history = 'Created';
-						$history_data = array(											
+						$history_data = [											
 											'trip_id' => $Id,
 											'history' => $history,
 											'createdby' => $loginUserId,
 											'createddate'=> $date
-										);
+										];
 						$history_where = '';
 						$historyId = $tripHistoryModel->saveOrUpdateTripHistory($history_data,$history_where); 
 					//End
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Trip added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Trip added successfully."]);
 				}
 					
 				$this->_redirect('expenses/trips');
@@ -445,9 +445,9 @@ class Expenses_TripsController extends Zend_Controller_Action
 			$checkExpenses = $tripsModel->checkExpensesAndTrips($id);
 			//echo "here";exit;
 			if($checkExpenses == 0){
-				$data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
+				$data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
 				$data['modifiedby'] = $loginUserId;
-				$where = array('id=?'=>$id);
+				$where = ['id=?'=>$id];
 				$id = $tripsModel->saveOrUpdateTripsData($data, $where);
 				if($id == 'update')
 				{
@@ -472,11 +472,11 @@ class Expenses_TripsController extends Zend_Controller_Action
 		{
 			if(	$messages['msgtype'] == 'error')
 			{
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
 			}
 			if(	$messages['msgtype'] == 'success')
 			{
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
 			}
 			
 		}
@@ -486,7 +486,7 @@ class Expenses_TripsController extends Zend_Controller_Action
 
 	public function addpopupAction()
 	{
-		$msgarray = array();
+		$msgarray = [];
 		$emptyFlag = '';
 		Zend_Layout::getMvcInstance()->setLayoutPath(APPLICATION_PATH."/layouts/scripts/popup/");
 		$auth = Zend_Auth::getInstance();
@@ -520,7 +520,7 @@ class Expenses_TripsController extends Zend_Controller_Action
 				}
 				$date = gmdate("Y-m-d H:i:s");
 
-				$data = array(
+				$data = [
 							'address'  => $address,
 							'client_name'  => $client_name,
 							'country_id'  => $country_id,
@@ -529,7 +529,7 @@ class Expenses_TripsController extends Zend_Controller_Action
 							'poc'  => $poc,
 							'fax'  => $fax,
 							'state_id'  => $state_id,
-				);
+				];
 
 				$data['created_by'] = $loginUserId;
 				$data['created'] = gmdate("Y-m-d H:i:s");
@@ -580,8 +580,8 @@ class Expenses_TripsController extends Zend_Controller_Action
 		$tripsModel = new Expenses_Model_Trips();	
 		$status = $this->_request->getParam('status');
 		$trip_id = $this->_request->getParam('trip_id');
-		$where = array('id=?'=>$trip_id);
-		$data = array('status'=>$status,'modifiedby'=>$loginUserId,'modifieddate'=>$date);
+		$where = ['id=?'=>$trip_id];
+		$data = ['status'=>$status,'modifiedby'=>$loginUserId,'modifieddate'=>$date];
 		
 		$Id = $tripsModel->saveOrUpdateTripsData($data, $where);
 		
@@ -594,11 +594,11 @@ class Expenses_TripsController extends Zend_Controller_Action
 		else if($status=='A')
 		$expense_status = 'approved';
 		$expenseModel = new Expenses_Model_Expenses();	
-		$expensedata = array('status'=>$expense_status,'modifiedby'=>$loginUserId,'modifieddate'=>$date);
+		$expensedata = ['status'=>$expense_status,'modifiedby'=>$loginUserId,'modifieddate'=>$date];
 		if($expense_status=='submitted')
-			$expensewhere = array('trip_id=?'=>$trip_id,'isactive=?'=>1,'status!=?'=>'approved');
+			$expensewhere = ['trip_id=?'=>$trip_id,'isactive=?'=>1,'status!=?'=>'approved'];
 		else
-			$expensewhere = array('trip_id=?'=>$trip_id,'isactive=?'=>1,'status!=?'=>'approved','manager_id=?'=>$loginUserId);
+			$expensewhere = ['trip_id=?'=>$trip_id,'isactive=?'=>1,'status!=?'=>'approved','manager_id=?'=>$loginUserId];
 		$expenseId = $expenseModel->saveOrUpdateExpensesData($expensedata, $expensewhere);
 		//echo $expenseId;die();
 		
@@ -654,18 +654,18 @@ class Expenses_TripsController extends Zend_Controller_Action
 			//$format = 'Associated with Trip %s';
 			//$history = sprintf($format, '"Trip to Boston"');
 			$history = $expense_status;
-			$history_data = array(											
+			$history_data = [											
 								'trip_id' => $trip_id,
 								'history' => $history,
 								'createdby' => $loginUserId,
 								'createddate'=> $date
-							);
+							];
 			$history_where = '';
 			$historyId = $tripHistoryModel->saveOrUpdateTripHistory($history_data,$history_where); 
 		//End
 		
 		sapp_ExpensesHelper::tripstatus($trip_id);
-		$this->_helper->json(array('message'=>'success','status'=> 'Trip '.$status.' successfully.'));
+		$this->_helper->json(['message'=>'success','status'=> 'Trip '.$status.' successfully.']);
 	}
 
 	public function deleteexpenseAction()
@@ -681,14 +681,14 @@ class Expenses_TripsController extends Zend_Controller_Action
 		$trip_id=$this->_getParam('trip_id');
 		$expense_id=$this->_getParam('expense_id');
 		//echo $expense_id;die();
-		
 
-		$data = array('trip_id'=>'','modifieddate'=>gmdate("Y-m-d H:i:s"));
+
+		$data = ['trip_id'=>'','modifieddate'=>gmdate("Y-m-d H:i:s")];
 		$data['modifiedby'] = $loginUserId;
-		$where = array('id=?'=>$expense_id);
+		$where = ['id=?'=>$expense_id];
 		$Id = $expenseModel->saveOrUpdateExpensesData($data, $where);
-		$this->_helper->json(array('message'=>'success','status'=> 'Expense Deleted Successfully.'));	
-		
+		$this->_helper->json(['message'=>'success','status'=> 'Expense Deleted Successfully.']);	
+
 		/* $receiptsModel = new Expenses_Model_Receipts();
 		$dataTmp = $receiptsModel->getReceipts();	
 		$this->view->dataArray = $dataTmp; */

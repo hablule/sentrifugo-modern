@@ -46,7 +46,7 @@ class Default_CompetencylevelController extends Zend_Controller_Action
 		$objname = $this->_getParam('objname');
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall',null);
-		$data = array();$searchQuery = '';	$searchArray = array();	$tablecontent='';
+		$data = [];$searchQuery = '';	$searchArray = [];	$tablecontent='';
 		
 		if($refresh == 'refresh')
 		{
@@ -56,7 +56,7 @@ class Default_CompetencylevelController extends Zend_Controller_Action
 				$perPage = PERPAGE;
 										
 			$sort = 'DESC';$by = 'modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	
-			$searchArray = array();
+			$searchArray = [];
 		}
 		else 
 		{
@@ -178,13 +178,13 @@ class Default_CompetencylevelController extends Zend_Controller_Action
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = ''; 
-				   $data = array( 'competencylevel'=>trim($competencylevel),
+				   $data = [ 'competencylevel'=>trim($competencylevel),
 				      			 'description'=>trim($description),
 								  'modifiedby'=>$loginUserId,
 									'modifieddate'=>gmdate("Y-m-d H:i:s")
-						);
+						];
 					if($id!=''){
-						$where = array('id=?'=>$id);  
+						$where = ['id=?'=>$id];  
 						$actionflag = 2;
 					}
 					else
@@ -199,12 +199,12 @@ class Default_CompetencylevelController extends Zend_Controller_Action
 					if($Id == 'update')
 					{
 					   $tableid = $id;
-					  $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Competency level updated successfully."));
+					  $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Competency level updated successfully."]);
 					}   
 					else
 					{
                        $tableid = $Id; 	
-					   $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Competency level added successfully."));
+					   $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Competency level added successfully."]);
 					}   
 					$menuID = COMPETENCYLEVEL;
 					$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
@@ -266,15 +266,15 @@ class Default_CompetencylevelController extends Zend_Controller_Action
                 $date = new Zend_Date();
                 $actionflag = '';
                 $tableid  = ''; 
-                $data = array( 
+                $data = [ 
                             'competencylevel'=>trim($competencylevel),
                             'description'=>trim($description),
                             'modifiedby'=>$loginUserId,			
                             'modifieddate'=>gmdate("Y-m-d H:i:s")
-                        );
+                        ];
                 if($id!='')
                 {
-                    $where = array('id=?'=>$id);  
+                    $where = ['id=?'=>$id];  
                     $actionflag = 2;
                 }
                 else
@@ -335,8 +335,8 @@ class Default_CompetencylevelController extends Zend_Controller_Action
 		    if($id)
 			{
 			$competencylevelmodel = new Default_Model_Competencylevel();
-			  $data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-			  $where = array('id=?'=>$id);
+			  $data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+			  $where = ['id=?'=>$id];
                           $compentency_data = $competencylevelmodel->getsingleCompetencyLevelData($id);
 			  $Id = $competencylevelmodel->SaveorUpdateCompetencyLevelData($data, $where);
 			    if($Id == 'update')
@@ -362,11 +362,11 @@ class Default_CompetencylevelController extends Zend_Controller_Action
 			{
 				if(	$messages['msgtype'] == 'error')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
 				}
 				if(	$messages['msgtype'] == 'success')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
 				}
 			}
 			$this->_helper->json($messages);

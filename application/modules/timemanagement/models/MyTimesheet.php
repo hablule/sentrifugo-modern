@@ -61,8 +61,8 @@ class Timemanagement_Model_MyTimesheet extends Zend_Db_Table_Abstract
 		
 		 $select = $this->select()
 				->setIntegrityCheck(false)
-				->from(array('t' => 'tm_emp_timesheets'),
-				array('count(*) rec_count'))			
+				->from(['t' => 'tm_emp_timesheets'],
+				['count(*) rec_count'])			
 				->where(" project_id is null and t.emp_id =".$empId." and t.ts_year = '".$year."' and t.ts_month='".$month."' and t.ts_week = '".$week."'");
 			//echo $select;exit;					
      	 $result = $this->fetchAll($select)->toArray();		  	
@@ -73,8 +73,8 @@ class Timemanagement_Model_MyTimesheet extends Zend_Db_Table_Abstract
 		
 		 $select = $this->select()
 				->setIntegrityCheck(false)
-				->from(array('s' => 'tm_ts_status'),
-				array('count(*) rec_count'))			
+				->from(['s' => 'tm_ts_status'],
+				['count(*) rec_count'])			
 				->where(" project_id is null and s.emp_id =".$empId." and s.ts_year = '".$year."' and s.ts_month='".$month."' and s.ts_week = '".$week."'");
 			//echo $select;exit;	
 		 $result = $this->fetchAll($select)->toArray();		  	
@@ -112,31 +112,31 @@ class Timemanagement_Model_MyTimesheet extends Zend_Db_Table_Abstract
 		
 		$weekDailyStatus = self::getWeekDaysDailyStatus($arrayData['emp_id'],$arrayData['ts_year'],$arrayData['ts_month'],$arrayData['ts_week']);
 		if(sizeof($weekDailyStatus) > 0) {
-			if(in_array($weekDailyStatus[0]['sun_status'], array('approved','submitted'))) {
+			if(in_array($weekDailyStatus[0]['sun_status'], ['approved','submitted'])) {
 				unset($arrayDataObj['sun_project_status']);
 				unset($arrayDataObj['sun_status']);
 			}
-			if(in_array($weekDailyStatus[0]['mon_status'], array('approved','submitted'))) {
+			if(in_array($weekDailyStatus[0]['mon_status'], ['approved','submitted'])) {
 				unset($arrayDataObj['mon_project_status']);
 				unset($arrayDataObj['mon_status']);
 			}
-			if(in_array($weekDailyStatus[0]['tue_status'], array('approved','submitted'))) {
+			if(in_array($weekDailyStatus[0]['tue_status'], ['approved','submitted'])) {
 				unset($arrayDataObj['tue_project_status']);
 				unset($arrayDataObj['tue_status']);
 			}
-			if(in_array($weekDailyStatus[0]['wed_status'], array('approved','submitted'))) {
+			if(in_array($weekDailyStatus[0]['wed_status'], ['approved','submitted'])) {
 				unset($arrayDataObj['wed_project_status']);
 				unset($arrayDataObj['wed_status']);
 			}
-			if(in_array($weekDailyStatus[0]['thu_status'], array('approved','submitted'))) {
+			if(in_array($weekDailyStatus[0]['thu_status'], ['approved','submitted'])) {
 				unset($arrayDataObj['thu_project_status']);
 				unset($arrayDataObj['thu_status']);
 			}
-			if(in_array($weekDailyStatus[0]['fri_status'], array('approved','submitted'))) {
+			if(in_array($weekDailyStatus[0]['fri_status'], ['approved','submitted'])) {
 				unset($arrayDataObj['fri_project_status']);
 				unset($arrayDataObj['fri_status']);
 			}
-			if(in_array($weekDailyStatus[0]['sat_status'], array('approved','submitted'))) {
+			if(in_array($weekDailyStatus[0]['sat_status'], ['approved','submitted'])) {
 				unset($arrayDataObj['sat_project_status']);
 				unset($arrayDataObj['sat_status']);
 			}
@@ -144,34 +144,34 @@ class Timemanagement_Model_MyTimesheet extends Zend_Db_Table_Abstract
 		
 		$weekProjStatus = self::getWeekDaysProjStatusForProject($arrayData['emp_id'],$arrayData['ts_year'],$arrayData['ts_month'],$arrayData['ts_week'],$arrayData['project_id']);
 		foreach($weekProjStatus as $projStatus) {
-			$sunProjFlag = in_array($projStatus['sun_project_status'], array('submitted','approved'));
-      		$monProjFlag = in_array($projStatus['mon_project_status'], array('submitted','approved'));
-      		$tueProjFlag = in_array($projStatus['tue_project_status'], array('submitted','approved'));
-      		$wedProjFlag = in_array($projStatus['wed_project_status'], array('submitted','approved'));
-      		$thuProjFlag = in_array($projStatus['thu_project_status'], array('submitted','approved'));
-      		$friProjFlag = in_array($projStatus['fri_project_status'], array('submitted','approved'));
-      		$satProjFlag = in_array($projStatus['sat_project_status'], array('submitted','approved'));
+			$sunProjFlag = in_array($projStatus['sun_project_status'], ['submitted','approved']);
+      		$monProjFlag = in_array($projStatus['mon_project_status'], ['submitted','approved']);
+      		$tueProjFlag = in_array($projStatus['tue_project_status'], ['submitted','approved']);
+      		$wedProjFlag = in_array($projStatus['wed_project_status'], ['submitted','approved']);
+      		$thuProjFlag = in_array($projStatus['thu_project_status'], ['submitted','approved']);
+      		$friProjFlag = in_array($projStatus['fri_project_status'], ['submitted','approved']);
+      		$satProjFlag = in_array($projStatus['sat_project_status'], ['submitted','approved']);
       				
       		if($sunProjFlag) {
-      			if(array_key_exists("sun_project_status",$arrayDataObj)) unset($arrayDataObj['sun_project_status']);
+      			if(property_exists($arrayDataObj, "sun_project_status")) unset($arrayDataObj['sun_project_status']);
       		}
       		if($monProjFlag){
-      			if(array_key_exists("mon_project_status",$arrayDataObj)) unset($arrayDataObj['mon_project_status']);
+      			if(property_exists($arrayDataObj, "mon_project_status")) unset($arrayDataObj['mon_project_status']);
       		}
       		if($tueProjFlag){
-      			if(array_key_exists("tue_project_status",$arrayDataObj)) unset($arrayDataObj['tue_project_status']);
+      			if(property_exists($arrayDataObj, "tue_project_status")) unset($arrayDataObj['tue_project_status']);
       		}
       		if($wedProjFlag) { 
-      			if(array_key_exists("wed_project_status",$arrayDataObj)) unset($arrayDataObj['wed_project_status']);
+      			if(property_exists($arrayDataObj, "wed_project_status")) unset($arrayDataObj['wed_project_status']);
       		}
       		if($thuProjFlag) { 
-      			if(array_key_exists("thu_project_status",$arrayDataObj)) unset($arrayDataObj['thu_project_status']);
+      			if(property_exists($arrayDataObj, "thu_project_status")) unset($arrayDataObj['thu_project_status']);
       		}
       		if($friProjFlag){ 
-      			if(array_key_exists("fri_project_status",$arrayDataObj)) unset($arrayDataObj['fri_project_status']);
+      			if(property_exists($arrayDataObj, "fri_project_status")) unset($arrayDataObj['fri_project_status']);
       		}
       		if($satProjFlag){
-      			if(array_key_exists("sat_project_status",$arrayDataObj)) unset($arrayDataObj['sat_project_status']);
+      			if(property_exists($arrayDataObj, "sat_project_status")) unset($arrayDataObj['sat_project_status']);
       		}
 		}		
 		
@@ -213,7 +213,7 @@ class Timemanagement_Model_MyTimesheet extends Zend_Db_Table_Abstract
 	
 		$select = $this->select()
 				  ->setIntegrityCheck(false)
-				  ->from(array('et'=>$this->_name),array(
+				  ->from(['et'=>$this->_name],[
 				  	'if(et.sun_duration is null,"00:00",time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.sun_duration as time)))),"%H:%i"))sun_duration,
 					if(et.mon_duration is null,"00:00",time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.mon_duration as time)))),"%H:%i"))mon_duration,
 					if(et.tue_duration is null,"00:00",time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.tue_duration as time)))),"%H:%i"))tue_duration,
@@ -222,7 +222,7 @@ class Timemanagement_Model_MyTimesheet extends Zend_Db_Table_Abstract
 					if(et.fri_duration is null,"00:00",time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.fri_duration as time)))),"%H:%i"))fri_duration,
 					if(et.sat_duration is null,"00:00",time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.sat_duration as time)))),"%H:%i"))sat_duration,
 				  	if(et.week_duration is null,"00:00",time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.week_duration as time)))),"%H:%i"))week_duration'
-					))				
+					])				
 				  ->where("et.is_active=1 and et.project_id = $projId and et.ts_year = $year and  et.ts_month = $month and et.ts_week = $week and et.emp_id = $empId")
 				  ->group('et.project_id');
 				  	         
@@ -266,8 +266,8 @@ class Timemanagement_Model_MyTimesheet extends Zend_Db_Table_Abstract
 		
 		 $select = $this->select()
 				->setIntegrityCheck(false)
-				->from(array('s' => 'tm_ts_status'),array('s.sun_status','s.mon_status','s.tue_status','s.wed_status','s.thu_status',
-				's.fri_status','s.sat_status'))
+				->from(['s' => 'tm_ts_status'],['s.sun_status','s.mon_status','s.tue_status','s.wed_status','s.thu_status',
+				's.fri_status','s.sat_status'])
 				->where("s.emp_id =".$empId." and s.ts_year = '".$year."' and s.ts_month = '".$mon."' and s.ts_week = '".$week."' ")
 				->group('s.emp_id');
 			//echo $select;exit;					
@@ -278,8 +278,8 @@ class Timemanagement_Model_MyTimesheet extends Zend_Db_Table_Abstract
 		
 		 $select = $this->select()
 				->setIntegrityCheck(false)
-				->from(array('s' => 'tm_ts_status'),array('s.project_id','s.sun_project_status','s.mon_project_status','s.tue_project_status','s.wed_project_status','s.thu_project_status',
-				's.fri_project_status','s.sat_project_status'))
+				->from(['s' => 'tm_ts_status'],['s.project_id','s.sun_project_status','s.mon_project_status','s.tue_project_status','s.wed_project_status','s.thu_project_status',
+				's.fri_project_status','s.sat_project_status'])
 				->where("s.emp_id =".$empId." and s.ts_year = '".$year."' and s.ts_month = '".$mon."' and s.ts_week = '".$week."' and s.is_active = 1 ");
 			
 			//echo $select;exit;					
@@ -290,8 +290,8 @@ class Timemanagement_Model_MyTimesheet extends Zend_Db_Table_Abstract
 		
 		 $select = $this->select()
 				->setIntegrityCheck(false)
-				->from(array('s' => 'tm_ts_status'),array('s.project_id','s.sun_project_status','s.mon_project_status','s.tue_project_status','s.wed_project_status','s.thu_project_status',
-				's.fri_project_status','s.sat_project_status'))
+				->from(['s' => 'tm_ts_status'],['s.project_id','s.sun_project_status','s.mon_project_status','s.tue_project_status','s.wed_project_status','s.thu_project_status',
+				's.fri_project_status','s.sat_project_status'])
 				->where("s.project_id =".$projId." and s.emp_id =".$empId." and s.ts_year = '".$year."' and s.ts_month = '".$mon."' and s.ts_week = '".$week."' ");
 			
 			//echo $select;exit;					
@@ -303,7 +303,7 @@ class Timemanagement_Model_MyTimesheet extends Zend_Db_Table_Abstract
 		//echo $project_ids;
 		$select = $this->select()
 				  ->setIntegrityCheck(false)
-				  ->from(array('et'=>$this->_name),array(
+				  ->from(['et'=>$this->_name],[
 				  	'ts.ts_week,et.sun_date,et.mon_date,et.tue_date,et.wed_date,et.thu_date,et.fri_date,et.sat_date,
 				  	if(et.sun_duration is null,"00:00",time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.sun_duration as time)))),"%H:%i"))sun_duration,ifnull(ts.sun_status,"no_entry")sun_status,
 					if(et.mon_duration is null,"00:00",time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.mon_duration as time)))),"%H:%i"))mon_duration,ifnull(ts.mon_status,"no_entry")mon_status,
@@ -320,14 +320,14 @@ class Timemanagement_Model_MyTimesheet extends Zend_Db_Table_Abstract
 				  	GROUP_CONCAT(distinct ifnull(tn.thu_reject_note,""), if(ts.thu_reject_note != "", CONCAT(p.project_name,":",ifnull(ts.thu_reject_note,"")),"")) thu_reject_note,
 				  	GROUP_CONCAT(distinct ifnull(tn.fri_reject_note,""), if(ts.fri_reject_note != "", CONCAT(p.project_name,":",ifnull(ts.fri_reject_note,"")),"")) fri_reject_note,
 				  	GROUP_CONCAT(distinct ifnull(tn.sat_reject_note,""), if(ts.sat_reject_note != "", CONCAT(p.project_name,":",ifnull(ts.sat_reject_note,"")),"")) sat_reject_note'
-					));
+					]);
 			//	  ->joinInner(array('ts'=>'tm_ts_status'),'ts.emp_id = et.emp_id and ts.project_id = et.project_id',array())
 //			  if($project_ids != ""){
 //			  	$select->joinInner(array('ts'=>'tm_ts_status'),'ts.emp_id = et.emp_id and et.ts_year= ts.ts_year and et.ts_month= ts.ts_month and et.ts_week = ts.ts_week and et.project_id = ts.project_id and et.project_id IN ('.$project_ids.')',array());
 //			  }else{
-			  	$select->joinInner(array('ts'=>'tm_ts_status'),'ts.emp_id = et.emp_id and et.ts_year= ts.ts_year and et.ts_month= ts.ts_month and et.ts_week = ts.ts_week and (et.project_id = ts.project_id OR ts.project_id IS NULL)',array());
-			  	$select->joinInner(array('tn'=>'tm_emp_ts_notes'),'tn.emp_id = ts.emp_id and tn.ts_year= ts.ts_year and tn.ts_month= ts.ts_month and tn.ts_week = ts.ts_week',array());
-			  	$select->joinLeft(array('p'=>'tm_projects'),'p.id = ts.project_id and p.id = et.project_id',array());
+			  	$select->joinInner(['ts'=>'tm_ts_status'],'ts.emp_id = et.emp_id and et.ts_year= ts.ts_year and et.ts_month= ts.ts_month and et.ts_week = ts.ts_week and (et.project_id = ts.project_id OR ts.project_id IS NULL)',[]);
+			  	$select->joinInner(['tn'=>'tm_emp_ts_notes'],'tn.emp_id = ts.emp_id and tn.ts_year= ts.ts_year and tn.ts_month= ts.ts_month and tn.ts_week = ts.ts_week',[]);
+			  	$select->joinLeft(['p'=>'tm_projects'],'p.id = ts.project_id and p.id = et.project_id',[]);
 			  	
 			  	
 			//  }
@@ -345,18 +345,18 @@ class Timemanagement_Model_MyTimesheet extends Zend_Db_Table_Abstract
 		}
 		$select = $this->select()
 				  ->setIntegrityCheck(false)
-				  ->from(array('pte'=>'tm_project_task_employees'),array(
+				  ->from(['pte'=>'tm_project_task_employees'],[
 				  	'pte.project_id','p.project_name','p.project_status','pte.project_task_id','t.task','sun_duration'=>'ifnull(et.sun_duration,0)','mon_duration'=>'ifnull(et.mon_duration,0)',
-				  	'tue_duration'=>'ifnull(et.tue_duration,0)','wed_duration'=>'ifnull(et.wed_duration,0)','thu_duration'=>'ifnull(et.thu_duration,0)','fri_duration'=>'ifnull(et.fri_duration,0)','sat_duration'=>'ifnull(et.sat_duration,0)','week_duration'=>'ifnull(et.week_duration,0)'))
-				  ->joinInner(array('pt'=>'tm_project_tasks'),'pt.id = pte.project_task_id',array())
-				  ->joinInner(array('p'=>'tm_projects'),'p.id = pt.project_id and p.id = pte.project_id',array())
-				  ->joinInner(array('t'=>'tm_tasks'),'t.id = pt.task_id',array());
+				  	'tue_duration'=>'ifnull(et.tue_duration,0)','wed_duration'=>'ifnull(et.wed_duration,0)','thu_duration'=>'ifnull(et.thu_duration,0)','fri_duration'=>'ifnull(et.fri_duration,0)','sat_duration'=>'ifnull(et.sat_duration,0)','week_duration'=>'ifnull(et.week_duration,0)'])
+				  ->joinInner(['pt'=>'tm_project_tasks'],'pt.id = pte.project_task_id',[])
+				  ->joinInner(['p'=>'tm_projects'],'p.id = pt.project_id and p.id = pte.project_id',[])
+				  ->joinInner(['t'=>'tm_tasks'],'t.id = pt.task_id',[]);
 				 // ->joinLeft(array('et'=>'tm_emp_timesheets'),'et.project_task_id = pte.project_task_id and ts_year='.$year.' and et.ts_month='.$month.' and et.ts_week = '.$week.' and et.emp_id= '.$empId,array());
 				 
 				if($flag == 'view')  
-		 		 	$select->joinInner(array('et'=>'tm_emp_timesheets'),'et.project_task_id = pte.project_task_id and et.ts_year='.$year.' and et.ts_month='.$month.' and et.ts_week = '.$week.' and et.emp_id= '.$empId,array());
+		 		 	$select->joinInner(['et'=>'tm_emp_timesheets'],'et.project_task_id = pte.project_task_id and et.ts_year='.$year.' and et.ts_month='.$month.' and et.ts_week = '.$week.' and et.emp_id= '.$empId,[]);
 		 		else  
-		 			$select->joinLeft(array('et'=>'tm_emp_timesheets'),'et.project_task_id = pte.project_task_id and ts_year='.$year.' and et.ts_month='.$month.' and et.ts_week = '.$week.' and et.emp_id= '.$empId,array());	
+		 			$select->joinLeft(['et'=>'tm_emp_timesheets'],'et.project_task_id = pte.project_task_id and ts_year='.$year.' and et.ts_month='.$month.' and et.ts_week = '.$week.' and et.emp_id= '.$empId,[]);	
 		  $select->where("pte.emp_id =".$empId." and pte.is_active = 1 and p.is_active = 1 $where ");
 //		  if($project_ids != ""){
 //		  	$select->where("p.id IN (".$project_ids.")");
@@ -369,8 +369,8 @@ class Timemanagement_Model_MyTimesheet extends Zend_Db_Table_Abstract
 		
 		 $select = $this->select()
 				->setIntegrityCheck(false)
-				->from(array('n' => 'tm_emp_ts_notes'),array('n.sun_note','n.mon_note','n.tue_note','n.wed_note','n.thu_note',
-				'n.fri_note','n.sat_note','n.week_note'))
+				->from(['n' => 'tm_emp_ts_notes'],['n.sun_note','n.mon_note','n.tue_note','n.wed_note','n.thu_note',
+				'n.fri_note','n.sat_note','n.week_note'])
 			//	->where("n.emp_id =".$empId." and n.ts_year = '".$year."' and n.cal_week = '".$calWeek."' ");
 				->where("n.emp_id =".$empId." and n.ts_year = '".$year."' and n.ts_month='".$month."' and n.ts_week = '".$week."'");
 			//echo $select;exit;					
@@ -398,7 +398,7 @@ class Timemanagement_Model_MyTimesheet extends Zend_Db_Table_Abstract
 		
 		 $select = $this->select()
 				->setIntegrityCheck(false)
-				->from(array('s' => 'tm_ts_status'),array('sun_reject_note'=>$sun_reject_note,'mon_reject_note'=>$mon_reject_note,'tue_reject_note'=>$tue_reject_note,'wed_reject_note'=>$wed_reject_note,'thu_reject_note'=>$thu_reject_note,'fri_reject_note'=>$fri_reject_note,'sat_reject_note'=>$sat_reject_note,
+				->from(['s' => 'tm_ts_status'],['sun_reject_note'=>$sun_reject_note,'mon_reject_note'=>$mon_reject_note,'tue_reject_note'=>$tue_reject_note,'wed_reject_note'=>$wed_reject_note,'thu_reject_note'=>$thu_reject_note,'fri_reject_note'=>$fri_reject_note,'sat_reject_note'=>$sat_reject_note,
 				'sun_status'=>'case when s.sun'.$status.' ="submitted" then "For Approval" when s.sun'.$status.' ="saved" 
 				then "Yet to submit" when s.sun'.$status.' ="no_entry" then "No Entry" 
 				else CONCAT(UCASE(LEFT(s.sun'.$status.', 1)),SUBSTRING(s.sun'.$status.', 2)) end',
@@ -428,9 +428,9 @@ class Timemanagement_Model_MyTimesheet extends Zend_Db_Table_Abstract
 				else CONCAT(UCASE(LEFT(s.sat'.$status.', 1)),SUBSTRING(s.sat'.$status.', 2)) end',
 				'week_status'=>'case when s.week_status ="submitted" then "For Approval" when s.week_status ="saved" 
 				then "Yet to submit" when s.week_status ="no_entry" then "No Entry" 
-				else CONCAT(UCASE(LEFT(s.week_status, 1)),SUBSTRING(s.week_status, 2)) end'))
+				else CONCAT(UCASE(LEFT(s.week_status, 1)),SUBSTRING(s.week_status, 2)) end'])
 				
-				->joinInner(array('en'=> 'tm_emp_ts_notes'),'en.emp_id = s.emp_id and s.ts_year= en.ts_year and s.ts_month= en.ts_month and s.ts_week = en.ts_week ',array())
+				->joinInner(['en'=> 'tm_emp_ts_notes'],'en.emp_id = s.emp_id and s.ts_year= en.ts_year and s.ts_month= en.ts_month and s.ts_week = en.ts_week ',[])
 				
 		//		->where("s.emp_id =".$empId." and s.ts_year = '".$year."' and s.cal_week = '".$calWeek."' ");
 				->where("s.emp_id =".$empId." and s.ts_year = '".$year."' and s.ts_month='".$month."' and s.ts_week = '".$week."'  ".$where)
@@ -443,7 +443,7 @@ class Timemanagement_Model_MyTimesheet extends Zend_Db_Table_Abstract
 		 
 		$select = $this->select()
 				->setIntegrityCheck(false)
-				->from(array('s' => 'tm_ts_status'),array(
+				->from(['s' => 'tm_ts_status'],[
 				 'sun_status' => 'IF(FIND_IN_SET("blocked",GROUP_CONCAT(DISTINCT s.sun_project_status))!=0,"blocked",
 				 IF(FIND_IN_SET("saved",GROUP_CONCAT(DISTINCT s.sun_project_status))!=0,"saved",
     			IF(FIND_IN_SET("rejected",GROUP_CONCAT(DISTINCT s.sun_project_status))!=0,"rejected",
@@ -486,7 +486,7 @@ class Timemanagement_Model_MyTimesheet extends Zend_Db_Table_Abstract
 			    IF(FIND_IN_SET("submitted",GROUP_CONCAT(DISTINCT s.sat_project_status))!=0,"submitted",
 			    IF(FIND_IN_SET("approved",GROUP_CONCAT(DISTINCT s.sat_project_status))!=0,"approved",			    
 			    IF(FIND_IN_SET("enabled",GROUP_CONCAT(DISTINCT s.sat_project_status))!=0,"enabled","no_entry"))))))' 
-				))
+				])
 				->where(" s.project_id is not null and s.is_active = 1 and s.emp_id =".$empId." and s.ts_year = '".$year."' and s.ts_month = '".$month."' and s.ts_week = '".$week."' ")
 				->group('s.emp_id');
 
@@ -500,14 +500,14 @@ class Timemanagement_Model_MyTimesheet extends Zend_Db_Table_Abstract
 		
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('t' => 'tm_ts_status'),
-		array('week_status' => "IF(FIND_IN_SET('blocked',CONCAT(sun_status,',',mon_status,',',tue_status,',',wed_status,',',thu_status,',',fri_status,',',sat_status))!=0,'blocked',
+		->from(['t' => 'tm_ts_status'],
+		['week_status' => "IF(FIND_IN_SET('blocked',CONCAT(sun_status,',',mon_status,',',tue_status,',',wed_status,',',thu_status,',',fri_status,',',sat_status))!=0,'blocked',
 					   		   IF(FIND_IN_SET('submitted',CONCAT(sun_status,',',mon_status,',',tue_status,',',wed_status,',',thu_status,',',fri_status,',',sat_status))!=0,'submitted',
 							   IF(FIND_IN_SET('rejected',CONCAT(sun_status,',',mon_status,',',tue_status,',',wed_status,',',thu_status,',',fri_status,',',sat_status))!=0,'rejected',				
 							   IF(FIND_IN_SET('approved',CONCAT(sun_status,',',mon_status,',',tue_status,',',wed_status,',',thu_status,',',fri_status,',',sat_status))!=0,'approved',
 							   IF(FIND_IN_SET('saved',CONCAT(sun_status,',',mon_status,',',tue_status,',',wed_status,',',thu_status,',',fri_status,',',sat_status))!=0,'saved',
 							   IF(FIND_IN_SET('enabled',CONCAT(sun_status,',',mon_status,',',tue_status,',',wed_status,',',thu_status,',',fri_status,',',sat_status))!=0,'enabled','no_entry'))))))
-							"))
+							"])
 		->where("emp_id=".$empId." and is_active=1 and ts_week = '".$week."' and ts_year = '".$year."' and ts_month = '".$month."' ")
 		->group('emp_id');
 	//	echo $select;
@@ -572,7 +572,7 @@ class Timemanagement_Model_MyTimesheet extends Zend_Db_Table_Abstract
 		
 		$select = $this->select()
 				->setIntegrityCheck(false)
-				->from(array('c' => 'tm_mailing_list'),array('ts_start_date','ts_end_date'))
+				->from(['c' => 'tm_mailing_list'],['ts_start_date','ts_end_date'])
 				->where("mail_type = 'block' and YEAR(ts_end_date) = '".$year."' and MONTH(ts_end_date) = '".$month."'");
 			
 			//echo $select;exit;					

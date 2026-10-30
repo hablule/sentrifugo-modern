@@ -74,7 +74,7 @@ class Default_Model_Categories extends Zend_Db_Table_Abstract
 
 			$res = $this->select()
 				->setIntegrityCheck(false)
-				->from(array('c' => $this->_name),array('c.id',$columns))
+				->from(['c' => $this->_name],['c.id',$columns])
 				->where($where)
 				->order("$by $sort");
 
@@ -94,7 +94,7 @@ class Default_Model_Categories extends Zend_Db_Table_Abstract
 				$documentsObj = $tmpRes->fetchAll();
 				$categoryObj = $this->fetchAll($res)->toArray();
 
-				return array('res' => $categoryObj, 'docs' => $documentsObj);
+				return ['res' => $categoryObj, 'docs' => $documentsObj];
 			}
 			else
 			{
@@ -110,8 +110,8 @@ class Default_Model_Categories extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{
 		$searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		
 		if($searchData != '' && $searchData!='undefined')
 			{
@@ -126,18 +126,18 @@ class Default_Model_Categories extends Zend_Db_Table_Abstract
 			
 		$objName = 'categories';
 		
-		$tableFields = array('action'=>'Action','category'=>'Category','description' => 'Description');
+		$tableFields = ['action'=>'Action','category'=>'Category','description' => 'Description'];
 		
 		$tablecontent = $this->getCategories('grid',$sort, $by, $pageNo, $perPage,$searchQuery);     
 		
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -145,7 +145,7 @@ class Default_Model_Categories extends Zend_Db_Table_Abstract
 			'add' =>'add',
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall,
-		);
+		];
 		return $dataTmp;
 	}
 
@@ -156,7 +156,7 @@ class Default_Model_Categories extends Zend_Db_Table_Abstract
 			$where = 'c.id = '.$id.' AND c.isactive = 1';
 			$res = $this->select()
 					->setIntegrityCheck(false)
-					->from(array('c' => $this->_name),array('c.id','c.isused','c.category','c.description'))
+					->from(['c' => $this->_name],['c.id','c.isused','c.category','c.description'])
 					->where($where);
 
 			$tmp = $this->fetchAll($res)->toArray();

@@ -9,8 +9,8 @@ class Schedule_Model_Schedulecycle extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $p1, $p2, $p3, $p4)
     {
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
         $db = Zend_Db_Table::getDefaultAdapter();
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
@@ -43,7 +43,7 @@ class Schedule_Model_Schedulecycle extends Zend_Db_Table_Abstract
 
         $objName = 'schedulecycle';
         $objID = 'schedulecycle';
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'schedule' => 'Schedule',
             'cycle'=>'Cycle',
@@ -52,12 +52,12 @@ class Schedule_Model_Schedulecycle extends Zend_Db_Table_Abstract
             'dayofmonth' => 'Day of Month',
             'active' => 'Active',
             'description'=>'description'
-        );
+        ];
 
         $tablecontent = $this->getScheduleData($sort, $by, $pageNo, $perPage, $searchQuery);
 
       
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
@@ -65,7 +65,7 @@ class Schedule_Model_Schedulecycle extends Zend_Db_Table_Abstract
             'tablecontent' => $tablecontent,
             'objectname' => $objName,
             'objectId' => $objID,
-            'extra' => array(),
+            'extra' => [],
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
             'jsFillFnName' => '',
@@ -75,19 +75,19 @@ class Schedule_Model_Schedulecycle extends Zend_Db_Table_Abstract
             'call' => $call,
             'menuName' => 'Schedule Cycle',
             'dashboardcall' => $dashboardcall,
-            'search_filters' => array(
-                'active' => array(
+            'search_filters' => [
+                'active' => [
                     'type' => 'select',
-                    'filter_data' => array('' => 'All', 'Y' => 'Yes', 'N' => 'No')
-                ),
-                'cycle' => array(
+                    'filter_data' => ['' => 'All', 'Y' => 'Yes', 'N' => 'No']
+                ],
+                'cycle' => [
                     'type' => 'select',
-                    'filter_data' => array('' => 'All', 'DAILY' => 'DAILY', 'WEEKLY' => 'WEEKLY','MONTHLY'=>'MONTHLY')
-                ),
-            ),
+                    'filter_data' => ['' => 'All', 'DAILY' => 'DAILY', 'WEEKLY' => 'WEEKLY','MONTHLY'=>'MONTHLY']
+                ],
+            ],
 
 
-        );
+        ];
         return $dataTmp;
     }
 
@@ -101,8 +101,8 @@ class Schedule_Model_Schedulecycle extends Zend_Db_Table_Abstract
 
         $roleData =  $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('sc' => 'main_schedulecycle'), array('id' => 'sc.schedulecycle_id','sc.*','active' => 'if(sc.isactive="Y","Yes","No")'))
-            ->joinLeft(array('s' => 'main_schedule'), 'sc.schedule_id = s.schedule_id', array('schedule' => 's.name','cycle'=>'s.cycle'))
+            ->from(['sc' => 'main_schedulecycle'], ['id' => 'sc.schedulecycle_id','sc.*','active' => 'if(sc.isactive="Y","Yes","No")'])
+            ->joinLeft(['s' => 'main_schedule'], 'sc.schedule_id = s.schedule_id', ['schedule' => 's.name','cycle'=>'s.cycle'])
             ->where($where)
             ->order("$sort_field $sort_order")
             ->limitPage($pageNo, $perPage);
@@ -115,14 +115,14 @@ class Schedule_Model_Schedulecycle extends Zend_Db_Table_Abstract
     {
         $query = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('sch' => 'main_schedule'), array('sch.name','sch.code', 'sch.startdate', 'sch.enddate','sch.cycle','sch.isactive','sch.isverified'))
+            ->from(['sch' => 'main_schedule'], ['sch.name','sch.code', 'sch.startdate', 'sch.enddate','sch.cycle','sch.isactive','sch.isverified'])
             ->where('sch.schedule_id=' . $id);
         //die($query);
         $data = $this->fetchAll($query)->toArray();
         if (count($data) == 0) {
             $query = $this->select()
                 ->setIntegrityCheck(false)
-                ->from(array('sch' => 'main_schedule'), array('sch.name', 'sch.startdate', 'sch.enddate',))
+                ->from(['sch' => 'main_schedule'], ['sch.name', 'sch.startdate', 'sch.enddate',])
                 ->where('sch.schedule_id=' . $id);
             $data = $this->fetchAll($query)->toArray();
         }
@@ -145,10 +145,10 @@ class Schedule_Model_Schedulecycle extends Zend_Db_Table_Abstract
 
     public function getschedulelist()
     {
-        $config = array(
+        $config = [
             'name' => 'main_schedule',
             'primary' => 'schedule_id'
-        );
+        ];
         $db = new Zend_Db_Table($config);
         $tblweeks = $db->select()
             ->setIntegrityCheck(false)
@@ -206,10 +206,10 @@ class Schedule_Model_Schedulecycle extends Zend_Db_Table_Abstract
     }
     public function deleteData($where,$tablename,$id)
     {
-        $config=array(
+        $config=[
             'name'=>$tablename,
             'primary'=>$id
-        );
+        ];
         $table = new Zend_Db_Table($config);
         return $table->delete($where);
     }
@@ -276,7 +276,7 @@ class Schedule_Model_Schedulecycle extends Zend_Db_Table_Abstract
     {
         $roleData =  $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('sc' => 'main_schedulecycle'), array('id' => 'sc.schedulecycle_id','sc.*'))
+            ->from(['sc' => 'main_schedulecycle'], ['id' => 'sc.schedulecycle_id','sc.*'])
             ->where('sc.schedulecycle_id='.$id);
         return $this->fetchAll($roleData)->toArray();
     }
@@ -285,7 +285,7 @@ class Schedule_Model_Schedulecycle extends Zend_Db_Table_Abstract
     {
         $select = $this->select()
                        ->setIntegrityCheck(false)
-                       ->from(array('sc'=>'main_schedulecycle'))
+                       ->from(['sc'=>'main_schedulecycle'])
                        ->where('schedule_id='.$id);
                        
         return $this->fetchAll($select)->toArray();

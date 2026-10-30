@@ -70,7 +70,7 @@ class Default_RacecodeController extends Zend_Controller_Action
         $session = sapp_Global::_readSession();
         if (!isset($session)) {
             if ($this->getRequest()->isXmlHttpRequest()) {
-                $this->_helper->json(array('login' => 'failed'));
+                $this->_helper->json(['login' => 'failed']);
             } else {
                 $this->_redirect('');
             }
@@ -116,7 +116,7 @@ class Default_RacecodeController extends Zend_Controller_Action
 
             $dataTmp = $this->_model->getGrid($sort, $by, $perPage, $page, rtrim($searchData, ','), $call, $dashboardcall);
             
-            $this->view->dataArray = array($dataTmp);
+            $this->view->dataArray = [$dataTmp];
             $this->view->call      = $call;
 
             $this->view->messages  = $this->_helper->flashMessenger->getMessages();
@@ -189,12 +189,12 @@ class Default_RacecodeController extends Zend_Controller_Action
             $db->beginTransaction();
 
             try {
-                $data = array(
+                $data = [
                     'code'         => trim((string) $request->getParam('code', '')),
                     'name'         => trim((string) $request->getParam('name', '')),
                     'description'  => trim((string) $request->getParam('description', '')),
                     'isactive'     => (int) $request->getParam('isactive', 1)
-                );
+                ];
 
                 $actionFlag = 2; // Edit
                 $saveMode   = 'updated';
@@ -213,25 +213,25 @@ class Default_RacecodeController extends Zend_Controller_Action
                 $db->commit();
 
                 // Set FlashMessenger for standard non-AJAX fallback/redirect scenarios
-                $this->_helper->flashMessenger->addMessage(array('success' => "Race Code {$saveMode} successfully."));
+                $this->_helper->flashMessenger->addMessage(['success' => "Race Code {$saveMode} successfully."]);
 
                 // SSOT v6.2 Strict AJAX JSON Response (Success)
-                $this->_helper->json(array(
+                $this->_helper->json([
                     'result'    => 'saved',
                     'nomessage' => 'no',
                     'msgtype'   => 'success',
                     'message'   => "Race Code {$saveMode} successfully."
-                ));
+                ]);
 
             } catch (\Throwable $e) {
                 $db->rollBack();
                 error_log("RaceCode Save Error: " . $e->getMessage()); 
                 
                 // SSOT v6.2 Strict AJAX JSON Response (Exception)
-                $this->_helper->json(array(
+                $this->_helper->json([
                     'result'  => 'exception', 
                     'message' => 'System error occurred.'
-                ));
+                ]);
             }
         } else {
             // SSOT v6.2 Strict AJAX JSON Response (Validation Error - Raw Array)
@@ -250,7 +250,7 @@ class Default_RacecodeController extends Zend_Controller_Action
         
         if ($id) {
             if (sapp_Global::_checkprivileges(RACECODE, $this->_loginuserGroup, $this->_loginuserRole, 'delete') !== 'Yes') {
-                return $this->_helper->json(array('result' => 'error', 'message' => 'Permission Denied.'));
+                return $this->_helper->json(['result' => 'error', 'message' => 'Permission Denied.']);
             }
 
             try {
@@ -263,15 +263,15 @@ class Default_RacecodeController extends Zend_Controller_Action
                 sapp_Global::logManager(RACECODE, 3, $this->_loginUserId, $id);
                 
                 // Standard Success Response
-                return $this->_helper->json(array('result' => 'saved', 'nomessage' => 'no', 'message' => 'Record deleted successfully.'));
+                return $this->_helper->json(['result' => 'saved', 'nomessage' => 'no', 'message' => 'Record deleted successfully.']);
                 
             } catch (\Throwable $e) {
                 error_log("RaceCode Delete Error: " . $e->getMessage());
-                return $this->_helper->json(array('result' => 'exception', 'message' => $e->getMessage()));
+                return $this->_helper->json(['result' => 'exception', 'message' => $e->getMessage()]);
             }
         }
         
-        return $this->_helper->json(array('result' => 'error', 'message' => 'Invalid request'));
+        return $this->_helper->json(['result' => 'error', 'message' => 'Invalid request']);
     }
 
     public function makeactiveinactiveAction()
@@ -283,10 +283,10 @@ class Default_RacecodeController extends Zend_Controller_Action
             $this->_model->toggleStatus($id, $status);
             sapp_Global::logManager(RACECODE, 4, $this->_loginUserId, $id);
             
-            $this->_helper->json(array('result' => 'saved', 'nomessage' => 'no', 'msgtype' => 'success', 'message' => 'Status updated successfully.'));
+            $this->_helper->json(['result' => 'saved', 'nomessage' => 'no', 'msgtype' => 'success', 'message' => 'Status updated successfully.']);
         } catch (\Throwable $e) {
             error_log("RaceCode Toggle Error: " . $e->getMessage());
-            $this->_helper->json(array('result' => 'exception', 'msgtype' => 'error', 'message' => 'System error occurred.'));
+            $this->_helper->json(['result' => 'exception', 'msgtype' => 'error', 'message' => 'System error occurred.']);
         }
     }
 

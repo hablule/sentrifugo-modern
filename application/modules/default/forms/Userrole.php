@@ -42,7 +42,7 @@ class Default_Form_Userrole extends Zend_Form
             ->addValidator(
                 'NotEmpty',
                 false,
-                array('messages' => 'Please select a user.')
+                ['messages' => 'Please select a user.']
             );
 
         /* 
@@ -71,7 +71,7 @@ class Default_Form_Userrole extends Zend_Form
             ->addValidator(
                 'NotEmpty',
                 false,
-                array('messages' => 'Please select a role.')
+                ['messages' => 'Please select a role.']
             );
 
         /* --------------------------------------------------------------
@@ -79,17 +79,17 @@ class Default_Form_Userrole extends Zend_Form
          * -------------------------------------------------------------- */
         $datefrom = new ZendX_JQuery_Form_Element_DatePicker('datefrom');
         $datefrom->setLabel('Valid From')
-            ->setAttribs(array(
+            ->setAttribs([
                 'class'    => 'brdr_none formDataElement',
                 'readonly' => 'true',
                 'onfocus'  => 'this.blur()'
-            ))
-            ->setOptions(array('class' => 'formDataElement'))
+            ])
+            ->setOptions(['class' => 'formDataElement'])
             ->setRequired(true)
             ->addValidator(
                 'NotEmpty',
                 false,
-                array('messages' => 'Please select a start date.')
+                ['messages' => 'Please select a start date.']
             );
 
         /* --------------------------------------------------------------
@@ -97,32 +97,32 @@ class Default_Form_Userrole extends Zend_Form
          * -------------------------------------------------------------- */
         $dateto = new ZendX_JQuery_Form_Element_DatePicker('dateto');
         $dateto->setLabel('Valid To')
-            ->setAttribs(array(
+            ->setAttribs([
                 'class'    => 'brdr_none formDataElement',
                 'readonly' => 'true',
                 'onfocus'  => 'this.blur()'
-            ));
+            ]);
 
         /* --------------------------------------------------------------
          * Description
          * -------------------------------------------------------------- */
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Description')
-            ->setAttribs(array(
+            ->setAttribs([
                 'rows'  => 3,
                 'class' => 'formDataElement'
-            ))
+            ])
             ->addFilter(new Zend_Filter_StringTrim())
             ->addValidator(
                 'Regex',
                 true,
-                array(
+                [
                     'pattern'  => '/^[a-zA-Z0-9\s\.\,\-]+$/',
-                    'messages' => array(
+                    'messages' => [
                         Zend_Validate_Regex::NOT_MATCH =>
                         'Description contains invalid characters.'
-                    )
-                )
+                    ]
+                ]
             );
 
         /* --------------------------------------------------------------
@@ -138,17 +138,17 @@ class Default_Form_Userrole extends Zend_Form
          * Submit
          * -------------------------------------------------------------- */
         $submit = new Zend_Form_Element_Submit('submit');
-        $submit->setAttribs(array(
+        $submit->setAttribs([
             'id'      => 'submitbutton',
             'class'   => 'actbtn_btn',
             'onclick' => 'saveUserRole()'
-        ))
+        ])
             ->setLabel('Save Role Assignment');
 
         /* --------------------------------------------------------------
          * Add elements
          * -------------------------------------------------------------- */
-        $this->addElements(array(
+        $this->addElements([
             $userrole_id,
             $user_id,
             $role_id,
@@ -157,17 +157,17 @@ class Default_Form_Userrole extends Zend_Form
             $description,
             $isactive,
             $submit
-        ));
+        ]);
 
         /* --------------------------------------------------------------
          * Decorators (Sentrifugo standard)
          * -------------------------------------------------------------- */
-        $this->setElementDecorators(array('ViewHelper'));
+        $this->setElementDecorators(['ViewHelper']);
 
         // DatePicker widgets
         $this->setElementDecorators(
-            array('UiWidgetElement'),
-            array('datefrom', 'dateto')
+            ['UiWidgetElement'],
+            ['datefrom', 'dateto']
         );
     }
 }

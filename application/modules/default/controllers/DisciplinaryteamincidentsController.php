@@ -43,9 +43,9 @@ class Default_DisciplinaryteamincidentsController extends Zend_Controller_Action
         $refresh = $this->_getParam('refresh');
         $dashboardcall = $this->_getParam('dashboardcall');
 
-        $data = array();
+        $data = [];
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         $tablecontent = '';
 
         if ($refresh == 'refresh') {

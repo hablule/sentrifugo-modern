@@ -21,7 +21,7 @@ class Default_SkillsourceController extends Zend_Controller_Action
       $refresh = $this->_getParam('refresh');
       $dashboradcall = $this->_getParam('dashboradcall');
 
-      $data = array();
+      $data = [];
 
       if ($refresh == 'refresh') {
           if ($dashboradcall == 'Yes') {
@@ -71,19 +71,19 @@ class Default_SkillsourceController extends Zend_Controller_Action
            
             if ($form->isValid($this->getRequest()->getPost())) {
 
-                $data = array(
+                $data = [
                     'name'=>$this->_request->getParam('name'),
                     'code'=>$this->_request->getParam('code'),
                     'description'=>$this->_request->getParam('description'),
                     'createdby'=>$loginUserId,
                     'createddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
 
                 $Id=$dmtmodel->SaveorUpdateData($data,'');
                 $tableid = $Id;
                 $actionflag = 1;
                 $result = sapp_Global::logManager(291,$actionflag,$loginUserId,$tableid);
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array('success'=>'Skill Source Added Successful'));
+                $this->_helper->getHelper("FlashMessenger")->addMessage(['success'=>'Skill Source Added Successful']);
                 $this->_redirect('skillsource');
             }
             $messages = $form->getMessages();
@@ -116,13 +116,13 @@ try {
                     $loginUserId = $auth->getStorage()->read()->id;
                 }
                 $model = new Default_Model_skillsource();
-                $data = array(
+                $data = [
                     'name'=>$this->_request->getParam('name'),
                     'code'=>$this->_request->getParam('code'),
                     'description'=>$this->_request->getParam('description'),
                     'createdby'=>$loginUserId,
                     'createddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
 
                 $tableid=$model->SaveorUpdateData($data, '');
                 sapp_Global::logManager(315,1,$loginUserId,$tableid);
@@ -168,19 +168,19 @@ Zend_Debug::dump($th->getMessage());    }
         $form->isactive->setValue(utlis::getcheckboxvalue($dmtdata['isactive'],'form'));
         if ($this->getRequest()->isPost()) {
             if ($form->isValid($this->getRequest()->getPost())) {
-                $data = array(
+                $data = [
                     'name'=>$this->_request->getParam('name'),
                     'code'=>$this->_request->getParam('code'),
                     'description'=>$this->_request->getParam('description'),
                     'isactive'=>utlis::getcheckboxvalue($this->_request->getParam('isactive')),
                     'modifiedby'=>$loginUserId,
                     'modifieddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
                 $dmtmodel->SaveorUpdateData($data,'skillsource_id='.$id);
                 $tableid = $id;
                 $actionflag = 2;
                 $result = sapp_Global::logManager(291,$actionflag,$loginUserId,$tableid);
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array('success'=>'Skil Source Updated Successful'));
+                $this->_helper->getHelper("FlashMessenger")->addMessage(['success'=>'Skil Source Updated Successful']);
                 $this->_redirect('skillsource');
             }
             $messages = $form->getMessages();

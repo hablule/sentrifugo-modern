@@ -74,7 +74,7 @@ class Default_PayfrequencyController extends Zend_Controller_Action
 		$session = sapp_Global::_readSession();
 		if (!isset($session)) {
 			if ($this->getRequest()->isXmlHttpRequest()) {
-				echo Zend_Json::encode(array('login' => 'failed'));
+				echo Zend_Json::encode(['login' => 'failed']);
 				exit;
 			} else {
 				$this->_redirect('');
@@ -123,7 +123,7 @@ class Default_PayfrequencyController extends Zend_Controller_Action
 
 			$dataTmp = $this->_model->getGrid($sort, $by, $perPage, $page, rtrim($searchData, ','), $call, $dashboardcall);
 
-			$this->view->dataArray = array($dataTmp);
+			$this->view->dataArray = [$dataTmp];
 			$this->view->call      = $call;
 			$this->view->messages  = $this->_helper->flashMessenger->getMessages();
 		} catch (\Throwable $e) {
@@ -160,7 +160,7 @@ class Default_PayfrequencyController extends Zend_Controller_Action
 		}
 
 		$this->view->form = $this->_prepareForm();
-		$this->view->existingAnchors = json_encode(array());
+		$this->view->existingAnchors = json_encode([]);
 		$this->render('save');
 	}
 
@@ -202,7 +202,7 @@ class Default_PayfrequencyController extends Zend_Controller_Action
 			try {
 				$freqType = trim((string) $request->getParam('frequency_type', 'FIXED_INTERVAL'));
 
-				$data = array(
+				$data = [
 					'code'                  => trim((string) $request->getParam('code', '')),
 					'name'                  => trim((string) $request->getParam('name', '')),
 					'frequency_type'        => $freqType,
@@ -214,9 +214,9 @@ class Default_PayfrequencyController extends Zend_Controller_Action
 					'missing_date_policy'   => 'PREVIOUS_VALID_DAY',
 					'description'           => trim((string) $request->getParam('description', '')),
 					'isactive'              => (int) $request->getParam('isactive', 1)
-				);
+				];
 
-				$anchorsToSync = array();
+				$anchorsToSync = [];
 
 				// Validation Branch 1: FIXED_INTERVAL
 				if ($freqType === 'FIXED_INTERVAL') {
@@ -249,7 +249,7 @@ class Default_PayfrequencyController extends Zend_Controller_Action
 				// Validation Branch 2: CALENDAR_BASED
 				elseif ($freqType === 'CALENDAR_BASED') {
 					$rawPayload = $request->getParam('calendar_anchors_payload');
-					$anchorsArray = !empty($rawPayload) ? json_decode($rawPayload, true) : array();
+					$anchorsArray = !empty($rawPayload) ? json_decode($rawPayload, true) : [];
 
 					if (!is_array($anchorsArray) || count($anchorsArray) < 1) {
 						throw new Exception("Calendar Based frequencies require at least one anchor day (1-31).");
@@ -280,15 +280,15 @@ class Default_PayfrequencyController extends Zend_Controller_Action
 
 				$db->commit();
 
-				$this->_helper->flashMessenger->addMessage(array('success' => "Pay Frequency {$saveMode} successfully."));
-				$this->_helper->json(array('result' => 'saved', 'nomessage' => 'yes'));
+				$this->_helper->flashMessenger->addMessage(['success' => "Pay Frequency {$saveMode} successfully."]);
+				$this->_helper->json(['result' => 'saved', 'nomessage' => 'yes']);
 			} catch (\Throwable $e) {
 				$db->rollBack();
 				error_log("Pay Frequency Save Error: " . $e->getMessage());
-				$this->_helper->json(array('result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error'));
+				$this->_helper->json(['result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error']);
 			}
 		} else {
-			$msgarray = array();
+			$msgarray = [];
 			foreach ($form->getMessages() as $field => $errors) {
 				$msgarray[$field] = current($errors);
 			}
@@ -306,7 +306,7 @@ class Default_PayfrequencyController extends Zend_Controller_Action
 
 		if ($id) {
 			if (defined('PAYFREQUENCY_MENU_ID') && sapp_Global::_checkprivileges(PAYFREQUENCY_MENU_ID, $this->_loginuserGroup, $this->_loginuserRole, 'delete') !== 'Yes') {
-				return $this->_helper->json(array('result' => 'error', 'message' => 'Permission Denied.'));
+				return $this->_helper->json(['result' => 'error', 'message' => 'Permission Denied.']);
 			}
 
 			try {
@@ -319,14 +319,14 @@ class Default_PayfrequencyController extends Zend_Controller_Action
 					sapp_Global::logManager(PAYFREQUENCY_MENU_ID, 3, $this->_loginUserId, $id);
 				}
 
-				return $this->_helper->json(array('result' => 'saved', 'nomessage' => 'no', 'message' => 'Record deleted successfully.', 'msgtype' => 'success'));
+				return $this->_helper->json(['result' => 'saved', 'nomessage' => 'no', 'message' => 'Record deleted successfully.', 'msgtype' => 'success']);
 			} catch (\Throwable $e) {
 				error_log("Pay Frequency Delete Error: " . $e->getMessage());
-				return $this->_helper->json(array('result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error'));
+				return $this->_helper->json(['result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error']);
 			}
 		}
 
-		return $this->_helper->json(array('result' => 'error', 'message' => 'Invalid request'));
+		return $this->_helper->json(['result' => 'error', 'message' => 'Invalid request']);
 	}
 
 	public function makeactiveinactiveAction()
@@ -340,10 +340,10 @@ class Default_PayfrequencyController extends Zend_Controller_Action
 				sapp_Global::logManager(PAYFREQUENCY_MENU_ID, 4, $this->_loginUserId, $id);
 			}
 
-			$this->_helper->json(array('result' => 'saved', 'nomessage' => 'no', 'msgtype' => 'success', 'message' => 'Status updated successfully.'));
+			$this->_helper->json(['result' => 'saved', 'nomessage' => 'no', 'msgtype' => 'success', 'message' => 'Status updated successfully.']);
 		} catch (\Throwable $e) {
 			error_log("Pay Frequency Toggle Error: " . $e->getMessage());
-			$this->_helper->json(array('result' => 'exception', 'msgtype' => 'error', 'message' => 'System error occurred.'));
+			$this->_helper->json(['result' => 'exception', 'msgtype' => 'error', 'message' => 'System error occurred.']);
 		}
 	}
 
@@ -362,7 +362,7 @@ class Default_PayfrequencyController extends Zend_Controller_Action
 		$form->setAttrib('id', 'popupformid');
 		$form->getElement('submit')->setAttrib('onclick', null);
 
-		$msgarray = array();
+		$msgarray = [];
 
 		if ($this->getRequest()->isPost()) {
 			if ($form->isValid($this->getRequest()->getPost())) {
@@ -370,13 +370,13 @@ class Default_PayfrequencyController extends Zend_Controller_Action
 				$db->beginTransaction();
 
 				try {
-					$data = array(
+					$data = [
 						'code'           => trim((string) $this->getRequest()->getParam('code', '')),
 						'name'           => trim((string) $this->getRequest()->getParam('name', '')),
 						'frequency_type' => trim((string) $this->getRequest()->getParam('frequency_type', 'FIXED_INTERVAL')),
 						'description'    => trim((string) $this->getRequest()->getParam('description', '')),
 						'isactive'       => (int) $this->getRequest()->getParam('isactive', 1)
-					);
+					];
 
 					$newId = $this->_model->saveRecord($data);
 

@@ -54,28 +54,28 @@ class Default_HeirarchyController extends Zend_Controller_Action
 			$emps = $heirarchyModel->getAllEmployees();
 			$vEmps = $heirarchyModel->getVAllEmployees();
 			$output = '';
-			$empData = array();
+			$empData = [];
 
 			if (count($emps) > 0) {
 				foreach ($emps as $empRecord) {
-					$empData[] = array('id' => $empRecord['id'], 'name' => ucwords($empRecord['name']), 'profileimg' => $empRecord['profileimg']);
+					$empData[] = ['id' => $empRecord['id'], 'name' => ucwords($empRecord['name']), 'profileimg' => $empRecord['profileimg']];
 				}
 			}
 			$editpermission = sapp_Global::_checkprivileges(HEIRARCHY, $loginuserGroup, $loginuserRole, 'edit');
 			$addpermission = sapp_Global::_checkprivileges(HEIRARCHY, $loginuserGroup, $loginuserRole, 'add');
-			$dataArr = array();
+			$dataArr = [];
 			$tmplevelsdata = $levelsdata;
-			$parentArr = array();
+			$parentArr = [];
 			//die(json_encode($levelsdata));	
 			for ($i = 0; $i < sizeof($levelsdata); $i++) {
 				$parentArr[] = $levelsdata[$i]['parent'];
 			}
 			$parentArr = array_unique($parentArr);
-			$parr = array();
+			$parr = [];
 			foreach ($parentArr as $parent) {
 				foreach ($tmplevelsdata as $data) {
 					if ($data['parent'] == $parent) {
-						$parr[$parent][] = array('userid' => $data['userid'], 'userfullname' => $data['userfullname'], 'profileimg' => $data['profileimg'], 'level_number' => $data['level_number'], 'parent' => $data['parent'], 'jobtitlename' => $data['jobtitlename']);
+						$parr[$parent][] = ['userid' => $data['userid'], 'userfullname' => $data['userfullname'], 'profileimg' => $data['profileimg'], 'level_number' => $data['level_number'], 'parent' => $data['parent'], 'jobtitlename' => $data['jobtitlename']];
 					}
 				}
 			}
@@ -138,25 +138,25 @@ class Default_HeirarchyController extends Zend_Controller_Action
 		$orgData = $structureModel->getOrgData();
 		$vEmps = $heirarchyModel->getVAllEmployees();
 		$output = '';
-		$empData = array();
+		$empData = [];
 		if (count($emps) > 0) {
 			foreach ($emps as $empRecord) {
-				$empData[] = array('id' => $empRecord['id'], 'name' => ucwords($empRecord['name']), 'profileimg' => $empRecord['profileimg']);
+				$empData[] = ['id' => $empRecord['id'], 'name' => ucwords($empRecord['name']), 'profileimg' => $empRecord['profileimg']];
 			}
 		}
-		$dataArr = array();
+		$dataArr = [];
 
 		$tmplevelsdata = $levelsdata;
-		$parentArr = array();
+		$parentArr = [];
 		for ($i = 0; $i < sizeof($levelsdata); $i++) {
 			$parentArr[] = $levelsdata[$i]['parent'];
 		}
 		$parentArr = array_unique($parentArr);
-		$parr = array();
+		$parr = [];
 		foreach ($parentArr as $parent) {
 			foreach ($tmplevelsdata as $data) {
 				if ($data['parent'] == $parent) {
-					$parr[$parent][] = array('userid' => $data['userid'], 'userfullname' => $data['userfullname'], 'profileimg' => $data['profileimg'], 'level_number' => $data['level_number'], 'parent' => $data['parent'], 'jobtitlename' => $data['jobtitlename']);
+					$parr[$parent][] = ['userid' => $data['userid'], 'userfullname' => $data['userfullname'], 'profileimg' => $data['profileimg'], 'level_number' => $data['level_number'], 'parent' => $data['parent'], 'jobtitlename' => $data['jobtitlename']];
 				}
 			}
 		}
@@ -233,10 +233,10 @@ class Default_HeirarchyController extends Zend_Controller_Action
 		$actionName = $this->_getParam('actionName');
 		$heirarchyModel = new Default_Model_Heirarchy();
 		$emps = $heirarchyModel->getAllEmployees();
-		$empData = array();
+		$empData = [];
 		if (count($emps) > 0) {
 			foreach ($emps as $empRecord) {
-				$empData[] = array('id' => $empRecord['id'], 'name' => ucwords($empRecord['name']), 'profileimg' => $empRecord['profileimg']);
+				$empData[] = ['id' => $empRecord['id'], 'name' => ucwords($empRecord['name']), 'profileimg' => $empRecord['profileimg']];
 			}
 		}
 		$newlevel = $level;
@@ -257,10 +257,10 @@ class Default_HeirarchyController extends Zend_Controller_Action
 		$actionName = $this->_getParam('actionName');
 		$heirarchyModel = new Default_Model_Heirarchy();
 		$emps = $heirarchyModel->getAllEmployees();
-		$empData = array();
+		$empData = [];
 		if (count($emps) > 0) {
 			foreach ($emps as $empRecord) {
-				$empData[] = array('id' => $empRecord['id'], 'name' => ucwords($empRecord['name']), 'profileimg' => $empRecord['profileimg']);
+				$empData[] = ['id' => $empRecord['id'], 'name' => ucwords($empRecord['name']), 'profileimg' => $empRecord['profileimg']];
 			}
 		}
 		$newlevel  = $level;
@@ -290,7 +290,7 @@ class Default_HeirarchyController extends Zend_Controller_Action
 		$newuserArr = explode(',', $newuserid);
 		if (isset($newuserid) && $newuserid != '' && $newuserid != 0) {
 			for ($i = 0; $i < sizeof($newuserArr); $i++) {
-				$insertdata = array(
+				$insertdata = [
 					'level_number'		=>		$level,
 					'parent'			=>		$parent,
 					'userid'			=>		$newuserArr[$i],
@@ -299,17 +299,17 @@ class Default_HeirarchyController extends Zend_Controller_Action
 					'createddate'		=>		gmdate("Y-m-d H:i:s"),
 					'modifieddate'		=>		gmdate("Y-m-d H:i:s"),
 					'isactive'			=>		1
-				);
-				$updatedata = array(
+				];
+				$updatedata = [
 					'level_number'		=>		$level,
 					'parent'			=>		$parent,
 					'modifiedby'		=>		$loginUserId,
 					'modifieddate'		=>		gmdate("Y-m-d H:i:s"),
 					'isactive'			=>		1
-				);
+				];
 				$insertorupdateModel->insertOrUpdate($insertdata, $updatedata);
 			}
-			$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Hierarchy data is added successfully."));
+			$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Hierarchy data is added successfully."]);
 			$updateresult['result'] = 'saved';
 		} else {
 			$updateresult['result'] = 'error';
@@ -343,18 +343,18 @@ class Default_HeirarchyController extends Zend_Controller_Action
 				$trDb->beginTransaction();
 				try {
 					/*Removing old user */
-					$data = array(
+					$data = [
 						'modifiedby'		=>		$loginUserId,
 						'modifieddate'		=>		gmdate("Y-m-d H:i:s"),
 						'isactive'			=>		0
-					);
-					$userwhere = array(
+					];
+					$userwhere = [
 						'userid=?'			=>		$olduserid
-					);
+					];
 					$heirarchyModel->SaveorUpdateleveldata($data, $userwhere);
 
 					/* Adding new user */
-					$insertdata = array(
+					$insertdata = [
 						'level_number'		=>		$level,
 						'parent'			=>		$olduserparent,
 						'userid'			=>		$newuserid,
@@ -363,14 +363,14 @@ class Default_HeirarchyController extends Zend_Controller_Action
 						'createddate'		=>		gmdate("Y-m-d H:i:s"),
 						'modifieddate'		=>		gmdate("Y-m-d H:i:s"),
 						'isactive'			=>		1
-					);
-					$updatedata = array(
+					];
+					$updatedata = [
 						'level_number'		=>		$level,
 						'parent'			=>		$olduserparent,
 						'modifiedby'		=>		$loginUserId,
 						'modifieddate'		=>		gmdate("Y-m-d H:i:s"),
 						'isactive'			=>		1
-					);
+					];
 					$where = '';
 					$insertorupdateModel->insertOrUpdate($insertdata, $updatedata);
 
@@ -378,22 +378,22 @@ class Default_HeirarchyController extends Zend_Controller_Action
 
 
 					/* Pointing old user's children to new user*/
-					$data = array(
+					$data = [
 						'parent'			=>		$newuserid,
 						'modifiedby'		=>		$loginUserId,
 						'modifieddate'		=>		gmdate("Y-m-d H:i:s")
-					);
-					$where = array(
+					];
+					$where = [
 						'parent=?'			=>		$olduserid,
 						'isactive=?'		=>		1
-					);
+					];
 					$heirarchyModel->SaveorUpdateleveldata($data, $where);
 
 					$trDb->commit();
 					$updateresult['result'] = 'updated';
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Hierarchy data is updated successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Hierarchy data is updated successfully."]);
 				} catch (Exception $e) {
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Hierarchy data cannot be updated."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Hierarchy data cannot be updated."]);
 					$updateresult['result'] = 'failed';
 					$trDb->rollBack();
 				}
@@ -423,20 +423,20 @@ class Default_HeirarchyController extends Zend_Controller_Action
 		$trDb->beginTransaction();
 		try {
 			$heirarchyModel = new Default_Model_Heirarchy();
-			$data = array(
+			$data = [
 				'modifiedby'		=>		$loginUserId,
 				'modifieddate'		=>		gmdate("Y-m-d H:i:s"),
 				'isactive'			=>		0
-			);
-			$userwhere = array(
+			];
+			$userwhere = [
 				'parent=?'			=>		$parent,
 				'userid=?'			=>		$userid
-			);
+			];
 			$heirarchyModel->SaveorUpdateleveldata($data, $userwhere);
 
 			$this->deletechildren($userid, $loginUserId);
 			$trDb->commit();
-			$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Hierarchy data is removed successfully."));
+			$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Hierarchy data is removed successfully."]);
 			$updateresult['result'] = 'updated';
 		} catch (Exception $e) {
 			$updateresult['result'] = 'failed';
@@ -453,26 +453,26 @@ class Default_HeirarchyController extends Zend_Controller_Action
 		if (!empty($childArr)) {
 			foreach ($childArr as $child) {
 				$deleteuserid = $child['userid'];
-				$data = array(
+				$data = [
 					'modifiedby'		=>		$loginUserId,
 					'modifieddate'		=>		gmdate("Y-m-d H:i:s"),
 					'isactive'			=>		'0'
-				);
-				$userwhere = array(
+				];
+				$userwhere = [
 					'userid=?'			=>		$userid
-				);
+				];
 				$heirarchyModel->SaveorUpdateleveldata($data, $userwhere);
 				$this->deletechildren($deleteuserid, $loginUserId);
 			}
 		} else {
-			$data = array(
+			$data = [
 				'modifiedby'		=>		$loginUserId,
 				'modifieddate'		=>		gmdate("Y-m-d H:i:s"),
 				'isactive'			=>		'0'
-			);
-			$userwhere = array(
+			];
+			$userwhere = [
 				'userid=?'			=>		$userid
-			);
+			];
 			$heirarchyModel->SaveorUpdateleveldata($data, $userwhere);
 		}
 	}

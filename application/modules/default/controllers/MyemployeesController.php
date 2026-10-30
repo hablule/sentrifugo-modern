@@ -47,7 +47,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 		$myemployeesModel = new Default_Model_Myemployees();
 		$role_model = new Default_Model_Roles();		
 
-		$data = array();
+		$data = [];
 		$limit=LIMIT;
 		$offset=0;
 		$search_val = $this->_request->getParam('search_val',null);
@@ -424,7 +424,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 								//To get all ids of employees in my team
 									$myEmployees_model = new Default_Model_Myemployees();
 									$getMyTeamIds = $myEmployees_model->getTeamIds($loginUserId);
-									$teamIdArr = array();
+									$teamIdArr = [];
 									if(!empty($getMyTeamIds))
 									{
 										foreach($getMyTeamIds as $teamId)
@@ -546,7 +546,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 											$emppersonaldetailsform->celebrated_dob->setValue($celebrated_dob);
 										}
 										*/
-										$documentsArr = array();
+										$documentsArr = [];
 										if($data[0]['identity_documents'] !='')
 										{
 											$documentsArr = get_object_vars(json_decode($data[0]['identity_documents']));
@@ -587,8 +587,8 @@ class Default_MyemployeesController extends Zend_Controller_Action
 			if(in_array('empcommunicationdetails',$empOrganizationTabs))
 			{
 				$auth = Zend_Auth::getInstance();
-				$empdata =array();
-				$empDeptdata=array();
+				$empdata =[];
+				$empDeptdata=[];
 				$empDept = '';
 				if($auth->hasIdentity()){
 							$loginUserId = $auth->getStorage()->read()->id;
@@ -639,13 +639,13 @@ class Default_MyemployeesController extends Zend_Controller_Action
 								$statesmodel = new Default_Model_States();
 								$citiesmodel = new Default_Model_Cities();
 								$orgInfoModel = new Default_Model_Organisationinfo();
-								$msgarray = array();
+								$msgarray = [];
 								
 								$deptModel = new Default_Model_Departments();
 								if($empDept !='' && $empDept !='NULL')
 									$departmentAddress = $usersModel->getDepartmentAddress($empDept);
 								else
-									$departmentAddress = $usersModel->getOrganizationAddress($empDept);	
+									$departmentAddress = $usersModel->getOrganizationAddress();	
 							
 								$data = $empcommdetailsModal->getsingleEmpCommDetailsData($id);
 								if(!empty($data))
@@ -859,7 +859,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 				}
 				$id = $this->getRequest()->getParam('userid');
 				if($id == '')		$id = $loginUserId;
-				$Uid = ($id)?$id:$userID;
+				$Uid = $id ?: $userID;
 				$employeeModal = new Default_Model_Employee();
 				try
 				{
@@ -880,7 +880,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 							$view = Zend_Layout::getMvcInstance()->getView();		
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
-							$data = array();$searchQuery = '';	$searchArray = array();	$tablecontent = '';$levelsArr=array();$empcompetencyLevelsArr =array();
+							$data = [];$searchQuery = '';	$searchArray = [];	$tablecontent = '';$levelsArr=[];$empcompetencyLevelsArr =[];
 							if($refresh == 'refresh')
 							{
 								$sort = 'DESC';$by = 'e.modifieddate';$perPage = PERPAGE;$pageNo = 1;$searchData = '';
@@ -914,7 +914,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 							}
 									
 							$objName = 'empskills';
-							$tableFields = array('action'=>'Action','skillname'=>'Skill','yearsofexp'=>'Years of Experience','competencylevelid'=>'Competency Level','year_skill_last_used'=>'Skill Last Used Year');
+							$tableFields = ['action'=>'Action','skillname'=>'Skill','yearsofexp'=>'Years of Experience','competencylevelid'=>'Competency Level','year_skill_last_used'=>'Skill Last Used Year'];
 							
 							$tablecontent = $empskillsModel->getEmpSkillsData($sort, $by, $pageNo, $perPage,$searchQuery,$Uid);     
 								$empcompetencyLevelsArr = $empskillsModel->empcompetencylevels($Uid);
@@ -923,14 +923,14 @@ class Default_MyemployeesController extends Zend_Controller_Action
 									$levelsArr[$empcompetencyLevelsArr[$i]['id']] = $empcompetencyLevelsArr[$i]['competencylevel'];
 								}
 							
-							$dataTmp = array('userid'=>$Uid,
+							$dataTmp = ['userid'=>$Uid,
 											'sort' => $sort,
 											'by' => $by,
 											'pageNo' => $pageNo,
 											'perPage' => $perPage,				
 											'tablecontent' => $tablecontent,
 											'objectname' => $objName,
-											'extra' => array(),
+											'extra' => [],
 											'tableheader' => $tableFields,
 											'jsGridFnName' => 'getEmployeeAjaxgridData',
 											'jsFillFnName' => '',
@@ -940,13 +940,13 @@ class Default_MyemployeesController extends Zend_Controller_Action
 											'formgrid'=>'true',
 											'unitId'=>$Uid,
 											'call'=>$call,'context'=>'myteam',
-											'search_filters' => array(
-												'competencylevelid' => array('type'=>'select',
-															'filter_data'=>array(''=>'All')+$levelsArr),
-															'year_skill_last_used'=>array('type'=>'datepicker')
+											'search_filters' => [
+												'competencylevelid' => ['type'=>'select',
+															'filter_data'=>[''=>'All']+$levelsArr],
+															'year_skill_last_used'=>['type'=>'datepicker']
 																
-								)
-								);			
+								]
+								];			
 							array_push($data,$dataTmp);
 							$this->view->dataArray = $data;
 							$this->view->call = $call;
@@ -981,7 +981,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 			if(in_array('experience_details',$empOrganizationTabs))
 			{
 				$auth = Zend_Auth::getInstance();
-				$employeeData=array();
+				$employeeData=[];
 				if($auth->hasIdentity()){
 							$loginUserId = $auth->getStorage()->read()->id;
 				} 
@@ -993,7 +993,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 					$userID = ($this->_getParam('unitId') !='')? $this->_getParam('unitId'):$this->_getParam('userid');
 				}
 				if($userid == '')			$userid = $loginUserId;
-				$Uid = ($userid)?$userid:$userID;
+				$Uid = $userid ?: $userID;
 				
 				$employeeModal = new Default_Model_Employee();
 				$usersModel = new Default_Model_Users();
@@ -1017,7 +1017,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
 						
-							$data = array();	$searchQuery = '';	$searchArray = array();		$tablecontent = '';
+							$data = [];	$searchQuery = '';	$searchArray = [];		$tablecontent = '';
 						
 							if($refresh == 'refresh')
 							{
@@ -1052,19 +1052,19 @@ class Default_MyemployeesController extends Zend_Controller_Action
 							}
 							$objName = 'experiencedetails';
 						
-						$tableFields = array('action'=>'Action','comp_name'=>'Company Name','comp_website'=>'Company Website','designation'=>'Designation','from_date'=>'From','to_date'=>'To');
+						$tableFields = ['action'=>'Action','comp_name'=>'Company Name','comp_website'=>'Company Website','designation'=>'Designation','from_date'=>'From','to_date'=>'To'];
 						
 						$tablecontent = $experiencedetailsModel->getexperiencedetailsData($sort, $by, $pageNo, $perPage,$searchQuery,$userid);     
 						
 						
-						$dataTmp = array('userid'=>$Uid,
+						$dataTmp = ['userid'=>$Uid,
 							'sort' => $sort,
 							'by' => $by,
 							'pageNo' => $pageNo,
 							'perPage' => $perPage,				
 							'tablecontent' => $tablecontent,
 							'objectname' => $objName,
-							'extra' => array(),
+							'extra' => [],
 							'tableheader' => $tableFields,
 							'jsGridFnName' => 'getEmployeeAjaxgridData',
 							'jsFillFnName' => '',
@@ -1074,11 +1074,11 @@ class Default_MyemployeesController extends Zend_Controller_Action
 							'formgrid' => 'true',
 							'unitId'=>$Uid,
 							'call'=>$call,'context'=>'myteam',
-							'search_filters' => array(
-											'from_date' =>array('type'=>'datepicker'),
-											'to_date' =>array('type'=>'datepicker')											
-											)
-							);			
+							'search_filters' => [
+											'from_date' =>['type'=>'datepicker'],
+											'to_date' =>['type'=>'datepicker']											
+											]
+							];			
 						
 						array_push($data,$dataTmp);
 						
@@ -1128,7 +1128,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 							
 				$userid = $this->getRequest()->getParam('userid');
 				if($userid == '')			$userid = $loginUserId;
-				$Uid = ($userid)?$userid:$userID;
+				$Uid = $userid ?: $userID;
 				$employeeModal = new Default_Model_Employee();
 				try
 				{
@@ -1150,9 +1150,9 @@ class Default_MyemployeesController extends Zend_Controller_Action
 							$view = Zend_Layout::getMvcInstance()->getView();		
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
-							$data = array();	
+							$data = [];	
 							$searchQuery = '';
-							$searchArray = array();
+							$searchArray = [];
 							$tablecontent = '';
 							if($refresh == 'refresh')
 							{
@@ -1187,16 +1187,16 @@ class Default_MyemployeesController extends Zend_Controller_Action
 							}
 									
 							$objName = 'educationdetails';
-							$tableFields = array('action'=>'Action','educationlevel'=>'Education Level',
+							$tableFields = ['action'=>'Action','educationlevel'=>'Education Level',
 										 'institution_name'=>'Institution Name','course'=>'Course',
-										 'from_date'=>'From',"to_date"=>"To","percentage"=>"Percentage");
+										 'from_date'=>'From',"to_date"=>"To","percentage"=>"Percentage"];
 							
 
 							$tablecontent = $educationdetailsModel->geteducationdetails($sort, $by, $pageNo, $perPage,$searchQuery,$Uid);     
 							
 							$educationlevelcodemodel = new Default_Model_Educationlevelcode();
 							$educationlevelArr = $educationlevelcodemodel->getEducationlevelData();
-							$level_opt = array();
+							$level_opt = [];
 							if(!empty($educationlevelArr))
 							{
 								foreach ($educationlevelArr as $educationlevelres)
@@ -1204,14 +1204,14 @@ class Default_MyemployeesController extends Zend_Controller_Action
 									$level_opt[$educationlevelres['id']] = $educationlevelres['educationlevelcode'];
 								}
 							}
-							$dataTmp = array('userid'=>$Uid,
+							$dataTmp = ['userid'=>$Uid,
 								'sort' => $sort,
 								'by' => $by,
 								'pageNo' => $pageNo,
 								'perPage' => $perPage,				
 								'tablecontent' => $tablecontent,
 								'objectname' => $objName,
-								'extra' => array(),
+								'extra' => [],
 								'tableheader' => $tableFields,
 								'jsGridFnName' => 'getEmployeeAjaxgridData',
 								'jsFillFnName' => '',
@@ -1221,14 +1221,14 @@ class Default_MyemployeesController extends Zend_Controller_Action
 								'formgrid' => 'true',
 								'unitId'=>$Uid,
 								'call'=>$call,'context'=>'myteam',
-								'search_filters' => array('from_date' =>array('type'=>'datepicker'),
-															'to_date' =>array('type'=>'datepicker'),
-																	'educationlevel' => array(
+								'search_filters' => ['from_date' =>['type'=>'datepicker'],
+															'to_date' =>['type'=>'datepicker'],
+																	'educationlevel' => [
 																		'type' => 'select',
-																		'filter_data' => array('' => 'All')+$level_opt,
-																	),
-														)	
-							);			
+																		'filter_data' => ['' => 'All']+$level_opt,
+																	],
+														]	
+							];			
 							array_push($data,$dataTmp);
 							$this->view->id=$Uid;
 							$this->view->controllername = $objName;
@@ -1274,7 +1274,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 					$this->_helper->layout->disableLayout();
 					$userID = ($this->_getParam('unitId') !='')? $this->_getParam('unitId'):$this->_getParam('userid');
 				}
-				$Uid = ($userid)?$userid:$userID;//die;
+				$Uid = $userid ?: $userID;//die;
 				//Check for this user id record exists or not....
 				$employeeModal = new Default_Model_Employee();
 				try
@@ -1304,7 +1304,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
 							
-							$data = array();$searchQuery = '';$searchArray = array();$tablecontent = '';
+							$data = [];$searchQuery = '';$searchArray = [];$tablecontent = '';
 						
 							if($refresh == 'refresh')
 							{
@@ -1335,18 +1335,18 @@ class Default_MyemployeesController extends Zend_Controller_Action
 								
 						$objName = 'trainingandcertificationdetails';
 						
-						$tableFields = array('action'=>'Action','course_name'=>'Course Name','course_level'=>'Course Level','course_offered_by'=>'Course Offered By','certification_name'=>'Certification Name');
+						$tableFields = ['action'=>'Action','course_name'=>'Course Name','course_level'=>'Course Level','course_offered_by'=>'Course Offered By','certification_name'=>'Certification Name'];
 						
 						$tablecontent = $TandCdetailsModel->getTandCdetailsData($sort,$by,$pageNo, $perPage,$searchQuery,$Uid); 
 						
-						$dataTmp = array('userid'=>$Uid,
+						$dataTmp = ['userid'=>$Uid,
 							'sort' => $sort,
 							'by' => $by,
 							'pageNo' => $pageNo,
 							'perPage' => $perPage,				
 							'tablecontent' => $tablecontent,
 							'objectname' => $objName,
-							'extra' => array(),
+							'extra' => [],
 							'tableheader' => $tableFields,
 							'jsGridFnName' => 'getEmployeeAjaxgridData',
 							'jsFillFnName' => '',
@@ -1354,7 +1354,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 							'add'=>'add',
 							'menuName'=>TAB_EMP_TRAINING_CERTIFY,
 							'formgrid' => 'true','unitId'=>$Uid,
-							'call'=>$call,'context'=>'myteam');			
+							'call'=>$call,'context'=>'myteam'];			
 						
 						array_push($data,$dataTmp);
 						
@@ -1410,7 +1410,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 		 	if($id == '')		
 			  $id = $userID;
 			  
-		 	$Uid = ($id)?$id:$userID;
+		 	$Uid = $id ?: $userID;
 		 	 
 		 	$employeeModal = new Default_Model_Employee();
 		 	try
@@ -1435,7 +1435,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
 							$dashboardcall = $this->_getParam('dashboardcall',null);
-							$data = array();	$searchQuery = '';	$searchArray = array();		$tablecontent = '';
+							$data = [];	$searchQuery = '';	$searchArray = [];		$tablecontent = '';
 							if($refresh == 'refresh')
 							{
 								if($dashboardcall == 'Yes')
@@ -1511,7 +1511,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 					$conText = ($this->_getParam('context') !='')? $this->_getParam('context'):$this->getRequest()->getParam('context');
 				}
 				if($id == '')		$id = $userID;
-				$Uid = ($id)?$id:$userID;
+				$Uid = $id ?: $userID;
 				
 				$employeeModal = new Default_Model_Employee();
 				try
@@ -1534,7 +1534,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
 							$dashboardcall = $this->_getParam('dashboardcall',null);
-							$data = array();	$searchQuery = '';	$searchArray = array();		$tablecontent = '';
+							$data = [];	$searchQuery = '';	$searchArray = [];		$tablecontent = '';
 							if($refresh == 'refresh')
 							{
 								if($dashboardcall == 'Yes')
@@ -1542,7 +1542,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 								else	
 									$perPage = PERPAGE;
 												
-								$sort = 'DESC';$by = 'e.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = array();
+								$sort = 'DESC';$by = 'e.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = [];
 							}
 							else 
 							{
@@ -1587,7 +1587,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 	public function addAction()
 	{
 		try {
-			
+
 		$emptyFlag=0;
 		$auth = Zend_Auth::getInstance();
 
@@ -1595,11 +1595,11 @@ class Default_MyemployeesController extends Zend_Controller_Action
 			$loginUserId = $auth->getStorage()->read()->id;
 			$loginuserRole = $auth->getStorage()->read()->emprole;
 			$loginuserGroup = $auth->getStorage()->read()->group_id;
-		
+
 		}
-		
+
 		$employeeform = new Default_Form_Myteamemployee();
-		
+
 		$usersModel = new Default_Model_Users();
 		$employmentstatusModel = new Default_Model_Employmentstatus();
 		$busineesUnitModel = new Default_Model_Businessunits();
@@ -1607,22 +1607,22 @@ class Default_MyemployeesController extends Zend_Controller_Action
 		$userModel = new Default_Model_Users();
 		$candidate_model = new Default_Model_Candidatedetails();
 		$role_model = new Default_Model_Roles();
-	
+
 		$jobtitlesModel = new Default_Model_Jobtitles();
-	
-		$msgarray = array();
+
+		$msgarray = [];
 		$identity_code_model = new Default_Model_Identitycodes();
 		$identity_codes = $identity_code_model->getIdentitycodesRecord();
-		
-	
+
+
 		$emp_identity_code = isset($identity_codes[0])?$identity_codes[0]['employee_code']:"";
-		
+
 		if($emp_identity_code!='')
 		{
 			// $emp_id = $emp_identity_code.str_pad($user_model->getMaxEmpId($emp_identity_code), 4, '0', STR_PAD_LEFT);
 			//sending identity code instead of employee id
 			$emp_id = $emp_identity_code;
-			
+
 		}
 		else
 		{
@@ -1636,14 +1636,14 @@ class Default_MyemployeesController extends Zend_Controller_Action
 
 		if(sizeof($roles_arr) > 0)
 		{
-			$employeeform->emprole->addMultiOptions(array(''=>'Select Role')+$roles_arr);
+			$employeeform->emprole->addMultiOptions([''=>'Select Role']+$roles_arr);
 		}
 		else
 		{
-		    $employeeform->emprole->addMultiOptions(array(''=>'Select Role'));
+		    $employeeform->emprole->addMultiOptions([''=>'Select Role']);
 			$msgarray['emprole'] = 'Roles are not configured yet.';
 		}
-			
+
 		$employmentStatusData = $employmentstatusModel->getempstatusActivelist();
 		$employeeform->emp_status_id->addMultiOption('','Select Employment Status');
 		if(!empty($employmentStatusData))
@@ -1659,13 +1659,13 @@ class Default_MyemployeesController extends Zend_Controller_Action
 		}
 
 		$businessunitData = $busineesUnitModel->getDeparmentList();
-		
+
 		if(!empty($businessunitData))
 		{
-			
+
 			foreach ($businessunitData as $businessunitres){
-				
-				
+
+
 
 					$employeeform->businessunit_id->addMultiOption($businessunitres['id'],$businessunitres['unitname']);
 			}
@@ -1745,7 +1745,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 	public function save($employeeform)
 	{
 		$emproleStr='';
-		$roleArr=array();
+		$roleArr=[];
 		$empgroupStr='';
 		$auth = Zend_Auth::getInstance();
 		if($auth->hasIdentity())
@@ -1761,7 +1761,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 		$unitid = '';
 		$deptid = '';
 		$errorflag = 'true';
-		$msgarray = array();
+		$msgarray = [];
 		
 		$id = $this->_request->getParam('id');
 		$businessunit_id = $this->_request->getParam('businessunit_id',null);
@@ -1841,7 +1841,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 			$emailaddress = $this->_getParam('emailaddress',null);
 			//end of user table
 			$date = new Zend_Date();
-			$empstatusarray = array(8,9,10);
+			$empstatusarray = [8,9,10];
 			$actionflag = '';
 			$tableid  = '';
 
@@ -1851,7 +1851,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 			try
 			{
 				$emppassword = sapp_Global::generatePassword();
-				$user_data = array(
+				$user_data = [
                                     'emprole' =>$emproleStr,
                                     'firstname' => ($firstname!='')?$firstname:NULL,
 									'middlename' =>($middlename!='')?$middlename:NULL,
@@ -1867,11 +1867,11 @@ class Default_MyemployeesController extends Zend_Controller_Action
                                     'selecteddate' => $date_of_joining,
                                     'candidatereferredby' => 0,
                                     'userstatus' => 'old',
-				);
+				];
 				$user_data['employeeId'] = $emp_id;
 				if($id!='')
 				{
-					$where = array('user_id=?'=>$user_id);
+					$where = ['user_id=?'=>$user_id];
 					$actionflag = 2;
 					$user_where = "id = ".$user_id;
 					unset($user_data['candidatereferredby']);
@@ -1903,7 +1903,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
                                 
 				if($id == '')
 				$user_id = $user_status;
-				$data = array(  'user_id'=>$user_id,
+				$data = [  'user_id'=>$user_id,
                                     'reporting_manager'=>$reporting_manager,
                                     'emp_status_id'=>$emp_status_id,
                                     'businessunit_id'=>$businessunit_id,
@@ -1919,7 +1919,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
                                     'years_exp'=>($years_exp=='')?null:$years_exp,
                                     'modifiedby'=>$loginUserId,				
                                     'modifieddate'=>gmdate("Y-m-d H:i:s")
-				);
+				];
 				if($id == '')
 				{
 					$data['createdby'] = $loginUserId;
@@ -1928,7 +1928,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 				}
 				$Id = $employeeModal->SaveorUpdateEmployeeData($data, $where);
 
-				$statuswhere = array('id=?'=>$user_id);
+				$statuswhere = ['id=?'=>$user_id];
                                 if($id != '')
                                 {
                                     if (in_array($emp_status_id, $empstatusarray))
@@ -1940,18 +1940,18 @@ class Default_MyemployeesController extends Zend_Controller_Action
                                         $isactivestatus = 3;
                                         else if($emp_status_id == 10)
                                         $isactivestatus = 4;
-                                        $statusdata = array('isactive'=>$isactivestatus);
+                                        $statusdata = ['isactive'=>$isactivestatus];
                                         $empstatusId = $usersModel->SaveorUpdateUserData($statusdata, $statuswhere);
                                         $employeeModal->SaveorUpdateEmployeeData($statusdata, "user_id = ".$user_id);
                                     }
                                     else
                                     {
                                         $edata = $usersModel->getUserDataById($id);
-                                        $statusdata = array('isactive'=> 1);
+                                        $statusdata = ['isactive'=> 1];
                                         if($edata['isactive'] != 0)
                                         {
                                             if($edata['emptemplock'] == 1)
-                                                $statusdata = array('isactive'=> 0);
+                                                $statusdata = ['isactive'=> 0];
                                             $empstatusId = $usersModel->SaveorUpdateUserData($statusdata, $statuswhere);
                                             $employeeModal->SaveorUpdateEmployeeData($statusdata, "user_id = ".$user_id);
                                         }
@@ -1960,7 +1960,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 				if($Id == 'update')
 				{
 					$tableid = $id;
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Employee details updated successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Employee details updated successfully."]);
 				}
 				else
 				{
@@ -1980,7 +1980,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 					$result = sapp_Global::_sendEmail($options);
 					//end of mailing
 					$tableid = $Id;
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Employee details added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Employee details added successfully."]);
 				}
 				$menuID = EMPLOYEE;
 				$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$user_id);
@@ -2039,7 +2039,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 	public function editAction()
 	{
 		$auth = Zend_Auth::getInstance();
-		$role_datap=array();$empGroup="";
+		$role_datap=[];$empGroup="";
 		if($auth->hasIdentity()){
 			$loginUserId = $auth->getStorage()->read()->id;
 			$loginuserRole = $auth->getStorage()->read()->emprole;
@@ -2072,7 +2072,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 				$jobtitlesModel = new Default_Model_Jobtitles();
 				$positionsmodel = new Default_Model_Positions();
 				$prefixModel = new Default_Model_Prefix();
-				$my_emp_data = array();
+				$my_emp_data = [];
 				$empDeptId="";
 				$empRoleId="";
 				$my_emp_data = $employeeModal->getsingleEmployeeData($id);
@@ -2091,7 +2091,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 					$roles_arr = $role_model->getRolesListByGroupID(EMPLOYEE_GROUP);
 					if(sizeof($roles_arr) > 0)
 					{
-						$employeeform->emprole->addMultiOptions(array(''=>'Select Role')+$roles_arr);
+						$employeeform->emprole->addMultiOptions([''=>'Select Role']+$roles_arr);
 					}
 
 					$employmentStatusData = $employmentstatusModel->getempstatuslist();
@@ -2230,7 +2230,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 				}
 				$id = $this->getRequest()->getParam('userid');
 				if($id == '')		$id = $loginUserId;
-				$Uid = ($id)?$id:$userID;
+				$Uid = $id ?: $userID;
 				$employeeModal = new Default_Model_Employee();
 				try
 				{
@@ -2251,7 +2251,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 							$view = Zend_Layout::getMvcInstance()->getView();		
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
-							$data = array();$searchQuery = '';	$searchArray = array();	$tablecontent = '';$levelsArr=array();$empcompetencyLevelsArr =array();
+							$data = [];$searchQuery = '';	$searchArray = [];	$tablecontent = '';$levelsArr=[];$empcompetencyLevelsArr =[];
 							if($refresh == 'refresh')
 							{
 								$sort = 'DESC';$by = 'e.modifieddate';$perPage = PERPAGE;$pageNo = 1;$searchData = '';
@@ -2285,7 +2285,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 							}
 									
 							$objName = 'empskills';
-							$tableFields = array('action'=>'Action','skillname'=>'Skill','yearsofexp'=>'Years of Experience','competencylevelid'=>'Competency Level','year_skill_last_used'=>'Skill Last Used Year');
+							$tableFields = ['action'=>'Action','skillname'=>'Skill','yearsofexp'=>'Years of Experience','competencylevelid'=>'Competency Level','year_skill_last_used'=>'Skill Last Used Year'];
 							
 							$tablecontent = $empskillsModel->getEmpSkillsData($sort, $by, $pageNo, $perPage,$searchQuery,$Uid);     
 								$empcompetencyLevelsArr = $empskillsModel->empcompetencylevels($Uid);
@@ -2294,14 +2294,14 @@ class Default_MyemployeesController extends Zend_Controller_Action
 									$levelsArr[$empcompetencyLevelsArr[$i]['id']] = $empcompetencyLevelsArr[$i]['competencylevel'];
 								}
 							
-							$dataTmp = array('userid'=>$Uid,
+							$dataTmp = ['userid'=>$Uid,
 											'sort' => $sort,
 											'by' => $by,
 											'pageNo' => $pageNo,
 											'perPage' => $perPage,				
 											'tablecontent' => $tablecontent,
 											'objectname' => $objName,
-											'extra' => array(),
+											'extra' => [],
 											'tableheader' => $tableFields,
 											'jsGridFnName' => 'getEmployeeAjaxgridData',
 											'jsFillFnName' => '',
@@ -2311,13 +2311,13 @@ class Default_MyemployeesController extends Zend_Controller_Action
 											'formgrid'=>'true',
 											'unitId'=>$Uid,
 											'call'=>$call,'context'=>'myteam',
-											'search_filters' => array(
-												'competencylevelid' => array('type'=>'select',
-															'filter_data'=>array(''=>'All')+$levelsArr),
-															'year_skill_last_used'=>array('type'=>'datepicker')
+											'search_filters' => [
+												'competencylevelid' => ['type'=>'select',
+															'filter_data'=>[''=>'All']+$levelsArr],
+															'year_skill_last_used'=>['type'=>'datepicker']
 																
-								)
-								);			
+								]
+								];			
 							array_push($data,$dataTmp);
 							$this->view->dataArray = $data;
 							$this->view->call = $call;
@@ -2368,7 +2368,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 					$conText = ($this->_getParam('context') !='')? $this->_getParam('context'):$this->getRequest()->getParam('context');
 				}
 				if($id == '')		$id = $userID;
-				$Uid = ($id)?$id:$userID;
+				$Uid = $id ?: $userID;
 				
 				$employeeModal = new Default_Model_Employee();
 				try
@@ -2391,7 +2391,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
 							$dashboardcall = $this->_getParam('dashboardcall',null);
-							$data = array();	$searchQuery = '';	$searchArray = array();		$tablecontent = '';
+							$data = [];	$searchQuery = '';	$searchArray = [];		$tablecontent = '';
 							if($refresh == 'refresh')
 							{
 								if($dashboardcall == 'Yes')
@@ -2399,7 +2399,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 								else	
 									$perPage = PERPAGE;
 												
-								$sort = 'DESC';$by = 'e.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = array();
+								$sort = 'DESC';$by = 'e.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = [];
 							}
 							else 
 							{
@@ -2449,7 +2449,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 			if(in_array('experience_details',$empOrganizationTabs))
 			{
 				$auth = Zend_Auth::getInstance();
-				$employeeData=array();
+				$employeeData=[];
 				if($auth->hasIdentity()){
 							$loginUserId = $auth->getStorage()->read()->id;
 				} 
@@ -2461,7 +2461,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 					$userID = ($this->_getParam('unitId') !='')? $this->_getParam('unitId'):$this->_getParam('userid');
 				}
 				if($userid == '')			$userid = $loginUserId;
-				$Uid = ($userid)?$userid:$userID;
+				$Uid = $userid ?: $userID;
 				
 				$employeeModal = new Default_Model_Employee();
 				$usersModel = new Default_Model_Users();
@@ -2485,7 +2485,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
 						
-							$data = array();	$searchQuery = '';	$searchArray = array();		$tablecontent = '';
+							$data = [];	$searchQuery = '';	$searchArray = [];		$tablecontent = '';
 						
 							if($refresh == 'refresh')
 							{
@@ -2520,19 +2520,19 @@ class Default_MyemployeesController extends Zend_Controller_Action
 							}
 							$objName = 'experiencedetails';
 						
-						$tableFields = array('action'=>'Action','comp_name'=>'Company Name','comp_website'=>'Company Website','designation'=>'Designation','from_date'=>'From','to_date'=>'To');
+						$tableFields = ['action'=>'Action','comp_name'=>'Company Name','comp_website'=>'Company Website','designation'=>'Designation','from_date'=>'From','to_date'=>'To'];
 						
 						$tablecontent = $experiencedetailsModel->getexperiencedetailsData($sort, $by, $pageNo, $perPage,$searchQuery,$userid);     
 						
 						
-						$dataTmp = array('userid'=>$Uid,
+						$dataTmp = ['userid'=>$Uid,
 							'sort' => $sort,
 							'by' => $by,
 							'pageNo' => $pageNo,
 							'perPage' => $perPage,				
 							'tablecontent' => $tablecontent,
 							'objectname' => $objName,
-							'extra' => array(),
+							'extra' => [],
 							'tableheader' => $tableFields,
 							'jsGridFnName' => 'getEmployeeAjaxgridData',
 							'jsFillFnName' => '',
@@ -2542,11 +2542,11 @@ class Default_MyemployeesController extends Zend_Controller_Action
 							'formgrid' => 'true',
 							'unitId'=>$Uid,
 							'call'=>$call,'context'=>'myteam',
-							'search_filters' => array(
-											'from_date' =>array('type'=>'datepicker'),
-											'to_date' =>array('type'=>'datepicker')											
-											)
-							);			
+							'search_filters' => [
+											'from_date' =>['type'=>'datepicker'],
+											'to_date' =>['type'=>'datepicker']											
+											]
+							];			
 						
 						array_push($data,$dataTmp);
 						
@@ -2596,7 +2596,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 							
 				$userid = $this->getRequest()->getParam('userid');
 				if($userid == '')			$userid = $loginUserId;
-				$Uid = ($userid)?$userid:$userID;
+				$Uid = $userid ?: $userID;
 				$employeeModal = new Default_Model_Employee();
 				try
 				{
@@ -2618,9 +2618,9 @@ class Default_MyemployeesController extends Zend_Controller_Action
 							$view = Zend_Layout::getMvcInstance()->getView();		
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
-							$data = array();	
+							$data = [];	
 							$searchQuery = '';
-							$searchArray = array();
+							$searchArray = [];
 							$tablecontent = '';
 							if($refresh == 'refresh')
 							{
@@ -2655,16 +2655,16 @@ class Default_MyemployeesController extends Zend_Controller_Action
 							}
 									
 							$objName = 'educationdetails';
-							$tableFields = array('action'=>'Action','educationlevel'=>'Education Level',
+							$tableFields = ['action'=>'Action','educationlevel'=>'Education Level',
 										 'institution_name'=>'Institution Name','course'=>'Course',
-										 'from_date'=>'From',"to_date"=>"To","percentage"=>"Percentage");
+										 'from_date'=>'From',"to_date"=>"To","percentage"=>"Percentage"];
 							
 
 							$tablecontent = $educationdetailsModel->geteducationdetails($sort, $by, $pageNo, $perPage,$searchQuery,$Uid);     
 							
 							$educationlevelcodemodel = new Default_Model_Educationlevelcode();
 							$educationlevelArr = $educationlevelcodemodel->getEducationlevelData();
-							$level_opt = array();
+							$level_opt = [];
 							if(!empty($educationlevelArr))
 							{
 								foreach ($educationlevelArr as $educationlevelres)
@@ -2672,14 +2672,14 @@ class Default_MyemployeesController extends Zend_Controller_Action
 									$level_opt[$educationlevelres['id']] = $educationlevelres['educationlevelcode'];
 								}
 							}
-							$dataTmp = array('userid'=>$Uid,
+							$dataTmp = ['userid'=>$Uid,
 								'sort' => $sort,
 								'by' => $by,
 								'pageNo' => $pageNo,
 								'perPage' => $perPage,				
 								'tablecontent' => $tablecontent,
 								'objectname' => $objName,
-								'extra' => array(),
+								'extra' => [],
 								'tableheader' => $tableFields,
 								'jsGridFnName' => 'getEmployeeAjaxgridData',
 								'jsFillFnName' => '',
@@ -2689,14 +2689,14 @@ class Default_MyemployeesController extends Zend_Controller_Action
 								'formgrid' => 'true',
 								'unitId'=>$Uid,
 								'call'=>$call,'context'=>'myteam',
-								'search_filters' => array('from_date' =>array('type'=>'datepicker'),
-															'to_date' =>array('type'=>'datepicker'),
-																	'educationlevel' => array(
+								'search_filters' => ['from_date' =>['type'=>'datepicker'],
+															'to_date' =>['type'=>'datepicker'],
+																	'educationlevel' => [
 																		'type' => 'select',
-																		'filter_data' => array('' => 'All')+$level_opt,
-																	),
-														)	
-							);			
+																		'filter_data' => ['' => 'All']+$level_opt,
+																	],
+														]	
+							];			
 							array_push($data,$dataTmp);
 							$this->view->id=$Uid;
 							$this->view->controllername = $objName;
@@ -2742,7 +2742,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 					$this->_helper->layout->disableLayout();
 					$userID = ($this->_getParam('unitId') !='')? $this->_getParam('unitId'):$this->_getParam('userid');
 				}
-				$Uid = ($userid)?$userid:$userID;//die;
+				$Uid = $userid ?: $userID;//die;
 				//Check for this user id record exists or not....
 				$employeeModal = new Default_Model_Employee();
 				try
@@ -2772,7 +2772,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
 							
-							$data = array();$searchQuery = '';$searchArray = array();$tablecontent = '';
+							$data = [];$searchQuery = '';$searchArray = [];$tablecontent = '';
 						
 							if($refresh == 'refresh')
 							{
@@ -2803,18 +2803,18 @@ class Default_MyemployeesController extends Zend_Controller_Action
 								
 						$objName = 'trainingandcertificationdetails';
 						
-						$tableFields = array('action'=>'Action','course_name'=>'Course Name','course_level'=>'Course Level','course_offered_by'=>'Course Offered By','certification_name'=>'Certification Name');
+						$tableFields = ['action'=>'Action','course_name'=>'Course Name','course_level'=>'Course Level','course_offered_by'=>'Course Offered By','certification_name'=>'Certification Name'];
 						
 						$tablecontent = $TandCdetailsModel->getTandCdetailsData($sort,$by,$pageNo, $perPage,$searchQuery,$Uid); 
 						
-						$dataTmp = array('userid'=>$Uid,
+						$dataTmp = ['userid'=>$Uid,
 							'sort' => $sort,
 							'by' => $by,
 							'pageNo' => $pageNo,
 							'perPage' => $perPage,				
 							'tablecontent' => $tablecontent,
 							'objectname' => $objName,
-							'extra' => array(),
+							'extra' => [],
 							'tableheader' => $tableFields,
 							'jsGridFnName' => 'getEmployeeAjaxgridData',
 							'jsFillFnName' => '',
@@ -2822,7 +2822,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 							'add'=>'add',
 							'menuName'=>TAB_EMP_TRAINING_CERTIFY,
 							'formgrid' => 'true','unitId'=>$Uid,
-							'call'=>$call,'context'=>'myteam');			
+							'call'=>$call,'context'=>'myteam'];			
 						
 						array_push($data,$dataTmp);
 						
@@ -2879,7 +2879,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 		 	if($id == '')		
 			  $id = $userID;
 			  
-		 	$Uid = ($id)?$id:$userID;
+		 	$Uid = $id ?: $userID;
 		 	 
 		 	
 			 	$employeeModal = new Default_Model_Employee();
@@ -2905,7 +2905,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
 							$dashboardcall = $this->_getParam('dashboardcall',null);
-							$data = array();	$searchQuery = '';	$searchArray = array();		$tablecontent = '';
+							$data = [];	$searchQuery = '';	$searchArray = [];		$tablecontent = '';
 							if($refresh == 'refresh')
 							{
 								if($dashboardcall == 'Yes')
@@ -2959,8 +2959,8 @@ class Default_MyemployeesController extends Zend_Controller_Action
 	
 	public function pereditAction()
 	{
-		$identityDocumentArr = array();
-		$documentsArr = array();
+		$identityDocumentArr = [];
+		$documentsArr = [];
 		if(defined('EMPTABCONFIGS'))
 		{
 			$empOrganizationTabs = explode(",",EMPTABCONFIGS);
@@ -2983,7 +2983,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 				//To check previlige for edit
 				$myEmployees_model = new Default_Model_Myemployees();
 			 	$getMyTeamIds = $myEmployees_model->getTeamIds($loginUserId);
-			 	$teamIdArr = array();
+			 	$teamIdArr = [];
 			 	if(!empty($getMyTeamIds))
 			 	{
 				 	foreach($getMyTeamIds as $teamId)
@@ -3025,7 +3025,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 								$ethniccodemodel = new Default_Model_Ethniccode();
 								$racecodemodel = new Default_Model_Racecode();
 								$languagemodel = new Default_Model_Language();
-								$msgarray = array();
+								$msgarray = [];
 
 								$genderlistArr = $genderModel->getGenderList();
 								if(!empty($genderlistArr))
@@ -3191,9 +3191,9 @@ class Default_MyemployeesController extends Zend_Controller_Action
 			$loginUserId = $auth->getStorage()->read()->id;
 		}
 		
-				$documentnameArr = array();
-				$expiry_dateArr = array();
-				$mandatorydocArr = array();
+				$documentnameArr = [];
+				$expiry_dateArr = [];
+				$mandatorydocArr = [];
 				
 				$documentnameArr = $this->_request->getParam('document_name');
 				$expiry_dateArr = $this->_request->getParam('expiry_date');
@@ -3258,14 +3258,14 @@ class Default_MyemployeesController extends Zend_Controller_Action
 		        $new_post_values = array_filter($post_values);
 		        if(!empty($new_post_values))
 		        {
-					$identitydocArr = array();
+					$identitydocArr = [];
 					$identitydoc = '';
 					$expirydate = '';
 					if(!empty($identityDocumentArr))
 					{
 						for($k=0;$k<sizeof($identityDocumentArr);$k++)
 						{
-							$identitydoc = isset($documentnameArr[$k])?$documentnameArr[$k]:'';
+							$identitydoc = $documentnameArr[$k] ?? '';
 							if(isset($expiry_dateArr[$k]) && $expiry_dateArr[$k] !='empty')
 								$expirydate = sapp_Global::change_date($expiry_dateArr[$k],'database');
 							else
@@ -3297,7 +3297,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 					$actionflag = '';
 					$tableid  = '';
 		
-					$data = array('user_id'=>$user_id,
+					$data = ['user_id'=>$user_id,
 						                 'genderid'=>$genderid,
 										 'maritalstatusid'=>$maritalstatusid,
 		                                 'nationalityid'=>$nationalityid,
@@ -3310,9 +3310,9 @@ class Default_MyemployeesController extends Zend_Controller_Action
 										 'identity_documents'=>(!empty($identitydocArr)?$identitydocjson:NULL),	
 										 'modifiedby'=>$loginUserId,
 					                     'modifieddate'=>gmdate("Y-m-d H:i:s")
-					);
+					];
 					if($id!=''){
-						$where = array('user_id=?'=>$user_id);
+						$where = ['user_id=?'=>$user_id];
 						$actionflag = 2;
 					}
 					else
@@ -3327,18 +3327,18 @@ class Default_MyemployeesController extends Zend_Controller_Action
 					if($Id == 'update')
 					{
 						$tableid = $id;
-						$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Employee personal details updated successfully."));
+						$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Employee personal details updated successfully."]);
 					}
 					else
 					{
 						$tableid = $Id;
-						$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Employee personal details added successfully."));
+						$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Employee personal details added successfully."]);
 					}
 					$menuID = EMPLOYEE;
 					$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$user_id);
 			}else
 			{
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>FIELDMSG));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>FIELDMSG]);
 			}			
 			$this->_redirect('myemployees/peredit/userid/'.$userid);
 		}else
@@ -3364,7 +3364,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
             if(in_array('empcommunicationdetails',$empOrganizationTabs))
             {
 					
-                $empDeptdata=array();$employeeData =array();
+                $empDeptdata=[];$employeeData =[];
                 $auth = Zend_Auth::getInstance();
                 if($auth->hasIdentity()){
                      $loginUserId = $auth->getStorage()->read()->id;
@@ -3380,7 +3380,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
                 //To check previlige for edit
 				$myEmployees_model = new Default_Model_Myemployees();
 			 	$getMyTeamIds = $myEmployees_model->getTeamIds($loginUserId);
-			 	$teamIdArr = array();
+			 	$teamIdArr = [];
 			 	if(!empty($getMyTeamIds))
 			 	{
 				 	foreach($getMyTeamIds as $teamId)
@@ -3417,7 +3417,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
                                 $statesmodel = new Default_Model_States();
                                 $citiesmodel = new Default_Model_Cities();
                                 $orgInfoModel = new Default_Model_Organisationinfo();
-                                $msgarray = array();
+                                $msgarray = [];
 								$orgid = 1;
 								$countryId = '';
 								$stateId = '';
@@ -3670,7 +3670,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 			$date = new Zend_Date();
 			$actionflag = '';
 			$tableid  = '';
-			$data = array('user_id'=>$user_id,
+			$data = ['user_id'=>$user_id,
 				                 'personalemail'=>$personalemail,
 								 'perm_streetaddress'=>$perm_streetaddress, 								 
 				      			 'perm_country'=>($perm_country!=''?$perm_country:NULL),
@@ -3687,9 +3687,9 @@ class Default_MyemployeesController extends Zend_Controller_Action
 								 'emergency_email'=>($emergency_email!=''?$emergency_email:NULL),
 								 'modifiedby'=>$loginUserId,
 			                     'modifieddate'=>gmdate("Y-m-d H:i:s")			
-			);
+			];
 			if($id!=''){
-				$where = array('user_id=?'=>$user_id);
+				$where = ['user_id=?'=>$user_id];
 				$actionflag = 2;
 			}
 			else
@@ -3704,19 +3704,19 @@ class Default_MyemployeesController extends Zend_Controller_Action
 			if($Id == 'update')
 			{
 				$tableid = $id;
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Employee contact details updated successfully."));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Employee contact details updated successfully."]);
 			}
 			else
 			{
 				$tableid = $Id;
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Employee contact details added successfully."));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Employee contact details added successfully."]);
 			}
 			$menuID = EMPLOYEE;
 			$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$user_id);
            }
 			else
            {
-           		$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>FIELDMSG));
+           		$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>FIELDMSG]);
            }	
 			$this->_redirect('myemployees/comedit/userid/'.$userid);
 		}else
@@ -3799,7 +3799,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 			 	
 			 	$myEmployees_model = new Default_Model_Myemployees();
 			 	$getMyTeamIds = $myEmployees_model->getTeamIds($loginUserId);
-			 	$teamIdArr = array();
+			 	$teamIdArr = [];
 			 	if(!empty($getMyTeamIds))
 			 	{
 				 	foreach($getMyTeamIds as $teamId)
@@ -3871,7 +3871,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 			 	
 		 		$myEmployees_model = new Default_Model_Myemployees();
 			 	$getMyTeamIds = $myEmployees_model->getTeamIds($loginUserId);
-			 	$teamIdArr = array();
+			 	$teamIdArr = [];
 			 	if(!empty($getMyTeamIds))
 			 	{
 				 	foreach($getMyTeamIds as $teamId)
@@ -3938,7 +3938,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
             }
             if($loginuserGroup==MANAGER_GROUP || $loginuserGroup==MANAGEMENT_GROUP || $loginuserRole==SUPERADMINROLE)
             {
-	            $norec_arr = array();
+	            $norec_arr = [];
 	            $form = new Default_Form_Employeereport();
 	            $requi_model = new Default_Model_Requisition();
 	            $employmentstatusModel = new Default_Model_Employmentstatus();
@@ -3958,7 +3958,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 	            {
 	                $norec_arr['emp_status_id'] = "Employment status is not configured yet.";
 	            }
-	            $form->jobtitle_id->addMultiOptions(array(''=>'Select Job Title')+$job_data);
+	            $form->jobtitle_id->addMultiOptions([''=>'Select Job Title']+$job_data);
 	            if(count($employmentStatusData) > 0)
 	            {
 	                    $form->emp_status_id->addMultiOption('','Select Employment Status');
@@ -3969,7 +3969,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 	            }
 	            if(sizeof($roles_arr) > 0)
 	            {
-	                    $form->emprole->addMultiOptions(array(''=>'Select Role')+$roles_arr);
+	                    $form->emprole->addMultiOptions([''=>'Select Role']+$roles_arr);
 	            }
 	            else
 	            {
@@ -4018,11 +4018,11 @@ class Default_MyemployeesController extends Zend_Controller_Action
 	{
 		try {
 			$param_arr = $this->_getAllParams();
-			$cols_param_arr = $this->_getParam('cols_arr',array());
+			$cols_param_arr = $this->_getParam('cols_arr',[]);
 			if(isset($param_arr['cols_arr']))
 	                    unset($param_arr['cols_arr']);
-			$page_no = isset($param_arr['page_no'])?$param_arr['page_no']:1;
-			$per_page = isset($param_arr['per_page'])?$param_arr['per_page']:PERPAGE;
+			$page_no = $param_arr['page_no'] ?? 1;
+			$per_page = $param_arr['per_page'] ?? PERPAGE;
 			$sort_name = $param_arr['sort_name'];
 			$sort_type = $param_arr['sort_type'];
 			if(isset($param_arr['page_no']))unset($param_arr['page_no']);
@@ -4066,7 +4066,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 	 */
 	public function empreport_heplper1($type)
 	{
-		$columns_array = array(
+		$columns_array = [
                         'employeeId' => 'Employee ID',
                         'userfullname' => 'Employee',
                         'emailaddress' => 'Email',
@@ -4090,8 +4090,8 @@ class Default_MyemployeesController extends Zend_Controller_Action
                         'salary' => 'Salary',//04-02-2015
                         'referer_name' => 'Referred By',
 						'isactive'=>'User Status'
-		);
-		$mandatory_array = array(
+		];
+		$mandatory_array = [
                         'employeeId' => 'Employee ID',
                         'userfullname' => 'Employee',
                         'emailaddress' => 'Email',
@@ -4104,7 +4104,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
                         'emp_status_name' => 'Employment Status',
                         'date_of_joining' => 'Date of Joining', 
 						'isactive'=>'User Status'                                   
-		);
+		];
 		if($type == 'all')
 		return $columns_array;
 		else
@@ -4118,7 +4118,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 	public function empautoAction()
 	{
 		$params = $this->_getAllParams();
-		$output = array(array('id' => '','value' => 'No records','label' => 'No records'));
+		$output = [['id' => '','value' => 'No records','label' => 'No records']];
 		$emp_model = new Default_Model_Employee();
 		if($params['term'] != '')
 		{
@@ -4131,10 +4131,10 @@ class Default_MyemployeesController extends Zend_Controller_Action
 			$emp_arr = $emp_model->getAutoReportEmployee($params);
 			if(count($emp_arr)>0)
 			{
-				$output = array();
+				$output = [];
 				foreach($emp_arr as $emp)
 				{
-					$output[] = array('id' => $emp['user_id'],'value' => $emp[$params['field']],'label' => $emp[$params['field']],'profile_img' => $emp['profileimg']);
+					$output[] = ['id' => $emp['user_id'],'value' => $emp[$params['field']],'label' => $emp[$params['field']],'profile_img' => $emp['profileimg']];
 				}
 			}
 		}
@@ -4149,10 +4149,10 @@ class Default_MyemployeesController extends Zend_Controller_Action
 		$this->_helper->layout->disableLayout();
 		$param_arr = $this->_getAllParams();
 
-		$cols_param_arr = $this->_getParam('cols_arr',array());
+		$cols_param_arr = $this->_getParam('cols_arr',[]);
 		if(isset($param_arr['cols_arr']))	unset($param_arr['cols_arr']);
-		$page_no = isset($param_arr['page_no'])?$param_arr['page_no']:1;
-		$per_page = isset($param_arr['per_page'])?$param_arr['per_page']:PERPAGE;
+		$page_no = $param_arr['page_no'] ?? 1;
+		$per_page = $param_arr['per_page'] ?? PERPAGE;
 		$sort_name = $param_arr['sort_name'];
 		$sort_type = $param_arr['sort_type'];
 		if(isset($param_arr['page_no']))unset($param_arr['page_no']);
@@ -4177,16 +4177,16 @@ class Default_MyemployeesController extends Zend_Controller_Action
 				$emp_arr[$i]['userfullname'] = $emp_arr[$i]['prefix_name'].'. '.$emp_arr[$i]['userfullname'];
 			}
 		}
-		$field_names = array();
-		$field_widths = array();
-		$data['field_name_align'] = array();
+		$field_names = [];
+		$field_widths = [];
+		$data['field_name_align'] = [];
 
 		foreach($cols_param_arr as $column_key => $column_name)
 		{
-			$field_names[] = array(
+			$field_names[] = [
                                         'field_name'=>$column_key,
                                         'field_label'=>$column_name
-			);
+			];
 			$field_widths[] = 25;
 			$data['field_name_align'][] = 'C';
 		}
@@ -4208,12 +4208,12 @@ class Default_MyemployeesController extends Zend_Controller_Action
             
         $count_emp_reporting = $employee_model->getCountEmpReporting($myEmployees_model->getLoginUserId());
             		
-		$data = array('grid_no'=>1, 'project_name'=>'', 'object_name'=>'Employee Report', 'grid_count'=>1,'file_name'=>'EmployeeRpt.pdf', 'count_emp_reporting' => $count_emp_reporting);
+		$data = ['grid_no'=>1, 'project_name'=>'', 'object_name'=>'Employee Report', 'grid_count'=>1,'file_name'=>'EmployeeRpt.pdf', 'count_emp_reporting' => $count_emp_reporting];
 
 		$pdf = $this->_helper->PdfHelper->generateReport($field_names, $emp_arr, $field_widths, $data);
 
 		
-		$this->_helper->json(array('file_name'=>$data['file_name']));
+		$this->_helper->json(['file_name'=>$data['file_name']]);
 	}
 
 	/**
@@ -4224,10 +4224,10 @@ class Default_MyemployeesController extends Zend_Controller_Action
 		$this->_helper->layout->disableLayout();
 		$param_arr = $this->_getAllParams();
 
-		$cols_param_arr = $this->_getParam('cols_arr',array());
+		$cols_param_arr = $this->_getParam('cols_arr',[]);
 		if(isset($param_arr['cols_arr']))	unset($param_arr['cols_arr']);
-		$page_no = isset($param_arr['page_no'])?$param_arr['page_no']:1;
-		$per_page = isset($param_arr['per_page'])?$param_arr['per_page']:PERPAGE;
+		$page_no = $param_arr['page_no'] ?? 1;
+		$per_page = $param_arr['per_page'] ?? PERPAGE;
 		$sort_name = $param_arr['sort_name'];
 		$sort_type = $param_arr['sort_type'];
 		if(isset($param_arr['page_no']))unset($param_arr['page_no']);
@@ -4274,12 +4274,12 @@ class Default_MyemployeesController extends Zend_Controller_Action
 			$objPHPExcel->getActiveSheet()->SetCellValue($cell_name, $names);
 			// Make bold cells
 			$objPHPExcel->getActiveSheet()->getStyle($cell_name)->getFont()->setBold(true);
-			$objPHPExcel->getActiveSheet()->getStyle($cell_name)->applyFromArray( array(
-									        'fill' => array(
+			$objPHPExcel->getActiveSheet()->getStyle($cell_name)->applyFromArray( [
+									        'fill' => [
 									            'type' => PHPExcel_Style_Fill::FILL_SOLID,
-									            'color' => array('rgb' => '82CAFF')
-			)
-			)
+									            'color' => ['rgb' => '82CAFF']
+			]
+			]
 			);
 			$objPHPExcel->getActiveSheet()->getColumnDimension($letters[$count])->setAutoSize(true);
 			$i++;
@@ -4307,7 +4307,7 @@ class Default_MyemployeesController extends Zend_Controller_Action
 				}
 				else
 				{
-					$value = isset($emp_data[$column_key])?$emp_data[$column_key]:"";
+					$value = $emp_data[$column_key] ?? "";
 				}
 				$value = html_entity_decode($value,ENT_QUOTES,'UTF-8');
 				$objPHPExcel->getActiveSheet()->SetCellValue($cell_name, $value);

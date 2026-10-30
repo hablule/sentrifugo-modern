@@ -43,9 +43,9 @@ class Default_ServicedeskconfController extends Zend_Controller_Action
 		$objname = $this->_getParam('objname');
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 		if($refresh == 'refresh')
 		{
@@ -97,8 +97,8 @@ class Default_ServicedeskconfController extends Zend_Controller_Action
 
 		$servicedeskdepartmentmodel = new Default_Model_Servicedeskdepartment();
 
-		$msgarray = array();
-		$popConfigPermission = array();
+		$msgarray = [];
+		$popConfigPermission = [];
 
 	 	if(sapp_Global::_checkprivileges(SERVICEDESKDEPARTMENT,$loginuserGroup,$loginuserRole,'add') == 'Yes'){
 	 		array_push($popConfigPermission,'servicedeskdepartment');
@@ -208,20 +208,20 @@ class Default_ServicedeskconfController extends Zend_Controller_Action
 					   if($data['request_recievers'] !='' && $data['request_recievers'] != 'NULL') 
 					    {
 							try {
-								
+
 								$reqrecieverdata = $employeemodel->getEmployeeDetails($data['request_recievers']);
 							} catch (\Throwable $th) {
 								Zend_Debug::dump($th->getMessage());
 							}
-					    
-							
+
+
 					     if(sizeof($reqrecieverdata) > 0)
 					     {
 					        $servicedeskconfform->request_recievers->setMultiOptions($reqrecieverdata);  
-							
+
 					     }
 					     $req_recievers_arr = explode(',', $data['request_recievers']);
-						 
+
 					    // $data['request_recievers']=explode(',', $data['request_recievers']);
 					    }	 
 
@@ -282,7 +282,7 @@ class Default_ServicedeskconfController extends Zend_Controller_Action
 					    }
 						
                        $bunitdata = $bunitModel->fetchAll('isactive=1','unitname');
-					   $servicedeskconfform->businessunit_id->addMultiOptions(array(''=>'Select Business unit','0'=>'No Business Unit'));
+					   $servicedeskconfform->businessunit_id->addMultiOptions([''=>'Select Business unit','0'=>'No Business Unit']);
 						foreach ($bunitdata->toArray() as $bdata)
 						{
 							$servicedeskconfform->businessunit_id->addMultiOption($bdata['id'],$bdata['unitname']);
@@ -428,9 +428,9 @@ class Default_ServicedeskconfController extends Zend_Controller_Action
 		$departmentsmodel = new Default_Model_Departments();
 		$employeemodel = new Default_Model_Employee();
 		$approvingauthflag = '';
-		$msgarray = array();
-		$emparray = array();
-		$catarray=array();
+		$msgarray = [];
+		$emparray = [];
+		$catarray=[];
 		$empstring ='';
 		
 		$servicedeskconfform->submit->setLabel('Update');
@@ -480,7 +480,7 @@ class Default_ServicedeskconfController extends Zend_Controller_Action
 							$departmentlistArr = $departmentsmodel->getSingleDepartmentData($data['department_id']);
 						}	 
 						else
-						    $departmentlistArr = array();
+						    $departmentlistArr = [];
 						if(!empty($employeeData))
 						{ 
 							foreach($employeeData as $empRes)
@@ -623,8 +623,8 @@ class Default_ServicedeskconfController extends Zend_Controller_Action
         $servicedeskdepartmentmodel = new Default_Model_Servicedeskdepartment();
         $assetcategoriesModel = new Assets_Model_AssetCategories();
 
-		$msgarray = array();
-		$resultArr = array();
+		$msgarray = [];
+		$resultArr = [];
 		$empstring = '';
 	 	$servicedeskstring = '';
 		$prevBusinessunit = '';
@@ -651,7 +651,7 @@ class Default_ServicedeskconfController extends Zend_Controller_Action
 			
 		 	$assetcategoriesModel = new Assets_Model_AssetCategories();
 		 	$user_cat_data=$assetcategoriesModel->getActiveCategoriesData($bunitid,$deptid);
-		    $asset_cat_array = array();
+		    $asset_cat_array = [];
 		 	if(count($user_cat_data) > 0)
 		 	{
 		 		 
@@ -661,7 +661,7 @@ class Default_ServicedeskconfController extends Zend_Controller_Action
 		 		}
 		 	}
 		 	
-		 	$servicedeskconfform->service_desk_id->addMultiOptions(array(''=>'Select Category')+$asset_cat_array);
+		 	$servicedeskconfform->service_desk_id->addMultiOptions([''=>'Select Category']+$asset_cat_array);
 		 	
 		}
 	
@@ -839,7 +839,7 @@ class Default_ServicedeskconfController extends Zend_Controller_Action
 	for($j=0;$j<sizeof($servicedeskidarr);$j++)
 	 {	
 	   if($id!=''){
-	    	$data = array('businessunit_id'=>$businessunit_id,
+	    	$data = ['businessunit_id'=>$businessunit_id,
 			                 'department_id'=>($department_id!=''?$department_id:NULL), 
 							 'service_desk_flag'=>$service_desk_flag,
 			   				 'request_for'=>$request_for,
@@ -853,11 +853,11 @@ class Default_ServicedeskconfController extends Zend_Controller_Action
 							 'description'=>($description !=''?$description:NULL),
 							  'modifiedby'=>$loginUserId,
 							  'modifieddate'=>gmdate("Y-m-d H:i:s")
-					);
+					];
 					// $servicedeskconfform->request_for->setRequired(false);
 					
 	    }else{
-			   $data = array('businessunit_id'=>$businessunit_id,
+			   $data = ['businessunit_id'=>$businessunit_id,
 			                 'department_id'=>($department_id!=''?$department_id:NULL), 
 							 'service_desk_flag'=>$service_desk_flag,
 			   	           	 'request_for'=>$request_for,
@@ -871,12 +871,12 @@ class Default_ServicedeskconfController extends Zend_Controller_Action
 							 'description'=>($description !=''?$description:NULL),
 							  'modifiedby'=>$loginUserId,
 							  'modifieddate'=>gmdate("Y-m-d H:i:s")
-					);
+					];
 	    }	
 	    
 					
 				if($id!=''){
-					$where = array('id=?'=>$id);  
+					$where = ['id=?'=>$id];  
 					$actionflag = 2;
 				}
 				else
@@ -888,11 +888,11 @@ class Default_ServicedeskconfController extends Zend_Controller_Action
 					$actionflag = 1;
 				}
 				
-				$budata = array('service_desk_flag' => $service_desk_flag,
+				$budata = ['service_desk_flag' => $service_desk_flag,
 								'modifiedby'=>$loginUserId,
 							  	'modifieddate'=>gmdate("Y-m-d H:i:s")
-								);
-				$buwhere = array('id=?'=>$businessunit_id);
+								];
+				$buwhere = ['id=?'=>$businessunit_id];
 				
 				/* If implementation wise is changed then all the previous records are inactivated and new record is inserted 
 				 * Else normal update - insert will take place. 
@@ -900,11 +900,11 @@ class Default_ServicedeskconfController extends Zend_Controller_Action
                 if($prevBusinessunit != $service_desk_flag)
 				{
 					if(!empty($servicedeskidarr) && $j==0) {
-						 $prevBUData = array('isactive'=>0,
+						 $prevBUData = ['isactive'=>0,
 						 					'modifiedby'=>$loginUserId,
 								  			'modifieddate'=>gmdate("Y-m-d H:i:s")
-						 					);
-						 $prevBUwhere = array('businessunit_id=?'=>$businessunit_id);					
+						 					];
+						 $prevBUwhere = ['businessunit_id=?'=>$businessunit_id];					
 						  /*Inactivating previous records */
 						  $prevBUId = $servicedeskconfmodel->SaveorUpdateServiceConfData($prevBUData, $prevBUwhere);
 					} 
@@ -932,12 +932,12 @@ class Default_ServicedeskconfController extends Zend_Controller_Action
 				if($Id == 'update')
 				{
 				   $tableid = $id;
-				   $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Setting updated successfully."));
+				   $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Setting updated successfully."]);
 				}   
 				else
 				{
 				   $tableid = $Id; 	
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Setting added successfully."));					   
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Setting added successfully."]);					   
 				}   
 	 
 				$menuID = SERVICEDESKCONFIGURATION;
@@ -976,7 +976,7 @@ class Default_ServicedeskconfController extends Zend_Controller_Action
 				
 				$employeeData = $employeemodel->getEmployeesForServiceDesk($businessunit_id,$department_id);
 				if($request_for==1) {
-					$servicedeskData = $servicedeskconfmodel->getnotconfiguredActiveServiceDepartments($businessunit_id,$department_id,$request_for);
+					$servicedeskData = $servicedeskconfmodel->getnotconfiguredActiveServiceDepartments($businessunit_id,$department_id);
 				}elseif($request_for==2){
 					$servicedeskData = $assetcategoriesModel->getActiveCategoriesData($businessunit_id,$department_id);
 				}
@@ -1157,8 +1157,8 @@ class Default_ServicedeskconfController extends Zend_Controller_Action
 			  if($count < 1)
 			  {	
 				  $serviceDeptData = $servicedeskdepartmentmodel->getServiceDeskDepartmentDatabyID($servicedeskconfdata[0]['service_desk_id']);
-				  $data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-				  $where = array('id=?'=>$id);
+				  $data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+				  $where = ['id=?'=>$id];
 				  $Id = $servicedeskconfmodel->SaveorUpdateServiceConfData($data, $where);
 				    if($Id == 'update')
 					{
@@ -1189,11 +1189,11 @@ class Default_ServicedeskconfController extends Zend_Controller_Action
 			{
 				if(	$messages['msgtype'] == 'error')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
 				}
 				if(	$messages['msgtype'] == 'success')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
 				}
 				
 			}
@@ -1205,7 +1205,7 @@ class Default_ServicedeskconfController extends Zend_Controller_Action
 	public function getemployeesAction()
 	{
 		try {
-			
+
 		$ajaxContext = $this->_helper->getHelper('AjaxContext');
 		$ajaxContext->addActionContext('getemployees', 'html')->initContext();
 		$employeemodel = new Default_Model_Employee();
@@ -1216,9 +1216,9 @@ class Default_ServicedeskconfController extends Zend_Controller_Action
 		$bunitid = $this->_request->getParam('bunitid');
 		$deptid = $this->_request->getParam('deptid');
 		$reqfor= $this->_request->getParam('reqfor');
-		$employeeData = array();
-		$servicedeskData = array();
-		$implementationdata= array();
+		$employeeData = [];
+		$servicedeskData = [];
+		$implementationdata= [];
 		$employeeData = $employeemodel->getEmployeesForServiceDesk($bunitid,$deptid);
 		//echo '<pre>';
 		if(isset($bunitid) && $bunitid != '')
@@ -1251,7 +1251,7 @@ class Default_ServicedeskconfController extends Zend_Controller_Action
 	public function getapproverAction()
 	{
 		try {
-			
+
 		$ajaxContext = $this->_helper->getHelper('AjaxContext');
 		$ajaxContext->addActionContext('getapprover', 'html')->initContext();
 		$employeemodel = new Default_Model_Employee();
@@ -1260,7 +1260,7 @@ class Default_ServicedeskconfController extends Zend_Controller_Action
 		$deptid = $this->_request->getParam('deptid');
 		$approver_1 = $this->_request->getParam('approver_1');
 		$approver_2 = $this->_request->getParam('approver_2');
-		$employeeData = array();
+		$employeeData = [];
 		$approvercount ='';
 		$empstring = '';
 		if($elementid == 'approvingauthority')
@@ -1274,7 +1274,7 @@ class Default_ServicedeskconfController extends Zend_Controller_Action
 		  $empstring =  $approver_1;
 		if($approver_2 !='')
 		  $empstring.=','.$approver_2;	
-		
+
 	    $employeeData = $employeemodel->getApproverForServiceDesk($bunitid,$deptid,$empstring);  
 		$this->view->employeedata=$employeeData;
 		$this->view->approvercount=$approvercount;
@@ -1292,7 +1292,7 @@ class Default_ServicedeskconfController extends Zend_Controller_Action
 		$businessunitsmodel = new Default_Model_Businessunits();
 		$servicedeskconfmodel = new Default_Model_Servicedeskconf();
 		$bunitid = $this->_request->getParam('bunitid');
-		$result = array();
+		$result = [];
 		if($bunitid !='')
 		{
 			$pendingRequestdata = $servicedeskconfmodel->getPendingServiceReqData($bunitid);

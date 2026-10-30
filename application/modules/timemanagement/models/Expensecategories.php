@@ -73,8 +73,8 @@ class Timemanagement_Model_Expensecategories extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall)
 	{
 		$searchQuery = '';
-		$searchArray = array();
-		$data = array();
+		$searchArray = [];
+		$data = [];
 
 		if($searchData != '' && $searchData!='undefined')
 		{
@@ -89,10 +89,10 @@ class Timemanagement_Model_Expensecategories extends Zend_Db_Table_Abstract
 			
 		$objName = 'expensecategory';
 
-		$tableFields = array('action'=>'Action','expense_category' => 'Category','unit_price' => 'Unit Price');
+		$tableFields = ['action'=>'Action','expense_category' => 'Category','unit_price' => 'Unit Price'];
 
 		$tablecontent = $this->getExpenseCategoryData($sort, $by, $pageNo, $perPage,$searchQuery);
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
@@ -100,14 +100,14 @@ class Timemanagement_Model_Expensecategories extends Zend_Db_Table_Abstract
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
 		    'menuName' => 'Expense Category',
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
 			'searchArray' => $searchArray,
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall
-		);
+		];
 		return $dataTmp;
 	}
 
@@ -127,7 +127,7 @@ class Timemanagement_Model_Expensecategories extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('ec'=>$this->_name),array('ec.*'))
+		->from(['ec'=>$this->_name],['ec.*'])
 		->where('ec.is_active = 1 AND ec.id='.$id.' ');
 		return $this->fetchAll($select)->toArray();
 	}
@@ -148,7 +148,7 @@ class Timemanagement_Model_Expensecategories extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('e'=>$this->_name),array('e.id','e.expense_category'))
+		->from(['e'=>$this->_name],['e.id','e.expense_category'])
 		->where('e.is_active = 1 ')
 		->order('e.expense_category');
 		return $this->fetchAll($select)->toArray();

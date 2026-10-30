@@ -39,7 +39,7 @@ class Default_MissedhoursapproveController extends Zend_Controller_Action
         try {
            
         $auth = Zend_Auth::getInstance();
-        $popConfigPermission = array();
+        $popConfigPermission = [];
         if ($auth->hasIdentity()) {
             $loginUserId = $auth->getStorage()->read()->id;
             $loginuserRole = $auth->getStorage()->read()->emprole;
@@ -51,7 +51,7 @@ class Default_MissedhoursapproveController extends Zend_Controller_Action
         $perm = $access['perm'];
 
         $missmodel = new Default_Model_Missedhoursapprove();
-        $inter_options = array();
+        $inter_options = [];
         $call = $this->_getParam('call');
         if ($call == 'ajaxcall')
             $this->_helper->layout->disableLayout();
@@ -60,9 +60,9 @@ class Default_MissedhoursapproveController extends Zend_Controller_Action
         $objname = $this->_getParam('objname');
         $refresh = $this->_getParam('refresh');
         $dashboardcall = $this->_getParam('dashboardcall', null);
-        $data = array();
+        $data = [];
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if ($refresh == 'refresh') {
             if ($dashboardcall == 'Yes')
@@ -74,7 +74,7 @@ class Default_MissedhoursapproveController extends Zend_Controller_Action
             $pageNo = 1;
             $searchData = '';
             $searchQuery = '';
-            $searchArray = array();
+            $searchArray = [];
         } else {
             $sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
             $by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'ms.schedule_id';
@@ -146,13 +146,13 @@ class Default_MissedhoursapproveController extends Zend_Controller_Action
         if ($this->getRequest()->getPost()) {
             if ($form->isValid($this->_request->getPost())) {
                 $approved = $this->getRequest()->getParam('managerstatus');
-                $where = array('missed_hours_id=?' => $id);
-                $data = array(
+                $where = ['missed_hours_id=?' => $id];
+                $data = [
                     'approved' => $this->getRequest()->getParam('managerstatus'),
                     'approved_amount' => $this->getRequest()->getParam('approvedamount'),
                     'approvedby' => $loginUserId,
                     'approved_date' => gmdate("Y-m-d H:i:s")
-                );
+                ];
 
                 // die(json_encode($data));
                 $missModal->editmissedhours($data, $where);

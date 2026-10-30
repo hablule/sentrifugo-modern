@@ -14,7 +14,7 @@ class Payroll_Model_payroll extends Zend_Db_Table{
         }
         $payrolls = $this->select()
                          ->setIntegrityCheck(false)
-                         ->from($this->_name,array('document_no'=>'document_no','paydate'=>'DATE_FORMAT(paydate,"'.DATEFORMAT_MYSQL.'")'))
+                         ->from($this->_name,['document_no'=>'document_no','paydate'=>'DATE_FORMAT(paydate,"'.DATEFORMAT_MYSQL.'")'])
                          ->order("$by $sort")
                          ->limitPage($pageNo,$perPage);
         return $payrolls;
@@ -23,7 +23,7 @@ class Payroll_Model_payroll extends Zend_Db_Table{
     public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         if($searchData != '' && $searchData!='undefined')
         {
             $searchValues = json_decode($searchData);
@@ -41,9 +41,9 @@ class Payroll_Model_payroll extends Zend_Db_Table{
         }
 
         $objName = 'payroll';
-        $tableFields = array('action'=>'Action','document_no'=>'Document No.','paydate'=>'Pay Date');
+        $tableFields = ['action'=>'Action','document_no'=>'Document No.','paydate'=>'Pay Date'];
         $tablecontent = $this->getPayroll($sort, $by, $pageNo, $perPage,$searchQuery);
-        $dataTmp = array(
+        $dataTmp = [
             'sort'=>$sort,
             'by'=>$by,
             'pageNo'=>$pageNo,
@@ -51,7 +51,7 @@ class Payroll_Model_payroll extends Zend_Db_Table{
             'perPage' => $perPage,				
             'tablecontent' => $tablecontent,
             'objectname' => $objName,
-            'extra' => array(),
+            'extra' => [],
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
             'jsFillFnName' => '',
@@ -59,11 +59,11 @@ class Payroll_Model_payroll extends Zend_Db_Table{
             'formgrid' => 'true',
             'call'=>$call,
             'dashboardcall'=>$dashboardcall,
-            'search_filters' => array(
-                'paydate' =>array('type'=>'datepicker')
-            )
+            'search_filters' => [
+                'paydate' =>['type'=>'datepicker']
+            ]
             
-        );
+        ];
         return $dataTmp;
     }
 }

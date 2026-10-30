@@ -36,18 +36,18 @@ class Default_Form_Projects extends Zend_Form
         $project_name->setAttrib('maxLength', 100);
         
         $project_name->setRequired(true);
-        $project_name->addValidator('NotEmpty', false, array('messages' => 'Please enter project name.'));
-		$project_name->addValidator("regex",true,array(
+        $project_name->addValidator('NotEmpty', false, ['messages' => 'Please enter project name.']);
+		$project_name->addValidator("regex",true,[
 									'pattern'=> '/^(?![0-9]*$)[a-zA-Z0-9.,&\(\)\/\-_\' ?]+$/',
-								    'messages'=>array(
+								    'messages'=>[
 									     'regexNotMatch'=>'Please enter a valid project name.'
-								     )
-					       ));	
+								     ]
+					       ]);	
         $project_name->addValidator(new Zend_Validate_Db_NoRecordExists(
-                                              array('table'=>'tm_projects',
+                                              ['table'=>'tm_projects',
                                                      'field'=>'project_name',
                                                      'exclude'=>'id!="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('id').'" and is_active=1',    
-                                                 ) )  
+                                                 ] )  
                                     );
         $project_name->getValidator('Db_NoRecordExists')->setMessage('Project name already exists.');
 
@@ -60,9 +60,9 @@ class Default_Form_Projects extends Zend_Form
 		$projstatus->addMultiOption('completed','Completed');
 		$projstatus->setRequired(true);
 		$projstatus->setRegisterInArrayValidator(false);
-		$projstatus->addValidator('NotEmpty', false, array(
+		$projstatus->addValidator('NotEmpty', false, [
 			'messages' => 'Please select status.'
-		));
+		]);
 		
 		$base_project = new Zend_Form_Element_Select('base_project');
 		$base_project->addMultiOption('','Select Project');
@@ -72,49 +72,49 @@ class Default_Form_Projects extends Zend_Form
 		$client->addMultiOption('','Select Client');
 		$client->setRegisterInArrayValidator(false);	
         $client->setRequired(true);
-        $client->addValidator('NotEmpty', false, array('messages' => 'Please select client.'));
+        $client->addValidator('NotEmpty', false, ['messages' => 'Please select client.']);
          
 		$client->addValidator(new Zend_Validate_Db_RecordExists(
-										array('table' => 'tm_clients',
+										['table' => 'tm_clients',
                                         		'field' => 'id',
                                                 'exclude'=>'is_active = 1',
-										)));
+										]));
 		$client->getValidator('Db_RecordExists')->setMessage('Selected client is inactivated.');
 		
 		$currency = new Zend_Form_Element_Select('currency_id');
 		$currency->addMultiOption('','Select Currency');
 		$currency->setRegisterInArrayValidator(false);	
         $currency->setRequired(true);
-        $currency->addValidator('NotEmpty', false, array('messages' => 'Please select currency.'));
+        $currency->addValidator('NotEmpty', false, ['messages' => 'Please select currency.']);
          
 		$currency->addValidator(new Zend_Validate_Db_RecordExists(
-										array('table' => 'main_currency',
+										['table' => 'main_currency',
                                         		'field' => 'id',
                                                 'exclude'=>'isactive = 1',
-										)));
+										]));
 		$currency->getValidator('Db_RecordExists')->setMessage('Selected currency is inactivated.');
 		
 		$project_type = new Zend_Form_Element_Radio('project_type');
 		$project_type->setLabel("Type");
-        $project_type->addMultiOptions(array(
+        $project_type->addMultiOptions([
 										   'billable' => 'Billable',
 										   'non_billable' => 'Non Billable',
                                            'revenue' => 'Revenue generation',
-    									   ));
+    									   ]);
 		$project_type->setSeparator('');
 		$project_type->setValue('billable');    									   
 		$project_type->setRegisterInArrayValidator(false);
 		$project_type->setRequired(true);
-		$project_type->addValidator('NotEmpty', false, array('messages' => 'Please select type.'));
+		$project_type->addValidator('NotEmpty', false, ['messages' => 'Please select type.']);
 		
 		$start_date = new ZendX_JQuery_Form_Element_DatePicker('start_date');
-		$start_date->setOptions(array('class' => 'brdr_none'));
+		$start_date->setOptions(['class' => 'brdr_none']);
         //$date_of_leaving->setAttrib('onchange', 'validatejoiningdate(this)'); 		
 		$start_date->setAttrib('readonly', 'true');
 		$start_date->setAttrib('onfocus', 'this.blur()');
 		
 		$end_date = new ZendX_JQuery_Form_Element_DatePicker('end_date');
-		$end_date->setOptions(array('class' => 'brdr_none'));
+		$end_date->setOptions(['class' => 'brdr_none']);
         //$date_of_leaving->setAttrib('onchange', 'validatejoiningdate(this)'); 		
 		$end_date->setAttrib('readonly', 'true');
 		$end_date->setAttrib('onfocus', 'this.blur()');
@@ -122,7 +122,7 @@ class Default_Form_Projects extends Zend_Form
 		$estimated_hrs = new Zend_Form_Element_Text("estimated_hrs");
 		$estimated_hrs->setAttrib('maxLength', 5);
 		$estimated_hrs->addFilter(new Zend_Filter_StringTrim());
-		$estimated_hrs->addValidator("regex", false, array("/^([0-9]*\:?[0-9]{1,2})$/","messages"=>"Please enter a valid hours."));
+		$estimated_hrs->addValidator("regex", false, ["/^([0-9]*\:?[0-9]{1,2})$/","messages"=>"Please enter a valid hours."]);
 		
 		$description = new Zend_Form_Element_Textarea('description');
         $description->setAttrib('rows', 10);
@@ -133,10 +133,10 @@ class Default_Form_Projects extends Zend_Form
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 		
-		 $this->addElements(array($id,$invoice_method,$project_name,$projstatus,$base_project,$description,$client,$currency,$project_type,$start_date,$end_date,$estimated_hrs,$submit));
-         $this->setElementDecorators(array('ViewHelper')); 
-          $this->setElementDecorators(array(
+		 $this->addElements([$id,$invoice_method,$project_name,$projstatus,$base_project,$description,$client,$currency,$project_type,$start_date,$end_date,$estimated_hrs,$submit]);
+         $this->setElementDecorators(['ViewHelper']); 
+          $this->setElementDecorators([
                     'UiWidgetElement',
-        ),array('start_date','end_date'));  
+        ],['start_date','end_date']);  
 	}
 }

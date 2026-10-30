@@ -71,7 +71,7 @@ class Default_Model_Organisationinfo extends Zend_Db_Table_Abstract
 	{
 	   $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('s'=>'main_company'),array('s.company_id as id','s.code as code','s.website as website','s.org_start_date as org_start_date','s.name as organisationname','s.domain as domain','s.org_image as org_image','s.description as orgdescription'))
+						->from(['s'=>'main_company'],['s.company_id as id','s.code as code','s.website as website','s.org_start_date as org_start_date','s.name as organisationname','s.domain as domain','s.org_image as org_image','s.description as orgdescription'])
 					    ->where('s.isactive = "Y"');
 						//die($select);
 		return $this->fetchAll($select)->toArray();
@@ -81,7 +81,7 @@ class Default_Model_Organisationinfo extends Zend_Db_Table_Abstract
 	{
 	   $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('s'=>'main_businessdomain'),array('s.businessdomain_id as id','s.name as name'))
+						->from(['s'=>'main_businessdomain'],['s.businessdomain_id as id','s.name as name'])
 					    ->where('s.isactive = "Y"');
 		return $this->fetchAll($select)->toArray();
 	
@@ -109,7 +109,7 @@ class Default_Model_Organisationinfo extends Zend_Db_Table_Abstract
             $result1 = $db->query($query1);
             $row1 = $result1->fetch();
             $head_id = $row1['id'];
-            $head_details = array();
+            $head_details = [];
             if($head_id != '')
             {
                 $query2 = "select userfullname,jobtitle_name from employees_summary where id = ".$head_id;
@@ -155,8 +155,8 @@ class Default_Model_Organisationinfo extends Zend_Db_Table_Abstract
 	   {
 	    $startdatedata = $this->select()
     					   ->setIntegrityCheck(false)	 
-						   ->from(array('b' => 'main_businessunits'),array('unitid'=>'b.id'))
-                           ->joinLeft(array('d'=>'main_departments'), 'b.id=d.unitid',array('deptid'=>'d.id'))							   						   
+						   ->from(['b' => 'main_businessunits'],['unitid'=>'b.id'])
+                           ->joinLeft(['d'=>'main_departments'], 'b.id=d.unitid',['deptid'=>'d.id'])							   						   
 						   ->where('(b.startdate <= "'.$startdate.'" OR d.startdate <= "'.$startdate.'") AND b.startdate !="0000-00-00" 
 						             AND d.startdate !="0000-00-00" AND b.isactive = 1 AND d.isactive = 1');
 		

@@ -28,10 +28,10 @@ class Schedule_Model_attendance extends Zend_Db_Table_Abstract
 
     public function getempsch($id)
     {
-        $config = array(
+        $config = [
             'name' => 'main_emp_schedule',
             'primary' => 'id'
-        );
+        ];
         $empschtable = new Zend_Db_Table($config);
         $data = $empschtable->select()
             ->setIntegrityCheck(false)
@@ -42,10 +42,10 @@ class Schedule_Model_attendance extends Zend_Db_Table_Abstract
     }
     public function getschedule($schid)
     {
-        $config = array(
+        $config = [
             'name' => 'main_schedule',
             'primary' => 'id'
-        );
+        ];
 
         $schtable = new Zend_Db_Table($config);
         $data = $schtable->select()
@@ -56,10 +56,10 @@ class Schedule_Model_attendance extends Zend_Db_Table_Abstract
     }
     public function getschedulebyname()
     {
-        $config = array(
+        $config = [
             'name' => 'main_schedule',
             'primary' => 'id'
-        );
+        ];
 
         $schtable = new Zend_Db_Table($config);
         $data = $schtable->select()
@@ -71,10 +71,10 @@ class Schedule_Model_attendance extends Zend_Db_Table_Abstract
     }
     public function getempids()
     {
-        $config = array(
+        $config = [
             'name' => 'main_employees',
             'primary' => 'id'
-        );
+        ];
         $emptable = new Zend_Db_Table($config);
         $data = $emptable->select()
             ->setIntegrityCheck(false)
@@ -96,18 +96,18 @@ class Schedule_Model_attendance extends Zend_Db_Table_Abstract
             ->where('week_name LIKE ?', $weekname . '%');
         $weekid = $weektable->fetchRow($data)->toArray(); */
         //Zend_Debug::dump($weekid);
-        $config = array(
+        $config = [
             'name' => 'main_schedule',
             'primary' => 'sch_id'
-        );
+        ];
         $scheduletable = new Zend_Db_Table($config);
 
         $schdata = $scheduletable->select()
             ->setIntegrityCheck(false)
-            ->from(array('sch'=>'main_schedule'), '')
-            ->joinInner(array('wd'=>'main_sch_workday'),'wd.sch_id = sch.sch_id AND wd.workday like "'.$weekname.'%" AND wd.isactive=1','')
-            ->joinInner(array('ws'=>'main_work_shift'),'ws.workday_id = wd.sch_workday_id AND ws.isactive=1','')
-            ->joinInner(array('tm'=>'main_time_table'),'tm.time_id = ws.time_id AND tm.isactive=1',array('shift_id'=>'tm.time_id','tm.start_time','tm.end_time'))
+            ->from(['sch'=>'main_schedule'], '')
+            ->joinInner(['wd'=>'main_sch_workday'],'wd.sch_id = sch.sch_id AND wd.workday like "'.$weekname.'%" AND wd.isactive=1','')
+            ->joinInner(['ws'=>'main_work_shift'],'ws.workday_id = wd.sch_workday_id AND ws.isactive=1','')
+            ->joinInner(['tm'=>'main_time_table'],'tm.time_id = ws.time_id AND tm.isactive=1',['shift_id'=>'tm.time_id','tm.start_time','tm.end_time'])
             ->where('"'.$date.'" BETWEEN sch.start_date AND sch.end_date AND sch.isactive=1');
             
         $array = $scheduletable->fetchAll($schdata)->toArray();
@@ -124,10 +124,10 @@ class Schedule_Model_attendance extends Zend_Db_Table_Abstract
     }
     public function getleaveapproved($id,$date)
     {
-        $config = array(
+        $config = [
             'name' => 'main_leaverequest',
             'primary' => 'id'
-        );
+        ];
         $leavetable = new Zend_Db_Table($config);
         $data = $leavetable->select()
             ->setIntegrityCheck(false)
@@ -138,10 +138,10 @@ class Schedule_Model_attendance extends Zend_Db_Table_Abstract
     public function getshiftid($time)
     {
 
-        $config = array(
+        $config = [
             'name' => 'main_time_table',
             'primary' => 'id'
-        );
+        ];
         Zend_Debug::dump($time);
         $timetable = new Zend_Db_Table($config);
         $data = $timetable->select()
@@ -153,10 +153,10 @@ class Schedule_Model_attendance extends Zend_Db_Table_Abstract
     }
     public function getshiftbyid($id)
     {
-        $config = array(
+        $config = [
             'name' => 'main_time_table',
             'primary' => 'time_id'
-        );
+        ];
         $timetable = new Zend_Db_Table($config);
         $data = $timetable->select()
             ->setIntegrityCheck(false)
@@ -168,15 +168,15 @@ class Schedule_Model_attendance extends Zend_Db_Table_Abstract
 
     public function getSingleAttendance($emp_id, $shift_id, $datetime)
     {
-        $config = array(
+        $config = [
             'name' => 'main_attendance',
             'primary' => 'id'
-        );
+        ];
 
         $table = new Zend_Db_Table($config);
         $query = $table->select()
             ->setIntegrityCheck(false)
-            ->from(array('att' => 'main_attendance'), 'att.*')
+            ->from(['att' => 'main_attendance'], 'att.*')
             ->where('att.datetime="' . $datetime . '" AND att.emp_id=' . $emp_id . ' AND att.shift_id = ' . $shift_id);
         //  if($emp_id== "11"){
         //      die($query);
@@ -186,10 +186,10 @@ class Schedule_Model_attendance extends Zend_Db_Table_Abstract
     }
     public function saveandupdatemissinghour($data,$where)
     {
-        $config = array(
+        $config = [
             'name'=>'main_missed_hours',
             'primary'=>'missed_hours_id'
-        );
+        ];
         $missedHtable = new Zend_Db_Table($config);
         if ($where != '') {
             $missedHtable->update($data,$where);
@@ -200,18 +200,18 @@ class Schedule_Model_attendance extends Zend_Db_Table_Abstract
     }
     public function findschedule($empid,$day,$date)
     {
-        $config = array(
+        $config = [
             'name'=>'main_emp_schedule',
             'primary'=>'id'
-        );
+        ];
         $schtable = new Zend_Db_Table($config);
         $schres = $schtable->select()
                            ->setIntegrityCheck(false)
-                           ->from(array('esh'=>'main_emp_schedule'))
-                           ->joinInner(array('ms'=>'main_schedule'),'esh.sch_id = ms.sch_id AND ms.isactive=1')
-                           ->joinInner(array('msw'=>'main_sch_workday'),'(ms.sch_id = msw.sch_id AND msw.isactive=1)')
-                           ->joinInner(array('mws'=>'main_work_shift'),'(msw.sch_workday_id=mws.workday_id AND mws.isactive=1 )')
-                           ->joinInner(array('mtt'=>'main_time_table'),'(mtt.time_id = mws.time_id AND mtt.isactive=1)')
+                           ->from(['esh'=>'main_emp_schedule'])
+                           ->joinInner(['ms'=>'main_schedule'],'esh.sch_id = ms.sch_id AND ms.isactive=1')
+                           ->joinInner(['msw'=>'main_sch_workday'],'(ms.sch_id = msw.sch_id AND msw.isactive=1)')
+                           ->joinInner(['mws'=>'main_work_shift'],'(msw.sch_workday_id=mws.workday_id AND mws.isactive=1 )')
+                           ->joinInner(['mtt'=>'main_time_table'],'(mtt.time_id = mws.time_id AND mtt.isactive=1)')
                            ->where('esh.emp_id = '.$empid.' AND  msw.workday LIKE "'.$day.'%" AND msw.isactive = 1 AND ("'.$date.'" BETWEEN ms.start_date AND ms.end_date) ');
         
                       //die($schres);
@@ -222,28 +222,28 @@ class Schedule_Model_attendance extends Zend_Db_Table_Abstract
     }
     public function latedata($currentdate)
     {
-        $config = array(
+        $config = [
             'name'=>'main_attendance',
             'primary'=>'id'
-        );
+        ];
         $attendtable = new Zend_Db_Table($config);
         $data = $attendtable->select()
                             ->setIntegrityCheck(false)
-                            ->from($config['name'],array('emp_id','shift_id','shift_start','user_start','shift_end','user_end'))
+                            ->from($config['name'],['emp_id','shift_id','shift_start','user_start','shift_end','user_end'])
                             ->where('(start_status = "Late" OR end_status = "Left Early") AND datetime = '."'".$currentdate."' AND start_status!='absent' AND end_status!='absent'");
             
         return $attendtable->fetchAll($data)->toArray();
     }
     public function latedataemp($currentdate,$empid)
     {
-        $config = array(
+        $config = [
             'name'=>'main_attendance',
             'primary'=>'id'
-        );
+        ];
         $attendtable = new Zend_Db_Table($config);
         $data = $attendtable->select()
                             ->setIntegrityCheck(false)
-                            ->from($config['name'],array('emp_id','shift_id','shift_start','user_start','shift_end','user_end'))
+                            ->from($config['name'],['emp_id','shift_id','shift_start','user_start','shift_end','user_end'])
                             ->where('(start_status = "Late" OR end_status = "Left Early") AND datetime = '."'".$currentdate."' AND emp_id=".$empid." start_status!='absent' AND end_status!='absent'");
             
         return $attendtable->fetchAll($data)->toArray();
@@ -251,10 +251,10 @@ class Schedule_Model_attendance extends Zend_Db_Table_Abstract
     
     public function saveandupdatebm($data, $where)
     {
-        $config = array(
+        $config = [
             'name' => 'bm_event',
             'primary' => 'bm_event_id'
-        );
+        ];
         $bmtable = new Zend_Db_Table($config);
         if ($where != '') {
 
@@ -265,10 +265,10 @@ class Schedule_Model_attendance extends Zend_Db_Table_Abstract
     }
     public function getoffshift($date)
     {
-        $config = array(
+        $config = [
             'name' => 'main_attendance',
             'primary' => 'id'
-        );
+        ];
         $takeattend = new Zend_Db_Table($config);
         $res = $takeattend->select()
             ->setIntegrityCheck(false)
@@ -278,10 +278,10 @@ class Schedule_Model_attendance extends Zend_Db_Table_Abstract
     }
     public function offshiftdata($empid, $date)
     {
-        $config = array(
+        $config = [
             'name' => 'main_attendance',
             'primary' => 'id'
-        );
+        ];
         $takeattend = new Zend_Db_Table($config);
         $res = $takeattend->select()
             ->setIntegrityCheck(false)
@@ -296,10 +296,10 @@ class Schedule_Model_attendance extends Zend_Db_Table_Abstract
     }
     public function holydaydata($empid, $date)
     {
-        $config = array(
+        $config = [
             'name' => 'main_attendance',
             'primary' => 'id'
-        );
+        ];
         $takeattend = new Zend_Db_Table($config);
         $res = $takeattend->select()
             ->setIntegrityCheck(false)
@@ -314,10 +314,10 @@ class Schedule_Model_attendance extends Zend_Db_Table_Abstract
     }
     public function saveandupdateattend($data)
     {
-        $config = array(
+        $config = [
             'name' => 'main_attendance',
             'primary' => 'id'
-        );
+        ];
         $takeattend = new Zend_Db_Table($config);
         $db = Zend_Db_Table::getDefaultAdapter();
         $query = "UPDATE 
@@ -361,10 +361,10 @@ class Schedule_Model_attendance extends Zend_Db_Table_Abstract
 
     public function getHolidayDates($emp_id, $current_date)
     {
-        $config = array(
+        $config = [
             'name' => 'main_empholidays',
             'primary' => 'id'
-        );
+        ];
         $table = new Zend_Db_Table($config);
         $hgroup = $table->select()
             ->setIntegrityCheck(false)
@@ -374,32 +374,32 @@ class Schedule_Model_attendance extends Zend_Db_Table_Abstract
         $hgroupres = $table->fetchAll($hgroup)->toArray();
         if (count($hgroupres) != 0) {
             $hgjson = json_encode($hgroupres);
-            $hg = str_replace(array('[', '{', '}', ']', ':', '"', 'holiday_group_id'), '', $hgjson);
-            $config = array(
+            $hg = str_replace(['[', '{', '}', ']', ':', '"', 'holiday_group_id'], '', $hgjson);
+            $config = [
                 'name' => 'main_holidaydates',
                 'primary' => 'id'
-            );
+            ];
             $table = new Zend_Db_Table($config);
             $holidays = $table->select()
                 ->setIntegrityCheck(false)
                 ->where('groupid IN (' . $hg . ") AND holidaydate LIKE ?", $current_date);
             return $table->fetchAll($holidays)->toArray();
         } else {
-            return array();
+            return [];
         }
     }
 
     public function getParticularAttend($shiftID, $userID, $date)
     {
-        $config = array(
+        $config = [
             'name' => 'main_attendance',
             'primary' => 'id'
-        );
+        ];
         $table = new Zend_Db_Table($config);
 
         $isAttend = $table->select()
             ->setIntegrityCheck(false)
-            ->from(array('att' => 'main_attendance'), 'att.id')
+            ->from(['att' => 'main_attendance'], 'att.id')
             ->where('att.emp_id = ' . $userID . ' AND att.shift_id = ' . $shiftID . ' AND att.datetime ="' . $date . '"');
        // die($isAttend);
         return $table->fetchAll($isAttend)->toArray();
@@ -407,27 +407,27 @@ class Schedule_Model_attendance extends Zend_Db_Table_Abstract
 
     public function getAttendByDate($date)
     {
-        $config = array(
+        $config = [
             'name' => 'main_attendance',
             'primary' => 'id'
-        );
+        ];
         $table = new Zend_Db_Table($config);
         $query = $table->select()
             ->setIntegrityCheck(false)
-            ->from(array('att' => 'main_attendance'), 'att.*')
+            ->from(['att' => 'main_attendance'], 'att.*')
             ->where('att.datetime = "' . $date . '"  AND att.start_status NOT IN ("absent","Leave") AND att.end_status NOT IN("absent","Leave")');
         return $this->fetchAll($query)->toArray();
     }
     public function getAttendByDateemp($date,$empid)
     {
-        $config = array(
+        $config = [
             'name' => 'main_attendance',
             'primary' => 'id'
-        );
+        ];
         $table = new Zend_Db_Table($config);
         $query = $table->select()
             ->setIntegrityCheck(false)
-            ->from(array('att' => 'main_attendance'), 'att.*')
+            ->from(['att' => 'main_attendance'], 'att.*')
             ->where('att.datetime = "' . $date . '" AND  att.emp_id = "' . $empid . '"  AND att.start_status NOT IN ("absent","Leave") AND att.end_status NOT IN("absent","Leave")');
         return $this->fetchAll($query)->toArray();
     }

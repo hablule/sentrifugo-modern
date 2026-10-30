@@ -55,7 +55,7 @@ class Expenses_ExpensecategoriesController extends Zend_Controller_Action
 		$objname = $this->_getParam('objname');
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall',null);
-		$data = array();		$searchQuery = '';		$searchArray = array();		$tablecontent='';
+		$data = [];		$searchQuery = '';		$searchArray = [];		$tablecontent='';
 
 		if($refresh == 'refresh')
 		{
@@ -65,7 +65,7 @@ class Expenses_ExpensecategoriesController extends Zend_Controller_Action
 			$perPage = PERPAGE;
 
 			$sort = 'DESC';$by = 'c.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';
-			$searchArray = array();
+			$searchArray = [];
 		}
 		else
 		{
@@ -184,15 +184,15 @@ class Expenses_ExpensecategoriesController extends Zend_Controller_Action
 
 				$date = gmdate("Y-m-d H:i:s");
 
-				$data = array(
+				$data = [
 							'expense_category_name'  => $expense_category_name,
 							'createdby'  => $createdby,
 							'created_date'  => $date,
-				);
+				];
 				if($id!=''){
 					$data['modifiedby'] = $loginUserId;
 					$data['modifieddate'] = $date;
-					$where = array('id=?'=>$id);
+					$where = ['id=?'=>$id];
 				}
 				else
 				{
@@ -206,11 +206,11 @@ class Expenses_ExpensecategoriesController extends Zend_Controller_Action
 				$Id = $categoriesmodel->saveOrUpdateCategoryData($data, $where);
 				if($Id == 'update')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Expense Category Name updated successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Expense Category Name updated successfully."]);
 				}
 				else
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Expense Category Name added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Expense Category Name added successfully."]);
 				}
 					
 				$this->_redirect('expenses/expensecategories');
@@ -264,9 +264,9 @@ class Expenses_ExpensecategoriesController extends Zend_Controller_Action
 			$isexist = $categoriesmodel->isCategoryExistForexpense($id);
 			if($isexist==0)
 			{
-				$data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
+				$data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
 				$data['modifiedby'] = $loginUserId;
-				$where = array('id=?'=>$id);
+				$where = ['id=?'=>$id];
 				$id = $categoriesmodel->saveOrUpdateCategoryData($data, $where);
 				if($id == 'update')
 				{

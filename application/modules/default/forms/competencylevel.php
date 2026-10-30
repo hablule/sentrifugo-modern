@@ -35,20 +35,20 @@ class Default_Form_competencylevel extends Zend_Form
         $competencylevel->setAttrib('maxLength', 20);
         
         $competencylevel->setRequired(true);
-        $competencylevel->addValidator('NotEmpty', false, array('messages' => 'Please enter competency level.')); 
-		$competencylevel->addValidator("regex",true,array(
+        $competencylevel->addValidator('NotEmpty', false, ['messages' => 'Please enter competency level.']); 
+		$competencylevel->addValidator("regex",true,[
 									
 									'pattern'=> '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9 ]*)$/',
 								   
-								   'messages'=>array(
+								   'messages'=>[
 									   'regexNotMatch'=>'Please enter valid competency level.'
-								   )
-					));
+								   ]
+					]);
 		$competencylevel->addValidator(new Zend_Validate_Db_NoRecordExists(
-                                              array('table'=>'main_competencylevel',
+                                              ['table'=>'main_competencylevel',
                                                         'field'=>'competencylevel',
                                                       'exclude'=>'id!="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('id').'" and isactive=1',    
-                                                 ) )  
+                                                 ] )  
                                     );
         $competencylevel->getValidator('Db_NoRecordExists')->setMessage('Competency level already exists.');		
 		
@@ -64,7 +64,7 @@ class Default_Form_competencylevel extends Zend_Form
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 
-		 $this->addElements(array($id,$competencylevel,$description,$submit));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 $this->addElements([$id,$competencylevel,$description,$submit]);
+         $this->setElementDecorators(['ViewHelper']); 
 	}
 }

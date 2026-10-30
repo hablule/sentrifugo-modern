@@ -33,13 +33,13 @@ class Default_Model_Myemployees extends Zend_Db_Table_Abstract
 		
 		$employeesData = $this->select()
     					   ->setIntegrityCheck(false)	 
-						   ->from(array('e' => 'main_employees'),array('id'=>'e.user_id'))
-						   ->joinInner(array('u'=>'main_employees'),'e.reporting_manager=u.id',array('reportingmanager'=>'u.userfullname'))
-						   ->joinInner(array('mu'=>'main_employees'),'e.user_id=mu.id',array('empId'=>'mu.employeeId','empname'=>'mu.userfullname','empemail'=>'mu.emailaddress'))
-						   ->joinInner(array('b'=>'main_businessunits'),'e.businessunit_id=b.id',array('businessunit'=>'b.unitname'))
-						   ->joinInner(array('d'=>'main_departments'),'e.department_id=d.id',array('department'=>'d.deptname'))
-						   ->joinLeft(array('j'=>'main_jobtitles'),'e.jobtitle_id=j.id',array('jobtitle'=>'j.jobtitlename'))
-						   ->joinLeft(array('p'=>'main_positions'),'e.position_id=p.id',array('position'=>'p.positionname'))
+						   ->from(['e' => 'main_employees'],['id'=>'e.user_id'])
+						   ->joinInner(['u'=>'main_employees'],'e.reporting_manager=u.id',['reportingmanager'=>'u.userfullname'])
+						   ->joinInner(['mu'=>'main_employees'],'e.user_id=mu.id',['empId'=>'mu.employeeId','empname'=>'mu.userfullname','empemail'=>'mu.emailaddress'])
+						   ->joinInner(['b'=>'main_businessunits'],'e.businessunit_id=b.id',['businessunit'=>'b.unitname'])
+						   ->joinInner(['d'=>'main_departments'],'e.department_id=d.id',['department'=>'d.deptname'])
+						   ->joinLeft(['j'=>'main_jobtitles'],'e.jobtitle_id=j.id',['jobtitle'=>'j.jobtitlename'])
+						   ->joinLeft(['p'=>'main_positions'],'e.position_id=p.id',['position'=>'p.positionname'])
 						   ->where($where)
     					   ->order("$by $sort") 
     					   ->limitPage($pageNo, $perPage);
@@ -78,13 +78,13 @@ class Default_Model_Myemployees extends Zend_Db_Table_Abstract
 		}
 		$controllerName = $request->getRequest()->getControllerName();
 		if($controllerName=='employee' && ($loginUserRole == SUPERADMINROLE || $loginUserGroup == HR_GROUP || $loginUserGroup == MANAGEMENT_GROUP))
-			$filterArray = array(''=>'All',1 => 'Active',0 => 'Inactive',2 => 'Resigned',3 => 'Left',4 => 'Suspended');
+			$filterArray = [''=>'All',1 => 'Active',0 => 'Inactive',2 => 'Resigned',3 => 'Left',4 => 'Suspended'];
 		else
-			$filterArray = array(''=>'All',1 => 'Active');
+			$filterArray = [''=>'All',1 => 'Active'];
 		
         $searchQuery = '';$tablecontent = '';
-        $searchArray = array();$data = array();$id='';
-        $dataTmp = array();
+        $searchArray = [];$data = [];$id='';
+        $dataTmp = [];
 		if($searchData != '' && $searchData!='undefined')
 		{
 			$searchValues = json_decode($searchData);
@@ -111,7 +111,7 @@ class Default_Model_Myemployees extends Zend_Db_Table_Abstract
 		}
 		$objName = 'myemployees';$emptyroles=0;
 		
-		$tableFields = array('action'=>'Action','firstname'=>'First Name','lastname'=>'Last Name','emailaddress'=>'Email','employeeId' =>'Employee ID','astatus' =>'User Status','extn'=>' Work Phone','jobtitle_name'=>'Job Title','contactnumber'=>'Contact Number');
+		$tableFields = ['action'=>'Action','firstname'=>'First Name','lastname'=>'Last Name','emailaddress'=>'Email','employeeId' =>'Employee ID','astatus' =>'User Status','extn'=>' Work Phone','jobtitle_name'=>'Job Title','contactnumber'=>'Contact Number'];
 		
 		$employeeModel = new Default_Model_Employee();
 		$tablecontent = $employeeModel->getEmployeesData($sort,$by,$pageNo,$perPage,$searchQuery,$exParam1,$exParam1);  
@@ -124,7 +124,7 @@ class Default_Model_Myemployees extends Zend_Db_Table_Abstract
 		{	
 			$emptyroles=0;
 		}
-			$dataTmp = array('dashboardcall'=>$dashboardcall,
+			$dataTmp = ['dashboardcall'=>$dashboardcall,
 					'emptyroles'=>$emptyroles,
 					'sort' => $sort,
 					'by' => $by,
@@ -132,7 +132,7 @@ class Default_Model_Myemployees extends Zend_Db_Table_Abstract
 					'perPage' => $perPage,				
 					'tablecontent' => $tablecontent,
 					'objectname' => $objName,
-					'extra' => array(),
+					'extra' => [],
 					'tableheader' => $tableFields,
 					'jsGridFnName' => 'getAjaxgridData',
 					'jsFillFnName' => '',
@@ -142,11 +142,11 @@ class Default_Model_Myemployees extends Zend_Db_Table_Abstract
 					'call'=>$call,
 					'sortStr'=>$by,
 					'context'=>'myteam',
-					'search_filters' => array(
-                                                'astatus' => array('type'=>'select',
-                                                'filter_data'=>$filterArray),
-                                                ),
-				);			
+					'search_filters' => [
+                                                'astatus' => ['type'=>'select',
+                                                'filter_data'=>$filterArray],
+                                                ],
+				];			
 		return $dataTmp;
 	}
 	
@@ -164,7 +164,7 @@ class Default_Model_Myemployees extends Zend_Db_Table_Abstract
 	
 	public function getTeamIds($mgr_id)
 	{
-		$data = array();
+		$data = [];
         if($mgr_id != '')
         {
             $db = Zend_Db_Table::getDefaultAdapter();

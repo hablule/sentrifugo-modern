@@ -36,38 +36,38 @@ class Default_Form_departmentsreport extends Zend_Form
 		$dcode = new Zend_Form_Element_Text('dcode');
 		$dcode->setLabel('Code');		
         $dcode->setAttrib('class', 'selectoption');      
-		$dcode->addValidator("regex",true,array(                           
+		$dcode->addValidator("regex",true,[                           
                                    'pattern'=>'/^([a-zA-Z0-9.\-]+ ?)+$/',
-                                   'messages'=>array(
+                                   'messages'=>[
                                        'regexNotMatch'=>'Please enter only alpha numeric characters.'
-                                   )
-                        ));
+                                   ]
+                        ]);
 		$dcode->setAttrib('onblur', 'clearautocompletenames(this)');	
 		
 		$bname = new Zend_Form_Element_Text('bname');
 		$bname->setLabel('Business Unit');
-		$bname->addValidator("regex",true,array(                           
+		$bname->addValidator("regex",true,[                           
                                    'pattern'=>'/^([a-zA-Z.\-]+ ?)+$/',
-                                   'messages'=>array(
+                                   'messages'=>[
                                        'regexNotMatch'=>'Please enter only alphabets.'
-                                   )
-                        ));
+                                   ]
+                        ]);
 		$bname->setAttrib('onblur', 'clearautocompletenames(this)');	
        				
 		$startdate = new ZendX_JQuery_Form_Element_DatePicker('startdate');
 		$startdate->setLabel('Started On');
 		$startdate->setAttrib('readonly', 'true');	        
-		$startdate->setOptions(array('class' => 'brdr_none'));	
+		$startdate->setOptions(['class' => 'brdr_none']);	
 		
 		$country = new Zend_Form_Element_Select('country');
         $country->setLabel('Country');			
 		   		       
 
-		$this->addElements(array($deptname,$dcode,$bname,$startdate,$country));
-        $this->setElementDecorators(array('ViewHelper')); 
-		$this->setElementDecorators(array(
+		$this->addElements([$deptname,$dcode,$bname,$startdate,$country]);
+        $this->setElementDecorators(['ViewHelper']); 
+		$this->setElementDecorators([
                     'UiWidgetElement',
-        ),array('startdate'));		 
+        ],['startdate']);		 
 	}
 }
 

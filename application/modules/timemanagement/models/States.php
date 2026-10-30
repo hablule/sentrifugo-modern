@@ -33,7 +33,7 @@ class Timemanagement_Model_States extends Zend_Db_Table_Abstract
 	 */
 	public function getStatesByCountryId($country_id){
 		$sql = "SELECT * FROM ".$this->_name." WHERE country_id = :param1 AND isactive = :param2";
-		$state_data  = $this->_db->fetchAll($sql,array("param1"=>$country_id,"param2"=>1));
+		$state_data  = $this->_db->fetchAll($sql,["param1"=>$country_id,"param2"=>1]);
 		return $state_data;
 	}
 

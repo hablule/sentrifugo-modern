@@ -52,7 +52,7 @@ class Default_PaappraisalController extends Zend_Controller_Action
     {
         $session = sapp_Global::_readSession();
         if (!isset($session)) {
-            if ($this->getRequest()->isXmlHttpRequest()) die(Zend_Json::encode(array('login' => 'failed')));
+            if ($this->getRequest()->isXmlHttpRequest()) die(Zend_Json::encode(['login' => 'failed']));
             else $this->_redirect('');
         }
 
@@ -89,7 +89,7 @@ class Default_PaappraisalController extends Zend_Controller_Action
             }
 
             $dataTmp = $this->_model->getGrid($sort, $by, $perPage, $page, rtrim($searchData, ','), $call, null);
-            $this->view->dataArray = array($dataTmp);
+            $this->view->dataArray = [$dataTmp];
             $this->view->call      = $call;
             $this->view->messages  = $this->_helper->flashMessenger->getMessages();
         } catch (\Throwable $e) {
@@ -124,7 +124,7 @@ class Default_PaappraisalController extends Zend_Controller_Action
 
         // Security check: Only Draft campaigns can be modified
         if ($record && $record['status'] !== 'Draft') {
-            $this->_helper->flashMessenger->addMessage(array('error' => "Active or Closed campaigns cannot be modified."));
+            $this->_helper->flashMessenger->addMessage(['error' => "Active or Closed campaigns cannot be modified."]);
             $this->_redirect('paappraisal/index');
             return;
         }
@@ -164,19 +164,19 @@ class Default_PaappraisalController extends Zend_Controller_Action
 
                     if ($id == 0) {
                         if ($this->_model->checkDuplicateCampaign($rulebookId, $periodId)) {
-                            $this->_helper->json(array('period_id' => 'This financial period has already been launched for this Rulebook.'));
+                            $this->_helper->json(['period_id' => 'This financial period has already been launched for this Rulebook.']);
                             return;
                         }
                     }
 
-                    $data = array(
+                    $data = [
                         'period_id'   => $periodId,
                         'name'        => trim($request->getParam('name')),
                         'start_date'  => sapp_Global::change_date(trim($request->getParam('start_date')), 'database'),
                         'end_date'    => sapp_Global::change_date(trim($request->getParam('end_date')), 'database'),
                         'description' => trim($request->getParam('description')),
                         'isactive'    => (int)$request->getParam('isactive', 1)
-                    );
+                    ];
                     if ($id == 0) $data['rulebook_id'] = $rulebookId;
 
                     $actionFlag = ($id > 0) ? 2 : 1;
@@ -190,7 +190,7 @@ class Default_PaappraisalController extends Zend_Controller_Action
                         $audienceRaw  = json_decode((string)$request->getParam('audience_payload'), true);
                         $questionsRaw = json_decode((string)$request->getParam('questions_payload'), true);
 
-                        $employeeIds = is_array($audienceRaw) ? array_column($audienceRaw, 'employee_id') : array();
+                        $employeeIds = is_array($audienceRaw) ? array_column($audienceRaw, 'employee_id') : [];
 
                         $this->_model->syncAppraisalMappings($campaignId, $employeeIds, $questionsRaw);
                     }
@@ -201,11 +201,11 @@ class Default_PaappraisalController extends Zend_Controller_Action
                     // ==============================================================
                     if ($shouldLaunch) {
                         $assessmentsGenerated = $this->_model->generateAssessmentEnvelopes($campaignId, $rulebookId, $this->_loginUserId);
-                        $this->_model->saveRecord(array('status' => 'Active'), $campaignId);
-                        $this->_helper->flashMessenger->addMessage(array('success' => "Campaign launched successfully. Generated $assessmentsGenerated assessments."));
+                        $this->_model->saveRecord(['status' => 'Active'], $campaignId);
+                        $this->_helper->flashMessenger->addMessage(['success' => "Campaign launched successfully. Generated $assessmentsGenerated assessments."]);
                     } else {
                         $msg = ($actionFlag == 1) ? 'Campaign Draft created' : 'Campaign Updated';
-                        $this->_helper->flashMessenger->addMessage(array('success' => "$msg successfully."));
+                        $this->_helper->flashMessenger->addMessage(['success' => "$msg successfully."]);
                     }
 
                     $menuId = 395;
@@ -218,11 +218,11 @@ class Default_PaappraisalController extends Zend_Controller_Action
                         ? BASE_URL . 'paappraisal'
                         : (($actionFlag == 1) ? BASE_URL . "paappraisal/edit/id/$campaignId" : BASE_URL . 'paappraisal');
 
-                    $this->_helper->json(array('result' => 'saved', 'nomessage' => 'yes', 'redirect_url' => $redirectUrl));
+                    $this->_helper->json(['result' => 'saved', 'nomessage' => 'yes', 'redirect_url' => $redirectUrl]);
                 } catch (\Throwable $e) {
                     $db->rollBack();
                     error_log("PaAppraisal Save/Launch Error: " . $e->getMessage());
-                    $this->_helper->json(array('result' => 'exception', 'message' => $e->getMessage()));
+                    $this->_helper->json(['result' => 'exception', 'message' => $e->getMessage()]);
                 }
             } else {
                 $this->_helper->json($form->getMessages());
@@ -241,12 +241,12 @@ class Default_PaappraisalController extends Zend_Controller_Action
             try {
                 $this->_model->deleteRecord($id);
                 sapp_Global::logManager(395, 3, $this->_loginUserId, $id);
-                $this->_helper->json(array('msgtype' => 'success', 'message' => 'Campaign deleted successfully.'));
+                $this->_helper->json(['msgtype' => 'success', 'message' => 'Campaign deleted successfully.']);
             } catch (\Throwable $e) {
-                $this->_helper->json(array('msgtype' => 'error', 'message' => $e->getMessage()));
+                $this->_helper->json(['msgtype' => 'error', 'message' => $e->getMessage()]);
             }
         } else {
-            $this->_helper->json(array('msgtype' => 'error', 'message' => 'Invalid Request.'));
+            $this->_helper->json(['msgtype' => 'error', 'message' => 'Invalid Request.']);
         }
     }
 
@@ -257,9 +257,9 @@ class Default_PaappraisalController extends Zend_Controller_Action
             $status = (int)$this->getRequest()->getParam('status');
             $this->_model->toggleStatus($id, $status);
             sapp_Global::logManager(395, 4, $this->_loginUserId, $id);
-            $this->_helper->json(array('result' => 'yes'));
+            $this->_helper->json(['result' => 'yes']);
         } catch (\Throwable $e) {
-            $this->_helper->json(array('result' => 'no'));
+            $this->_helper->json(['result' => 'no']);
         }
     }
 

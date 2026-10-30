@@ -40,7 +40,7 @@ class Default_AddperkController extends Zend_Controller_Action
         $payrollmodel = new Default_Model_Addperk();
         $empmodel = new Default_Model_Emplist();
         $form = new Default_Form_addperk();
-        $inter_options = array();
+        $inter_options = [];
         $call = $this->_getParam('call');
         if ($this->_request->isPost()) {
            
@@ -60,13 +60,13 @@ class Default_AddperkController extends Zend_Controller_Action
         $view = Zend_Layout::getMvcInstance()->getView();
         $objname = $this->_getParam('objname');
         $refresh = $this->_getParam('refresh');
-        $data = array();
-        $data2 = array();
+        $data = [];
+        $data2 = [];
         $searchQuery2 = '';
-        $searchArray2 = array();
+        $searchArray2 = [];
 
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         $tablecontent = '';
         $tablecontent2 = '';
 
@@ -89,8 +89,8 @@ class Default_AddperkController extends Zend_Controller_Action
             $searchData2 = '';
             $searchQuery2 = '';
 
-            $searchArray = array();
-            $searchArray2 = array();
+            $searchArray = [];
+            $searchArray2 = [];
         } else {
             $sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
             $sort2 = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
@@ -132,11 +132,11 @@ class Default_AddperkController extends Zend_Controller_Action
 
         $temp_id = $_POST['emp_ids'];
         $temp_perks_id = $_POST['perk_ids'];
-        $datas = array();
+        $datas = [];
         foreach ($temp_id as $id) {
 
             foreach ($temp_perks_id as $perk_id) {
-                $data = array();
+                $data = [];
                 //$emp_id = $payrollmodel->getEmpId($id);
 
                 //$data['emp_id'] = (int)$emp_id[0]['user_id'];

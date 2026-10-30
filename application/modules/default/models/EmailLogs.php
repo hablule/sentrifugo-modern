@@ -50,13 +50,13 @@ class Default_Model_EmailLogs extends Zend_Db_Table_Abstract
         $db = Zend_Db_Table::getDefaultAdapter();
         $query = "select id,document_name from main_identitydocuments where isactive = 1 and expiry = 1";
         $result = $db->query($query);
-        $doc_arr = array();
+        $doc_arr = [];
         while($data = $result->fetch())
         {        
             $doc_arr[$data['id']] = $data['document_name'];
         }
         
-        $final_arr = array();
+        $final_arr = [];
         if(count($doc_arr) > 0)
         {
             $query = "select p.identity_documents,e.userfullname,e.emailaddress from main_emppersonaldetails p,
@@ -95,9 +95,9 @@ class Default_Model_EmailLogs extends Zend_Db_Table_Abstract
                   v.visa_expiry_date) and v.isactive = 1";
         
         $result = $db->query($query);
-        $visa_arr = array();
-        $emp_arr = array();
-        $final_arr = array();
+        $visa_arr = [];
+        $emp_arr = [];
+        $final_arr = [];
         while($data = $result->fetch())
         {
             $visa_arr[$data['user_id']]['etype'] = $data['etype'];
@@ -128,12 +128,12 @@ class Default_Model_EmailLogs extends Zend_Db_Table_Abstract
                   order by l.rep_mang_id asc";
         
         $result = $db->query($query);
-        $final_arr = array();
-        $leave_arr = array();
-        $emp_arr = array();
+        $final_arr = [];
+        $leave_arr = [];
+        $emp_arr = [];
         while($data = $result->fetch())
         {
-            $leave_arr[] = array('user_id' => $data['user_id'],'rep_mang_id' => $data['rep_mang_id']);
+            $leave_arr[] = ['user_id' => $data['user_id'],'rep_mang_id' => $data['rep_mang_id']];
             $emp_arr[] = $data['user_id'];
             $emp_arr[] = $data['rep_mang_id'];
         }
@@ -144,7 +144,7 @@ class Default_Model_EmailLogs extends Zend_Db_Table_Abstract
                       from main_users 
                       where isactive = 1 and id in (".$emp_str.") and id > 1";
         $emp_result = $db->query($emp_query);
-        $emp_arr = array();
+        $emp_arr = [];
         while($data = $emp_result->fetch())
         {
             $emp_arr[$data['id']]['userfullname'] = $data['userfullname'];
@@ -169,8 +169,8 @@ class Default_Model_EmailLogs extends Zend_Db_Table_Abstract
                   from main_userloginlog ul                   
                   where date(ul.logindatetime) = '".$calc_date."' and ul.userid != 1 group by ul.userid";
         $result = $db->query($query);
-        $final_arr = array();
-        $emp_arr = array();
+        $final_arr = [];
+        $emp_arr = [];
         
         while($data = $result->fetch())
         {                        
@@ -183,7 +183,7 @@ class Default_Model_EmailLogs extends Zend_Db_Table_Abstract
                       from main_users 
                       where isactive = 1 and id in (".$emp_str.") and id > 1";
         $emp_result = $db->query($emp_query);
-        $emp_arr = array();
+        $emp_arr = [];
         while($data = $emp_result->fetch())
         {
             $final_arr[$data['id']]['employeeId'] = $data['employeeId'];
@@ -200,7 +200,7 @@ class Default_Model_EmailLogs extends Zend_Db_Table_Abstract
                   left join main_jobtitles j on j.id = r.jobtitle 
                   where r.onboard_date = '".$calc_date."'  and r.isactive  = 1 order by r.businessunit_id";
         $result = $db->query($query);
-        $final_arr = array();
+        $final_arr = [];
         
         while($data = $result->fetch())
         {            

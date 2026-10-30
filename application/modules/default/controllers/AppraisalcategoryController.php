@@ -46,9 +46,9 @@ class Default_AppraisalcategoryController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 		
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 		
 		if($refresh == 'refresh')
@@ -97,7 +97,7 @@ class Default_AppraisalcategoryController extends Zend_Controller_Action
 		if($callval == 'ajaxcall')
 			$this->_helper->layout->disableLayout();
 		$appraisalCategoryForm = new Default_Form_Appraisalcategory();
-		$msgarray = array();
+		$msgarray = [];
 		$appraisalCategoryForm->setAttrib('action',BASE_URL.'appraisalcategory/add');
 		$this->view->form = $appraisalCategoryForm; 
 		$this->view->msgarray = $msgarray; 
@@ -239,7 +239,7 @@ class Default_AppraisalcategoryController extends Zend_Controller_Action
 					$loginUserId = $auth->getStorage()->read()->id;
 		} 
 	    $appraisalCategoryModel = new Default_Model_Appraisalcategory();
-		$msgarray = array();
+		$msgarray = [];
 	    
 		  if($appraisalCategoryForm->isValid($this->_request->getPost())){
             try{
@@ -248,13 +248,13 @@ class Default_AppraisalcategoryController extends Zend_Controller_Action
 			$description = $this->_request->getParam('description');
 			$actionflag = '';
 			$tableid  = ''; 
-			   $data = array('category_name'=>$appraisal_category_name, 
+			   $data = ['category_name'=>$appraisal_category_name, 
 							 'description'=>($description!=''?trim($description):NULL),
 							  'modifiedby'=>$loginUserId,
 							  'modifieddate'=>gmdate("Y-m-d H:i:s")
-					);
+					];
 				if($id!=''){
-					$where = array('id=?'=>$id);  
+					$where = ['id=?'=>$id];  
 					$actionflag = 2;
 				}
 				else
@@ -269,12 +269,12 @@ class Default_AppraisalcategoryController extends Zend_Controller_Action
 				if($Id == 'update')
 				{
 				   $tableid = $id;
-				   $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Parameter updated successfully."));
+				   $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Parameter updated successfully."]);
 				}   
 				else
 				{
 				   $tableid = $Id; 	
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Parameter added successfully."));					   
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Parameter added successfully."]);					   
 				}   
 				$menuID = APPRAISALCATEGORIES;
 				$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
@@ -323,7 +323,7 @@ class Default_AppraisalcategoryController extends Zend_Controller_Action
 			  {
 				$appQuestionModel = new Default_Model_Appraisalquestions();
 				$appQuesData = $appQuestionModel->getAppraisalQuestionsByCategotyID($id);
-				$d=array();
+				$d=[];
 				foreach($appQuesData as $key => $value)
 				{
 					 
@@ -333,8 +333,8 @@ class Default_AppraisalcategoryController extends Zend_Controller_Action
 				
 				if(sizeof($appQuesData) == 0)
 				{				
-				  $data = array('isactive'=>0,'modifiedby'=>$loginUserId,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-				  $where = array('id=?'=>$id);
+				  $data = ['isactive'=>0,'modifiedby'=>$loginUserId,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+				  $where = ['id=?'=>$id];
 				  $Id = $appraisalCategoryModel->SaveorUpdateAppraisalCategoryData($data, $where);
 				   
 				    if($Id == 'update')
@@ -361,8 +361,8 @@ class Default_AppraisalcategoryController extends Zend_Controller_Action
 			  	if(sizeof($appQuesData)> 0)
 			  	{ 
 			  		
-			  	 $data = array('isactive'=>0,'modifiedby'=>$loginUserId,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-				  $where = array('id=?'=>$id);
+			  	 $data = ['isactive'=>0,'modifiedby'=>$loginUserId,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+				  $where = ['id=?'=>$id];
 				  $Id = $appraisalCategoryModel->SaveorUpdateAppraisalCategoryData($data, $where);
 			  			
 			  	  $appQuestionModel->UpdateAppraisalQuestionData($d);
@@ -399,11 +399,11 @@ class Default_AppraisalcategoryController extends Zend_Controller_Action
 			{
 				if(	$messages['msgtype'] == 'error')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
 				}
 				if(	$messages['msgtype'] == 'success')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
 				}
 				
 			}
@@ -419,7 +419,7 @@ class Default_AppraisalcategoryController extends Zend_Controller_Action
 		}
 		$id = $this->getRequest()->getParam('id');
 
-		$msgarray = array();
+		$msgarray = [];
 		$controllername = 'appraisalcategory';
 		$appraisalCategoryForm = new Default_Form_Appraisalcategory();
 		$appraisalCategoryModel = new Default_Model_Appraisalcategory();
@@ -431,13 +431,13 @@ class Default_AppraisalcategoryController extends Zend_Controller_Action
 			$description = $this->_request->getParam('description');
 			$actionflag = '';
 			$tableid  = ''; 
-			   $data = array('category_name'=>$category_name, 
+			   $data = ['category_name'=>$category_name, 
 							 'description'=>$description,
 							  'modifiedby'=>$loginUserId,
 							  'modifieddate'=>gmdate("Y-m-d H:i:s")
-					);
+					];
 				if($id!=''){
-					$where = array('id=?'=>$id);  
+					$where = ['id=?'=>$id];  
 					$actionflag = 2;
 				}
 				else

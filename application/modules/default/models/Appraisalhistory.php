@@ -34,7 +34,7 @@ class Default_Model_Appraisalhistory extends Zend_Db_Table_Abstract
 	//function to get the appraisal history for a particular employee
 	public function getEmpAppraisalHistory($employee_id)
 	{
-		$result = array();
+		$result = [];
 		if(is_numeric($employee_id))
 		{
 			$sql_str = "select a.employee_id,group_concat(a.pa_initialization_id) as init_ids,c.from_year,c.to_year,format(COALESCE(avg(a.consolidated_rating),0),2) as consolidated_rating,case appraisal_mode when 'Quarterly' then 'Q1, Q2, Q3, Q4' when 'Half-yearly' then 'H1, H2' when 'Yearly' then 'Yearly' end as app_mode,group_concat(c.appraisal_period) as app_period    
@@ -64,13 +64,13 @@ class Default_Model_Appraisalhistory extends Zend_Db_Table_Abstract
                 }   
                 $appHistoryData = $this->select()
                             ->setIntegrityCheck(false)	
-                            ->from(array('a'=>'main_pa_employee_ratings'),array('a.id','a.pa_initialization_id','c.status as statusval',
+                            ->from(['a'=>'main_pa_employee_ratings'],['a.id','a.pa_initialization_id','c.status as statusval',
                                 new Zend_Db_Expr("concat(c.from_year,'-',c.to_year) as fin_year"),'c.appraisal_mode',
-                                ))
-                            ->joinLeft(array('b' => 'employees_summary'),"a.employee_id = b.id and b.isactive=1",array(new Zend_Db_Expr("case when c.appraisal_mode = 'Quarterly' then concat('Q',c.appraisal_period) when c.appraisal_mode = 'Half-yearly' then concat('H',c.appraisal_period) when c.appraisal_mode = 'Yearly' then 'Yearly' end as app_period")))
-                            ->joinLeft(array('c' => 'main_pa_initialization'),"a.pa_initialization_id = c.id and c.isactive=1",array('c.from_year','c.to_year',new Zend_Db_Expr("case when c.appraisal_mode = 'Quarterly' then concat('Q',c.appraisal_period) when c.appraisal_mode = 'Half-yearly' then concat('H',c.appraisal_period) when c.appraisal_mode = 'Yearly' then 'Yearly' end as app_period")))
-                            ->joinLeft(array('bu' => 'main_businessunits'),"c.businessunit_id = bu.id",array('bu.unitname'))
-                            ->joinLeft(array('du' => 'main_department'),"c.department_id = du.department_id",array('du.name'))
+                                ])
+                            ->joinLeft(['b' => 'employees_summary'],"a.employee_id = b.id and b.isactive=1",[new Zend_Db_Expr("case when c.appraisal_mode = 'Quarterly' then concat('Q',c.appraisal_period) when c.appraisal_mode = 'Half-yearly' then concat('H',c.appraisal_period) when c.appraisal_mode = 'Yearly' then 'Yearly' end as app_period")])
+                            ->joinLeft(['c' => 'main_pa_initialization'],"a.pa_initialization_id = c.id and c.isactive=1",['c.from_year','c.to_year',new Zend_Db_Expr("case when c.appraisal_mode = 'Quarterly' then concat('Q',c.appraisal_period) when c.appraisal_mode = 'Half-yearly' then concat('H',c.appraisal_period) when c.appraisal_mode = 'Yearly' then 'Yearly' end as app_period")])
+                            ->joinLeft(['bu' => 'main_businessunits'],"c.businessunit_id = bu.id",['bu.unitname'])
+                            ->joinLeft(['du' => 'main_department'],"c.department_id = du.department_id",['du.name'])
                             ->where($where)
                             ->order("$by $sort") 
                             ->limitPage($pageNo, $perPage);
@@ -93,13 +93,13 @@ class Default_Model_Appraisalhistory extends Zend_Db_Table_Abstract
                 }   
                 $appTeamHistoryData = $this->select()
                             ->setIntegrityCheck(false)	
-                            ->from(array('a'=>'main_pa_employee_ratings'),array('c.id','a.pa_initialization_id','c.status as statusval',
+                            ->from(['a'=>'main_pa_employee_ratings'],['c.id','a.pa_initialization_id','c.status as statusval',
                                 new Zend_Db_Expr("concat(c.from_year,'-',c.to_year) as fin_year"),'c.appraisal_mode',
-                                ))
-                            ->joinLeft(array('b' => 'employees_summary'),"a.employee_id = b.id and b.isactive=1",array(new Zend_Db_Expr("case when c.appraisal_mode = 'Quarterly' then concat('Q',c.appraisal_period) when c.appraisal_mode = 'Half-yearly' then concat('H',c.appraisal_period) when c.appraisal_mode = 'Yearly' then 'Yearly' end as app_period")))
-                            ->joinLeft(array('c' => 'main_pa_initialization'),"a.pa_initialization_id = c.id and c.isactive=1",array('c.from_year','c.to_year',new Zend_Db_Expr("case when c.appraisal_mode = 'Quarterly' then concat('Q',c.appraisal_period) when c.appraisal_mode = 'Half-yearly' then concat('H',c.appraisal_period) when c.appraisal_mode = 'Yearly' then 'Yearly' end as app_period")))
-                            ->joinLeft(array('bu' => 'main_businessunits'),"c.businessunit_id = bu.id",array('bu.unitname'))
-                            ->joinLeft(array('du' => 'main_department'),"c.department_id = du.department_id",array('du.name'))
+                                ])
+                            ->joinLeft(['b' => 'employees_summary'],"a.employee_id = b.id and b.isactive=1",[new Zend_Db_Expr("case when c.appraisal_mode = 'Quarterly' then concat('Q',c.appraisal_period) when c.appraisal_mode = 'Half-yearly' then concat('H',c.appraisal_period) when c.appraisal_mode = 'Yearly' then 'Yearly' end as app_period")])
+                            ->joinLeft(['c' => 'main_pa_initialization'],"a.pa_initialization_id = c.id and c.isactive=1",['c.from_year','c.to_year',new Zend_Db_Expr("case when c.appraisal_mode = 'Quarterly' then concat('Q',c.appraisal_period) when c.appraisal_mode = 'Half-yearly' then concat('H',c.appraisal_period) when c.appraisal_mode = 'Yearly' then 'Yearly' end as app_period")])
+                            ->joinLeft(['bu' => 'main_businessunits'],"c.businessunit_id = bu.id",['bu.unitname'])
+                            ->joinLeft(['du' => 'main_department'],"c.department_id = du.department_id",['du.name'])
                             ->where($where)
                             ->group("c.id") 
                             ->order("$by $sort") 
@@ -112,8 +112,8 @@ class Default_Model_Appraisalhistory extends Zend_Db_Table_Abstract
         public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$flag='',$b='',$c='',$d='')
         {		
             $searchQuery = '';
-            $searchArray = array();
-            $data = array();
+            $searchArray = [];
+            $data = [];
 
             if($searchData != '' && $searchData!='undefined')
             {
@@ -140,17 +140,17 @@ class Default_Model_Appraisalhistory extends Zend_Db_Table_Abstract
                     $objName = 'appraisalhistoryteam';
                     $tablecontent = $this->getTeamAppraisalHistory($sort, $by, $pageNo, $perPage,$searchQuery);  
                 }
-		$tableFields = array('action'=>'Action','unitname' => 'Business Unit','deptname' => 'Department','fin_year' => 'Financial Year',
-                    'appraisal_mode'=>'Appraisal Mode','app_period' => 'Period');
+		$tableFields = ['action'=>'Action','unitname' => 'Business Unit','deptname' => 'Department','fin_year' => 'Financial Year',
+                    'appraisal_mode'=>'Appraisal Mode','app_period' => 'Period'];
 		
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -159,13 +159,13 @@ class Default_Model_Appraisalhistory extends Zend_Db_Table_Abstract
 			'call'=>$call,
 			'actionparam'=>'yes',
 			'dashboardcall'=>$dashboardcall,
-                        'search_filters' => array(
-                            'appraisal_mode' => array(
+                        'search_filters' => [
+                            'appraisal_mode' => [
                                 'type' => 'select',
-                                'filter_data' => array('' => 'All','Quarterly' => 'Quarterly','Half-yearly' => 'Half-yearly','Yearly' => 'Yearly',),
-                            ),
-                        ),
-		);
+                                'filter_data' => ['' => 'All','Quarterly' => 'Quarterly','Half-yearly' => 'Half-yearly','Yearly' => 'Yearly',],
+                            ],
+                        ],
+		];
 		return $dataTmp;
 	}
 }

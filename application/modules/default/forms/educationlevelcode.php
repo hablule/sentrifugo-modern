@@ -35,19 +35,19 @@ class Default_Form_educationlevelcode extends Zend_Form
         $educationlevelcode->setAttrib('maxLength', 20);
         
         $educationlevelcode->setRequired(true);
-        $educationlevelcode->addValidator('NotEmpty', false, array('messages' => 'Please enter education level.'));
-		$educationlevelcode->addValidator("regex",true,array(                           
+        $educationlevelcode->addValidator('NotEmpty', false, ['messages' => 'Please enter education level.']);
+		$educationlevelcode->addValidator("regex",true,[                           
 							   
 							   'pattern'=> '/^(?=.*[a-zA-Z])([^ ][a-zA-Z -]*)$/',
-							   'messages'=>array(
+							   'messages'=>[
 								   'regexNotMatch'=>'Please enter valid education level.'
-							   )
-					));		
+							   ]
+					]);		
 		$educationlevelcode->addValidator(new Zend_Validate_Db_NoRecordExists(
-                                              array('table'=>'main_educationlevelcode',
+                                              ['table'=>'main_educationlevelcode',
                                                         'field'=>'educationlevelcode',
                                                       'exclude'=>'id!="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('id').'" and isactive=1',    
-                                                 ) )  
+                                                 ] )  
                                     );
         $educationlevelcode->getValidator('Db_NoRecordExists')->setMessage('Education level already exists.');		
    	
@@ -61,7 +61,7 @@ class Default_Form_educationlevelcode extends Zend_Form
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 
-		 $this->addElements(array($id,$educationlevelcode,$description,$submit));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 $this->addElements([$id,$educationlevelcode,$description,$submit]);
+         $this->setElementDecorators(['ViewHelper']); 
 	}
 }

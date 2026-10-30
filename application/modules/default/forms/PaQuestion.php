@@ -44,47 +44,47 @@ class Default_Form_Paquestion extends Zend_Form
         $category_id->setLabel('Question Category')
             ->setAttrib('class', 'formDataElement')
             ->setRequired(true)
-            ->addValidator('NotEmpty', true, array('messages' => 'Please select a Category.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please select a Category.']);
 
         $rating_id = new Zend_Form_Element_Select('rating_id');
         $rating_id->setLabel('Rating Scale / Input Type')
             ->setAttrib('class', 'formDataElement')
             ->setRequired(true)
-            ->addValidator('NotEmpty', true, array('messages' => 'Please select a Rating Scale.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please select a Rating Scale.']);
 
         // Weight (Importance) of the Question
         $weight = new Zend_Form_Element_Text('weight');
         $weight->setLabel('Question Weight (Importance)')
-            ->setAttribs(array(
+            ->setAttribs([
                 'class' => 'formDataElement',
                 'maxlength' => '5',
                 'placeholder' => 'e.g., 1.00 (Default)'
-            ))
+            ])
             ->setRequired(true)
             ->setValue('1.00') // Default weight
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', true, array('messages' => 'Please enter a weight.'))
-            ->addValidator('Float', true, array(
+            ->addValidator('NotEmpty', true, ['messages' => 'Please enter a weight.'])
+            ->addValidator('Float', true, [
                 'locale'   => 'en_US',
-                'messages' => array(Zend_Validate_Float::NOT_FLOAT => 'Weight must be a valid number.')
-            ))
-            ->addValidator('Between', true, array(
+                'messages' => [Zend_Validate_Float::NOT_FLOAT => 'Weight must be a valid number.']
+            ])
+            ->addValidator('Between', true, [
                 'min' => 0.1,
                 'max' => 10.0,
-                'messages' => array(
+                'messages' => [
                     Zend_Validate_Between::NOT_BETWEEN => 'Weight must be between 0.1 and 10.0.'
-                )
-            ));
+                ]
+            ]);
 
         // SSOT VIII.5: Multiselect Field Mapping
         $skill_ids = new Zend_Form_Element_Multiselect('skill_ids');
         $skill_ids->setLabel('Associated Skills (Optional)')
-            ->setAttribs(array(
+            ->setAttribs([
                 'class' => 'formDataElement',
                 'size'  => 5,
                 'title' => 'Select one or more Applicable Skills.'
-            ))
+            ])
             ->setRegisterInArrayValidator(false) // Required for dynamically injected UI options
             ->setRequired(false);
 
@@ -95,14 +95,14 @@ class Default_Form_Paquestion extends Zend_Form
         // Question Prompt (Note: Omitted strict alphanumeric regex to allow ?, ", ! etc.)
         $name = new Zend_Form_Element_Textarea('name');
         $name->setLabel('Question Prompt')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 3, 'placeholder' => 'e.g., How effectively does this employee communicate?'))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 3, 'placeholder' => 'e.g., How effectively does this employee communicate?'])
             ->setRequired(true)
             ->addFilter('StringTrim')->addFilter('StripTags')
-            ->addValidator('NotEmpty', true, array('messages' => 'Please enter the question text.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please enter the question text.']);
 
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Help Text (Optional)')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 2, 'placeholder' => 'Additional context for the evaluator.'))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 2, 'placeholder' => 'Additional context for the evaluator.'])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -123,13 +123,13 @@ class Default_Form_Paquestion extends Zend_Form
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save')
             // CORRECTED: Remove onclick for custom JS handler in view
-            ->setAttribs(array('id' => 'submitbutton', 'class' => 'actbtn_btn'));
+            ->setAttribs(['id' => 'submitbutton', 'class' => 'actbtn_btn']);
 
         /* --------------------------------------------------------------
          * Build Form & Apply Decorators (SSOT VI.7)
          * -------------------------------------------------------------- */
 
-        $this->addElements(array(
+        $this->addElements([
             $idElement,
             $category_id,
             $rating_id,
@@ -139,11 +139,11 @@ class Default_Form_Paquestion extends Zend_Form
             $description,
             $isactive,
             $submit
-        ));
+        ]);
 
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
-            $element->setDecorators(array('ViewHelper'));
+            $element->setDecorators(['ViewHelper']);
         }
     }
 }

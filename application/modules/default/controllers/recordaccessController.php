@@ -21,9 +21,9 @@ class Default_recordaccessController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 		
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 		
 		if($refresh == 'refresh')
@@ -88,13 +88,13 @@ class Default_recordaccessController extends Zend_Controller_Action
         if($this->getRequest()->isPost())
         { 
             if ($recordaccess_Form->isValid($this->_request->getPost())) {
-                $data = array(
+                $data = [
                     'user_id'=>$this->_getParam('user_id'),
                     'description'=>$this->_getParam('description'),
                     'accesslevel'=>$this->_getParam('accesslevel'),
                     'readwrite'=>utlis::getcheckboxvalue($this->_getParam('readwrite')),
                     'isactive'=>utlis::getcheckboxvalue($this->_getParam('isactive'))
-                );
+                ];
                 
                 if($id!=null)
                 {
@@ -129,11 +129,11 @@ class Default_recordaccessController extends Zend_Controller_Action
                
                 if($Id=='update')
                 {
-                    $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Record access updated successfully."));
+                    $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Record access updated successfully."]);
                    
                 }
                 else{
-                    $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Record access added successfully."));
+                    $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Record access added successfully."]);
                    
                 }
                 $this->_redirect('recordaccess');

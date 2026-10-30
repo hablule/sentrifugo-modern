@@ -35,24 +35,24 @@ class Default_Form_militaryservice extends Zend_Form
         $militaryservicetype->setAttrib('maxLength', 20);
         $militaryservicetype->addFilter(new Zend_Filter_StringTrim());
         $militaryservicetype->setRequired(true);
-        $militaryservicetype->addValidator('NotEmpty', false, array('messages' => 'Please enter military service type.'));  
-		$militaryservicetype->addValidators(array(
-						 array(
+        $militaryservicetype->addValidator('NotEmpty', false, ['messages' => 'Please enter military service type.']);  
+		$militaryservicetype->addValidators([
+						 [
 							 'validator'   => 'Regex',
 							 'breakChainOnFailure' => true,
-							 'options'     => array( 
+							 'options'     => [ 
 							 'pattern'=> '/^(?=.*[a-zA-Z])([^ ][a-zA-Z\s]*)$/',
-								 'messages' => array(
+								 'messages' => [
 										 'regexNotMatch'=>'Please enter valid military service type.'
-								 )
-							 )
-						 )
-					 )); 	
+								 ]
+							 ]
+						 ]
+					 ]); 	
 		$militaryservicetype->addValidator(new Zend_Validate_Db_NoRecordExists(
-                                              array('table'=>'main_militaryservice',
+                                              ['table'=>'main_militaryservice',
                                                         'field'=>'militaryservicetype',
                                                       'exclude'=>'id!="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('id').'" and isactive=1',    
-                                                 ) )  
+                                                 ] )  
                                     );
         $militaryservicetype->getValidator('Db_NoRecordExists')->setMessage('Military service type already exists.');
 		
@@ -71,7 +71,7 @@ class Default_Form_militaryservice extends Zend_Form
 		$toggleDivId = "''";
 		$jsFunction = "'redirecttocontroller(\'gender\');'";;
 
-		 $this->addElements(array($id,$militaryservicetype,$description,$submit));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 $this->addElements([$id,$militaryservicetype,$description,$submit]);
+         $this->setElementDecorators(['ViewHelper']); 
 	}
 }

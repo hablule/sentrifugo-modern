@@ -47,8 +47,8 @@ class Default_AssetdetailsController extends Zend_Controller_Action
 				$usersModel = new Default_Model_Users();
 
 					$userID = "";
-					$levelsArr = array();
-					$empcompetencyLevelsArr = array();
+					$levelsArr = [];
+					$empcompetencyLevelsArr = [];
 					$auth = Zend_Auth::getInstance();
 					if ($auth->hasIdentity()) {
 						$loginUserId = $auth->getStorage()->read()->id;
@@ -64,7 +64,7 @@ class Default_AssetdetailsController extends Zend_Controller_Action
 						$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 					}
 					if ($id == '')		$id = $userID;
-					$Uid = ($id) ? $id : $userID;
+					$Uid = $id ?: $userID;
 					if ($Uid != "") {
 						$employeeData = $usersModel->getUserDetailsByIDandFlag($Uid);
 					}
@@ -86,9 +86,9 @@ class Default_AssetdetailsController extends Zend_Controller_Action
 									$objname = $this->_getParam('objname');
 									$refresh = $this->_getParam('refresh');
 									$dashboardcall = $this->_getParam('dashboardcall', null);
-									$data = array();
+									$data = [];
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 									$tablecontent = '';
 									if ($refresh == 'refresh') {
 										if ($dashboardcall == 'Yes')
@@ -150,8 +150,8 @@ class Default_AssetdetailsController extends Zend_Controller_Action
 				$usersModel = new Default_Model_Users();
 
 					$userID = "";
-					$levelsArr = array();
-					$empcompetencyLevelsArr = array();
+					$levelsArr = [];
+					$empcompetencyLevelsArr = [];
 					$auth = Zend_Auth::getInstance();
 					if ($auth->hasIdentity()) {
 						$loginUserId = $auth->getStorage()->read()->id;
@@ -167,7 +167,7 @@ class Default_AssetdetailsController extends Zend_Controller_Action
 						$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 					}
 					if ($id == '')		$id = $userID;
-					$Uid = ($id) ? $id : $userID;
+					$Uid = $id ?: $userID;
 					if ($Uid != "") {
 						$employeeData = $usersModel->getUserDetailsByIDandFlag($Uid);
 					}
@@ -189,9 +189,9 @@ class Default_AssetdetailsController extends Zend_Controller_Action
 									$objname = $this->_getParam('objname');
 									$refresh = $this->_getParam('refresh');
 									$dashboardcall = $this->_getParam('dashboardcall', null);
-									$data = array();
+									$data = [];
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 									$tablecontent = '';
 									if ($refresh == 'refresh') {
 										if ($dashboardcall == 'Yes')
@@ -268,7 +268,7 @@ class Default_AssetdetailsController extends Zend_Controller_Action
 			$emptyFlag = 0;
 			$empskillsform = new Assets_Form_Assetdetails();
 			
-			$msgarray = array();
+			$msgarray = [];
 		
 	
 
@@ -280,7 +280,7 @@ class Default_AssetdetailsController extends Zend_Controller_Action
 			$this->view->emptyFlag = $emptyFlag;
 			$this->view->controllername = 'assetdetails';
 			if ($this->getRequest()->getPost()) {
-				$result = $this->save($empskillsform, $id);
+				$result = $this->save($empskillsform);
 				$this->view->msgarray = $result;
 			}
 		} catch (\Throwable $th) {
@@ -311,7 +311,7 @@ class Default_AssetdetailsController extends Zend_Controller_Action
 			$emptyFlag = 0;
 			$empskillsform = new Assets_Form_Assetdetails();
 			
-			$msgarray = array();
+			$msgarray = [];
 			$skillModel = new Assets_Model_Assetdetails();
 
 	
@@ -384,7 +384,7 @@ class Default_AssetdetailsController extends Zend_Controller_Action
 
 				try {
 
-						$data = array('asset_id'=>$asset_id,
+						$data = ['asset_id'=>$asset_id,
 														'description'=>$description,
 														'assetinstant_id'=>$assetinstant_id,
 														'uom_id'=>$uom_id,
@@ -394,7 +394,7 @@ class Default_AssetdetailsController extends Zend_Controller_Action
 														'emp_id' => $unitid,
 														'modifiedby'=>$loginUserId,
 									                    'modifieddate'=>gmdate("Y-m-d H:i:s")
-									);
+									];
 						if ($id != '') {
 
 							$where = 'assetassignment_id= ' . $id;

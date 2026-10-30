@@ -10,20 +10,20 @@ class Default_Form_Leavecategory extends Zend_Form{
         $name = new Zend_Form_Element_Text('name');
         $name->setAttrib('maxLength', 50);
         $name->setRequired(true);
-        $name->addValidator('NotEmpty', false, array('messages' => 'Please enter leave type.'));
-		$name->addValidators(array(
-						 array(
+        $name->addValidator('NotEmpty', false, ['messages' => 'Please enter leave type.']);
+		$name->addValidators([
+						 [
 							 'validator'   => 'Regex',
 							 'breakChainOnFailure' => true,
-							 'options'     => array( 
+							 'options'     => [ 
 							 
 							 'pattern'=> '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9\-\s]*)$/',
-								 'messages' => array(
+								 'messages' => [
 										 'regexNotMatch'=>'Please enter valid leave type.'
-								 )
-							 )
-						 )
-					 )); 
+								 ]
+							 ]
+						 ]
+					 ]); 
 				
 		$description = new Zend_Form_Element_Textarea('description');
 		$description->setLabel("Description");
@@ -35,8 +35,8 @@ class Default_Form_Leavecategory extends Zend_Form{
 		$isactive->setLabel('Active');
         $submit = new Zend_Form_Element_Submit('submit');
 		$submit->setLabel('Save');
-		 $this->addElements(array($id,$name,$description,$isactive,$submit));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 $this->addElements([$id,$name,$description,$isactive,$submit]);
+         $this->setElementDecorators(['ViewHelper']); 
     }
 }
 ?>

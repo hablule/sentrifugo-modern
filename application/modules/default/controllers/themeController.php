@@ -22,9 +22,9 @@ class Default_themeController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 
 		if($refresh == 'refresh')
@@ -63,7 +63,7 @@ class Default_themeController extends Zend_Controller_Action
 			$loginUserId = $auth->getStorage()->read()->id;
 		}
 
-		$msgarray = array();
+		$msgarray = [];
 		$controllername = 'theme';
 		$form = new Default_Form_theme();
 		$model = new Default_Model_theme();
@@ -94,7 +94,7 @@ class Default_themeController extends Zend_Controller_Action
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = '';
-				$data = array('theme_name'=>$name,
+				$data = ['theme_name'=>$name,
 				 				'menu_color'=>$menucolor,
 								 'menufg_color'=>$menufgcolor,
 								 'menuho_color'=>$menuhocolor,
@@ -114,7 +114,7 @@ class Default_themeController extends Zend_Controller_Action
 								 'tableheader_color'=>$tableheadercolor, 
 								 'tableheaderfg_color'=>$tableheaderfgcolor	 
 
-				);
+				];
 
 					$data['createdby'] = $loginUserId;
 					$data['createddate'] = gmdate("Y-m-d H:i:s");
@@ -124,7 +124,7 @@ class Default_themeController extends Zend_Controller_Action
 //die(json_encode($data));
 				$Id = $model->SaveorUpdateData($data, $where);
 				$tableid = $Id;
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Theme  added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Theme  added successfully."]);
 
 					sapp_Global::logManager(THEME,$actionflag,$loginUserId,$tableid);
 				$this->_redirect('theme');
@@ -236,7 +236,7 @@ $form->name->setValue($data[0]['name']);
 				$date = new Zend_Date();
 				$actionflag = 2;
 				$tableid  = '';
-				$data = array('theme_name'=>$name,
+				$data = ['theme_name'=>$name,
                 'menu_color'=>$menucolor,
 				'menufg_color'=>$menufgcolor,
                 'menuho_color'=>$menuhocolor,
@@ -258,7 +258,7 @@ $form->name->setValue($data[0]['name']);
 				'menu_orentation'=>$menuorentation,
 
                 'modifieddate'=>gmdate("Y-m-d H:i:s")
-				);
+				];
 				
 					$where = 'theme_id='.$id;
                   // die(json_encode($data));
@@ -266,17 +266,17 @@ $form->name->setValue($data[0]['name']);
 				if($Id == 'update')
 				{
 					$tableid = $id;
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Theme updated successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Theme updated successfully."]);
 				}
 				else if($Id == 'exist')
 				{
 					$tableid = $id;
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>"Default Theme Alaredy exist."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>"Default Theme Alaredy exist."]);
 				}
 				else
 				{
 					$tableid = $Id;
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Theme added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Theme added successfully."]);
 				}
 				sapp_Global::logManager(THEME,$actionflag,$loginUserId,$tableid);
 				$this->_redirect('theme');
@@ -317,7 +317,7 @@ $form->name->setValue($data[0]['name']);
 			$model = new Default_Model_Leave();
 
 		
-			$where = array('leave_id=?' => $id);
+			$where = ['leave_id=?' => $id];
 			$Id = $model->DeleteData($where);
 			if ($Id == 'delete') {
 				$messages['message'] = 'Leave deleted successfully.';
@@ -332,10 +332,10 @@ $form->name->setValue($data[0]['name']);
 		}
 		if ($deleteflag == 1) {
 			if ($messages['msgtype'] == 'error') {
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("error" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["error" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag]);
 			}
 			if ($messages['msgtype'] == 'success') {
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag]);
 			}
 		}
 		$this->_helper->json($messages);

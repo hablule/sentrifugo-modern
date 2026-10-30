@@ -47,9 +47,9 @@ class Default_FeedforwardinitController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 		
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 		
 		if($refresh == 'refresh')
@@ -111,8 +111,8 @@ class Default_FeedforwardinitController extends Zend_Controller_Action
         $getQuestions = $feedforwardInitModel->getQuestionsFeedforward();
       	$this->view->getQuestions = $getQuestions;
         
-        $msgarray = array();
-        $msgarray['check_array'] = array();
+        $msgarray = [];
+        $msgarray['check_array'] = [];
         $feedforwardInitForm->setAttrib('action',BASE_URL.'feedforwardinit/add');
         $this->view->form = $feedforwardInitForm; 
         $this->view->msgarray = $msgarray; 
@@ -149,8 +149,8 @@ class Default_FeedforwardinitController extends Zend_Controller_Action
         } 
         $feedforwardInitModel = new Default_Model_Feedforwardinit();
         
-        $msgarray = array();
-        $check_array = array();
+        $msgarray = [];
+        $check_array = [];
        
        	$appraisal_id = '';
 		$id = $this->_request->getParam('id');
@@ -171,14 +171,14 @@ class Default_FeedforwardinitController extends Zend_Controller_Action
 		if($empcmnt)
 			$empcmnt_keys = array_keys($empcmnt);
 		else
-			$empcmnt_keys = array();
+			$empcmnt_keys = [];
     	
 		if(sizeof($check)>0){
 			foreach($check as $qid){
 				if(in_array($qid, $empcmnt_keys))
-					$check_array[$qid] = array('EC'=>1,'ER'=>1);
+					$check_array[$qid] = ['EC'=>1,'ER'=>1];
 				else
-					$check_array[$qid] = array('EC'=>0,'ER'=>1);
+					$check_array[$qid] = ['EC'=>0,'ER'=>1];
 			}								
 		}
 		
@@ -197,7 +197,7 @@ class Default_FeedforwardinitController extends Zend_Controller_Action
 	            {                
 	              	
 	
-				   	$data = array(
+				   	$data = [
 	                                            'ff_due_date'=> $ff_due_date,
 				   								'employee_name_view' => $employee_name_view,
 				   								'enable_to'=>$enable_to,						   								   	
@@ -209,10 +209,10 @@ class Default_FeedforwardinitController extends Zend_Controller_Action
 	                                            'modifiedby_role'=>$loginuserRole,
 	                                            'modifiedby_group'=>$loginuserGroup,
 	                                            'modifieddate'=>gmdate("Y-m-d H:i:s")
-						);									
+						];									
 						
 					if($id!=''){
-						$where = array('id=?'=>$id);  
+						$where = ['id=?'=>$id];  
 						$actionflag = 2;
 						$appraisal_id = $this->_request->getParam('appraisal_id');
 					}
@@ -244,12 +244,12 @@ class Default_FeedforwardinitController extends Zend_Controller_Action
 					if($Id == 'update')
 					{
 					   $tableid = $id;
-					   $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Initialization updated successfully."));
+					   $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Initialization updated successfully."]);
 					}   
 					else
 					{
 					   	$tableid = $Id;
-						$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Initialization added successfully."));					   
+						$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Initialization added successfully."]);					   
 					}
 	
 					if($initialize_status == 1)
@@ -280,17 +280,17 @@ class Default_FeedforwardinitController extends Zend_Controller_Action
 				return $msgarray;	
 			}	
 		} else {
-			$data = array('status'=>$status,'ff_due_date'=> $ff_due_date,);
-			$where = array('id=?'=>$id);
+			$data = ['status'=>$status,'ff_due_date'=> $ff_due_date,];
+			$where = ['id=?'=>$id];
 			$Id = $feedforwardInitModel->SaveorUpdateFeedforwardInitData($data, $where);
 			if($status == 2){
 				if($Id == 'update')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Initialization closed successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Initialization closed successfully."]);
 					$this->_redirect('feedforwardinit');
 				}
 			}else{
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Initialization updated successfully."));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Initialization updated successfully."]);
 				$this->_redirect('feedforwardinit');
 			}
 		}
@@ -331,7 +331,7 @@ class Default_FeedforwardinitController extends Zend_Controller_Action
                         $feedforwardInitForm->populate($data);
                         
                         if($data['enable_to'] == 1)
-							$feedforwardInitForm->enable_to->setValue(array(0,1));
+							$feedforwardInitForm->enable_to->setValue([0,1]);
 						else
 							$feedforwardInitForm->enable_to->setValue(0);
                         
@@ -348,7 +348,7 @@ class Default_FeedforwardinitController extends Zend_Controller_Action
 						
                         $feedforwardInitForm->setAttrib('action',BASE_URL.'feedforwardinit/edit/id/'.$id);
                         
-                        $check_array['check_array'] = array();
+                        $check_array['check_array'] = [];
                         if($data['qs_privileges'])
                         	$check_array['check_array'] = json_decode($data['qs_privileges'],true);
                         
@@ -417,7 +417,7 @@ class Default_FeedforwardinitController extends Zend_Controller_Action
                     if(!empty($data))
                     {                     
                     	$empsCount = $feedforwardInitModel->getCountOfEmps($id);
-                    	$check_array = array();
+                    	$check_array = [];
                         if($data[0]['qs_privileges'])
                         	$check_array = json_decode($data[0]['qs_privileges'],true);
                         
@@ -509,7 +509,7 @@ class Default_FeedforwardinitController extends Zend_Controller_Action
     		$ffEmpRatingsModel = new Default_Model_Feedforwardemployeeratings();
     		$feedforwardInitModel = new Default_Model_Feedforwardinit();
     		$appraisalEmpsData = $feedforwardInitModel->getEmpsFromAppEmpRat($appInitId);
-    		$appEmpIDs = array();
+    		$appEmpIDs = [];
     		
     		if(sizeof($appraisalEmpsData)>0){
     			foreach ($appraisalEmpsData as $appE)
@@ -518,7 +518,7 @@ class Default_FeedforwardinitController extends Zend_Controller_Action
     				$appEmpIDs[] = $appE['employee_id'];
     				
     				$where = '';
-    				$data = array(
+    				$data = [
     						'ff_initialization_id'=>$tableid,
     						'question_ids'=>($check!='')?implode(',',$check):NULL,
 		    				'manager_id'=>$appE['line_manager_1'],
@@ -528,7 +528,7 @@ class Default_FeedforwardinitController extends Zend_Controller_Action
 							'createdby_role'=>$loginuserRole,
 							'createdby_group'=>$loginuserGroup,
 							'createddate'=>gmdate("Y-m-d H:i:s"),    				
-    				);
+    				];
     				$ffEmpRatingsModel->SaveorUpdateFFEmpRatingsData($data, $where);
     			}
     			
@@ -544,7 +544,7 @@ class Default_FeedforwardinitController extends Zend_Controller_Action
 	    			{    				
 	    			
 	    				$where1 = '';
-	    				$data1 = array(
+	    				$data1 = [
 	    						'ff_initialization_id'=>$tableid,
 	    						'question_ids'=>($check!='')?implode(',',$check):NULL,
 			    				'manager_id'=>$allE['reporting_manager'],
@@ -554,7 +554,7 @@ class Default_FeedforwardinitController extends Zend_Controller_Action
 								'createdby_role'=>$loginuserRole,
 								'createdby_group'=>$loginuserGroup,
 								'createddate'=>gmdate("Y-m-d H:i:s"),    				
-	    				);
+	    				];
 	    				$ffEmpRatingsModel->SaveorUpdateFFEmpRatingsData($data1, $where1);
 	    			}
 	    		}
@@ -583,7 +583,7 @@ class Default_FeedforwardinitController extends Zend_Controller_Action
 				else 
 				$empforFF = $feedforwardInitModel->getAppemployeeIDs($appInitId);
 				
-				$ffEmpArr = array();
+				$ffEmpArr = [];
 				$ffEmpList = '';
 				if(!empty($empforFF))
 				{
@@ -593,7 +593,7 @@ class Default_FeedforwardinitController extends Zend_Controller_Action
 					}
 					$ffEmpList = implode(',',$ffEmpArr);
 				}
-				$ffEmpEmailArr = array();
+				$ffEmpEmailArr = [];
 				$ffemployeeDetailsArr = $feedforwardInitModel->getUserDetailsByIds($ffEmpList);
 				if(!empty($ffemployeeDetailsArr))
 				{
@@ -607,8 +607,8 @@ class Default_FeedforwardinitController extends Zend_Controller_Action
 				$dept_str = ($dept == '') ? " ":"and department <b>$dept</b> "; 
 				$emp_id_str = ($loginuserRole == SUPERADMINROLE) ? " ":"($loginUserEmpId)";
 				//Preparing Employee array for Bcc
-				$empArr = array();
-				$total_emp_arr = array();
+				$empArr = [];
+				$total_emp_arr = [];
 				if(!empty($employeeDetailsArr))
 				{
 					$empArrList = '';
@@ -654,9 +654,9 @@ class Default_FeedforwardinitController extends Zend_Controller_Action
           	$ffdata = $feedforwardInitModel->getFFInitViewData($id);			
 			if($ffdata[0]['initialize_status'] == 2)	
 			{
-				  $data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"),'modifiedby_role'=>$loginuserRole,
-								 'modifiedby_group'=>$loginuserGroup,'modifiedby'=>$loginUserId);
-				  $where = array('id=?'=>$id);
+				  $data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"),'modifiedby_role'=>$loginuserRole,
+								 'modifiedby_group'=>$loginuserGroup,'modifiedby'=>$loginUserId];
+				  $where = ['id=?'=>$id];
 				  $Id = $feedforwardInitModel->SaveorUpdateFeedforwardInitData($data, $where);
 				    if($Id == 'update')
 					{

@@ -44,8 +44,8 @@ class Default_Model_Prefix extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{		
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		
 		if($searchData != '' && $searchData!='undefined')
 			{
@@ -59,24 +59,24 @@ class Default_Model_Prefix extends Zend_Db_Table_Abstract
 			}
 		$objName = 'prefix';
 		
-		$tableFields = array('action'=>'Action','prefix' => 'Prefix','description' => 'Description');
+		$tableFields = ['action'=>'Action','prefix' => 'Prefix','description' => 'Description'];
 		$tablecontent = $this->getPrefixData($sort, $by, $pageNo, $perPage,$searchQuery);     
 		
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
 			'searchArray' => $searchArray,
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall
-		);	
+		];	
 		return $dataTmp;
 	}
 	
@@ -98,7 +98,7 @@ class Default_Model_Prefix extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('p'=>'main_prefix'),array('p.id','p.prefix'))
+						->from(['p'=>'main_prefix'],['p.id','p.prefix'])
 					    ->where('p.isactive = 1')
 						 ->order('p.prefix');
 		return $this->fetchAll($select)->toArray();

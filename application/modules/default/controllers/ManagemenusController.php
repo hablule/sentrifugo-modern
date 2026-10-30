@@ -81,7 +81,7 @@ class Default_ManagemenusController extends Zend_Controller_Action
 					$chk_menu = explode(',',$chk_menu);					
 				}
                 else 
-                    $chk_menu = array();
+                    $chk_menu = [];
                 $disable_menus = array_diff($defined_menus, $chk_menu); //menus to be deactivated                              
                 if(!empty($chk_menu))
                 {                                        
@@ -105,11 +105,11 @@ class Default_ManagemenusController extends Zend_Controller_Action
 		             $menuNames = $menumodel->getMenusNamesByIds($logmenus); 
                     
 		             
-	            $logarr = array('userid' => $loginUserId,
+	            $logarr = ['userid' => $loginUserId,
 	                            'recordid' =>$logmenus,
 	                            'childrecordid' => $menuNames,
 	                            'date' => $date->get('yyyy-MM-dd HH:mm:ss')
-	                            );
+	                            ];
 	            $jsonlogarr = json_encode($logarr);
 	            $menuID = MANAGEMODULE;
 	            $actionflag = 2;

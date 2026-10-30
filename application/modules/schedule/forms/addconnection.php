@@ -22,7 +22,7 @@ class Schedule_Form_AddConnection extends Zend_Form
                 ->setAttrib('placeholder', '51211')
                 ->setRequired(true)
                 ->addValidator('NotEmpty', true)
-                ->addValidator('StringLength', false, array(1, 5))
+                ->addValidator('StringLength', false, [1, 5])
                 ->addFilter('StripTags')
                 ->addFilter('StringTrim');
 
@@ -31,8 +31,8 @@ class Schedule_Form_AddConnection extends Zend_Form
         $submit->setAttrib('class', 'search-btn');
         $submit->setAttrib('style', 'margin-right:10px;');
         $submit->setAttrib('onclick', 'searchDevice();');
-        $this->addElements(array($id, $device_ip, $device_port, $submit));
-        $this->setElementDecorators(array('ViewHelper'));
+        $this->addElements([$id, $device_ip, $device_port, $submit]);
+        $this->setElementDecorators(['ViewHelper']);
     }
 }
 

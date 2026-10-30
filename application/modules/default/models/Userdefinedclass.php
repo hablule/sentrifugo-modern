@@ -18,7 +18,7 @@ class Default_Model_Userdefinedclass extends Zend_Db_Table_Abstract
         AND TABLE_NAME IN(".$tables.")".$colname;
         $query = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('cols' => 'information_schema.COLUMNS'), array('fieldName' => 'CONCAT(cols.TABLE_NAME,CONCAT(".",cols.COLUMN_NAME))'))
+            ->from(['cols' => 'information_schema.COLUMNS'], ['fieldName' => 'CONCAT(cols.TABLE_NAME,CONCAT(".",cols.COLUMN_NAME))'])
             ->where($where);
         //die($query);
         return $this->fetchAll($query)->toArray();
@@ -28,7 +28,7 @@ class Default_Model_Userdefinedclass extends Zend_Db_Table_Abstract
     {
         $query = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('t' => $table), array('t.classPath','t.method', 't.parameters'))
+            ->from(['t' => $table], ['t.classPath','t.method', 't.parameters'])
             ->where("t.type='Calculated'");
         //die($query);
         return $this->fetchAll($query)->toArray();
@@ -48,10 +48,10 @@ class Default_Model_Userdefinedclass extends Zend_Db_Table_Abstract
     public function getReferencedTables($tableName){
         $query = $this->select()
                 ->setIntegrityCheck(false)
-                ->from(array('t'=>'information_schema.KEY_COLUMN_USAGE'), 
-                    array('table'=>'t.TABLE_NAME', 'column'=>'t.COLUMN_NAME',
+                ->from(['t'=>'information_schema.KEY_COLUMN_USAGE'], 
+                    ['table'=>'t.TABLE_NAME', 'column'=>'t.COLUMN_NAME',
                             'referenced_table'=>'t.REFERENCED_TABLE_NAME',
-                            'referenced_column'=>'t.REFERENCED_COLUMN_NAME'))
+                            'referenced_column'=>'t.REFERENCED_COLUMN_NAME'])
                 ->where("t.TABLE_NAME='".$tableName."' AND t.REFERENCED_TABLE_NAME!=''");
               //die($query); 
         return $this->fetchAll($query)->toArray();

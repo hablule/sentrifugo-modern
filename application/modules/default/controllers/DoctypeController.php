@@ -22,7 +22,7 @@ class Default_DoctypeController extends Zend_Controller_Action
         }
         $dashboardcall = $this->_getParam('dashboardcall');
         $refresh = $this->_getParam('refresh');
-        $data = array();
+        $data = [];
 
         if ($refresh == 'refresh') {
             if ($dashboardcall == 'Yes') {
@@ -119,10 +119,10 @@ class Default_DoctypeController extends Zend_Controller_Action
             $menuID = PERIODCONTROL;
 
             sapp_Global::logManager($menuID,$flag,$loginUserId,$objId);
-            $response = array(
+            $response = [
                 'message' => 'Document Type Successfully Removed.',
                 'msgtype' => 'success'
-            );
+            ];
             die(json_encode($response));
         } else {
             
@@ -165,14 +165,14 @@ class Default_DoctypeController extends Zend_Controller_Action
 				$tableid = $id;
 
 				$this->messages = '';
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Document type updated successfully."));
+                $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Document type updated successfully."]);
 			}
 			else
 			{
                 $flag = $this->actionadd;
 				$tableid = $Id;
 				$this->messages = '';	
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Document type added successfully."));		}
+                $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Document type added successfully."]);		}
             $menuID = DOCUMENTTYPE;
             sapp_Global::logManager($menuID,$flag,$loginUserId,$tableid);
             $this->_redirect('doctype/index');

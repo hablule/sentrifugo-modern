@@ -36,9 +36,9 @@ class Default_Model_Emailcontacts extends Zend_Db_Table_Abstract
 			$where .= " AND eg.group_code <> 'BG_CHECKS_HR' AND eg.group_code <> 'BG_CHECKS_MNGMNT' ";
 	$emailContactsdata = $this->select()
                                     ->setIntegrityCheck(false)	
-                                    ->from(array('e'=>'main_emailcontacts'))
-                                    ->joinInner(array('eg'=>'main_emailgroups'), "eg.id = e.group_id and eg.isactive = 1", array('group_name'=>'eg.group_name'))
-                                    ->joinInner(array('bu'=>'main_businessunits'), "bu.id = e.business_unit_id and bu.isactive = 1", array('unitname'=>"if(bu.id = 0,'',bu.unitname)"))
+                                    ->from(['e'=>'main_emailcontacts'])
+                                    ->joinInner(['eg'=>'main_emailgroups'], "eg.id = e.group_id and eg.isactive = 1", ['group_name'=>'eg.group_name'])
+                                    ->joinInner(['bu'=>'main_businessunits'], "bu.id = e.business_unit_id and bu.isactive = 1", ['unitname'=>"if(bu.id = 0,'',bu.unitname)"])
                                     ->where($where)
                                     ->order("$by $sort") 
                                     ->limitPage($pageNo, $perPage);
@@ -49,8 +49,8 @@ class Default_Model_Emailcontacts extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{		
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		
 		if($searchData != '' && $searchData!='undefined')
 			{
@@ -64,18 +64,18 @@ class Default_Model_Emailcontacts extends Zend_Db_Table_Abstract
 			}
 		$objName = 'emailcontacts';
 
-	    $tableFields = array('action'=>'Action','unitname'=>'Business Unit','group_name' => 'Group','groupEmail' => 'Group Email');
+	    $tableFields = ['action'=>'Action','unitname'=>'Business Unit','group_name' => 'Group','groupEmail' => 'Group Email'];
 		
 		$tablecontent = $this->getgroupEmails($sort, $by, $pageNo, $perPage,$searchQuery);     
 		
-	    $dataTmp = array(
+	    $dataTmp = [
 						'sort' => $sort,
 						'by' => $by,
 						'pageNo' => $pageNo,
 						'perPage' => $perPage,				
 						'tablecontent' => $tablecontent,
 						'objectname' => $objName,
-						'extra' => array(),
+						'extra' => [],
 						'tableheader' => $tableFields,
 						'jsGridFnName' => 'getAjaxgridData',
 						'jsFillFnName' => '',
@@ -83,12 +83,12 @@ class Default_Model_Emailcontacts extends Zend_Db_Table_Abstract
 						'add' =>'add',
 						'call'=>$call,
 						'dashboardcall'=>$dashboardcall,
-					);
+					];
 		return $dataTmp;
 	}
 	public function getdataforview($id = 0)
         {
-            $data = array();
+            $data = [];
             if($id != 0)
             {
                 $db = Zend_Db_Table::getDefaultAdapter();
@@ -110,8 +110,8 @@ class Default_Model_Emailcontacts extends Zend_Db_Table_Abstract
             {   $where = "e.isactive = 1 and e.id =".$id;
                 $emailContactsdata = $this->select()
 										 ->setIntegrityCheck(false)	
-                                        ->from(array('e'=>'main_emailcontacts'))
-										->joinLeft(array('eg'=>'main_emailgroups'),'eg.id = e.group_id',array('group_code'=>'eg.group_code'))
+                                        ->from(['e'=>'main_emailcontacts'])
+										->joinLeft(['eg'=>'main_emailgroups'],'eg.id = e.group_id',['group_code'=>'eg.group_code'])
                                         ->where($where);
                    
                 $emailContactsArr = $this->fetchAll($emailContactsdata)->toArray(); 
@@ -147,7 +147,7 @@ class Default_Model_Emailcontacts extends Zend_Db_Table_Abstract
         if(count($rows)>0)
             return $rows;
         else 
-            return array();
+            return [];
     }
     public function getemailcnt($bunit_id,$group_id)
     {

@@ -23,9 +23,9 @@ class Default_Model_Appraisalqsmain extends Zend_Db_Table_Abstract
 {
     protected $_name = 'main_pa_questions_privileges';
     protected $_primary = 'id';
-    
-    	
-    
+
+
+
     /**
      * This function is used to save/update data in database.
      * @parameters
@@ -48,30 +48,30 @@ class Default_Model_Appraisalqsmain extends Zend_Db_Table_Abstract
             return $id;
         }
     }
-    
+
     public function getManagerIDs($appraisalid)
     {
-    	$result = array();
+    	$result = [];
         $db = Zend_Db_Table::getDefaultAdapter();
         $query = "select line_manager_1 as mgr from main_pa_questions_privileges where pa_initialization_id = $appraisalid and isactive=1 group by line_manager_1";
         $result = $db->query($query)->fetchAll();
         return $result;
     }
-    
+
 	public function getemployeeIDs($appraisalid)
     {
-    	$result = array();
+    	$result = [];
         $db = Zend_Db_Table::getDefaultAdapter();
         $query = "select employee_id,line_manager_1,line_manager_2,line_manager_3,line_manager_4,line_manager_5 from main_pa_questions_privileges where pa_initialization_id = $appraisalid and isactive=1 and module_flag=1";
         $result = $db->query($query)->fetchAll();
         return $result;
     }
-    
+
 	public function getLine1ManagerIdMain($appraisalid)
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();
-		$options = array();
-		
+		$options = [];
+
 		if($appraisalid !='')
 		{
 		 	$query = "select t.line_manager_1,e.userfullname,e.emailaddress from main_pa_questions_privileges t
@@ -81,37 +81,37 @@ class Default_Model_Appraisalqsmain extends Zend_Db_Table_Abstract
             $result = $db->query($query);
             $options = $result->fetchAll();
 		}   
-            
+
             return $options;
 	}
-	
+
 	public function getAllManagerIds($appraisalid,$employeeid)
     {
-    	$result = array();
+    	$result = [];
         $db = Zend_Db_Table::getDefaultAdapter();
         $query = "select line_manager_1,line_manager_2,line_manager_3,line_manager_4,line_manager_5,manager_levels from main_pa_questions_privileges where pa_initialization_id = $appraisalid and employee_id = $employeeid and isactive=1 and module_flag=1";
         $result = $db->query($query)->fetchAll();
         return $result;
     }
-    
+
 	public function getAppraisalQuestionsMain($appraisalid)
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('qp'=>'main_pa_questions_privileges'),array('qp.manager_qs'))
+						->from(['qp'=>'main_pa_questions_privileges'],['qp.manager_qs'])
 					    ->where('qp.isactive = 1 AND qp.pa_initialization_id='.$appraisalid.' ');
 		return $this->fetchAll($select)->toArray();	
 	}
-   
+
 	public function getManagerDetailsByIds($employeeid,$mgrStr)
     {
-    	$result = array();
+    	$result = [];
     	$db = Zend_Db_Table::getDefaultAdapter();
         $query = "select user_id,userfullname,employeeId,profileimg,emailaddress from employees_summary where user_id in($employeeid,$mgrStr) and isactive=1;";
         $result = $db->query($query)->fetchAll();
         return $result;
     }
-	
-    
-    
+
+
+
 }//end of class

@@ -47,8 +47,8 @@ class Default_Model_Appraisalquestions extends Zend_Db_Table_Abstract
 		
         $appQuestionsData = $this->select()
                                 ->setIntegrityCheck(false)	
-                                ->from(array('aq'=>'main_pa_questions'),array('aq.*'))
-                                ->joinInner(array('ac'=>'main_pa_category'), 'aq.pa_category_id = ac.id', array('category_name' => 'ac.category_name'))
+                                ->from(['aq'=>'main_pa_questions'],['aq.*'])
+                                ->joinInner(['ac'=>'main_pa_category'], 'aq.pa_category_id = ac.id', ['category_name' => 'ac.category_name'])
                                 ->where($where)
                                 ->order("$by $sort") 
                                 ->limitPage($pageNo, $perPage);        
@@ -58,8 +58,8 @@ class Default_Model_Appraisalquestions extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{		
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		
 		if($searchData != '' && $searchData!='undefined')
 			{
@@ -81,18 +81,18 @@ class Default_Model_Appraisalquestions extends Zend_Db_Table_Abstract
 			
 		$objName = 'appraisalquestions';
 		
-		$tableFields = array('action'=>'Action','category_name'=>'Parameter','question' => 'Question','description' => 'Description');
+		$tableFields = ['action'=>'Action','category_name'=>'Parameter','question' => 'Question','description' => 'Description'];
 		
 		$tablecontent = $this->getAppraisalQuestionData($sort, $by, $pageNo, $perPage,$searchQuery);     
 		
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -100,7 +100,7 @@ class Default_Model_Appraisalquestions extends Zend_Db_Table_Abstract
 			'add' =>'add',
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall,
-		);
+		];
 		return $dataTmp;
 	}
 	
@@ -124,7 +124,7 @@ class Default_Model_Appraisalquestions extends Zend_Db_Table_Abstract
 			
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('aq'=>'main_pa_questions'),array('aq.*'))
+						->from(['aq'=>'main_pa_questions'],['aq.*'])
 					    ->where($where);
 		return $this->fetchAll($select)->toArray();	
 	}
@@ -133,7 +133,7 @@ class Default_Model_Appraisalquestions extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('aq'=>'main_pa_questions'),array('aq.*'))
+						->from(['aq'=>'main_pa_questions'],['aq.*'])
 					    ->where('aq.isactive = 1 AND aq.pa_category_id='.$categotyId.' ');
 		return $this->fetchAll($select)->toArray();	
 	}
@@ -177,7 +177,7 @@ class Default_Model_Appraisalquestions extends Zend_Db_Table_Abstract
 	{
             $db = Zend_Db_Table::getDefaultAdapter();
             $auth = Zend_Auth::getInstance();
-            $res = array();
+            $res = [];
             $loginuserGroup = '';
             if($auth->hasIdentity())
             {
@@ -218,7 +218,7 @@ class Default_Model_Appraisalquestions extends Zend_Db_Table_Abstract
 	public function gethrquestionprivileges($appraisalid,$tablename,$groupid='')
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();
-		$options = array();
+		$options = [];
 		$where = "e.pa_initialization_id = $appraisalid AND e.isactive=1 AND e.module_flag=1";
 		if($groupid !='')
 		{
@@ -238,7 +238,7 @@ class Default_Model_Appraisalquestions extends Zend_Db_Table_Abstract
 	public function getmanagerquestionprivileges($appraisalid,$tablename,$groupid='')
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();
-		$options = array();
+		$options = [];
 		$where = "e.pa_initialization_id = $appraisalid AND e.isactive=1 AND e.module_flag=1";
 		if($groupid !='')
 		{
@@ -258,7 +258,7 @@ class Default_Model_Appraisalquestions extends Zend_Db_Table_Abstract
 	public function getGroupEmployeeCount($appraisalid,$tablename)
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();
-		$options = array();
+		$options = [];
 		
 		if($appraisalid !='')
 		{
@@ -275,10 +275,10 @@ class Default_Model_Appraisalquestions extends Zend_Db_Table_Abstract
 	}
 	
 	
-	public function getEmpGroupDetails($groupid='',$appraisalid,$tablename)
+	public function getEmpGroupDetails($groupid='',$appraisalid = null,$tablename = null)
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();
-		$options = array();
+		$options = [];
 		$where = "e.isactive=1 AND t.pa_initialization_id = $appraisalid AND t.isactive=1 AND t.module_flag=1";
 		if($groupid!='')
 			$where.=" AND t.group_id = $groupid ";
@@ -301,7 +301,7 @@ class Default_Model_Appraisalquestions extends Zend_Db_Table_Abstract
 	public function getGroupCountDetails($appraisalid,$tablename)
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();
-		$options = array();
+		$options = [];
 		
 		if($appraisalid !='')
 		{

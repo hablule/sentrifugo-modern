@@ -20,7 +20,7 @@ class Default_PayrollController extends Zend_Controller_Action
         }
         $dashboardcall = $this->_getParam('dashboardcall');
         $refresh = $this->_getParam('refresh');
-        $data = array();
+        $data = [];
         if ($refresh == 'refresh') {
             if ($dashboardcall == 'Yes') {
                 $perPage = DASHBOARD_PERPAGE;
@@ -71,12 +71,12 @@ class Default_PayrollController extends Zend_Controller_Action
         $payrollform->docno->setAttrib('Readonly',true);
         if ($this->getRequest()->isPost()) {
             if ($payrollform->isValid($this->getRequest()->getPost())) {
-                $data = array(
+                $data = [
                     'docment_no'=>$this->_request->getParam('docno'),
                     'paydate'=>sapp_Global::change_date($this->_request->getParam('paydate'),'database'),
                     'autogenrerated' => $util->getcheckboxvalue($this->_request->getParam('autogen')),
 
-                );
+                ];
                 
                 
                try {
@@ -86,7 +86,7 @@ class Default_PayrollController extends Zend_Controller_Action
                }
                 sapp_Global::logManager($menuID,1,$loginuserid,$id);
                $this->_redirect('payroll');
-               $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Payroll updated successfully."));
+               $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Payroll updated successfully."]);
                $this->view->messages = $this->_helper->flashMessenger->getMessages();
                 
             }
@@ -121,12 +121,12 @@ class Default_PayrollController extends Zend_Controller_Action
         if ($this->getRequest()->isPost()) {
             $approval = $this->_request->getParam('approve');
             if ($approval == 'Approve') {
-                $data = array(
+                $data = [
                     'approved'=>sapp_Global::change_date(date('Y-m-d'),'database'),
                     'approvedby'=>$loginuserid,
                     'autogenrerated'=>'N'
                     
-                );
+                ];
 
                 $payrollmodel->saveorupdate($data,'id = '.$this->_request->getParam('id'));
                 $this->_redirect('payroll');
@@ -173,15 +173,15 @@ class Default_PayrollController extends Zend_Controller_Action
             
             if ($payrollform->isValid($this->getRequest()->getPost())) {
                
-                $data = array(
+                $data = [
                     'docment_no'=>$this->_request->getParam('docno'),
                     'paydate'=>sapp_Global::change_date($this->_request->getParam('paydate'),'database'),
                     'autogenrerated' => $util->getcheckboxvalue($this->_request->getParam('autogen')),
-                );
+                ];
                 
                 $payrollmodel->saveorupdate($data,'id = '.$id);
                         
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Perk updated successfully."));
+                $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Perk updated successfully."]);
                 $this->view->messages = $this->_helper->flashMessenger->getMessages();
                 sapp_Global::logManager($menuID,2,$loginuserid,$id);
                 $this->_redirect('payroll');

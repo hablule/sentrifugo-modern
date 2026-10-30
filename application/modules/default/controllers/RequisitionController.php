@@ -62,7 +62,7 @@ class Default_RequisitionController extends Zend_Controller_Action
 		$session = sapp_Global::_readSession();
 		if (!isset($session)) {
 			if ($this->getRequest()->isXmlHttpRequest()) {
-				echo Zend_Json::encode(array('login' => 'failed'));
+				echo Zend_Json::encode(['login' => 'failed']);
 				exit;
 			} else {
 				$this->_redirect('');
@@ -117,7 +117,7 @@ class Default_RequisitionController extends Zend_Controller_Action
 
 			$dataTmp = $this->_model->getGrid($sort, $by, $perPage, $page, rtrim($searchData, ','), $call, $dashboardcall, $statusFilter);
 
-			$this->view->dataArray = array($dataTmp);
+			$this->view->dataArray = [$dataTmp];
 			$this->view->call      = $call;
 			$this->view->messages  = $this->_helper->flashMessenger->getMessages();
 		} catch (\Throwable $e) {
@@ -161,7 +161,7 @@ class Default_RequisitionController extends Zend_Controller_Action
 
 		// Inject empty child form and position array for Tab 2
 		$this->_setupChildFormContext();
-		$this->view->existingPositions = json_encode(array());
+		$this->view->existingPositions = json_encode([]);
 
 		$this->render('save');
 	}
@@ -207,7 +207,7 @@ class Default_RequisitionController extends Zend_Controller_Action
 			try {
 				$recruiterId = $request->getParam('assigned_recruiter_id');
 
-				$data = array(
+				$data = [
 					'code'                     => trim((string) $request->getParam('code', '')),
 					'requested_by_employee_id' => (int) $request->getParam('requested_by_employee_id'),
 					'assigned_recruiter_id'    => !empty($recruiterId) ? (int)$recruiterId : null,
@@ -215,7 +215,7 @@ class Default_RequisitionController extends Zend_Controller_Action
 					'status'                   => trim((string) $request->getParam('status', 'Draft')),
 					'description'              => trim((string) $request->getParam('description', '')),
 					'isactive'                 => (int) $request->getParam('isactive', 1)
-				);
+				];
 
 				$actionFlag = 2;
 				$saveMode   = 'updated';
@@ -246,15 +246,15 @@ class Default_RequisitionController extends Zend_Controller_Action
 				$db->commit();
 
 				$redirectTab = ($data['status'] === 'Approved') ? 'active_pipelines' : 'action_required';
-				$this->_helper->flashMessenger->addMessage(array('success' => "Requisition campaign {$saveMode} successfully."));
-				$this->_helper->json(array('result' => 'saved', 'nomessage' => 'yes', 'redirect_url' => base_url . '/requisition/index/status_filter/' . $redirectTab));
+				$this->_helper->flashMessenger->addMessage(['success' => "Requisition campaign {$saveMode} successfully."]);
+				$this->_helper->json(['result' => 'saved', 'nomessage' => 'yes', 'redirect_url' => \BASE_URL . '/requisition/index/status_filter/' . $redirectTab]);
 			} catch (\Throwable $e) {
 				$db->rollBack();
 				error_log("Requisition Save Error: " . $e->getMessage());
-				$this->_helper->json(array('result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error'));
+				$this->_helper->json(['result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error']);
 			}
 		} else {
-			$msgarray = array();
+			$msgarray = [];
 			foreach ($form->getMessages() as $field => $errors) {
 				$msgarray[$field] = current($errors);
 			}
@@ -272,7 +272,7 @@ class Default_RequisitionController extends Zend_Controller_Action
 
 		if ($id) {
 			if (defined('REQUISITION_MENU_ID') && sapp_Global::_checkprivileges(REQUISITION_MENU_ID, $this->_loginuserGroup, $this->_loginuserRole, 'delete') !== 'Yes') {
-				return $this->_helper->json(array('result' => 'error', 'message' => 'Permission Denied.'));
+				return $this->_helper->json(['result' => 'error', 'message' => 'Permission Denied.']);
 			}
 
 			try {
@@ -285,14 +285,14 @@ class Default_RequisitionController extends Zend_Controller_Action
 					sapp_Global::logManager(REQUISITION_MENU_ID, 3, $this->_loginUserId, $id);
 				}
 
-				return $this->_helper->json(array('result' => 'saved', 'nomessage' => 'no', 'message' => 'Record deleted successfully.', 'msgtype' => 'success'));
+				return $this->_helper->json(['result' => 'saved', 'nomessage' => 'no', 'message' => 'Record deleted successfully.', 'msgtype' => 'success']);
 			} catch (\Throwable $e) {
 				error_log("Requisition Delete Error: " . $e->getMessage());
-				return $this->_helper->json(array('result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error'));
+				return $this->_helper->json(['result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error']);
 			}
 		}
 
-		return $this->_helper->json(array('result' => 'error', 'message' => 'Invalid request'));
+		return $this->_helper->json(['result' => 'error', 'message' => 'Invalid request']);
 	}
 
 	/* =================================================================================
@@ -375,7 +375,7 @@ class Default_RequisitionController extends Zend_Controller_Action
 	{
 		$request = $this->getRequest();
 		if (!$request->isPost()) {
-			return $this->_helper->json(array('result' => 'error', 'message' => 'Invalid request method.'));
+			return $this->_helper->json(['result' => 'error', 'message' => 'Invalid request method.']);
 		}
 
 		$form = new Default_Form_Reqpositionstatus();
@@ -403,16 +403,16 @@ class Default_RequisitionController extends Zend_Controller_Action
 
 				// 1. Update Seat Status on map_requisition_position
 				$reqPosModel->update(
-					array(
+					[
 						'status'       => $newStatus,
 						'modifiedby'   => $this->_loginUserId,
 						'modifieddate' => gmdate("Y-m-d H:i:s")
-					),
-					array('id = ?' => $mapId)
+					],
+					['id = ?' => $mapId]
 				);
 
 				// 2. Write to Immutable Event Ledger
-				$db->insert('log_requisition_position_status', array(
+				$db->insert('log_requisition_position_status', [
 					'map_req_pos_id'        => $mapId,
 					'status'                => $newStatus,
 					'status_reason_id'      => $reasonId,
@@ -420,11 +420,11 @@ class Default_RequisitionController extends Zend_Controller_Action
 					'notes'                 => !empty($notes) ? $notes : null,
 					'createdby'             => $this->_loginUserId,
 					'createddate'           => gmdate("Y-m-d H:i:s")
-				));
+				]);
 
 				// Campaign Auto-Closure Check
 				// Find the parent requisition ID
-				$mapRow = $reqPosModel->fetchRow(array('id = ?' => $mapId));
+				$mapRow = $reqPosModel->fetchRow(['id = ?' => $mapId]);
 				if ($mapRow) {
 					$reqId = $mapRow->requisition_id;
 
@@ -435,31 +435,31 @@ class Default_RequisitionController extends Zend_Controller_Action
                         WHERE requisition_id = ? 
                           AND status NOT IN ('Filled', 'Cancelled') 
                           AND isactive != 5
-                    ", array($reqId));
+                    ", [$reqId]);
 
 					if ($openSeatsCount == 0) {
 						// All seats are accounted for! Auto-close the master requisition.
 						$db->update(
 							'main_requisition',
-							array(
+							[
 								'status' => 'Closed',
 								'modifiedby' => $this->_loginUserId,
 								'modifieddate' => gmdate("Y-m-d H:i:s")
-							),
-							array('id = ?' => $reqId)
+							],
+							['id = ?' => $reqId]
 						);
 					}
 				}
 
 				$db->commit();
-				$this->_helper->json(array('result' => 'saved', 'message' => 'Pipeline status updated successfully.'));
+				$this->_helper->json(['result' => 'saved', 'message' => 'Pipeline status updated successfully.']);
 			} catch (\Throwable $e) {
 				$db->rollBack();
 				error_log("Status Transition Error: " . $e->getMessage());
-				$this->_helper->json(array('result' => 'exception', 'message' => $e->getMessage()));
+				$this->_helper->json(['result' => 'exception', 'message' => $e->getMessage()]);
 			}
 		} else {
-			$this->_helper->json(array('result' => 'error', 'message' => 'Please provide a valid status and reason.'));
+			$this->_helper->json(['result' => 'error', 'message' => 'Please provide a valid status and reason.']);
 		}
 	}
 }

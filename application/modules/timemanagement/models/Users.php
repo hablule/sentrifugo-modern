@@ -21,12 +21,12 @@ class Timemanagement_Model_Users extends Zend_Db_Table_Abstract
 		if($userId != 1){
 			$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('u'=>$this->_name), array('tm_role'=>new Zend_Db_Expr("(CASE WHEN g. ".GROUP_ARRAY['colname']." = 'Management' || g.".GROUP_ARRAY['colname']." = 'Manager'  THEN  'Manager'
+			->from(['u'=>$this->_name], ['tm_role'=>new Zend_Db_Expr("(CASE WHEN g. ".GROUP_ARRAY['colname']." = 'Management' || g.".GROUP_ARRAY['colname']." = 'Manager'  THEN  'Manager'
  ELSE CASE WHEN u.id IN (SELECT reporting_manager FROM employees_summary) THEN 'Manager'
-      ELSE 'Employee' END END)")))
-	  ->joinInner(array('ur'=>'main_userrole'),"ur.user_id = u.id",array())
-	  ->joinInner(array('r'=>ROLE_ARRAY['tablename']),"r.".ROLE_ARRAY['colid']." = ur.role_id",array())
-	  ->joinInner(array('g'=>GROUP_ARRAY['tablename']),"g.".GROUP_ARRAY['colid']." = r.".ROLE_ARRAY['colgroupid']."",array())
+      ELSE 'Employee' END END)")])
+	  ->joinInner(['ur'=>'main_userrole'],"ur.user_id = u.id",[])
+	  ->joinInner(['r'=>ROLE_ARRAY['tablename']],"r.".ROLE_ARRAY['colid']." = ur.role_id",[])
+	  ->joinInner(['g'=>GROUP_ARRAY['tablename']],"g.".GROUP_ARRAY['colid']." = r.".ROLE_ARRAY['colgroupid']."",[])
 			->where(" u.id = ".$userId." ");
 
 			$tmRole = $this->fetchAll($select)->toArray();
@@ -40,10 +40,10 @@ class Timemanagement_Model_Users extends Zend_Db_Table_Abstract
 
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('u'=>'employees_summary'),
-		array('u.user_id','p.role','u.emprole','tm_role'=>'m.menuName','u.userfullname','u.emailaddress','u.employeeId'))
-		->joinInner(array('p'=>'main_privileges'),"p.role = u.emprole",array())
-		->joinInner(array('m'=>'main_menu'),"m.id = p.object",array())
+		->from(['u'=>'employees_summary'],
+		['u.user_id','p.role','u.emprole','tm_role'=>'m.menuName','u.userfullname','u.emailaddress','u.employeeId'])
+		->joinInner(['p'=>'main_privileges'],"p.role = u.emprole",[])
+		->joinInner(['m'=>'main_menu'],"m.id = p.object",[])
 		->where(" m.menuName = '".$empType."' and m.parent=(select id from main_menu where menuName ='Time Management' and isactive = 1)");
 		//echo $select;exit;
 		$employees = $this->fetchAll($select)->toArray();
@@ -67,11 +67,11 @@ class Timemanagement_Model_Users extends Zend_Db_Table_Abstract
 			//add this to the first join statment
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('s'=>'employees_summary'),
-		array('date_of_joining','m.weekend_startday','m.weekend_endday','holiday_names'=>'GROUP_CONCAT(h.name)' ,
-					 'holiday_dates'=>'GROUP_CONCAT(start_date)'))				
-		->joinInner(array('m'=>'main_leavemanagement'),"m.isactive=1",array())
-		->joinLeft(array('h'=>'main_holidaydates'),"h.holidaycategory_id = s.holiday_group and h.isactive=1 and YEAR(start_date) = '".$year."' ".$where." ",array())
+		->from(['s'=>'employees_summary'],
+		['date_of_joining','m.weekend_startday','m.weekend_endday','holiday_names'=>'GROUP_CONCAT(h.name)' ,
+					 'holiday_dates'=>'GROUP_CONCAT(start_date)'])				
+		->joinInner(['m'=>'main_leavemanagement'],"m.isactive=1",[])
+		->joinLeft(['h'=>'main_holidaydates'],"h.holidaycategory_id = s.holiday_group and h.isactive=1 and YEAR(start_date) = '".$year."' ".$where." ",[])
 		->where(" s.user_id = '".$empId."'");
 		//echo $select; 
 		//die($select);
@@ -85,7 +85,7 @@ class Timemanagement_Model_Users extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('t' => 'tm_process_updates'),array('ts_date'=>'t.ts_dates','approved_date'=>'date_format(t.created,"%Y-%m-%d")'))
+		->from(['t' => 'tm_process_updates'],['ts_date'=>'t.ts_dates','approved_date'=>'date_format(t.created,"%Y-%m-%d")'])
 		->where("t.action_type = 'approved' AND t.alert = 'open' AND t.emp_id = '".$emp_id."' ")
 		->order("t.ts_dates DESC");
 		return $this->fetchAll($select)->toArray();
@@ -103,14 +103,14 @@ class Timemanagement_Model_Users extends Zend_Db_Table_Abstract
 
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('u'=>'employees_summary'),
-		array('u.user_id','u.emprole','tm_role'=>new Zend_Db_Expr("(CASE WHEN ".GROUP_ARRAY['colname']." = 'Management' || ".GROUP_ARRAY['colname']." = 'Manager'  THEN  'Manager'
+		->from(['u'=>'employees_summary'],
+		['u.user_id','u.emprole','tm_role'=>new Zend_Db_Expr("(CASE WHEN ".GROUP_ARRAY['colname']." = 'Management' || ".GROUP_ARRAY['colname']." = 'Manager'  THEN  'Manager'
  ELSE CASE WHEN u.user_id IN (SELECT reporting_manager FROM employees_summary) THEN 'Manager'
-      ELSE 'Employee' END END)"),'u.userfullname','u.emailaddress','u.employeeId','u.holiday_group','u.department_id','u.date_of_joining','emp_cur_day' => new Zend_Db_Expr("(SELECT LOWER(DAYNAME(CONVERT_TZ(UTC_TIMESTAMP(),'+00:00',tz.offet_value))))")))
-		->joinInner(array('r'=>ROLE_ARRAY['colid']),"r.".ROLE_ARRAY['colid']." = u.emprole",array())
-		->joinInner(array('g'=>GROUP_ARRAY['tablename']),"g.".GROUP_ARRAY['colid']." = r.".ROLE_ARRAY['colgroupid']."",array())
-		->joinInner(array('d'=>'main_department'),"d.id = u.department_id",array())
-		->joinInner(array('tz'=>'main_timezone'),"tz.id = d.timezone",array())
+      ELSE 'Employee' END END)"),'u.userfullname','u.emailaddress','u.employeeId','u.holiday_group','u.department_id','u.date_of_joining','emp_cur_day' => new Zend_Db_Expr("(SELECT LOWER(DAYNAME(CONVERT_TZ(UTC_TIMESTAMP(),'+00:00',tz.offet_value))))")])
+		->joinInner(['r'=>ROLE_ARRAY['colid']],"r.".ROLE_ARRAY['colid']." = u.emprole",[])
+		->joinInner(['g'=>GROUP_ARRAY['tablename']],"g.".GROUP_ARRAY['colid']." = r.".ROLE_ARRAY['colgroupid']."",[])
+		->joinInner(['d'=>'main_department'],"d.id = u.department_id",[])
+		->joinInner(['tz'=>'main_timezone'],"tz.id = d.timezone",[])
 		->where("u.isactive=1 and u.reporting_manager = '".$reportingToId."'");
 		//->having('emp_cur_day = "'.$cron_run_day.'"');
 		//echo $select;exit;
@@ -124,20 +124,20 @@ class Timemanagement_Model_Users extends Zend_Db_Table_Abstract
 	/* To check whether in week/month all days have been submitted */
 	public function checkweekdaysdatacron($hidstartweek_date,$hidendweek_date,$hidemp,$emp_dept_id,$employeeGroupId,$empJoiningDate)
 	{
-		$messages = array();
+		$messages = [];
 		if($hidemp != '' && $hidstartweek_date != '' && $hidendweek_date != '')
 		{
 			//To get days in the week/month
 			$weekDatesArray = sapp_Global::createDateRangeArray($hidstartweek_date,$hidendweek_date); //echo '<pre>';print_r($weekDatesArray);
 			//End
 
-			$submittedtsdates = $holDates = $weekendDates = $leaveDates = array();
+			$submittedtsdates = $holDates = $weekendDates = $leaveDates = [];
 
 			$startdateObj = DateTime::createFromFormat("Y-m-d", $hidstartweek_date);
 
 			$loopDate = $hidstartweek_date;
-			$cal_weekArray = array();
-			$yearCalWeekArray = array();
+			$cal_weekArray = [];
+			$yearCalWeekArray = [];
 			while (strtotime($loopDate) <= strtotime($hidendweek_date)) {
 
 				$calWeekVal = strftime('%U',strtotime($loopDate));
@@ -160,7 +160,7 @@ class Timemanagement_Model_Users extends Zend_Db_Table_Abstract
 			//To get dates of timesheet filled by user of the given duration
 			$tsStatus_model = new Timemanagement_Model_Timesheetstatus();
 			$resultData = $tsStatus_model->getEachDayTsDateCron($hidemp,$cal_weekArray,$yearCalWeekArray); //echo '<pre>'; print_r($resultData);exit;
-			$ts_filled_dates = array();
+			$ts_filled_dates = [];
 			if(!empty($resultData)){
 				foreach($resultData as $resData){
 					$ts_week_dates = $resData['ts_week_dates'];
@@ -187,7 +187,7 @@ class Timemanagement_Model_Users extends Zend_Db_Table_Abstract
 			/*End*/
 
 			//To get Holidays for the given duration
-			$holidayDatesArr =  array();
+			$holidayDatesArr =  [];
 			if( isset($employeeGroupId) && $employeeGroupId !=''){
 				$holidaydatesmodel = new Default_Model_Holidaydates();
 				$holidayDateslistArr = $holidaydatesmodel->getHolidayDatesListForGroup($employeeGroupId);
@@ -204,7 +204,7 @@ class Timemanagement_Model_Users extends Zend_Db_Table_Abstract
 			//To get Leaves applied by user for the given duration
 			$empLeaves = $this->getEmpLeaves($hidemp,$hidstartweek_date,$hidendweek_date);
 			if(!empty($empLeaves)){
-				$empleaveDatesArray = array();
+				$empleaveDatesArray = [];
 				foreach($empLeaves as $empLeaveRow){
 					if($empLeaveRow['leaveday'] == 1){
 						$leaveDatesArray = sapp_Global::createDateRangeArray($empLeaveRow['from_date'],$empLeaveRow['to_date']);
@@ -250,16 +250,16 @@ class Timemanagement_Model_Users extends Zend_Db_Table_Abstract
 				}
 			}
 
-			$totalDaysArray = array();
+			$totalDaysArray = [];
 			$totalDaysArray = array_merge($submittedtsdates,$holDates,$leaveDates,$weekendDates);
 			//print_r($totalDaysArray);
 
-			$emptyDataDatesArray = array();
+			$emptyDataDatesArray = [];
 			$emptyDataDatesArray = array_diff($weekDatesArray,$totalDaysArray);
 			//echo '<pre>';print_r($emptyDataDatesArray);exit;
 			if(count($emptyDataDatesArray)>0)
 			{
-				$newemptyDataDatesArray=array();
+				$newemptyDataDatesArray=[];
 				foreach($emptyDataDatesArray as $edate)
 				{
 					if($edate>=$empJoiningDate)
@@ -268,20 +268,20 @@ class Timemanagement_Model_Users extends Zend_Db_Table_Abstract
 				return $newemptyDataDatesArray;
 			}
 			else
-			return array();
+			return [];
 			// echo "<pre>";print_r($emptyDataDatesArray);exit;
 		}
 	}
 
 	public function getWeekend($startday,$endday,$dept_id)
 	{
-		$wkend_dates_arr = array();
+		$wkend_dates_arr = [];
 		$leavemanagementmodel = new Default_Model_Leavemanagement();
 		$weekendDetailsArr = $leavemanagementmodel->getWeekendNamesDetails($dept_id);
 
 		if(!empty($weekendDetailsArr)){
-			$weekend_arr=array($weekendDetailsArr[0]['daystartname'],$weekendDetailsArr[0]['dayendname']);
-			$wkend_dates_arr=array();
+			$weekend_arr=[$weekendDetailsArr[0]['daystartname'],$weekendDetailsArr[0]['dayendname']];
+			$wkend_dates_arr=[];
 			while($startday<=$endday)
 			{
 				$nday=new DateTime($startday);
@@ -303,8 +303,8 @@ class Timemanagement_Model_Users extends Zend_Db_Table_Abstract
 		if($flag != 'all') $where .= "el.leaveday = 1 AND";
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('el' => 'main_leaverequest'),
-		array('from_date'=>'date_format(el.from_date,"%Y-%m-%d")','to_date'=>'date_format(el.to_date,"%Y-%m-%d")','leavetypeid'=>'el.leavetypeid','leavestatus'=>'el.leavestatus','leaveday'=>'el.leaveday','leave_req_id'=>'el.id'))
+		->from(['el' => 'main_leaverequest'],
+		['from_date'=>'date_format(el.from_date,"%Y-%m-%d")','to_date'=>'date_format(el.to_date,"%Y-%m-%d")','leavetypeid'=>'el.leavetypeid','leavestatus'=>'el.leavestatus','leaveday'=>'el.leaveday','leave_req_id'=>'el.id'])
 	//	->where("el.isactive=1 AND el.user_id=".$empid." AND el.leavestatus IN ('Approved','Pending for approval') AND  ((el.from_date >= '".$startday."' AND el.from_date <= '".$endday."') OR (el.to_date >= '".$startday."' AND el.to_date <= '".$endday."')) ");
 		->where("$where  el.isactive=1 AND el.user_id=".$empid." AND el.leavestatus IN ('Approved','Pending for approval') AND  ((el.from_date >= '".$startday."' AND el.from_date <= '".$endday."') OR (el.to_date >= '".$startday."' AND el.to_date <= '".$endday."')) ");
 		//echo $select;
@@ -317,12 +317,12 @@ class Timemanagement_Model_Users extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('u'=>'employees_summary'),
-		array('u.user_id','u.emprole','tm_role'=>new Zend_Db_Expr("(CASE WHEN ".GROUP_ARRAY['colname']." = 'Management' || ".GROUP_ARRAY['colname']." = 'Manager'  THEN  'Manager'
+		->from(['u'=>'employees_summary'],
+		['u.user_id','u.emprole','tm_role'=>new Zend_Db_Expr("(CASE WHEN ".GROUP_ARRAY['colname']." = 'Management' || ".GROUP_ARRAY['colname']." = 'Manager'  THEN  'Manager'
  ELSE CASE WHEN u.user_id IN (SELECT reporting_manager FROM employees_summary) THEN 'Manager'
-      ELSE 'Employee' END END)"),'u.userfullname','u.emailaddress','u.employeeId'))
-		->joinInner(array('r'=>ROLE_ARRAY['tablename']),"r.".ROLE_ARRAY['colid']." = u.emprole",array())
-		->joinInner(array('g'=>GROUP_ARRAY['tablename']),"g.".GROUP_ARRAY['colid']." = r.".ROLE_ARRAY['colgroupid']."",array())
+      ELSE 'Employee' END END)"),'u.userfullname','u.emailaddress','u.employeeId'])
+		->joinInner(['r'=>ROLE_ARRAY['tablename']],"r.".ROLE_ARRAY['colid']." = u.emprole",[])
+		->joinInner(['g'=>GROUP_ARRAY['tablename']],"g.".GROUP_ARRAY['colid']." = r.".ROLE_ARRAY['colgroupid']."",[])
 		->where("u.isactive=1")
 		->group("u.user_id")
 		->having("tm_role = 'Manager'");;

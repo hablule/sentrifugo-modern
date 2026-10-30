@@ -56,7 +56,7 @@ class Default_DigitalpresenceController extends Zend_Controller_Action
         $session = sapp_Global::_readSession();
         if (!isset($session)) {
             if ($this->getRequest()->isXmlHttpRequest()) {
-                die(Zend_Json::encode(array('login' => 'failed')));
+                die(Zend_Json::encode(['login' => 'failed']));
             } else {
                 $this->_redirect('');
             }
@@ -103,7 +103,7 @@ class Default_DigitalpresenceController extends Zend_Controller_Action
 
             $dataTmp = $this->_model->getGrid($sort, $by, $perPage, $page, rtrim($searchData, ','), $call, $dashboardcall);
 
-            $this->view->dataArray = array($dataTmp);
+            $this->view->dataArray = [$dataTmp];
             $this->view->call      = $call;
             $this->view->messages  = $this->_helper->flashMessenger->getMessages();
         } catch (\Throwable $e) { // SSOT IX.2
@@ -157,7 +157,7 @@ class Default_DigitalpresenceController extends Zend_Controller_Action
                     // SSOT V.10: Poly-Hierarchical Integrity Validation
                     // Enforce exactly one parent organizational unit/owner
                     // ===================================================================
-                    $parentIds = array(
+                    $parentIds = [
                         'company_id'    => $request->getParam('company_id'),
                         'sbunit_id'     => $request->getParam('sbunit_id'),
                         'division_id'   => $request->getParam('division_id'),
@@ -166,19 +166,17 @@ class Default_DigitalpresenceController extends Zend_Controller_Action
                         'project_id'    => $request->getParam('project_id'),
                         'team_id'       => $request->getParam('team_id'),
                         'employee_id'   => $request->getParam('employee_id')
-                    );
+                    ];
 
                     // Filter out empty values to count how many parents were selected
-                    $activeParents = array_filter($parentIds, function ($val) {
-                        return !empty($val) && (int)$val > 0;
-                    });
+                    $activeParents = array_filter($parentIds, fn($val) => !empty($val) && (int)$val > 0);
 
                     if (count($activeParents) !== 1) {
                         throw new Exception("Integrity Error: This Digital Presence record must be assigned to exactly one owner (e.g., Company OR Employee OR Department). You selected " . count($activeParents) . ".");
                     }
 
                     // Prepare Data Payload
-                    $data = array(
+                    $data = [
                         'digitalmedia_id' => (int)$request->getParam('digitalmedia_id'),
                         'company_id'      => !empty($parentIds['company_id']) ? (int)$parentIds['company_id'] : null,
                         'sbunit_id'       => !empty($parentIds['sbunit_id']) ? (int)$parentIds['sbunit_id'] : null,
@@ -191,7 +189,7 @@ class Default_DigitalpresenceController extends Zend_Controller_Action
                         'digitaladdress'  => trim($request->getParam('digitaladdress')),
                         'description'     => trim($request->getParam('description')),
                         'isactive'        => (int)$request->getParam('isactive', 1)
-                    );
+                    ];
 
                     $actionFlag = ($id > 0) ? 2 : 1; // 2=Edit, 1=Add
                     $savedId = $this->_model->saveRecord($data, $id);
@@ -204,26 +202,26 @@ class Default_DigitalpresenceController extends Zend_Controller_Action
                     $db->commit();
 
                     $msg = ($actionFlag == 1) ? 'Added' : 'Updated';
-                    $this->_helper->flashMessenger->addMessage(array('success' => "Digital Presence $msg successfully."));
+                    $this->_helper->flashMessenger->addMessage(['success' => "Digital Presence $msg successfully."]);
 
                     // SSOT V.6: Strict JSON Response
-                    $this->_helper->json(array(
+                    $this->_helper->json([
                         'result'    => 'saved',
                         'nomessage' => 'yes'
-                    ));
+                    ]);
                 } catch (\Throwable $e) {
                     $db->rollBack();
                     error_log("DigitalPresence Save Error: " . $e->getMessage());
                     // If it's our custom integrity exception, return it cleanly to the UI
-                    if (strpos($e->getMessage(), 'Integrity Error') !== false) {
-                        $this->_helper->json(array('error' => $e->getMessage()));
+                    if (str_contains($e->getMessage(), 'Integrity Error')) {
+                        $this->_helper->json(['error' => $e->getMessage()]);
                     } else {
-                        $this->_helper->json(array('result' => 'exception', 'message' => 'System error occurred while saving the record.'));
+                        $this->_helper->json(['result' => 'exception', 'message' => 'System error occurred while saving the record.']);
                     }
                 }
             } else {
                 // SSOT V.8: Extract and flatten Zend Form error messages
-                $msgarray = array();
+                $msgarray = [];
                 foreach ($form->getMessages() as $field => $errors) {
                     $msgarray[$field] = current($errors);
                 }
@@ -246,12 +244,12 @@ class Default_DigitalpresenceController extends Zend_Controller_Action
                 $menuId = defined('DIGITALPRESENCES') ? DIGITALPRESENCES : 295;
                 sapp_Global::logManager($menuId, 3, $this->_loginUserId, $id);
 
-                $this->_helper->json(array('msgtype' => 'success', 'message' => 'Record deleted successfully.'));
+                $this->_helper->json(['msgtype' => 'success', 'message' => 'Record deleted successfully.']);
             } catch (\Throwable $e) {
-                $this->_helper->json(array('msgtype' => 'error', 'message' => $e->getMessage()));
+                $this->_helper->json(['msgtype' => 'error', 'message' => $e->getMessage()]);
             }
         } else {
-            $this->_helper->json(array('msgtype' => 'error', 'message' => 'Invalid Request.'));
+            $this->_helper->json(['msgtype' => 'error', 'message' => 'Invalid Request.']);
         }
     }
 
@@ -266,9 +264,9 @@ class Default_DigitalpresenceController extends Zend_Controller_Action
             $menuId = defined('DIGITALPRESENCES') ? DIGITALPRESENCES : 295;
             sapp_Global::logManager($menuId, 4, $this->_loginUserId, $id);
 
-            $this->_helper->json(array('result' => 'yes'));
+            $this->_helper->json(['result' => 'yes']);
         } catch (\Throwable $e) {
-            $this->_helper->json(array('result' => 'no'));
+            $this->_helper->json(['result' => 'no']);
         }
     }
 
@@ -314,18 +312,18 @@ class Default_DigitalpresenceController extends Zend_Controller_Action
         $form->digitalmedia_id->addMultiOption('', 'Select Media Platform')->addMultiOptions($mediaModel->getPairs(true));
 
         // The 8 Polymorphic Owners
-        $models = array(
-            'company_id'    => array('model' => 'Default_Model_Company', 'label' => 'Select Company'),
-            'sbunit_id'     => array('model' => 'Default_Model_Businessunit', 'label' => 'Select Business Unit'),
-            'division_id'   => array('model' => 'Default_Model_Division', 'label' => 'Select Division'),
-            'department_id' => array('model' => 'Default_Model_Department', 'label' => 'Select Department'),
-            'section_id'    => array('model' => 'Default_Model_Section', 'label' => 'Select Section'),
-            'project_id'    => array('model' => 'Default_Model_Project', 'label' => 'Select Project'),
-            'team_id'       => array('model' => 'Default_Model_Team', 'label' => 'Select Team'),
+        $models = [
+            'company_id'    => ['model' => 'Default_Model_Company', 'label' => 'Select Company'],
+            'sbunit_id'     => ['model' => 'Default_Model_Businessunit', 'label' => 'Select Business Unit'],
+            'division_id'   => ['model' => 'Default_Model_Division', 'label' => 'Select Division'],
+            'department_id' => ['model' => 'Default_Model_Department', 'label' => 'Select Department'],
+            'section_id'    => ['model' => 'Default_Model_Section', 'label' => 'Select Section'],
+            'project_id'    => ['model' => 'Default_Model_Project', 'label' => 'Select Project'],
+            'team_id'       => ['model' => 'Default_Model_Team', 'label' => 'Select Team'],
             // Using Usermanagement model as it often contains the unified getPairs for employees in Sentrifugo,
             // or Default_Model_Employee if specifically implemented. Assuming standard Employee model exists:
-            'employee_id'   => array('model' => 'Default_Model_Employee', 'label' => 'Select Employee')
-        );
+            'employee_id'   => ['model' => 'Default_Model_Employee', 'label' => 'Select Employee']
+        ];
 
         foreach ($models as $field => $config) {
             if (class_exists($config['model'])) {

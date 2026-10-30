@@ -33,11 +33,11 @@ class Default_Model_Servicedeskconf extends Zend_Db_Table_Abstract
 
 	  $serviceConfData = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('c'=>'main_sd_configurations'),array('c.*','service_desk_flag'=>'if (c.service_desk_flag=1,"Business Unit wise","Department Wise")','attachment'=>'if (c.attachment=1,"Yes","No")','request_for'=>'if(c.request_for=1,"Service","Asset")','category_name'=>'if(c.request_for=1,s.service_desk_name,ac.name)'))
-                           ->joinLeft(array('s'=>'main_sd_depts'), 'c.service_desk_id = s.id', array('s.service_desk_name'))
-                           ->joinLeft(array('ac'=>'assets_categories'), 'c.service_desk_id = ac.id and ac.is_active=1 and ac.parent=0', array('ac.name'))
-                           ->joinLeft(array('b'=>'main_sbunit'), 'c.businessunit_id = b.sbunit_id', array('deptname'=>'ifnull(d.name,"No department")'))
-                           ->joinLeft(array('d'=>'main_department'), 'c.department_id = d.department_id', array('b.name'))
+                           ->from(['c'=>'main_sd_configurations'],['c.*','service_desk_flag'=>'if (c.service_desk_flag=1,"Business Unit wise","Department Wise")','attachment'=>'if (c.attachment=1,"Yes","No")','request_for'=>'if(c.request_for=1,"Service","Asset")','category_name'=>'if(c.request_for=1,s.service_desk_name,ac.name)'])
+                           ->joinLeft(['s'=>'main_sd_depts'], 'c.service_desk_id = s.id', ['s.service_desk_name'])
+                           ->joinLeft(['ac'=>'assets_categories'], 'c.service_desk_id = ac.id and ac.is_active=1 and ac.parent=0', ['ac.name'])
+                           ->joinLeft(['b'=>'main_sbunit'], 'c.businessunit_id = b.sbunit_id', ['deptname'=>'ifnull(d.name,"No department")'])
+                           ->joinLeft(['d'=>'main_department'], 'c.department_id = d.department_id', ['b.name'])
                            ->where($where)
     					   ->order("$by $sort") 
     					   ->limitPage($pageNo, $perPage);
@@ -47,8 +47,8 @@ class Default_Model_Servicedeskconf extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{		
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		
 		if($searchData != '' && $searchData!='undefined')
 			{
@@ -70,20 +70,20 @@ class Default_Model_Servicedeskconf extends Zend_Db_Table_Abstract
 			
 		$objName = 'servicedeskconf';
 		
-		$tableFields = array('action'=>'Action','unitname'=>'Business Unit','deptname' => 'Department',
+		$tableFields = ['action'=>'Action','unitname'=>'Business Unit','deptname' => 'Department',
                     'service_desk_flag'=>'Applicability','request_for'=>'Request For','category_name' => 'Category','attachment' => 'Attachment',
-                    'description' => 'Description');
+                    'description' => 'Description'];
 		
 		$tablecontent = $this->getServiceDeskRequestData($sort, $by, $pageNo, $perPage,$searchQuery);     
 		
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -91,22 +91,22 @@ class Default_Model_Servicedeskconf extends Zend_Db_Table_Abstract
 			'add' =>'add',
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall,
-                        'search_filters' => array(
-                            'service_desk_flag' => array(
+                        'search_filters' => [
+                            'service_desk_flag' => [
                                 'type' => 'select',
-                                'filter_data' => array('' => 'All',1 => 'Business Unit wise', 0 => 'Department wise'),
-                            ),
-                            'attachment' => array(
+                                'filter_data' => ['' => 'All',1 => 'Business Unit wise', 0 => 'Department wise'],
+                            ],
+                            'attachment' => [
                                 'type' => 'select',
-                                'filter_data' => array('' => 'All',1 => 'Yes', 0 => 'No'),
-                            ),
-                        	'request_for'=> array(
+                                'filter_data' => ['' => 'All',1 => 'Yes', 0 => 'No'],
+                            ],
+                        	'request_for'=> [
                         			'type' => 'select',
-                        			'filter_data' => array('' => 'All',1 => 'Service', 2 => 'Asset'),
-                        	),
-                        ),
+                        			'filter_data' => ['' => 'All',1 => 'Service', 2 => 'Asset'],
+                        	],
+                        ],
                         
-		);
+		];
 		return $dataTmp;
 	}
 	
@@ -114,7 +114,7 @@ class Default_Model_Servicedeskconf extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('sc'=>'main_sd_configurations'),array('sc.*'))
+						->from(['sc'=>'main_sd_configurations'],['sc.*'])
 					    ->where('sc.isactive = 1 AND sc.id='.$id.' ');
 		return $this->fetchAll($select)->toArray();
 	
@@ -140,7 +140,7 @@ class Default_Model_Servicedeskconf extends Zend_Db_Table_Abstract
 	
 	}
 	
-	public function getActiveServiceDepartments($bunitid,$deptid='',$reqfor)
+	public function getActiveServiceDepartments($bunitid,$deptid='',$reqfor = null)
 	{
 		$where = 'sc.isactive=1';
 		if($bunitid != '' && $bunitid !='null' )
@@ -281,7 +281,7 @@ public function getnotconfiguredActiveServiceDepartments($bunitid,$deptid='')
 	{
 		$userdata=	$this->select()
 		->setIntegrityCheck(false)
-		->from(array('c'=>'assets_categories'),array('c.*'))
+		->from(['c'=>'assets_categories'],['c.*'])
 		->order('c.id')
 		->where('c.is_active =1 and c.parent=0 ');
 		return $this->fetchAll($userdata)->toArray();
@@ -292,7 +292,7 @@ public function getnotconfiguredActiveServiceDepartments($bunitid,$deptid='')
 	{
 		$assetcategoriesData = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('c1'=>'assets_categories'),array('c1.*'))
+		->from(['c1'=>'assets_categories'],['c1.*'])
 		->where('c1.is_active = 1 AND c1.id='.$id.' ');
 		return $this->fetchAll($assetcategoriesData)->toArray();
 	}
@@ -305,7 +305,7 @@ public function getConfigIdForAssetCategory($service_request_id,$login_bu='')
 		
 		$configid = $this->select()
 					->setIntegrityCheck(false)
-					->from(array('c'=>$this->_name),array('c.id'))
+					->from(['c'=>$this->_name],['c.id'])
 					->where(' '.$where.' AND c.service_desk_id IN ('.$service_request_id.') ');
 		return $this->fetchAll($configid)->toArray();
 	}

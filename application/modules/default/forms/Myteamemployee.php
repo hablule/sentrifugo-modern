@@ -39,7 +39,7 @@ class Default_Form_Myteamemployee extends Zend_Form
                 $employeeId->setAttrib("class", "formDataElement");
                 $employeeId->setAttrib("readonly", "readonly");
 				$employeeId->setAttrib('onfocus', 'this.blur()');
-				$employeeId->addValidator('NotEmpty', false, array('messages' => 'Identity codes are not configured yet.'));
+				$employeeId->addValidator('NotEmpty', false, ['messages' => 'Identity codes are not configured yet.']);
 
                 //for emp id
                 $employeeNumId = new Zend_Form_Element_Text("employeeNumId");
@@ -47,12 +47,12 @@ class Default_Form_Myteamemployee extends Zend_Form
                 $employeeNumId->setLabel("Employee Id");
                 $employeeNumId->setAttrib('maxLength', 5);       
                 $employeeNumId->setAttrib("class", "formDataElement");
-                $employeeNumId->addValidator('NotEmpty', false, array('messages' => 'Please enter the Employee Id.'));
-                $employeeNumId->addValidator("regex",true,array(                          
+                $employeeNumId->addValidator('NotEmpty', false, ['messages' => 'Please enter the Employee Id.']);
+                $employeeNumId->addValidator("regex",true,[                          
                            'pattern'=>'/^[0-9]+$/',
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter only numbers.'
-                           ))); 
+                           ]]); 
 		
 				/*$employeeId = new Zend_Form_Element_Text("employeeId");
                 $employeeId->setRequired("true");
@@ -74,58 +74,58 @@ class Default_Form_Myteamemployee extends Zend_Form
 		$prefix_id->setLabel("Prefix");
 		$prefix_id->setRegisterInArrayValidator(false);
 		$prefix_id->addValidator(new Zend_Validate_Db_RecordExists(
-										array('table' => 'main_prefix',
+										['table' => 'main_prefix',
                                         		'field' => 'id',
                                                 'exclude'=>'isactive = 1',
-										)));
+										]));
 		$prefix_id->getValidator('Db_RecordExists')->setMessage('Selected prefix is deleted.');
 		
 				$first_name = new Zend_Form_Element_Text("firstname");
                 $first_name->setLabel("First Name");
                	$first_name->setRequired(true);
-               	$first_name->addValidator('NotEmpty', false, array('messages' => 'Please enter first name.'));
+               	$first_name->addValidator('NotEmpty', false, ['messages' => 'Please enter first name.']);
                 $first_name->setAttrib("class", "formDataElement");
                 $first_name->setAttrib('maxlength', 50);
-                $first_name->addValidator("regex",true,array(                           
+                $first_name->addValidator("regex",true,[                           
                                    'pattern'=>'/^([a-zA-Z.]+ ?)+$/',
-                                   'messages'=>array(
+                                   'messages'=>[
 									   'regexNotMatch'=>'Please enter only alphabets.'
-                                   )
-                        ));
+                                   ]
+                        ]);
                 $middlename = new Zend_Form_Element_Text('middlename');
 				$middlename->setRequired(true);
 				$middlename->setLabel('Middle Name');
-				$middlename->addValidator('NotEmpty',false,array('messages'=>'Please enter middle name.'));
+				$middlename->addValidator('NotEmpty',false,['messages'=>'Please enter middle name.']);
 				$middlename->setAttrib('class','formDataElement');
 				$middlename->setAttrib('maxlength',50);
-				$middlename->addValidator('regex',true,array(
+				$middlename->addValidator('regex',true,[
 					'pattern'=>'/^([a-zA-Z.]+ ?)+$/',
-					'messages'=>array(
+					'messages'=>[
 						'regexNoMatch'=>'Please enter only alphabets.'
-					)
-				));
+					]
+				]);
                 $last_name = new Zend_Form_Element_Text("lastname");
                 $last_name->setLabel("Last Name");
                 $last_name->setRequired(true);	
-                $last_name->addValidator('NotEmpty', false, array('messages' => 'Please enter last name.'));
+                $last_name->addValidator('NotEmpty', false, ['messages' => 'Please enter last name.']);
                 $last_name->setAttrib("class", "formDataElement");
                 $last_name->setAttrib('maxlength', 50);
-                $last_name->addValidator("regex",true,array(                           
+                $last_name->addValidator("regex",true,[                           
                                    'pattern'=>'/^([a-zA-Z.]+ ?)+$/',
-                                   'messages'=>array(
+                                   'messages'=>[
 									   'regexNotMatch'=>'Please enter only alphabets.'
-                                   )
-                        ));
+                                   ]
+                        ]);
 		
 				$modeofentry = new Zend_Form_Element_Select("modeofentry");                
                 $modeofentry->setLabel("Mode of Employment")
-                            ->addMultiOptions(array(
+                            ->addMultiOptions([
 													'Direct' => 'Direct',
-                                                    ));	
+                                                    ]);	
                 $modeofentry->setAttrib("class", "formDataElement");
                 if($id_val == ''){
 					$modeofentry->setRequired(true);
-                	$modeofentry->addValidator('NotEmpty', false, array('messages' => 'Please select mode of employment.'));
+                	$modeofentry->addValidator('NotEmpty', false, ['messages' => 'Please select mode of employment.']);
                 }
                 
 				$emprole = new Zend_Form_Element_Select("emprole");        
@@ -133,61 +133,61 @@ class Default_Form_Myteamemployee extends Zend_Form
                 $emprole->setRequired(true);
 				$emprole->setLabel("Role");
                 $emprole->setAttrib("class", "formDataElement");
-                $emprole->addValidator('NotEmpty', false, array('messages' => 'Please select role.'));
+                $emprole->addValidator('NotEmpty', false, ['messages' => 'Please select role.']);
                 $emprole->addValidator(new Zend_Validate_Db_RecordExists(
-										array('table' =>ROLE_ARRAY['tablename'],
+										['table' =>ROLE_ARRAY['tablename'],
                                         		'field' =>ROLE_ARRAY['colid'],
                                                 'exclude'=>''.ROLE_ARRAY['colisactive'].'= "Y"',
-										)));
+										]));
 				$emprole->getValidator('Db_RecordExists')->setMessage('Selected role is deleted.');
                 
                 $emailaddress = new Zend_Form_Element_Text("emailaddress");
 				$emailaddress->setRequired(true);
-                $emailaddress->addValidator('NotEmpty', false, array('messages' => 'Please enter email.'));
-                $emailaddress->addValidator("regex",true,array(
+                $emailaddress->addValidator('NotEmpty', false, ['messages' => 'Please enter email.']);
+                $emailaddress->addValidator("regex",true,[
 						    'pattern'=>'/^(?!.*\.{2})[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/',                            
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter valid email.'
-                           )
-        	    ));
+                           ]
+        	    ]);
         		$emailaddress->setLabel("Email");
                 $emailaddress->setAttrib("class", "formDataElement");              
                 $emailaddress->addValidator(new Zend_Validate_Db_NoRecordExists(
-                                                                array('table' => 'main_users',
+                                                                ['table' => 'main_users',
                                                                 'field' => 'emailaddress',
                                                                 'exclude'=>'id!="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('user_id',0).'" ',                                                                        					        						
-                                                                )));
+                                                                ]));
                 $emailaddress->getValidator('Db_NoRecordExists')->setMessage('Email already exists.');
                 
 		$businessunit = new Zend_Form_Element_Select('businessunit_id');
 		$businessunit->setRegisterInArrayValidator(false);
 		$businessunit->addValidator(new Zend_Validate_Db_RecordExists(
-										array('table' => 'main_businessunits',
+										['table' => 'main_businessunits',
                                         		'field' => 'id',
                                                 'exclude'=>'isactive = 1',
-										)));
+										]));
 		$businessunit->getValidator('Db_RecordExists')->setMessage('Selected business unit is deleted.');
 		
 		$department = new Zend_Form_Element_Select('department_id');
 		$department->setRegisterInArrayValidator(false);
 		$department->setRequired(true);
-		$department->addValidator('NotEmpty', false, array('messages' => 'Please select department.'));
+		$department->addValidator('NotEmpty', false, ['messages' => 'Please select department.']);
 		$department->addValidator(new Zend_Validate_Db_RecordExists(
-										array('table' => 'main_departments',
+										['table' => 'main_departments',
                                         		'field' => 'id',
                                                 'exclude'=>'isactive = 1',
-										)));
+										]));
 		$department->getValidator('Db_RecordExists')->setMessage('Selected department is deleted.');	
 		
 		$reportingmanager = new Zend_Form_Element_Select('reporting_manager');
 		$reportingmanager->setRegisterInArrayValidator(false);	
 		$reportingmanager->setRequired(true);
-        $reportingmanager->addValidator('NotEmpty', false, array('messages' => 'Please select reporting manager.'));
+        $reportingmanager->addValidator('NotEmpty', false, ['messages' => 'Please select reporting manager.']);
         $reportingmanager->addValidator(new Zend_Validate_Db_RecordExists(
-										array('table' => 'main_users',
+										['table' => 'main_users',
                                         		'field' => 'id',
                                                 'exclude'=>'isactive = 1',
-										)));
+										]));
 		$reportingmanager->getValidator('Db_RecordExists')->setMessage('Selected reporting manager is inactivated.');
         
         $jobtitle = new Zend_Form_Element_Select('jobtitle_id');
@@ -196,10 +196,10 @@ class Default_Form_Myteamemployee extends Zend_Form
 		$jobtitle->setAttrib('onchange', 'displayPositions(this,"position_id","")');
 		$jobtitle->setRegisterInArrayValidator(false);
 		$jobtitle->addValidator(new Zend_Validate_Db_RecordExists(
-										array('table' => 'main_jobtitles',
+										['table' => 'main_jobtitles',
                                         		'field' => 'id',
                                                 'exclude'=>'isactive = 1',
-										)));
+										]));
 		$jobtitle->getValidator('Db_RecordExists')->setMessage('Selected job title is deleted.');	                
 		
 		$position = new Zend_Form_Element_Select('position_id');
@@ -207,35 +207,35 @@ class Default_Form_Myteamemployee extends Zend_Form
 		$position->addMultiOption('','Select Position');
 		$position->setRegisterInArrayValidator(false);
 		$position->addValidator(new Zend_Validate_Db_RecordExists(
-										array('table' => 'main_positions',
+										['table' => 'main_positions',
                                         		'field' => 'id',
                                                 'exclude'=>'isactive = 1',
-										)));
+										]));
 		$position->getValidator('Db_RecordExists')->setMessage('Selected position is deleted.');
         			
 		$empstatus = new Zend_Form_Element_Select('emp_status_id');
 		$empstatus->setAttrib('onchange', 'displayempstatusmessage()');
 		$empstatus->setRegisterInArrayValidator(false);	
 		$empstatus->setRequired(true);
-        $empstatus->addValidator('NotEmpty', false, array('messages' => 'Please select employment status.'));
+        $empstatus->addValidator('NotEmpty', false, ['messages' => 'Please select employment status.']);
         $empstatus->addValidator(new Zend_Validate_Db_RecordExists(
-                                                                array('table' => 'main_employmentstatus',
+                                                                ['table' => 'main_employmentstatus',
                                                                 'field' => 'workcodename',
                                                                 'exclude'=>'isactive = 1',
-                                                                )));
+                                                                ]));
      	$empstatus->getValidator('Db_RecordExists')->setMessage('Selected employment status is deleted.');
         
         $date_of_joining = new ZendX_JQuery_Form_Element_DatePicker('date_of_joining');
 		$date_of_joining->setLabel("Date of Joining");
-		$date_of_joining->setOptions(array('class' => 'brdr_none'));
+		$date_of_joining->setOptions(['class' => 'brdr_none']);
 		$date_of_joining->setAttrib('onchange', 'validatejoiningdate(this)');
 		$date_of_joining->setRequired(true);
 		$date_of_joining->setAttrib('readonly', 'true');
 		$date_of_joining->setAttrib('onfocus', 'this.blur()');
-        $date_of_joining->addValidator('NotEmpty', false, array('messages' => 'Please select date of joining.'));	
+        $date_of_joining->addValidator('NotEmpty', false, ['messages' => 'Please select date of joining.']);	
 
         $date_of_leaving = new ZendX_JQuery_Form_Element_DatePicker('date_of_leaving');
-		$date_of_leaving->setOptions(array('class' => 'brdr_none'));
+		$date_of_leaving->setOptions(['class' => 'brdr_none']);
           $date_of_leaving->setAttrib('onchange', 'validateleavingdate(this)'); 				
 		$date_of_leaving->setAttrib('readonly', 'true');
 		$date_of_leaving->setAttrib('onfocus', 'this.blur()');
@@ -243,54 +243,54 @@ class Default_Form_Myteamemployee extends Zend_Form
 		$yearsofexp = new Zend_Form_Element_Text('years_exp');
 		$yearsofexp->setAttrib('maxLength', 2);
 		$yearsofexp->addFilter(new Zend_Filter_StringTrim());
-		$yearsofexp->addValidator("regex",true,array(
+		$yearsofexp->addValidator("regex",true,[
 						  'pattern'=>'/^[0-9]\d{0,1}(\.\d*)?$/', 
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter only numbers.'
-                           )
-        	));
+                           ]
+        	]);
 		
 		$extension_number = new Zend_Form_Element_Text('extension_number');
 		$extension_number->setAttrib('maxLength', 4);
 		$extension_number->setLabel("Extension");
 		$extension_number->addFilter(new Zend_Filter_StringTrim());
-		$extension_number->addValidator("regex",true,array(                          
+		$extension_number->addValidator("regex",true,[                          
                            'pattern'=>'/^[0-9]+$/',
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter only numbers.'
-                           )
-        	));
+                           ]
+        	]);
         	
 	    $office_number = new Zend_Form_Element_Text('office_number');
         $office_number->setAttrib('maxLength', 10);
 		$office_number->setLabel("Work Telephone Number");
         $office_number->addFilter(new Zend_Filter_StringTrim());
-		$office_number->addValidator("regex",true,array(
+		$office_number->addValidator("regex",true,[
                            'pattern'=>'/^(?!0{10})[0-9\+\-\)\(]+$/', 
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter valid phone number.'
-                           )
-        	));
+                           ]
+        	]);
 
 		$office_faxnumber = new Zend_Form_Element_Text('office_faxnumber');
         $office_faxnumber->setAttrib('maxLength', 15);
 		$office_faxnumber->setLabel("Fax");
         $office_faxnumber->addFilter(new Zend_Filter_StringTrim());
-		$office_faxnumber->addValidator("regex",true,array(
+		$office_faxnumber->addValidator("regex",true,[
                            'pattern'=>'/^[0-9\+\-\)\(]+$/', 
-                           'messages'=>array(
+                           'messages'=>[
 							  'regexNotMatch'=>'Please enter valid fax number.'
-                           )
-        	)); 	
+                           ]
+        	]); 	
 		
 		$submit = new Zend_Form_Element_Submit('submit');
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');	
 		                
-		$this->addElements(array($id,$userid,$reportingmanager,$empstatus,$businessunit,$department,$jobtitle,$position,$prefix_id,$extension_number,$office_number,$office_faxnumber,$yearsofexp,$date_of_joining,$date_of_leaving,$submit,$employeeId,$modeofentry,$emailaddress,$emprole,$first_name,$middlename,$last_name,$employeeNumId));
-                $this->setElementDecorators(array('ViewHelper')); 
-                $this->setElementDecorators(array(
+		$this->addElements([$id,$userid,$reportingmanager,$empstatus,$businessunit,$department,$jobtitle,$position,$prefix_id,$extension_number,$office_number,$office_faxnumber,$yearsofexp,$date_of_joining,$date_of_leaving,$submit,$employeeId,$modeofentry,$emailaddress,$emprole,$first_name,$middlename,$last_name,$employeeNumId]);
+                $this->setElementDecorators(['ViewHelper']); 
+                $this->setElementDecorators([
                     'UiWidgetElement',
-        ),array('date_of_joining','date_of_leaving'));  		
+        ],['date_of_joining','date_of_leaving']);  		
 	}
 }

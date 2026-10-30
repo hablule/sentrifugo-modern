@@ -46,9 +46,9 @@ class Default_AppraisalskillsController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 		
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 		
 		if($refresh == 'refresh')
@@ -97,7 +97,7 @@ class Default_AppraisalskillsController extends Zend_Controller_Action
 		if($callval == 'ajaxcall')
 			$this->_helper->layout->disableLayout();
 		$appraisalSkillsForm = new Default_Form_Appraisalskills();
-		$msgarray = array();
+		$msgarray = [];
 		$appraisalSkillsForm->setAttrib('action',BASE_URL.'appraisalskills/add');
 		$this->view->form = $appraisalSkillsForm; 
 		$this->view->msgarray = $msgarray; 
@@ -231,7 +231,7 @@ class Default_AppraisalskillsController extends Zend_Controller_Action
 					$loginuserGroup = $auth->getStorage()->read()->group_id;
 		} 
 	    $appraisalSkillsModel = new Default_Model_Appraisalskills();
-		$msgarray = array();
+		$msgarray = [];
 	    
 		  if($appraisalSkillsForm->isValid($this->_request->getPost())){
             try{
@@ -240,15 +240,15 @@ class Default_AppraisalskillsController extends Zend_Controller_Action
 			$description = $this->_request->getParam('description');
 			$actionflag = '';
 			$tableid  = ''; 
-			   $data = array('skill_name'=>$appraisal_skill_name, 
+			   $data = ['skill_name'=>$appraisal_skill_name, 
 							 'description'=>($description!=''?trim($description):NULL),
 							  'modifiedby'=>$loginUserId,
 							   'modifiedby_role'=>$loginuserRole,
 							   'modifiedby_group'=>$loginuserGroup,
 							  'modifieddate'=>gmdate("Y-m-d H:i:s")
-					);
+					];
 				if($id!=''){
-					$where = array('id=?'=>$id);  
+					$where = ['id=?'=>$id];  
 					$actionflag = 2;
 				}
 				else
@@ -266,12 +266,12 @@ class Default_AppraisalskillsController extends Zend_Controller_Action
 				if($Id == 'update')
 				{
 				   $tableid = $id;
-				   $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Skill updated successfully."));
+				   $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Skill updated successfully."]);
 				}   
 				else
 				{
 				   $tableid = $Id; 	
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Skill added successfully."));					   
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Skill added successfully."]);					   
 				}   
 				$menuID = APPRAISALSKILLS;
 				$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
@@ -318,9 +318,9 @@ class Default_AppraisalskillsController extends Zend_Controller_Action
 			  
 			  if($appSkillsdata[0]['isused'] == 0)	
 			  {
-				  $data = array('isactive'=>0, 'modifiedby'=>$loginUserId, 'modifiedby_role'=>$loginuserRole,
-								   'modifiedby_group'=>$loginuserGroup, 'modifieddate'=>gmdate("Y-m-d H:i:s"));
-				  $where = array('id=?'=>$id);
+				  $data = ['isactive'=>0, 'modifiedby'=>$loginUserId, 'modifiedby_role'=>$loginuserRole,
+								   'modifiedby_group'=>$loginuserGroup, 'modifieddate'=>gmdate("Y-m-d H:i:s")];
+				  $where = ['id=?'=>$id];
 				  $Id = $appraisalSkillsModel->SaveorUpdateAppraisalSkillsData($data, $where);
 				    if($Id == 'update')
 					{
@@ -417,7 +417,7 @@ class Default_AppraisalskillsController extends Zend_Controller_Action
 					}else
 					{
 				
-					   		$data = array('skill_name'=>$skillsval,
+					   		$data = ['skill_name'=>$skillsval,
 									 'description'=>($description!=''?$description:NULL),			   
 					   				 'createdby_role'=>$loginuserRole,
 									 'createdby_group'=>$loginuserGroup,			   
@@ -428,7 +428,7 @@ class Default_AppraisalskillsController extends Zend_Controller_Action
 					   				 'isactive'=>1,
 					   				 'createddate'=>gmdate("Y-m-d H:i:s"),
 									 'modifieddate'=>gmdate("Y-m-d H:i:s")
-							);
+							];
 						
 							$where = '';
 							$actionflag = 1;

@@ -65,50 +65,50 @@ class Default_Form_Maritalstatus extends Zend_Form
         // Marital Status Name
         $name = new Zend_Form_Element_Text('name');
         $name->setLabel('Marital Status')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '255', 'placeholder' => 'e.g., Married, Single, Divorced'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '255', 'placeholder' => 'e.g., Married, Single, Divorced'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', true, array('messages' => 'Please enter a marital status name.'))
+            ->addValidator('NotEmpty', true, ['messages' => 'Please enter a marital status name.'])
             // SSOT VI: Mandatory Regex for primary string descriptors
-            ->addValidator('Regex', true, array(
+            ->addValidator('Regex', true, [
                 'pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9 ]*)$/',
-                'messages' => array(
+                'messages' => [
                     Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space or contain special characters.'
-                )
-            ));
+                ]
+            ]);
 
         // Strict Check: Ignore current ID, check against all non-deleted records
         $excludeClauseName = ($idVal > 0) ? "id != $idVal AND isactive != 5" : "isactive != 5";
-        $nameVal = new Zend_Validate_Db_NoRecordExists(array(
+        $nameVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_maritalstatus',
             'field'   => 'name',
             'exclude' => $excludeClauseName
-        ));
+        ]);
         $nameVal->setMessage('This marital status name already exists.');
         $name->addValidator($nameVal);
 
         // Marital Status Code
         $code = new Zend_Form_Element_Text('code');
         $code->setLabel('Marital Status Code')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '255', 'placeholder' => 'e.g., M, S, D'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '255', 'placeholder' => 'e.g., M, S, D'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', true, array('messages' => 'Please enter a marital status code.'))
-            ->addValidator('Regex', true, array(
+            ->addValidator('NotEmpty', true, ['messages' => 'Please enter a marital status code.'])
+            ->addValidator('Regex', true, [
                 'pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9 ]*)$/',
-                'messages' => array(
+                'messages' => [
                     Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space or contain special characters.'
-                )
-            ));
+                ]
+            ]);
 
         $excludeClauseCode = ($idVal > 0) ? "id != $idVal AND isactive != 5" : "isactive != 5";
-        $codeVal = new Zend_Validate_Db_NoRecordExists(array(
+        $codeVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_maritalstatus',
             'field'   => 'code',
             'exclude' => $excludeClauseCode
-        ));
+        ]);
         $codeVal->setMessage('This marital status code already exists.');
         $code->addValidator($codeVal);
 
@@ -117,7 +117,7 @@ class Default_Form_Maritalstatus extends Zend_Form
          * -------------------------------------------------------------- */
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Description')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -135,10 +135,10 @@ class Default_Form_Maritalstatus extends Zend_Form
          * -------------------------------------------------------------- */
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save')
-            ->setAttribs(array(
+            ->setAttribs([
                 'id'    => 'submitbutton',
                 'class' => 'actbtn_btn'
-            ));
+            ]);
 
         // SSOT AJAX Submission Pattern (Strict Quoting, Empty 2nd Param, No return false)
         $urlAction  = "'maritalstatus/save/format/json'";
@@ -148,14 +148,14 @@ class Default_Form_Maritalstatus extends Zend_Form
         /* --------------------------------------------------------------
          * Build Form & Apply Decorators (SSOT VI)
          * -------------------------------------------------------------- */
-        $this->addElements(array(
+        $this->addElements([
             $idElement, $code, $name, $description, $isactive, $submit
-        ));
+        ]);
 
         // Strip default Zend Decorators and enforce ViewHelper universally
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
-            $element->setDecorators(array('ViewHelper'));
+            $element->setDecorators(['ViewHelper']);
         }
     }
 }

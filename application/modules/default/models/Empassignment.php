@@ -52,7 +52,7 @@ class Default_Model_Empassignment extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if (!empty($searchData) && $searchData !== 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -76,7 +76,7 @@ class Default_Model_Empassignment extends Zend_Db_Table_Abstract
             }
         }
 
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'               => 'Action',
             'employee_name'        => 'Employee Name',
             'position_title'       => 'Position (Seat)',
@@ -87,18 +87,18 @@ class Default_Model_Empassignment extends Zend_Db_Table_Abstract
             'end_date'             => 'Effective End',
             'reason_name'          => 'Reason',
             'status_text'          => 'Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
             'perPage'        => $perPage,
             'tablecontent'   => $tableContent,
             'objectname'     => 'empassignment',
-            'extra'          => array(),
+            'extra'          => [],
             'tableheader'    => $tableHeaders,
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
@@ -106,13 +106,13 @@ class Default_Model_Empassignment extends Zend_Db_Table_Abstract
             'menuName'       => 'Employee Assignments',
             'call'           => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => array(
-                'status_text'     => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive')),
-                'assignment_type' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Primary' => 'Primary', 'Secondary' => 'Secondary', 'Acting' => 'Acting', 'Secondment' => 'Secondment')),
-                'start_date'      => array('type' => 'datepicker'),
-                'end_date'        => array('type' => 'datepicker')
-            )
-        );
+            'search_filters' => [
+                'status_text'     => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']],
+                'assignment_type' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Primary' => 'Primary', 'Secondary' => 'Secondary', 'Acting' => 'Acting', 'Secondment' => 'Secondment']],
+                'start_date'      => ['type' => 'datepicker'],
+                'end_date'        => ['type' => 'datepicker']
+            ]
+        ];
     }
 
     public function getGridData($sort, $by, $pageNo, $perPage, $searchQuery = '')
@@ -128,40 +128,40 @@ class Default_Model_Empassignment extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from(
-                array('a' => $this->_name),
-                array(
+                ['a' => $this->_name],
+                [
                     'id' => 'a.id',
                     'assignment_type',
                     'allocated_fte',
                     'start_date'   => new Zend_Db_Expr("DATE_FORMAT(a.start_date, '" . DATEFORMAT_MYSQL . "')"),
                     'end_date'     => new Zend_Db_Expr("CASE WHEN a.end_date IS NULL THEN 'Ongoing / Current' ELSE DATE_FORMAT(a.end_date, '" . DATEFORMAT_MYSQL . "') END"),
                     'status_text'  => new Zend_Db_Expr("CASE WHEN a.isactive = 1 THEN 'Active' ELSE 'Inactive' END")
-                )
+                ]
             )
             ->joinInner(
-                array('e' => 'main_employee'),
+                ['e' => 'main_employee'],
                 'a.employee_id = e.id',
-                array('employee_name' => new Zend_Db_Expr("COALESCE(NULLIF(e.userfullname, ''), CONCAT(e.firstname, ' ', e.lastname))"))
+                ['employee_name' => new Zend_Db_Expr("COALESCE(NULLIF(e.userfullname, ''), CONCAT(e.firstname, ' ', e.lastname))")]
             )
             ->joinInner(
-                array('p' => 'main_position'),
+                ['p' => 'main_position'],
                 'a.position_id = p.id',
-                array('position_code' => 'p.code')
+                ['position_code' => 'p.code']
             )
             ->joinInner(
-                array('jt' => 'main_jobtitle'),
+                ['jt' => 'main_jobtitle'],
                 'p.jobtitle_id = jt.id',
-                array('position_title' => new Zend_Db_Expr("CONCAT(p.code, ' - ', COALESCE(p.name, jt.name))"))
+                ['position_title' => new Zend_Db_Expr("CONCAT(p.code, ' - ', COALESCE(p.name, jt.name))")]
             )
             ->joinInner(
-                array('et' => 'main_employment_type'),
+                ['et' => 'main_employment_type'],
                 'a.employment_type_id = et.id',
-                array('employment_type_name' => 'et.name')
+                ['employment_type_name' => 'et.name']
             )
             ->joinInner(
-                array('ar' => 'main_assignment_reason'),
+                ['ar' => 'main_assignment_reason'],
                 'a.assignment_reason_id = ar.id',
-                array('reason_name' => 'ar.name')
+                ['reason_name' => 'ar.name']
             )
             ->where('a.isactive != ?', 5);
 
@@ -179,10 +179,10 @@ class Default_Model_Empassignment extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from(
-                array('a' => $this->_name),
-                array('id' => 'a.id', 'label' => new Zend_Db_Expr("CONCAT(e.userfullname, ' (', a.assignment_type, ')')"))
+                ['a' => $this->_name],
+                ['id' => 'a.id', 'label' => new Zend_Db_Expr("CONCAT(e.userfullname, ' (', a.assignment_type, ')')")]
             )
-            ->joinInner(array('e' => 'main_employee'), 'a.employee_id = e.id', array())
+            ->joinInner(['e' => 'main_employee'], 'a.employee_id = e.id', [])
             ->where('a.end_date IS NULL') // Only current assignments
             ->order('e.userfullname ASC');
 
@@ -213,11 +213,11 @@ class Default_Model_Empassignment extends Zend_Db_Table_Abstract
     {
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('a' => $this->_name))
-            ->joinInner(array('p' => 'main_position'), 'a.position_id = p.id', array('position_code' => 'p.code', 'position_custom_name' => 'p.name'))
-            ->joinInner(array('jt' => 'main_jobtitle'), 'p.jobtitle_id = jt.id', array('jobtitle_name' => 'jt.name'))
-            ->joinInner(array('et' => 'main_employment_type'), 'a.employment_type_id = et.id', array('employment_type_name' => 'et.name'))
-            ->joinInner(array('ar' => 'main_assignment_reason'), 'a.assignment_reason_id = ar.id', array('reason_name' => 'ar.name'))
+            ->from(['a' => $this->_name])
+            ->joinInner(['p' => 'main_position'], 'a.position_id = p.id', ['position_code' => 'p.code', 'position_custom_name' => 'p.name'])
+            ->joinInner(['jt' => 'main_jobtitle'], 'p.jobtitle_id = jt.id', ['jobtitle_name' => 'jt.name'])
+            ->joinInner(['et' => 'main_employment_type'], 'a.employment_type_id = et.id', ['employment_type_name' => 'et.name'])
+            ->joinInner(['ar' => 'main_assignment_reason'], 'a.assignment_reason_id = ar.id', ['reason_name' => 'ar.name'])
             ->where('a.employee_id = ?', $employeeId)
             ->where('a.isactive != ?', 5)
             ->order('a.start_date DESC');
@@ -248,7 +248,7 @@ class Default_Model_Empassignment extends Zend_Db_Table_Abstract
         if (!empty($id)) {
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = $currentDate;
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return 'update';
         }
 
@@ -267,13 +267,13 @@ class Default_Model_Empassignment extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? (int)$auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => 5,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
+        ];
 
-        return $this->update($data, array('id = ?' => (int)$id));
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     public function toggleStatus($id, $status)
@@ -281,13 +281,13 @@ class Default_Model_Empassignment extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? (int)$auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => (int)$status,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
+        ];
 
-        return $this->update($data, array('id = ?' => (int)$id));
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* =================================================================================
@@ -376,7 +376,7 @@ class Default_Model_Empassignment extends Zend_Db_Table_Abstract
         $db = $this->getAdapter();
 
         // 1. Fetch Position Max FTE
-        $posRow = $db->fetchRow($db->select()->from('main_position', array('max_fte', 'code'))->where('id = ?', $positionId));
+        $posRow = $db->fetchRow($db->select()->from('main_position', ['max_fte', 'code'])->where('id = ?', $positionId));
         if (!$posRow) {
             return ['code' => 'INVALID_POSITION', 'message' => 'Position does not exist.'];
         }
@@ -385,7 +385,7 @@ class Default_Model_Empassignment extends Zend_Db_Table_Abstract
 
         // 2. Sum currently active allocated FTEs for this seat
         $sumSelect = $db->select()
-            ->from($this->_name, array('total_allocated' => new Zend_Db_Expr('COALESCE(SUM(allocated_fte), 0)')))
+            ->from($this->_name, ['total_allocated' => new Zend_Db_Expr('COALESCE(SUM(allocated_fte), 0)')])
             ->where('position_id = ?', $positionId)
             ->where('end_date IS NULL') // Currently active occupants
             ->where('isactive = ?', 1);

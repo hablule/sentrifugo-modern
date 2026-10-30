@@ -153,7 +153,7 @@ class Default_EmprecordaccessController extends Zend_Controller_Action
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 				if ($Uid != "") {
 					$employeeData = $usersModel->getUserDetailsByIDandFlag($Uid);
 				}
@@ -173,9 +173,9 @@ class Default_EmprecordaccessController extends Zend_Controller_Action
 					$objname = $this->_getParam('objname');
 					$refresh = $this->_getParam('refresh');
 					$dashboardcall = $this->_getParam('dashboardcall', null);
-					$data = array();
+					$data = [];
 					$searchQuery = '';
-					$searchArray = array();
+					$searchArray = [];
 					$tablecontent = '';
 					if ($refresh == 'refresh') {
 						if ($dashboardcall == 'Yes')
@@ -188,7 +188,7 @@ class Default_EmprecordaccessController extends Zend_Controller_Action
 						$pageNo = 1;
 						$searchData = '';
 						$searchQuery = '';
-						$searchArray = array();
+						$searchArray = [];
 					} else {
 						$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 						$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'ad.emp_id';
@@ -270,14 +270,14 @@ $form->removeElement('emprecordaccess_id2');
 
 				for($i=0;$i<sizeof($emprecordaccess_id);$i++)
 				{
-                $data = array(
+                $data = [
                     'emprecordaccess_id'=>$emprecordaccess_id[$i],
                     'emp_id'=>$unitid,
                     'createdby'=>$loginUserid,
                     'description'=>$this->_getParam('description'),
                     'createddate'=>gmdate('Y-m-d H:i:s'),
 					'isactive'=>'Y'
-                );
+                ];
 
 				$where = '';
 				$actionflag = 1;
@@ -374,7 +374,7 @@ Zend_Debug::dump($th->getMessage())	;
 
 				if ($form->isValid($this->_request->getPost())) {
 					
-                $data = array(
+                $data = [
                     // 'emprecordaccess_id'=>$this->_request->getParam('emprecordaccess_id2'),
                     'emp_id'=>$unitid,
                  'description'=>$this->_request->getParam('description'),
@@ -382,7 +382,7 @@ Zend_Debug::dump($th->getMessage())	;
 					'isactive'=>$util::getcheckboxvalue($this->_getParam('isactive'))
 
                   
-                );
+                ];
                 $data['modifiedby'] = $loginUserId;
                 		$data['modifieddate'] = gmdate("Y-m-d H:i:s");
             		$where = 'emprecordaccessdetail_id='.$id;
@@ -469,7 +469,7 @@ Zend_Debug::dump($th->getMessage())	;
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 
 				$employeeModal = new Default_Model_Employee();
 				try {
@@ -488,9 +488,9 @@ Zend_Debug::dump($th->getMessage())	;
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall', null);
-								$data = array();
+								$data = [];
 								$searchQuery = '';
-								$searchArray = array();
+								$searchArray = [];
 								$tablecontent = '';
 								if ($refresh == 'refresh') {
 									if ($dashboardcall == 'Yes')
@@ -503,7 +503,7 @@ Zend_Debug::dump($th->getMessage())	;
 									$pageNo = 1;
 									$searchData = '';
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 								} else {
 									$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 									$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'ad.emp_id';

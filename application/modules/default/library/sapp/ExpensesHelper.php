@@ -9,7 +9,7 @@ class sapp_ExpensesHelper
 			$status = '';
 			$tripsModel = new Expenses_Model_Trips();
 			$expenseStatusArray = $tripsModel->getTripExpenses($trip_id);
-			$statusArray = array();
+			$statusArray = [];
 			foreach($expenseStatusArray as $status)
 			{
 				$statusArray[] = $status['status'];
@@ -32,8 +32,8 @@ class sapp_ExpensesHelper
 			if($auth->hasIdentity()){
 				$loginUserId = $auth->getStorage()->read()->id;
 			}
-			$data = array('status'=>$status,'modifiedby'=>$loginUserId,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-			$where = array('id=?'=>$trip_id);
+			$data = ['status'=>$status,'modifiedby'=>$loginUserId,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+			$where = ['id=?'=>$trip_id];
 			$tripsModel->saveOrUpdateTripsData($data,$where);
 		}
 	}

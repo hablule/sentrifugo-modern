@@ -41,32 +41,32 @@ class Default_Form_Educationdetails extends Zend_Form
 		$description->setLabel("Description");
         $status = new Zend_Form_Element_Select('status');
 		$status->setRequired(true);
-		$status->addMultiOptions(array(
+		$status->addMultiOptions([
 			'Select'=>'Select',
 			'Graduated'=>'Graduated',
 			'Withdrawn'=>'Withdrawn',
 			'Terminated'=>'Terminated',
 			'Studing'=>'Studing'
-		));
+		]);
 		$summaryofcourse = new Zend_Form_Element_Textarea('summaryofcourse');
 		$summaryofcourse->setLabel("Summary of Course");
         $institution_name = new Zend_Form_Element_Text('institution_name');
         $institution_name->addFilter(new Zend_Filter_StringTrim());
 		$institution_name->setAttrib("maxlength",50);
-        $institution_name->addValidator('NotEmpty', false, array('messages' => 'Please enter institution name.'));
+        $institution_name->addValidator('NotEmpty', false, ['messages' => 'Please enter institution name.']);
 		$institution_name->setAttrib('onchange','hideElement("institution","institution_name")');
-		$institution_name->addValidators(array(
-						 array(
+		$institution_name->addValidators([
+						 [
 							 'validator'   => 'Regex',
 							 'breakChainOnFailure' => true,
-							 'options'     => array( 
+							 'options'     => [ 
 							 'pattern' =>'/^[a-zA-Z\s]+$/i',
-								 'messages' => array(
+								 'messages' => [
 										 'regexNotMatch'=>'Please enter only alphabets.'
-								 )
-							 )
-						 )
-					 )); 
+								 ]
+							 ]
+						 ]
+					 ]); 
 		
 		//course ... 
         $studylevel = new Zend_Form_Element_Select('studylevel');
@@ -78,25 +78,25 @@ class Default_Form_Educationdetails extends Zend_Form
         $maxachscore->addFilter(new Zend_Filter_StringTrim());
         $maxachscore->setRequired(true);
 		$maxachscore->setAttrib("maxlength",3);
-        $maxachscore->addValidator('NotEmpty', false, array('messages' => 'Please enter maxachscore name.'));
+        $maxachscore->addValidator('NotEmpty', false, ['messages' => 'Please enter maxachscore name.']);
 		
 		//from_date..
         $from_date = new ZendX_JQuery_Form_Element_DatePicker('from_date');
 		
-		$from_date->setOptions(array('class' => 'brdr_none'));	
+		$from_date->setOptions(['class' => 'brdr_none']);	
 		$from_date->setRequired(true);
 		$from_date->setAttrib('readonly', 'true');
 		$from_date->setAttrib('onfocus', 'this.blur()');  
-        $from_date->addValidator('NotEmpty', false, array('messages' => 'Please select from date.'));
+        $from_date->addValidator('NotEmpty', false, ['messages' => 'Please select from date.']);
         
         //to_date
         $to_date = new ZendX_JQuery_Form_Element_DatePicker('to_date');
 		
-		$to_date->setOptions(array('class' => 'brdr_none'));	
+		$to_date->setOptions(['class' => 'brdr_none']);	
 		$to_date->setRequired(true);
 		$to_date->setAttrib('readonly', 'true');
 		$to_date->setAttrib('onfocus', 'this.blur()');  
-        $to_date->addValidator('NotEmpty', false, array('messages' => 'Please select to date.'));
+        $to_date->addValidator('NotEmpty', false, ['messages' => 'Please select to date.']);
         
         // percentage...
 		
@@ -104,7 +104,7 @@ class Default_Form_Educationdetails extends Zend_Form
         $totalscore->addFilter(new Zend_Filter_StringTrim());
         $totalscore->setRequired(true);
 		$totalscore->setAttrib("maxlength",2);
-        $totalscore->addValidator('NotEmpty', false, array('messages' => 'Please enter total score.'));
+        $totalscore->addValidator('NotEmpty', false, ['messages' => 'Please enter total score.']);
 		
 		
 	   //Form Submit....
@@ -112,13 +112,13 @@ class Default_Form_Educationdetails extends Zend_Form
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 
-		$this->addElements(array($id,$user_id,$summaryofcourse,$description,$studylevel,$studyfield,$studyfield_name,$institution,$status,$from_date,$to_date,$totalscore,$maxachscore,$institution_name,
-							$submit));
-       $this->setElementDecorators(array('ViewHelper')); 
+		$this->addElements([$id,$user_id,$summaryofcourse,$description,$studylevel,$studyfield,$studyfield_name,$institution,$status,$from_date,$to_date,$totalscore,$maxachscore,$institution_name,
+							$submit]);
+       $this->setElementDecorators(['ViewHelper']); 
 		
-		$this->setElementDecorators(array(
+		$this->setElementDecorators([
                     'UiWidgetElement',
-        ),array('from_date','to_date'));
+        ],['from_date','to_date']);
 		
 		
         

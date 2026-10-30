@@ -13,8 +13,8 @@ class Default_Model_Pagetab extends Zend_Db_Table_Abstract{
 
         $bank = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('pt'=>'main_pagetab'),array('pt.tabname as tabname', 'pt.tabcode as tabcode', 'pt.description as description', 'if(pt.isactive="Y","Yes","No") as isactive', 'pt.pagetab_id as id'))
-            ->joinInner(array('mm'=>'main_menu'),"pt.parentpage_id = mm.id",array('menu'=>'mm.menuName'))
+            ->from(['pt'=>'main_pagetab'],['pt.tabname as tabname', 'pt.tabcode as tabcode', 'pt.description as description', 'if(pt.isactive="Y","Yes","No") as isactive', 'pt.pagetab_id as id'])
+            ->joinInner(['mm'=>'main_menu'],"pt.parentpage_id = mm.id",['menu'=>'mm.menuName'])
             ->order("$by $sort")
             ->where($where)
             ->limitPage($pageNo, $perPage);
@@ -24,7 +24,7 @@ class Default_Model_Pagetab extends Zend_Db_Table_Abstract{
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $a = '', $b = '', $c = '', $d = '')
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
             foreach ($searchValues as $key => $val) {
@@ -40,7 +40,7 @@ class Default_Model_Pagetab extends Zend_Db_Table_Abstract{
             $searchQuery = rtrim($searchQuery, " AND");
         }
         $objName = 'pagetab';
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'tabcode' => 'Code',
             'tabname' => 'Name',
@@ -48,17 +48,17 @@ class Default_Model_Pagetab extends Zend_Db_Table_Abstract{
 
             'description' => 'Description',
             'isactive' => 'Active',
-        );
+        ];
 
         $tablecontent = $this->getData($sort, $by, $pageNo, $perPage, $searchQuery);
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
             'perPage' => $perPage,
             'tablecontent' => $tablecontent,
             'objectname' => $objName,
-            'extra' => array(),
+            'extra' => [],
             // 'add'=>'add',
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
@@ -66,12 +66,12 @@ class Default_Model_Pagetab extends Zend_Db_Table_Abstract{
             'searchArray' => $searchArray,
             'call' => $call,
             'dashboardcall' => $dashboardcall,
-            'search_filters' => array(
-                'isactive' => array(
+            'search_filters' => [
+                'isactive' => [
                     'type' => 'select',
-                    'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-            )
-        );
+                    'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+            ]
+        ];
         return $dataTmp;
     }
 

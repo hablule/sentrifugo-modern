@@ -22,7 +22,7 @@ class Exit_Model_Exitproc extends Zend_Db_Table_Abstract
 {
 	protected $_name = 'main_exit_process';
 	private $db;
-	private $searchArray = array();
+	private $searchArray = [];
 
 	public function init()
 	{
@@ -37,7 +37,7 @@ class Exit_Model_Exitproc extends Zend_Db_Table_Abstract
 		}
 	}
 	
-	public function getExitProcDetails($userId='',$process_id)
+	public function getExitProcDetails($userId='',$process_id = null)
 	{
 		$cond='';
 		$join = '';
@@ -50,10 +50,10 @@ class Exit_Model_Exitproc extends Zend_Db_Table_Abstract
 		{
 			$res = $this->select()
 				->setIntegrityCheck(false)
-				->from(array('ep' => $this->_name),'ep.*')
-				->joinInner(array('u' => 'main_employees'),'u.id = ep.employee_id',array('e.*'))
-				->joinInner(array('et' => 'main_exit_types'),'et.id = ep.exit_type_id',array('et.exit_type'))
-				->joinInner(array('econfig' => 'main_exit_settings'),'econfig.businessunit_id = u.businessunit_id AND econfig.department_id = u.department_id'.$join,array('econfig.id as econfigId','econfig.businessunit_id','econfig.department_id','econfig.l2_manager','econfig.hr_manager','econfig.sys_admin','econfig.general_admin','econfig.finance_manager'))
+				->from(['ep' => $this->_name],'ep.*')
+				->joinInner(['u' => 'main_employees'],'u.id = ep.employee_id',['e.*'])
+				->joinInner(['et' => 'main_exit_types'],'et.id = ep.exit_type_id',['et.exit_type'])
+				->joinInner(['econfig' => 'main_exit_settings'],'econfig.businessunit_id = u.businessunit_id AND econfig.department_id = u.department_id'.$join,['econfig.id as econfigId','econfig.businessunit_id','econfig.department_id','econfig.l2_manager','econfig.hr_manager','econfig.sys_admin','econfig.general_admin','econfig.finance_manager'])
 				->where('ep.employee_id ='.$userId.' AND u.isactive = 1'.$cond);
 				//->order('ep.id DESC')
 				//->limit('0,1');
@@ -65,7 +65,7 @@ class Exit_Model_Exitproc extends Zend_Db_Table_Abstract
 	{
 		$res = $this->select()
 				->setIntegrityCheck(false)
-				->from(array('et' => 'main_exit_types'),'et.*')
+				->from(['et' => 'main_exit_types'],'et.*')
 				->where('et.isactive = 1');
 
 			return $this->fetchAll($res)->toArray();
@@ -77,7 +77,7 @@ class Exit_Model_Exitproc extends Zend_Db_Table_Abstract
 		{
 			$res = $this->select()
 				->setIntegrityCheck(false)
-				->from(array('emp' => 'main_users'),'emp.*')
+				->from(['emp' => 'main_users'],'emp.*')
 				->where('emp.id ='.$userId.' AND emp.isactive = 1');				
 
 			return $this->fetchAll($res)->toArray();
@@ -86,7 +86,7 @@ class Exit_Model_Exitproc extends Zend_Db_Table_Abstract
 		{
 			$res = $this->select()
 				->setIntegrityCheck(false)
-				->from(array('emp' => 'employees_summary'),'emp.*')
+				->from(['emp' => 'employees_summary'],'emp.*')
 				->where('emp.user_id ='.$userId.' AND emp.isactive = 1');				
 
 			return $this->fetchAll($res)->toArray();
@@ -96,7 +96,7 @@ class Exit_Model_Exitproc extends Zend_Db_Table_Abstract
 			$where = ' AND emp.user_id IN ('.$userId.')';
 			$res = $this->select()
 				->setIntegrityCheck(false)
-				->from(array('emp' => 'employees_summary'),'emp.*')
+				->from(['emp' => 'employees_summary'],'emp.*')
 				->where('emp.isactive = 1 '.$where);				
 
 			return $this->fetchAll($res)->toArray();
@@ -118,7 +118,7 @@ class Exit_Model_Exitproc extends Zend_Db_Table_Abstract
 	{	
 		$res = $this->select()
 				->setIntegrityCheck(false)
-				->from(array('epConfig' => 'main_exit_settings'),'epConfig.*')
+				->from(['epConfig' => 'main_exit_settings'],'epConfig.*')
 				->where('epConfig.isactive = 1 AND epConfig.businessunit_id = '.$businessunit_id.' AND epConfig.department_id = '.$department_id);
 
 		return $this->fetchAll($res)->toArray();
@@ -140,8 +140,8 @@ class Exit_Model_Exitproc extends Zend_Db_Table_Abstract
 		{
 			$qry = $this->select()
 					->setIntegrityCheck(false)
-					->from(array('eph' => 'main_exit_history'),'eph.*')
-					->join(array('e' => 'main_users'),'e.id = eph.createdby',array('e.userfullname','e.profileimg'))
+					->from(['eph' => 'main_exit_history'],'eph.*')
+					->join(['e' => 'main_users'],'e.id = eph.createdby',['e.userfullname','e.profileimg'])
 					->where('eph.exit_request_id = '.$exitProcId);
 
 			return $this->fetchAll($qry)->toArray();			
@@ -151,7 +151,7 @@ class Exit_Model_Exitproc extends Zend_Db_Table_Abstract
 	{
 		$searchQuery = '';
        // $searchArray = array();
-        $data = array();
+        $data = [];
 
 		if($searchData != '' && $searchData!='undefined')
 			{
@@ -175,21 +175,21 @@ class Exit_Model_Exitproc extends Zend_Db_Table_Abstract
 			}
 		$objName = 'exitproc';
 
-		$tableFields = array('action'=>'Action','businessunit_name'=>'Business Unit','department_name'=>'Department','exit_type'=>'Exit Type','overall_status'=>'Overall Status','initiateddate' => 'Initiated Date');
+		$tableFields = ['action'=>'Action','businessunit_name'=>'Business Unit','department_name'=>'Department','exit_type'=>'Exit Type','overall_status'=>'Overall Status','initiateddate' => 'Initiated Date'];
 
 		$tablecontent = $this->getExitProcs('grid',$sort, $by, $pageNo, $perPage,$searchQuery,$a);     
 		
 		
 
 		
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -197,10 +197,10 @@ class Exit_Model_Exitproc extends Zend_Db_Table_Abstract
 			'add' =>'add',
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall,
-			'search_filters' => array(
-					'initiateddate' =>array('type'=>'datepicker')					
-				)
-		);
+			'search_filters' => [
+					'initiateddate' =>['type'=>'datepicker']					
+				]
+		];
 		return $dataTmp;
 	}
 	public function getExitProcs($con,$sort='', $by='', $pageNo='', $perPage='',$searchQuery='',$conText = '')
@@ -221,10 +221,10 @@ class Exit_Model_Exitproc extends Zend_Db_Table_Abstract
 		
 			$res = $this->select()
 				->setIntegrityCheck(false)
-				->from(array('e' => $this->_name),array('e.id','date(e.createddate) as initiateddate',$columns))
-				->joinInner(array('emp'=> 'main_employees'),'e.employee_id = emp.id',array('emp.*'));
+				->from(['e' => $this->_name],['e.id','date(e.createddate) as initiateddate',$columns])
+				->joinInner(['emp'=> 'main_employees'],'e.employee_id = emp.id',['emp.*']);
 			if(!empty($configWhere))
-				$res = $res->joinInner(array('econfig' => 'main_exit_types'),'econfig.id = e.exit_type_id',array('econfig.createddate as created_date','econfig.exit_type as exit_type'));
+				$res = $res->joinInner(['econfig' => 'main_exit_types'],'econfig.id = e.exit_type_id',['econfig.createddate as created_date','econfig.exit_type as exit_type']);
 
 				$res = $res->where($where.$configWhere);
 				$res = $res->order("$by $sort");
@@ -251,7 +251,7 @@ class Exit_Model_Exitproc extends Zend_Db_Table_Abstract
 	{
 		$qry = $this->select()
 					->setIntegrityCheck(false)
-					->from(array('mu' => 'main_users'),'mu.*')
+					->from(['mu' => 'main_users'],'mu.*')
 					->where('mu.id = '.$userId);
 
 			return $this->fetchAll($qry)->toArray();
@@ -261,7 +261,7 @@ class Exit_Model_Exitproc extends Zend_Db_Table_Abstract
 	{
 		$qry = $this->select()
 					->setIntegrityCheck(false)
-					->from(array('mes' => 'main_exit_settings'),'mes.*')
+					->from(['mes' => 'main_exit_settings'],'mes.*')
 					->where('mes.id = '.$settingId);
 
 			return $this->fetchAll($qry)->toArray();
@@ -271,7 +271,7 @@ class Exit_Model_Exitproc extends Zend_Db_Table_Abstract
 	{
 		$qry = $this->select()
 					->setIntegrityCheck(false)
-					->from(array('mep' => 'main_exit_process'),'mep.*')
+					->from(['mep' => 'main_exit_process'],'mep.*')
 					->where('mep.employee_id = '.$emp_id.' and mep.overall_status="Pending"');
 
 		return $this->fetchAll($qry)->toArray();

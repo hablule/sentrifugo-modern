@@ -50,7 +50,7 @@ class Default_PermissioncontrollerController extends Zend_Controller_Action
         $session = sapp_Global::_readSession();
         if (!isset($session)) {
             if ($this->getRequest()->isXmlHttpRequest()) {
-                echo Zend_Json::encode(array('login' => 'failed'));
+                echo Zend_Json::encode(['login' => 'failed']);
                 die();
             } else {
                 $this->_redirect('');
@@ -93,7 +93,7 @@ class Default_PermissioncontrollerController extends Zend_Controller_Action
             // Override grid actions: Remove Add/Edit/Delete, keep View only
             $dataTmp['tableheader']['action'] = 'View Actions'; 
 
-            $this->view->dataArray = array($dataTmp);
+            $this->view->dataArray = [$dataTmp];
             $this->view->call      = $call;
             $this->view->messages  = $this->_helper->flashMessenger->getMessages();
 
@@ -111,8 +111,8 @@ class Default_PermissioncontrollerController extends Zend_Controller_Action
         // Custom Fetch with Module Name included
         $select = $this->_model->select()
             ->setIntegrityCheck(false)
-            ->from(array('c' => 'main_controller'))
-            ->joinLeft(array('m' => 'main_module'), 'c.module_id = m.id', array('module_name' => 'm.name'))
+            ->from(['c' => 'main_controller'])
+            ->joinLeft(['m' => 'main_module'], 'c.module_id = m.id', ['module_name' => 'm.name'])
             ->where('c.id = ?', $id);
             
         $data = $this->_model->fetchRow($select);

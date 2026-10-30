@@ -35,17 +35,17 @@ class Default_Form_Categories extends Zend_Form
 		$categoryName->setAttrib('onkeypress','chkCategory()');
 		$categoryName->addFilter(new Zend_Filter_StringTrim());
 		$categoryName->setRequired(true);
-		$categoryName->addValidator('NotEmpty',false,array("messages"=>'Please enter category'));
-		$categoryName->addValidator('regex',true,array(
+		$categoryName->addValidator('NotEmpty',false,["messages"=>'Please enter category']);
+		$categoryName->addValidator('regex',true,[
 			'pattern'=>'/^[a-zA-Z0-9][\s+[a-zA-Z0-9]+]*$/', //'/^[a-zA-Z][a-zA-Z0-9\s]*$/', 	/^[a-z0-9 ]+$/i						
-			'messages'=>array('regexNotMatch'=>'Please enter valid category')
-		));
+			'messages'=>['regexNotMatch'=>'Please enter valid category']
+		]);
 		$categoryName->addValidator(new Zend_Validate_Db_NoRecordExists(
-			array(
+			[
 				'table' => 'main_pd_categories',
 				'field' => 'category',
 				'exclude' => 'id!="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('id').'" and isactive = 1'
-			)	
+			]	
 		));
 		$categoryName->getValidator('Db_NoRecordExists')->setMessage('Category already exists');
 
@@ -60,8 +60,8 @@ class Default_Form_Categories extends Zend_Form
 		$submitBtn->setAttrib('id','submitBtn');
 		$submitBtn->setLabel('Save');
 
-		$this->addElements(array($categoryName,$categoryDesc,$submitBtn));
-		$this->setElementDecorators(array('ViewHelper'));
+		$this->addElements([$categoryName,$categoryDesc,$submitBtn]);
+		$this->setElementDecorators(['ViewHelper']);
 	}
 }
 ?>

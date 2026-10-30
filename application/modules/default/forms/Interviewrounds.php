@@ -37,7 +37,7 @@ class Default_Form_Interviewrounds extends Zend_Form
         $req_id->setRequired(true);
 		$req_id->setAttrib("required",'true');
         $req_id->setAttrib("class", "formDataElement"); 
-        $req_id->addValidator('NotEmpty', false, array('messages' => 'Please select requisition id.'));  
+        $req_id->addValidator('NotEmpty', false, ['messages' => 'Please select requisition id.']);  
 		$req_id->setAttrib('title', 'Interviewer');
 		$req_id->setAttrib('onchange', 'displayParticularCandidates(this,"")');
     
@@ -45,7 +45,7 @@ class Default_Form_Interviewrounds extends Zend_Form
         $candidate_name->setAttrib('title', 'Candidate Name');        
         $candidate_name->addFilter(new Zend_Filter_StringTrim());
         $candidate_name->setRequired(true);
-        $candidate_name->addValidator('NotEmpty', false, array('messages' => 'Please select candidate.'));
+        $candidate_name->addValidator('NotEmpty', false, ['messages' => 'Please select candidate.']);
         
 		
 		$candidate_name->addMultiOption('','Select candidate');
@@ -60,11 +60,11 @@ class Default_Form_Interviewrounds extends Zend_Form
         $interview_mode = new Zend_Form_Element_Select("interview_mode");
         $interview_mode->setRegisterInArrayValidator(true);  
         $interview_mode->setAttrib("class", "formDataElement"); 
-        $interview_mode->addMultiOptions(array('' => 'Select Interview Type',
+        $interview_mode->addMultiOptions(['' => 'Select Interview Type',
                                                'In person' => 'In person',
                                                'Phone' => 'Phone',
                                                'Video conference' => 'Video conference',
-											   'Written Questions'=>'Written Question'));
+											   'Written Questions'=>'Written Question']);
         $interview_mode->setAttrib('title', 'Interview Type');
 		$interview_mode->setAttrib("required",'true');      
         $int_location = new Zend_Form_Element_Text('int_location');
@@ -135,7 +135,7 @@ class Default_Form_Interviewrounds extends Zend_Form
 		$round_status = new Zend_Form_Element_Select('round_status');
                 $round_status->setRegisterInArrayValidator(false);
 		$round_status->setLabel('Round status')	;
-                $round_status->addMultiOptions(array(
+                $round_status->addMultiOptions([
 							'' => 'Select status',
 							'Schedule for next round'=>'Schedule for next round' ,
 							'Qualified'=>'Qualified',
@@ -144,24 +144,24 @@ class Default_Form_Interviewrounds extends Zend_Form
 							'Incompetent' => 'Incompetent',
 							'Ineligible' => 'Ineligible',
 							'Candidate no show' => 'Candidate no show'
-					));
+					]);
 		$hid_round_status_val = Zend_Controller_Front::getInstance()->getRequest()->getParam('hid_round_status',null);	
 		$interview_status = new Zend_Form_Element_Select('interview_status');		
 		$interview_status->setLabel('Interview status')
-		->setMultiOptions(array(
+		->setMultiOptions([
 							'' => 'Select status',
 							'In process'=>'In process' ,
 							'Completed'=>'Complete',
 							'On hold'=> 'On hold'						
-							));
+							]);
 		$interview_status->setRegisterInArrayValidator(false);
 			
 		$cand_status = new Zend_Form_Element_Select('cand_status');		
 		$cand_status->setLabel('Candidate status')
 		
-		->setMultiOptions(array(
+		->setMultiOptions([
 							'' => 'Select status',							
-							));
+							]);
 		$cand_status->setRegisterInArrayValidator(false);
 		
 		$auth = Zend_Auth::getInstance();
@@ -173,61 +173,61 @@ class Default_Form_Interviewrounds extends Zend_Form
 		if(($loginuserGroup == MANAGER_GROUP || $loginuserGroup == EMPLOYEE_GROUP || $loginuserGroup == SYSTEMADMIN_GROUP) || (($loginuserGroup == HR_GROUP || $loginuserGroup == MANAGEMENT_GROUP) && $intrvid_val == $loginUserId))
 		{
 			$round_status->setRequired(true);
-                        $round_status->addValidator('NotEmpty', false, array('messages' => 'Please select status.'));
+                        $round_status->addValidator('NotEmpty', false, ['messages' => 'Please select status.']);
 			$interview_comments->setRequired(true);
-			$interview_comments->addValidator('NotEmpty', false, array('messages' => 'Please select comments.'));
+			$interview_comments->addValidator('NotEmpty', false, ['messages' => 'Please select comments.']);
 			$interview_feedback->setRequired(true);
-			$interview_feedback->addValidator('NotEmpty', false, array('messages' => 'Please select feedback.'));
+			$interview_feedback->addValidator('NotEmpty', false, ['messages' => 'Please select feedback.']);
 		}
 		if(($loginuserGroup == HR_GROUP || $loginuserGroup == MANAGEMENT_GROUP || $loginuserGroup == '') )
 		{
                     if($hid_round_status_val != '' && ($loginuserGroup == HR_GROUP || $loginuserGroup == MANAGEMENT_GROUP || $loginuserGroup == ''))
                     {
                         $round_status->setRequired(true);
-                        $round_status->addValidator('NotEmpty', false, array('messages' => 'Please select status.'));
+                        $round_status->addValidator('NotEmpty', false, ['messages' => 'Please select status.']);
                     }
                     else 
                     {
 			$interview_status->setRequired(true);
-			$interview_status->addValidator('NotEmpty', false, array('messages' => 'Please select interview status.'));
+			$interview_status->addValidator('NotEmpty', false, ['messages' => 'Please select interview status.']);
 			$cand_status->setRequired(true);
-			$cand_status->addValidator('NotEmpty', false, array('messages' => 'Please select candidate status.'));					
+			$cand_status->addValidator('NotEmpty', false, ['messages' => 'Please select candidate status.']);					
 			$interviewer_id->setRequired(true);
-			$interviewer_id->addValidator('NotEmpty', false, array('messages' => 'Please select interviewer.'));  
+			$interviewer_id->addValidator('NotEmpty', false, ['messages' => 'Please select interviewer.']);  
 			$interview_mode->setRequired(true);
-			$interview_mode->addValidator('NotEmpty', false, array('messages' => 'Please select interview type.'));  
+			$interview_mode->addValidator('NotEmpty', false, ['messages' => 'Please select interview type.']);  
 			$int_location->setRequired(true);
-			$int_location->addValidator('NotEmpty', false, array('messages' => 'Please enter location.'));  
+			$int_location->addValidator('NotEmpty', false, ['messages' => 'Please enter location.']);  
 			$country->setRequired(true);
-			$country->addValidator('NotEmpty', false, array('messages' => 'Please select country.')); 
+			$country->addValidator('NotEmpty', false, ['messages' => 'Please select country.']); 
 			$state->setRequired(true);
-			$state->addValidator('NotEmpty', false, array('messages' => 'Please select state.')); 
+			$state->addValidator('NotEmpty', false, ['messages' => 'Please select state.']); 
 			$city->setRequired(true);
-			$city->addValidator('NotEmpty', false, array('messages' => 'Please select city.'));
+			$city->addValidator('NotEmpty', false, ['messages' => 'Please select city.']);
 			$interview_time->setRequired(true);
-			$interview_time->addValidator('NotEmpty', false, array('messages' => 'Please select interview time.'));
+			$interview_time->addValidator('NotEmpty', false, ['messages' => 'Please select interview time.']);
 			$interview_date->setRequired(true);
-			$interview_date->addValidator('NotEmpty', false, array('messages' => 'Please select interview date.'));
+			$interview_date->addValidator('NotEmpty', false, ['messages' => 'Please select interview date.']);
 			$interview_round->setRequired(true);
-			$interview_round->addValidator('NotEmpty', false, array('messages' => 'Please enter interview name.'));
+			$interview_round->addValidator('NotEmpty', false, ['messages' => 'Please enter interview name.']);
                     }
 		}
         $submit = new Zend_Form_Element_Submit('submit');        
         $submit->setAttrib('id', 'submitbutton');
         $submit->setLabel('Update'); 
-        $int_location->addValidator("regex",true,array(                           
+        $int_location->addValidator("regex",true,[                           
                            'pattern'=>'/^[a-zA-Z.\- ?]+$/',
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter valid location.'
-                           )
-        	));
-        $interview_round->addValidator("regex",true,array(                           
+                           ]
+        	]);
+        $interview_round->addValidator("regex",true,[                           
                            'pattern'=>'/^[0-9a-zA-Z.\- ?]+$/',
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please select valid interview name.'
-                           )
-        	));
-        $this->addElements(array($req_id,$id,$candidate_name,$job_title,$interviewer_id,$interview_mode,$int_location,$country,$state,$city,$interview_time,$interview_date,$round_status,$interview_feedback,$interview_comments,$interview_round,$interview_status,$cand_status,$submit,$timezone));
-        $this->setElementDecorators(array('ViewHelper')); 
+                           ]
+        	]);
+        $this->addElements([$req_id,$id,$candidate_name,$job_title,$interviewer_id,$interview_mode,$int_location,$country,$state,$city,$interview_time,$interview_date,$round_status,$interview_feedback,$interview_comments,$interview_round,$interview_status,$cand_status,$submit,$timezone]);
+        $this->setElementDecorators(['ViewHelper']); 
     }
 }

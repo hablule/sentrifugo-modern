@@ -23,7 +23,7 @@ class Default_Model_Candidatedetails extends Zend_Db_Table_Abstract
 {
     protected $_name = 'main_candidatedetails';
     protected $_primary = 'id';
-    
+
     /**
      * This function gives data for grid view.
      * @parameters
@@ -42,11 +42,11 @@ class Default_Model_Candidatedetails extends Zend_Db_Table_Abstract
         if($searchQuery){
             $where .= " AND ".$searchQuery;       
         }
-                        
+
         $roleData =  $this->select()
                         ->setIntegrityCheck(false)
-                        ->from(array('c'=>$this->_name),
-                        		array(
+                        ->from(['c'=>$this->_name],
+                        		[
                         			'id'=>'c.id',
                         			'candidate_name'=>'c.candidate_name',
                         			//'candidate_lastname'=>'c.candidate_lastname', 
@@ -56,29 +56,29 @@ class Default_Model_Candidatedetails extends Zend_Db_Table_Abstract
 				                    'contact_number'=>'c.contact_number', 
 				                    'skillset'=>'c.skillset'  ,
                                     'isdifferent'=>'c.isdifferent'
-                                      
-                        				
-                        		)
+
+
+                        		]
                         	)
-                        ->joinLeft(array('r'=>'main_requisition_summary'), "r.req_id = c.requisition_id and r.isactive = 1",
-                        		array(
+                        ->joinLeft(['r'=>'main_requisition_summary'], "r.req_id = c.requisition_id and r.isactive = 1",
+                        		[
                         			'requisition_code'=>'if(c.requisition_id != 0,r.requisition_code,"Not Applicable")',
 									'jobtitle_name'=>'r.jobtitle_name'
-                        		)
+                        		]
                         	)
-                        	
-                        	
-                        	->joinLeft(array('y'=>'main_employees'), "y.id = c.createdby and y.isactive = 1",
-                        			array(
+
+
+                        	->joinLeft(['y'=>'main_employees'], "y.id = c.createdby and y.isactive = 1",
+                        			[
                         					'userfullname' => 'y.userfullname',
                                             'profileimg' => 'y.profileimg'
 
-                        					
+
+                        			]
                         			)
-                        			)
-                        			
-                        			
-                        			
+
+
+
                         ->where($where)
                         ->order("$sort_field $sort_order") 
                         ->limitPage($pageNo, $perPage);
@@ -105,14 +105,14 @@ class Default_Model_Candidatedetails extends Zend_Db_Table_Abstract
 
         $roleData = $this->select()
                         ->setIntegrityCheck(false)
-                        ->from(array('c'=>$this->_name),array('c.*',))
-                        ->joinInner(array('r'=>'main_requisition'), "r.id = c.requisition_id and r.isactive = 1",array('requisition_code'=>'r.requisition_code'))
+                        ->from(['c'=>$this->_name],['c.*',])
+                        ->joinInner(['r'=>'main_requisition'], "r.id = c.requisition_id and r.isactive = 1",['requisition_code'=>'r.requisition_code'])
                         ->where($where)
                         ->order("$by $sort") 
                         ->limitPage($pageNo, $perPage);        
         return $roleData;       		
     }
-    
+
     /**
      * This function gives data for grid view.
      * @parameters
@@ -134,14 +134,14 @@ class Default_Model_Candidatedetails extends Zend_Db_Table_Abstract
 
         $roleData = $this->select()
                         ->setIntegrityCheck(false)
-                        ->from(array('c'=>$this->_name),array('c.*',))
-                        
+                        ->from(['c'=>$this->_name],['c.*',])
+
                         ->where($where)
                         ->order("$by $sort") 
                         ->limitPage($pageNo, $perPage);        
         return $roleData;       		
     }
-    
+
     /**
      * This function is used to save/update data in database.
      * @parameters
@@ -184,16 +184,16 @@ class Default_Model_Candidatedetails extends Zend_Db_Table_Abstract
                     where c.isactive = 1 and c.cand_status = 'Selected' and c.backgroundchk_status in ('Yet to start','Completed') and c.id not in (select rccandidatename from main_users 
                     where isactive = 1 and rccandidatename is not null)";
         $result = $db->query($query);
-        $data = array();
+        $data = [];
         while($row = $result->fetch())
         {
-            
+
             $data[$row['id']] = $row['candidate_name'];
-            
+
         }
         return $data;
     }
-    
+
     public function getCandidateForView($id)
     {
         $db = Zend_Db_Table::getDefaultAdapter();
@@ -231,7 +231,7 @@ class Default_Model_Candidatedetails extends Zend_Db_Table_Abstract
         $row = $result->fetch();
         return $row;
     }
-	
+
 	public function getcandidateData($id)
 	{
 		$row = $this->fetchRow("id = '".$id."' and isactive = 1");
@@ -241,7 +241,7 @@ class Default_Model_Candidatedetails extends Zend_Db_Table_Abstract
         }
         return $row->toArray();
 	}
-	
+
 	public function getnotscheduledcandidateData($req_id)
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();
@@ -250,7 +250,7 @@ class Default_Model_Candidatedetails extends Zend_Db_Table_Abstract
         $row = $result->fetchAll();
         return $row;
 	}	
-	
+
 	public function getcountofrecords($req_id)
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();
@@ -260,7 +260,7 @@ class Default_Model_Candidatedetails extends Zend_Db_Table_Abstract
         return $row;
 	}
 
-		
+
 	public function SaveorUpdateUserData($data, $where)
     {
         if($where != '')
@@ -274,7 +274,7 @@ class Default_Model_Candidatedetails extends Zend_Db_Table_Abstract
             $id=$this->getAdapter()->lastInsertId($this->_name);
             return $id;
         }
-        
+
     }
     /**
      * This function gives all content for grid view.
@@ -290,8 +290,8 @@ class Default_Model_Candidatedetails extends Zend_Db_Table_Abstract
     public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$p1,$p2,$p3,$p4)
     {
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
         $db = Zend_Db_Table::getDefaultAdapter();
         if($searchData != '' && $searchData!='undefined')
         {
@@ -307,10 +307,10 @@ class Default_Model_Candidatedetails extends Zend_Db_Table_Abstract
                 $searchQuery = rtrim($searchQuery," AND");					
             }
         }
-        
+
         $objName = 'candidatedetails';
 
-        $tableFields = array('action'=>'Action',
+        $tableFields = ['action'=>'Action',
                              'requisition_code' => 'Requisition Code',
 							 'jobtitle_name' => 'Job Title',
                              'candidate_name' => 'Candidate Name',
@@ -318,25 +318,25 @@ class Default_Model_Candidatedetails extends Zend_Db_Table_Abstract
         		            'cand_status' => 'Status',
                             // 'emailid' => 'Email',
         					 'cand_resume' => 'Resume',
-							 
+
                              'contact_number' => 'Mobile',
                              'skillset' => 'Skill Set', 
         		              'userfullname'=>'Added By'
-                            );
+                            ];
 
         $tablecontent = $this->getCandidatesData($sort, $by, $pageNo, $perPage,$searchQuery);     
-        $cand_status_opt = array('' => 'All','Shortlisted' => 'Shortlisted','Selected' => 'Selected','Rejected' => 'Rejected',
+        $cand_status_opt = ['' => 'All','Shortlisted' => 'Shortlisted','Selected' => 'Selected','Rejected' => 'Rejected',
                                 'On hold' => 'On hold','Disqualified' => 'Disqualified','Scheduled' => 'Scheduled',
-                                'Not Scheduled' => 'Not Scheduled','Recruited' => 'Recruited','Requisition Closed/Completed' => 'Requisition Closed/Completed');
+                                'Not Scheduled' => 'Not Scheduled','Recruited' => 'Recruited','Requisition Closed/Completed' => 'Requisition Closed/Completed'];
 
-        $dataTmp = array(
+        $dataTmp = [
                 'sort' => $sort,
                 'by' => $by,
                 'pageNo' => $pageNo,
                 'perPage' => $perPage,				
                 'tablecontent' => $tablecontent,
                 'objectname' => $objName,
-                'extra' => array(),
+                'extra' => [],
                 'tableheader' => $tableFields,
                 'jsGridFnName' => 'getAjaxgridData',
                 'jsFillFnName' => '',
@@ -344,51 +344,51 @@ class Default_Model_Candidatedetails extends Zend_Db_Table_Abstract
                 'add' => 'add',
                 'call'=>$call,
 				'dashboardcall'=>$dashboardcall,
-                'search_filters' => array(
-                    'cand_status' => array(
+                'search_filters' => [
+                    'cand_status' => [
                         'type' => 'select',
                         'filter_data' => $cand_status_opt,
-                    ),
-                ),
-        );
+                    ],
+                ],
+        ];
         return $dataTmp;
     }
-    
+
     // To get content of word document
     public function read_file_docx($filename){
-		
+
 		$striped_content = '';
 		$content = '';
-		
+
 		if(!$filename || !file_exists($filename)) return false;
-		
+
 		$zip = zip_open($filename);
-		
+
 		if (!$zip || is_numeric($zip)) return false;
-	
-	
+
+
 		while ($zip_entry = zip_read($zip)) {
-			
+
 			if (zip_entry_open($zip, $zip_entry) == FALSE) continue;
-			
+
 			if (zip_entry_name($zip_entry) != "word/document.xml") continue;
 
 			$content .= zip_entry_read($zip_entry, zip_entry_filesize($zip_entry));
-			
+
 			zip_entry_close($zip_entry);
 		}// end while
-	
+
 		zip_close($zip);
-		
-			
-		
+
+
+
 		$content = str_replace('</w:r></w:p></w:tc><w:tc>', " ", $content);
 		$content = str_replace('</w:r></w:p>', "\r\n", $content);
 		$striped_content = strip_tags($content);
 
 		return $striped_content;
 	}
-	
+
     public function getContentWord($filename=null){
 		$content = read_file_docx($filename);
 		if($content !== false){
@@ -397,14 +397,14 @@ class Default_Model_Candidatedetails extends Zend_Db_Table_Abstract
 			echo 'Couldn\'t get the file. Please check that file.';
 		}
     }
-    
+
     // To save uploaded file contents
-    public function saveUploadedFile($files=array()){
-    
+    public function saveUploadedFile($files=[]){
+
 		$max_size = 1024;			// maxim size for image file, in KiloBytes
 
 		// Allowed image types
-		$allowtype = array('doc', 'docx', 'pdf');
+		$allowtype = ['doc', 'docx', 'pdf'];
 
 		/** Uploading the image **/
 
@@ -412,7 +412,7 @@ class Default_Model_Candidatedetails extends Zend_Db_Table_Abstract
 		$result_status = 'error';
 		$result_msg = '';
 		// if is received a valid file
-		
+
 		if (isset ($files['resume-file'])) {
 		  // checks to have the allowed extension
 		  $type = explode(".", strtolower($files['resume-file']['name']));
@@ -425,22 +425,22 @@ class Default_Model_Candidatedetails extends Zend_Db_Table_Abstract
 			  if ($files['resume-file']['error'] == 0) {
 			  	$date = new DateTime();
 				$timestamp = $date->getTimestamp();
-			  
+
 			  	$newname = uniqid('resume_').'_'.$timestamp.'.'.$ext;
-			  	
+
 			  	// Folder to upload resumes
 				$newfilename = UPLOAD_PATH_RESUMES . "/" . $newname;  
 
 				// Check file permissions
 				$permissions = substr(sprintf('%o', fileperms(UPLOAD_PATH_RESUMES)), -3);
-				
+
 				/* if($permissions!=777){
 					$result_msg = "Failed to upload the file";
 					// To log warning in the logs/application.log
 					move_uploaded_file($files['resume-file']['tmp_name'], $newfilename);
 				}else */
 				if (!move_uploaded_file ($files['resume-file']['tmp_name'], $newfilename)) {
-				  
+
 				  $result_msg = "Failed to upload the file"; // To show error in one line, the above error message was replaced to this one.
 				}else{
 			      $rezultat = $newname;
@@ -448,40 +448,40 @@ class Default_Model_Candidatedetails extends Zend_Db_Table_Abstract
 				}
 			  }
 			}else{ 
-				
+
 				$result_msg = 'Invalid file'; // To show error in one line, the above error message was replaced to this one.
 			}
 		  }
 		  else 
 		  { 
-			
+
 			$result_msg = 'Invalid file'; // To show error in one line, the above error message was replaced to this one.
-			
+
 		  }
 		}
 		else 
 		  { 
-			
+
 			$result_msg = 'Failed to upload the file'; // To show error in one line, the above error message was replaced to this one.
-			
+
 		  }
 
-		$result = array(
+		$result = [
 			'result'=>$result_status,
 			'file_name'=>$rezultat,
 			'msg'=>$result_msg
-		);
+		];
 		return $result;
     }
-    
-    public function insertMultipleRecords($fields=array(), $records=array()){
+
+    public function insertMultipleRecords($fields=[], $records=[]){
     	$db = Zend_Db_Table::getDefaultAdapter();
     	$query = 'INSERT INTO main_candidatedetails ('.implode(',', $fields).') VALUES '.$records;
     	$db->query($query);
         $id=$this->getAdapter()->lastInsertId($this->_name);
         return $id;
     }
-    
+
     // To get login user ID
     public function getLoginUserId(){
         $auth = Zend_Auth::getInstance();
@@ -493,13 +493,13 @@ class Default_Model_Candidatedetails extends Zend_Db_Table_Abstract
 
 	// To generate report
 	public function getReportData($param_arr,$per_page,$page_no,$sort_name,$sort_type){
-		
+
             $search_str = "c.isactive = 1";
-			
+
             unset($param_arr['search_criteria']);
 			unset($param_arr['previous_search']);
 			if(!empty($param_arr)){
-            
+
 	            foreach($param_arr as $key => $value)
 	            {
 	                    if($value != '')
@@ -511,22 +511,22 @@ class Default_Model_Candidatedetails extends Zend_Db_Table_Abstract
 	                    }
 	            }
 			}
-            
+
             // To get count of total requisitions
             $db = Zend_Db_Table::getDefaultAdapter();
             $count_query = "select count(c.id) cnt from main_candidatedetails c 
                             LEFT JOIN main_requisition_summary r ON c.requisition_id = r.req_id where ".$search_str;
             $count_result = $db->query($count_query);
             $count_row = $count_result->fetch();
-            
+
             // To get requisitions data
             $count = $count_row['cnt'];
             $page_cnt = ceil($count/$per_page);
-            
+
             if($sort_name == 'cand_status'){
                 $sort_name = "cast(cand_status as char(100))";
             }
-            
+
             $offset = ($per_page*$page_no) - $per_page;
             $limit_str = " limit ".$per_page." offset ".$offset;
             $query = "select r.requisition_code requisition_code, r.jobtitle_name jobtitle_name,
@@ -537,7 +537,7 @@ class Default_Model_Candidatedetails extends Zend_Db_Table_Abstract
                       where $search_str order by $sort_name $sort_type $limit_str";
             $result = $db->query($query);
             $rows = $result->fetchAll();
-            return array('rows' => $rows,'page_cnt' => $page_cnt);
+            return ['rows' => $rows,'page_cnt' => $page_cnt];
     }
 	//get the selected candidatedetails
     public function getSelectedCandidatesDetails()
@@ -546,10 +546,10 @@ class Default_Model_Candidatedetails extends Zend_Db_Table_Abstract
     	$query = "select c.id,c.candidate_name,c.emailid from main_candidatedetails c
                     where c.isactive = 1 and c.cand_status = 'Selected' and c.backgroundchk_status in ('Yet to start','Completed') and c.id not in (select rccandidatename from main_users
                     where isactive = 1 and rccandidatename is not null)";
-    	 
+
     	$result = $db->query($query);
     	$candidateData= $result->fetchAll();
     	return $candidateData;
-    	 
+
     }
 }//end of class

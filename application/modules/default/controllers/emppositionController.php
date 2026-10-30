@@ -22,7 +22,7 @@ class Default_emppositionController extends Zend_Controller_Action
       $refresh = $this->_getParam('refresh');
       $dashboradcall = $this->_getParam('dashboradcall');
 
-      $data = array();
+      $data = [];
 
       if ($refresh == 'refresh') {
           if ($dashboradcall == 'Yes') {
@@ -115,7 +115,7 @@ class Default_emppositionController extends Zend_Controller_Action
             }
             else{
             if ($form->isValid($this->getRequest()->getPost())) {
-                $data = array(
+                $data = [
                     'position_id'=>$this->_getParam('position_id'),
                     'jobtitle_id'=>$this->_getParam('jobtitle_id'),
                     'employee_id'=>$this->_getParam('employee_id'),
@@ -131,10 +131,10 @@ class Default_emppositionController extends Zend_Controller_Action
                     'description'=>$this->_getParam('description'),
                     'createdby'=>$loginUserid,
                     'createddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
 
                 $model->SaveorUpdateData($data,'');
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Employee Position added successfully."));
+                $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Employee Position added successfully."]);
                 $this->_redirect('empposition');
             }
             else{
@@ -219,7 +219,7 @@ class Default_emppositionController extends Zend_Controller_Action
             }
             else{
             if ($form->isValid($this->getRequest()->getPost())) {
-                $data = array(
+                $data = [
                     'position_id'=>$this->_getParam('position_id'),
                     'jobtitle_id'=>$this->_getParam('jobtitle_id'),
                     'employee_id'=>$this->_getParam('employee_id'),
@@ -235,9 +235,9 @@ class Default_emppositionController extends Zend_Controller_Action
                     'description'=>$this->_getParam('description'),
                     'createdby'=>$loginUserid,
                     'createddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
                 $model->SaveorUpdateData($data,'employee_id = '.$emp_id.' and position_id= '.$pos_id);
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Employee Position updated successfully."));
+                $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Employee Position updated successfully."]);
                 $this->_redirect('empposition');
             }
             else{

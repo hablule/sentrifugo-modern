@@ -49,9 +49,9 @@ class Default_StatesController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 		
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 		
 		if($refresh == 'refresh')
@@ -163,14 +163,14 @@ class Default_StatesController extends Zend_Controller_Action
 		$callval = $this->getRequest()->getParam('call');
 		if($callval == 'ajaxcall')
 			$this->_helper->layout->disableLayout();
-		$popConfigPermission = array();
+		$popConfigPermission = [];
 		if(sapp_Global::_checkprivileges(COUNTRIES,$loginuserGroup,$loginuserRole,'add') == 'Yes'){
 						array_push($popConfigPermission,'country');
 		}
 		$statesform = new Default_Form_states();
 		$statesmodel = new Default_Model_States();
 		$countriesModel = new Default_Model_Countries();
-		$msgarray = array();
+		$msgarray = [];
 		
 		    $countrieslistArr = $countriesModel->getActiveCountriesList();
 			if(sizeof($countrieslistArr)>0)
@@ -222,8 +222,8 @@ class Default_StatesController extends Zend_Controller_Action
 		if($this->getRequest()->getPost()){
 		        $id = $this->_request->getParam('id'); 
 				$errorflag = "true";
-				$msgarray = array();
-				$newstateArr = array();
+				$msgarray = [];
+				$newstateArr = [];
 				$dbstate = '';
 				$dbcountryid ='';
 				$statestring = '';
@@ -317,7 +317,7 @@ class Default_StatesController extends Zend_Controller_Action
 							}
 						$actionflag = 1;
 						$tableid = $NewStateInsertedId;
-						$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"State  added successfully.")); 
+						$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"State  added successfully."]); 
 					   }	
 					}
 				  else
@@ -329,16 +329,16 @@ class Default_StatesController extends Zend_Controller_Action
                        
 					   if($id)
 					   {
-					 	 $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"State  updated successfully."));
+					 	 $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"State  updated successfully."]);
 						 $actionflag = 2;
 					     $tableid = $id;
 					   }
 					   else
 					   {
 						   if(sizeof($stateid)>1)
-							$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"States  added successfully."));
+							$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"States  added successfully."]);
 						   else
-							$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"State  added successfully.")); 					   
+							$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"State  added successfully."]); 					   
 							
 						 $actionflag = 1;
 					     $tableid = $Id;	
@@ -398,14 +398,14 @@ class Default_StatesController extends Zend_Controller_Action
 			  $statedata = $statesmodel->getStatesDataByID($id);
 			  if(!empty($statedata))
 			    $stateOrgId = $statedata[0]['state_id_org'];
-			  $data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-			  $where = array('id=?'=>$id);
+			  $data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+			  $where = ['id=?'=>$id];
 			  $Id = $statesmodel->deleteStateData($data, $where);
 			  
 			  if($stateOrgId !='')
 			  {
-			        $citydata = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-					$citywhere = array('state=?'=>$stateOrgId);
+			        $citydata = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+					$citywhere = ['state=?'=>$stateOrgId];
 					$CityId = $citiesmodel->deleteCityData($citydata, $citywhere); 
 			  }
 			    if($Id == 'update')
@@ -431,11 +431,11 @@ class Default_StatesController extends Zend_Controller_Action
 			{
 				if(	$messages['msgtype'] == 'error')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
 				}
 				if(	$messages['msgtype'] == 'success')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
 				}
 					
 			}
@@ -484,7 +484,7 @@ class Default_StatesController extends Zend_Controller_Action
                 $state_opt .= sapp_Global::selectOptionBuilder($state['id'], $state['state_name']);
             }
         }
-        $this->_helper->_json(array('options'=>$state_opt));
+        $this->_helper->_json(['options'=>$state_opt]);
         
     }
 	
@@ -500,7 +500,7 @@ class Default_StatesController extends Zend_Controller_Action
 		$selectedcountryid = $this->_request->getParam('selectcountryid',null);
 		$countryid = $this->_request->getParam('countryid');
 		
-		$msgarray = array();	$controllername = 'states';		$statestring = '';
+		$msgarray = [];	$controllername = 'states';		$statestring = '';
 		
 		$statesform = new Default_Form_states();
 		$statesmodel = new Default_Model_States();
@@ -553,8 +553,8 @@ class Default_StatesController extends Zend_Controller_Action
 		{	
 			$id = $this->_request->getParam('id'); 
 			$errorflag = "true";
-			$msgarray = array();
-			$newstateArr = array();
+			$msgarray = [];
+			$newstateArr = [];
 			$dbstate = '';
 			$dbcountryid ='';
 			$statestring = '';			
@@ -667,7 +667,7 @@ class Default_StatesController extends Zend_Controller_Action
 				{
 					$stateData = $statesmodel->fetchAll('isactive = 1 and countryid = '.$selectedcountryid,'state')->toArray();
 				}
-				else $stateData = array();				
+				else $stateData = [];				
 				
 				$opt ='';   
 				foreach($stateData as $record)
@@ -720,7 +720,7 @@ class Default_StatesController extends Zend_Controller_Action
      	if($auth->hasIdentity()){
 					$loginUserId = $auth->getStorage()->read()->id;
 		}
-		$msgarray = array();	$controllername = 'states';		$statestring = '';
+		$msgarray = [];	$controllername = 'states';		$statestring = '';
 		$id = $this->getRequest()->getParam('id');		
 		$selectedcountryid = $this->_request->getParam('selectcountryid',null);
 		
@@ -732,13 +732,13 @@ class Default_StatesController extends Zend_Controller_Action
 		/* Changing the form */		
 		$statesform->setAction(BASE_URL.'states/addnewstate/selectcountryid/'.$selectedcountryid);		
 		$statesform->removeElement('state');
-		$statesform->addElement('text', 'state',array(
+		$statesform->addElement('text', 'state',[
 					'label'      => 'State',
 					'maxlength'	 => '20',
 					'required'   => true,
-					'validators' => array(
-						array('validator' => 'NotEmpty','options'=> array('messages' => 'Please enter state name.')
-         ))));
+					'validators' => [
+						['validator' => 'NotEmpty','options'=> ['messages' => 'Please enter state name.']
+         ]]]);
 		
 		/* END */
 		
@@ -769,7 +769,7 @@ class Default_StatesController extends Zend_Controller_Action
 		if($this->getRequest()->getPost())
 		{	
 			$errorflag = "true";
-			$msgarray = array();
+			$msgarray = [];
 			
 			$id = $this->_request->getParam('id'); 
 			
@@ -804,7 +804,7 @@ class Default_StatesController extends Zend_Controller_Action
 				{
 					$stateData = $statesmodel->getStatesList($selectedcountryid,'');
 				}
-				else $stateData = array();				
+				else $stateData = [];				
 				
 				$opt ='';   
 				foreach($stateData as $record)

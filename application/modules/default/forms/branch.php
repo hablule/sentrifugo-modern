@@ -34,12 +34,12 @@ class Default_Form_branch extends Zend_Form
 		$branch = new Zend_Form_Element_Text('branch');
         $branch->setAttrib('maxLength', 20);
         $branch->setRequired(true);
-        $branch->addValidator('NotEmpty', false, array('messages' => 'Please enter branch.'));  
+        $branch->addValidator('NotEmpty', false, ['messages' => 'Please enter branch.']);  
 		$branch->addValidator(new Zend_Validate_Db_NoRecordExists(
-			array(
+			[
 				'table'=>'main_emp_branch',
 				'field'=>'branch'
-			)
+			]
 			));
 
 			$branch->getValidator('Db_NoRecordExists')->setMessage('Branch already exists.');
@@ -68,7 +68,7 @@ class Default_Form_branch extends Zend_Form
 		// $toggleDivId = "''";
 		// $jsFunction = "'redirecttocontroller(\'gender\');'";;
 
-		 $this->addElements(array($id,$branch,$description,$submit,$isactive));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 $this->addElements([$id,$branch,$description,$submit,$isactive]);
+         $this->setElementDecorators(['ViewHelper']); 
 	}
 }

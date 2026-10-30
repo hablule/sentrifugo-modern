@@ -20,9 +20,9 @@ class Default_relationshipController extends Zend_Controller_Action
 		} 
 		
         $refresh = $this->_getParam('refresh');
-        $data = array();
+        $data = [];
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         $tablecontent='';
 
         if($refresh == 'refresh')
@@ -32,7 +32,7 @@ class Default_relationshipController extends Zend_Controller_Action
 			else	
 				$perPage = PERPAGE;
             $sort = 'DESC';$by = 'modifiedby';$pageNo = 1;$searchData = '';$searchQuery = '';
-            $searchArray = array();
+            $searchArray = [];
         }
         else 
         {
@@ -136,15 +136,15 @@ class Default_relationshipController extends Zend_Controller_Action
 			$actionflag = '';
 			$tableid  = '';
 
-			$data = array(
+			$data = [
 				                 'name'=>$name,
 				                 'code'=>$code,
 								 'description'=>$description,
                                  'isactive'=>utlis::getcheckboxvalue($isactive),
                                  'relationtype'=>$relation_type
-			);
+			];
 			if($id!=''){
-				$where = array('relationship_id=?'=>$id);
+				$where = ['relationship_id=?'=>$id];
                 $data['modifiedby'] = $loginUserId;
                 $data['modifieddate'] = gmdate("Y-m-d H:i:s");
 				$actionflag = 2;

@@ -22,9 +22,9 @@ class Default_LeaveController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 
 		if($refresh == 'refresh')
@@ -65,7 +65,7 @@ class Default_LeaveController extends Zend_Controller_Action
 			$loginUserId = $auth->getStorage()->read()->id;
 		}
      
-		$msgarray = array();
+		$msgarray = [];
 		$controllername = 'leave';
 		$util = new utlis();
 		$form = new Default_Form_Leave();
@@ -93,7 +93,7 @@ class Default_LeaveController extends Zend_Controller_Action
             $msgarray['leavecategory'] = 'Leave Category is not configured yet.';
         } else {
             foreach ($add as $adds) {
-                $form->leavecategory->addMultiOptions(array($adds['leavecategory_id'] => $adds['name']));
+                $form->leavecategory->addMultiOptions([$adds['leavecategory_id'] => $adds['name']]);
             }
         }
 		if($this->getRequest()->getPost()){
@@ -114,7 +114,7 @@ class Default_LeaveController extends Zend_Controller_Action
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = '';
-				$data = array(	
+				$data = [	
                 'name' => $name,
 				'leavecategory_id'=>$leavecategory,
 				'description' => $description,
@@ -127,7 +127,7 @@ class Default_LeaveController extends Zend_Controller_Action
 				'classPath'=>($classpath!='empty'?$classpath:''),
 				'method' =>($method!='empty'?$method:''),
 				'parameters' =>($parameter!=''?$parameter:''),
-				);
+				];
 
 					$data['createdby'] = $loginUserId;
 					$data['createddate'] = gmdate("Y-m-d H:i:s");
@@ -138,7 +138,7 @@ class Default_LeaveController extends Zend_Controller_Action
 				$Id = $model->SaveorUpdateData($data, $where);
 				$tableid = $Id;
 				$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Leave   added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Leave   added successfully."]);
 					$this->view->messages = $this->_helper->flashMessenger->getMessages();
 
 				
@@ -197,7 +197,7 @@ class Default_LeaveController extends Zend_Controller_Action
             $msgarray['leavecategory'] = 'Leave Category is not configured yet.';
         } else {
             foreach ($add as $adds) {
-                $form->leavecategory->addMultiOptions(array($adds['leavecategory_id'] => $adds['name']));
+                $form->leavecategory->addMultiOptions([$adds['leavecategory_id'] => $adds['name']]);
             }
         }
 		try
@@ -273,7 +273,7 @@ class Default_LeaveController extends Zend_Controller_Action
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = '';
-				$data = array(	
+				$data = [	
                 'name' => $name,
 				'leavecategory_id'=>$leavecategory,
 				'description' => $description,
@@ -290,7 +290,7 @@ class Default_LeaveController extends Zend_Controller_Action
 				'modifieddate'=>gmdate("Y-m-d H:i:s"),
 				'isactive'=>$isactive,
 
-);
+];
 				
 				
 					$where = 'leave_id='.$id;
@@ -300,13 +300,13 @@ class Default_LeaveController extends Zend_Controller_Action
 				{
 					$tableid = $id;
 					$actionflag = 2;
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Leave  updated successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Leave  updated successfully."]);
 				}
 				else
 				{
 					$tableid = $Id;
 					$actionflag = 1;
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Leave   added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Leave   added successfully."]);
 				}
 				$menuID = LEAVE;
 				$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
@@ -343,7 +343,7 @@ class Default_LeaveController extends Zend_Controller_Action
 			$model = new Default_Model_Leave();
 
 		
-			$where = array('leave_id=?' => $id);
+			$where = ['leave_id=?' => $id];
 			$Id = $model->DeleteData($where);
 			if ($Id == 'delete') {
 				$messages['message'] = 'Leave deleted successfully.';
@@ -358,10 +358,10 @@ class Default_LeaveController extends Zend_Controller_Action
 		}
 		if ($deleteflag == 1) {
 			if ($messages['msgtype'] == 'error') {
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("error" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["error" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag]);
 			}
 			if ($messages['msgtype'] == 'success') {
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag]);
 			}
 		}
 		$menuID = LEAVE;

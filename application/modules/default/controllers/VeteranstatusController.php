@@ -47,9 +47,9 @@ class Default_VeteranstatusController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 		
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 		
 		if($refresh == 'refresh')
@@ -188,13 +188,13 @@ class Default_VeteranstatusController extends Zend_Controller_Action
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = ''; 
-				   $data = array('veteranstatus'=>trim($veteranstatus),
+				   $data = ['veteranstatus'=>trim($veteranstatus),
 				  		 'description'=>trim($description),
 						  'modifiedby'=>$loginUserId,
 						  'modifieddate'=>gmdate("Y-m-d H:i:s")
-						);
+						];
 					if($id!=''){
-						$where = array('id=?'=>$id);  
+						$where = ['id=?'=>$id];  
 						$actionflag = 2;
 					}
 					else
@@ -209,12 +209,12 @@ class Default_VeteranstatusController extends Zend_Controller_Action
 					if($Id == 'update')
 					{
 					   $tableid = $id;
-					   $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Veteran status updated successfully."));
+					   $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Veteran status updated successfully."]);
 					}   
 					else
 					{
                        $tableid = $Id; 	
-                        $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Veteran status added successfully."));					   
+                        $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Veteran status added successfully."]);					   
 					}   
 					$menuID = VETERANSTATUS;
 					$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
@@ -290,13 +290,13 @@ class Default_VeteranstatusController extends Zend_Controller_Action
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = ''; 
-				   $data = array('veteranstatus'=>trim($veteranstatus),
+				   $data = ['veteranstatus'=>trim($veteranstatus),
 				  		 'description'=>trim($description),
 						  'modifiedby'=>$loginUserId,
 						  'modifieddate'=>gmdate("Y-m-d H:i:s")
-						);
+						];
 					if($id!=''){
-						$where = array('id=?'=>$id);  
+						$where = ['id=?'=>$id];  
 						$actionflag = 2;
 					}
 					else
@@ -311,12 +311,12 @@ class Default_VeteranstatusController extends Zend_Controller_Action
 					if($Id == 'update')
 					{
 					   $tableid = $id;
-					   $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Veteran status updated successfully."));
+					   $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Veteran status updated successfully."]);
 					}   
 					else
 					{
                        $tableid = $Id; 	
-                        $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Veteran status added successfully."));					   
+                        $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Veteran status added successfully."]);					   
 					}   
 					$menuID = VETERANSTATUS;
 					$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
@@ -362,8 +362,8 @@ class Default_VeteranstatusController extends Zend_Controller_Action
 			{
 			 $veteranstatusmodel = new Default_Model_Veteranstatus();
 			  $veteranstatusdata = $veteranstatusmodel->getVeteranStatusDataByID($id);
-			  $data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-			  $where = array('id=?'=>$id);
+			  $data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+			  $where = ['id=?'=>$id];
 			  $Id = $veteranstatusmodel->SaveorUpdateVeteranStatusData($data, $where);
 			    if($Id == 'update')
 				{
@@ -389,11 +389,11 @@ class Default_VeteranstatusController extends Zend_Controller_Action
 			{
 				if(	$messages['msgtype'] == 'error')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
 				}
 				if(	$messages['msgtype'] == 'success')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
 				}
 			}
 			$this->_helper->json($messages);

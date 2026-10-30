@@ -59,62 +59,62 @@ class Default_Form_GeographygroupMap extends Zend_Form
             ->setAttrib('class', 'formDataElement')
             ->setRegisterInArrayValidator(false) // Populated in controller
             ->setRequired(true)
-            ->addValidator('NotEmpty', true, array('messages' => 'Please select the target Geography Group.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please select the target Geography Group.']);
 
         // Entity Type (Determines which dropdowns are shown/required)
         $entity_type = new Zend_Form_Element_Select('entity_type');
         $entity_type->setLabel('Mapping Level')
-            ->setAttribs(array(
+            ->setAttribs([
                 'class'    => 'formDataElement',
                 'onchange' => 'toggleEntityFields(this.value)'
-            ))
-            ->addMultiOptions(array(
+            ])
+            ->addMultiOptions([
                 ''           => 'Select Level',
                 'Country'    => 'Entire Country',
                 'State'      => 'Specific State/Province',
                 'City'       => 'Specific City',
                 'PostalCode' => 'Specific Postal/ZIP Code'
-            ))
+            ])
             ->setRequired(true)
-            ->addValidator('NotEmpty', true, array('messages' => 'Please select the mapping level.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please select the mapping level.']);
 
         // Transient: Country ID
         $country_id = new Zend_Form_Element_Select('country_id');
         $country_id->setLabel('Country')
-            ->setAttribs(array(
+            ->setAttribs([
                 'class'    => 'formDataElement',
                 'onchange' => 'handleEntitySelection("Country", this.value); getStatesByCountry(this.value);'
-            ))
+            ])
             ->setRegisterInArrayValidator(false) // Dynamic population in controller
             ->setRequired(false);
 
         // Transient: State ID
         $state_id = new Zend_Form_Element_Select('state_id');
         $state_id->setLabel('State/Province')
-            ->setAttribs(array(
+            ->setAttribs([
                 'class'    => 'formDataElement',
                 'onchange' => 'handleEntitySelection("State", this.value); getCitiesByState(this.value);'
-            ))
+            ])
             ->setRegisterInArrayValidator(false) // Dynamic population in controller or via AJAX
             ->setRequired(false);
 
         // Transient: City ID
         $city_id = new Zend_Form_Element_Select('city_id');
         $city_id->setLabel('City')
-            ->setAttribs(array(
+            ->setAttribs([
                 'class'    => 'formDataElement',
                 'onchange' => 'handleEntitySelection("City", this.value); getPostalCodesByCity(this.value);'
-            ))
+            ])
             ->setRegisterInArrayValidator(false) // Dynamic population in controller or via AJAX
             ->setRequired(false);
 
         // Transient: Postal Code ID
         $postalcode_id = new Zend_Form_Element_Select('postalcode_id');
         $postalcode_id->setLabel('Postal / ZIP Code')
-            ->setAttribs(array(
+            ->setAttribs([
                 'class'    => 'formDataElement',
                 'onchange' => 'handleEntitySelection("PostalCode", this.value);'
-            ))
+            ])
             ->setRegisterInArrayValidator(false) // Dynamic population in controller or via AJAX
             ->setRequired(false);
 
@@ -125,7 +125,7 @@ class Default_Form_GeographygroupMap extends Zend_Form
         // Description (Optional)
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Mapping Notes')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -146,7 +146,7 @@ class Default_Form_GeographygroupMap extends Zend_Form
 
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save Mapping')
-            ->setAttribs(array('id' => 'submitbutton', 'class' => 'actbtn_btn'));
+            ->setAttribs(['id' => 'submitbutton', 'class' => 'actbtn_btn']);
 
         // SSOT AJAX Submission Pattern (Strict Quoting & Escaping)
         $urlAction  = "'geographygroupmap/save/format/json'";
@@ -161,7 +161,7 @@ class Default_Form_GeographygroupMap extends Zend_Form
          * Build Form & Apply Decorators
          * -------------------------------------------------------------- */
 
-        $this->addElements(array(
+        $this->addElements([
             $idElement,
             $geographygroup_id,
             $entity_id,
@@ -173,12 +173,12 @@ class Default_Form_GeographygroupMap extends Zend_Form
             $description,
             $isactive,
             $submit
-        ));
+        ]);
 
         // Strip default Zend Decorators and enforce ViewHelper universally
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
-            $element->setDecorators(array('ViewHelper'));
+            $element->setDecorators(['ViewHelper']);
         }
     }
 }

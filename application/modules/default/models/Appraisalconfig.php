@@ -25,7 +25,7 @@ class Default_Model_Appraisalconfig extends Zend_Db_Table_Abstract
     protected $_primary = 'id';
     protected $_db = '';
 	
-    public function __construct($config = array()) {
+    public function __construct($config = []) {
     	$this->_db = Zend_Db_Table::getDefaultAdapter();	
     }
     
@@ -40,7 +40,7 @@ class Default_Model_Appraisalconfig extends Zend_Db_Table_Abstract
             if(count($result) > 0)
                 return $result[0];            
         }
-        return array();
+        return [];
     }
     public function check_act_init($id)
     {
@@ -109,21 +109,21 @@ select max(id) FROM `main_pa_initialization` GROUP BY `pa_configured_id`
 		
 		$subSelectQuery = $this->select()
 							->setIntegrityCheck(false)	
-							->from(array('e'=>'main_pa_initialization'),array('max(e.id)'))
+							->from(['e'=>'main_pa_initialization'],['max(e.id)'])
 							->where('e.isactive = 1')
 							->group('e.pa_configured_id');
 		
 		$subSelectWhere = 'e.id IN ('.$subSelectQuery.')';
 		$tmpQuery = $this->select()
-						->setIntegrityCheck(false)	->from(array('e'=>'main_pa_initialization'),array('id','e.pa_configured_id','e.initialize_status','e.status','e.enable_step'))
+						->setIntegrityCheck(false)	->from(['e'=>'main_pa_initialization'],['id','e.pa_configured_id','e.initialize_status','e.status','e.enable_step'])
 						->where($subSelectWhere);
 		
 		 $appraisalConfigData = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('c'=>'main_pa_implementation'),array('c.*','performance_app_flag'=>'if (c.performance_app_flag=1,"Business Unit wise","Department Wise")','approval_selection'=>'if (c.approval_selection=1,"HR","Manager")','appraisal_ratings'=>'if (c.appraisal_ratings=1,"1-5","1-10")'))
-                           ->joinLeft(array('b'=>'main_businessunits'), 'c.businessunit_id = b.id', array('deptname'=>'ifnull(d.deptname,"")'))
-                           ->joinLeft(array('d'=>'main_departments'), 'c.department_id = d.id', array('b.unitname'))
-                           ->joinLeft(array('e'=> $tmpQuery), 'c.id = e.pa_configured_id', array(
+                           ->from(['c'=>'main_pa_implementation'],['c.*','performance_app_flag'=>'if (c.performance_app_flag=1,"Business Unit wise","Department Wise")','approval_selection'=>'if (c.approval_selection=1,"HR","Manager")','appraisal_ratings'=>'if (c.appraisal_ratings=1,"1-5","1-10")'])
+                           ->joinLeft(['b'=>'main_businessunits'], 'c.businessunit_id = b.id', ['deptname'=>'ifnull(d.deptname,"")'])
+                           ->joinLeft(['d'=>'main_departments'], 'c.department_id = d.id', ['b.unitname'])
+                           ->joinLeft(['e'=> $tmpQuery], 'c.id = e.pa_configured_id', [
                            new Zend_Db_Expr(" case when e.status = 1 then 'Open' 
 														when e.status = 2 then 'Closed' 
 														when e.status = 3 then 'Force Closed' end as status, 
@@ -134,7 +134,7 @@ select max(id) FROM `main_pa_initialization` GROUP BY `pa_configured_id`
 											             when e.enable_step = 2 then 'Enabled to Employees' end 
 											        when (e.pa_configured_id is not null and e.initialize_status is null) then 'In progress' end as initialize_status
 													
-											        "),))                           
+											        "),])                           
                            	->where($where)
     					   ->order("$by $sort") 
     					   ->limitPage($pageNo, $perPage);
@@ -146,8 +146,8 @@ select max(id) FROM `main_pa_initialization` GROUP BY `pa_configured_id`
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{		
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		
 		if($searchData != '' && $searchData!='undefined')
 			{
@@ -169,19 +169,19 @@ select max(id) FROM `main_pa_initialization` GROUP BY `pa_configured_id`
 			
 		$objName = 'appraisalconfig';
 		
-		$tableFields = array('action'=>'Action','unitname'=>'Business Unit','deptname' => 'Department',
-                    'performance_app_flag'=>'Applicability','appraisal_mode'=>'Appraisal Mode','appraisal_ratings'=>'Ratings','status'=>'Appraisal Status','initialize_status'=>'Process Status');
+		$tableFields = ['action'=>'Action','unitname'=>'Business Unit','deptname' => 'Department',
+                    'performance_app_flag'=>'Applicability','appraisal_mode'=>'Appraisal Mode','appraisal_ratings'=>'Ratings','status'=>'Appraisal Status','initialize_status'=>'Process Status'];
 		
 		$tablecontent = $this->getAppraisalconfigData($sort, $by, $pageNo, $perPage,$searchQuery);     
 		
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -189,31 +189,31 @@ select max(id) FROM `main_pa_initialization` GROUP BY `pa_configured_id`
 			'add' =>'add',
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall,
-                        'search_filters' => array(
-                            'performance_app_flag' => array(
+                        'search_filters' => [
+                            'performance_app_flag' => [
                                 'type' => 'select',
-                                'filter_data' => array('' => 'All',1 => 'Business Unit wise', 0 => 'Department wise'),
-                            ),
-                            'appraisal_mode' => array(
+                                'filter_data' => ['' => 'All',1 => 'Business Unit wise', 0 => 'Department wise'],
+                            ],
+                            'appraisal_mode' => [
                                 'type' => 'select',
-                                'filter_data' => array('' => 'All','Quarterly'=>'Quarterly', 'Half-yearly'=>'Half-yearly','Yearly'=>'Yearly'),
-                            ),
-                            'approval_selection' => array(
+                                'filter_data' => ['' => 'All','Quarterly'=>'Quarterly', 'Half-yearly'=>'Half-yearly','Yearly'=>'Yearly'],
+                            ],
+                            'approval_selection' => [
                                 'type' => 'select',
-                                'filter_data' => array('' => 'All',1 => 'HR', 2 => 'Manager')
-                            ),
-                            'appraisal_ratings' => array(
+                                'filter_data' => ['' => 'All',1 => 'HR', 2 => 'Manager']
+                            ],
+                            'appraisal_ratings' => [
                                 'type' => 'select',
-                                'filter_data' => array('' => 'All',1 => '1-5', 2 => '1-10')
-                            ),
-                            'status' => array(
+                                'filter_data' => ['' => 'All',1 => '1-5', 2 => '1-10']
+                            ],
+                            'status' => [
                                 'type' => 'select',
-                                'filter_data' => array('' => 'All',1 => 'Open', 2 => 'Close',3=>'Force Close')
-                            ),
+                                'filter_data' => ['' => 'All',1 => 'Open', 2 => 'Close',3=>'Force Close']
+                            ],
                             
-                        ),
+                        ],
                         
-		);
+		];
 		return $dataTmp;
 	}
 	
@@ -221,7 +221,7 @@ select max(id) FROM `main_pa_initialization` GROUP BY `pa_configured_id`
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('im'=>'main_pa_implementation'),array('im.*'))
+						->from(['im'=>'main_pa_implementation'],['im.*'])
 					    ->where('im.isactive = 1 AND im.id='.$id.' ');
 		return $this->fetchAll($select)->toArray();
 	
@@ -318,7 +318,7 @@ select max(id) FROM `main_pa_initialization` GROUP BY `pa_configured_id`
             	
 	  $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('d'=>'main_department'),array('d.department_id as id','d.name as deptname'))
+						->from(['d'=>'main_department'],['d.department_id as id','d.name as deptname'])
 					    ->where('d.sbunit_id = '.$id.' AND d.isactive = "Y" ')
 						->order('d.name');
 		
@@ -327,7 +327,7 @@ select max(id) FROM `main_pa_initialization` GROUP BY `pa_configured_id`
 		return $this->fetchAll($select)->toArray();
             }
             else 
-                return array();
+                return [];
 	}
 	
 	public function getExistDepartments($id)
@@ -336,14 +336,14 @@ select max(id) FROM `main_pa_initialization` GROUP BY `pa_configured_id`
            {
 	  $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('d'=>'main_pa_implementation'),array('d.businessunit_id','d.department_id'))
+						->from(['d'=>'main_pa_implementation'],['d.businessunit_id','d.department_id'])
 					    ->where('d.businessunit_id = '.$id.' AND d.isactive = 1');
 						
 	//echo $select;exit;					
 		return $this->fetchAll($select)->toArray();
             }
             else 
-                return array();
+                return [];
 	}
 	
     public function check_delete($config_id)
@@ -365,7 +365,7 @@ select max(id) FROM `main_pa_initialization` GROUP BY `pa_configured_id`
      * @param Array $data - Configuration posted by user
      * @return Boolean - 'True' when there are duplicate records else 'False'
      */
-    public function combinationExists($data = array()) {
+    public function combinationExists($data = []) {
     	
     	if (empty($data['department_id'])) {
 	    	// Get count of duplicates by 'Business unit'
@@ -430,7 +430,7 @@ select max(id) FROM `main_pa_initialization` GROUP BY `pa_configured_id`
 							group by a.unitid;";
 
     	$result_main = $this->_db->query($qry_main)->fetchAll();
-    	$bunitImpArr = array();
+    	$bunitImpArr = [];
     	$result  = '';
     	if(!empty($result_main))
     	{ 
@@ -488,7 +488,7 @@ select max(id) FROM `main_pa_initialization` GROUP BY `pa_configured_id`
 
 	public function getBunit($businessunit_id)
     {
-        $data = array();
+        $data = [];
         if($businessunit_id != '')
         {
             $db = Zend_Db_Table::getDefaultAdapter();
@@ -500,7 +500,7 @@ select max(id) FROM `main_pa_initialization` GROUP BY `pa_configured_id`
     
 	public function getBunitDept($businessunit_id,$deptId)
     {
-        $data = array();
+        $data = [];
         if($businessunit_id != '')
         {
             $db = Zend_Db_Table::getDefaultAdapter();

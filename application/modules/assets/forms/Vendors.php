@@ -39,25 +39,25 @@ class Assets_Form_Vendors extends Zend_Form
         $name->setAttrib('title', 'Vendor Name');        
         $name->addFilter(new Zend_Filter_StringTrim());
         $name->setRequired(true);
-        $name->addValidator('NotEmpty', false, array('messages' => 'Please enter vendor name.'));  
-        $name->addValidator("regex",true,array(                           
+        $name->addValidator('NotEmpty', false, ['messages' => 'Please enter vendor name.']);  
+        $name->addValidator("regex",true,[                           
                            'pattern'=>'/^(?![0-9]*$)[a-zA-Z0-9.,&\(\)\/\-_\' ?]+$/',
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter valid vendor name.'
-                           )
-        	));  
+                           ]
+        	]);  
         $contactperson = new Zend_Form_Element_Text('contact_person');
         $contactperson->setAttrib('maxLength', 50);
         $contactperson->setAttrib('title', 'Contact Person');        
         $contactperson->addFilter(new Zend_Filter_StringTrim());
 		$contactperson->setRequired(true);
-        $contactperson->addValidator('NotEmpty', false, array('messages' => 'Please enter contact person.'));
-		$contactperson->addValidator("regex",true,array(                           
+        $contactperson->addValidator('NotEmpty', false, ['messages' => 'Please enter contact person.']);
+		$contactperson->addValidator("regex",true,[                           
                            'pattern'=>'/^[a-zA-Z.\- ?]+$/',
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter valid contact name.'
-                           )
-        	)); 
+                           ]
+        	]); 
 		 
 		$address = new Zend_Form_Element_Textarea('address');
         $address->setAttrib('rows', 10);
@@ -73,16 +73,16 @@ class Assets_Form_Vendors extends Zend_Form
         $primary_phone->setAttrib('title', 'Primary Phone');        
         $primary_phone->addFilter(new Zend_Filter_StringTrim());
 		$primary_phone->setRequired(true);
-        $primary_phone->addValidator('NotEmpty', false, array('messages' => 'Please enter Primary Phone number.'));  
-        $primary_phone->addValidator("regex",true,array(                           
+        $primary_phone->addValidator('NotEmpty', false, ['messages' => 'Please enter Primary Phone number.']);  
+        $primary_phone->addValidator("regex",true,[                           
                            
                            
                             'pattern'=>'/^(?!0{10})([0-9\+\-\)\(]{10})+$/',
-                           'messages'=>array(
+                           'messages'=>[
                            
                                'regexNotMatch'=>'Please enter valid Phone number.'
-                           )
-        	));
+                           ]
+        	]);
       
         $secondary_phone = new Zend_Form_Element_Text('secondary_phone');
 		
@@ -92,16 +92,16 @@ class Assets_Form_Vendors extends Zend_Form
         $secondary_phone->setAttrib('maxLength', 10);
         $secondary_phone->setAttrib('title', 'secondary Phone');        
         $secondary_phone->addFilter(new Zend_Filter_StringTrim());
-        $secondary_phone->addValidator('NotEmpty', false, array('messages' => 'Please enter  Phone number.'));  
-        $secondary_phone->addValidator("regex",true,array(                           
+        $secondary_phone->addValidator('NotEmpty', false, ['messages' => 'Please enter  Phone number.']);  
+        $secondary_phone->addValidator("regex",true,[                           
                            
                            
                             'pattern'=>'/^(?!0{10})([0-9\+\-\)\(]{10})+$/',
-                           'messages'=>array(
+                           'messages'=>[
                            
                                'regexNotMatch'=>'Please enter valid Phone number.'
-                           )
-        	));
+                           ]
+        	]);
       
               
         $country = new Zend_Form_Element_Select("country");
@@ -113,14 +113,14 @@ class Assets_Form_Vendors extends Zend_Form
         $country->setAttrib('title', 'Country');
        
         
-        $country->addValidator('NotEmpty', false, array('messages' => 'Please select country.'));
+        $country->addValidator('NotEmpty', false, ['messages' => 'Please select country.']);
 		
         $state = new Zend_Form_Element_Select("state");
         $state->setRegisterInArrayValidator(false);
         
         
-		$state->addValidator('NotEmpty', false, array('messages' => 'Please select state.')); 
-        $state->addMultiOptions(array(''=>'Select State'));
+		$state->addValidator('NotEmpty', false, ['messages' => 'Please select state.']); 
+        $state->addMultiOptions([''=>'Select State']);
         $state->setLabel("State");	
         $state->setRequired(true);		
         $state->setAttrib("class", "formDataElement"); 
@@ -129,7 +129,7 @@ class Assets_Form_Vendors extends Zend_Form
         
         $city = new Zend_Form_Element_Select("city");
         $city->setRegisterInArrayValidator(false);
-        $city->addMultiOptions(array(''=>'Select City'));
+        $city->addMultiOptions([''=>'Select City']);
         $city->setLabel("City");
         $city->setRequired(true);		
         $city->setAttrib("class", "formDataElement");         
@@ -141,13 +141,13 @@ class Assets_Form_Vendors extends Zend_Form
         $pincode = new Zend_Form_Element_Text('pincode');
         $pincode->setLabel('Pin Code');
         $pincode->setAttrib('maxLength', 6);		
-        $pincode->addValidator('NotEmpty', true, array('messages' => 'Please enter pincode.')); 
-        $pincode->addValidator("regex",true,array(                           
+        $pincode->addValidator('NotEmpty', true, ['messages' => 'Please enter pincode.']); 
+        $pincode->addValidator("regex",true,[                           
                             'pattern'=>'/^(?!0{3})[0-9a-zA-Z]+\d+$/',
-                            'messages'=>array(
+                            'messages'=>[
                               'regexNotMatch'=>'Enter valid  pincode.'
-                           )
-        	));
+                           ]
+        	]);
         $pincode->setRequired(true);			
 		//$pincode->addValidator('NotEmpty', false, array('messages' => 'Please enter postal code.'));
         
@@ -177,7 +177,7 @@ class Assets_Form_Vendors extends Zend_Form
         
        
 		
-        $this->addElements(array($id,$name,$contactperson,$address,$primary_phone,$secondary_phone,$country,$state,$city,$pincode,$submit));
-        $this->setElementDecorators(array('ViewHelper')); 
+        $this->addElements([$id,$name,$contactperson,$address,$primary_phone,$secondary_phone,$country,$state,$city,$pincode,$submit]);
+        $this->setElementDecorators(['ViewHelper']); 
     }
 }

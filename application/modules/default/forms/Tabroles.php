@@ -64,10 +64,10 @@ class Default_Form_Tabroles extends Zend_Form
         $toggleDivId = "''";
         $jsFunction = "'redirecttocontroller(\'tabroles\');'";;
 		 
-        $submit->setOptions(array('onclick' => "saveDetails($url,$dialogMsg,$toggleDivId,$jsFunction);"
-                        ));
+        $submit->setOptions(['onclick' => "saveDetails($url,$dialogMsg,$toggleDivId,$jsFunction);"
+                        ]);
 
-        $this->addElements(array($id,$name,$code,$levelid,$isactive,$submit,$prev_cnt));
-        $this->setElementDecorators(array('ViewHelper')); 
+        $this->addElements([$id,$name,$code,$levelid,$isactive,$submit,$prev_cnt]);
+        $this->setElementDecorators(['ViewHelper']); 
     }
 }

@@ -60,7 +60,7 @@ class html2text
      *  @access public
      *  @see $replace
      */
-    public $search = array(
+    public $search = [
         "/\r/",                                  // Non-legal carriage return
         "/[\n\t]+/",                             // Newlines and tabs
         '/<head[^>]*>.*?<\/head>/i',             // <head>
@@ -80,7 +80,7 @@ class html2text
         '/(<tr[^>]*>|<\/tr>)/i',                 // <tr> and </tr>
         '/<td[^>]*>(.*?)<\/td>/i',               // <td> and </td>
         '/<span class="_html2text_ignore">.+?<\/span>/i'  // <span class="_html2text_ignore">...</span>
-    );
+    ];
 
     /**
      *  List of pattern replacements corresponding to patterns searched.
@@ -89,7 +89,7 @@ class html2text
      *  @access public
      *  @see $search
      */
-    public $replace = array(
+    public $replace = [
         '',                                     // Non-legal carriage return
         ' ',                                    // Newlines and tabs
         '',                                     // <head>
@@ -109,7 +109,7 @@ class html2text
         "\n",                                   // <tr> and </tr>
         "\t\t\\1\n",                            // <td> and </td>
         ""                                      // <span class="_html2text_ignore">...</span>
-    );
+    ];
 
     /**
      *  List of preg* regular expression patterns to search for,
@@ -119,7 +119,7 @@ class html2text
      *  @access public
      *  @see $ent_replace
      */
-    public $ent_search = array(
+    public $ent_search = [
         '/&(nbsp|#160);/i',                      // Non-breaking space
         '/&(quot|rdquo|ldquo|#8220|#8221|#147|#148);/i',
         // Double quotes
@@ -136,7 +136,7 @@ class html2text
         '/&(euro|#8364);/i',                     // Euro sign
         '/&(amp|#38);/i',                        // Ampersand: see _converter()
         '/[ ]{2,}/',                             // Runs of spaces, post-handling
-    );
+    ];
 
     /**
      *  List of pattern replacements corresponding to patterns searched.
@@ -145,7 +145,7 @@ class html2text
      *  @access public
      *  @see $ent_search
      */
-    public $ent_replace = array(
+    public $ent_replace = [
         ' ',                                    // Non-breaking space
         '"',                                    // Double quotes
         "'",                                    // Single quotes
@@ -161,7 +161,7 @@ class html2text
         'EUR',                                  // Euro sign. € ?
         '|+|amp|+|',                            // Ampersand: see _converter()
         ' ',                                    // Runs of spaces, post-handling
-    );
+    ];
 
     /**
      *  List of preg* regular expression patterns to search for
@@ -170,13 +170,13 @@ class html2text
      *  @var array $callback_search
      *  @access public
      */
-    public $callback_search = array(
+    public $callback_search = [
         '/<(a) [^>]*href=("|\')([^"\']+)\2([^>]*)>(.*?)<\/a>/i', // <a href="">
         '/<(h)[123456]( [^>]*)?>(.*?)<\/h[123456]>/i',         // h1 - h6
         '/<(b)( [^>]*)?>(.*?)<\/b>/i',                         // <b>
         '/<(strong)( [^>]*)?>(.*?)<\/strong>/i',               // <strong>
         '/<(th)( [^>]*)?>(.*?)<\/th>/i',                       // <th> and </th>
-    );
+    ];
 
     /**
      *  List of preg* regular expression patterns to search for in PRE body,
@@ -186,13 +186,13 @@ class html2text
      *  @access public
      *  @see $pre_replace
      */
-    public $pre_search = array(
+    public $pre_search = [
         "/\n/",
         "/\t/",
         '/ /',
         '/<pre[^>]*>/',
         '/<\/pre>/'
-    );
+    ];
 
     /**
      *  List of pattern replacements corresponding to patterns searched for PRE body.
@@ -201,13 +201,13 @@ class html2text
      *  @access public
      *  @see $pre_search
      */
-    public $pre_replace = array(
+    public $pre_replace = [
         '<br>',
         '&nbsp;&nbsp;&nbsp;&nbsp;',
         '&nbsp;',
         '',
         ''
-    );
+    ];
 
     /**
      *  Contains a list of HTML tags to allow in the resulting text.
@@ -242,7 +242,7 @@ class html2text
      *  @access private
      *  @see _build_link_list()
      */
-    private $_link_list = array();
+    private $_link_list = [];
 
 
     /**
@@ -251,7 +251,7 @@ class html2text
      *  @var array $_options
      *  @access private
      */
-    private $_options = array(
+    private $_options = [
 
         // 'none'
         // 'inline' (show links inline)
@@ -263,7 +263,7 @@ class html2text
         //  Set this value to 0 (or less) to ignore word wrapping
         //  and not constrain text to a fixed-width column.
         'width' => 70,
-    );
+    ];
 
 
     /**
@@ -279,7 +279,7 @@ class html2text
      *  @access public
      *  @return void
      */
-    public function __construct( $source = '', $from_file = false, $options = array() )
+    public function __construct( $source = '', $from_file = false, $options = [] )
     {
         $this->_options = array_merge($this->_options, $options);
 
@@ -379,7 +379,7 @@ class html2text
         } else {
             // Strip any trailing slashes for consistency (relative
             // URLs may already start with a slash like "/file.html")
-            if ( substr($url, -1) == '/' ) {
+            if ( str_ends_with($url, '/') ) {
                 $url = substr($url, 0, -1);
             }
             $this->url = $url;
@@ -395,7 +395,7 @@ class html2text
     private function _convert()
     {
         // Variables used for building the link list
-        $this->_link_list = array();
+        $this->_link_list = [];
 
         $text = trim(stripslashes($this->html));
 
@@ -440,7 +440,7 @@ class html2text
         $text = preg_replace($this->search, $this->replace, $text);
 
         // Run our defined tags search-and-replace with callback
-        $text = preg_replace_callback($this->callback_search, array($this, '_preg_callback'), $text);
+        $text = preg_replace_callback($this->callback_search, [$this, '_preg_callback'], $text);
 
         // Strip any other HTML tags
         $text = strip_tags($text, $this->allowed_tags);
@@ -488,7 +488,7 @@ class html2text
      */
     private function _build_link_list( $link, $display, $link_override = null)
     {
-        $link_method = ($link_override) ? $link_override : $this->_options['do_links'];
+        $link_method = $link_override ?: $this->_options['do_links'];
         if ($link_method == 'none')
             return $display;
 
@@ -502,7 +502,7 @@ class html2text
         }
         else {
             $url = $this->url;
-            if (substr($link, 0, 1) != '/') {
+            if (!str_starts_with($link, '/')) {
                 $url .= '/';
             }
             $url .= "$link";
@@ -541,14 +541,14 @@ class html2text
 
             // Run our defined tags search-and-replace with callback
             $this->pre_content = preg_replace_callback($this->callback_search,
-                array($this, '_preg_callback'), $this->pre_content);
+                [$this, '_preg_callback'], $this->pre_content);
 
             // convert the content
             $this->pre_content = sprintf('<div><br>%s<br></div>',
                 preg_replace($this->pre_search, $this->pre_replace, $this->pre_content));
             // replace the content (use callback because content can contain $0 variable)
             $text = preg_replace_callback('/<pre[^>]*>.*<\/pre>/ismU',
-                array($this, '_preg_pre_callback'), $text, 1);
+                [$this, '_preg_pre_callback'], $text, 1);
 
             // free memory
             $this->pre_content = '';
@@ -671,7 +671,7 @@ class html2text
             }
         }
 
-        return implode($chunks);
+        return implode('', $chunks);
     }
 
     /**

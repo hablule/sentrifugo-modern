@@ -195,7 +195,7 @@ class Timemanagement_Model_Notifications extends Zend_Db_Table_Abstract
 		return $result;
 	}
 	//get number of weeks in current given month
-	function weeks_in_month($year, $month, $start_day_of_week)
+	public function weeks_in_month($year, $month, $start_day_of_week)
 	{
 		// Total number of days in the given month.
 		$num_of_days = date("t", mktime(0,0,0,$month,1,$year));

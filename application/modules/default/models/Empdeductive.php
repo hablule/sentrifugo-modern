@@ -33,10 +33,10 @@ class Default_Model_Empdeductive extends Zend_Db_Table_Abstract
 
         $bank = $this->select()
         ->setIntegrityCheck(false)
-        ->from(array('el' => 'main_employeeload'), array('id'=>'el.employeeload_id','emp_id' => 'el.emp_id','empamount' => 'el.amount', 'load_id'=>'el.load_id','approved'=>'if(el.approved="N","No","Yes")','isactive'=>'if(el.isactive="Y","Yes","No")'))
-            ->joinInner(array('ml' => 'main_load'), "ml.load_id =el.load_id ", array('name' => 'ml.name','type' => 'ml.type','start' =>  'DATE_FORMAT(ml.start,"'.DATEFORMAT_MYSQL.'")','end' => 'DATE_FORMAT(ml.end,"'.DATEFORMAT_MYSQL.'")','amount' => 'ml.amount'))
-            ->joinLeft(array('e' => 'main_employees'), "e.id = el.emp_id ", array('userfullname' => 'e.userfullname'))
-            ->joinInner(array('lc' => 'main_loadcategory'), "lc.load_category_id = ml.load_category_id ", array('c_name' => 'lc.name','c_description' => 'lc.description'))
+        ->from(['el' => 'main_employeeload'], ['id'=>'el.employeeload_id','emp_id' => 'el.emp_id','empamount' => 'el.amount', 'load_id'=>'el.load_id','approved'=>'if(el.approved="N","No","Yes")','isactive'=>'if(el.isactive="Y","Yes","No")'])
+            ->joinInner(['ml' => 'main_load'], "ml.load_id =el.load_id ", ['name' => 'ml.name','type' => 'ml.type','start' =>  'DATE_FORMAT(ml.start,"'.DATEFORMAT_MYSQL.'")','end' => 'DATE_FORMAT(ml.end,"'.DATEFORMAT_MYSQL.'")','amount' => 'ml.amount'])
+            ->joinLeft(['e' => 'main_employees'], "e.id = el.emp_id ", ['userfullname' => 'e.userfullname'])
+            ->joinInner(['lc' => 'main_loadcategory'], "lc.load_category_id = ml.load_category_id ", ['c_name' => 'lc.name','c_description' => 'lc.description'])
             ->where($where)
             ->order("$by $sort")
             ->limitPage($pageNo, $perPage);
@@ -45,8 +45,8 @@ class Default_Model_Empdeductive extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $exParam1 = '', $exParam2 = '', $exParam3 = '', $exParam4 = '')
     {
 		$searchQuery = '';
-		$searchArray = array();
-		$data = array();
+		$searchArray = [];
+		$data = [];
 
 		if ($searchData != '' && $searchData != 'undefined') {
 			$searchValues = json_decode($searchData);
@@ -80,17 +80,17 @@ class Default_Model_Empdeductive extends Zend_Db_Table_Abstract
 			$searchQuery = rtrim($searchQuery, " AND");
 		}
         $objName = 'empdeductive';
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'name' => 'Load Name',
             'empamount' => 'Amount',
             'isactive' => 'Active'
 
-        );
+        ];
 
         $tablecontent = $this->getData($sort, $by, $pageNo, $perPage, $searchQuery, $exParam1);
 
-        $dataTmp = array(
+        $dataTmp = [
             'userid' => $exParam1,
 			'sort' => $sort,
 			'by' => $by,
@@ -98,7 +98,7 @@ class Default_Model_Empdeductive extends Zend_Db_Table_Abstract
 			'perPage' => $perPage,
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getEmployeeAjaxgridData',
 			'jsFillFnName' => '',
@@ -109,26 +109,26 @@ class Default_Model_Empdeductive extends Zend_Db_Table_Abstract
 			'unitId' => $exParam1,
 			'call' => $call,
 			'userAction' => $exParam3,	
-			'context' => $exParam2,	  'search_filters' => array(
-                'start' =>array('type'=>'datepicker'),
-                'end' =>array('type'=>'datepicker'),
-                'isactive' => array(
+			'context' => $exParam2,	  'search_filters' => [
+                'start' =>['type'=>'datepicker'],
+                'end' =>['type'=>'datepicker'],
+                'isactive' => [
                     'type' => 'select',
-                    'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-                    'approved' => array(
+                    'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+                    'approved' => [
                         'type' => 'select',
-                        'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-            )
+                        'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+            ]
 
-        );
+        ];
         return $dataTmp;
     }
     public function SaveorUpdateLoadkData($data,$where)
     {
-        $config = array(
+        $config = [
             'name' => 'main_employeeload',
             'primary' => 'employeeload_id'
-        );
+        ];
         Zend_Debug::dump($where);
         $table = new Zend_Db_Table($config);
         if($where != ''){
@@ -144,16 +144,16 @@ class Default_Model_Empdeductive extends Zend_Db_Table_Abstract
     public function getPerkType($id){
         $query = $this->select()
                         ->setIntegrityCheck(false)
-                        ->from(array('p'=>'main_perk'),array('p.*'))
+                        ->from(['p'=>'main_perk'],['p.*'])
                         ->where('p.perk_id='.$id);
         return $this->fetchAll($query)->toArray();
     }
 
     public function deleteEmpPerk($emp_id){
-        $config = array(
+        $config = [
             'name'=>'main_employeeperk',
             'primary'=>'employeeperk_id'
-        );
+        ];
         $this->table = new Zend_Db_Table($config) ;
         $this->table->delete('emp_id='.$emp_id);
     }

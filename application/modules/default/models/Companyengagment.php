@@ -1,7 +1,7 @@
 <?php
 class Default_Model_Companyengagment extends Zend_Db_Table_Abstract{
     protected $_name = 'main_companyengage';
-    protected $_primary = array('businessdomain_id','company_id');
+    protected $_primary = ['businessdomain_id','company_id'];
 
     public function getAddress($sort, $by, $pageNo, $perPage, $searchQuery)
     {
@@ -11,9 +11,9 @@ class Default_Model_Companyengagment extends Zend_Db_Table_Abstract{
 
         $adress = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('c' => 'main_companyengage'), array('comp_id' => 'c.company_id','bd_id'=>'c.businessdomain_id'))
-            ->joinInner(array('bd' => 'main_businessdomain'), "bd.businessdomain_id = c.businessdomain_id ", array('bd_name' => 'bd.name'))
-            ->joinInner(array('comp' => 'main_company'), "c.company_id = comp.company_id", array('comp_name' => 'comp.name'))
+            ->from(['c' => 'main_companyengage'], ['comp_id' => 'c.company_id','bd_id'=>'c.businessdomain_id'])
+            ->joinInner(['bd' => 'main_businessdomain'], "bd.businessdomain_id = c.businessdomain_id ", ['bd_name' => 'bd.name'])
+            ->joinInner(['comp' => 'main_company'], "c.company_id = comp.company_id", ['comp_name' => 'comp.name'])
             ->where($where)
             ->order("$by $sort")
             ->limitPage($pageNo, $perPage);
@@ -23,7 +23,7 @@ class Default_Model_Companyengagment extends Zend_Db_Table_Abstract{
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $a = '', $b = '', $c = '', $d = '')
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
             foreach ($searchValues as $key => $val) {
@@ -48,23 +48,23 @@ class Default_Model_Companyengagment extends Zend_Db_Table_Abstract{
             $searchQuery = rtrim($searchQuery, " AND");
         }
         $objName = 'companyengagment';
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'comp_name' => 'Company',
             'bd_name' => 'Business Domain',
 
            
-        );
+        ];
 
         $tablecontent = $this->getAddress($sort, $by, $pageNo, $perPage, $searchQuery);
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
             'perPage' => $perPage,
             'tablecontent' => $tablecontent,
             'objectname' => $objName,
-            'extra' => array(),
+            'extra' => [],
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
             'jsFillFnName' => '',
@@ -73,7 +73,7 @@ class Default_Model_Companyengagment extends Zend_Db_Table_Abstract{
             'call' => $call,
             'add'=>'add',
             'dashboardcall' => $dashboardcall
-        );
+        ];
         return $dataTmp;
     }
     public function SaveorUpdateData($data, $where)
@@ -93,9 +93,9 @@ class Default_Model_Companyengagment extends Zend_Db_Table_Abstract{
       
         $adress = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('c' => 'main_companyengage'), array('comp_id' => 'c.company_id','bd_id'=>'c.businessdomain_id'))
-            ->joinInner(array('bd' => 'main_businessdomain'), "bd.businessdomain_id = c.businessdomain_id ", array('bd_name' => 'bd.name'))
-            ->joinInner(array('comp' => 'main_company'), "c.company_id = comp.company_id ", array('comp_name' => 'comp.name'))
+            ->from(['c' => 'main_companyengage'], ['comp_id' => 'c.company_id','bd_id'=>'c.businessdomain_id'])
+            ->joinInner(['bd' => 'main_businessdomain'], "bd.businessdomain_id = c.businessdomain_id ", ['bd_name' => 'bd.name'])
+            ->joinInner(['comp' => 'main_company'], "c.company_id = comp.company_id ", ['comp_name' => 'comp.name'])
             ->where('c.company_id= '.$comp_id. ' and c.businessdomain_id='.$bdid);
             return $this->fetchAll($adress)->toArray();    }
 
@@ -104,9 +104,9 @@ public function getdatacompany($comp_id)
   
     $adress = $this->select()
         ->setIntegrityCheck(false)
-        ->from(array('c' => 'main_companyengage'), array('com_id' => 'c.company','bd_id'=>'c.businessdomain_id'))
-        ->joinInner(array('bd' => 'main_businessdomain'), "bd.businessdomain_id = c.businessdomain_id ", array('bd_name' => 'bd.name'))
-        ->joinInner(array('comp' => 'main_company'), "c.company_id = comp.company_id ", array('comp_name' => 'comp.name'))      
+        ->from(['c' => 'main_companyengage'], ['com_id' => 'c.company','bd_id'=>'c.businessdomain_id'])
+        ->joinInner(['bd' => 'main_businessdomain'], "bd.businessdomain_id = c.businessdomain_id ", ['bd_name' => 'bd.name'])
+        ->joinInner(['comp' => 'main_company'], "c.company_id = comp.company_id ", ['comp_name' => 'comp.name'])      
           ->where('c.company_id= '.$comp_id);
         return $this->fetchAll($adress)->toArray();    }
         public function getajaxdata($id)
@@ -114,9 +114,9 @@ public function getdatacompany($comp_id)
   
     $adress = $this->select()
         ->setIntegrityCheck(false)
-        ->from(array('c' => 'main_companyengage'), array('id' => 'c.company_id','bd_id'=>'c.businessdomain_id'))
-        ->joinLeft(array('bd' => 'main_businessdomain'), "bd.businessdomain_id = c.businessdomain_id ", array('name' => 'bd.name','businessdomain_id'=>'bd.businessdomain_id'))
-        ->joinLeft(array('comp' => 'main_company'), "c.company_id = comp.company_id ", array('comp_name' => 'comp.name'))
+        ->from(['c' => 'main_companyengage'], ['id' => 'c.company_id','bd_id'=>'c.businessdomain_id'])
+        ->joinLeft(['bd' => 'main_businessdomain'], "bd.businessdomain_id = c.businessdomain_id ", ['name' => 'bd.name','businessdomain_id'=>'bd.businessdomain_id'])
+        ->joinLeft(['comp' => 'main_company'], "c.company_id = comp.company_id ", ['comp_name' => 'comp.name'])
         ->where('c.company_id= '.$id);
         return $this->fetchAll($adress)->toArray();
     }

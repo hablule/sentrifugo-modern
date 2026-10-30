@@ -48,9 +48,9 @@ class Default_AppraisalhistoryteamController extends Zend_Controller_Action {
         $refresh = $this->_getParam('refresh');
         $dashboardcall = $this->_getParam('dashboardcall');
 
-        $data = array();
+        $data = [];
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         $tablecontent = '';
 
         if ($refresh == 'refresh') {
@@ -111,7 +111,7 @@ class Default_AppraisalhistoryteamController extends Zend_Controller_Action {
                     $app_rating_model = new Default_Model_Appraisalratings();
                     $ratingflag = 'false';
                     $linemangerids = '';
-                    $managerprofileimgArr = array();
+                    $managerprofileimgArr = [];
                     
                     $emp_data = $model->getEmpdata_managerapphistory($loginUserId,'',$id);
                     if(!empty($emp_data))
@@ -140,7 +140,7 @@ class Default_AppraisalhistoryteamController extends Zend_Controller_Action {
                                     }
                                     $emp_data[$key]= $emp_data[$key]+$managerprofileimgArr;
                                     $linemangerids = '';
-                                    $managerprofileimgArr = array();
+                                    $managerprofileimgArr = [];
 
                             }
                     }
@@ -184,7 +184,7 @@ class Default_AppraisalhistoryteamController extends Zend_Controller_Action {
         $app_rating_model = new Default_Model_Appraisalratings();
         $ratingflag = 'false';
         $linemangerids = '';
-        $managerprofileimgArr = array();
+        $managerprofileimgArr = [];
 		
         if($searchstring!='')
         {
@@ -212,7 +212,7 @@ class Default_AppraisalhistoryteamController extends Zend_Controller_Action {
         		}
         		$emp_data[$key]= $emp_data[$key]+$managerprofileimgArr;
         		$linemangerids = '';
-        		$managerprofileimgArr = array();
+        		$managerprofileimgArr = [];
         		
         	}
         }

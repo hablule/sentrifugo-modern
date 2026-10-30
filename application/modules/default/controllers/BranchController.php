@@ -49,9 +49,9 @@ class Default_BranchController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 
 		if($refresh == 'refresh')
@@ -200,12 +200,12 @@ class Default_BranchController extends Zend_Controller_Action
 				$date = new Zend_Date();
 				$actionflag = 2;
 				$tableid  = '';
-				$data = array('branch'=>trim($branch),
+				$data = ['branch'=>trim($branch),
 				 				'description'=>trim($description),
 								 'isactive'=>$isactive,
 						        'modifiedby'=>$loginUserId,
 								'modifieddate'=>gmdate("Y-m-d H:i:s")
-				);
+				];
 				
 					$where = 'emp_branch_id='.$id;
 //die($where)	;
@@ -213,12 +213,12 @@ class Default_BranchController extends Zend_Controller_Action
 				if($Id == 'update')
 				{
 					$tableid = $id;
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"branch updated successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"branch updated successfully."]);
 				}
 				else
 				{
 					$tableid = $Id;
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"branch  added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"branch  added successfully."]);
 				}
 				
 					$menuID = BRANCH;
@@ -316,7 +316,7 @@ Zend_Debug::dump($th->getMessage());	}
 		}
 		$id = $this->getRequest()->getParam('id');
 
-		$msgarray = array();
+		$msgarray = [];
 		$controllername = 'branch';
 		$form = new Default_Form_branch();
 		$model = new Default_Model_Branch();
@@ -329,14 +329,14 @@ Zend_Debug::dump($th->getMessage());	}
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = '';
-				$data = array('branch'=>trim($branch),
+				$data = ['branch'=>trim($branch),
 				 				'description'=>trim($description),
 						        'modifiedby'=>$loginUserId,
 								'modifieddate'=>gmdate("Y-m-d H:i:s")
-				);
+				];
 
 				if($id!=''){
-					$where = array('emp_branch_id=?'=>$id);
+					$where = ['emp_branch_id=?'=>$id];
 					$actionflag = 2;
 				}
 				else
@@ -388,7 +388,7 @@ Zend_Debug::dump($th->getMessage());	}
 			$loginUserId = $auth->getStorage()->read()->id;
 		}
 
-		$msgarray = array();
+		$msgarray = [];
 		$controllername = 'branch';
 		$form = new Default_Form_branch();
 		$model = new Default_Model_Branch();
@@ -400,9 +400,9 @@ Zend_Debug::dump($th->getMessage());	}
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = '';
-				$data = array('branch'=>trim($branch),
+				$data = ['branch'=>trim($branch),
 				 				'description'=>trim($description),	       
-				);
+				];
 
 					$data['createdby'] = $loginUserId;
 					$data['createddate'] = gmdate("Y-m-d H:i:s");
@@ -412,7 +412,7 @@ Zend_Debug::dump($th->getMessage());	}
 
 				$Id = $model->SaveorUpdatebranchData($data, $where);
 				$tableid = $Id;
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Branch  added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Branch  added successfully."]);
 
 					$menuID = BRANCH;
 					sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
@@ -444,14 +444,14 @@ Zend_Debug::dump($th->getMessage());	}
 
 		$id = $this->_request->getParam('objid');
 		$where = 'emp_branch_id =' . (int)$id;
-		$data = array(
+		$data = [
 			'isactive' => 'N'
-		);
+		];
 		//die(json_encode($where));
         $res=$formModel->SaveorUpdatebranchData($data, $where);
 
 		if ($res > 0)
-			return $this->_helper->json(array('flagtype' => 'process', 'message' => 'Deleted'));
+			return $this->_helper->json(['flagtype' => 'process', 'message' => 'Deleted']);
 		die();
     }
 }

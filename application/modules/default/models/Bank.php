@@ -15,7 +15,7 @@ class Default_Model_Bank extends Zend_Db_Table_Abstract
         }
         $bank = $this->select()
             ->setIntegrityCheck(false)
-            ->from($this->_name,array('bank_id','name','description','routingno','bank_verification_class','if(isactive="Y","Yes","No") as isactive'))
+            ->from($this->_name,['bank_id','name','description','routingno','bank_verification_class','if(isactive="Y","Yes","No") as isactive'])
             ->order("$by $sort")
             ->where($where)
             ->limitPage($pageNo, $perPage);
@@ -25,7 +25,7 @@ class Default_Model_Bank extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $a = '', $b = '', $c = '', $d = '')
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
             foreach ($searchValues as $key => $val) {
@@ -42,7 +42,7 @@ class Default_Model_Bank extends Zend_Db_Table_Abstract
             //die( $searchQuery);
         }
         $objName = 'bank';
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
 
             'name' => 'Bank Name',
@@ -50,17 +50,17 @@ class Default_Model_Bank extends Zend_Db_Table_Abstract
             'routingno' => 'Routing No.',
             'bank_verification_class' => 'Verfication Class',
             'isactive'=>'Active'
-        );
-        $bool_arr = array('' => 'All', 'Y' => 'Yes', 'N' => 'No');
+        ];
+        $bool_arr = ['' => 'All', 'Y' => 'Yes', 'N' => 'No'];
         $tablecontent = $this->getBank($sort, $by, $pageNo, $perPage, $searchQuery);
-        $dataTmp = array(
+        $dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -69,12 +69,12 @@ class Default_Model_Bank extends Zend_Db_Table_Abstract
             'add'=>'add',
 
 			'dashboardcall'=>$dashboardcall,
-			'search_filters' => array(
-                'isactive' => array(
+			'search_filters' => [
+                'isactive' => [
                     'type' => 'select',
-                    'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-    )
-		);	
+                    'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+    ]
+		];	
         return $dataTmp;
     }
 
@@ -95,7 +95,7 @@ class Default_Model_Bank extends Zend_Db_Table_Abstract
     {
         $query = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('b' => 'main_bank'), array('b.*'))
+            ->from(['b' => 'main_bank'], ['b.*'])
             ->where('bank_id=' . $id);
         return $this->fetchAll($query)->toArray();
     }

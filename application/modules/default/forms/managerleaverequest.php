@@ -41,11 +41,11 @@ class Default_Form_managerleaverequest extends Zend_Form
 		$managerstatus = new Zend_Form_Element_Select('managerstatus');
 		$managerstatus->setLabel("Approve or Reject or Cancel");
         $managerstatus->setRegisterInArrayValidator(false);
-        $managerstatus->setMultiOptions(array(							
+        $managerstatus->setMultiOptions([							
 							'1'=>'Approve' ,
 							'2'=>'Reject',
         					'3'=>'Cancel',
-							));
+							]);
 				
 		$comments = new Zend_Form_Element_Textarea('comments');
 		$comments->setLabel("Comments");
@@ -61,10 +61,10 @@ class Default_Form_managerleaverequest extends Zend_Form
                
         $leaveday = new Zend_Form_Element_Select('leaveday');
         $leaveday->setRegisterInArrayValidator(false);
-        $leaveday->setMultiOptions(array(							
+        $leaveday->setMultiOptions([							
 							'1'=>'Full Day' ,
 							'2'=>'Half Day',
-							));
+							]);
 		$leaveday->setAttrib('readonly', 'true');
         $leaveday->setAttrib('onfocus', 'this.blur()'); 		
 							
@@ -95,8 +95,8 @@ class Default_Form_managerleaverequest extends Zend_Form
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 
-		$this->addElements(array($id,$employeename,$managerstatus,$comments,$reason,$leaveday,$from_date,$to_date,$leavetypeid,$appliedleavesdaycount,$leavestatus,$createddate,$submit));
-        $this->setElementDecorators(array('ViewHelper'));
+		$this->addElements([$id,$employeename,$managerstatus,$comments,$reason,$leaveday,$from_date,$to_date,$leavetypeid,$appliedleavesdaycount,$leavestatus,$createddate,$submit]);
+        $this->setElementDecorators(['ViewHelper']);
       	 
 	}
 }

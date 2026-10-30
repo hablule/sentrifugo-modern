@@ -29,7 +29,7 @@ class Default_empiddocumentController extends Zend_Controller_Action
 		 	if($id == '')		
 			  $id = $userID;
 			  
-		 	$Uid = ($id)?$id:$userID;
+		 	$Uid = $id ?: $userID;
 		 	 
 		 	$employeeModal = new Default_Model_Employee();
 		 	try
@@ -54,7 +54,7 @@ class Default_empiddocumentController extends Zend_Controller_Action
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
 							$dashboardcall = $this->_getParam('dashboardcall',null);
-							$data = array();	$searchQuery = '';	$searchArray = array();		$tablecontent = '';
+							$data = [];	$searchQuery = '';	$searchArray = [];		$tablecontent = '';
 							
 							if($refresh == 'refresh')
 							{
@@ -131,7 +131,7 @@ class Default_empiddocumentController extends Zend_Controller_Action
 		 	if($id == '')		
 			  $id = $userID;
 			  
-		 	$Uid = ($id)?$id:$userID;
+		 	$Uid = $id ?: $userID;
 		 	 
 		 	$employeeModal = new Default_Model_Employee();
 		 	try
@@ -156,7 +156,7 @@ class Default_empiddocumentController extends Zend_Controller_Action
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
 							$dashboardcall = $this->_getParam('dashboardcall',null);
-							$data = array();	$searchQuery = '';	$searchArray = array();		$tablecontent = '';
+							$data = [];	$searchQuery = '';	$searchArray = [];		$tablecontent = '';
 							if($refresh == 'refresh')
 							{
 								if($dashboardcall == 'Yes')
@@ -231,7 +231,7 @@ class Default_empiddocumentController extends Zend_Controller_Action
 		$max_size = 1024;			// maxim size for image file, in KiloBytes
 
 		// Allowed image types
-		$allowtype = array('gif', 'jpg', 'jpeg', 'png');
+		$allowtype = ['gif', 'jpg', 'jpeg', 'png'];
 		//$allowtype = array('docx', 'doc','PDF','pdf');
 
 		/** Uploading the image **/
@@ -263,7 +263,7 @@ class Default_empiddocumentController extends Zend_Controller_Action
 							$rezultat = $filename;
 							$setWidth = 265;
 							$setHeight = 40;
-							list($imgwidth, $imgheight) = getimagesize($newfilename);
+							[$imgwidth, $imgheight] = getimagesize($newfilename);
 							if ($imgwidth < 265) {
 								$setWidth = $imgwidth;
 							}
@@ -294,11 +294,11 @@ class Default_empiddocumentController extends Zend_Controller_Action
 			$result_msg = 'Please upload only .gif, .jpg, .jpeg, .png images.';
 		}
 
-		$result = array(
+		$result = [
 			'result' => $result_status,
 			'img' => $rezultat,
 			'msg' => $result_msg
-		);
+		];
 		return $result;
 	}
     public function editpopupAction()
@@ -366,9 +366,9 @@ class Default_empiddocumentController extends Zend_Controller_Action
 		$model = new Default_Model_iddocument();
 		$iddocumentdata = $model->getIddocumentById($id);
 		if ($iddocumentdata[0]['isnumbered'] == 'Y') 
-			$this->_helper->json(array('result'=>true));
+			$this->_helper->json(['result'=>true]);
 		}
-		$this->_helper->json(array('result'=>false));
+		$this->_helper->json(['result'=>false]);
 
         
     }
@@ -393,7 +393,7 @@ class Default_empiddocumentController extends Zend_Controller_Action
 				if (sizeof($imageArr) > 1) {
 					$imagename = $imageArr[0];
 					$imageext = $imageArr[1];
-					$extArr = array('pdf', 'doc', 'docx');
+					$extArr = ['pdf', 'doc', 'docx'];
 					if (!in_array($imageext, $extArr)) {
 						$msgarray['attestation_image_value'] = 'Please upload an appropriate image file.';
 						$flag = 'false';
@@ -420,7 +420,7 @@ class Default_empiddocumentController extends Zend_Controller_Action
 			$actionflag = '';
 			$tableid  = '';
 
-			$data = array(
+			$data = [
 				                 'empid'=>$empid,
 				                 'iddocument_id'=>$this->_getParam('iddocument_id'),
 								 'idnumber'=>$this->_getParam('description'),
@@ -432,10 +432,10 @@ class Default_empiddocumentController extends Zend_Controller_Action
                                  'issuedate'=>sapp_Global::change_date($this->_getParam('issuedate'),'database'),
                                  'expirydate'=>sapp_Global::change_date($this->_getParam('expirydate'),'database'),
                                  'documentimg'=>$imagepath
-			);
+			];
            
 			if($id!=''){
-				$where = array('empiddocument_id=?'=>$id);
+				$where = ['empiddocument_id=?'=>$id];
                 $data['modifiedby'] = $loginUserId;
                 $data['modifieddate'] = gmdate("Y-m-d H:i:s");
 				$actionflag = 2;
@@ -507,7 +507,7 @@ class Default_empiddocumentController extends Zend_Controller_Action
 		 	if($id == '')		
 			  $id = $userID;
 			  
-		 	$Uid = ($id)?$id:$userID;
+		 	$Uid = $id ?: $userID;
 		 	 
 		 	$employeeModal = new Default_Model_Employee();
 		 	try
@@ -532,7 +532,7 @@ class Default_empiddocumentController extends Zend_Controller_Action
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
 							$dashboardcall = $this->_getParam('dashboardcall',null);
-							$data = array();	$searchQuery = '';	$searchArray = array();		$tablecontent = '';
+							$data = [];	$searchQuery = '';	$searchArray = [];		$tablecontent = '';
 							if($refresh == 'refresh')
 							{
 								if($dashboardcall == 'Yes')

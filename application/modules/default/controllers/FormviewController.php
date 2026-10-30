@@ -4,7 +4,7 @@ use Zend_Form;
 
 class Default_FormviewController extends Zend_Controller_Action
 {
-    protected $allFormNames = array();
+    protected $allFormNames = [];
     public function init()
     {
         $this->_options = $this->getInvokeArg('bootstrap')->getOptions();
@@ -43,19 +43,19 @@ class Default_FormviewController extends Zend_Controller_Action
         
      
         if ($this->_request->isPost()) {
-            $ids = array();
-            $elementsData = array();
+            $ids = [];
+            $elementsData = [];
             foreach ($this->allFormNames as $form) {
                 foreach ($form as $key => $value) {
                     array_push($ids, substr($value, strpos($value, '0') + 1));
-                    $isActive = array('isActive' => $this->_request->getParam($value));
+                    $isActive = ['isActive' => $this->_request->getParam($value)];
                     array_push($elementsData, $isActive);
                 }
             }
 
             $FormModel->updateElements($ids, $elementsData);
             sleep(1);
-            $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Form Option  updated successfully."));
+            $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Form Option  updated successfully."]);
 
             $this->_redirect('formview');    
        }
@@ -67,8 +67,8 @@ class Default_FormviewController extends Zend_Controller_Action
         $FormModel = new Default_Model_Formview();
         
         $formElements = $FormModel->getAllElements($formName);
-        $formElementNames = array();
-        $formElementLabels = array();
+        $formElementNames = [];
+        $formElementLabels = [];
         foreach($formElements AS $element){
             $elementName = $element['elementNameOrID'] . '0' . $element['id'];
             $form->addElement('CheckBox', $elementName);
@@ -138,7 +138,7 @@ class Default_FormviewController extends Zend_Controller_Action
     // }
     public function addpopupAction(){
         Zend_Layout::getMvcInstance()->setLayoutPath(APPLICATION_PATH . "/layouts/scripts/popup/");
-        $msgarray = array();
+        $msgarray = [];
         $FormModel = new Default_Model_Formview();
 
       
@@ -221,7 +221,7 @@ class Default_FormviewController extends Zend_Controller_Action
         $allvalidator=$allvalidator.$com_values.",";
     }
     //die($all);
-            $elementData = array(
+            $elementData = [
                 'formName' => $formName,
                 'dataType' => $elementType,
                 'elementNameOrID' => $elementName,
@@ -234,7 +234,7 @@ class Default_FormviewController extends Zend_Controller_Action
                 'parent' => $parent,
                 'child' => $child,
     
-            );
+            ];
             //die(json_encode($elementData));
             
             $FormModel->addElement($elementData);
@@ -335,7 +335,7 @@ class Default_FormviewController extends Zend_Controller_Action
             $result = $FormModel->getRequestedData($_POST['tableName'],$_POST['columnName'],$_POST['data'],$_POST['queryWith']);
             die(json_encode($result));
         }else{
-            die(json_encode(array('result'=>'error')));
+            die(json_encode(['result'=>'error']));
         }
     }
    

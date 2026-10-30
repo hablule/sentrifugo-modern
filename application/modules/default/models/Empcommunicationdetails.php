@@ -28,7 +28,7 @@ class Default_Model_Empcommunicationdetails extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('ec'=>'main_empcommunicationdetails'),array('ec.*'))
+						->from(['ec'=>'main_empcommunicationdetails'],['ec.*'])
 						->where('ec.user_id='.$id.' AND ec.isactive = 1');
 					//die($select);
 		return $this->fetchAll($select)->toArray();

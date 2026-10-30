@@ -11,7 +11,7 @@ class Default_Model_Leavecategory extends Zend_Db_Table_Abstract{
             $where .= " AND " . $searchQuery;
         $bank = $this->select()
         ->setIntegrityCheck(false)
-        ->from(array('lc' => 'main_leavecategory'), array('leavecategory_id' => 'lc.leavecategory_id', 'name'=>'lc.name','description'=>'lc.description','isactive'=>'if(lc.isactive="N","No","Yes")'))
+        ->from(['lc' => 'main_leavecategory'], ['leavecategory_id' => 'lc.leavecategory_id', 'name'=>'lc.name','description'=>'lc.description','isactive'=>'if(lc.isactive="N","No","Yes")'])
         ->where($where)
         ->order("$by $sort")
         ->limitPage($pageNo, $perPage);
@@ -21,7 +21,7 @@ class Default_Model_Leavecategory extends Zend_Db_Table_Abstract{
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $a = '', $b = '', $c = '', $d = '')
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
             foreach ($searchValues as $key => $val) {
@@ -31,22 +31,22 @@ class Default_Model_Leavecategory extends Zend_Db_Table_Abstract{
             $searchQuery = rtrim($searchQuery, " AND");
         }
         $objName = 'leavecategory';
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'name' => 'Name',
             'description' => 'Description',
 			'isactive'=>'Active',
-        );
+        ];
 
         $tablecontent = $this->getData($sort, $by, $pageNo, $perPage, $searchQuery);
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
             'perPage' => $perPage,
             'tablecontent' => $tablecontent,
             'objectname' => $objName,
-            'extra' => array(),
+            'extra' => [],
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
             'jsFillFnName' => '',
@@ -55,12 +55,12 @@ class Default_Model_Leavecategory extends Zend_Db_Table_Abstract{
             'add' => 'add',
 
             'dashboardcall' => $dashboardcall,
-			'search_filters' => array(
-                        'isactive' => array(
+			'search_filters' => [
+                        'isactive' => [
                             'type' => 'select',
-                            'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-            )
-        );
+                            'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+            ]
+        ];
         return $dataTmp;
     }
 
@@ -81,14 +81,14 @@ class Default_Model_Leavecategory extends Zend_Db_Table_Abstract{
 	
 		$select = $this->select()
 						->setIntegrityCheck(false)
-                        ->from(array('lc' => 'main_leavecategory'),array('name' => 'lc.name','description' => 'lc.description','isactivecheck' => 'lc.isactive'))
+                        ->from(['lc' => 'main_leavecategory'],['name' => 'lc.name','description' => 'lc.description','isactivecheck' => 'lc.isactive'])
 						->where('lc.leavecategory_id='.$id.'');
 		return $this->fetchAll($select)->toArray();
 	}
     public function getleavecategory(){
         $query = $this->select()
                    ->setIntegrityCheck(false)
-                   ->from(array('lc'=>'main_leavecategory'))
+                   ->from(['lc'=>'main_leavecategory'])
                    ->where('lc.isactive="Y"');
        return $this->fetchAll($query)->toArray();
     }

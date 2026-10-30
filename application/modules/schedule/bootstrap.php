@@ -38,230 +38,230 @@ class Schedule_Bootstrap extends Zend_Application_Module_Bootstrap
             'controller' => 'timetable',
             'action' => 'view'
         )); */
-        $timetableviewallroute = new Zend_Controller_Router_Route('timetable/viewall', array(
+        $timetableviewallroute = new Zend_Controller_Router_Route('timetable/viewall', [
             'module' => 'schedule',
             'controller' => 'timetable',
             'action' => 'viewall'
-        ));
-        $timetabledeleteroute = new Zend_Controller_Router_Route('timetable/delete', array(
+        ]);
+        $timetabledeleteroute = new Zend_Controller_Router_Route('timetable/delete', [
             'module' => 'schedule',
             'controller' => 'timetable',
             'action' => 'delete'
-        ));
-        $scheduleroute = new Zend_Controller_Router_Route('timeschedule', array(
+        ]);
+        $scheduleroute = new Zend_Controller_Router_Route('timeschedule', [
             'module' => 'schedule',
             'controller' => 'timeschedule',
             'action' => 'index'
-        ));
-        $scheduleaddroute = new Zend_Controller_Router_Route('timeschedule/add', array(
+        ]);
+        $scheduleaddroute = new Zend_Controller_Router_Route('timeschedule/add', [
             'module' => 'schedule',
             'controller' => 'timeschedule',
             'action' => 'add'
-        ));
-        $scheduleviewroute = new Zend_Controller_Router_Route('timeschedule/view/id/:id', array(
+        ]);
+        $scheduleviewroute = new Zend_Controller_Router_Route('timeschedule/view/id/:id', [
             'module' => 'schedule',
             'controller' => 'timeschedule',
             'action' => 'view'
-        ));
-        $scheduleeditroute = new Zend_Controller_Router_Route('timeschedule/edit/id/:id', array(
+        ]);
+        $scheduleeditroute = new Zend_Controller_Router_Route('timeschedule/edit/id/:id', [
             'module' => 'schedule',
             'controller' => 'timeschedule',
             'action' => 'edit'
-        ));
-        $scheduledeleteroute = new Zend_Controller_Router_Route('timeschedule/delete', array(
+        ]);
+        $scheduledeleteroute = new Zend_Controller_Router_Route('timeschedule/delete', [
             'module' => 'schedule',
             'controller' => 'timeschedule',
             'action' => 'delete'
-        ));
+        ]);
 
-        $cronjobroute = new Zend_Controller_Router_Route('attendancecronjob', array(
+        $cronjobroute = new Zend_Controller_Router_Route('attendancecronjob', [
             'module' => 'schedule',
             'controller' => 'cronjob',
             'action' => 'index'
-        ));
-        $schedulecyclepopupid = new Zend_Controller_Router_Route('schedulecycle/addpopup/id/:id', array(
+        ]);
+        $schedulecyclepopupid = new Zend_Controller_Router_Route('schedulecycle/addpopup/id/:id', [
             'module' => 'schedule',
             'controller' => 'schedulecycle',
             'action' => 'addpopup'
-        ));
-        $schedulecyclepopup = new Zend_Controller_Router_Route('schedulecycle/addpopup', array(
+        ]);
+        $schedulecyclepopup = new Zend_Controller_Router_Route('schedulecycle/addpopup', [
             'module' => 'schedule',
             'controller' => 'schedulecycle',
             'action' => 'addpopup'
-        ));
-        $overtimecategoryindex = new Zend_Controller_Router_Route('cycleshift/addpopup', array(
+        ]);
+        $overtimecategoryindex = new Zend_Controller_Router_Route('cycleshift/addpopup', [
             'module' => 'schedule',
             'controller' => 'cycleshift',
             'action' => 'addpopup'
-        ));
-        $cycleshiftgetdata = new Zend_Controller_Router_Route('schedulecycle/getcycledata', array(
+        ]);
+        $cycleshiftgetdata = new Zend_Controller_Router_Route('schedulecycle/getcycledata', [
             'module' => 'schedule',
             'controller' => 'schedulecycle',
             'action' => 'getcycledata'
-        ));
+        ]);
 
-        $checkschedule = new Zend_Controller_Router_Route('schedulecycle/dayofexists', array(
+        $checkschedule = new Zend_Controller_Router_Route('schedulecycle/dayofexists', [
             'module' => 'schedule',
             'controller' => 'schedulecycle',
             'action' => 'dayofexists'
-        ));
+        ]);
 
-        $cycleshiftPopup = new Zend_Controller_Router_Route('cycleshift/editpopup', array(
+        $cycleshiftPopup = new Zend_Controller_Router_Route('cycleshift/editpopup', [
             'module' => 'schedule',
             'controller' => 'cycleshift',
             'action' => 'editpopup'
-        ));
-        $cyclepopup = new Zend_Controller_Router_Route('schedulecycle/editpopup', array(
+        ]);
+        $cyclepopup = new Zend_Controller_Router_Route('schedulecycle/editpopup', [
             'module' => 'schedule',
             'controller' => 'schedulecycle',
             'action' => 'editpopup'
-        ));
-        $overtimecategoryedit = new Zend_Controller_Router_Route('overtimecategory/edit/id/:id', array(
+        ]);
+        $overtimecategoryedit = new Zend_Controller_Router_Route('overtimecategory/edit/id/:id', [
             'module' => 'schedule',
             'controller' => 'overtimecategory',
             'action' => 'edit'
-        ));
-        $overtimecategorydelete = new Zend_Controller_Router_Route('overtimecategory/delete', array(
+        ]);
+        $overtimecategorydelete = new Zend_Controller_Router_Route('overtimecategory/delete', [
             'module' => 'schedule',
             'controller' => 'overtimecategory',
             'action' => 'delete'
-        ));
-        $takeattendroute = new Zend_Controller_Router_Route('takeattend', array(
+        ]);
+        $takeattendroute = new Zend_Controller_Router_Route('takeattend', [
             'module' => 'schedule',
             'controller' => 'cronjob',
             'action' => 'takeattend'
-        ));
+        ]);
 
-        $logreportindexroute = new Zend_Controller_Router_Route('logreport', array(
+        $logreportindexroute = new Zend_Controller_Router_Route('logreport', [
             'module' => 'schedule',
             'controller' => 'logreport',
             'action' => 'index'
-        ));
+        ]);
 
-        $attendancerepindexroute = new Zend_Controller_Router_Route('attendancereport', array(
+        $attendancerepindexroute = new Zend_Controller_Router_Route('attendancereport', [
             'module' => 'schedule',
             'controller' => 'attendancereport',
             'action' => 'index'
-        ));
-        $attendancereportchecktimeroute = new Zend_Controller_Router_Route('attendancereport/printreport', array(
+        ]);
+        $attendancereportchecktimeroute = new Zend_Controller_Router_Route('attendancereport/printreport', [
             'module' => 'schedule',
             'controller' => 'attendancereport',
             'action' => 'printreport'
-        ));
-        $attendancereportprintroute = new Zend_Controller_Router_Route('attendancereport/checktime', array(
+        ]);
+        $attendancereportprintroute = new Zend_Controller_Router_Route('attendancereport/checktime', [
             'module' => 'schedule',
             'controller' => 'attendancereport',
             'action' => 'checktime'
-        ));
+        ]);
 
-        $overtimeindexroute = new Zend_Controller_Router_Route('overtime', array(
+        $overtimeindexroute = new Zend_Controller_Router_Route('overtime', [
             'module' => 'schedule',
             'controller' => 'overtime',
             'action' => 'index'
-        ));
-        $overtimeaddroute = new Zend_Controller_Router_Route('overtime/add', array(
+        ]);
+        $overtimeaddroute = new Zend_Controller_Router_Route('overtime/add', [
             'module' => 'schedule',
             'controller' => 'overtime',
             'action' => 'add'
-        ));
+        ]);
 
-        $overtimeeditroute = new Zend_Controller_Router_Route('overtime/edit/id/:id', array(
+        $overtimeeditroute = new Zend_Controller_Router_Route('overtime/edit/id/:id', [
             'module' => 'schedule',
             'controller' => 'overtime',
             'action' => 'edit'
-        ));
-        $overtimeviewroute = new Zend_Controller_Router_Route('overtime/view/id/:id', array(
+        ]);
+        $overtimeviewroute = new Zend_Controller_Router_Route('overtime/view/id/:id', [
             'module' => 'schedule',
             'controller' => 'overtime',
             'action' => 'view'
-        ));
-        $overtimedeleteroute = new Zend_Controller_Router_Route('overtime/delete', array(
+        ]);
+        $overtimedeleteroute = new Zend_Controller_Router_Route('overtime/delete', [
             'module' => 'schedule',
             'controller' => 'overtime',
             'action' => 'delete'
-        ));
+        ]);
 
-        $overtimecateroute = new Zend_Controller_Router_Route('overtime/addcategory', array(
+        $overtimecateroute = new Zend_Controller_Router_Route('overtime/addcategory', [
             'module' => 'schedule',
             'controller' => 'overtime',
             'action' => 'addcategory'
-        ));
+        ]);
 
 
 
-        $overtimenewOTroute = new Zend_Controller_Router_Route('overtime/newot', array(
+        $overtimenewOTroute = new Zend_Controller_Router_Route('overtime/newot', [
             'module' => 'schedule',
             'controller' => 'overtime',
             'action' => 'addnewot'
-        ));
-        $overtimechecktimeOTroute = new Zend_Controller_Router_Route('overtime/checktime', array(
+        ]);
+        $overtimechecktimeOTroute = new Zend_Controller_Router_Route('overtime/checktime', [
             'module' => 'schedule',
             'controller' => 'overtime',
             'action' => 'checktime'
-        ));
+        ]);
         //
-        $myovertimesroute = new Zend_Controller_Router_Route('manageremployeeovertime', array(
+        $myovertimesroute = new Zend_Controller_Router_Route('manageremployeeovertime', [
             'module' => 'schedule',
             'controller' => 'manageremployeeovertime',
             'action' => 'index',
-        ));
-        $myovertimeseditroute = new Zend_Controller_Router_Route('manageremployeeovertime/edit/id/:id', array(
+        ]);
+        $myovertimeseditroute = new Zend_Controller_Router_Route('manageremployeeovertime/edit/id/:id', [
             'module' => 'schedule',
             'controller' => 'manageremployeeovertime',
             'action' => 'edit',
-        ));
-        $myovertimeseditpopuproute = new Zend_Controller_Router_Route('manageremployeeovertime/editpopup/id/:id', array(
+        ]);
+        $myovertimeseditpopuproute = new Zend_Controller_Router_Route('manageremployeeovertime/editpopup/id/:id', [
             'module' => 'schedule',
             'controller' => 'manageremployeeovertime',
             'action' => 'editpopup',
-        ));
-        $myovertimesviewroute = new Zend_Controller_Router_Route('manageremployeeovertime/view/id/:id', array(
+        ]);
+        $myovertimesviewroute = new Zend_Controller_Router_Route('manageremployeeovertime/view/id/:id', [
             'module' => 'schedule',
             'controller' => 'manageremployeeovertime',
             'action' => 'view',
-        ));
-        $myovertimesdeleteroute = new Zend_Controller_Router_Route('manageremployeeovertime/delete', array(
+        ]);
+        $myovertimesdeleteroute = new Zend_Controller_Router_Route('manageremployeeovertime/delete', [
             'module' => 'schedule',
             'controller' => 'manageremployeeovertime',
             'action' => 'delete',
-        ));
-        $backuproute = new Zend_Controller_Router_Route('backup', array(
+        ]);
+        $backuproute = new Zend_Controller_Router_Route('backup', [
             'module' => 'schedule',
             'controller' => 'backup',
             'action' => 'index',
-        ));
+        ]);
 
         //
 
 
-        $timetablepopup = new Zend_Controller_Router_Route('timetable/addpopup', array(
+        $timetablepopup = new Zend_Controller_Router_Route('timetable/addpopup', [
             'module' => 'schedule',
             'controller' => 'timetable',
             'action' => 'addpopup'
-        ));
+        ]);
 
-        $deviceRoute = new Zend_Controller_Router_Route('device', array(
+        $deviceRoute = new Zend_Controller_Router_Route('device', [
             'module' => 'schedule',
             'controller' => 'device',
             'action' => 'index'
-        ));
-        $scanRoute = new Zend_Controller_Router_Route('scandevice', array(
+        ]);
+        $scanRoute = new Zend_Controller_Router_Route('scandevice', [
             'module' => 'schedule',
             'controller' => 'device',
             'action' => 'scandevice'
-        ));
+        ]);
 
-        $addDeviceRoute = new Zend_Controller_Router_Route('addconnection', array(
+        $addDeviceRoute = new Zend_Controller_Router_Route('addconnection', [
             'module' => 'schedule',
             'controller' => 'device',
             'action' => 'addconnection'
-        ));
+        ]);
 
-        $deleteDeviceRoute = new Zend_Controller_Router_Route('device/delete', array(
+        $deleteDeviceRoute = new Zend_Controller_Router_Route('device/delete', [
             'module' => 'schedule',
             'controller' => 'device',
             'action' => 'delete'
-        ));
+        ]);
         $router->addRoute('delete', $deleteDeviceRoute);
         $router->addRoute('addDevice', $addDeviceRoute);
         $router->addRoute('scan', $scanRoute);

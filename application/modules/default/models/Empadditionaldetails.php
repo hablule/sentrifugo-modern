@@ -34,12 +34,12 @@ class Default_Model_Empadditionaldetails extends Zend_Db_Table_Abstract
 
 		$empadditionaldetailsData = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('e' => 'main_empadditionaldetails'),array('e.*',
+		->from(['e' => 'main_empadditionaldetails'],['e.*',
 		                                               'from_date'=>'DATE_FORMAT(e.from_date,"'.DATEFORMAT_MYSQL.'")',
-													   'to_date'=>'DATE_FORMAT(e.to_date,"'.DATEFORMAT_MYSQL.'")'))
-		->joinLeft(array('ms'=>'main_militaryservicebranch'),'e.branch_service=ms.servicebranch_id',array('ms.name as branchname'))
-		->joinLeft(array('v'=>'main_veteranstatus'),'e.veteranstatus=v.id AND v.isactive = 1',array('veteran_status'=>'v.veteranstatus'))
-		->joinLeft(array('m'=>'main_militaryservice'),'e.military_servicetype=m.id AND m.isactive = 1',array('military_servicetype'=>'m.militaryservicetype'))
+													   'to_date'=>'DATE_FORMAT(e.to_date,"'.DATEFORMAT_MYSQL.'")'])
+		->joinLeft(['ms'=>'main_militaryservicebranch'],'e.branch_service=ms.servicebranch_id',['ms.name as branchname'])
+		->joinLeft(['v'=>'main_veteranstatus'],'e.veteranstatus=v.id AND v.isactive = 1',['veteran_status'=>'v.veteranstatus'])
+		->joinLeft(['m'=>'main_militaryservice'],'e.military_servicetype=m.id AND m.isactive = 1',['military_servicetype'=>'m.militaryservicetype'])
 		->where($where)
 		->order("$by $sort")
 		->limitPage($pageNo, $perPage);
@@ -51,7 +51,7 @@ class Default_Model_Empadditionaldetails extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('ea'=>'main_empadditionaldetails'),array('ea.*'))
+						->from(['ea'=>'main_empadditionaldetails'],['ea.*'])
 						->where('ea.user_id='.$id.' AND ea.isactive = 1');
 					
 		return $this->fetchAll($select)->toArray();
@@ -64,9 +64,9 @@ class Default_Model_Empadditionaldetails extends Zend_Db_Table_Abstract
 		
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('es'=>'main_empadditionaldetails'),array('es.*'))
-		->joinLeft(array('msb'=>'main_militaryservicebranch'),'msb.servicebranch_id = es.branch_service',array('msb.name as branchname'))
-		->joinLeft(array('mr'=>'main_militaryrank'),'mr.militaryrank_id=es.rank_achieved',array('mr.name as rankname'))
+		->from(['es'=>'main_empadditionaldetails'],['es.*'])
+		->joinLeft(['msb'=>'main_militaryservicebranch'],'msb.servicebranch_id = es.branch_service',['msb.name as branchname'])
+		->joinLeft(['mr'=>'main_militaryrank'],'mr.militaryrank_id=es.rank_achieved',['mr.name as rankname'])
 		->where('es.id='.$id.' AND es.isactive = 1');
 			
 		return $this->fetchAll($select)->toArray();
@@ -92,9 +92,9 @@ class Default_Model_Empadditionaldetails extends Zend_Db_Table_Abstract
 	{
 		$searchQuery = '';
 		$tablecontent = '';
-		$searchArray = array();
-		$data = array(); 
-		$dataTmp = array();
+		$searchArray = [];
+		$data = []; 
+		$dataTmp = [];
 		/** search from grid - START **/
 		if($searchData != '' && $searchData!='undefined')
 		{
@@ -119,14 +119,14 @@ class Default_Model_Empadditionaldetails extends Zend_Db_Table_Abstract
 		
 		$objName = 'empadditionaldetails';
 
-		$tableFields = array('action'=>'Action','branchname'=>'Branch of Service','from_date'=>'From','to_date'=>'To','veteranstatus'=>'Veteran Status','military_servicetype'=>'Service Type');
+		$tableFields = ['action'=>'Action','branchname'=>'Branch of Service','from_date'=>'From','to_date'=>'To','veteranstatus'=>'Veteran Status','military_servicetype'=>'Service Type'];
 			
 		$tablecontent = $this->getEmpAdditionalsData($sort,$by,$pageNo,$perPage,$searchQuery,$exParam1);
 
-		$bool_arr = array('' => 'All',1 => 'Yes',2 => 'No');
+		$bool_arr = ['' => 'All',1 => 'Yes',2 => 'No'];
 		
 		$empVeteranStatusArr = $this->empveteranstatus($exParam1);
-		$veteranstatusArr = array();
+		$veteranstatusArr = [];
 		if(!empty($empVeteranStatusArr)){
 			for($i=0;$i<sizeof($empVeteranStatusArr);$i++)
 			{
@@ -135,7 +135,7 @@ class Default_Model_Empadditionaldetails extends Zend_Db_Table_Abstract
 		}
 		
 		$empMiltitaryStatusArr = $this->empmilitarystatus($exParam1);
-		$militarystatusArr = array();
+		$militarystatusArr = [];
 		if(!empty($empMiltitaryStatusArr)){
 			for($i=0;$i<sizeof($empMiltitaryStatusArr);$i++)
 			{
@@ -143,14 +143,14 @@ class Default_Model_Empadditionaldetails extends Zend_Db_Table_Abstract
 			}
 		}
 		
-		$dataTmp = array('userid'=>$exParam1,
+		$dataTmp = ['userid'=>$exParam1,
 						'sort' => $sort,
 						'by' => $by,
 						'pageNo' => $pageNo,
 						'perPage' => $perPage,				
 						'tablecontent' => $tablecontent,
 						'objectname' => $objName,
-						'extra' => array(),
+						'extra' => [],
 						'tableheader' => $tableFields,
 						'jsGridFnName' => 'getEmployeeAjaxgridData',
 						'jsFillFnName' => '',
@@ -164,19 +164,19 @@ class Default_Model_Empadditionaldetails extends Zend_Db_Table_Abstract
 						'dashboardcall'=>$dashboardcall,
 						'call'=>$call,
 						'context'=>$exParam2,
-						'search_filters' => array(
-						'military_status' => array(
+						'search_filters' => [
+						'military_status' => [
                                 'type' => 'select',
                                 'filter_data' => $bool_arr,
-                            ),
-						'military_servicetype' => array('type'=>'select',
-													'filter_data'=>array(''=>'All')+$militarystatusArr),
-						'veteran_status' => array('type'=>'select',
-													'filter_data'=>array(''=>'All')+$veteranstatusArr),							
-						'from_date'=>array('type'=>'datepicker','yearrange'=>'yearrange'),
-						'to_date'=>array('type'=>'datepicker','yearrange'=>'yearrange')
-		)
-		);
+                            ],
+						'military_servicetype' => ['type'=>'select',
+													'filter_data'=>[''=>'All']+$militarystatusArr],
+						'veteran_status' => ['type'=>'select',
+													'filter_data'=>[''=>'All']+$veteranstatusArr],							
+						'from_date'=>['type'=>'datepicker','yearrange'=>'yearrange'],
+						'to_date'=>['type'=>'datepicker','yearrange'=>'yearrange']
+		]
+		];
 		return $dataTmp;
 	}
 	

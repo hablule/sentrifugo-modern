@@ -43,7 +43,7 @@ class Default_Model_Tabgroups extends Zend_Db_Table_Abstract
 
         $bank = $this->select()
             ->setIntegrityCheck(false)
-            ->from('main_group',array('name as bname','code as code','description as description','if(isactive="Y","Yes","No") as isactive','group_id as id'))
+            ->from('main_group',['name as bname','code as code','description as description','if(isactive="Y","Yes","No") as isactive','group_id as id'])
             ->order("$by $sort")
             ->where($where)
             ->limitPage($pageNo, $perPage);
@@ -61,7 +61,7 @@ class Default_Model_Tabgroups extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $a = '', $b = '', $c = '', $d = '')
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
             foreach ($searchValues as $key => $val) {
@@ -71,23 +71,23 @@ class Default_Model_Tabgroups extends Zend_Db_Table_Abstract
             $searchQuery = rtrim($searchQuery, " AND");
         }
         $objName = 'tabgroups';
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'bname' => ' Group Name',
 			'code' => 'Group Code',
             'description' => 'Description',
             'isactive' => 'Active',
-        );
+        ];
 
         $tablecontent = $this->getData($sort, $by, $pageNo, $perPage, $searchQuery);
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
             'perPage' => $perPage,
             'tablecontent' => $tablecontent,
             'objectname' => $objName,
-            'extra' => array(),
+            'extra' => [],
             'add'=>'add', 
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
@@ -95,12 +95,12 @@ class Default_Model_Tabgroups extends Zend_Db_Table_Abstract
             'searchArray' => $searchArray,
             'call' => $call,
             'dashboardcall' => $dashboardcall,
-            'search_filters' => array(
-                'isactive' => array(
+            'search_filters' => [
+                'isactive' => [
                     'type' => 'select',
-                    'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-            )
-        );
+                    'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+            ]
+        ];
         return $dataTmp;
     }
 	public function SaveorUpdateGroupsData($data, $where)
@@ -130,7 +130,7 @@ class Default_Model_Tabgroups extends Zend_Db_Table_Abstract
 		$query = "select g.".GROUP_ARRAY['colid'].",g.".GROUP_ARRAY['colname'].",(select count(*) from ".ROLE_ARRAY['tablename']." r where r.".ROLE_ARRAY['colisactive']." ='Y' and r.".ROLE_ARRAY['colgroupid']." = g.".GROUP_ARRAY['colid'].") cnt
                    from ".GROUP_ARRAY['tablename']." g where g.".GROUP_ARRAY['colisactive']." = 'Y'";
 		$result = $db->query($query);
-		$group_arr = array();
+		$group_arr = [];
 		while($row = $result->fetch())
 		{
 			$group_arr[$row['group_id']]['name'] = $row['name'];
@@ -145,7 +145,7 @@ class Default_Model_Tabgroups extends Zend_Db_Table_Abstract
 		$query = "select g.".GROUP_ARRAY['colid']." as id,g.".GROUP_ARRAY['colname']." as group_name,(select count(*) from ".ROLE_ARRAY['tablename']." r where r.".ROLE_ARRAY['colisactive']." ='Y' and r.".ROLE_ARRAY['colgroupid']." = g.group_id) cnt
                    from ".GROUP_ARRAY['tablename']." g where g.".GROUP_ARRAY['colisactive']." = 'Y'";
 		$result = $db->query($query);
-		$group_arr = array();
+		$group_arr = [];
 		while($row = $result->fetch())
 		{
 			$group_arr[$row['id']]['group_name'] = $row['group_name'];
@@ -165,7 +165,7 @@ class Default_Model_Tabgroups extends Zend_Db_Table_Abstract
 		$query = "select g.".GROUP_ARRAY['colid'].",g.".GROUP_ARRAY['colname'].",(select count(*) from main_userloginlog where group_id = g.group_id) cnt
                    from ".GROUP_ARRAY['tablename']." g where g.".GROUP_ARRAY['colisactive']." = 'Y'";
 		$result = $db->query($query);
-		$group_arr = array();
+		$group_arr = [];
 		while($row = $result->fetch())
 		{
 			$group_arr[$row['group_id']]['name'] = $row['name'];
@@ -187,7 +187,7 @@ class Default_Model_Tabgroups extends Zend_Db_Table_Abstract
 		return $data;
             }
             else 
-                return array();
+                return [];
 	}
 
 	/**
@@ -200,7 +200,7 @@ class Default_Model_Tabgroups extends Zend_Db_Table_Abstract
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$query = "select group_id,name from ".GROUP_ARRAY['tablename']." where ".GROUP_ARRAY['colisactive']." = 'Y' order by ".GROUP_ARRAY['colname']."";
 		$result = $db->query($query);
-		$group_arr = array();
+		$group_arr = [];
 		while($row = $result->fetch())
 		{
 			$group_arr[$row['group_id']] = $row['name'];
@@ -217,7 +217,7 @@ class Default_Model_Tabgroups extends Zend_Db_Table_Abstract
 	public function getGroupNamesByIds($groupIdArray)
 	{
 		$resultstring = implode(',', $groupIdArray);
-		$groupArray = array();
+		$groupArray = [];
 		if($resultstring)
 		{
 			try

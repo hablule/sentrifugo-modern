@@ -74,7 +74,7 @@ class Default_Model_Language extends Zend_Db_Table_Abstract
 	public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
 	{
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 
 		if (!empty($searchData) && $searchData !== 'undefined') {
 			$searchValues = json_decode($searchData, true);
@@ -93,24 +93,24 @@ class Default_Model_Language extends Zend_Db_Table_Abstract
 		}
 
 		// SSOT Mandatory: 'action' => 'Action' must be the first element
-		$tableHeaders = array(
+		$tableHeaders = [
 			'action'      => 'Action',
 			'code'        => 'Language Code',
 			'name'        => 'Language Name',
 			'description' => 'Description',
 			'status_text' => 'Status'
-		);
+		];
 
 		$tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-		return array(
+		return [
 			'sort'           => $sort,
 			'by'             => $by,
 			'pageNo'         => $pageNo,
 			'perPage'        => $perPage,
 			'tablecontent'   => $tableContent,
 			'objectname'     => 'language',
-			'extra'          => array(),
+			'extra'          => [],
 			'tableheader'    => $tableHeaders,
 			'jsGridFnName'   => 'getAjaxgridData',
 			'jsFillFnName'   => '',
@@ -118,10 +118,10 @@ class Default_Model_Language extends Zend_Db_Table_Abstract
 			'menuName'       => 'Languages',
 			'call'           => $call,
 			'dashboardcall'  => $dashboardcall,
-			'search_filters' => array(
-				'status_text' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive'))
-			)
-		);
+			'search_filters' => [
+				'status_text' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']]
+			]
+		];
 	}
 
 	/**
@@ -143,14 +143,14 @@ class Default_Model_Language extends Zend_Db_Table_Abstract
 		$select = $this->select()
 			->setIntegrityCheck(false)
 			->from(
-				array('l' => $this->_name),
-				array(
+				['l' => $this->_name],
+				[
 					'id' => 'l.id',
 					'code',
 					'name',
 					'description',
 					'status_text' => new Zend_Db_Expr("CASE WHEN l.isactive = 1 THEN 'Active' ELSE 'Inactive' END")
-				)
+				]
 			)
 			->where('l.isactive != ?', 5);
 
@@ -171,7 +171,7 @@ class Default_Model_Language extends Zend_Db_Table_Abstract
 	 */
 	public function getPairs($activeOnly = true)
 	{
-		$select = $this->select()->from($this->_name, array('id', 'name'))->order('name ASC');
+		$select = $this->select()->from($this->_name, ['id', 'name'])->order('name ASC');
 		if ($activeOnly) {
 			$select->where('isactive = ?', 1);
 		}
@@ -215,7 +215,7 @@ class Default_Model_Language extends Zend_Db_Table_Abstract
 		if (!empty($id)) {
 			$data['modifiedby']   = $userId;
 			$data['modifieddate'] = $currentDate;
-			$this->update($data, array('id = ?' => (int)$id));
+			$this->update($data, ['id = ?' => (int)$id]);
 			return 'update';
 		}
 
@@ -240,13 +240,13 @@ class Default_Model_Language extends Zend_Db_Table_Abstract
 		$auth = Zend_Auth::getInstance();
 		$userId = $auth->hasIdentity() ? (int)$auth->getStorage()->read()->id : 0;
 
-		$data = array(
+		$data = [
 			'isactive'     => 5,
 			'modifiedby'   => $userId,
 			'modifieddate' => gmdate("Y-m-d H:i:s")
-		);
+		];
 
-		return $this->update($data, array('id = ?' => (int)$id));
+		return $this->update($data, ['id = ?' => (int)$id]);
 	}
 
 	/**
@@ -261,13 +261,13 @@ class Default_Model_Language extends Zend_Db_Table_Abstract
 		$auth = Zend_Auth::getInstance();
 		$userId = $auth->hasIdentity() ? (int)$auth->getStorage()->read()->id : 0;
 
-		$data = array(
+		$data = [
 			'isactive'     => (int)$status,
 			'modifiedby'   => $userId,
 			'modifieddate' => gmdate("Y-m-d H:i:s")
-		);
+		];
 
-		return $this->update($data, array('id = ?' => (int)$id));
+		return $this->update($data, ['id = ?' => (int)$id]);
 	}
 
     /* =================================================================================
@@ -308,21 +308,21 @@ class Default_Model_Language extends Zend_Db_Table_Abstract
 
 		// 1. Check Employee Personal Details
 		$empCheck = $db->select()
-			->from('main_emppersonaldetails', array('id'))
+			->from('main_emppersonaldetails', ['id'])
 			->where('languageid = ?', (int)$id)
 			->where('isactive != ?', '5');
 		if ($db->fetchRow($empCheck)) return true;
 
 		// 2. Check Site Preferences (Global Default Locale)
 		$prefCheck = $db->select()
-			->from('main_sitepreference', array('id'))
+			->from('main_sitepreference', ['id'])
 			->where('language_id = ?', (int)$id)
 			->where('isactive != ?', 5);
 		if ($db->fetchRow($prefCheck)) return true;
 
 		// 3. Check Candidate Language Skills
 		$candCheck = $db->select()
-			->from('main_candlang', array('id'))
+			->from('main_candlang', ['id'])
 			->where('native_language = ?', (int)$id);
 		if ($db->fetchRow($candCheck)) return true;
 

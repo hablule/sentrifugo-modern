@@ -35,14 +35,14 @@ class Default_Form_Organisationinfo extends Zend_Form
         $orgname->setAttrib('maxLength', 50);
         $orgname->addFilter(new Zend_Filter_StringTrim());
         $orgname->setRequired(true);
-        $orgname->addValidator('NotEmpty', false, array('messages' => 'Please enter organization name.'));  
-        $orgname->addValidator("regex",true,array(                           
+        $orgname->addValidator('NotEmpty', false, ['messages' => 'Please enter organization name.']);  
+        $orgname->addValidator("regex",true,[                           
                            'pattern'=>'/^[a-zA-Z0-9.\- ?]+$/',
-                           'messages'=>array(
+                           'messages'=>[
                                
 							   'regexNotMatch'=>'Please enter valid organization name.'
-                           )
-        	));	
+                           ]
+        	]);	
 		
 	    $domain = new Zend_Form_Element_Multiselect('domain');
 		
@@ -88,7 +88,7 @@ class Default_Form_Organisationinfo extends Zend_Form
 		$imgerr = new Zend_Form_Element_Hidden('imgerr');
 		$imgerrmsg = new Zend_Form_Element_Hidden('imgerrmsg');
 		$code = new Zend_Form_Element_Text('code');
-		$code->addValidator('NotEmpty',false,array('messages'=>'Code required'));
+		$code->addValidator('NotEmpty',false,['messages'=>'Code required']);
 		$code->setRequired(true);
 		$orgdescription = new Zend_Form_Element_Textarea('orgdescription');
         $orgdescription->setAttrib('rows', 10);
@@ -99,7 +99,7 @@ class Default_Form_Organisationinfo extends Zend_Form
         $website->setAttrib('maxLength', 50);
         $website->addFilter(new Zend_Filter_StringTrim());
         $website->setRequired(true);
-		$website->addValidator('NotEmpty', false, array('messages' => 'Please enter website.'));  		
+		$website->addValidator('NotEmpty', false, ['messages' => 'Please enter website.']);  		
 		$website->addValidator(new Zend_Validate_Uri());
         
 
@@ -107,109 +107,109 @@ class Default_Form_Organisationinfo extends Zend_Form
 
         $totalemployees = new Zend_Form_Element_Select('totalemployees');
         $totalemployees->setRegisterInArrayValidator(false);
-        $totalemployees->setMultiOptions(array(							
+        $totalemployees->setMultiOptions([							
 							'1'=>'20-50' ,
 							'2'=>'51-100',
 							'3'=>'101-500',
 							'4'=>'501 -1000',
 							'5' =>'> 1000'
-							));
+							]);
 							
         $totalemployees->setRequired(true);
-		$totalemployees->addValidator('NotEmpty', false, array('messages' => 'Please enter total employees.')); 					 
+		$totalemployees->addValidator('NotEmpty', false, ['messages' => 'Please enter total employees.']); 					 
 					 
 		
 
         $org_startdate = new ZendX_JQuery_Form_Element_DatePicker('org_startdate');
 		$org_startdate->setAttrib('readonly', 'true');
 		$org_startdate->setAttrib('onfocus', 'this.blur()');
-		$org_startdate->setOptions(array('class' => 'brdr_none'));
+		$org_startdate->setOptions(['class' => 'brdr_none']);
          				
 		
 		
 		$phonenumber = new Zend_Form_Element_Text('phonenumber');
         $phonenumber->addFilter(new Zend_Filter_StringTrim());
 		$phonenumber->setAttrib('maxLength', 15);
-		$phonenumber->addValidators(array(array('StringLength',false,
-									  array('min' => 10,
+		$phonenumber->addValidators([['StringLength',false,
+									  ['min' => 10,
 											'max' => 15,
-											'messages' => array(
+											'messages' => [
 											Zend_Validate_StringLength::TOO_LONG =>
 											'Phone number must contain at most %max% characters.',
 											Zend_Validate_StringLength::TOO_SHORT =>
 											'Phone number must contain at least %min% characters.',
-											)))));
-		$phonenumber->addValidators(array(
-						 array(
+											]]]]);
+		$phonenumber->addValidators([
+						 [
 							 'validator'   => 'Regex',
 							 'breakChainOnFailure' => true,
-							 'options'     => array( 
+							 'options'     => [ 
 							 'pattern' =>'/^[0-9-]+$/i',
-								 'messages' => array(
+								 'messages' => [
 										 
 										 'regexNotMatch'=>'Please enter valid phone number.'
-								 )
-							 )
-						 )
-					 )); 		
+								 ]
+							 ]
+						 ]
+					 ]); 		
 					 
 		$secondaryphone = new Zend_Form_Element_Text('secondaryphone');
 		$secondaryphone->setAttrib('maxLength', 15);
         $secondaryphone->addFilter(new Zend_Filter_StringTrim());
-		$secondaryphone->addValidators(array(array('StringLength',false,
-									  array('min' => 10,
+		$secondaryphone->addValidators([['StringLength',false,
+									  ['min' => 10,
 											'max' => 15,
-											'messages' => array(
+											'messages' => [
 											Zend_Validate_StringLength::TOO_LONG =>
 											'Secondary phone number must contain at most %max% characters.',
 											Zend_Validate_StringLength::TOO_SHORT =>
 											'Secondary phone number must contain at least %min% characters.',
-											)))));
-		$secondaryphone->addValidators(array(
-						 array(
+											]]]]);
+		$secondaryphone->addValidators([
+						 [
 							 'validator'   => 'Regex',
 							 'breakChainOnFailure' => true,
-							 'options'     => array( 
+							 'options'     => [ 
 							 'pattern' =>'/^[0-9-]+$/i',
-								 'messages' => array(
+								 'messages' => [
 										 
 										 'regexNotMatch'=>'Please enter valid phone number.'
-								 )
-							 )
-						 )
-					 )); 
+								 ]
+							 ]
+						 ]
+					 ]); 
        
 		
         	
 		$faxnumber = new Zend_Form_Element_Text('faxnumber');
         $faxnumber->setAttrib('maxLength', 15);
         $faxnumber->addFilter(new Zend_Filter_StringTrim());
-		$faxnumber->addValidators(array(array('StringLength',false,
-									  array('min' => 10,
+		$faxnumber->addValidators([['StringLength',false,
+									  ['min' => 10,
 											'max' => 15,
-											'messages' => array(
+											'messages' => [
 											Zend_Validate_StringLength::TOO_LONG =>
 											'Fax number must contain at most %max% characters.',
 											Zend_Validate_StringLength::TOO_SHORT =>
 											'Fax number must contain at least %min% characters.',
-											)))));
-		$faxnumber->addValidators(array(
-						 array(
+											]]]]);
+		$faxnumber->addValidators([
+						 [
 							 'validator'   => 'Regex',
 							 'breakChainOnFailure' => true,
-							 'options'     => array( 
+							 'options'     => [ 
 							 'pattern' =>'/^[0-9-]+$/i',
-								 'messages' => array(
+								 'messages' => [
 										 'regexNotMatch'=>'Please enter valid fax number.'
-								 )
-							 )
-						 )
-					 )); 
+								 ]
+							 ]
+						 ]
+					 ]); 
         
 		$country = new Zend_Form_Element_Select('country');
         $country->setLabel('country');	
 		$country->setRequired(true);
-		$country->addValidator('NotEmpty', false, array('messages' => 'Please select country.')); 
+		$country->addValidator('NotEmpty', false, ['messages' => 'Please select country.']); 
 		
 		$country->setAttrib('onchange', 'displayParticularState(this,"state","state","")');
 		    $countryModal = new Default_Model_Countries();
@@ -226,7 +226,7 @@ class Default_Form_Organisationinfo extends Zend_Form
         $state->setRegisterInArrayValidator(false);
 		$state->addMultiOption('','Select State');
         $state->setRequired(true);
-		$state->addValidator('NotEmpty', false, array('messages' => 'Please select state.')); 
+		$state->addValidator('NotEmpty', false, ['messages' => 'Please select state.']); 
 		
 		$city = new Zend_Form_Element_Select('city');
         $city->setAttrib('class', 'selectoption');
@@ -234,7 +234,7 @@ class Default_Form_Organisationinfo extends Zend_Form
         $city->setRegisterInArrayValidator(false);
         $city->addMultiOption('','Select City');
 		$city->setRequired(true);
-		$city->addValidator('NotEmpty', false, array('messages' => 'Please select city.'));
+		$city->addValidator('NotEmpty', false, ['messages' => 'Please select city.']);
 		
 		$address1 = new Zend_Form_Element_Textarea('address1');
         $address1->setAttrib('rows', 10);
@@ -259,24 +259,24 @@ class Default_Form_Organisationinfo extends Zend_Form
 		$designation = new Zend_Form_Element_Text('designation');
         $designation->setAttrib('maxLength', 50);
         $designation->addFilter(new Zend_Filter_StringTrim());
-		$designation->addValidator("regex",true,array(                           
+		$designation->addValidator("regex",true,[                           
                            'pattern'=>'/^[a-zA-Z.\- ?]+$/',
-                           'messages'=>array(
+                           'messages'=>[
                               
 							   'regexNotMatch'=>'Please enter valid designation.'
-                           )
-        	));
+                           ]
+        	]);
 		
         $submit = new Zend_Form_Element_Submit('submit');
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 		
 		
-		 $this->addElements(array($id,$orgname,$imgerrmsg,$imgerr,$org_image_value,$domain,$orgdescription,$website,$org_startdate,$description,$code,$designation,$submit));//$email,$secondaryemail,
+		 $this->addElements([$id,$orgname,$imgerrmsg,$imgerr,$org_image_value,$domain,$orgdescription,$website,$org_startdate,$description,$code,$designation,$submit]);//$email,$secondaryemail,
 		 
-		 $this->setElementDecorators(array('ViewHelper')); 
-		 $this->setElementDecorators(array('File'),array('org_image'));
-		 $this->setElementDecorators(array('UiWidgetElement',),array('org_startdate','date_of_joining'));
+		 $this->setElementDecorators(['ViewHelper']); 
+		 $this->setElementDecorators(['File'],['org_image']);
+		 $this->setElementDecorators(['UiWidgetElement',],['org_startdate','date_of_joining']);
 		 
 	}
 }

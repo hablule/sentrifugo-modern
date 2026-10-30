@@ -21,7 +21,7 @@ class Default_studyfieldController extends Zend_Controller_Action
             $refresh = $this->_getParam('refresh');
             $dashboradcall = $this->_getParam('dashboradcall');
 
-            $data = array();
+            $data = [];
 
             if ($refresh == 'refresh') {
                 if ($dashboradcall == 'Yes') {
@@ -116,14 +116,14 @@ class Default_studyfieldController extends Zend_Controller_Action
 			$actionflag = '';
 			$tableid  = '';
 
-			$data = array(
+			$data = [
 				                 'name'=>$name,
 				                 'code'=>$code,
 								 'description'=>$description,
                                  'isactive'=>utlis::getcheckboxvalue($isactive)
-			);
+			];
 			if($id!=''){
-				$where = array('studyfield_id=?'=>$id);
+				$where = ['studyfield_id=?'=>$id];
                 $data['modifiedby'] = $loginUserId;
                 $data['modifieddate'] = gmdate("Y-m-d H:i:s");
 				$actionflag = 2;

@@ -47,9 +47,9 @@ class Default_WeekdaysController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 		
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 		
 		if($refresh == 'refresh')
@@ -188,7 +188,7 @@ class Default_WeekdaysController extends Zend_Controller_Action
 			else
 			{
 			   $activedaysArr =  $weekdaysmodel->getWeeklist();
-				$newarr = array();
+				$newarr = [];
 				$weekidstr = '';
 				if(!empty($activedaysArr))
 				{
@@ -229,15 +229,15 @@ class Default_WeekdaysController extends Zend_Controller_Action
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = '';
-				   $data = array('day_name'=>trim($dayname),
+				   $data = ['day_name'=>trim($dayname),
 				          'dayshortcode'=>trim($shortname),
                           'daylongcode'=>trim($longname),						  
 						  'description'=>trim($description),
 						  'modifiedby'=>$loginUserId,
 						  'modifieddate'=>gmdate("Y-m-d H:i:s")
-						);
+						];
 					if($id!=''){
-						$where = array('id=?'=>$id);  
+						$where = ['id=?'=>$id];  
 						$actionflag = 2;
 					}
 					else
@@ -252,12 +252,12 @@ class Default_WeekdaysController extends Zend_Controller_Action
 					if($Id == 'update')
 					{
 					   $tableid = $id;
-					   $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Day updated successfully."));
+					   $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Day updated successfully."]);
 					}   
 					else
 					{
                        $tableid = $Id; 					
-					   $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Day added successfully."));
+					   $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Day added successfully."]);
 					}   
 					$menuID = WEEKDAYS;
 					$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
@@ -298,15 +298,15 @@ class Default_WeekdaysController extends Zend_Controller_Action
 		
 		if($this->getRequest()->getPost()){
 		    if($weekdaysform->isValid($this->_request->getPost())){
-				   $data = array('day_name'=>trim($dayname),
+				   $data = ['day_name'=>trim($dayname),
 				          'dayshortcode'=>trim($shortname),
                           'daylongcode'=>trim($longname),						  
 						  'description'=>trim($description),
 						  'modifiedby'=>$loginUserId,
 						  'modifieddate'=>Zend_Registry::get('currentdate')
-						);
+						];
 					if($id!=''){
-						$where = array('id=?'=>$id);  
+						$where = ['id=?'=>$id];  
 						$messages['message']='Day updated successfully.';
 						$actionflag = 2;
 						
@@ -358,8 +358,8 @@ class Default_WeekdaysController extends Zend_Controller_Action
 			 $weekdaysmodel = new Default_Model_Weekdays();
 			 $weekname = $weekdaysmodel->getcombinedweekname($id);
 			 
-			  $data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-			  $where = array('id=?'=>$id);
+			  $data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+			  $where = ['id=?'=>$id];
 			  $Id = $weekdaysmodel->SaveorUpdateWeekdaysdataData($data, $where);
 			    if($Id == 'update')
 				{

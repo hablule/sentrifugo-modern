@@ -48,7 +48,7 @@ class Default_Model_Cvadd extends Zend_Db_Table_Abstract
     //Zend_Debug::dump($candidatedata);
     $date = date("Y-m-d H:i:s");
    // Zend_Debug::dump($date);
-    $candidatedetaildata = array(
+    $candidatedetaildata = [
         'requisition_id' => 0,
         'candidate_firstname'=>$candidatedata[0]['first_name'],
         'candidate_lastname'=>$candidatedata[0]['last_name'],
@@ -69,13 +69,13 @@ class Default_Model_Cvadd extends Zend_Db_Table_Abstract
         'candidate_id'=>$candidatedata[0]['candidate_id'],
         'modifiedby'=>$userLogin,
 
-    );
+    ];
    Zend_Debug::dump($candidatedetaildata);
     //die();
-    $config = array(
+    $config = [
         'name'=>'main_candidatedetails',
         'primary'=>'id'
-    );
+    ];
     $ad = new Zend_Db_Table($config);
     $ad->insert($candidatedetaildata); 
     return $candidatedetaildata;

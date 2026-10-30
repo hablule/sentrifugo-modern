@@ -75,7 +75,7 @@ class Timemanagement_ConfigurationController extends Zend_Controller_Action
 		$configurationModel = new Timemanagement_Model_Configuration();
 		$activerecordArr = $configurationModel->getActiveRecord();
 
-		$msgarray = array();
+		$msgarray = [];
 			
 		$configurationForm->setAttrib('action',BASE_URL.'timemanagement/configuration/add');
 		$this->view->form = $configurationForm;
@@ -139,7 +139,7 @@ class Timemanagement_ConfigurationController extends Zend_Controller_Action
 				$ts_block_dates_range = $this->_request->getParam('ts_block_dates_range');
 
 				$date = new Zend_Date();
-				$data = array(
+				$data = [
 				//'ts_block_reminder_day'=>$ts_block_reminder_day,
 				// 'ts_blocking_day'=>$ts_blocking_day,
                                 'ts_weekly_reminder_day'=>$ts_weekly_reminder_day,
@@ -149,25 +149,25 @@ class Timemanagement_ConfigurationController extends Zend_Controller_Action
                                 'modified'=>$date->get('yyyy-MM-dd HH:mm:ss'),
                                 'created'=>$date->get('yyyy-MM-dd HH:mm:ss'),
                                 'is_active'=>1
-				);
+				];
 
-				$update_arr = array(
+				$update_arr = [
                                     'is_active' => 0,
                                     'modified'=>$date->get('yyyy-MM-dd HH:mm:ss'),
                                     'modified_by'=>$loginUserId,                                                
-				);
+				];
 
-				$configurationModel->SaveorUpdateConfigurationData($update_arr, array('is_active'=>1));
+				$configurationModel->SaveorUpdateConfigurationData($update_arr, ['is_active'=>1]);
 
 				$Id = $configurationModel->SaveorUpdateConfigurationData($data, $where='');
 
 				if($id!='')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Configuration updated successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Configuration updated successfully."]);
 				}
 				else
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Configuration added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Configuration added successfully."]);
 				}
 
 				$trDb->commit();
@@ -175,7 +175,7 @@ class Timemanagement_ConfigurationController extends Zend_Controller_Action
 			catch (Exception $e)
 			{
 				$trDb->rollBack();
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Something went wrong,please try again later."));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Something went wrong,please try again later."]);
 			}
 			$this->_redirect('timemanagement/configuration');
 		}

@@ -41,7 +41,7 @@ class Default_Model_Feedforwardquestions extends Zend_Db_Table_Abstract
 		
 		$appQuestionsData = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('aq'=>'main_pa_questions'),array('aq.*'))
+                           ->from(['aq'=>'main_pa_questions'],['aq.*'])
                            ->where($where)
     					   ->order("$by $sort") 
     					   ->limitPage($pageNo, $perPage);
@@ -51,8 +51,8 @@ class Default_Model_Feedforwardquestions extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{		
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		
 		if($searchData != '' && $searchData!='undefined')
 			{
@@ -67,18 +67,18 @@ class Default_Model_Feedforwardquestions extends Zend_Db_Table_Abstract
 			
 		$objName = 'feedforwardquestions';
 		
-		$tableFields = array('action'=>'Action','question' => 'Question','description' => 'Description');
+		$tableFields = ['action'=>'Action','question' => 'Question','description' => 'Description'];
 		
 		$tablecontent = $this->getFeedforwardQuestionData($sort, $by, $pageNo, $perPage,$searchQuery);     
 		
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -86,7 +86,7 @@ class Default_Model_Feedforwardquestions extends Zend_Db_Table_Abstract
 			'add' =>'add',
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall,
-		);
+		];
 		return $dataTmp;
 	}
 	
@@ -105,7 +105,7 @@ class Default_Model_Feedforwardquestions extends Zend_Db_Table_Abstract
 			
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('aq'=>'main_pa_questions'),array('aq.*'))
+						->from(['aq'=>'main_pa_questions'],['aq.*'])
 					    ->where($where);
 		return $this->fetchAll($select)->toArray();	
 	}
@@ -114,7 +114,7 @@ class Default_Model_Feedforwardquestions extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('aq'=>'main_pa_questions'),array('aq.*'))
+						->from(['aq'=>'main_pa_questions'],['aq.*'])
 					    ->where('aq.isactive = 1 AND aq.pa_category_id='.$categotyId.' ');
 		return $this->fetchAll($select)->toArray();	
 	}

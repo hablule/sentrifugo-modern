@@ -70,7 +70,7 @@ class Default_PostalcodeController extends Zend_Controller_Action
         $session = sapp_Global::_readSession();
         if (!isset($session)) {
             if ($this->getRequest()->isXmlHttpRequest()) {
-                die(Zend_Json::encode(array('login' => 'failed')));
+                die(Zend_Json::encode(['login' => 'failed']));
             } else {
                 $this->_redirect('');
             }
@@ -124,7 +124,7 @@ class Default_PostalcodeController extends Zend_Controller_Action
 
             $dataTmp = $this->_model->getGrid($sort, $by, $perPage, $page, rtrim($searchData, ','), $call, $dashboardcall);
 
-            $this->view->dataArray = array($dataTmp);
+            $this->view->dataArray = [$dataTmp];
             $this->view->call      = $call;
             $this->view->messages  = $this->_helper->flashMessenger->getMessages();
         } catch (\Throwable $e) { // SSOT VIII: Catch \Throwable
@@ -194,7 +194,7 @@ class Default_PostalcodeController extends Zend_Controller_Action
 
                 // SSOT IV: Custom Composite Uniqueness Check
                 if ($this->_model->checkDuplicate($cityId, $code, $id)) {
-                    $this->_helper->json(array('code' => array('duplicate' => 'This Postal Code already exists within the selected City.')));
+                    $this->_helper->json(['code' => ['duplicate' => 'This Postal Code already exists within the selected City.']]);
                     return;
                 }
 
@@ -202,12 +202,12 @@ class Default_PostalcodeController extends Zend_Controller_Action
                 $db->beginTransaction();
 
                 try {
-                    $data = array(
+                    $data = [
                         'city_id'     => $cityId,
                         'code'        => $code,
                         'description' => trim($request->getParam('description')),
                         'isactive'    => (int)$request->getParam('isactive')
-                    );
+                    ];
 
                     $actionFlag = ($id > 0) ? 2 : 1;
                     $savedId = $this->_model->saveRecord($data, $id);
@@ -220,13 +220,13 @@ class Default_PostalcodeController extends Zend_Controller_Action
                     $db->commit();
 
                     $msg = ($actionFlag == 1) ? 'Added' : 'Updated';
-                    $this->_helper->flashMessenger->addMessage(array('success' => "Postal Code $msg successfully."));
+                    $this->_helper->flashMessenger->addMessage(['success' => "Postal Code $msg successfully."]);
 
-                    $this->_helper->json(array('result' => 'saved', 'nomessage' => 'yes'));
+                    $this->_helper->json(['result' => 'saved', 'nomessage' => 'yes']);
                 } catch (\Throwable $e) {
                     $db->rollBack();
                     error_log("Postal Code Save Error: " . $e->getMessage());
-                    $this->_helper->json(array('result' => 'exception', 'message' => 'System error occurred.'));
+                    $this->_helper->json(['result' => 'exception', 'message' => 'System error occurred.']);
                 }
             } else {
                 $this->_helper->json($form->getMessages());
@@ -250,7 +250,7 @@ class Default_PostalcodeController extends Zend_Controller_Action
         $form->setAction(BASE_URL . 'postalcode/addpopup');
         $form->getElement('submit')->setAttrib('onclick', null);
 
-        $msgarray = array();
+        $msgarray = [];
         $this->view->popup = '';
 
         if ($request->isPost()) {
@@ -265,12 +265,12 @@ class Default_PostalcodeController extends Zend_Controller_Action
                     $db->beginTransaction();
 
                     try {
-                        $data = array(
+                        $data = [
                             'city_id'     => $cityId,
                             'code'        => $code,
                             'description' => trim($request->getParam('description')),
                             'isactive'    => (int)$request->getParam('isactive', 1)
-                        );
+                        ];
 
                         $newId = $this->_model->saveRecord($data);
 
@@ -317,12 +317,12 @@ class Default_PostalcodeController extends Zend_Controller_Action
                 $this->_model->deleteRecord($id);
                 $menuId = defined('POSTALCODE') ? POSTALCODE : 998;
                 sapp_Global::logManager($menuId, 3, $this->_loginUserId, $id);
-                $this->_helper->json(array('msgtype' => 'success', 'message' => 'Postal Code deleted successfully.'));
+                $this->_helper->json(['msgtype' => 'success', 'message' => 'Postal Code deleted successfully.']);
             } catch (\Throwable $e) {
-                $this->_helper->json(array('msgtype' => 'error', 'message' => $e->getMessage()));
+                $this->_helper->json(['msgtype' => 'error', 'message' => $e->getMessage()]);
             }
         } else {
-            $this->_helper->json(array('msgtype' => 'error', 'message' => 'Invalid Request.'));
+            $this->_helper->json(['msgtype' => 'error', 'message' => 'Invalid Request.']);
         }
     }
 
@@ -335,9 +335,9 @@ class Default_PostalcodeController extends Zend_Controller_Action
 
             $menuId = defined('POSTALCODE') ? POSTALCODE : 998;
             sapp_Global::logManager($menuId, 4, $this->_loginUserId, $id);
-            $this->_helper->json(array('result' => 'yes'));
+            $this->_helper->json(['result' => 'yes']);
         } catch (\Throwable $e) {
-            $this->_helper->json(array('result' => 'no'));
+            $this->_helper->json(['result' => 'no']);
         }
     }
 
@@ -353,7 +353,7 @@ class Default_PostalcodeController extends Zend_Controller_Action
     public function getstatesAction()
     {
         $countryId = (int)$this->getRequest()->getParam('country_id');
-        $states = array();
+        $states = [];
 
         if ($countryId) {
             $stateModel = new Default_Model_State();
@@ -371,7 +371,7 @@ class Default_PostalcodeController extends Zend_Controller_Action
     public function getcitiesAction()
     {
         $stateId = (int)$this->getRequest()->getParam('state_id');
-        $cities = array();
+        $cities = [];
 
         if ($stateId) {
             $cityModel = new Default_Model_City();

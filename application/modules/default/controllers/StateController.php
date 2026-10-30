@@ -66,7 +66,7 @@ class Default_StateController extends Zend_Controller_Action
         $session = sapp_Global::_readSession();
         if (!isset($session)) {
             if ($this->getRequest()->isXmlHttpRequest()) {
-                die(Zend_Json::encode(array('login' => 'failed')));
+                die(Zend_Json::encode(['login' => 'failed']));
             } else {
                 $this->_redirect('');
             }
@@ -114,7 +114,7 @@ class Default_StateController extends Zend_Controller_Action
 
             $dataTmp = $this->_model->getGrid($sort, $by, $perPage, $page, rtrim($searchData, ','), $call, $dashboardcall);
 
-            $this->view->dataArray = array($dataTmp);
+            $this->view->dataArray = [$dataTmp];
             $this->view->call      = $call;
             $this->view->messages  = $this->_helper->flashMessenger->getMessages();
         } catch (\Throwable $e) {
@@ -183,13 +183,13 @@ class Default_StateController extends Zend_Controller_Action
                 $db->beginTransaction();
 
                 try {
-                    $data = array(
+                    $data = [
                         'country_id'  => (int)$request->getParam('country_id'),
                         'name'        => trim($request->getParam('name')),
                         'code'        => trim($request->getParam('code')),
                         'description' => trim($request->getParam('description')),
                         'isactive'    => (int)$request->getParam('isactive')
-                    );
+                    ];
 
                     $actionFlag = ($id > 0) ? 2 : 1;
                     $savedId = $this->_model->saveRecord($data, $id);
@@ -198,7 +198,7 @@ class Default_StateController extends Zend_Controller_Action
                     // Sync Polymorphic Geography Groups
                     $selectedGroups = $request->getParam('geographygroup_id');
                     if (!is_array($selectedGroups)) {
-                        $selectedGroups = empty($selectedGroups) ? array() : array($selectedGroups);
+                        $selectedGroups = empty($selectedGroups) ? [] : [$selectedGroups];
                     }
                     $this->_model->syncGeographyGroupMappings($recordId, $selectedGroups);
 
@@ -209,13 +209,13 @@ class Default_StateController extends Zend_Controller_Action
                     $db->commit();
 
                     $msg = ($actionFlag == 1) ? 'Added' : 'Updated';
-                    $this->_helper->flashMessenger->addMessage(array('success' => "State/Province $msg successfully."));
+                    $this->_helper->flashMessenger->addMessage(['success' => "State/Province $msg successfully."]);
 
-                    $this->_helper->json(array('result' => 'saved', 'nomessage' => 'yes'));
+                    $this->_helper->json(['result' => 'saved', 'nomessage' => 'yes']);
                 } catch (\Throwable $e) {
                     $db->rollBack();
                     error_log("State Save Error: " . $e->getMessage());
-                    $this->_helper->json(array('result' => 'exception', 'message' => 'System error occurred.'));
+                    $this->_helper->json(['result' => 'exception', 'message' => 'System error occurred.']);
                 }
             } else {
                 $this->_helper->json($form->getMessages());
@@ -238,7 +238,7 @@ class Default_StateController extends Zend_Controller_Action
         $form->getElement('submit')->setAttrib('onclick', null);
 
         $request = $this->getRequest();
-        $msgarray = array();
+        $msgarray = [];
         $this->view->popup = '';
 
         if ($request->isPost()) {
@@ -247,13 +247,13 @@ class Default_StateController extends Zend_Controller_Action
                 $db->beginTransaction();
 
                 try {
-                    $data = array(
+                    $data = [
                         'country_id'  => (int)$request->getParam('country_id'),
                         'name'        => trim($request->getParam('name')),
                         'code'        => trim($request->getParam('code')),
                         'description' => trim($request->getParam('description')),
                         'isactive'    => (int)$request->getParam('isactive', 1)
-                    );
+                    ];
 
                     $newId = $this->_model->saveRecord($data);
 
@@ -299,12 +299,12 @@ class Default_StateController extends Zend_Controller_Action
                 $this->_model->deleteRecord($id);
                 $menuId = defined('STATES') ? STATES : 101;
                 sapp_Global::logManager($menuId, 3, $this->_loginUserId, $id);
-                $this->_helper->json(array('msgtype' => 'success', 'message' => 'State deleted successfully.'));
+                $this->_helper->json(['msgtype' => 'success', 'message' => 'State deleted successfully.']);
             } catch (\Throwable $e) {
-                $this->_helper->json(array('msgtype' => 'error', 'message' => $e->getMessage()));
+                $this->_helper->json(['msgtype' => 'error', 'message' => $e->getMessage()]);
             }
         } else {
-            $this->_helper->json(array('msgtype' => 'error', 'message' => 'Invalid Request.'));
+            $this->_helper->json(['msgtype' => 'error', 'message' => 'Invalid Request.']);
         }
     }
 
@@ -319,9 +319,9 @@ class Default_StateController extends Zend_Controller_Action
             $menuId = defined('STATES') ? STATES : 101;
             sapp_Global::logManager($menuId, 4, $this->_loginUserId, $id);
 
-            $this->_helper->json(array('result' => 'yes'));
+            $this->_helper->json(['result' => 'yes']);
         } catch (\Throwable $e) {
-            $this->_helper->json(array('result' => 'no'));
+            $this->_helper->json(['result' => 'no']);
         }
     }
 
@@ -345,7 +345,7 @@ class Default_StateController extends Zend_Controller_Action
 
         // 2. Validate Request Type (Strictness)
         if (!$request->isPost()) {
-            echo Zend_Json::encode(array('error' => 'Invalid request method.'));
+            echo Zend_Json::encode(['error' => 'Invalid request method.']);
             exit;
         }
 

@@ -44,8 +44,8 @@ class Default_Model_Militaryservice extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{		
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		
 		if($searchData != '' && $searchData!='undefined')
 			{
@@ -59,25 +59,25 @@ class Default_Model_Militaryservice extends Zend_Db_Table_Abstract
 			}
 			
 		$objName = 'militaryservice';
-		$tableFields = array('action'=>'Action','militaryservicetype' => 'Military Service Type','description' => 'Description');
+		$tableFields = ['action'=>'Action','militaryservicetype' => 'Military Service Type','description' => 'Description'];
 		
 		$tablecontent = $this->getMilitaryServiceData($sort, $by, $pageNo, $perPage,$searchQuery);     
 		
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
 			'searchArray' => $searchArray,
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall
-		);	
+		];	
 		return $dataTmp;
 	}
 	
@@ -94,7 +94,7 @@ class Default_Model_Militaryservice extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('m'=>'main_militaryservice'),array('m.*'))
+						->from(['m'=>'main_militaryservice'],['m.*'])
 					    ->where('m.isactive = 1 AND m.id='.$id.' ');
 		return $this->fetchAll($select)->toArray();
 	
@@ -104,7 +104,7 @@ class Default_Model_Militaryservice extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('m'=>'main_militaryservice'),array('m.*'))
+						->from(['m'=>'main_militaryservice'],['m.*'])
 					    ->where('m.isactive = 1')
 						->order('m.militaryservicetype');
 		

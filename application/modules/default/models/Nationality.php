@@ -94,7 +94,7 @@ class Default_Model_Nationality extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -122,18 +122,18 @@ class Default_Model_Nationality extends Zend_Db_Table_Abstract
         }
 
         // Must match exact column aliases defined in getGridData()
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'           => 'Action',
             'name'             => 'Nationality (Legal Status)',
             'code'             => 'Code',
             'citizenship_text' => 'Confers Citizenship',
             'description'      => 'Description',
             'status_text'      => 'Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
@@ -141,7 +141,7 @@ class Default_Model_Nationality extends Zend_Db_Table_Abstract
             'tablecontent'   => $tableContent,
             'objectname'     => 'nationality',
             'tableheader'    => $tableHeaders,
-            'extra'          => array(),
+            'extra'          => [],
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
             'searchArray'    => $searchArray,
@@ -149,11 +149,11 @@ class Default_Model_Nationality extends Zend_Db_Table_Abstract
             'menuName'       => 'Nationalities',
             'call'           => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => array(
-                'status_text'      => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive')),
-                'citizenship_text' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Yes' => 'Yes', 'No' => 'No'))
-            )
-        );
+            'search_filters' => [
+                'status_text'      => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']],
+                'citizenship_text' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Yes' => 'Yes', 'No' => 'No']]
+            ]
+        ];
     }
 
     /**
@@ -176,13 +176,13 @@ class Default_Model_Nationality extends Zend_Db_Table_Abstract
 
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('n' => $this->_name), array(
+            ->from(['n' => $this->_name], [
                 'id' => 'n.id',
                 '*',
                 // Alias boolean columns so the grid helper displays readable text
                 'status_text'      => new Zend_Db_Expr("CASE WHEN n.isactive = 1 THEN 'Active' ELSE 'Inactive' END"),
                 'citizenship_text' => new Zend_Db_Expr("CASE WHEN n.citizenship = 1 THEN 'Yes' ELSE 'No' END")
-            ))
+            ])
             ->where('n.isactive != 5');
 
         if (!empty($searchQuery)) {
@@ -202,7 +202,7 @@ class Default_Model_Nationality extends Zend_Db_Table_Abstract
      */
     public function getPairs($activeOnly = true)
     {
-        $select = $this->select()->from($this->_name, array('id', 'name'))->order('name ASC');
+        $select = $this->select()->from($this->_name, ['id', 'name'])->order('name ASC');
         if ($activeOnly) {
             $select->where("isactive = 1");
         }
@@ -241,7 +241,7 @@ class Default_Model_Nationality extends Zend_Db_Table_Abstract
         if (!empty($id)) {
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = gmdate("Y-m-d H:i:s");
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return 'update';
         }
 
@@ -271,12 +271,12 @@ class Default_Model_Nationality extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => 5,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
-        return $this->update($data, array('id = ?' => (int)$id));
+        ];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /**
@@ -291,12 +291,12 @@ class Default_Model_Nationality extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => (int)$status,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
-        return $this->update($data, array('id = ?' => (int)$id));
+        ];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* =================================================================================
@@ -354,7 +354,7 @@ class Default_Model_Nationality extends Zend_Db_Table_Abstract
      */
     public function getMappedCountryIds($nationalityId)
     {
-        if (empty($nationalityId)) return array();
+        if (empty($nationalityId)) return [];
 
         $db = $this->getAdapter();
         $select = $db->select()
@@ -389,10 +389,10 @@ class Default_Model_Nationality extends Zend_Db_Table_Abstract
 
         // 3. Remove unselected mappings (Hard delete for junction tables)
         if (!empty($toRemove)) {
-            $db->delete('map_country_nationality', array(
+            $db->delete('map_country_nationality', [
                 'nationality_id = ?' => (int)$nationalityId,
                 'country_id IN (?)'  => $toRemove
-            ));
+            ]);
         }
 
         // 4. Insert new mappings
@@ -401,14 +401,14 @@ class Default_Model_Nationality extends Zend_Db_Table_Abstract
                 // Feature: The very first item in the submitted array becomes the default
                 $isDefault = ($index === 0) ? 1 : 0;
 
-                $db->insert('map_country_nationality', array(
+                $db->insert('map_country_nationality', [
                     'nationality_id' => (int)$nationalityId,
                     'country_id'     => (int)$cId,
                     'is_default'     => $isDefault,
                     'isactive'       => 1,
                     'createdby'      => $userId,
                     'createddate'    => $currentDate
-                ));
+                ]);
             }
         }
 
@@ -420,15 +420,15 @@ class Default_Model_Nationality extends Zend_Db_Table_Abstract
             // Strip default from all mappings for this nationality
             $db->update(
                 'map_country_nationality',
-                array('is_default' => 0, 'modifiedby' => $userId, 'modifieddate' => $currentDate),
-                array('nationality_id = ?' => (int)$nationalityId)
+                ['is_default' => 0, 'modifiedby' => $userId, 'modifieddate' => $currentDate],
+                ['nationality_id = ?' => (int)$nationalityId]
             );
 
             // Apply default to the chosen first country
             $db->update(
                 'map_country_nationality',
-                array('is_default' => 1, 'modifiedby' => $userId, 'modifieddate' => $currentDate),
-                array('nationality_id = ?' => (int)$nationalityId, 'country_id = ?' => (int)$firstCountryId)
+                ['is_default' => 1, 'modifiedby' => $userId, 'modifieddate' => $currentDate],
+                ['nationality_id = ?' => (int)$nationalityId, 'country_id = ?' => (int)$firstCountryId]
             );
         }
     }

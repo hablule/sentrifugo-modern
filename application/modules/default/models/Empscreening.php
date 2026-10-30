@@ -60,9 +60,9 @@ class Default_Model_Empscreening extends Zend_Db_Table_Abstract
 			$empScreeningData = $this->select()
 								->setIntegrityCheck(false)
 								//->distinct()
-								->from(array('dt'=>'main_bgcheckdetails'),array())
-								->joinLeft(array('me' => 'employees_summary'),'dt.specimen_id = me.id',array('id'=>'distinct concat(me.id,"-1")','backgroundchk_status'=>'if(me.backgroundchk_status="Completed","Complete",me.backgroundchk_status)','userfullname'=>'me.userfullname','createddate'=>'me.createddate','isactive'=>'if(me.isactive = 1, "Active",if(me.isactive = 2 , "Resigned",if (me.isactive = 3,"Left",if(me.isactive = 4,"Suspended",if(me.isactive = 5,"Deleted","Inactive")))))','jobtitle_name'=>'me.jobtitle_name','emailaddress'=>'me.emailaddress' ))
-								->joinLeft(array('al'=>'main_bgagencylist'),'al.id = dt.bgagency_id',array())
+								->from(['dt'=>'main_bgcheckdetails'],[])
+								->joinLeft(['me' => 'employees_summary'],'dt.specimen_id = me.id',['id'=>'distinct concat(me.id,"-1")','backgroundchk_status'=>'if(me.backgroundchk_status="Completed","Complete",me.backgroundchk_status)','userfullname'=>'me.userfullname','createddate'=>'me.createddate','isactive'=>'if(me.isactive = 1, "Active",if(me.isactive = 2 , "Resigned",if (me.isactive = 3,"Left",if(me.isactive = 4,"Suspended",if(me.isactive = 5,"Deleted","Inactive")))))','jobtitle_name'=>'me.jobtitle_name','emailaddress'=>'me.emailaddress' ])
+								->joinLeft(['al'=>'main_bgagencylist'],'al.id = dt.bgagency_id',[])
 								->where($where)
 								->order("$by $sort") 
 								->limitPage($pageNo, $perPage); 
@@ -70,13 +70,13 @@ class Default_Model_Empscreening extends Zend_Db_Table_Abstract
 			$where .= " AND me.backgroundchk_status <> 'Not Applicable' AND me.backgroundchk_status <> 'Yet to start' ";
 			$empScreeningData = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('me' => 'main_candidatedetails'),array('id'=>'distinct concat(me.id,"-2")','backgroundchk_status'=>'if(me.backgroundchk_status="Completed","Complete",me.backgroundchk_status)','candidate_name'=>'me.candidate_name','isactive'=>'if(me.isactive = 1, "Active","Inactive")','createddate'=>'me.createddate','cand_location'=>'me.cand_location'))
+						->from(['me' => 'main_candidatedetails'],['id'=>'distinct concat(me.id,"-2")','backgroundchk_status'=>'if(me.backgroundchk_status="Completed","Complete",me.backgroundchk_status)','candidate_name'=>'me.candidate_name','isactive'=>'if(me.isactive = 1, "Active","Inactive")','createddate'=>'me.createddate','cand_location'=>'me.cand_location'])
 						
-						->joinLeft(array('ct'=>'tbl_cities'),'me.city=ct.id',array('city_name'=>'ct.city_name'))
-						->joinLeft(array('st'=>'tbl_states'),'me.state=st.id',array('state_name'=>'st.state_name'))
-						->joinLeft(array('cnt'=>'tbl_countries'),'me.country=cnt.id',array('country_name'=>'cnt.country_name'))
-						->joinLeft(array('dt'=>'main_bgcheckdetails'),'dt.specimen_id = me.id and flag = 2',array())
-						->joinLeft(array('al'=>'main_bgagencylist'),'al.id = dt.bgagency_id',array())
+						->joinLeft(['ct'=>'tbl_cities'],'me.city=ct.id',['city_name'=>'ct.city_name'])
+						->joinLeft(['st'=>'tbl_states'],'me.state=st.id',['state_name'=>'st.state_name'])
+						->joinLeft(['cnt'=>'tbl_countries'],'me.country=cnt.id',['country_name'=>'cnt.country_name'])
+						->joinLeft(['dt'=>'main_bgcheckdetails'],'dt.specimen_id = me.id and flag = 2',[])
+						->joinLeft(['al'=>'main_bgagencylist'],'al.id = dt.bgagency_id',[])
 						->where($where)
 						->order("$by $sort") 
 						->limitPage($pageNo, $perPage);			
@@ -116,9 +116,9 @@ class Default_Model_Empscreening extends Zend_Db_Table_Abstract
 			$empScreeningData = $this->select()
 								->setIntegrityCheck(false)
 								
-								->from(array('me' => 'employees_summary'),array('id'=>'distinct concat(me.id,"-1")'))
-								->joinLeft(array('dt'=>'main_bgcheckdetails'),'dt.specimen_id = me.id',array())
-								->joinLeft(array('al'=>'main_bgagencylist'),'al.id = dt.bgagency_id',array())
+								->from(['me' => 'employees_summary'],['id'=>'distinct concat(me.id,"-1")'])
+								->joinLeft(['dt'=>'main_bgcheckdetails'],'dt.specimen_id = me.id',[])
+								->joinLeft(['al'=>'main_bgagencylist'],'al.id = dt.bgagency_id',[])
 								->where($where)
 								->order("$by $sort"); 
 								return count($this->fetchAll($empScreeningData)->toArray());
@@ -126,13 +126,13 @@ class Default_Model_Empscreening extends Zend_Db_Table_Abstract
 			$where .= " AND me.backgroundchk_status <> 'Not Applicable' AND me.backgroundchk_status <> 'Yet to start' ";
 			$empScreeningData = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('me' => 'main_candidatedetails'),array('id'=>'distinct concat(me.id,"-2")'))
+						->from(['me' => 'main_candidatedetails'],['id'=>'distinct concat(me.id,"-2")'])
 						
-						->joinLeft(array('ct'=>'tbl_cities'),'me.city=ct.id',array('city_name'=>'ct.city_name'))
-						->joinLeft(array('st'=>'tbl_states'),'me.state=st.id',array('state_name'=>'st.state_name'))
-						->joinLeft(array('cnt'=>'tbl_countries'),'me.country=cnt.id',array('country_name'=>'cnt.country_name'))
-						->joinLeft(array('dt'=>'main_bgcheckdetails'),'dt.specimen_id = me.id and flag = 2',array())
-						->joinLeft(array('al'=>'main_bgagencylist'),'al.id = dt.bgagency_id',array())
+						->joinLeft(['ct'=>'tbl_cities'],'me.city=ct.id',['city_name'=>'ct.city_name'])
+						->joinLeft(['st'=>'tbl_states'],'me.state=st.id',['state_name'=>'st.state_name'])
+						->joinLeft(['cnt'=>'tbl_countries'],'me.country=cnt.id',['country_name'=>'cnt.country_name'])
+						->joinLeft(['dt'=>'main_bgcheckdetails'],'dt.specimen_id = me.id and flag = 2',[])
+						->joinLeft(['al'=>'main_bgagencylist'],'al.id = dt.bgagency_id',[])
 						->where($where)
 						->order("$by $sort");
 								
@@ -145,8 +145,8 @@ class Default_Model_Empscreening extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$queryflag,$statusidstring,$formgrid,$unitId)
 	{
 		$searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		if($searchData != '' && $searchData!='undefined')
 		{
 			$searchValues = json_decode($searchData);
@@ -169,22 +169,22 @@ class Default_Model_Empscreening extends Zend_Db_Table_Abstract
 		}
 		$objName = 'empscreening';
 		if($queryflag == '2')
-		$tableFields = array('action'=>'Action','candidate_name' =>'Name','backgroundchk_status'=>'Background Check Status','cand_location' => 'Location','city_name'=>'City','state_name'=>'State','country_name'=>'Country','isactive'=>'Candidate Status');		
+		$tableFields = ['action'=>'Action','candidate_name' =>'Name','backgroundchk_status'=>'Background Check Status','cand_location' => 'Location','city_name'=>'City','state_name'=>'State','country_name'=>'Country','isactive'=>'Candidate Status'];		
 		else
-		$tableFields = array('action'=>'Action','userfullname' =>'Name','backgroundchk_status'=>'Background Check Status','jobtitle_name' => 'Job Title','emailaddress'=>'Email','isactive'=>'Employee Status');
+		$tableFields = ['action'=>'Action','userfullname' =>'Name','backgroundchk_status'=>'Background Check Status','jobtitle_name' => 'Job Title','emailaddress'=>'Email','isactive'=>'Employee Status'];
 
 		$tablecontent = $this->getEmpScreeningData($sort, $by, $pageNo, $perPage,$searchQuery,$queryflag);    
 		$count =  $this->getEmpScreeningDataCount($sort, $by, $pageNo, $perPage,$searchQuery,$queryflag);    
-		$bg_arr = array('' => 'All','In process' => 'In process','Completed' => 'Complete',
-                                'On hold' => 'On hold');
-		$dataTmp = array(
+		$bg_arr = ['' => 'All','In process' => 'In process','Completed' => 'Complete',
+                                'On hold' => 'On hold'];
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'menuName' => 'Employee/Candidate Screening',
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
@@ -198,18 +198,18 @@ class Default_Model_Empscreening extends Zend_Db_Table_Abstract
 			'add' => 'add',
 		    'empscreentotalcount' =>$count,
 			'dashboardcall'=>$dashboardcall,
-			'search_filters' => array(
-                            'isactive' => array(
+			'search_filters' => [
+                            'isactive' => [
                                 'type'=>'select',
-                                'filter_data'=>array(''=>'All',1 => 'Active',0 => 'Inactive',
-                                            2=>'Resigned',3=>'Left',4=>'Suspended',5=>'Deleted')
-                                ),
-                            'backgroundchk_status' => array(
+                                'filter_data'=>[''=>'All',1 => 'Active',0 => 'Inactive',
+                                            2=>'Resigned',3=>'Left',4=>'Suspended',5=>'Deleted']
+                                ],
+                            'backgroundchk_status' => [
                                 'type' => 'select',
                                 'filter_data' => $bg_arr,
-                            ),
-                        ),
-		);
+                            ],
+                        ],
+		];
 		return $dataTmp;
 	}	
 		
@@ -555,11 +555,11 @@ class Default_Model_Empscreening extends Zend_Db_Table_Abstract
 		$usermodel = new Default_Model_Users();
 		$candmodel = new Default_Model_Candidatedetails();
 		
-		$userdata = array(
+		$userdata = [
 				'backgroundchk_status' => 'Yet to start',
 				'modifieddate' => gmdate("Y-m-d H:i:s"),
 				'modifiedby' => $this->getLoginUserId()
-		);
+		];
 		$userwhere = "id=".$userid;		
 		if($flag == 1)
 			{				
@@ -615,11 +615,11 @@ class Default_Model_Empscreening extends Zend_Db_Table_Abstract
 		$candmodel = new Default_Model_Candidatedetails();
 		if($con == 'onhold')
 		{
-			$userdata = array(
+			$userdata = [
 				'backgroundchk_status' => 'On hold',
 				'modifieddate' => gmdate("Y-m-d H:i:s"),
 				'modifiedby' => $this->getLoginUserId()
-			);
+			];
 			$userwhere = "id=".$specimenid;
 			if($flag == 1)
 			{	
@@ -628,21 +628,21 @@ class Default_Model_Empscreening extends Zend_Db_Table_Abstract
 				$candmodel->SaveorUpdateCandidateData($userdata,$userwhere);
 			}
 			
-			$data = array(
+			$data = [
 				'bgcheck_status' => 'On hold',
 				'modifieddate' => gmdate("Y-m-d H:i:s"),
 				'modifiedby' => $this->getLoginUserId()
-			);
+			];
 			$where = "flag = ".$flag." AND specimen_id=".$specimenid;
 			$screeningmodel->SaveorUpdateDetails($data,$where);
 		}
 		if($con == 'complete')
 		{
-			$userdata = array(
+			$userdata = [
 				'backgroundchk_status' => 'Completed',
 				'modifieddate' => gmdate("Y-m-d H:i:s"),
 				'modifiedby' => $this->getLoginUserId()
-			);
+			];
 			$userwhere = "id=".$specimenid;
 			
 			if($flag == 1)
@@ -652,23 +652,23 @@ class Default_Model_Empscreening extends Zend_Db_Table_Abstract
 				$candmodel->SaveorUpdateCandidateData($userdata,$userwhere);
 			}
 			
-			$data = array(
+			$data = [
 				'bgcheck_status' => 'Complete',
 				'modifieddate' => gmdate("Y-m-d H:i:s"),
 				'modifiedby' => $this->getLoginUserId()
-			);
+			];
 			$where = "flag = ".$flag." AND specimen_id=".$specimenid;
 			$screeningmodel->SaveorUpdateDetails($data,$where);
 		}
 	}
 	
     // To save uploaded file contents
-    public function saveUploadedFile($files=array()){
+    public function saveUploadedFile($files=[]){
     
 		$max_size = 1024;			// maxim size for image file, in KiloBytes
 
 		// Allowed image types
-		$allowtype = array('doc', 'docx', 'pdf', 'txt', 'xls', 'xlsx');
+		$allowtype = ['doc', 'docx', 'pdf', 'txt', 'xls', 'xlsx'];
 
 		/** Uploading the image **/
 
@@ -730,11 +730,11 @@ class Default_Model_Empscreening extends Zend_Db_Table_Abstract
 			
 		  }
 
-		$result = array(
+		$result = [
 			'result'=>$result_status,
 			'file_name'=>$rezultat,
 			'msg'=>$result_msg
-		);
+		];
 		return $result;
     }
     

@@ -19,7 +19,7 @@ class Schedule_CronjobController extends Zend_Controller_Action
 
         $activecon = $model->getActiveCron('General');
         $attendance_model = new Schedule_Model_attendance();
-        $updatebm = array();
+        $updatebm = [];
         $empids = $attendance_model->getempids();
         //die(json_encode($empids));
         for ($dumy = 15; $dumy < 17; $dumy++) {
@@ -29,13 +29,13 @@ class Schedule_CronjobController extends Zend_Controller_Action
             //$currentdate = '2021-03-17';
             $datetimestamp = strtotime($currentdate);
 
-            $ids = str_replace(array('{', '}', '[', ']', '"', '"', ':', 'user_id'), '', json_encode($empids));
+            $ids = str_replace(['{', '}', '[', ']', '"', '"', ':', 'user_id'], '', json_encode($empids));
             // die(json_encode($ids));
             $bmevent = $attendance_model->getBmdata($currentdate);
             //$bmeventemp = $attendance_model->getBmdataemp($ids);
 
            // die(json_encode($bmeventemp));
-            $schdata = array();
+            $schdata = [];
             foreach ($bmevent as $key => $value) {
                 //Zend_Debug::dump($value);
 
@@ -76,8 +76,8 @@ class Schedule_CronjobController extends Zend_Controller_Action
 
 
                     Zend_Debug::dump(date('g:i a', $timestamp), 'original time stamp');
-                    $sc = array();
-                    $timeshifts = array();
+                    $sc = [];
+                    $timeshifts = [];
                     $networkhour = 0;
                     $schtype = [];
                     $shiftsworkhour = 0;
@@ -120,7 +120,7 @@ class Schedule_CronjobController extends Zend_Controller_Action
                         $currenttol = '';
                         foreach ($timeshifts as $key => $value0) {
                             $time = strtotime($value0);
-                            if (strpos($key, 'start_tol') !== false or strpos($key, 'end_tol') !== false) {
+                            if (str_contains($key, 'start_tol') or str_contains($key, 'end_tol')) {
                                 $currentot = $key;
                                 continue;
                             }
@@ -128,7 +128,7 @@ class Schedule_CronjobController extends Zend_Controller_Action
                             if ($closest === null || abs($timestamp - $closest) > abs($time - $timestamp)) {
                                 $closest = $time;
 
-                                if (strpos($key, 'start') !== false) {
+                                if (str_contains($key, 'start')) {
                                     $shiftid = trim(str_replace('start', ' ', $key));
                                     $status = 'start';
                                 } else {
@@ -178,7 +178,7 @@ Zend_Debug::dump($missed,'missed');
                         $currenttol = '';
                         foreach ($timeshifts as $key => $value0) {
                             $time = strtotime($value0);
-                            if (strpos($key, 'start_tol') !== false or strpos($key, 'end_tol') !== false) {
+                            if (str_contains($key, 'start_tol') or str_contains($key, 'end_tol')) {
                                 $currentot = $key;
                                 continue;
                             }
@@ -186,7 +186,7 @@ Zend_Debug::dump($missed,'missed');
                             if ($closest === null || abs($timestamp - $closest) > abs($time - $timestamp)) {
                                 $closest = $time;
 
-                                if (strpos($key, 'start') !== false) {
+                                if (str_contains($key, 'start')) {
                                     $shiftid = trim(str_replace('start', ' ', $key));
                                     $status = 'start';
                                 } else {
@@ -274,7 +274,7 @@ Zend_Debug::dump($missed,'missed');
 
         foreach ($bmdata as $value) {
 
-            $attendance = array();
+            $attendance = [];
             $attendance['emp_id'] = $value['user_id'];
             $attendance['shift_id'] = $value['shift_id'];
             Zend_Debug::dump(date('H:i:s', $value['datetime']));
@@ -364,13 +364,13 @@ Zend_Debug::dump($missed,'missed');
             Zend_Debug::dump($starttimemissed, 'start late');
             Zend_Debug::dump($endtimemissed, 'end');
             Zend_Debug::dump($totaltimemissed);
-            $data = array(
+            $data = [
                 "emp_id" => $value["emp_id"],
                 "sch_id" => $sch_id,
                 "shift_id" => $shift_id,
                 "submitted_date" => $currentdate,
                 "missed_hour" => $totaltimemissed
-            );
+            ];
             //die(Zend_Debug::dump($data));
             $attend_model->saveandupdatemissinghour($data, '');
         }
@@ -378,7 +378,7 @@ Zend_Debug::dump($missed,'missed');
     public function missedhoursflex($currentdate, $starttol, $endtol, $sch_id,$empid)
     {
         $attend_model = new Schedule_Model_attendance();
-        $lateemp = $attend_model->latedata($currentdate,$empid);
+        $lateemp = $attend_model->latedata($currentdate);
         foreach ($lateemp as $key => $value) {
             // Zend_Debug::dump($value['user_start'], 'user start');
             // Zend_Debug::dump($value['user_end'], 'user end');
@@ -511,7 +511,7 @@ Zend_Debug::dump($missed,'missed');
                             // $shiftdata = $attendance_model->getshiftbyid($shiftID);
                             //($diff->y <= 0  && $diff->m <= 0 && $diff->d <= 0) ||
                             if ($approvedLeave == NULL) {
-                                $leaveData = array(
+                                $leaveData = [
                                     'emp_id' => $empID['user_id'],
                                     'datetime' => $date,
                                     'shift_id' => $empschdetail['shift_id'],
@@ -521,11 +521,11 @@ Zend_Debug::dump($missed,'missed');
                                     'shift_end' => $empschdetail['end_time'],
                                     'user_end' => '00:00:00',
                                     'end_status' => 'absent'
-                                );
+                                ];
                                 $attendance_model->saveandupdateattend($leaveData);
                                 //Zend_Debug::dump($leaveData, 'Absent');
                             } else {
-                                $leaveData = array(
+                                $leaveData = [
                                     'emp_id' => $empID['user_id'],
                                     'datetime' => $date,
                                     'shift_id' => $empschdetail['shift_id'],
@@ -536,7 +536,7 @@ Zend_Debug::dump($missed,'missed');
                                     'user_end' => '00:00:00',
                                     'end_status' => 'Leave',
                                     'leave_id' => $approvedLeave[0]['id']
-                                );
+                                ];
                                 //Zend_Debug::dump($leaveData, 'Leave');
                                 $attendance_model->saveandupdateattend($leaveData);
                             }
@@ -621,7 +621,7 @@ Zend_Debug::dump($missed,'missed');
                                 if ((int)($value['autoapproved']) == 1) {
                                     $approved = 'Y';
                                 }
-                                $OT_app_data = array(
+                                $OT_app_data = [
                                     'OT_id' => $otsch_value['OT_id'],
                                     'emp_id' => $particularAttendance['emp_id'],
                                     'submitted_date' => $date,
@@ -630,7 +630,7 @@ Zend_Debug::dump($missed,'missed');
                                     'earned_time' => $this->getTime((strtotime($app_end_time) - strtotime($app_start_time))),
                                     'amount_due' => $otsch_value['rate'],
                                     'approved' => $approved
-                                );
+                                ];
 
                                 $otmodel->saveORupdateApproval($OT_app_data, '');
                                 Zend_Debug::dump($OT_app_data, 'Overtime Approval Data');
@@ -682,7 +682,7 @@ Zend_Debug::dump($missed,'missed');
                                     if ((int)($value['autoapproved']) == 1) {
                                         $approved = 'Y';
                                     }
-                                    $OT_app_data = array(
+                                    $OT_app_data = [
                                         'OT_id' => $otsch_value['OT_id'],
                                         'emp_id' => $particularAttendance['emp_id'],
                                         'submitted_date' => $date,
@@ -691,7 +691,7 @@ Zend_Debug::dump($missed,'missed');
                                         'earned_time' => $this->getTime((strtotime($app_end_time) - strtotime($app_start_time))),
                                         'amount_due' => $otsch_value['rate'],
                                         'approved' => $approved
-                                    );
+                                    ];
                                     Zend_Debug::dump($OT_app_data, 'OTOT');
                                     $otmodel->saveORupdateApproval($OT_app_data, '');
                                 }
@@ -720,7 +720,7 @@ Zend_Debug::dump($missed,'missed');
                                     if ((int)($value['autoapproved']) == 1) {
                                         $approved = 'Y';
                                     }
-                                    $OT_app_data = array(
+                                    $OT_app_data = [
                                         'OT_id' => $otsch_value['OT_id'],
                                         'emp_id' => $particularAttendance['emp_id'],
                                         'submitted_date' => $date,
@@ -729,7 +729,7 @@ Zend_Debug::dump($missed,'missed');
                                         'earned_time' => $earned_minutes,
                                         'amount_due' => $otsch_value['rate'],
                                         'approved' => $approved
-                                    );
+                                    ];
                                     Zend_Debug::dump($OT_app_data, 'OT data Day based');
                                     $otmodel->saveORupdateApproval($OT_app_data, '');
                                 }
@@ -754,7 +754,7 @@ Zend_Debug::dump($missed,'missed');
                                     }
                                     $earned_seconds = $user_end - $user_start;
                                     $earned_minutes = $this->getTime($earned_seconds);
-                                    $OT_app_data = array(
+                                    $OT_app_data = [
                                         'OT_id' => $otsch_value['OT_id'],
                                         'emp_id' => $particularAttendance['emp_id'],
                                         'submitted_date' => $date,
@@ -763,7 +763,7 @@ Zend_Debug::dump($missed,'missed');
                                         'earned_time' => $earned_minutes,
                                         'amount_due' => $otsch_value['rate'],
                                         'approved' => $approved
-                                    );
+                                    ];
                                 }
                                 Zend_Debug::dump($OT_app_data, 'Date Based OT Data');
                                 $otmodel->saveORupdateApproval($OT_app_data, '');
@@ -856,7 +856,7 @@ Zend_Debug::dump($missed,'missed');
                                 if ((int)($value['autoapproved']) == 1) {
                                     $approved = 'Y';
                                 }
-                                $OT_app_data = array(
+                                $OT_app_data = [
                                     'OT_id' => $otsch_value['OT_id'],
                                     'emp_id' => $particularAttendance['emp_id'],
                                     'submitted_date' => $date,
@@ -865,7 +865,7 @@ Zend_Debug::dump($missed,'missed');
                                     'earned_time' => $this->getTime((strtotime($app_end_time) - strtotime($app_start_time))),
                                     'amount_due' => $otsch_value['rate'],
                                     'approved' => $approved
-                                );
+                                ];
 
                                 $otmodel->saveORupdateApproval($OT_app_data, '');
                             //Zend_Debug::dump($OT_app_data, 'Overtime Approval Data');
@@ -915,7 +915,7 @@ Zend_Debug::dump($missed,'missed');
                                     if ((int)($value['autoapproved']) == 1) {
                                         $approved = 'Y';
                                     }
-                                    $OT_app_data = array(
+                                    $OT_app_data = [
                                         'OT_id' => $otsch_value['OT_id'],
                                         'emp_id' => $particularAttendance['emp_id'],
                                         'submitted_date' => $date,
@@ -924,7 +924,7 @@ Zend_Debug::dump($missed,'missed');
                                         'earned_time' => $this->getTime((strtotime($app_end_time) - strtotime($app_start_time))),
                                         'amount_due' => $otsch_value['rate'],
                                         'approved' => $approved
-                                    );
+                                    ];
                                     //Zend_Debug::dump($OT_app_data, 'OTOT');
                                     $otmodel->saveORupdateApproval($OT_app_data, '');
                                 }
@@ -954,7 +954,7 @@ Zend_Debug::dump($missed,'missed');
                                     if ((int)($value['autoapproved']) == 1) {
                                         $approved = 'Y';
                                     }
-                                    $OT_app_data = array(
+                                    $OT_app_data = [
                                         'OT_id' => $otsch_value['OT_id'],
                                         'emp_id' => $particularAttendance['emp_id'],
                                         'submitted_date' => $date,
@@ -963,7 +963,7 @@ Zend_Debug::dump($missed,'missed');
                                         'earned_time' => $earned_minutes,
                                         'amount_due' => $otsch_value['rate'],
                                         'approved' => $approved
-                                    );
+                                    ];
                                    // Zend_Debug::dump($OT_app_data, 'OT data Day based');
                                     $otmodel->saveORupdateApproval($OT_app_data, '');
                                 }
@@ -989,7 +989,7 @@ Zend_Debug::dump($missed,'missed');
                                     }
                                     $earned_seconds = $user_end - $user_start;
                                     $earned_minutes = $this->getTime($earned_seconds);
-                                    $OT_app_data = array(
+                                    $OT_app_data = [
                                         'OT_id' => $otsch_value['OT_id'],
                                         'emp_id' => $particularAttendance['emp_id'],
                                         'submitted_date' => $date,
@@ -998,7 +998,7 @@ Zend_Debug::dump($missed,'missed');
                                         'earned_time' => $earned_minutes,
                                         'amount_due' => $otsch_value['rate'],
                                         'approved' => $approved
-                                    );
+                                    ];
                                 }
                                // Zend_Debug::dump($OT_app_data, 'Date Based OT Data');
                                 $otmodel->saveORupdateApproval($OT_app_data, '');
@@ -1027,7 +1027,7 @@ Zend_Debug::dump($missed,'missed');
         if ((int)$autoapp == 1) {
             $approved = 'Y';
         }
-        $OT_app_data = array(
+        $OT_app_data = [
             'OT_id' => $otid,
             'emp_id' => $data['emp_id'],
             'submitted_date' => $data['datetime'],
@@ -1036,7 +1036,7 @@ Zend_Debug::dump($missed,'missed');
             'earned_time' => $earned_minutes,
             'amount_due' => $rate,
             'approved' => $approved
-        );
+        ];
         Zend_Debug::dump($OT_app_data, 'oof');
         $otmodel->saveORupdateApproval($OT_app_data, '');
     }
@@ -1053,7 +1053,7 @@ Zend_Debug::dump($missed,'missed');
         if ((int)$autoapp == 1) {
             $approved = 'Y';
         }
-        $OT_app_data = array(
+        $OT_app_data = [
             'OT_id' => $otid,
             'emp_id' => $data['emp_id'],
             'submitted_date' => $data['datetime'],
@@ -1062,7 +1062,7 @@ Zend_Debug::dump($missed,'missed');
             'earned_time' => $earned_minutes,
             'amount_due' => $rate,
             'approved' => $approved
-        );
+        ];
         Zend_Debug::dump($data, 'holiday');
         $otmodel->saveORupdateApproval($OT_app_data, '');
 
@@ -1093,19 +1093,19 @@ Zend_Debug::dump($missed,'missed');
         $networkminutes = 0;
         foreach ($timeshifts as $shifts => $shift) {
             //$shift['start'];
-            if (strpos($shifts, 'start') !== false) {
+            if (str_contains($shifts, 'start')) {
 
                 $sumworkstart = $sumworkstart + strtotime($timeshifts[$shifts]);
             }
-            if (strpos($shifts, 'start_tol') !== false) {
+            if (str_contains($shifts, 'start_tol')) {
 
                 $sumworkstart_tol = $sumworkstart_tol + strtotime($timeshifts[$shifts]);
             }
-            if (strpos($shifts, 'end') !== false) {
+            if (str_contains($shifts, 'end')) {
 
                 $sumworkend = $sumworkend + strtotime($timeshifts[$shifts]);
             }
-            if (strpos($shifts, 'end_tol') !== false) {
+            if (str_contains($shifts, 'end_tol')) {
 
                 $sumworkend_tol = $sumworkend_tol + strtotime($timeshifts[$shifts]);
             }

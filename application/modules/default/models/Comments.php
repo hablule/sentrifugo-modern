@@ -43,7 +43,7 @@ class Default_Model_Comments extends Zend_Db_Table_Abstract
 		{
 			$commentsData = $this->select()
     					   ->setIntegrityCheck(false)	 
-						   ->from(array('b' => 'main_bgcheckcomments'),array('id'=>'b.id','detail_id'=>'bgdet_id','comment'=>'b.comment','from_id'=>'b.from_id','to_id'=>'b.to_id','createddate'=>'b.createddate'))
+						   ->from(['b' => 'main_bgcheckcomments'],['id'=>'b.id','detail_id'=>'bgdet_id','comment'=>'b.comment','from_id'=>'b.from_id','to_id'=>'b.to_id','createddate'=>'b.createddate'])
 						   
 						   
 						   ->where(' b.isactive = 1 AND b.bgdet_id = '.$id)
@@ -54,7 +54,7 @@ class Default_Model_Comments extends Zend_Db_Table_Abstract
 		{
 			$commentsData = $this->select()
     					   ->setIntegrityCheck(false)	 
-						   ->from(array('b' => 'main_bgcheckcomments'),array('id'=>'b.id','detail_id'=>'bgdet_id','comment'=>'b.comment','from_id'=>'b.from_id','to_id'=>'b.to_id','createddate'=>'b.createddate'))
+						   ->from(['b' => 'main_bgcheckcomments'],['id'=>'b.id','detail_id'=>'bgdet_id','comment'=>'b.comment','from_id'=>'b.from_id','to_id'=>'b.to_id','createddate'=>'b.createddate'])
 						   
 						   
 						   ->where(' b.isactive = 1 AND b.bgdet_id = '.$id)
@@ -63,7 +63,7 @@ class Default_Model_Comments extends Zend_Db_Table_Abstract
 		else{
 			$commentsData = $this->select()
     					   ->setIntegrityCheck(false)	 
-						   ->from(array('b' => 'main_bgcheckcomments'),array('id'=>'b.id','detail_id'=>'bgdet_id','comment'=>'b.comment','from_id'=>'b.from_id','to_id'=>'b.to_id','createddate'=>'b.createddate'))
+						   ->from(['b' => 'main_bgcheckcomments'],['id'=>'b.id','detail_id'=>'bgdet_id','comment'=>'b.comment','from_id'=>'b.from_id','to_id'=>'b.to_id','createddate'=>'b.createddate'])
 						   
 						   
 						   ->where(' b.isactive = 1 AND b.bgdet_id = '.$id)

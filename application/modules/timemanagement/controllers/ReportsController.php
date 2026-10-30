@@ -109,9 +109,9 @@ class Timemanagement_ReportsController extends Zend_Controller_Action
 		$objname = $this->_getParam('objname');
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 
 		if($refresh == 'refresh')
@@ -150,7 +150,7 @@ class Timemanagement_ReportsController extends Zend_Controller_Action
 			$searchData = $this->_getParam('search_data_pdf');
 			$searchData = rtrim($searchData,',');
 			$searchQuery = '';
-			$searchArray = array();
+			$searchArray = [];
 			//build search parameters
 			if($searchData != '' && $searchData!='undefined')
 			{
@@ -186,7 +186,7 @@ class Timemanagement_ReportsController extends Zend_Controller_Action
 			//for excel
 			else if(!empty($is_excel))
 			{
-				$cols_param_arr = array('userfullname' => 'Employee','duration' => 'Hours');
+				$cols_param_arr = ['userfullname' => 'Employee','duration' => 'Hours'];
 				sapp_Global::export_to_excel($result,$cols_param_arr,"EmployeesReport.xlsx");
 			}
             exit;
@@ -233,9 +233,9 @@ class Timemanagement_ReportsController extends Zend_Controller_Action
 		$objname = $this->_getParam('objname');
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 
 		if($refresh == 'refresh')
@@ -274,7 +274,7 @@ class Timemanagement_ReportsController extends Zend_Controller_Action
 			$searchData = $this->_getParam('search_data_pdf');
 			$searchData = rtrim($searchData,',');
 			$searchQuery = '';
-			$searchArray = array();
+			$searchArray = [];
 			//build search parameters
 			if($searchData != '' && $searchData!='undefined')
 			{
@@ -309,7 +309,7 @@ class Timemanagement_ReportsController extends Zend_Controller_Action
 	        }
 	        elseif (!empty($is_excel)) //for excel
 	        {
-				$cols_param_arr = array('project_name' => 'Project','project_type' => 'Project Type','duration'=>'Duration');
+				$cols_param_arr = ['project_name' => 'Project','project_type' => 'Project Type','duration'=>'Duration'];
 				sapp_Global::export_to_excel($result,$cols_param_arr,"ProjectsReport.xlsx");	        	
 	        }
             exit;

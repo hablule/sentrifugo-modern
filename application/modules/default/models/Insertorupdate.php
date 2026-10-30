@@ -38,13 +38,13 @@ class Default_Model_Insertorupdate extends Zend_Db_Table_Abstract
 
         // extract and quote col names from the array keys
         $i           = 0;
-        $bind        = array();
-        $insert_cols = array(); $insert_vals = array();
-        $update_cols = array(); $update_vals = array();
-        foreach (array('insert', 'update') as $type) {
+        $bind        = [];
+        $insert_cols = []; $insert_vals = [];
+        $update_cols = []; $update_vals = [];
+        foreach (['insert', 'update'] as $type) {
             $data = ${"{$type}Data"};
-            $cols = array();
-            $vals = array();
+            $cols = [];
+            $vals = [];
             foreach ($data as $col => $val) {
                 $cols[] = $db->quoteIdentifier($col, true);
                 if ($val instanceof Zend_Db_Expr) {
@@ -71,7 +71,7 @@ class Default_Model_Insertorupdate extends Zend_Db_Table_Abstract
         }
 
         // build the statement
-        $set = array();
+        $set = [];
         foreach ($update_cols as $i => $col) {
             $set[] = sprintf('%s = %s', $col, $update_vals[$i]);
         }

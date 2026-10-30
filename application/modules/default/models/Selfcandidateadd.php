@@ -49,10 +49,10 @@ class Default_Model_Selfcandidateadd extends Zend_Db_Table_Abstract
 
   public function saveData($data, $table){
     
-    $config = array(
+    $config = [
         'name' => $table,
         'primary' => 'id'
-    );
+    ];
     $this->table = new Zend_Db_Table($config);
     $this->table->insert($data);
     $id = $this->table->getAdapter()->lastInsertId($table); 
@@ -61,7 +61,7 @@ class Default_Model_Selfcandidateadd extends Zend_Db_Table_Abstract
   public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall){
 
     $searchQuery = '';
-    $searchArray = array();
+    $searchArray = [];
     if($searchData != '' && $searchData!='undefined'){
       $searchValues = json_decode($searchData);
 
@@ -80,7 +80,7 @@ class Default_Model_Selfcandidateadd extends Zend_Db_Table_Abstract
       }
     }
 
-    $tableFields = array(
+    $tableFields = [
 
       'action'=>'Action',
       'full_name'=>'Candidate Name',
@@ -90,19 +90,19 @@ class Default_Model_Selfcandidateadd extends Zend_Db_Table_Abstract
       'course'=>'Graduated With',
       'gpa'=>"GPA"
       
-    );
+    ];
     $objName = 'listcandidates';
   
     $tablecontent = $this->getProfileData($sort,$by,$pageNo,$perPage,$searchQuery);
    
-    $dataTmp = array(
+    $dataTmp = [
       'sort' => $sort,
       'by' => $by,
       'pageNo' => $pageNo,
       'perPage' => $perPage,				
       'tablecontent' => $tablecontent,
       'objectname' => $objName,
-      'extra' => array(),
+      'extra' => [],
       'tableheader' => $tableFields,
       'jsGridFnName' => 'getAjaxgridData',
       'jsFillFnName' => '',
@@ -111,7 +111,7 @@ class Default_Model_Selfcandidateadd extends Zend_Db_Table_Abstract
       'searchArray' => $searchArray,
       'call'=>$call,
       'dashboardcall'=>$dashboardcall
-    );
+    ];
     
     return $dataTmp;
   }
@@ -119,22 +119,22 @@ class Default_Model_Selfcandidateadd extends Zend_Db_Table_Abstract
   public function getProfileData($sort, $by, $pageNo, $perPage,$searchQuery)
   {
 
-    $config = array(
+    $config = [
       'name'=>'main_candpersonalprofile',
       'primary'=>'id'
-    );
+    ];
 
    $table = new Zend_Db_Table($config);
    $tableData=$table->select()
                     ->setIntegrityCheck(false)
-                    ->from(array('p'=>'main_candpersonalprofile'),array(
+                    ->from(['p'=>'main_candpersonalprofile'],[
                       'full_name' => 'CONCAT(p.first_name," ",p.middle_name," ",p.last_name)',
                       'id'=>'p.id'
-                      ))
-                    ->joinInner(array('w'=>'main_candworkexp'),'p.id = w.candidate_id',array('response'=>'w.responsibilities'))
-                    ->joinInner(array('c'=>'main_career'),'c.id = w.engagment_area',array('engag'=>'c.area_of_engagment'))
-                    ->joinInner(array('e'=>'main_candeducation'),'e.candidate_id = p.id',array('gpa'=>'e.cgpa','course'=>'CONCAT(course_programe,"\n")'))
-                    ->joinInner(array('el'=>'main_educationlevelcode'),'el.id = e.education_level',array('edu_level'=>'el.description'))
+                      ])
+                    ->joinInner(['w'=>'main_candworkexp'],'p.id = w.candidate_id',['response'=>'w.responsibilities'])
+                    ->joinInner(['c'=>'main_career'],'c.id = w.engagment_area',['engag'=>'c.area_of_engagment'])
+                    ->joinInner(['e'=>'main_candeducation'],'e.candidate_id = p.id',['gpa'=>'e.cgpa','course'=>'CONCAT(course_programe,"\n")'])
+                    ->joinInner(['el'=>'main_educationlevelcode'],'el.id = e.education_level',['edu_level'=>'el.description'])
                     ->order("$by $sort")
                     ->limitPage($pageNo,$perPage);
    
@@ -145,14 +145,14 @@ class Default_Model_Selfcandidateadd extends Zend_Db_Table_Abstract
   public function getCandidateList($ids)
   {
     $ids = implode(",",$ids);
-    $config = array(
+    $config = [
       'name'=>'main_candpersonalprofile',
       'primary'=>'id'
-    );
+    ];
     $table = new Zend_Db_Table($config);
     $candidates = $table->select()
                         ->setIntegrityCheck(false)
-                        ->from(array('p'=>'main_candidatedetails'))
+                        ->from(['p'=>'main_candidatedetails'])
                         ->where("candidate_id IN ($ids)");
     return $table->_fetch($candidates);
     //return $this->fetchAll();
@@ -164,14 +164,14 @@ class Default_Model_Selfcandidateadd extends Zend_Db_Table_Abstract
 
   public function getRequistion()
   {
-    $config = array(
+    $config = [
       'name'=>'main_requisition',
       'primary'=>'id'
-    );
+    ];
     $table = new Zend_Db_Table($config);
     $requistion = $table->select()
                         ->setIntegrityCheck(false)
-                        ->from(array('r'=>'main_requisition'),array('id'=>'r.id','req_code'=>'r.requisition_code'))
+                        ->from(['r'=>'main_requisition'],['id'=>'r.id','req_code'=>'r.requisition_code'])
                         ->where('req_status = "Approved"');
                         
                         

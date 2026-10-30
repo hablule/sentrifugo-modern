@@ -52,9 +52,9 @@ class Assets_Model_AssetCategories extends Zend_Db_Table_Abstract
 		//echo "here";exit;
 		$searchQuery = '';
 		$havingQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		//$havingArray = array();
-		$data = array();
+		$data = [];
 
 		if($searchData != '' && $searchData!='undefined')
 		{
@@ -74,20 +74,20 @@ class Assets_Model_AssetCategories extends Zend_Db_Table_Abstract
 			$searchQuery = rtrim($searchQuery," AND");
 		}
 		$objName = 'assetcategories';
-		$tableFields = array(
+		$tableFields = [
 				'action'=>'Action',
 				'name' => 'Category',
 				'SubCategoryCount' => 'Sub Category(s)' ,
-				);
+				];
 		$tablecontent = $this->getAssetCategoriesData($sort, $by, $pageNo, $perPage,$searchQuery,$havingQuery);
-		$dataTmp = array(
+		$dataTmp = [
 				'sort' => $sort,
 				'by' => $by,
 				'pageNo' => $pageNo,
 				'perPage' => $perPage,
 				'tablecontent' => $tablecontent,
 				'objectname' => $objName,
-				'extra' => array(),
+				'extra' => [],
 				'tableheader' => $tableFields,
 				'jsGridFnName' => 'getAjaxgridData',
 				'jsFillFnName' => '',
@@ -95,7 +95,7 @@ class Assets_Model_AssetCategories extends Zend_Db_Table_Abstract
 				'call'=>$call,
 				'dashboardcall'=>$dashboardcall,
 				'menuName' => 'Asset Categories'
-		);
+		];
 		return $dataTmp;
 	}
 
@@ -119,9 +119,9 @@ class Assets_Model_AssetCategories extends Zend_Db_Table_Abstract
 		
       $assetcategoriesData =$this->select()
 			 ->setIntegrityCheck(false)
-			 ->from(array('c1'=>$this->_name),array(('c1.*'),"SubCategoryCount"=>"(SELECT COUNT(*) FROM `assets_categories` WHERE parent = c1.id AND is_active = 1)" ))
+			 ->from(['c1'=>$this->_name],[('c1.*'),"SubCategoryCount"=>"(SELECT COUNT(*) FROM `assets_categories` WHERE parent = c1.id AND is_active = 1)" ])
 			 ->where('c1.is_active = 1 AND  c1.parent = 0'.$where)
-			 ->group(array("c1.id"))
+			 ->group(["c1.id"])
 			 ->order("$by $sort")
 		     ->limitPage($pageNo, $perPage);
 			 if($havingQuery!='')
@@ -161,8 +161,8 @@ class Assets_Model_AssetCategories extends Zend_Db_Table_Abstract
 
   $assetcategoriesData = $this->select()
 					->setIntegrityCheck(false)
-					->from(array('c1'=>$this->_name),array('c1.*'))
-					->joinLeft(array('c2'=>$this->_name),"c1.parent = c2.id",array("parent_name"=>'c1.name'))
+					->from(['c1'=>$this->_name],['c1.*'])
+					->joinLeft(['c2'=>$this->_name],"c1.parent = c2.id",["parent_name"=>'c1.name'])
 					->order('c1.id' )
 					->where('c1.is_active = 1 AND c1.id='.$id.' ');
 		
@@ -177,7 +177,7 @@ class Assets_Model_AssetCategories extends Zend_Db_Table_Abstract
 		
 	 	 $assetsubcategoriesData = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('c1'=>$this->_name),array('c1.*'))	
+		->from(['c1'=>$this->_name],['c1.*'])	
 		->where('c1.is_active = 1 AND c1.parent='.$catid.' ')
 		->order('c1.id' );
 		return $this->fetchAll($assetsubcategoriesData)->toArray();
@@ -193,8 +193,8 @@ class Assets_Model_AssetCategories extends Zend_Db_Table_Abstract
 	{	
 	$select=$this->select()
 		->setIntegrityCheck(false)
-		->from(array('c1'=>$this->_name),array('c1.id','c1.name','c2.name'))
-		->joinLeft(array('c2'=>$this->_name),"c1.parent = c2.id",array("parent_name"=>'c2.name'))
+		->from(['c1'=>$this->_name],['c1.id','c1.name','c2.name'])
+		->joinLeft(['c2'=>$this->_name],"c1.parent = c2.id",["parent_name"=>'c2.name'])
 		->order('c1.id')
 		->where('c1.is_active =1 ');
 		return $this->fetchAll($select)->toArray();
@@ -203,8 +203,8 @@ class Assets_Model_AssetCategories extends Zend_Db_Table_Abstract
 	public function getActiveCategoriesData($bunitid,$deptid='')
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();
-		$cat_ids= array();
-		$final_result = array();
+		$cat_ids= [];
+		$final_result = [];
 		$where = 'sc.isactive=1 and sc.request_for=2';
 		$resWhere ='ac.is_active=1 and ac.parent=0';		
 				
@@ -222,8 +222,8 @@ class Assets_Model_AssetCategories extends Zend_Db_Table_Abstract
 		$res = $db->query($qry)->fetchAll();
 		
 		$categoryIds = '';
-		$configured_cat_id_array = array();
-		$available_asset_cat_id_array = array();
+		$configured_cat_id_array = [];
+		$available_asset_cat_id_array = [];
 		if(!empty($res))
 		{
 			
@@ -244,7 +244,7 @@ class Assets_Model_AssetCategories extends Zend_Db_Table_Abstract
 			
 		}
 		
-		$result = array();
+		$result = [];
 		if(!empty($configured_cat_id_array) && !empty($available_asset_cat_id_array)) {
 			$result=array_diff($available_asset_cat_id_array,$configured_cat_id_array);
 		}elseif(empty($configured_cat_id_array) && !empty($available_asset_cat_id_array)){
@@ -279,9 +279,9 @@ class Assets_Model_AssetCategories extends Zend_Db_Table_Abstract
 	{
  	 $select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('ah'=>'assets_history'),array('ah.createddate','ac.name','u.userfullname'))
-		->joinLeft(array('ac'=>'assets'),"ah.asset_id = ac.id",array())
-		->joinLeft(array('u'=>'main_users'),"u.id = ah.user_id",array())
+		->from(['ah'=>'assets_history'],['ah.createddate','ac.name','u.userfullname'])
+		->joinLeft(['ac'=>'assets'],"ah.asset_id = ac.id",[])
+		->joinLeft(['u'=>'main_users'],"u.id = ah.user_id",[])
 		->where('ah.isactive = 1 '); 
 		
       return $this->fetchAll($select)->toArray();
@@ -305,8 +305,8 @@ class Assets_Model_AssetCategories extends Zend_Db_Table_Abstract
 	{
 	  $select = $this->select()
             ->setIntegrityCheck(false)
-		    ->from(array('ac'=>'assets'),array())
-		    ->joinLeft(array('mu'=>'main_employees')," mu.id=ac.allocated_to",array('mu.userfullname','ac.created','ac.name'))
+		    ->from(['ac'=>'assets'],[])
+		    ->joinLeft(['mu'=>'main_employees']," mu.id=ac.allocated_to",['mu.userfullname','ac.created','ac.name'])
 		    ->where('mu.isactive = 1  AND ac.isactive = 1 AND  mu.id ='.$userid.'');
 	
 		return $this->fetchAll($select)->toArray();
@@ -316,7 +316,7 @@ class Assets_Model_AssetCategories extends Zend_Db_Table_Abstract
 	{
 		$assetcategoriesData = $this->select()
 					->setIntegrityCheck(false)
-					->from(array('c1'=>$this->_name),array('c1.*'))
+					->from(['c1'=>$this->_name],['c1.*'])
 					->where('c1.is_active = 1 AND c1.id='.$id.' ');
 		return $this->fetchAll($assetcategoriesData)->toArray();			
 	}
@@ -325,7 +325,7 @@ class Assets_Model_AssetCategories extends Zend_Db_Table_Abstract
 	{
 		$assetcategoriesData = $this->select()
 					->setIntegrityCheck(false)
-					->from(array('c1'=>$this->_name),array('c1.id','c1.name'))
+					->from(['c1'=>$this->_name],['c1.id','c1.name'])
 					->where('c1.is_active = 1 AND c1.parent=0 ');
 		return $this->fetchAll($assetcategoriesData)->toArray();			
 	}

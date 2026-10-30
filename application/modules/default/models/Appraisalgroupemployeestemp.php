@@ -27,7 +27,7 @@ class Default_Model_Appraisalgroupemployeestemp extends Zend_Db_Table_Abstract
 	public function checkAppraisalRecordexists($groupid,$appraisalid)
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();
-		$options = array();
+		$options = [];
 		
 		if($groupid !='null' && $appraisalid !='null')
 		{

@@ -21,7 +21,7 @@ class Default_SkillController extends Zend_Controller_Action
       $refresh = $this->_getParam('refresh');
       $dashboradcall = $this->_getParam('dashboradcall');
 
-      $data = array();
+      $data = [];
 
       if ($refresh == 'refresh') {
           if ($dashboradcall == 'Yes') {
@@ -87,7 +87,7 @@ class Default_SkillController extends Zend_Controller_Action
             $msgarray['measurement_id'] = 'Measurement is not configured yet.';
         } else {
             foreach ($add as $adds) {
-                $form->measurement_id->addMultiOptions(array($adds['measurement_id'] => $adds['name']));
+                $form->measurement_id->addMultiOptions([$adds['measurement_id'] => $adds['name']]);
             }
         }
         $modelc = new Default_Model_Skillcategory();
@@ -98,7 +98,7 @@ class Default_SkillController extends Zend_Controller_Action
             $msgarray['skillcategory_id'] = 'skillcategory is not configured yet.';
         } else {
             foreach ($addc as $addsc) {
-                $form->skillcategory_id->addMultiOptions(array($addsc['skillcategory_id'] => $addsc['name']));
+                $form->skillcategory_id->addMultiOptions([$addsc['skillcategory_id'] => $addsc['name']]);
             }
         }
         $form->parentskill_id->addMultiOption(' ', 'Select...');
@@ -108,7 +108,7 @@ class Default_SkillController extends Zend_Controller_Action
             $msgarray['parentskill_id'] = 'skill is not configured yet.';
         } else {
             foreach ($pskill as $pskills) {
-                $form->parentskill_id->addMultiOptions(array($pskills['skill_id'] => $pskills['name']));
+                $form->parentskill_id->addMultiOptions([$pskills['skill_id'] => $pskills['name']]);
             }
         }
         if ($this->getRequest()->isPost()) {
@@ -116,7 +116,7 @@ class Default_SkillController extends Zend_Controller_Action
            
             if ($form->isValid($this->getRequest()->getPost())) {
 
-                $data = array(
+                $data = [
                     'name'=>$this->_request->getParam('name'),
                     'code'=>$this->_request->getParam('code'),
                     'skillcategory_id'=>$this->_request->getParam('skillcategory_id'),
@@ -125,12 +125,12 @@ class Default_SkillController extends Zend_Controller_Action
                     'description'=>$this->_request->getParam('description'),
                     'createdby'=>$loginUserId,
                     'createddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
                 $Id=$dmtmodel->SaveorUpdateData($data,'');
                 $tableid = $Id;
                 $actionflag = 1;
                 $result = sapp_Global::logManager(291,$actionflag,$loginUserId,$tableid);
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array('success'=>'Skill Added Successful'));
+                $this->_helper->getHelper("FlashMessenger")->addMessage(['success'=>'Skill Added Successful']);
                 $this->_redirect('skill');
             }
             $messages = $form->getMessages();
@@ -170,7 +170,7 @@ class Default_SkillController extends Zend_Controller_Action
             $msgarray['measurement_id'] = 'Measurement is not configured yet.';
         } else {
             foreach ($add as $adds) {
-                $form->measurement_id->addMultiOptions(array($adds['measurement_id'] => $adds['name']));
+                $form->measurement_id->addMultiOptions([$adds['measurement_id'] => $adds['name']]);
             }
         }
         $modelc = new Default_Model_Skillcategory();
@@ -181,7 +181,7 @@ class Default_SkillController extends Zend_Controller_Action
             $msgarray['skillcategory_id'] = 'skillcategory is not configured yet.';
         } else {
             foreach ($addc as $addsc) {
-                $form->skillcategory_id->addMultiOptions(array($addsc['skillcategory_id'] => $addsc['name']));
+                $form->skillcategory_id->addMultiOptions([$addsc['skillcategory_id'] => $addsc['name']]);
             }
         }
         $form->parentskill_id->addMultiOption(' ', 'Select...');
@@ -191,14 +191,14 @@ class Default_SkillController extends Zend_Controller_Action
             $msgarray['parentskill_id'] = 'skill is not configured yet.';
         } else {
             foreach ($pskill as $pskills) {
-                $form->parentskill_id->addMultiOptions(array($pskills['skill_id'] => $pskills['name']));
+                $form->parentskill_id->addMultiOptions([$pskills['skill_id'] => $pskills['name']]);
             }
         }
         if ($this->getRequest()->isPost()) {
            
             
             if ($form->isValid($this->getRequest()->getPost())) {
-                $data = array(
+                $data = [
                     'name'=>$this->_request->getParam('name'),
                     'code'=>$this->_request->getParam('code'),
                     'skillcategory_id'=>$this->_request->getParam('skillcategory_id'),
@@ -207,7 +207,7 @@ class Default_SkillController extends Zend_Controller_Action
                     'description'=>$this->_request->getParam('description'),
                     'createdby'=>$loginUserId,
                     'createddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
                 $Id= $dmtmodel->SaveorUpdateData($data,'');
                 $tableid = $Id;
                 $actionflag = 1;
@@ -270,7 +270,7 @@ class Default_SkillController extends Zend_Controller_Action
             $msgarray['measurement_id'] = 'Measurement is not configured yet.';
         } else {
             foreach ($add as $adds) {
-                $form->measurement_id->addMultiOptions(array($adds['measurement_id'] => $adds['name']));
+                $form->measurement_id->addMultiOptions([$adds['measurement_id'] => $adds['name']]);
             }
         }
         $modelc = new Default_Model_Skillcategory();
@@ -281,7 +281,7 @@ class Default_SkillController extends Zend_Controller_Action
             $msgarray['skillcategory_id'] = 'skillcategory is not configured yet.';
         } else {
             foreach ($addc as $addsc) {
-                $form->skillcategory_id->addMultiOptions(array($addsc['skillcategory_id'] => $addsc['name']));
+                $form->skillcategory_id->addMultiOptions([$addsc['skillcategory_id'] => $addsc['name']]);
             }
         }
         $form->parentskill_id->addMultiOption(' ', 'Select...');
@@ -291,7 +291,7 @@ class Default_SkillController extends Zend_Controller_Action
             $msgarray['parentskill_id'] = 'skill is not configured yet.';
         } else {
             foreach ($pskill as $pskills) {
-                $form->parentskill_id->addMultiOptions(array($pskills['skill_id'] => $pskills['name']));
+                $form->parentskill_id->addMultiOptions([$pskills['skill_id'] => $pskills['name']]);
             }
         }
 
@@ -306,7 +306,7 @@ class Default_SkillController extends Zend_Controller_Action
 
         if ($this->getRequest()->isPost()) {
             if ($form->isValid($this->getRequest()->getPost())) {
-                $data = array(
+                $data = [
                     'name'=>$this->_request->getParam('name'),
                     'code'=>$this->_request->getParam('code'),
                     'skillcategory_id'=>$this->_request->getParam('skillcategory_id'),
@@ -318,12 +318,12 @@ class Default_SkillController extends Zend_Controller_Action
 
                     'modifiedby'=>$loginUserId,
                     'modifieddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
                 $dmtmodel->SaveorUpdateData($data,'skill_id='.$id);
                 $tableid = $id;
                 $actionflag = 2;
                 $result = sapp_Global::logManager(291,$actionflag,$loginUserId,$tableid);
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array('success'=>'Skill Updated Successful'));
+                $this->_helper->getHelper("FlashMessenger")->addMessage(['success'=>'Skill Updated Successful']);
                 $this->_redirect('skill');
             }
             $messages = $form->getMessages();

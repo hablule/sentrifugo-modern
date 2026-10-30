@@ -34,20 +34,20 @@ class Default_Form_employeeleavetypes extends Zend_Form
 		$name = new Zend_Form_Element_Text('name');
         $name->setAttrib('maxLength', 60);
         $name->setRequired(true);
-        $name->addValidator('NotEmpty', false, array('messages' => 'Please enter leave category.'));
-		$name->addValidators(array(
-						 array(
+        $name->addValidator('NotEmpty', false, ['messages' => 'Please enter leave category.']);
+		$name->addValidators([
+						 [
 							 'validator'   => 'Regex',
 							 'breakChainOnFailure' => true,
-							 'options'     => array( 
+							 'options'     => [ 
 							 
 							 'pattern'=> '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9\-\s]*)$/',
-								 'messages' => array(
+								 'messages' => [
 										 'regexNotMatch'=>'Please enter valid leave type.'
-								 )
-							 )
-						 )
-					 ));         
+								 ]
+							 ]
+						 ]
+					 ]);         
       
 		
 	
@@ -61,7 +61,7 @@ class Default_Form_employeeleavetypes extends Zend_Form
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 
-		 $this->addElements(array($id,$leavetype,$numberofdays,$leavecode,$leavepreallocated,$leavepredeductable,$description,$approvalrequired,$submit));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 $this->addElements([$id,$leavetype,$numberofdays,$leavecode,$leavepreallocated,$leavepredeductable,$description,$approvalrequired,$submit]);
+         $this->setElementDecorators(['ViewHelper']); 
 	}
 }

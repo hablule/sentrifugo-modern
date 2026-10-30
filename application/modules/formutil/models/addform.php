@@ -4,10 +4,10 @@ class Formutil_Model_addform extends Zend_Db_Table
 {
     public function geteletype()
     {
-        $config = array(
+        $config = [
             'name'=>'main_form_datatype',
             'primary'=>'dataType'
-        );
+        ];
         $table = new Zend_Db_Table($config);
         $data  = $table->select()
                        ->setIntegrityCheck(false)
@@ -17,10 +17,10 @@ class Formutil_Model_addform extends Zend_Db_Table
 
     public function modules()
     {
-        $config = array(
+        $config = [
             'name'=>'main_menu',
             'primary'=>'id'
-        );
+        ];
         $table = new Zend_Db_Table($config);
         $data = $table->select()
                       ->setIntegrityCheck(false)

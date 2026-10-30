@@ -117,7 +117,7 @@ class sapp_Helper
     public static function sd_all_summary($login_id,$context,$call)
     {
         $sd_req_model = new Default_Model_Servicerequests();
-        $url_arr = array();
+        $url_arr = [];
         $html = "";
         if($context == 'rec_rept' || $context == 'receiver')
         {
@@ -125,17 +125,17 @@ class sapp_Helper
             
             $all_counts = $sd_req_model->getRequestsCnt($login_id,'all_rec_rept');
             
-            $to_app_cnt = isset($all_counts['To management approve'])?$all_counts['To management approve']:0;
-            $to_mapp_cnt = isset($all_counts['To manager approve'])?$all_counts['To manager approve']:0;
+            $to_app_cnt = $all_counts['To management approve'] ?? 0;
+            $to_mapp_cnt = $all_counts['To manager approve'] ?? 0;
             $tot_toapp_cnt = $to_app_cnt + $to_mapp_cnt;
-            $url_arr['All'] = array('url'=>  self::sd_url_builder($grid_type, ''),'count' => (isset($all_counts['all'])?$all_counts['all']:0));
-            $url_arr['Pending'] = array('url'=>  self::sd_url_builder($grid_type, '1'),'count' => (isset($all_counts['Pending'])?$all_counts['Pending']:0));
-            $url_arr['Closed'] = array('url'=>  self::sd_url_builder($grid_type, '2'),'count' => (isset($all_counts['Closed'])?$all_counts['Closed']:0));
-            $url_arr['Cancelled'] = array('url'=>  self::sd_url_builder($grid_type, '3'),'count' => (isset($all_counts['Cancelled'])?$all_counts['Cancelled']:0));
-            $url_arr['Overdue'] = array('url'=>  self::sd_url_builder($grid_type, '4'),'count' => (isset($all_counts['overdue'])?$all_counts['overdue']:0));
-            $url_arr['Due today'] = array('url'=>  self::sd_url_builder($grid_type, '5'),'count' => (isset($all_counts['duetoday'])?$all_counts['duetoday']:0));
-            $url_arr['To approve'] = array('url'=>  self::sd_url_builder($grid_type, '6'),'count' => $tot_toapp_cnt);
-            $url_arr['Approved'] = array('url'=>  self::sd_url_builder($grid_type, '7'),'count' => (isset($all_counts['Approved'])?$all_counts['Approved']:0));
+            $url_arr['All'] = ['url'=>  self::sd_url_builder($grid_type, ''),'count' => ($all_counts['all'] ?? 0)];
+            $url_arr['Pending'] = ['url'=>  self::sd_url_builder($grid_type, '1'),'count' => ($all_counts['Pending'] ?? 0)];
+            $url_arr['Closed'] = ['url'=>  self::sd_url_builder($grid_type, '2'),'count' => ($all_counts['Closed'] ?? 0)];
+            $url_arr['Cancelled'] = ['url'=>  self::sd_url_builder($grid_type, '3'),'count' => ($all_counts['Cancelled'] ?? 0)];
+            $url_arr['Overdue'] = ['url'=>  self::sd_url_builder($grid_type, '4'),'count' => ($all_counts['overdue'] ?? 0)];
+            $url_arr['Due today'] = ['url'=>  self::sd_url_builder($grid_type, '5'),'count' => ($all_counts['duetoday'] ?? 0)];
+            $url_arr['To approve'] = ['url'=>  self::sd_url_builder($grid_type, '6'),'count' => $tot_toapp_cnt];
+            $url_arr['Approved'] = ['url'=>  self::sd_url_builder($grid_type, '7'),'count' => ($all_counts['Approved'] ?? 0)];
         }        
         if($context == 'org_head')
         {
@@ -143,31 +143,31 @@ class sapp_Helper
             
             $all_counts = $sd_req_model->getRequestsCnt($login_id,'org_head');
             
-            $to_app_cnt = isset($all_counts['To management approve'])?$all_counts['To management approve']:0;
-            $to_mapp_cnt = isset($all_counts['To manager approve'])?$all_counts['To manager approve']:0;
+            $to_app_cnt = $all_counts['To management approve'] ?? 0;
+            $to_mapp_cnt = $all_counts['To manager approve'] ?? 0;
             $tot_toapp_cnt = $to_app_cnt + $to_mapp_cnt;
             
-            $app1_cnt = isset($all_counts['Management approved'])?$all_counts['Management approved']:0;
-            $app2_cnt = isset($all_counts['Manager approved'])?$all_counts['Manager approved']:0;
+            $app1_cnt = $all_counts['Management approved'] ?? 0;
+            $app2_cnt = $all_counts['Manager approved'] ?? 0;
             $tot_app_cnt = $app1_cnt + $app2_cnt;
             
-            $rej1_cnt = isset($all_counts['Management rejected'])?$all_counts['Management rejected']:0;
-            $rej2_cnt = isset($all_counts['Manager rejected'])?$all_counts['Manager rejected']:0;
+            $rej1_cnt = $all_counts['Management rejected'] ?? 0;
+            $rej2_cnt = $all_counts['Manager rejected'] ?? 0;
             $tot_rej_cnt = $rej1_cnt + $rej2_cnt;
             
-            $close_cnt = isset($all_counts['Closed'])?$all_counts['Closed']:0;
-            $rej_cnt = isset($all_counts['Rejected'])?$all_counts['Rejected']:0;
+            $close_cnt = $all_counts['Closed'] ?? 0;
+            $rej_cnt = $all_counts['Rejected'] ?? 0;
             $cl_rj_cnt = $close_cnt + $rej_cnt;
             
-            $url_arr['All'] = array('url'=>  self::sd_url_builder($grid_type, ''),'count' => (isset($all_counts['all'])?$all_counts['all']:0));
-            $url_arr['Open'] = array('url'=>  self::sd_url_builder($grid_type, '1'),'count' => (isset($all_counts['Open'])?$all_counts['Open']:0));
-            $url_arr['Closed/Rejected'] = array('url'=>  self::sd_url_builder($grid_type, '22'),'count' => $cl_rj_cnt);
-            $url_arr['Cancelled'] = array('url'=>  self::sd_url_builder($grid_type, '3'),'count' => (isset($all_counts['Cancelled'])?$all_counts['Cancelled']:0));
-            $url_arr['Overdue'] = array('url'=>  self::sd_url_builder($grid_type, '4'),'count' => (isset($all_counts['overdue'])?$all_counts['overdue']:0));
-            $url_arr['Due today'] = array('url'=>  self::sd_url_builder($grid_type, '5'),'count' => (isset($all_counts['duetoday'])?$all_counts['duetoday']:0));
-            $url_arr['To approve'] = array('url'=>  self::sd_url_builder($grid_type, '6'),'count' => $tot_toapp_cnt);            
-            $url_arr['Approved'] = array('url'=>  self::sd_url_builder($grid_type, '20'),'count' => $tot_app_cnt);
-            $url_arr['Rejected'] = array('url'=>  self::sd_url_builder($grid_type, '21'),'count' => $tot_rej_cnt);
+            $url_arr['All'] = ['url'=>  self::sd_url_builder($grid_type, ''),'count' => ($all_counts['all'] ?? 0)];
+            $url_arr['Open'] = ['url'=>  self::sd_url_builder($grid_type, '1'),'count' => ($all_counts['Open'] ?? 0)];
+            $url_arr['Closed/Rejected'] = ['url'=>  self::sd_url_builder($grid_type, '22'),'count' => $cl_rj_cnt];
+            $url_arr['Cancelled'] = ['url'=>  self::sd_url_builder($grid_type, '3'),'count' => ($all_counts['Cancelled'] ?? 0)];
+            $url_arr['Overdue'] = ['url'=>  self::sd_url_builder($grid_type, '4'),'count' => ($all_counts['overdue'] ?? 0)];
+            $url_arr['Due today'] = ['url'=>  self::sd_url_builder($grid_type, '5'),'count' => ($all_counts['duetoday'] ?? 0)];
+            $url_arr['To approve'] = ['url'=>  self::sd_url_builder($grid_type, '6'),'count' => $tot_toapp_cnt];            
+            $url_arr['Approved'] = ['url'=>  self::sd_url_builder($grid_type, '20'),'count' => $tot_app_cnt];
+            $url_arr['Rejected'] = ['url'=>  self::sd_url_builder($grid_type, '21'),'count' => $tot_rej_cnt];
         }
         if(count($url_arr) > 0)
         {                
@@ -218,128 +218,128 @@ class sapp_Helper
     public static function sd_req_summary($login_id,$context,$call)
     {
         $sd_req_model = new Default_Model_Servicerequests();
-        $action_counts = array();
-        $url_arr = array();
+        $action_counts = [];
+        $url_arr = [];
         $html = "";
         if($context == 'receiver')
         {
             $action_counts = $sd_req_model->getRequestsCnt($login_id,'receiver');
             $grid_type = 2;
             
-            $mapp_cnt = isset($action_counts['Manager approved'])?$action_counts['Manager approved']:0;
-            $app_cnt = isset($action_counts['Management approved'])?$action_counts['Management approved']:0;
-            $rmapp_cnt = isset($action_counts['Manager rejected'])?$action_counts['Manager rejected']:0;
-            $rapp_cnt = isset($action_counts['Management rejected'])?$action_counts['Management rejected']:0;
-            $wmapp_cnt = isset($action_counts['To manager approve'])?$action_counts['To manager approve']:0;
-            $wapp_cnt = isset($action_counts['To management approve'])?$action_counts['To management approve']:0;
+            $mapp_cnt = $action_counts['Manager approved'] ?? 0;
+            $app_cnt = $action_counts['Management approved'] ?? 0;
+            $rmapp_cnt = $action_counts['Manager rejected'] ?? 0;
+            $rapp_cnt = $action_counts['Management rejected'] ?? 0;
+            $wmapp_cnt = $action_counts['To manager approve'] ?? 0;
+            $wapp_cnt = $action_counts['To management approve'] ?? 0;
             
             $pending_cnt = $mapp_cnt + $app_cnt + $rmapp_cnt + $rapp_cnt;
             $waiting_cnt = $wapp_cnt + $wmapp_cnt;
             
-            $url_arr['All'] = array('url' => self::sd_url_builder($grid_type, ''),'count' => (isset($action_counts['all'])?$action_counts['all']:0),);
-            $url_arr['Open'] = array('url' => self::sd_url_builder($grid_type, '1'),'count' => isset($action_counts['Open'])?$action_counts['Open']:0,);
-            $url_arr['Pending'] = array('url' => self::sd_url_builder($grid_type, '8'),'count' => $pending_cnt,);
-            $url_arr['Closed'] = array('url' => self::sd_url_builder($grid_type, '2'),'count' => (isset($action_counts['Closed'])?$action_counts['Closed']:0),);
-            $url_arr['Rejected'] = array('url' => self::sd_url_builder($grid_type, '16'),'count' => (isset($action_counts['Rejected'])?$action_counts['Rejected']:0),);
-            $url_arr['Cancelled'] = array('url' => self::sd_url_builder($grid_type, '3'),'count' => (isset($action_counts['Cancelled'])?$action_counts['Cancelled']:0),);
-            $url_arr['Due today'] = array('url' => self::sd_url_builder($grid_type, '5'),'count' => (isset($action_counts['duetoday'])?$action_counts['duetoday']:0),);
-            $url_arr['Overdue'] = array('url' => self::sd_url_builder($grid_type, '4'),'count' => (isset($action_counts['overdue'])?$action_counts['overdue']:0),);
-            $url_arr['Sent for approval'] = array('url' => self::sd_url_builder($grid_type, '9'),'count' => $waiting_cnt,);
+            $url_arr['All'] = ['url' => self::sd_url_builder($grid_type, ''),'count' => ($action_counts['all'] ?? 0),];
+            $url_arr['Open'] = ['url' => self::sd_url_builder($grid_type, '1'),'count' => $action_counts['Open'] ?? 0,];
+            $url_arr['Pending'] = ['url' => self::sd_url_builder($grid_type, '8'),'count' => $pending_cnt,];
+            $url_arr['Closed'] = ['url' => self::sd_url_builder($grid_type, '2'),'count' => ($action_counts['Closed'] ?? 0),];
+            $url_arr['Rejected'] = ['url' => self::sd_url_builder($grid_type, '16'),'count' => ($action_counts['Rejected'] ?? 0),];
+            $url_arr['Cancelled'] = ['url' => self::sd_url_builder($grid_type, '3'),'count' => ($action_counts['Cancelled'] ?? 0),];
+            $url_arr['Due today'] = ['url' => self::sd_url_builder($grid_type, '5'),'count' => ($action_counts['duetoday'] ?? 0),];
+            $url_arr['Overdue'] = ['url' => self::sd_url_builder($grid_type, '4'),'count' => ($action_counts['overdue'] ?? 0),];
+            $url_arr['Sent for approval'] = ['url' => self::sd_url_builder($grid_type, '9'),'count' => $waiting_cnt,];
         }
         else if($context == 'reporting')
         {
             $grid_type = 4;
             $action_counts = $sd_req_model->getRequestsCnt($login_id,'reporting');
             
-            $app_count = isset($action_counts['Manager approved'])?$action_counts['Manager approved']:0;
-            $reject_cnt = isset($action_counts['Manager rejected'])?$action_counts['Manager rejected']:0;
-            $rp_rj_cnt =  isset($action_counts['Rejected'])?$action_counts['Rejected']:0;
-            $rp_cl_cnt =  isset($action_counts['Closed'])?$action_counts['Closed']:0;
+            $app_count = $action_counts['Manager approved'] ?? 0;
+            $reject_cnt = $action_counts['Manager rejected'] ?? 0;
+            $rp_rj_cnt =  $action_counts['Rejected'] ?? 0;
+            $rp_cl_cnt =  $action_counts['Closed'] ?? 0;
                         
             $cl_rj_cnt = $rp_cl_cnt + $rp_rj_cnt;
             
-            $url_arr['All'] = array('url' => self::sd_url_builder($grid_type, ''),'count' => (isset($action_counts['all'])?$action_counts['all']:0),);
-            $url_arr['To approve'] = array('url' => self::sd_url_builder($grid_type, '13'),'count' => (isset($action_counts['To manager approve'])?$action_counts['To manager approve']:0),);
-            $url_arr['Approved'] = array('url' => self::sd_url_builder($grid_type, '18'),'count' =>$app_count,);
-            $url_arr['Rejected'] = array('url' => self::sd_url_builder($grid_type, '19'),'count' => $reject_cnt,);
-            $url_arr['Closed/Rejected'] = array('url' => self::sd_url_builder($grid_type, '22'),'count' => $cl_rj_cnt,);
+            $url_arr['All'] = ['url' => self::sd_url_builder($grid_type, ''),'count' => ($action_counts['all'] ?? 0),];
+            $url_arr['To approve'] = ['url' => self::sd_url_builder($grid_type, '13'),'count' => ($action_counts['To manager approve'] ?? 0),];
+            $url_arr['Approved'] = ['url' => self::sd_url_builder($grid_type, '18'),'count' =>$app_count,];
+            $url_arr['Rejected'] = ['url' => self::sd_url_builder($grid_type, '19'),'count' => $reject_cnt,];
+            $url_arr['Closed/Rejected'] = ['url' => self::sd_url_builder($grid_type, '22'),'count' => $cl_rj_cnt,];
         }
         else if($context == 'rept_app')
         {
             $grid_type = 8;
             $action_counts = $sd_req_model->getRequestsCnt($login_id,'rept_app');
             
-            $mapp_cnt = isset($action_counts['Manager approved'])?$action_counts['Manager approved']:0;
-            $app_cnt = isset($action_counts['Management approved'])?$action_counts['Management approved']:0;
-            $mrej_cnt = isset($action_counts['Manager rejected'])?$action_counts['Manager rejected']:0;
-            $rej_cnt = isset($action_counts['Management rejected'])?$action_counts['Management rejected']:0;
-            $wmapp_cnt = isset($action_counts['To manager approve'])?$action_counts['To manager approve']:0;
-            $wapp_cnt = isset($action_counts['To management approve'])?$action_counts['To management approve']:0;
-            $close_cnt = isset($action_counts['Closed'])?$action_counts['Closed']:0;
-            $reject_cnt = isset($action_counts['Rejected'])?$action_counts['Rejected']:0;
+            $mapp_cnt = $action_counts['Manager approved'] ?? 0;
+            $app_cnt = $action_counts['Management approved'] ?? 0;
+            $mrej_cnt = $action_counts['Manager rejected'] ?? 0;
+            $rej_cnt = $action_counts['Management rejected'] ?? 0;
+            $wmapp_cnt = $action_counts['To manager approve'] ?? 0;
+            $wapp_cnt = $action_counts['To management approve'] ?? 0;
+            $close_cnt = $action_counts['Closed'] ?? 0;
+            $reject_cnt = $action_counts['Rejected'] ?? 0;
             
             $approved_cnt = $mapp_cnt + $app_cnt; 
             $tot_reject_cnt =  $mrej_cnt + $rej_cnt;
             $waiting_cnt = $wapp_cnt + $wmapp_cnt;
             $tot_close_cnt = $reject_cnt + $close_cnt;
                         
-            $url_arr['All'] = array('url' => self::sd_url_builder($grid_type, ''),'count' => (isset($action_counts['all'])?$action_counts['all']:0),);                        
-            $url_arr['To approve'] = array('url' => self::sd_url_builder($grid_type, '6'),'count' => $waiting_cnt,);
-            $url_arr['Approved'] = array('url' => self::sd_url_builder($grid_type, '20'),'count' => $approved_cnt,);
-            $url_arr['Rejected'] = array('url' => self::sd_url_builder($grid_type, '21'),'count' => $tot_reject_cnt,);
-            $url_arr['Closed/Rejected'] = array('url' => self::sd_url_builder($grid_type, '22'),'count' => $tot_close_cnt,);
+            $url_arr['All'] = ['url' => self::sd_url_builder($grid_type, ''),'count' => ($action_counts['all'] ?? 0),];                        
+            $url_arr['To approve'] = ['url' => self::sd_url_builder($grid_type, '6'),'count' => $waiting_cnt,];
+            $url_arr['Approved'] = ['url' => self::sd_url_builder($grid_type, '20'),'count' => $approved_cnt,];
+            $url_arr['Rejected'] = ['url' => self::sd_url_builder($grid_type, '21'),'count' => $tot_reject_cnt,];
+            $url_arr['Closed/Rejected'] = ['url' => self::sd_url_builder($grid_type, '22'),'count' => $tot_close_cnt,];
         }
         else if($context == 'approver')
         {
             $grid_type = 5;
             $action_counts = $sd_req_model->getRequestsCnt($login_id,'approver');
                         
-            $app_cnt = isset($action_counts['Management approved'])?$action_counts['Management approved']:0;            
-            $rej_cnt = isset($action_counts['Management rejected'])?$action_counts['Management rejected']:0;            
-            $wapp_cnt = isset($action_counts['To management approve'])?$action_counts['To management approve']:0;
-            $close_cnt = isset($action_counts['Closed'])?$action_counts['Closed']:0;
-            $reject_cnt = isset($action_counts['Rejected'])?$action_counts['Rejected']:0;
+            $app_cnt = $action_counts['Management approved'] ?? 0;            
+            $rej_cnt = $action_counts['Management rejected'] ?? 0;            
+            $wapp_cnt = $action_counts['To management approve'] ?? 0;
+            $close_cnt = $action_counts['Closed'] ?? 0;
+            $reject_cnt = $action_counts['Rejected'] ?? 0;
                                                 
             $tot_close_cnt = $reject_cnt + $close_cnt;
                         
-            $url_arr['All'] = array('url' => self::sd_url_builder($grid_type, ''),'count' => (isset($action_counts['all'])?$action_counts['all']:0),);                        
-            $url_arr['To approve'] = array('url' => self::sd_url_builder($grid_type, '23'),'count' => $wapp_cnt,);
-            $url_arr['Approved'] = array('url' => self::sd_url_builder($grid_type, '24'),'count' => $app_cnt,);
-            $url_arr['Rejected'] = array('url' => self::sd_url_builder($grid_type, '25'),'count' => $rej_cnt,);
-            $url_arr['Closed/Rejected'] = array('url' => self::sd_url_builder($grid_type, '22'),'count' => $tot_close_cnt,);
+            $url_arr['All'] = ['url' => self::sd_url_builder($grid_type, ''),'count' => ($action_counts['all'] ?? 0),];                        
+            $url_arr['To approve'] = ['url' => self::sd_url_builder($grid_type, '23'),'count' => $wapp_cnt,];
+            $url_arr['Approved'] = ['url' => self::sd_url_builder($grid_type, '24'),'count' => $app_cnt,];
+            $url_arr['Rejected'] = ['url' => self::sd_url_builder($grid_type, '25'),'count' => $rej_cnt,];
+            $url_arr['Closed/Rejected'] = ['url' => self::sd_url_builder($grid_type, '22'),'count' => $tot_close_cnt,];
         }        
         else if($context == 'rec_rept')
         {
             $grid_type = 6;
             $action_counts = $sd_req_model->getRequestsCnt($login_id,'rec_rept');
             
-            $mapp_cnt = isset($action_counts['Manager approved'])?$action_counts['Manager approved']:0;
-            $app_cnt = isset($action_counts['Management approved'])?$action_counts['Management approved']:0;
-            $rmapp_cnt = isset($action_counts['Manager rejected'])?$action_counts['Manager rejected']:0;
-            $rapp_cnt = isset($action_counts['Management rejected'])?$action_counts['Management rejected']:0;
-            $wmapp_cnt = isset($action_counts['To manager approve'])?$action_counts['To manager approve']:0;
-            $wapp_cnt = isset($action_counts['To management approve'])?$action_counts['To management approve']:0;
-            $mrejected_cnt = isset($action_counts['mrejected'])?$action_counts['mrejected']:0;
-            $mclosed_cnt = isset($action_counts['mclosed'])?$action_counts['mclosed']:0;
+            $mapp_cnt = $action_counts['Manager approved'] ?? 0;
+            $app_cnt = $action_counts['Management approved'] ?? 0;
+            $rmapp_cnt = $action_counts['Manager rejected'] ?? 0;
+            $rapp_cnt = $action_counts['Management rejected'] ?? 0;
+            $wmapp_cnt = $action_counts['To manager approve'] ?? 0;
+            $wapp_cnt = $action_counts['To management approve'] ?? 0;
+            $mrejected_cnt = $action_counts['mrejected'] ?? 0;
+            $mclosed_cnt = $action_counts['mclosed'] ?? 0;
             
             $pending_cnt = $mapp_cnt + $app_cnt + $rmapp_cnt + $rapp_cnt;
             $waiting_cnt = $wapp_cnt + $wmapp_cnt;
             $cl_rj_cnt = $mrejected_cnt + $mclosed_cnt;
             
-            $url_arr['All'] = array('url' => self::sd_url_builder($grid_type, ''),'count' => (isset($action_counts['all'])?$action_counts['all']:0),);
-            $url_arr['Open'] = array('url' => self::sd_url_builder($grid_type, '1'),'count' => isset($action_counts['Open'])?$action_counts['Open']:0,);
-            $url_arr['Pending'] = array('url' => self::sd_url_builder($grid_type, '8'),'count' => $pending_cnt,);
-            $url_arr['Closed'] = array('url' => self::sd_url_builder($grid_type, '2'),'count' => (isset($action_counts['Closed'])?$action_counts['Closed']:0),);
-            $url_arr['Rejected'] = array('url' => self::sd_url_builder($grid_type, '16'),'count' => (isset($action_counts['Rejected'])?$action_counts['Rejected']:0),);
-            $url_arr['Cancelled'] = array('url' => self::sd_url_builder($grid_type, '3'),'count' => (isset($action_counts['Cancelled'])?$action_counts['Cancelled']:0),);
-            $url_arr['Due today'] = array('url' => self::sd_url_builder($grid_type, '5'),'count' => (isset($action_counts['duetoday'])?$action_counts['duetoday']:0),);
-            $url_arr['Overdue'] = array('url' => self::sd_url_builder($grid_type, '4'),'count' => (isset($action_counts['overdue'])?$action_counts['overdue']:0),);
-            $url_arr['Sent for approval'] = array('url' => self::sd_url_builder($grid_type, '9'),'count' => $waiting_cnt,);
-            $url_arr['As a reporting manager'] = array('url' => '','count' => 0,);
-            $url_arr['To approve'] = array('url' => self::sd_url_builder($grid_type, '10'),'count' => (isset($action_counts['to_approve'])?$action_counts['to_approve']:0),);
-            $url_arr['Approved '] = array('url' => self::sd_url_builder($grid_type, '18'),'count' => (isset($action_counts['manager_approved'])?$action_counts['manager_approved']:0),);
-            $url_arr['Rejected '] = array('url' => self::sd_url_builder($grid_type, '19'),'count' => (isset($action_counts['manager_rejected'])?$action_counts['manager_rejected']:0),);
-            $url_arr['Closed/Rejected'] = array('url' => self::sd_url_builder($grid_type, '22'),'count' => $cl_rj_cnt,);
+            $url_arr['All'] = ['url' => self::sd_url_builder($grid_type, ''),'count' => ($action_counts['all'] ?? 0),];
+            $url_arr['Open'] = ['url' => self::sd_url_builder($grid_type, '1'),'count' => $action_counts['Open'] ?? 0,];
+            $url_arr['Pending'] = ['url' => self::sd_url_builder($grid_type, '8'),'count' => $pending_cnt,];
+            $url_arr['Closed'] = ['url' => self::sd_url_builder($grid_type, '2'),'count' => ($action_counts['Closed'] ?? 0),];
+            $url_arr['Rejected'] = ['url' => self::sd_url_builder($grid_type, '16'),'count' => ($action_counts['Rejected'] ?? 0),];
+            $url_arr['Cancelled'] = ['url' => self::sd_url_builder($grid_type, '3'),'count' => ($action_counts['Cancelled'] ?? 0),];
+            $url_arr['Due today'] = ['url' => self::sd_url_builder($grid_type, '5'),'count' => ($action_counts['duetoday'] ?? 0),];
+            $url_arr['Overdue'] = ['url' => self::sd_url_builder($grid_type, '4'),'count' => ($action_counts['overdue'] ?? 0),];
+            $url_arr['Sent for approval'] = ['url' => self::sd_url_builder($grid_type, '9'),'count' => $waiting_cnt,];
+            $url_arr['As a reporting manager'] = ['url' => '','count' => 0,];
+            $url_arr['To approve'] = ['url' => self::sd_url_builder($grid_type, '10'),'count' => ($action_counts['to_approve'] ?? 0),];
+            $url_arr['Approved '] = ['url' => self::sd_url_builder($grid_type, '18'),'count' => ($action_counts['manager_approved'] ?? 0),];
+            $url_arr['Rejected '] = ['url' => self::sd_url_builder($grid_type, '19'),'count' => ($action_counts['manager_rejected'] ?? 0),];
+            $url_arr['Closed/Rejected'] = ['url' => self::sd_url_builder($grid_type, '22'),'count' => $cl_rj_cnt,];
         }
         if(count($url_arr) > 0)
         {        
@@ -426,19 +426,19 @@ class sapp_Helper
      */
     public static function sd_menu_names()
     {
-        return array(1=> 'My Request ',2=>'My Action ',3=>'My Action ', 
+        return [1=> 'My Request ',2=>'My Action ',3=>'My Action ', 
                      4 => 'My Action ',5=> 'My Action ',6 => 'My Action ',
-                     7=> 'My Action ',8 => 'My Action ',9 => 'All Request');
+                     7=> 'My Action ',8 => 'My Action ',9 => 'All Request'];
     }
     
     public static function sd_action_names()
     {
-        return array(1 => 'Open',2 => 'Closed',3 => 'Cancelled',4 => 'Overdue',5 => 'Due today',
+        return [1 => 'Open',2 => 'Closed',3 => 'Cancelled',4 => 'Overdue',5 => 'Due today',
                     6 => 'To approve',7 => 'Approved',8 => 'Pending',9 => 'Sent for approval',
                     10 => 'To approve',11 => 'To approve',12 => 'Approved/Rejected',13 => 'To approve',
                     14 => 'Approved/Rejected',15 => 'Pending',16 => 'Rejected',17 => 'Open',
                     18 => 'Approved',19 => 'Rejected',22 => 'Closed/Rejected',20 => 'Approved',
-                    21 => 'Rejected',23 => 'To approve',24 => 'Approved',25 => 'Rejected');
+                    21 => 'Rejected',23 => 'To approve',24 => 'Approved',25 => 'Rejected'];
     }
     
     public static function process_emp_excel($file_name)
@@ -466,12 +466,12 @@ class sapp_Helper
         if($sizeOfWorksheet > 1)
         {    		
             $column_salary_currency = 18;$column_salary_type = 19;$column_salary = 20;
-            $arrReqHeaders = array(
+            $arrReqHeaders = [
                 'Prefix','First name','Last name','Employee Id','Role Type','Email','Business Unit','Department','Reporting manager','Job Title' ,
                 'Position','Employment Status','Date of joining','Date of leaving','Experience','Extension',
                 'Work telephone number','Fax',$column_salary_currency => 'Salary Currency',
                 $column_salary_type =>'Pay Frequency',$column_salary => 'Salary'
-            );
+            ];
 		                        
             //Get first/header from excel
             $firstRow = $sheet->rangeToArray('A' . 1 . ':' . $highestColumn . 1, NULL, TRUE, TRUE);
@@ -505,12 +505,12 @@ class sapp_Helper
             try
             {
                 //start of validations
-                $ex_prefix_arr = array();
-                $ex_firstname_arr = array();$ex_lastname_arr = array();
-                $ex_role_arr = array();$ex_email_arr = array();
-                $ex_bu_arr = array();$ex_dep_arr = array();$ex_rm_arr = array();$ex_jt_arr = array();$ex_pos_arr = array();
-                $ex_es_arr = array();$ex_doj_arr = array();$ex_dol_arr = array();$ex_exp_arr = array();$ex_ext_arr = array();
-                $ex_wn_arr = array();$ex_fax_arr = array();$tot_rec_cnt = 0;
+                $ex_prefix_arr = [];
+                $ex_firstname_arr = [];$ex_lastname_arr = [];
+                $ex_role_arr = [];$ex_email_arr = [];
+                $ex_bu_arr = [];$ex_dep_arr = [];$ex_rm_arr = [];$ex_jt_arr = [];$ex_pos_arr = [];
+                $ex_es_arr = [];$ex_doj_arr = [];$ex_dol_arr = [];$ex_exp_arr = [];$ex_ext_arr = [];
+                $ex_wn_arr = [];$ex_fax_arr = [];$tot_rec_cnt = 0;
                 $err_msg = "";
                 for($i=2; $i <= $sizeOfWorksheet; $i++ )
                 {
@@ -668,12 +668,12 @@ class sapp_Helper
 							//date format 2012-09-12(y-m-d)
 							if (!preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",$var))
 							{
-									return array('status' => 'error' , 'msg' => "Date of joining is not a valid format at row ".$i.".");
+									return ['status' => 'error' , 'msg' => "Date of joining is not a valid format at row ".$i."."];
 							}
                         } 
                         catch (Exception $ex) {
                         	
-                           return array('status' => 'error' , 'msg' => "Date of joining is not a valid format at row ".$i.".");
+                           return ['status' => 'error' , 'msg' => "Date of joining is not a valid format at row ".$i."."];
                         }                    
                     }
                     
@@ -685,7 +685,7 @@ class sapp_Helper
                         	$date = str_replace('/', '-', $var);
                         	$test_dol= date('Y-m-d', strtotime($date));
                         } catch (Exception $ex) {
-                            return array('status' => 'error' , 'msg' => "Date of leaving is not a valid format at row ".$i.".");
+                            return ['status' => 'error' , 'msg' => "Date of leaving is not a valid format at row ".$i."."];
                         }                    
                     }
                     if(!empty($rowData[13]) && $rowData[13] < $rowData[12])
@@ -864,7 +864,7 @@ class sapp_Helper
                 }//end of for loop
                 
                 if(!empty($err_msg))
-                    return array('status' => 'error' , 'msg' => $err_msg);
+                    return ['status' => 'error' , 'msg' => $err_msg];
                 $err_msg = "";
                 
                 
@@ -907,7 +907,7 @@ class sapp_Helper
                 }
                  
                 if(!empty($err_msg))
-                    return array('status' => 'error' , 'msg' => $err_msg);
+                    return ['status' => 'error' , 'msg' => $err_msg];
 				
                 //end of validations
                 
@@ -938,13 +938,13 @@ class sapp_Helper
                         }
                         //start of saving into user table
                         $userfullname = $rowData[1].' '.$rowData[2];
-                        $user_data = array(
+                        $user_data = [
                             'emprole' =>$roles_arr[strtolower($rowData[4])],
                             'userfullname' => $userfullname,
                             'firstname' => $rowData[1],
                             'lastname' => $rowData[2],
                             'emailaddress' => $rowData[5],
-                            'jobtitle_id'=> isset($job_arr[strtolower($rowData[9])])?$job_arr[strtolower($rowData[9])]:null,
+                            'jobtitle_id'=> $job_arr[strtolower($rowData[9])] ?? null,
                             'modifiedby'=> $loginUserId,
                             'modifieddate'=> gmdate("Y-m-d H:i:s"),
                             'emppassword' => md5($emppassword),
@@ -952,7 +952,7 @@ class sapp_Helper
                             'modeofentry' => "Direct",
                             'selecteddate' => $date_of_joining,
                             'userstatus' => 'old',       
-                        );
+                        ];
                         $user_data['createdby'] = $loginUserId;
                         $user_data['createddate'] = gmdate("Y-m-d H:i:s");
                         $user_data['isactive'] = 1;
@@ -960,15 +960,15 @@ class sapp_Helper
                         $user_id = $usersModel->SaveorUpdateUserData($user_data, '');
                         //end of saving into user table.
                         //start of saving into employee table
-                        $data = array(  
+                        $data = [  
                             'user_id'=>$user_id,
                             'reporting_manager'=>$users_arr[strtolower($rowData[8])],
                             'emp_status_id'=>$emp_stat_arr[strtolower($rowData[11])],
                             // 'businessunit_id'=>(!empty($rowData[5]))?$bu_arr[strtolower($rowData[6])]:0,
                             'department_id'=>(!empty($rowData[6]))?$dep_arr[strtolower($rowData[7])]:null,
-                            'jobtitle_id'=>isset($job_arr[strtolower($rowData[9])])?$job_arr[strtolower($rowData[9])]:null, 
-                            'position_id'=>isset($positions_arr[strtolower($rowData[10])])?$positions_arr[strtolower($rowData[10])]:null, 
-                            'prefix_id'=> isset($prefix_arr[strtolower($rowData[0])])?$prefix_arr[strtolower($rowData[0])]:null,
+                            'jobtitle_id'=>$job_arr[strtolower($rowData[9])] ?? null, 
+                            'position_id'=>$positions_arr[strtolower($rowData[10])] ?? null, 
+                            'prefix_id'=> $prefix_arr[strtolower($rowData[0])] ?? null,
                             'extension_number'=>($rowData[15]!=''?$rowData[15]:NULL),
                             'office_number'=>($rowData[16]!=''?$rowData[16]:NULL),
                             'office_faxnumber'=>($rowData[17]!=''?$rowData[17]:NULL),
@@ -977,7 +977,7 @@ class sapp_Helper
                             'years_exp'=>($rowData[14]=='')?null:$rowData[14],
                             'modifiedby'=>$loginUserId,				
                             'modifieddate'=>gmdate("Y-m-d H:i:s")
-                        );
+                        ];
                      
                         $data['createdby'] = $loginUserId;
                         $data['createddate'] = gmdate("Y-m-d H:i:s");;
@@ -987,17 +987,17 @@ class sapp_Helper
                         //start of saving into salary details
                         if($rowData[$column_salary_currency] !='' || $rowData[$column_salary] != '' || $rowData[$column_salary_type] != '')
                         {
-                            $salary_data = array(
+                            $salary_data = [
                                 'user_id' => $user_id,
-                                'currencyid' => isset($currency_arr[strtolower($rowData[$column_salary_currency])])?$currency_arr[strtolower($rowData[$column_salary_currency])]:null,
-                                'salarytype' => isset($salary_type_arr[strtolower($rowData[$column_salary_type])])?$salary_type_arr[strtolower($rowData[$column_salary_type])]:null,
+                                'currencyid' => $currency_arr[strtolower($rowData[$column_salary_currency])] ?? null,
+                                'salarytype' => $salary_type_arr[strtolower($rowData[$column_salary_type])] ?? null,
                                 'salary' => !empty($rowData[$column_salary])?sapp_Global::_encrypt($rowData[$column_salary]):null,
                                 'isactive' => 1,
                                 'modifiedby'=> $loginUserId,				
                                 'modifieddate'=> gmdate("Y-m-d H:i:s"),
                                 'createdby'=> $loginUserId,				
                                 'createddate'=> gmdate("Y-m-d H:i:s"),
-                            );
+                            ];
                             $salary_model = new Default_Model_Empsalarydetails();
                             $salary_model->SaveorUpdateEmpSalaryData($salary_data,'');
                         }
@@ -1024,23 +1024,23 @@ class sapp_Helper
                         //end of mail
                     }//end of for loop
                     $trDb->commit();
-                    return array('status' =>"success",'msg' => 'Employees saved successfully.');
+                    return ['status' =>"success",'msg' => 'Employees saved successfully.'];
                 }
                 else
                 {
-                    return array('status' => 'error' , 'msg' => "No records to save.");
+                    return ['status' => 'error' , 'msg' => "No records to save."];
                 }
                 //end of saving
             }
             catch(Exception $e)
             {
                 $trDb->rollBack();
-                return array('status' => 'error' , 'msg' => "Something went wrong,please try again");
+                return ['status' => 'error' , 'msg' => "Something went wrong,please try again"];
             }            
         }
         else 
         {
-           return array('status' => 'error' , 'msg' => "No records to save.");
+           return ['status' => 'error' , 'msg' => "No records to save."];
         }
         
     }//end of process_emp_excel function
@@ -1084,7 +1084,7 @@ class sapp_Helper
 		$dataObj = $categoriesModel->getCategories('menu');
 
 		$categoriesObj = $documentsObj = '';
-		$documentsCntArr = array();
+		$documentsCntArr = [];
 
 		if(!empty($dataObj))
 		{
@@ -1140,7 +1140,7 @@ class sapp_Helper
 		/**
 		** to handle policy documents page urls
 		**/
-		$pd_array = array('id','cat','view','edit','add','addmultiple');
+		$pd_array = ['id','cat','view','edit','add','addmultiple'];
 		$documentsModel = new Default_Model_Documents();
 		
         $pageUrl = explode("/",$_SERVER['REQUEST_URI']);
@@ -1588,17 +1588,17 @@ public static function createNew($loginUserId)
 	public static function viewBody($trClass,$label1,$value1,$label2,$value2)
 		{
 	?>
-		<div class="main_view_<?php echo isset($trClass)?$trClass:'';?>">
+		<div class="main_view_<?php echo $trClass ?? '';?>">
 			<?php if(!empty($label1)) {?>
             <div class="main_view_sub_left">
                     <div class="width_20"><label><?php echo $label1;?></label></div>
-                    <div class="width_80"><label><?php echo isset($value1)?$value1:'';?></label></div>
+                    <div class="width_80"><label><?php echo $value1 ?? '';?></label></div>
             </div>
 			<?php } ?>
 			<?php if(!empty($label2)) {?>
             <div class="main_view_sub_right">
                     <div class="width_20"><label><?php echo $label2;?></label></div>
-                    <div class="width_80"><label><?php echo isset($value2)?$value2:'';?></label></div>
+                    <div class="width_80"><label><?php echo $value2 ?? '';?></label></div>
             </div>
 			<?php }?>
         </div>
@@ -1607,7 +1607,7 @@ public static function createNew($loginUserId)
         public static function viewBody2($trClass,$label1)
 		{
 	?>
-		<div class="main_view_<?php echo isset($trClass)?$trClass:'';?>">
+		<div class="main_view_<?php echo $trClass ?? '';?>">
 			<?php if(!empty($label1)) {?>
             <div class="main_view_sub_left">
                     <div class="width_20"><label><?php echo $label1;?></label></div>
@@ -1630,13 +1630,13 @@ public static function createNew($loginUserId)
 		$approvedLeavesCount = $leaverequestmodel->getLeavesCount($userId,'Approved');
 		$rejectedLeavesCount = $leaverequestmodel->getLeavesCount($userId,'Rejected');
 		$cancelLeavesCount = $leaverequestmodel->getLeavesCount($userId,'Cancelled');
-		return $countArray = array(
+		return $countArray = [
 							'all'=>$pendingLeavesCount+$approvedLeavesCount+$rejectedLeavesCount+$cancelLeavesCount,
 							'pendingleaves'=>$pendingLeavesCount,
 							'cancelleaves'=>$cancelLeavesCount,
 							'approvedleaves'=>$approvedLeavesCount,
 							'rejectedleaves'=>$rejectedLeavesCount				
-							);
+							];
 	}
 	
 	public static function displayLeaveTypeDiv($leavesCountArray){

@@ -33,7 +33,7 @@ class Timemanagement_Model_Configuration extends Zend_Db_Table_Abstract
 	{
 	   $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('c'=>$this->_name),array('c.*'))
+						->from(['c'=>$this->_name],['c.*'])
 					    ->where('c.is_active = 1');
 		return $this->fetchAll($select)->toArray();
 	

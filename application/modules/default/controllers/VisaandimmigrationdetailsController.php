@@ -40,7 +40,7 @@ class Default_VisaandimmigrationdetailsController extends Zend_Controller_Action
 			$empOrganizationTabs = explode(",",EMPTABCONFIGS);
 		
 			if(in_array('visadetails',$empOrganizationTabs)){
-				$userID="";$levelsArr=array();$empcompetencyLevelsArr =array();
+				$userID="";$levelsArr=[];$empcompetencyLevelsArr =[];
 				$auth = Zend_Auth::getInstance();
 				if($auth->hasIdentity()){
 					$loginUserId = $auth->getStorage()->read()->id;
@@ -57,7 +57,7 @@ class Default_VisaandimmigrationdetailsController extends Zend_Controller_Action
 					$conText = ($this->_getParam('context') !='')? $this->_getParam('context'):$this->getRequest()->getParam('context');
 				}
 				if($id == '')		$id = $userID;
-				$Uid = ($id)?$id:$userID;
+				$Uid = $id ?: $userID;
 				$employeeModal = new Default_Model_Employee();
 				try
 				{
@@ -81,7 +81,7 @@ class Default_VisaandimmigrationdetailsController extends Zend_Controller_Action
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall',null);
-								$data = array();	$searchQuery = '';	$searchArray = array();		$tablecontent = '';
+								$data = [];	$searchQuery = '';	$searchArray = [];		$tablecontent = '';
 								if($refresh == 'refresh')
 								{
 									if($dashboardcall == 'Yes')
@@ -140,7 +140,7 @@ class Default_VisaandimmigrationdetailsController extends Zend_Controller_Action
 			$empOrganizationTabs = explode(",",EMPTABCONFIGS);
 	
 			if(in_array('visadetails',$empOrganizationTabs)){
-				$userID="";$levelsArr=array();
+				$userID="";$levelsArr=[];
 				$auth = Zend_Auth::getInstance();
 				if($auth->hasIdentity()){
 					$loginUserId = $auth->getStorage()->read()->id;
@@ -157,7 +157,7 @@ class Default_VisaandimmigrationdetailsController extends Zend_Controller_Action
 					$conText = ($this->_getParam('context') !='')? $this->_getParam('context'):$this->getRequest()->getParam('context');
 				}
 				if($id == '')		$id = $userID;
-				$Uid = ($id)?$id:$userID;
+				$Uid = $id ?: $userID;
 				 
 				$employeeModal = new Default_Model_Employee();
 				try
@@ -182,7 +182,7 @@ class Default_VisaandimmigrationdetailsController extends Zend_Controller_Action
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall',null);
-								$data = array();	$searchQuery = '';	$searchArray = array();		$tablecontent = '';
+								$data = [];	$searchQuery = '';	$searchArray = [];		$tablecontent = '';
 								if($refresh == 'refresh')
 								{
 									if($dashboardcall == 'Yes')
@@ -241,7 +241,7 @@ class Default_VisaandimmigrationdetailsController extends Zend_Controller_Action
 		 			$empOrganizationTabs = explode(",",EMPTABCONFIGS);
 		 		
 		 			if(in_array('visadetails',$empOrganizationTabs)){
-		 				$userID="";$levelsArr=array();$empcompetencyLevelsArr =array();
+		 				$userID="";$levelsArr=[];$empcompetencyLevelsArr =[];
 		 				$auth = Zend_Auth::getInstance();
 		 				if($auth->hasIdentity()){
 		 					$loginUserId = $auth->getStorage()->read()->id;
@@ -258,7 +258,7 @@ class Default_VisaandimmigrationdetailsController extends Zend_Controller_Action
 		 					$conText = ($this->_getParam('context') !='')? $this->_getParam('context'):$this->getRequest()->getParam('context');
 		 				}
 		 				if($id == '')		$id = $userID;
-		 				$Uid = ($id)?$id:$userID;
+		 				$Uid = $id ?: $userID;
 		 					
 		 				$employeeModal = new Default_Model_Employee();
 		 				try
@@ -283,7 +283,7 @@ class Default_VisaandimmigrationdetailsController extends Zend_Controller_Action
 		 								$objname = $this->_getParam('objname');
 		 								$refresh = $this->_getParam('refresh');
 		 								$dashboardcall = $this->_getParam('dashboardcall',null);
-		 								$data = array();	$searchQuery = '';	$searchArray = array();		$tablecontent = '';
+		 								$data = [];	$searchQuery = '';	$searchArray = [];		$tablecontent = '';
 		 								if($refresh == 'refresh')
 		 								{
 		 									if($dashboardcall == 'Yes')
@@ -343,8 +343,8 @@ class Default_VisaandimmigrationdetailsController extends Zend_Controller_Action
 		 		}
 		 		$passport_num = new Zend_Form_Element_Text('passport_number');
 		 		$flag=true;
-		 		$msgarray = array();
-		 		$passportDetails=array();
+		 		$msgarray = [];
+		 		$passportDetails=[];
 		 		$passportNumber=$this->_request->getParam('passport_number');
 		 		$visaandimmigrationdetailsModel = new Default_Model_Visaandimmigrationdetails();
 		 		$passportDetails=$visaandimmigrationdetailsModel->getvisadetailsRecord($userid);
@@ -381,7 +381,7 @@ class Default_VisaandimmigrationdetailsController extends Zend_Controller_Action
 		 			$inine_review = sapp_Global::change_date($inine_review_date, 'database');
 		 			$ininetyfour_expiry = sapp_Global::change_date($ininetyfour_expiry_date, 'database');
 		 	
-		 			$data = array(  'passport_number'=>$passport_num,
+		 			$data = [  'passport_number'=>$passport_num,
 		 					'passport_issue_date'=>$passport_issue,
 		 					'passport_expiry_date'=>$passport_expiry,
 		 					'visa_number'=>$visa_number,
@@ -396,9 +396,9 @@ class Default_VisaandimmigrationdetailsController extends Zend_Controller_Action
 		 					'user_id'=>$user_id,
 		 					'modifiedby'=>$loginUserId,
 		 					'modifieddate'=>gmdate("Y-m-d H:i:s")
-		 			);
+		 			];
 		 			if($id!=''){
-		 				$where = array('id=?'=>$id);
+		 				$where = ['id=?'=>$id];
 		 				$actionflag = 2;
 		 			}
 		 			else
@@ -459,7 +459,7 @@ class Default_VisaandimmigrationdetailsController extends Zend_Controller_Action
 		 		$emptyFlag=0;
 		 		$Visaandimmigrationdetailsform = new Default_Form_Visaandimmigrationdetails();
 		 		$visaandimmigrationdetailsModel = new Default_Model_Visaandimmigrationdetails();
-		 		$msgarray = array();
+		 		$msgarray = [];
 		 		$Visaandimmigrationdetailsform->setAttrib('action',BASE_URL.'visaandimmigrationdetails/addpopup/unitId/'.$id);
 		 		$this->view->form = $Visaandimmigrationdetailsform;
 		 		$this->view->msgarray = $msgarray;
@@ -555,8 +555,8 @@ class Default_VisaandimmigrationdetailsController extends Zend_Controller_Action
 		 		if($id)
 		 		{
 		 			$visaandimmigrationdetailsModel = new Default_Model_Visaandimmigrationdetails();
-		 			$data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-		 			$where = array('id=?'=>$id);
+		 			$data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+		 			$where = ['id=?'=>$id];
 		 			$Id = $visaandimmigrationdetailsModel->SaveorUpdatevisaandimmigrationDetails($data, $where);
 		 			if($Id == 'update')
 		 			{

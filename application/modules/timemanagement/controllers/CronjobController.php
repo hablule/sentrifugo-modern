@@ -44,39 +44,39 @@ class Timemanagement_CronjobController extends Zend_Controller_Action
 		$this->_helper->layout()->disableLayout();
 
 		$date = new Zend_Date();
-		
+
 		//parameter wise cronjob start
-		$a_date = ($this->_getParam('date'))?$this->_getParam('date'):"";
+		$a_date = $this->_getParam('date') ?: "";
 		//parameter wise cronjob end
 		if($a_date!="")
 		{
 			$a_date = date("Y-m-d", strtotime($a_date));
 		}
-		
+
 		//weekly mail reminder function
 		$this->mailreminder($a_date);
 		//monthly mail reminder function
 		$this->monthlyempblockremainder($a_date);
-		
+
 		//monthly block function
 		$this->monthlyblockedemp($a_date);
 
 		$tm_cronjob_statusModel = new Timemanagement_Model_Cronjobstatus;
 		$checkAnyCronRunning = $tm_cronjob_statusModel->checkCronRunning();
 		if(count($checkAnyCronRunning) == 0){
-			$cronstatusData = array('cronjob_status' => 'running',
+			$cronstatusData = ['cronjob_status' => 'running',
 										'start_date' => gmdate("Y-m-d H:i:s"),
 										'end_date'=>gmdate("Y-m-d H:i:s")
-			);
+			];
 
 			$insertedCronjobStatusId = $tm_cronjob_statusModel->saveorUpdateCronjobStatusData($cronstatusData,'');
 
 			$this->tmmailscron();
 
-			$cronstatusData = array('cronjob_status' => 'stopped',
+			$cronstatusData = ['cronjob_status' => 'stopped',
 										'end_date'=>gmdate("Y-m-d H:i:s")
-			);
-			$whereCronstatus = array('id=?'=>$insertedCronjobStatusId);
+			];
+			$whereCronstatus = ['id=?'=>$insertedCronjobStatusId];
 
 			$updateCronjobStatus = $tm_cronjob_statusModel->saveorUpdateCronjobStatusData($cronstatusData,$whereCronstatus);
 
@@ -96,10 +96,10 @@ class Timemanagement_CronjobController extends Zend_Controller_Action
 		$tm_cronjob_statusModel = new Timemanagement_Model_Cronjobstatus;
 		$checkAnyCronRunning = $tm_cronjob_statusModel->checkCronRunning();
 		if(count($checkAnyCronRunning) == 0){
-			$cronstatusData = array('cronjob_status' => 'running',
+			$cronstatusData = ['cronjob_status' => 'running',
 										'start_date' => gmdate("Y-m-d H:i:s"),
 										'end_date'=>gmdate("Y-m-d H:i:s")
-			);
+			];
 
 			$insertedCronjobStatusId = $tm_cronjob_statusModel->saveorUpdateCronjobStatusData($cronstatusData,'');
 
@@ -109,9 +109,9 @@ class Timemanagement_CronjobController extends Zend_Controller_Action
 			if(!empty($getTmConfig)){
 				try{
 
-					$weekCon_arr = array('sun'=>'Sunday','mon'=>'Monday','tue'=>'Tuesday','wed'=>'Wednesday','thu'=>'Thursday','fri'=>'Friday','sat'=>'Saturday');
-					$startday_err=array('Sunday'=>7,'Monday'=>8,'Tuesday'=>9,'Wednesday'=>10,'Thursday'=>11,'Friday'=>12,'Saturday'=>13);
-					$endday_err=array('Sunday'=>1,'Monday'=>2,'Tuesday'=>3,'Wednesday'=>4,'Thursday'=>5,'Friday'=>6,'Saturday'=>7);
+					$weekCon_arr = ['sun'=>'Sunday','mon'=>'Monday','tue'=>'Tuesday','wed'=>'Wednesday','thu'=>'Thursday','fri'=>'Friday','sat'=>'Saturday'];
+					$startday_err=['Sunday'=>7,'Monday'=>8,'Tuesday'=>9,'Wednesday'=>10,'Thursday'=>11,'Friday'=>12,'Saturday'=>13];
+					$endday_err=['Sunday'=>1,'Monday'=>2,'Tuesday'=>3,'Wednesday'=>4,'Thursday'=>5,'Friday'=>6,'Saturday'=>7];
 
 					//$a_date = $this->_getParam('date');
 					//$a_date = '2015-06-04';
@@ -140,7 +140,7 @@ class Timemanagement_CronjobController extends Zend_Controller_Action
 						{
 							$emp_data = $tmUsers_model->getEmployeesReportingTo($mgr['user_id'],$cron_day);
 
-							$emp_arr=array();
+							$emp_arr=[];
 							if(count($emp_data) > 0){
 								foreach($emp_data as $emp)
 								{
@@ -172,10 +172,10 @@ class Timemanagement_CronjobController extends Zend_Controller_Action
 						echo "Date doesn't match";
 					}
 
-					$cronstatusData = array('cronjob_status' => 'stopped',
+					$cronstatusData = ['cronjob_status' => 'stopped',
 										'end_date'=>gmdate("Y-m-d H:i:s")
-					);
-					$whereCronstatus = array('id=?'=>$insertedCronjobStatusId);
+					];
+					$whereCronstatus = ['id=?'=>$insertedCronjobStatusId];
 
 					$updateCronjobStatus = $tm_cronjob_statusModel->saveorUpdateCronjobStatusData($cronstatusData,$whereCronstatus);
 				}
@@ -185,11 +185,11 @@ class Timemanagement_CronjobController extends Zend_Controller_Action
 				}
 			}else{
 				echo 'Timemanagement configuration not yet set.';
-				
-				$cronstatusData = array('cronjob_status' => 'stopped',
+
+				$cronstatusData = ['cronjob_status' => 'stopped',
 										'end_date'=>gmdate("Y-m-d H:i:s")
-					);
-				$whereCronstatus = array('id=?'=>$insertedCronjobStatusId);
+					];
+				$whereCronstatus = ['id=?'=>$insertedCronjobStatusId];
 
 				$updateCronjobStatus = $tm_cronjob_statusModel->saveorUpdateCronjobStatusData($cronstatusData,$whereCronstatus);
 			}
@@ -225,7 +225,7 @@ class Timemanagement_CronjobController extends Zend_Controller_Action
 
 		/*Insert data to send mail*/
 		$totDays = implode(",", $days);
-		$mailslist_data = array('emp_id'=>$empid,
+		$mailslist_data = ['emp_id'=>$empid,
 								'mail_type'=>$mail_type,
 								'ts_dates'=>$totDays,
 		                        'emp_full_name'=>$emp_name,
@@ -235,7 +235,7 @@ class Timemanagement_CronjobController extends Zend_Controller_Action
 								'mail_content'=>$text,
 								'is_mail_sent'=>0,
 								'created' => gmdate("Y-m-d H:i:s"),
-		);
+		];
 
 		$mailslist_where = '';
 
@@ -270,7 +270,7 @@ class Timemanagement_CronjobController extends Zend_Controller_Action
 			if($whichremainder == 'weeklyreminder'){
 				$mail_type = 'submit_pending';
 				$text = $view->render('tmmailtemplates/ts_weekly_manager.phtml');
-					
+
 			}else if($whichremainder == 'monthlyblock'){
 				$mail_type = 'block';
 				$text = $view->render('tmmailtemplates/monthlyemptimesheet.phtml');
@@ -281,7 +281,7 @@ class Timemanagement_CronjobController extends Zend_Controller_Action
 			$trDb->beginTransaction();
 			try
 			{
-				$mailslist_data = array('emp_id'=>$mgr_id,
+				$mailslist_data = ['emp_id'=>$mgr_id,
 								'mail_type'=>$mail_type,
 								'ts_dates'=>'',
 								'emp_full_name'=>$mgr_name,
@@ -291,7 +291,7 @@ class Timemanagement_CronjobController extends Zend_Controller_Action
 								'mail_content'=>$text,
 								'is_mail_sent'=>0,
 								'created' => gmdate("Y-m-d H:i:s"),
-				);
+				];
 
 				$mailslist_where = '';
 
@@ -316,10 +316,10 @@ class Timemanagement_CronjobController extends Zend_Controller_Action
 		$tm_cronjob_statusModel = new Timemanagement_Model_Cronjobstatus;
 		$checkAnyCronRunning = $tm_cronjob_statusModel->checkCronRunning();
 		if(count($checkAnyCronRunning) == 0){
-			$cronstatusData = array('cronjob_status' => 'running',
+			$cronstatusData = ['cronjob_status' => 'running',
 										'start_date' => gmdate("Y-m-d H:i:s"),
 										'end_date'=>gmdate("Y-m-d H:i:s")
-			);
+			];
 
 			$insertedCronjobStatusId = $tm_cronjob_statusModel->saveorUpdateCronjobStatusData($cronstatusData,'');
 
@@ -400,7 +400,7 @@ class Timemanagement_CronjobController extends Zend_Controller_Action
 						{
 							$emp_data = $tmUsers_model->getEmployeesReportingTo($mgr['user_id'],$cron_run_date);
 
-							$emp_arr=array();
+							$emp_arr=[];
 							if(count($emp_data)>0){
 								foreach($emp_data as $emp)
 								{
@@ -420,29 +420,29 @@ class Timemanagement_CronjobController extends Zend_Controller_Action
 						}
 					}
 
-					$cronstatusData = array('cronjob_status' => 'stopped',
+					$cronstatusData = ['cronjob_status' => 'stopped',
 										'end_date'=>gmdate("Y-m-d H:i:s")
-					);
-					$whereCronstatus = array('id=?'=>$insertedCronjobStatusId);
+					];
+					$whereCronstatus = ['id=?'=>$insertedCronjobStatusId];
 
 					$updateCronjobStatus = $tm_cronjob_statusModel->saveorUpdateCronjobStatusData($cronstatusData,$whereCronstatus);
 				}else{
 					echo "Date doesn't match";
-					
-					$cronstatusData = array('cronjob_status' => 'stopped',
+
+					$cronstatusData = ['cronjob_status' => 'stopped',
 										'end_date'=>gmdate("Y-m-d H:i:s")
-					);
-					$whereCronstatus = array('id=?'=>$insertedCronjobStatusId);
+					];
+					$whereCronstatus = ['id=?'=>$insertedCronjobStatusId];
 
 					$updateCronjobStatus = $tm_cronjob_statusModel->saveorUpdateCronjobStatusData($cronstatusData,$whereCronstatus);
 				}
 			}else{
 				echo 'Timemanagement configuration not yet set.';
-				
-				$cronstatusData = array('cronjob_status' => 'stopped',
+
+				$cronstatusData = ['cronjob_status' => 'stopped',
 										'end_date'=>gmdate("Y-m-d H:i:s")
-					);
-				$whereCronstatus = array('id=?'=>$insertedCronjobStatusId);
+					];
+				$whereCronstatus = ['id=?'=>$insertedCronjobStatusId];
 
 				$updateCronjobStatus = $tm_cronjob_statusModel->saveorUpdateCronjobStatusData($cronstatusData,$whereCronstatus);
 			}
@@ -468,10 +468,10 @@ class Timemanagement_CronjobController extends Zend_Controller_Action
 		$tm_cronjob_statusModel = new Timemanagement_Model_Cronjobstatus;
 		$checkAnyCronRunning = $tm_cronjob_statusModel->checkCronRunning();
 		if(count($checkAnyCronRunning) == 0){
-			$cronstatusData = array('cronjob_status' => 'running',
+			$cronstatusData = ['cronjob_status' => 'running',
 									'start_date' => gmdate("Y-m-d H:i:s"),
 									'end_date'=>gmdate("Y-m-d H:i:s")
-			);
+			];
 
 			$insertedCronjobStatusId = $tm_cronjob_statusModel->saveorUpdateCronjobStatusData($cronstatusData,'');
 
@@ -550,7 +550,7 @@ class Timemanagement_CronjobController extends Zend_Controller_Action
 						{
 							$emp_data = $tmUsers_model->getEmployeesReportingTo($mgr['user_id'],$cron_run_date);
 
-							$emp_arr=array();
+							$emp_arr=[];
 							if(count($emp_data) > 0){
 								foreach($emp_data as $emp)
 								{
@@ -576,7 +576,7 @@ class Timemanagement_CronjobController extends Zend_Controller_Action
 					/*insert record in mail_list table for front end use*/
 					if(!$atleastOneEmpBlocked){
 
-						$mailslistdummy_data = array('emp_id'=> NULL,
+						$mailslistdummy_data = ['emp_id'=> NULL,
 								'mail_type'=>'block',
 								'ts_dates'=> NULL,
 								'emp_full_name'=> NULL,
@@ -586,44 +586,44 @@ class Timemanagement_CronjobController extends Zend_Controller_Action
 								'mail_content'=> NULL,
 								'is_mail_sent'=>1,
 								'created' => gmdate("Y-m-d H:i:s"),
-						);
+						];
 
 						$mailslist_where = '';
-						
+
 						$tmMail_model = new Timemanagement_Model_Mailslist();
 						$id = $tmMail_model->addOrUpdateMailsList($mailslistdummy_data,$mailslist_where);
 					}
 						/*end insert record in mail_list table for front end use*/
 
 					// cronstatus update
-					$cronstatusData = array('cronjob_status' => 'stopped',
+					$cronstatusData = ['cronjob_status' => 'stopped',
 										'end_date'=>gmdate("Y-m-d H:i:s")
-					);
-					$whereCronstatus = array('id=?'=>$insertedCronjobStatusId);
+					];
+					$whereCronstatus = ['id=?'=>$insertedCronjobStatusId];
 
 					$updateCronjobStatus = $tm_cronjob_statusModel->saveorUpdateCronjobStatusData($cronstatusData,$whereCronstatus);
 					//end cronstatus update
 				}else{
 					echo "Date doesn't match";					
-					
+
 					// cronstatus update
-					$cronstatusData = array('cronjob_status' => 'stopped',
+					$cronstatusData = ['cronjob_status' => 'stopped',
 										'end_date'=>gmdate("Y-m-d H:i:s")
-					);
-					$whereCronstatus = array('id=?'=>$insertedCronjobStatusId);
+					];
+					$whereCronstatus = ['id=?'=>$insertedCronjobStatusId];
 
 					$updateCronjobStatus = $tm_cronjob_statusModel->saveorUpdateCronjobStatusData($cronstatusData,$whereCronstatus);
 					//end cronstatus update
 				}
 			}else{
 				echo 'Timemanagement configuration not yet set.';
-				
-				
+
+
 				// cronstatus update
-				$cronstatusData = array('cronjob_status' => 'stopped',
+				$cronstatusData = ['cronjob_status' => 'stopped',
 									'end_date'=>gmdate("Y-m-d H:i:s")
-				);
-				$whereCronstatus = array('id=?'=>$insertedCronjobStatusId);
+				];
+				$whereCronstatus = ['id=?'=>$insertedCronjobStatusId];
 
 				$updateCronjobStatus = $tm_cronjob_statusModel->saveorUpdateCronjobStatusData($cronstatusData,$whereCronstatus);
 				//end cronstatus update
@@ -635,9 +635,9 @@ class Timemanagement_CronjobController extends Zend_Controller_Action
 	//End
 
 	//child function to block
-	function notfilledDays($user_id,$fin_dates,$blockConfigDay){
-		$monthCalWeek = array(); //cal_weeks in a month for notfilleddates
-		$monthCalWeekDates = array();
+	public function notfilledDays($user_id,$fin_dates,$blockConfigDay){
+		$monthCalWeek = []; //cal_weeks in a month for notfilleddates
+		$monthCalWeekDates = [];
 
 		foreach($fin_dates as $notFilledDate){
 			//echo $notFilledDate.'<br>';
@@ -665,19 +665,19 @@ class Timemanagement_CronjobController extends Zend_Controller_Action
 
 					$YearFromStartDate = strftime('%Y',strtotime($startDateOfWeek));
 
-					$weekDates = array(date('Y-m-d', strtotime($startDateOfWeek)),
+					$weekDates = [date('Y-m-d', strtotime($startDateOfWeek)),
 					date('Y-m-d', strtotime($startDateOfWeek . " +1 days")),
 					date('Y-m-d', strtotime($startDateOfWeek . " +2 days")),
 					date('Y-m-d', strtotime($startDateOfWeek . " +3 days")),
 					date('Y-m-d', strtotime($startDateOfWeek . " +4 days")),
 					date('Y-m-d', strtotime($startDateOfWeek . " +5 days")),
 					date('Y-m-d', strtotime($startDateOfWeek . " +6 days")),
-					);
+					];
 
 					$loopDate = $weekDates[0];
 
-					$yearCalWeekArray = array();
-					$monthCalWeekArray = $monthWeekCalDatesArray = array();
+					$yearCalWeekArray = [];
+					$monthCalWeekArray = $monthWeekCalDatesArray = [];
 
 					while (strtotime($loopDate) <= strtotime($weekDates[6])) {
 
@@ -707,12 +707,12 @@ class Timemanagement_CronjobController extends Zend_Controller_Action
 						$monthnum = (int)$monthnum;
 						$empTsDataByDate = $ts_model->getTsRecordExists($user_id,$year,$monthnum,$week,$calWeekVal);//print_r($empTsDataByDate);exit;
 
-						$weekTableDateKeys = array('sun_date','mon_date','tue_date','wed_date','thu_date','fri_date','sat_date');
-						$weekTableStatusKeys = array('sun_status','mon_status','tue_status','wed_status','thu_status','fri_status','sat_status');
-						$projWeekTableStatusKeys = array('sun_project_status','mon_project_status','tue_project_status','wed_project_status','thu_project_status','fri_project_status','sat_project_status');
+						$weekTableDateKeys = ['sun_date','mon_date','tue_date','wed_date','thu_date','fri_date','sat_date'];
+						$weekTableStatusKeys = ['sun_status','mon_status','tue_status','wed_status','thu_status','fri_status','sat_status'];
+						$projWeekTableStatusKeys = ['sun_project_status','mon_project_status','tue_project_status','wed_project_status','thu_project_status','fri_project_status','sat_project_status'];
 
 						if(count($empTsDataByDate) == 0){
-							$insertData = array('emp_id'=>$user_id,
+							$insertData = ['emp_id'=>$user_id,
 											 'ts_year'=>$year,
 											 'ts_month' => $monthnum,
 											 'ts_week' => $week,
@@ -721,11 +721,11 @@ class Timemanagement_CronjobController extends Zend_Controller_Action
 						                     'created_by' => 1,
 											 'created' => gmdate("Y-m-d H:i:s"),
 											 'modified' => gmdate("Y-m-d H:i:s"),
-							);
+							];
 
-							$tableStatusArray = array();
+							$tableStatusArray = [];
 							$blockedFlag = false;
-							$projStatusArray = array();
+							$projStatusArray = [];
 							foreach($weekTableDateKeys as $key => $tableDate){
 								$projStatusArray[$projWeekTableStatusKeys[$key]] = 'no_entry';
 								$insertData[$tableDate] = $weekDates[$key];
@@ -748,16 +748,16 @@ class Timemanagement_CronjobController extends Zend_Controller_Action
 
 							// add day status and week status to inserted array
 							if($blockedFlag){
-								$week_status = array('week_status' => 'blocked');
+								$week_status = ['week_status' => 'blocked'];
 							}else{
-								$week_status = array('week_status' => 'no_entry');
+								$week_status = ['week_status' => 'no_entry'];
 							}
 
 							$tsinsertData = $insertData + $tableStatusArray+ $week_status+$projStatusArray;
 							$insertedTsid = $ts_model->SaveTsData($tsinsertData);
 
 						}else{ // update tbl_ts_status table for not not filled dates
-							$updateData = array();
+							$updateData = [];
 							$blockedFlag = false;
 							foreach($weekTableDateKeys as $key => $tableDate){
 								if(in_array($weekDates[$key],$monthCalWeekDates[$calWeekVal])){
@@ -769,15 +769,15 @@ class Timemanagement_CronjobController extends Zend_Controller_Action
 									}
 								}
 							}
-							
+
 							// add day status and week status to inserted array
 							if($blockedFlag){
 								$week_status_text = 'blocked';
 							}else{
 								$week_status_text = 'no_entry';
 							}
-							
-							$updateData = $updateData + array('week_status' => $week_status_text,'modified' => gmdate("Y-m-d H:i:s"));
+
+							$updateData = $updateData + ['week_status' => $week_status_text,'modified' => gmdate("Y-m-d H:i:s")];
 							$where['emp_id = ?'] = $user_id;
 							$where['ts_year = ?'] = $year;
 							$where['ts_month = ?'] = $monthnum;
@@ -794,7 +794,7 @@ class Timemanagement_CronjobController extends Zend_Controller_Action
 
 
 	//cron to send timemanagement mails from tm_mailing_list
-	function tmmailscron()
+	public function tmmailscron()
 	{
 		try{
 			$tmMail_model = new Timemanagement_Model_Mailslist();
@@ -826,7 +826,7 @@ class Timemanagement_CronjobController extends Zend_Controller_Action
 
 					$mail_status = sapp_Mail::_email($options);
 
-					$mail_where = array('id=?' => $mail['id']);
+					$mail_where = ['id=?' => $mail['id']];
 					$new_maildata['is_mail_sent'] = 1;
 					if($mail_status === true)
 					{

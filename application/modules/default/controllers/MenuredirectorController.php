@@ -55,7 +55,7 @@ class Default_MenuredirectorController extends Zend_Controller_Action
             $this->_redirect($targetRoute);
         } else {
             // Failsafe: No permissions for any sub-modules
-            $this->_helper->flashMessenger->addMessage(array('error' => "You do not have permission to view any modules within this section."));
+            $this->_helper->flashMessenger->addMessage(['error' => "You do not have permission to view any modules within this section."]);
             $this->_redirect('dashboard');
         }
     }

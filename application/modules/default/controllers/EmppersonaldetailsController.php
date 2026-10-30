@@ -50,8 +50,8 @@ class Default_EmppersonaldetailsController extends Zend_Controller_Action
 		 		$loginUserGroup = $auth->getStorage()->read()->group_id;
 				$loginUserRole = $auth->getStorage()->read()->emprole;
 		 	}
-		 	$identityDocumentArr = array();
-			$documentsArr = array();
+		 	$identityDocumentArr = [];
+			$documentsArr = [];
 		 	$id = $this->getRequest()->getParam('userid');
 		 	if($id == '')		$id = $loginUserId;
 
@@ -256,8 +256,8 @@ class Default_EmppersonaldetailsController extends Zend_Controller_Action
 
 		$languagepermission = '';
 		$nationalityaddpermission = '';	
-		$identityDocumentArr = array();
-		$documentsArr = array();
+		$identityDocumentArr = [];
+		$documentsArr = [];
 		
 
 
@@ -320,7 +320,7 @@ class Default_EmppersonaldetailsController extends Zend_Controller_Action
 								$languagemodel = new Default_Model_Language();
 								$religionmodel = new Default_Model_Religion();
 
-								$msgarray = array();
+								$msgarray = [];
 
 								$genderlistArr = $genderModel->getGenderList();
 
@@ -539,7 +539,7 @@ class Default_EmppersonaldetailsController extends Zend_Controller_Action
 					$actionflag = '';
 					$tableid  = '';
 		
-					$data = array('emp_id'=>$user_id,
+					$data = ['emp_id'=>$user_id,
 						                 'genderid'=>$genderid,
 										 'maritalstatusid'=>$maritalstatusid,
 		                                 'nationalityid'=>$nationalityid,
@@ -554,9 +554,9 @@ class Default_EmppersonaldetailsController extends Zend_Controller_Action
 										 'modifiedby'=>$loginUserId,
 					                     'modifieddate'=>gmdate("Y-m-d H:i:s")
 		
-					);
+					];
 					if($id!=''){
-						$where = array('emp_id=?'=>$user_id);
+						$where = ['emp_id=?'=>$user_id];
 						$actionflag = 2;
 					}
 					else
@@ -571,19 +571,19 @@ class Default_EmppersonaldetailsController extends Zend_Controller_Action
 					if($Id == 'update')
 					{
 						$tableid = $id;
-						$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Employee personal details updated successfully."));
+						$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Employee personal details updated successfully."]);
 							
 					}
 					else
 					{
 						$tableid = $Id;
-						$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Employee personal details added successfully."));
+						$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Employee personal details added successfully."]);
 					}
 					$menuID = EMPLOYEE;
 					$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$user_id);
 			}else
 			{
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>FIELDMSG));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>FIELDMSG]);
 			}			
 					$this->_redirect('emppersonaldetails/edit/userid/'.$userid);
 		}else

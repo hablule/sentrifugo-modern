@@ -68,9 +68,9 @@ class Timemanagement_ProjecttasksController extends Zend_Controller_Action
 		$dashboardcall = $this->_getParam('dashboardcall');
 		$projectId = $this->_getParam('projectId');
 
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 
 		if($refresh == 'refresh')
@@ -138,24 +138,24 @@ class Timemanagement_ProjecttasksController extends Zend_Controller_Action
 			$checkProjectTaskDependency = $projectTaskModel->checkProjectTaskDependency($projectId,$projectTaskId);
 			
 			if($checkProjectTaskDependency == 0){
-				$data = array('is_active'=>0,'modified'=>gmdate("Y-m-d H:i:s"),'modified_by'=>$loginUserId);
-				$where = array('id=?'=>$projectTaskId);
+				$data = ['is_active'=>0,'modified'=>gmdate("Y-m-d H:i:s"),'modified_by'=>$loginUserId];
+				$where = ['id=?'=>$projectTaskId];
 					
 				$Id = $projectTaskModel->SaveorUpdateProjectTaskData($data, $where);
 				if($Id == 'update')
 				{
-					$update_data = array('is_active'=>0,'modified'=>gmdate("Y-m-d H:i:s"),'modified_by'=>$loginUserId);
-					$where_cond = array('project_task_id=?'=>$projectTaskId,'project_id=?'=>$projectId);
+					$update_data = ['is_active'=>0,'modified'=>gmdate("Y-m-d H:i:s"),'modified_by'=>$loginUserId];
+					$where_cond = ['project_task_id=?'=>$projectTaskId,'project_id=?'=>$projectId];
 					$update_is_active = $projectTasResourceModel->SaveorUpdateProjectTaskResourceData($update_data,$where_cond);
 					
 					$taskAssignedCount = $projectTasResourceModel->getAssignedTaskCount($taskId,$projectId);
 					if($taskAssignedCount==0)
 					{
-						$task_where = array('id=?'=>trim($taskId));
-						$task_data = array( 'is_active'=>0,
+						$task_where = ['id=?'=>trim($taskId)];
+						$task_data = [ 'is_active'=>0,
 				                   'modified_by'=>$loginUserId,
 							       'modified'=>gmdate("Y-m-d H:i:s")	
-						);
+						];
 						$updateisactiveintm_task = $TaskModel->SaveorUpdateTaskData($task_data,$task_where);
 					}
 					
@@ -173,7 +173,7 @@ class Timemanagement_ProjecttasksController extends Zend_Controller_Action
 				$messages['msgtype'] = 'error';
 			}
 		}
-		$this->_helper->json(array('message'=>$messages['message'],'status'=>$messages['msgtype']));
+		$this->_helper->json(['message'=>$messages['message'],'status'=>$messages['msgtype']]);
 	}
 
 
@@ -187,8 +187,8 @@ class Timemanagement_ProjecttasksController extends Zend_Controller_Action
 			$projectEmployees = $projectTaskModel->getProjectEmployees($projectId);
 			$projectTaskEmployees = $projectTaskModel->getProjectTaskEmployees($projectId,$taskId,$projectTaskId);
 			$taskDetails = $projectTaskModel->getProjectTaskDetails($projectTaskId);
-			$assignedEmployees = array();
-			$notAssignedEmployees = array();
+			$assignedEmployees = [];
+			$notAssignedEmployees = [];
 
 			$existedEmpArray = $this->array_column($projectTaskEmployees, 'emp_id');
 
@@ -216,8 +216,8 @@ class Timemanagement_ProjecttasksController extends Zend_Controller_Action
 	}
 
 	//function to create single key values from a multidimensional array
-	function array_column(array $input, $columnKey, $indexKey = null) {
-		$array = array();
+	public function array_column(array $input, $columnKey, $indexKey = null) {
+		$array = [];
 		foreach ($input as $value) {
 			if ( ! isset($value[$columnKey])) {
 				trigger_error("Key \"$columnKey\" does not exist in array");
@@ -254,7 +254,7 @@ class Timemanagement_ProjecttasksController extends Zend_Controller_Action
 				$taskId = $this->_getParam('taskId');
 				$projectTaskId = $this->_getParam('projectTaskId');
 					
-				$oldRes_arr = $newRes_arr = array();
+				$oldRes_arr = $newRes_arr = [];
 				//echo $oldRes.'</br>';
 				if(isset($oldRes) && $oldRes != '')
 				{
@@ -278,7 +278,7 @@ class Timemanagement_ProjecttasksController extends Zend_Controller_Action
 				 		$checkprojTaskResRecExists = $projectTaskResourceModel->isTaskAssigned(trim($projectId),trim($taskId),trim($newRess));
 
 				 		if(empty($checkprojTaskResRecExists)){
-				 			$projectTaskResourceData = array( 'project_id'=>trim($projectId),
+				 			$projectTaskResourceData = [ 'project_id'=>trim($projectId),
 										             'task_id'=>trim($taskId), 
 				 	                                 'project_task_id'=>trim($projectTaskId), 
 				 	                                 'emp_id'=>trim($newRess),
@@ -287,8 +287,8 @@ class Timemanagement_ProjecttasksController extends Zend_Controller_Action
 													 'is_active' => 1,
 										   			 'modified_by'=>$loginUserId,
 													 'modified'=>gmdate("Y-m-d H:i:s")	
-				 			);
-				 			 
+				 			];
+
 				 			$result = $projectTaskResourceModel->SaveorUpdateProjectTaskResourceData($projectTaskResourceData,'');
 				 		}
 				 		//echo $result;
@@ -298,15 +298,15 @@ class Timemanagement_ProjecttasksController extends Zend_Controller_Action
 
 				if(!empty($oldRes_arr)){ // now $oldRes_arr contains removed res id's
 					foreach($oldRes_arr as $removedRes){
-						$projectTaskResourceData_remove = array( 'is_active' => 0,
+						$projectTaskResourceData_remove = [ 'is_active' => 0,
 										   			       'modified_by'=>$loginUserId,
 													       'modified'=>gmdate("Y-m-d H:i:s")	
-						);
-						$where = array('project_id=?'=>trim($projectId),'project_task_id=?'=>trim($projectTaskId),'emp_id=?'=>trim($removedRes));
+						];
+						$where = ['project_id=?'=>trim($projectId),'project_task_id=?'=>trim($projectTaskId),'emp_id=?'=>trim($removedRes)];
 						$result = $projectTaskResourceModel->SaveorUpdateProjectTaskResourceData($projectTaskResourceData_remove,$where);
 					}
 				}
-				$this->_helper->json(array('message'=>'success','status'=> 'Resource assigned to tasks successfully.'));
+				$this->_helper->json(['message'=>'success','status'=> 'Resource assigned to tasks successfully.']);
 			}
 		}
 	}
@@ -324,19 +324,19 @@ class Timemanagement_ProjecttasksController extends Zend_Controller_Action
 
 				$checkTaskNameExistAlready = $projectTaskModel->getProjTaskNameExists($projectId,$taskId,$taskName);
 				if($checkTaskNameExistAlready[0]['taskNameExistsCount'] > 0){
-					$this->_helper->json(array('status'=>'error','message'=> 'Task name already exists in default task or in project task.'));
+					$this->_helper->json(['status'=>'error','message'=> 'Task name already exists in default task or in project task.']);
 				}else{
-					$data = array( 'task'=>trim($taskName),
+					$data = [ 'task'=>trim($taskName),
 				                   'modified_by'=>$loginUserId,
 							       'modified'=>gmdate("Y-m-d H:i:s")	
-					);
+					];
 					if($taskId!=''){
 						$taskModel = new Timemanagement_Model_Tasks();
-						$where = array('id=?'=>trim($taskId));
+						$where = ['id=?'=>trim($taskId)];
 						$Id = $taskModel->SaveorUpdateTaskData($data, $where);
 						if($Id == 'update')
 						{
-							$this->_helper->json(array('status'=>'success','message'=> 'Task name updated successfully.'));
+							$this->_helper->json(['status'=>'success','message'=> 'Task name updated successfully.']);
 						}
 					}
 				}

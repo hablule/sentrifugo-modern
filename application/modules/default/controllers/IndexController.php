@@ -116,12 +116,12 @@ class Default_IndexController extends Zend_Controller_Action
 		try {				
 		
 				$emailParam = $this->getRequest()->getParam('username');
-				$opt = array(
-					'custom' => array(
+				$opt = [
+					'custom' => [
 						'timeout' => $this->_options['auth']['timeout']
-					)
-				);
-				$options = array();
+					]
+				];
+				$options = [];
 				$options['username'] = $this->getRequest()->getParam('username');
 				$options['user_password'] = $this->getRequest()->getParam('password');
 
@@ -234,14 +234,14 @@ class Default_IndexController extends Zend_Controller_Action
 					/***
 						End - Session for time management role.
 					**/
-					$dataTmp = array();
+					$dataTmp = [];
 
-					$dataTmp['id'] = ($storage->id) ? $storage->id : 0;
-					$dataTmp['emprole'] = ($storage->emprole) ? $storage->emprole : 0;
-					$dataTmp['group_id'] = ($storage->group_id) ? $storage->group_id : 0;
-					$dataTmp['username'] = ($storage->username) ? $storage->username : 0;
-					$dataTmp['emailaddress'] = ($storage->emailaddress) ? $storage->emailaddress : '';
-					$dataTmp['userfullname'] = ($storage->userfullname) ? $storage->userfullname : '';
+					$dataTmp['id'] = $storage->id ?: 0;
+					$dataTmp['emprole'] = $storage->emprole ?: 0;
+					$dataTmp['group_id'] = $storage->group_id ?: 0;
+					$dataTmp['username'] = $storage->username ?: 0;
+					$dataTmp['emailaddress'] = $storage->emailaddress ?: '';
+					$dataTmp['userfullname'] = $storage->userfullname ?: '';
 					$dataTmp['logindatetime'] = gmdate("Y-m-d H:i:s");
 
 					if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] != '') {
@@ -253,7 +253,7 @@ class Default_IndexController extends Zend_Controller_Action
 						$ip_address = '127.0.0.1';
 					}
 					$dataTmp['empipaddress'] = $ip_address;
-					$dataTmp['profileimg'] = ($storage->profileimg) ? $storage->profileimg : '';
+					$dataTmp['profileimg'] = $storage->profileimg ?: '';
 
 					$lastRecordId = $usersModel->addUserLoginLogManager($dataTmp);
 
@@ -263,9 +263,7 @@ class Default_IndexController extends Zend_Controller_Action
 					if (empty($organizationImg->orgimg)) {
 						$organizationImg->orgimg = $orgImg;
 					}
-					if (!isset($organizationImg->hideshowmainmenu)) {
-						$organizationImg->hideshowmainmenu = 1;
-					}
+					$organizationImg->hideshowmainmenu ??= 1;
 
 
 					/*** Redirect to wizard if not complete - start ***/
@@ -372,7 +370,7 @@ class Default_IndexController extends Zend_Controller_Action
 		$pagename = $this->_request->getParam('name');
 		$pagelink = $this->_request->getParam('link');
 		$recentlyViewed = new Zend_Session_Namespace('recentlyViewed');
-		$successmessage = array();
+		$successmessage = [];
 		$successmessage['result'] = '';
 		$successmessage['is_empty'] = 'no';
 		if (isset($recentlyViewed->recentlyViewedObject)) {
@@ -401,7 +399,7 @@ class Default_IndexController extends Zend_Controller_Action
 		$usermodel = new Login_Model_Users();
 		$usermodel->forcelogout($id);
 
-		$this->_helper->json(array('result' => 'logged out'));
+		$this->_helper->json(['result' => 'logged out']);
 	}
 
 
@@ -504,8 +502,8 @@ class Default_IndexController extends Zend_Controller_Action
 		if ($id) {
 			$usersModal = new Default_Model_Users();
 			$menumodel = new Default_Model_Menu();
-			$data = array('contactnumber' => $contactnumber);
-			$where = array('id=?' => $id);
+			$data = ['contactnumber' => $contactnumber];
+			$where = ['id=?' => $id];
 			$Id = $usersModal->addOrUpdateUserModel($data, $where);
 			if ($Id == 'update') {
 				$menuidArr = $menumodel->getMenuObjID('/employee');
@@ -579,7 +577,7 @@ class Default_IndexController extends Zend_Controller_Action
 		$ajaxContext->addActionContext('getdomainnormal', 'html')->initContext();
 		$remove = 'no';
 
-		$ids = array();
+		$ids = [];
 		$modelajax = new Default_Model_sbuengagment();
 		$modelajax2 = new Default_Model_Companyengagment();
 		$modelajax3 = new Assets_Model_Assetinstant();
@@ -755,7 +753,7 @@ class Default_IndexController extends Zend_Controller_Action
 
 			$ajaxContext = $this->_helper->getHelper('AjaxContext');
 			$ajaxContext->addActionContext('getdomainnormalinstant', 'html')->initContext();
-			$ids = array();
+			$ids = [];
 
 			$modelajax3 = new Assets_Model_Assetinstant();
 			$modelajax4 = new Assets_Model_Assets();
@@ -915,8 +913,8 @@ class Default_IndexController extends Zend_Controller_Action
 				$leavemanagementmodel = new Default_Model_Leavemanagement();
 				$departmentidsArr = $leavemanagementmodel->getActiveDepartmentIds();
 				$depatrmentidstr = '';
-				$newarr = array();
-				$hremployees = array();
+				$newarr = [];
+				$hremployees = [];
 
 				if (!empty($departmentidsArr)) {
 					$where = '';
@@ -949,7 +947,7 @@ class Default_IndexController extends Zend_Controller_Action
 				}
 			} else if ($con == 'appraisal_config') {
 				$departmentlistArr = $appraisalconfigmodel->getExistDepartments($businessunit_id);
-				$dept_arr = array();
+				$dept_arr = [];
 				foreach ($departmentlistArr as $dept) {
 					$deptid = $dept['department_id'];
 					array_push($dept_arr, $deptid);
@@ -991,7 +989,7 @@ class Default_IndexController extends Zend_Controller_Action
 		$employeeform = new Default_Form_employee();
 		$positionsmodel = new Default_Model_Positions();
 		$flag = '';
-		$positionlistArr = $positionsmodel->getPositionList($jobtitle_id);
+		$positionlistArr = $positionsmodel->getPositionList();
 		if (empty($positionlistArr))
 			$flag = 'true';
 
@@ -1015,7 +1013,7 @@ class Default_IndexController extends Zend_Controller_Action
 	}
 	public function calculatedaysAction()
 	{
-		$holidayDates = array();
+		$holidayDates = [];
 		$noOfDays = 0;
 		$weekDay = '';
 		$from_date = $this->_request->getParam('fromDate', null);
@@ -1046,7 +1044,7 @@ class Default_IndexController extends Zend_Controller_Action
 		$weekend1 = '';
 		$weekend2 = '';
 		$availableleaves = '';
-		$holidayDatesArr = array();
+		$holidayDatesArr = [];
 		$fromDatejs = $this->_request->getParam('fromDate');
 		$fromDate = sapp_Global::change_date($fromDatejs, 'database');
 
@@ -1247,7 +1245,7 @@ class Default_IndexController extends Zend_Controller_Action
 		$weekend1 = '';
 		$weekend2 = '';
 		$availableleaves = '';
-		$holidayDatesArr = array();
+		$holidayDatesArr = [];
 		$fromDatejs = $this->_request->getParam('fromDate');
 		$fromDate = sapp_Global::change_date($fromDatejs, 'database');
 
@@ -1353,7 +1351,7 @@ class Default_IndexController extends Zend_Controller_Action
 				$result = 'no';
 			}
 		}
-		$this->_helper->_json(array('result' => $result));
+		$this->_helper->_json(['result' => $result]);
 	}
 
 	public function fromdatetodateorgAction()
@@ -1378,7 +1376,7 @@ class Default_IndexController extends Zend_Controller_Action
 				$result = 'yes';
 			}
 		}
-		$this->_helper->_json(array('result' => $result));
+		$this->_helper->_json(['result' => $result]);
 	}
 
 	/**
@@ -1399,7 +1397,7 @@ class Default_IndexController extends Zend_Controller_Action
 				$result = 'no';
 		}
 
-		$this->_helper->_json(array('result' => $result));
+		$this->_helper->_json(['result' => $result]);
 	}
 
 
@@ -1463,7 +1461,7 @@ class Default_IndexController extends Zend_Controller_Action
 				}
 				break;
 		}
-		$this->_helper->_json(array('result' => $result));
+		$this->_helper->_json(['result' => $result]);
 	}
 	public function gettimeformatAction()
 	{
@@ -1472,7 +1470,7 @@ class Default_IndexController extends Zend_Controller_Action
 		if ($sel_time != '') {
 			$timeformat = sapp_Global::change_time($sel_time, 'view');
 		}
-		$this->_helper->_json(array('timeformat' => $timeformat));
+		$this->_helper->_json(['timeformat' => $timeformat]);
 	}
 	public function chkcurrenttimeAction()
 	{
@@ -1495,7 +1493,7 @@ class Default_IndexController extends Zend_Controller_Action
 		if ($greater == 'no') {
 			$timeformat = sapp_Global::change_time($sel_time, 'view');
 		}
-		$this->_helper->_json(array('timeformat' => $timeformat, 'greater' => $greater));
+		$this->_helper->_json(['timeformat' => $timeformat, 'greater' => $greater]);
 	}
 
 	public function popupAction()
@@ -1538,7 +1536,7 @@ class Default_IndexController extends Zend_Controller_Action
 						$settingsmenustring = $settingsmenuArr[0]['menuid'];
 
 						if (strlen($settingsmenustring) == 0)
-							$settingsmenuArray = array();
+							$settingsmenuArray = [];
 						else
 							$settingsmenuArray = explode(",", $settingsmenustring);
 						if (sizeof($settingsmenuArray) == 16 && $shortcutflag != 2) {
@@ -1558,28 +1556,28 @@ class Default_IndexController extends Zend_Controller_Action
 							else
 								$menuidstring = implode(",", $settingsmenuArray);
 
-							$where = array(
+							$where = [
 								'userid=?' => $loginUserId,
 								'flag=?' => 2,
 								'isactive=?' => 1
-							);
+							];
 
-							$data = array(
+							$data = [
 								'menuid' => $menuidstring,
 								'modified' => $date->get('yyyy-MM-dd HH:mm:ss')
-							);
+							];
 							$id = $settingsmodel->addOrUpdateMenus($data, $where);
 						}
 					}
 				} else if ($shortcutflag == 3) {
-					$data = array(
+					$data = [
 						'userid' => $loginUserId,
 						'menuid' => $menuid,
 						'flag' => 2,
 						'isactive' => 1,
 						'created' => $date->get('yyyy-MM-dd HH:mm:ss'),
 						'modified' => $date->get('yyyy-MM-dd HH:mm:ss')
-					);
+					];
 					$id = $settingsmodel->addOrUpdateMenus($data, $where);
 				}
 
@@ -1597,7 +1595,7 @@ class Default_IndexController extends Zend_Controller_Action
 			} else {
 				$result = 'inactive';
 			}
-			$this->_helper->_json(array('result' => $result));
+			$this->_helper->_json(['result' => $result]);
 		}
 	}
 
@@ -1611,7 +1609,7 @@ class Default_IndexController extends Zend_Controller_Action
 		}
 		$usermanagementModel = new Default_Model_Usermanagement();
 
-		$status = $usermanagementModel->SaveorUpdateUserData(array('tourflag' => 1), "id=" . $loginUserId);
+		$status = $usermanagementModel->SaveorUpdateUserData(['tourflag' => 1], "id=" . $loginUserId);
 
 		if ($status == 'update') {
 			$auth->getStorage()->read()->tourflag = 1;
@@ -1678,16 +1676,16 @@ class Default_IndexController extends Zend_Controller_Action
 
 			$user_id = sapp_Global::_readSession('id');
 
-			$where = array('id = ?' => $user_id);
-			$data = array(
+			$where = ['id = ?' => $user_id];
+			$data = [
 				'themes' => $theme_name,
 				'createddate' => gmdate("Y-m-d H:i:s"),
 				'modifieddate' => gmdate("Y-m-d H:i:s"),
-			);
+			];
 			$usersModel->addOrUpdateUserModel($data, $where);
 
 			sapp_Global::_writeSession('themes', $theme_name);
-			$this->_helper->json(array('result' => 'success'));
+			$this->_helper->json(['result' => 'success']);
 		}
 	}
 
@@ -1736,7 +1734,7 @@ class Default_IndexController extends Zend_Controller_Action
 				$announcementsData = $announcementsModel->getAllByBusiAndDeptId();
 			}
 
-			$this->view->announcementsData = !empty($announcementsData) ? $announcementsData : array();
+			$this->view->announcementsData = !empty($announcementsData) ? $announcementsData : [];
 			$this->view->announcementPrivilege = $announcementPrivilege;
 			// Announcements - END   
 
@@ -1752,7 +1750,7 @@ class Default_IndexController extends Zend_Controller_Action
 			//My details = 'format7';
 
 
-			$menuIdsArr = array(57  =>  'format1', 10  =>  'format5', 11  =>  'format5', 20  =>  'format5', 21  =>  'format5', 14  =>	'format4', 23  =>  'format2', 32 => 'format7', 34  =>  'format4', 35  =>  'format5', 41  =>  'format5', 42  =>  'format5', 45  =>  'format3', 54  =>  'format4', 55  =>  'format5', 56  =>  'format4', 61 => 'format3', 65  =>  'format3', 44  =>  'format6', 43  =>  'format5', 80  =>  'format5', 86  =>  'format5', 87  =>  'format5', 88  =>  'format5', 89  =>  'format5', 90  =>  'format5', 91  =>  'format5', 92  =>  'format5', 93  =>  'format5', 100  =>  'format5', 101  =>  'format5', 102  =>  'format5', 103  =>  'format5', 107  =>  'format5', 108  =>  'format5', 110  =>  'format5', 111  =>  'format5', 114  =>  'format5', 115  =>  'format5', 116  =>  'format5', 117  =>  'format5', 118  =>  'format5', 120  =>  'format5', 121  =>  'format5', 123  =>  'format5', 124  =>  'format5', 125  =>  'format5', 126  =>  'format5', 127  =>  'format5', 128  =>  'format5', 132  =>  'format5', 136  =>  'format5', 140 => 'format5', 143 => 'format3', 144  =>  'format5', 145  =>  'format5', 146  =>  'format5', 148  =>  'format3', 150  =>  'format5', 151  =>  'format5', 152  =>  'format5', 154  =>  'format4', 155  =>  'format5', 165  =>  'format5', 166  =>  'format5', 62  =>  'format3', 63  =>  'format3', 64  =>  'format3', 68  =>  'format3', 69  =>  'format3', 85  =>  'format3', 131 => 'format5', 134  =>  'format3', 135  =>  'format3', 138  =>  'format3', 139  =>  'format3', 140  =>  'format5', 142  =>  'format5', 151  =>  'format5', 154  =>  'format6', 158  =>  'format5', 159  =>  'format5', 160  =>  '', 161  =>  'format3', 165 => 'format5', 166 => 'format5', 167  =>  'format6', 168  =>  '', 174  =>  'format5', 169 => 'format3', 170 => 'format3', 172 => 'format5', 174 => 'format5', 182 => 'format5');
+			$menuIdsArr = [57  =>  'format1', 10  =>  'format5', 11  =>  'format5', 20  =>  'format5', 21  =>  'format5', 14  =>	'format4', 23  =>  'format2', 32 => 'format7', 34  =>  'format4', 35  =>  'format5', 41  =>  'format5', 42  =>  'format5', 45  =>  'format3', 54  =>  'format4', 55  =>  'format5', 56  =>  'format4', 61 => 'format3', 65  =>  'format3', 44  =>  'format6', 43  =>  'format5', 80  =>  'format5', 86  =>  'format5', 87  =>  'format5', 88  =>  'format5', 89  =>  'format5', 90  =>  'format5', 91  =>  'format5', 92  =>  'format5', 93  =>  'format5', 100  =>  'format5', 101  =>  'format5', 102  =>  'format5', 103  =>  'format5', 107  =>  'format5', 108  =>  'format5', 110  =>  'format5', 111  =>  'format5', 114  =>  'format5', 115  =>  'format5', 116  =>  'format5', 117  =>  'format5', 118  =>  'format5', 120  =>  'format5', 121  =>  'format5', 123  =>  'format5', 124  =>  'format5', 125  =>  'format5', 126  =>  'format5', 127  =>  'format5', 128  =>  'format5', 132  =>  'format5', 136  =>  'format5', 140 => 'format5', 143 => 'format3', 144  =>  'format5', 145  =>  'format5', 146  =>  'format5', 148  =>  'format3', 150  =>  'format5', 151  =>  'format5', 152  =>  'format5', 154  =>  'format4', 155  =>  'format5', 165  =>  'format5', 166  =>  'format5', 62  =>  'format3', 63  =>  'format3', 64  =>  'format3', 68  =>  'format3', 69  =>  'format3', 85  =>  'format3', 131 => 'format5', 134  =>  'format3', 135  =>  'format3', 138  =>  'format3', 139  =>  'format3', 140  =>  'format5', 142  =>  'format5', 151  =>  'format5', 154  =>  'format6', 158  =>  'format5', 159  =>  'format5', 160  =>  '', 161  =>  'format3', 165 => 'format5', 166 => 'format5', 167  =>  'format6', 168  =>  '', 174  =>  'format5', 169 => 'format3', 170 => 'format3', 172 => 'format5', 174 => 'format5', 182 => 'format5'];
 
 			$getMenuIds = $widgetsModel->getWidgets($loginUserId, $loginuserRole);
 			$htmlcontent = '';
@@ -1772,7 +1770,7 @@ class Default_IndexController extends Zend_Controller_Action
 					//echo "<pre>";print_r($menuIdsArr);
 					$menuId =  $getMenuIdArr['id'];
 					$url    =  $getMenuIdArr['url'];
-					$format = (isset($menuIdsArr[$menuId])) ? $menuIdsArr[$menuId] : '';
+					$format = $menuIdsArr[$menuId] ?? '';
 
 					if ($menuId == 57) {
 						$tmpHtml1 = sapp_Global::format1($url);
@@ -1830,7 +1828,7 @@ class Default_IndexController extends Zend_Controller_Action
 				}
 			}
 		}
-		$this->_helper->json(array('options' => $options));
+		$this->_helper->json(['options' => $options]);
 	}
 
 	/**
@@ -1850,6 +1848,6 @@ class Default_IndexController extends Zend_Controller_Action
 			$addemployeeleavesModel = new Default_Model_Addemployeeleaves();
 			$emp_data = $addemployeeleavesModel->getMultipleEmployees($dept_id);
 		}
-		$this->view->empData = !empty($emp_data) ? $emp_data : array();
+		$this->view->empData = !empty($emp_data) ? $emp_data : [];
 	}
 }

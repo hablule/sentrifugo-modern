@@ -42,17 +42,17 @@ class Default_Form_Activeuserreport extends Zend_Form
         $emprole = new Zend_Form_Element_Select("emprole");
         $emprole->setRegisterInArrayValidator(false);
         $emprole->setLabel("Role");        
-        $emprole->addMultiOptions(array(''=>'Select Role'));
+        $emprole->addMultiOptions([''=>'Select Role']);
         
         $isactive = new Zend_Form_Element_Select("isactive");
         $isactive->setLabel("Status");        
-        $isactive->addMultiOptions(array(''=>'Select Status',1 => 'Active',0 => 'Inactive'));
+        $isactive->addMultiOptions([''=>'Select Status',1 => 'Active',0 => 'Inactive']);
         
         $submit = new Zend_Form_Element_Button('submit');        
         $submit->setAttrib('id', 'idsubmitbutton');
         $submit->setLabel('Report'); 
         
-        $this->addElements(array($submit,$createddate,$logindatetime,$emprole,$isactive));
-        $this->setElementDecorators(array('ViewHelper')); 
+        $this->addElements([$submit,$createddate,$logindatetime,$emprole,$isactive]);
+        $this->setElementDecorators(['ViewHelper']); 
     }
 }

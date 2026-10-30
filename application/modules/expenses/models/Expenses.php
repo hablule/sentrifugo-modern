@@ -50,8 +50,8 @@ class Expenses_Model_Expenses extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{
 		$searchQuery = '';
-		$searchArray = array();
-		$data = array();
+		$searchArray = [];
+		$data = [];
 
 		
 		  if($searchData != '' && $searchData!='undefined')
@@ -87,7 +87,7 @@ class Expenses_Model_Expenses extends Zend_Db_Table_Abstract
 			
 		$objName = 'expenses';
 		
-		$tableFields = array(
+		$tableFields = [
 					'action'=>'Action',
 					'expense_name' => 'Expense Name',
 					'project_name'=>'Project',
@@ -97,20 +97,20 @@ class Expenses_Model_Expenses extends Zend_Db_Table_Abstract
 					'expense_amount' => 'Amount',
 					'is_reimbursable' => 'Reimbursable',
 					'status' => 'Status',
-		);
+		];
 
 		$tablecontent = $this->getExpensesData($sort, $by, $pageNo, $perPage,$searchQuery);
 		
 		//echo "<pre>";print_r($tablecontent);exit;
 
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -118,12 +118,12 @@ class Expenses_Model_Expenses extends Zend_Db_Table_Abstract
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall,
 			'menuName' => 'Expenses',
-			  'search_filters' => array(
+			  'search_filters' => [
                           
-                            'expense_date'=>array('type'=>'datepicker'),
+                            'expense_date'=>['type'=>'datepicker'],
                             
-                        ),
-			);
+                        ],
+			];
 			
 			return $dataTmp;
 	}
@@ -154,10 +154,10 @@ class Expenses_Model_Expenses extends Zend_Db_Table_Abstract
 
 		 $expensesData = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('e'=>'expenses'),array('e.*','is_reimbursable'=>new Zend_Db_Expr('case when e.is_reimbursable=1  then "Yes" when e.is_reimbursable=0 then "No" end'),'expense_date'=>'DATE_FORMAT(expense_date,"'.DATEFORMAT_MYSQL.'")'))
-		->joinLeft(array('tp'=>'tm_projects'), "tp.id = e.project_id",array('project_name'=>'tp.project_name'))
-		->joinLeft(array('c'=>'tm_clients'), "c.id = e.client_id",array('client_name'=>'c.client_name'))
-		->joinInner(array('ec'=>'expense_categories'), "ec.id = e.category_id",array('expense_category_name'=>'ec.expense_category_name'))
+		->from(['e'=>'expenses'],['e.*','is_reimbursable'=>new Zend_Db_Expr('case when e.is_reimbursable=1  then "Yes" when e.is_reimbursable=0 then "No" end'),'expense_date'=>'DATE_FORMAT(expense_date,"'.DATEFORMAT_MYSQL.'")'])
+		->joinLeft(['tp'=>'tm_projects'], "tp.id = e.project_id",['project_name'=>'tp.project_name'])
+		->joinLeft(['c'=>'tm_clients'], "c.id = e.client_id",['client_name'=>'c.client_name'])
+		->joinInner(['ec'=>'expense_categories'], "ec.id = e.category_id",['expense_category_name'=>'ec.expense_category_name'])
 		->where($where)
 		->order("$by $sort")
 		->limitPage($pageNo, $perPage); 
@@ -210,15 +210,15 @@ class Expenses_Model_Expenses extends Zend_Db_Table_Abstract
 		 $select =
 	 $this->select()
 		->setIntegrityCheck(false)
-		->from(array('ex' => 'expenses'))
-	    ->joinLeft(array('tp'=>'tm_projects'), "tp.id = ex.project_id",array('project_name'=>'tp.project_name'))
-		->joinLeft(array('c'=>'tm_clients'), "c.id = ex.client_id",array('client_name'=>'c.client_name'))
-		->joinInner(array('mc'=>'main_currency'), "mc.id = ex.expense_currency_id",array('currencycode'=>'mc.currencycode'))
-		->joinInner(array('ep'=>'expense_payment_methods'), "ep.id = ex.expense_payment_id",array('payment_method_name'=>'ep.payment_method_name'))
-		->joinInner(array('ec'=>'expense_categories'), "ec.id = ex.category_id",array('expense_category_name'=>'ec.expense_category_name'))
-		->joinLeft(array('er'=>'expense_receipts'), "er.expense_id = ex.id and er.isactive = 1",array('receipt_name'=>'er.receipt_name','receipt_filename'=>'er.receipt_filename','receipt_file_type'=>'er.receipt_file_type'))
-		->joinLeft(array('et'=>'expense_trips'), "et.id = ex.trip_id",array('trip_name'=>'et.trip_name','from_date'=>'et.from_date','to_date'=>'et.to_date'))
-		->joinLeft(array('advs'=>'expense_advacne_summary'), "advs.employee_id = ex.createdby",array('total'=>'advs.total'))
+		->from(['ex' => 'expenses'])
+	    ->joinLeft(['tp'=>'tm_projects'], "tp.id = ex.project_id",['project_name'=>'tp.project_name'])
+		->joinLeft(['c'=>'tm_clients'], "c.id = ex.client_id",['client_name'=>'c.client_name'])
+		->joinInner(['mc'=>'main_currency'], "mc.id = ex.expense_currency_id",['currencycode'=>'mc.currencycode'])
+		->joinInner(['ep'=>'expense_payment_methods'], "ep.id = ex.expense_payment_id",['payment_method_name'=>'ep.payment_method_name'])
+		->joinInner(['ec'=>'expense_categories'], "ec.id = ex.category_id",['expense_category_name'=>'ec.expense_category_name'])
+		->joinLeft(['er'=>'expense_receipts'], "er.expense_id = ex.id and er.isactive = 1",['receipt_name'=>'er.receipt_name','receipt_filename'=>'er.receipt_filename','receipt_file_type'=>'er.receipt_file_type'])
+		->joinLeft(['et'=>'expense_trips'], "et.id = ex.trip_id",['trip_name'=>'et.trip_name','from_date'=>'et.from_date','to_date'=>'et.to_date'])
+		->joinLeft(['advs'=>'expense_advacne_summary'], "advs.employee_id = ex.createdby",['total'=>'advs.total'])
 		->where('ex.isactive = 1 AND ex.id='.$id.' ') 
 		->order("ex.id DESC");
 		//->limit($limit,$offset); 
@@ -237,7 +237,7 @@ class Expenses_Model_Expenses extends Zend_Db_Table_Abstract
 		return $result['count'];
 		
 	} 
-	public function getExpenses($expense_id=0,$limit,$offset)
+	public function getExpenses($expense_id=0,$limit = null,$offset = null)
 	{
 		$auth = Zend_Auth::getInstance();
 		if($auth->hasIdentity()){
@@ -252,9 +252,9 @@ class Expenses_Model_Expenses extends Zend_Db_Table_Abstract
 			
 		$expenseData = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('ex' => 'expenses'))
-	    ->joinInner(array('ec'=>'expense_categories'), "ec.id = ex.category_id and
-	    ec.isactive = 1",array('expense_category_name'=>'ec.expense_category_name'))
+		->from(['ex' => 'expenses'])
+	    ->joinInner(['ec'=>'expense_categories'], "ec.id = ex.category_id and
+	    ec.isactive = 1",['expense_category_name'=>'ec.expense_category_name'])
 		->where($where)
 		->limit($limit,$offset)
 		;
@@ -298,7 +298,7 @@ class Expenses_Model_Expenses extends Zend_Db_Table_Abstract
 	  $geographygroupData = $this->select()
                                     ->setIntegrityCheck(false)	
                                     
-                                    ->from(array('c'=>'main_currency'),array('c.id','currency'=>'c.currencyname','currencycode'=>'c.currencycode'))
+                                    ->from(['c'=>'main_currency'],['c.id','currency'=>'c.currencyname','currencycode'=>'c.currencycode'])
                                      ->where('c.isactive = 1')
 						   ->order('c.currencyname');
       return $this->fetchAll($geographygroupData)->toArray();
@@ -308,7 +308,7 @@ class Expenses_Model_Expenses extends Zend_Db_Table_Abstract
 	{
 		 $projectsData = $this->select()
                                     ->setIntegrityCheck(false)	
-                                    ->from(array('p'=>'tm_projects'))
+                                    ->from(['p'=>'tm_projects'])
                                      ->where('p.is_active = 1 and p.id = '.$projectId);
       return $this->fetchAll($projectsData)->toArray();
 	}

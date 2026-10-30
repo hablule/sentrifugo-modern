@@ -19,7 +19,7 @@ class Default_Model_Myincident extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -35,16 +35,16 @@ class Default_Model_Myincident extends Zend_Db_Table_Abstract
         }
 
         // SSOT IV.3: Strict headers. 'Action' must be first.
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'             => 'Action',
             'date_of_occurrence' => 'Incident Date',
             'violation_name'     => 'Violation',
             'case_status'        => 'Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
@@ -52,17 +52,17 @@ class Default_Model_Myincident extends Zend_Db_Table_Abstract
             'tablecontent'   => $tableContent,
             'objectname'     => 'myincident',
             'tableheader'    => $tableHeaders,
-            'extra'          => array(),
+            'extra'          => [],
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
             'searchArray'    => $searchArray,
             'menuName'       => 'My Incidents',
             'call'           => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => array(
-                'case_status' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Initiated' => 'Initiated', 'Appealed' => 'Appealed', 'Closed' => 'Closed'))
-            )
-        );
+            'search_filters' => [
+                'case_status' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Initiated' => 'Initiated', 'Appealed' => 'Appealed', 'Closed' => 'Closed']]
+            ]
+        ];
     }
 
     public function getGridData($sort, $by, $pageNo, $perPage, $searchQuery = '')
@@ -74,12 +74,12 @@ class Default_Model_Myincident extends Zend_Db_Table_Abstract
 
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('dc' => $this->_name), array(
+            ->from(['dc' => $this->_name], [
                 'id'                 => 'dc.id',
                 'date_of_occurrence' => new Zend_Db_Expr("DATE_FORMAT(dc.date_of_occurrence, '" . DATEFORMAT_MYSQL . "')"),
                 'case_status'        => 'dc.case_status'
-            ))
-            ->joinInner(array('v' => 'main_discipline_violation'), 'dc.violation_id = v.id', array('violation_name' => 'v.name'))
+            ])
+            ->joinInner(['v' => 'main_discipline_violation'], 'dc.violation_id = v.id', ['violation_name' => 'v.name'])
             ->where('dc.isactive != 5')
             ->where('dc.employee_id = ?', (int)$userId); // STRICT FILTER: Only show cases belonging to this user
 
@@ -94,9 +94,9 @@ class Default_Model_Myincident extends Zend_Db_Table_Abstract
 
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('dc' => $this->_name))
-            ->joinInner(array('v' => 'main_discipline_violation'), 'dc.violation_id = v.id', array('violation_name' => 'v.name'))
-            ->joinLeft(array('a' => 'main_discipline_action'), 'dc.action_id = a.id', array('action_name' => 'a.name'))
+            ->from(['dc' => $this->_name])
+            ->joinInner(['v' => 'main_discipline_violation'], 'dc.violation_id = v.id', ['violation_name' => 'v.name'])
+            ->joinLeft(['a' => 'main_discipline_action'], 'dc.action_id = a.id', ['action_name' => 'a.name'])
             ->where('dc.id = ?', (int)$id)
             ->where('dc.employee_id = ?', (int)$userId) // Security Enforcement
             ->where('dc.isactive != 5');
@@ -112,20 +112,20 @@ class Default_Model_Myincident extends Zend_Db_Table_Abstract
         $data['modifiedby']   = $userId;
         $data['modifieddate'] = gmdate("Y-m-d H:i:s");
 
-        $this->update($data, array('id = ?' => (int)$id, 'employee_id = ?' => (int)$userId));
+        $this->update($data, ['id = ?' => (int)$id, 'employee_id = ?' => (int)$userId]);
         return $id;
     }
 
     public function addCaseLog($caseId, $description, $userId)
     {
         $db = $this->getAdapter();
-        $db->insert('main_discipline_case_log', array(
+        $db->insert('main_discipline_case_log', [
             'case_id'       => (int)$caseId,
             'description'   => $description,
             'action_emp_id' => (int)$userId,
             'isactive'      => 1,
             'createdby'     => (int)$userId,
             'createddate'   => gmdate("Y-m-d H:i:s")
-        ));
+        ]);
     }
 }

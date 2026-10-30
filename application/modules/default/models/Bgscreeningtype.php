@@ -33,7 +33,7 @@ class Default_Model_Bgscreeningtype extends Zend_Db_Table_Abstract
 		
 		$screeningtypdata = $this->select()
     					   ->setIntegrityCheck(false)	
-						   ->from(array('b' => 'main_bgchecktype'))
+						   ->from(['b' => 'main_bgchecktype'])
 						   ->where($where)
     					   ->order("$by $sort") 
     					   ->limitPage($pageNo, $perPage);
@@ -44,8 +44,8 @@ class Default_Model_Bgscreeningtype extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{
 		$searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		
 		if($searchData != '' && $searchData!='undefined')
 		{
@@ -59,17 +59,17 @@ class Default_Model_Bgscreeningtype extends Zend_Db_Table_Abstract
 		}
 		$objName = 'bgscreeningtype';
 		
-		$tableFields = array('action'=>'Action','type' => 'Screening Type','description' => 'Description');
+		$tableFields = ['action'=>'Action','type' => 'Screening Type','description' => 'Description'];
 		
 		$tablecontent = $this->getScreeningtypeData($sort, $by, $pageNo, $perPage,$searchQuery);     
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -77,7 +77,7 @@ class Default_Model_Bgscreeningtype extends Zend_Db_Table_Abstract
 			'searchArray' => $searchArray,
 			'add' =>'add',
 			'call' => $call
-		);	
+		];	
 		return $dataTmp;
 	}
 	

@@ -45,9 +45,9 @@ class Assets_AssetinstantController extends Zend_Controller_Action
 			$refresh = $this->_getParam('refresh');
 			
 			$dashboardcall = $this->_getParam('dashboardcall',null);
-				$data = array();		
+				$data = [];		
 				$searchQuery = '';		
-				$searchArray = array();		
+				$searchArray = [];		
 				$tablecontent='';		
 			
 			if($refresh == 'refresh')
@@ -58,7 +58,7 @@ class Assets_AssetinstantController extends Zend_Controller_Action
 					$perPage = PERPAGE;
 
 					$sort = 'DESC';$by = 'modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';
-					$searchArray = array();
+					$searchArray = [];
 				
 				}
 			else
@@ -100,11 +100,11 @@ Zend_Debug::dump($th->getMessage());		}
 			if($callval == 'ajaxcall')
 			$this->_helper->layout->disableLayout();
 
-		$popConfigPermission = array();
+		$popConfigPermission = [];
 	    $assetsForm = new Assets_Form_Assetinstant();
 		$assetsModel = new Assets_Model_Assetinstant();
 	
-		$msgarray = array();
+		$msgarray = [];
 		array_push($popConfigPermission,'assets');
 		
 		$this->view->popConfigPermission = $popConfigPermission; 
@@ -169,19 +169,19 @@ Zend_Debug::dump($th->getMessage());		}
 					$serialidentification	= $this->_request->getParam('serialidentification');
 					$description = $this->_request->getParam('description');
 				$date = gmdate("Y-m-d H:i:s");		
-				$data = array( 
+				$data = [ 
 								'asset_id' => $asset_id,
 								'serialidentification'=> $serialidentification,
 								'description'=>$description,
 								'isactive'=>utlis::getcheckboxvalue($this->_request->getParam('isactive')),
 
-							);	
+							];	
 				//ToCheckThe EncrpName
 				if($id!='')
 					{
 						$data['modifiedby'] = $loginUserId;
 						$data['modifieddate'] = $date;
-						$where = array('assetinstant_id=?'=>$id);
+						$where = ['assetinstant_id=?'=>$id];
 					}
 				else
 					{
@@ -196,7 +196,7 @@ Zend_Debug::dump($th->getMessage());		}
 	
 				if($Id == 'update')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Asset Instant updated successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Asset Instant updated successfully."]);
 					//insert asset history
 					
 				}
@@ -204,7 +204,7 @@ Zend_Debug::dump($th->getMessage());		}
 				{	
 					
 					
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Asset Instant added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Asset Instant added successfully."]);
 					
 				}
 					
@@ -255,9 +255,9 @@ Zend_Debug::dump($th->getMessage());		}
 			$isexist = $assetsModel->isAssetExistForSetting($id);
 			if($isexist==0 )
 			{
-				$data = array('isactive'=>0,'modified'=>gmdate("Y-m-d H:i:s"));
+				$data = ['isactive'=>0,'modified'=>gmdate("Y-m-d H:i:s")];
 				$data['modified_by'] = $loginUserId;
-				$where = array('id=?'=>$id);
+				$where = ['id=?'=>$id];
 				$id = $assetsModel->saveOrUpdateAssetsData($data, $where);
 				if($id == 'update')
 				{
@@ -286,11 +286,11 @@ Zend_Debug::dump($th->getMessage());		}
 		{
 			if(	$messages['msgtype'] == 'error')
 			{
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
 			}
 			if(	$messages['msgtype'] == 'success')
 			{
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
 			}
 				
 		}
@@ -305,11 +305,11 @@ Zend_Debug::dump($th->getMessage());		}
 		$assetsModel = new Assets_Model_Assets();
 		$user_id = sapp_Global::_readSession('id');
 		$image;
-        $filedata = array();
+        $filedata = [];
     	// Validate file with size greater than default(Upload Max Filesize)limit
         if ($_FILES["myfile"]["size"] == 0 || $_FILES["myfile"]["size"] > (2*1024*1024)) 
 			{
-				$this->_helper->json(array('error' => 'filesize'));
+				$this->_helper->json(['error' => 'filesize']);
 			}
 		else if(isset($_FILES["myfile"])) {
             $fileName = $_FILES["myfile"]["name"];
@@ -324,7 +324,7 @@ Zend_Debug::dump($th->getMessage());		}
 			
 			move_uploaded_file($_FILES["myfile"]["tmp_name"],ASSETS_IMAGES_TEMP_PATH.$newName);
         	   
-			$this->_helper->json(array('filedata' => $filedata));
+			$this->_helper->json(['filedata' => $filedata]);
 			//echo $newName;die;
 			
         } 
@@ -339,7 +339,7 @@ Zend_Debug::dump($th->getMessage());		}
         	if(isset($_POST["doc_id"]) && $_POST["doc_id"] != ''){
         		// Update attachments field in database by removing deleted attachment
         		$assetsModel = new Assets_Model_Assets();
-				$assetImages = $assetsModel->getAssetsDetailsById('id',$_POST["doc_id"]);
+				$assetImages = $assetsModel->getAssetsDetailsById('id');
 				if($empDocuments[0]['attachments']){
 					$attData = json_decode($empDocuments[0]['attachments'],true);
 					//echo "It is here while deleting ??";exit;
@@ -350,8 +350,8 @@ Zend_Debug::dump($th->getMessage());		}
 						}
 					}
 					
-					$data = array('attachments'=>(count($attData)>0)?json_encode($attData):null);
-					$where = array('id=?'=>$_POST["doc_id"]);
+					$data = ['attachments'=>(count($attData)>0)?json_encode($attData):null];
+					$where = ['id=?'=>$_POST["doc_id"]];
 					$empDocuModel->SaveorUpdateEmpDocuments($data, $where);
 				}
 				$filePath = ASSETS_IMAGES_TEMP_PATH.$_POST['doc_new_name'];	
@@ -373,7 +373,7 @@ Zend_Debug::dump($th->getMessage());		}
 	                unlink($filePath);
 	            }
 	            
-	            $this->_helper->json(array());
+	            $this->_helper->json([]);
         	}
         }
     }
@@ -382,7 +382,7 @@ Zend_Debug::dump($th->getMessage());		}
 	{
 		try {
 		
-		$ImageName=array();
+		$ImageName=[];
 		$auth = Zend_Auth::getInstance();
 		if($auth->hasIdentity()){
 			$loginUserId = $auth->getStorage()->read()->id;
@@ -419,7 +419,7 @@ Zend_Debug::dump($th->getMessage());		}
 			}
 		}
 			
-		$this->_helper->json(array('options'=>utf8_encode($opt)));
+		$this->_helper->json(['options'=>utf8_encode($opt)]);
 		
 	}
 	public function deleteimageAction()
@@ -432,7 +432,7 @@ Zend_Debug::dump($th->getMessage());		}
 					{
 	            	 unlink($filePath);
 					}
-				 $this->_helper->json(array());
+				 $this->_helper->json([]);
 	} 
 
 	public function downloadimageAction()
@@ -458,9 +458,9 @@ Zend_Debug::dump($th->getMessage());		}
 		//die; 
 		
 	}
-	function zipFilesDownload($imgNames){
+	public function zipFilesDownload($imgNames){
 		$file_path = ASSETS_IMAGES_TEMP_PATH;
-		$archive_file_name = time().rand(8,8).'.zip';
+		$archive_file_name = time().random_int(8,8).'.zip';
 	
 		$zip = new ZipArchive();
 		if ($zip->open($file_path.$archive_file_name, ZIPARCHIVE::CREATE )!==TRUE) {
@@ -507,14 +507,14 @@ Zend_Debug::dump($th->getMessage());		}
         $form->setAction(BASE_URL.'assets/assetinstant/addpopup/id/'.$id);
         if ($this->getRequest()->isPost()) {
             if ($form->isValid($this->getRequest()->getPost())) {
-                $data = array(
+                $data = [
                     'asset_id'=>$this->_request->getParam('asset_id'),
                     'serialidentification'=>$this->_request->getParam('serialidentification'),
                     'description'=>$this->_request->getParam('description'),
 					'isactive'=>utlis::getcheckboxvalue($this->_request->getParam('isactive')),
                     'createdby'=>$loginUserId,
                     'createddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
                 $Id= $dmtmodel->saveOrUpdateAssetsData($data,'');
                 $tableid = $Id;
                 $actionflag = 1;

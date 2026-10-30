@@ -39,14 +39,14 @@ class Default_Form_empadditionaldetails extends Zend_Form
         $countries_served->setRegisterInArrayValidator(false);
 		
 		$branch_service = new Zend_Form_Element_Select('branch_service');
-		$branch_service->addValidator('NotEmpty',false,array('messages'=>'Branch Required'));
+		$branch_service->addValidator('NotEmpty',false,['messages'=>'Branch Required']);
 		$branch_service->setRequired(true);
 		$branch_service->setLabel('Branch of Service');
 			
 			
 		$rank_achieved = new Zend_Form_Element_Select('rank_achieved');
 		$rank_achieved->setRequired(true);
-		$rank_achieved->addValidator('NotEmpty',false,array('messages'=>'Rank Required'));
+		$rank_achieved->addValidator('NotEmpty',false,['messages'=>'Rank Required']);
 		$rank_achieved->setLabel('Rank Achieved');
 		
 			
@@ -68,14 +68,14 @@ class Default_Form_empadditionaldetails extends Zend_Form
 		$service_number = new Zend_Form_Element_Text('service_number');
 		$service_number->setAttrib('maxlength',30);
 		$service_number->setLabel('Service Number');
-		$service_number->addValidator("regex",true,array(
+		$service_number->addValidator("regex",true,[
                             'pattern'=>'/^[a-zA-Z0-9\-\. ]*$/', 
                            
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter valid service number.'
-                           )
-        	));
-		$service_number->addFilters(array('StringTrim'));	
+                           ]
+        	]);
+		$service_number->addFilters(['StringTrim']);	
 			
 	
 			
@@ -93,21 +93,21 @@ class Default_Form_empadditionaldetails extends Zend_Form
 		$special_training->setLabel('Special Trainings');
         
 		$special_training ->setAttrib('maxlength', '400');
-		$special_training->addFilters(array('StringTrim'));
+		$special_training->addFilters(['StringTrim']);
 		
         $awards = new Zend_Form_Element_Textarea('awards');
 		$awards->setLabel('Awards/ Honors Received');
         $awards->setAttrib('rows', 10);
         $awards->setAttrib('cols', 50);
 		$awards ->setAttrib('maxlength', '400');
-		$awards->addFilters(array('StringTrim'));
+		$awards->addFilters(['StringTrim']);
 					
 		$submit = new Zend_Form_Element_Submit('submit');
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 		
-		$this->addElements(array($id,$userid,$countries_served,$branch_service,$rank_achieved,$from_date,$to_date,$discharge_status,$service_number,$military_servicetype,$veteran_status,$special_training,$awards,$submit));
-        $this->setElementDecorators(array('ViewHelper')); 
+		$this->addElements([$id,$userid,$countries_served,$branch_service,$rank_achieved,$from_date,$to_date,$discharge_status,$service_number,$military_servicetype,$veteran_status,$special_training,$awards,$submit]);
+        $this->setElementDecorators(['ViewHelper']); 
  		 
 	}
 }

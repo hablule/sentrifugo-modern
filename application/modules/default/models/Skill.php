@@ -38,10 +38,10 @@ class Default_Model_Skill extends Zend_Db_Table_Abstract
 
         $bank = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('s' => 'main_skill'), array('id' => 's.skill_id', 'name' => 's.name', 'code' => 's.code', 'isactive' => 'if(s.isactive="Y","Yes","No")', 'issummary' => 'if(s.issummary="Y","Yes","No")', 'description' => 's.description'))
-            ->joinLeft(array('sc' => 'main_skillcategory'), 's.skillcategory_id=sc.skillcategory_id', array('skillcategoryname' => 'sc.name'))
-            ->joinLeft(array('m' => 'main_measurement'), 's.measurement_id=m.measurement_id', array('measurementname' => 'm.name'))
-            ->joinLeft(array('ps' => 'main_skill'), 's.parentskill_id=ps.skill_id', array('parentskill' => 'ps.name'))
+            ->from(['s' => 'main_skill'], ['id' => 's.skill_id', 'name' => 's.name', 'code' => 's.code', 'isactive' => 'if(s.isactive="Y","Yes","No")', 'issummary' => 'if(s.issummary="Y","Yes","No")', 'description' => 's.description'])
+            ->joinLeft(['sc' => 'main_skillcategory'], 's.skillcategory_id=sc.skillcategory_id', ['skillcategoryname' => 'sc.name'])
+            ->joinLeft(['m' => 'main_measurement'], 's.measurement_id=m.measurement_id', ['measurementname' => 'm.name'])
+            ->joinLeft(['ps' => 'main_skill'], 's.parentskill_id=ps.skill_id', ['parentskill' => 'ps.name'])
 
             ->order("$by $sort")
             ->where($where)
@@ -52,7 +52,7 @@ class Default_Model_Skill extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $a = '', $b = '', $c = '', $d = '')
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
             foreach ($searchValues as $key => $val) {
@@ -62,7 +62,7 @@ class Default_Model_Skill extends Zend_Db_Table_Abstract
             $searchQuery = rtrim($searchQuery, " AND");
         }
         $objName = 'skill';
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'name' => 'Skill',
             'code' => 'Code',
@@ -70,17 +70,17 @@ class Default_Model_Skill extends Zend_Db_Table_Abstract
             'parentskill' => 'Parent Skill',
             'description' => 'Description',
             'isactive' => 'Active',
-        );
+        ];
 
         $tablecontent = $this->getData($sort, $by, $pageNo, $perPage, $searchQuery);
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
             'perPage' => $perPage,
             'tablecontent' => $tablecontent,
             'objectname' => $objName,
-            'extra' => array(),
+            'extra' => [],
             'add' => 'add',
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
@@ -88,24 +88,24 @@ class Default_Model_Skill extends Zend_Db_Table_Abstract
             'searchArray' => $searchArray,
             'call' => $call,
             'dashboardcall' => $dashboardcall,
-            'search_filters' => array(
-                'isactive' => array(
+            'search_filters' => [
+                'isactive' => [
                     'type' => 'select',
-                    'filter_data' => array('' => 'All', 'Y' => 'Yes', 'N' => 'No')
-                ),
-                'issummary' => array(
+                    'filter_data' => ['' => 'All', 'Y' => 'Yes', 'N' => 'No']
+                ],
+                'issummary' => [
                     'type' => 'select',
-                    'filter_data' => array('' => 'All', 'Y' => 'Yes', 'N' => 'No')
-                ),
-            )
-        );
+                    'filter_data' => ['' => 'All', 'Y' => 'Yes', 'N' => 'No']
+                ],
+            ]
+        ];
         return $dataTmp;
     }
     public function getskillsourcelist()
     {
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('sc' => 'main_measurement'), array('measurement_id' => 'sc.measurement_id', 'name' => 'sc.name'))
+            ->from(['sc' => 'main_measurement'], ['measurement_id' => 'sc.measurement_id', 'name' => 'sc.name'])
             ->where('sc.isactive="Y" ');
 
 
@@ -115,7 +115,7 @@ class Default_Model_Skill extends Zend_Db_Table_Abstract
     {
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('s' => 'main_skill'), array('skill_id' => 's.skill_id', 'name' => 's.name'))
+            ->from(['s' => 'main_skill'], ['skill_id' => 's.skill_id', 'name' => 's.name'])
             ->where('s.isactive="Y" ');
 
 
@@ -125,7 +125,7 @@ class Default_Model_Skill extends Zend_Db_Table_Abstract
     {
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('s' => 'main_skill'), array('skill_id' => 's.skill_id', 'name' => 's.name'))
+            ->from(['s' => 'main_skill'], ['skill_id' => 's.skill_id', 'name' => 's.name'])
             ->where('s.isactive="Y" and s.issummary="N"');
         return $this->fetchAll($select)->toArray();
     }
@@ -133,7 +133,7 @@ class Default_Model_Skill extends Zend_Db_Table_Abstract
     {
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('s' => 'main_skill'), array('skill_id' => 's.skill_id', 'name' => 's.name'))
+            ->from(['s' => 'main_skill'], ['skill_id' => 's.skill_id', 'name' => 's.name'])
             ->where('s.isactive="Y" and s.issummary="Y"');
         return $this->fetchAll($select)->toArray();
     }
@@ -153,7 +153,7 @@ class Default_Model_Skill extends Zend_Db_Table_Abstract
     {
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('m' => 'main_measurementindex'), array('measurementindex_id' => 'm.measurementindex_id', 'name' => 'm.description'))
+            ->from(['m' => 'main_measurementindex'], ['measurementindex_id' => 'm.measurementindex_id', 'name' => 'm.description'])
             ->where('m.isactive="Y" ');
 
 
@@ -170,10 +170,10 @@ class Default_Model_Skill extends Zend_Db_Table_Abstract
     {
         $linecate = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('s' => 'main_skill'), array('id' => 's.skill_id', 'name' => 's.name', 'code' => 's.code', 'isactive' => 'if(s.isactive="Y","Yes","No")', 'issummary' => 'if(s.issummary="Y","Yes","No")', 'description' => 's.description'))
-            ->joinLeft(array('sc' => 'main_skillcategory'), 's.skillcategory_id=sc.skillcategory_id', array('skillcategoryname' => 'sc.name'))
-            ->joinLeft(array('m' => 'main_measurement'), 's.measurement_id=m.measurement_id', array('measurementname' => 'm.name'))
-            ->joinLeft(array('ps' => 'main_skill'), 's.parentskill_id=ps.skill_id', array('parentskill' => 'ps.name'))
+            ->from(['s' => 'main_skill'], ['id' => 's.skill_id', 'name' => 's.name', 'code' => 's.code', 'isactive' => 'if(s.isactive="Y","Yes","No")', 'issummary' => 'if(s.issummary="Y","Yes","No")', 'description' => 's.description'])
+            ->joinLeft(['sc' => 'main_skillcategory'], 's.skillcategory_id=sc.skillcategory_id', ['skillcategoryname' => 'sc.name'])
+            ->joinLeft(['m' => 'main_measurement'], 's.measurement_id=m.measurement_id', ['measurementname' => 'm.name'])
+            ->joinLeft(['ps' => 'main_skill'], 's.parentskill_id=ps.skill_id', ['parentskill' => 'ps.name'])
             ->where('s.skill_id=' . $id);
         return $this->fetchRow($linecate)->toArray();
     }
@@ -198,7 +198,7 @@ class Default_Model_Skill extends Zend_Db_Table_Abstract
     public function getPairs($activeOnly = true)
     {
         $select = $this->select()
-            ->from('main_skill', array('skill_id', 'name'))
+            ->from('main_skill', ['skill_id', 'name'])
             ->order('name ASC');
 
         if ($activeOnly) {

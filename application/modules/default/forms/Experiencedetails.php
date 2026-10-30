@@ -39,20 +39,20 @@ class Default_Form_Experiencedetails extends Zend_Form
         $company_name->addFilter(new Zend_Filter_StringTrim());
         $company_name->setRequired(true);
 		$company_name->setAttrib("maxlength",50);
-        $company_name->addValidator('NotEmpty', false, array('messages' => 'Please enter company name.'));
+        $company_name->addValidator('NotEmpty', false, ['messages' => 'Please enter company name.']);
 		
-		$company_name->addValidators(array(
-						 array(
+		$company_name->addValidators([
+						 [
 							 'validator'   => 'Regex',
 							 'breakChainOnFailure' => true,
-							 'options'     => array( 
+							 'options'     => [ 
 							 'pattern' =>'/^[a-zA-Z][a-zA-Z0-9\-\s]+$/i',
-								 'messages' => array(
+								 'messages' => [
 										 'regexNotMatch'=>'Please enter valid company name.'
-								 )
-							 )
-						 )
-					 )); 
+								 ]
+							 ]
+						 ]
+					 ]); 
 		
 		//Company website ... 
         
@@ -63,12 +63,12 @@ class Default_Form_Experiencedetails extends Zend_Form
 		// $comp_website->setRequired(true);
 		// $comp_website->addValidator('NotEmpty', false, array('messages' => 'Please enter company website.')); 
 		
-		$comp_website->addValidator("regex",true,array(                           
+		$comp_website->addValidator("regex",true,[                           
                            'pattern'=>'/^(http:\/\/www|https:\/\/www|www)+\.([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,3})$/',
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter valid URL.'
-                           )
-        	));
+                           ]
+        	]);
 		
 		       
        // designation...
@@ -76,27 +76,27 @@ class Default_Form_Experiencedetails extends Zend_Form
         $designation->addFilter(new Zend_Filter_StringTrim());
 		$designation->setAttrib("maxlength",50);
         $designation->setRequired(true);
-        $designation->addValidator('NotEmpty', false, array('messages' => 'Please enter designation.'));
+        $designation->addValidator('NotEmpty', false, ['messages' => 'Please enter designation.']);
        
-		$designation->addValidators(array(
-						 array(
+		$designation->addValidators([
+						 [
 							 'validator'   => 'Regex',
 							 'breakChainOnFailure' => true,
-							 'options'     => array( 
+							 'options'     => [ 
 							 'pattern' =>'/^[a-zA-Z\.\-\s]+$/i',
-								 'messages' => array(
+								 'messages' => [
 										 'regexNotMatch'=>'Please enter valid designation.'
-								 )
-							 )
-						 )
-					 )); 
+								 ]
+							 ]
+						 ]
+					 ]); 
         
 		//from_date..
         $from_date = new ZendX_JQuery_Form_Element_DatePicker('from_date');
 		
 		
 		$from_date->setRequired(true);
-        $from_date->addValidator('NotEmpty', false, array('messages' => 'Please select from date.'));
+        $from_date->addValidator('NotEmpty', false, ['messages' => 'Please select from date.']);
         $from_date->setAttrib('readonly', 'true');
         $from_date->setAttrib('onfocus', 'this.blur()');  
 		
@@ -105,7 +105,7 @@ class Default_Form_Experiencedetails extends Zend_Form
 		
 		
 		$to_date->setRequired(true);
-        $to_date->addValidator('NotEmpty', false, array('messages' => 'Please select to date.'));
+        $to_date->addValidator('NotEmpty', false, ['messages' => 'Please select to date.']);
         $to_date->setAttrib('readonly', 'true');	
 		$to_date->setAttrib('onfocus', 'this.blur()');  
 		
@@ -115,11 +115,11 @@ class Default_Form_Experiencedetails extends Zend_Form
         $reason_for_leaving->setAttrib('cols', 50);	
 		$reason_for_leaving->setLabel("Reason for Leaving");
 		$reason_for_leaving->setRequired(true);
-        $reason_for_leaving->addValidator('NotEmpty', false, array('messages' => 'Please enter reason for leaving.'));
+        $reason_for_leaving->addValidator('NotEmpty', false, ['messages' => 'Please enter reason for leaving.']);
 		$responsibility = new Zend_Form_Element_Textarea('responsibility');
 		$responsibility->setRequired(true);
-        $responsibility->addValidator('NotEmpty', false, array('messages' => 'Please Enter Summary of Responsiblity.'));
-		$responsibility->addValidator('NotEmpty', false, array('messages' => 'Please Enter Summary of Responsiblity.'));
+        $responsibility->addValidator('NotEmpty', false, ['messages' => 'Please Enter Summary of Responsiblity.']);
+		$responsibility->addValidator('NotEmpty', false, ['messages' => 'Please Enter Summary of Responsiblity.']);
 		$responsibility->setAttrib("maxlength",500);
 
 		$responsibility->setLabel("Summary of Responsiblity");
@@ -130,65 +130,65 @@ class Default_Form_Experiencedetails extends Zend_Form
         $reference_name->addFilter(new Zend_Filter_StringTrim());
         $reference_name->setRequired(true);
 		$reference_name->setAttrib("maxlength",50);
-        $reference_name->addValidator('NotEmpty', false, array('messages' => 'Please enter referrer name.'));
+        $reference_name->addValidator('NotEmpty', false, ['messages' => 'Please enter referrer name.']);
 		
-		$reference_name->addValidators(array(
-						 array(
+		$reference_name->addValidators([
+						 [
 							 'validator'   => 'Regex',
 							 'breakChainOnFailure' => true,
-							 'options'     => array( 
+							 'options'     => [ 
 							 'pattern' =>'/^[a-zA-Z][a-zA-Z0-9\-\s]+$/i',
-								 'messages' => array(
+								 'messages' => [
 										 'regexNotMatch'=>'Please enter valid referrer name.'
-								 )
-							 )
-						 )
-					 )); 
+								 ]
+							 ]
+						 ]
+					 ]); 
 		//Referer mobile number ....
 		$reference_contact = new Zend_Form_Element_Text('reference_contact');
         $reference_contact->addFilter(new Zend_Filter_StringTrim());
         $reference_contact->setRequired(true);
 		$reference_contact->setAttrib("maxlength",10);
-        $reference_contact->addValidator('NotEmpty', false, array('messages' => 'Please enter referrer contact.'));
-		$reference_contact->addValidators(array(array('StringLength',false,
-									  array('min' => 10,
+        $reference_contact->addValidator('NotEmpty', false, ['messages' => 'Please enter referrer contact.']);
+		$reference_contact->addValidators([['StringLength',false,
+									  ['min' => 10,
 											'max' => 10,
-											'messages' => array(
+											'messages' => [
 											Zend_Validate_StringLength::TOO_LONG =>
 											'Referrer contact must contain at most of 10 numbers.',
 											Zend_Validate_StringLength::TOO_SHORT =>
 											'Referrer contact  must contain at least of %min% characters.'
-											)))));
+											]]]]);
 											
-		$reference_contact->addValidators(array(
-						 array(
+		$reference_contact->addValidators([
+						 [
 							 'validator'   => 'Regex',
 							 'breakChainOnFailure' => true,
-							 'options'     => array( 
+							 'options'     => [ 
 							 'pattern' =>'/^[0-9]+$/i',
-								 'messages' => array(
+								 'messages' => [
 										 'regexNotMatch'=>'Please enter only numbers.'
-								 )
-							 )
-						 )
-					 )); 
+								 ]
+							 ]
+						 ]
+					 ]); 
 		
 					 $isactive = new Zend_Form_Element_Checkbox('isactive');
 
 		 //Referer Email....
          $reference_email = new Zend_Form_Element_Text('reference_email');
-         $reference_email->addFilters(array('StringTrim', 'StripTags'));
+         $reference_email->addFilters(['StringTrim', 'StripTags']);
          $reference_email->setRequired(true);
 		 $reference_email->setAttrib("maxlength",50);
-         $reference_email->addValidator('NotEmpty', false, array('messages' => 'Please enter referrer email.')); 
+         $reference_email->addValidator('NotEmpty', false, ['messages' => 'Please enter referrer email.']); 
          
-         $reference_email->addValidator("regex",true,array(
+         $reference_email->addValidator("regex",true,[
                            
 						    'pattern'=>'/^(?!.*\.{2})[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/',                            
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter valid email.'
-                           )
-        	));
+                           ]
+        	]);
         
          
 	   //Form Submit....
@@ -196,13 +196,13 @@ class Default_Form_Experiencedetails extends Zend_Form
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 
-		$this->addElements(array($id,$user_id,$company_name,$responsibility,$comp_website,$designation,$from_date,$to_date,$reason_for_leaving,$reference_name,$reference_contact,$reference_email,$isactive,
-							$submit));
-       $this->setElementDecorators(array('ViewHelper')); 
+		$this->addElements([$id,$user_id,$company_name,$responsibility,$comp_website,$designation,$from_date,$to_date,$reason_for_leaving,$reference_name,$reference_contact,$reference_email,$isactive,
+							$submit]);
+       $this->setElementDecorators(['ViewHelper']); 
 		
-		$this->setElementDecorators(array(
+		$this->setElementDecorators([
                     'UiWidgetElement',
-        ),array('from_date','to_date'));
+        ],['from_date','to_date']);
 		
 		
         

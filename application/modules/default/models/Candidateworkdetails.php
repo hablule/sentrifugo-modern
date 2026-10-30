@@ -23,7 +23,7 @@ class Default_Model_Candidateworkdetails extends Zend_Db_Table_Abstract
 {
     protected $_name = 'main_candworkdetails';
     protected $_primary = 'id';
-    
+
     /**
      * This function gives data for grid view.
      * @parameters
@@ -44,14 +44,14 @@ class Default_Model_Candidateworkdetails extends Zend_Db_Table_Abstract
 
         $roleData = $this->select()
                         ->setIntegrityCheck(false)
-                        ->from(array('c'=>$this->_name),array('c.*',))
-                        
+                        ->from(['c'=>$this->_name],['c.*',])
+
                         ->where($where)
                         ->order("$by $sort") 
                         ->limitPage($pageNo, $perPage);        
         return $roleData;       		
     }
-    
+
     /**
      * This function is used to save/update data in database.
      * @parameters
@@ -82,11 +82,11 @@ class Default_Model_Candidateworkdetails extends Zend_Db_Table_Abstract
     {
         return $this->_name;
     }
-    
+
 	public function getcandidateworkData($id)
 	{	
             $db = Zend_Db_Table::getDefaultAdapter();	
-                
+
             $workData = $db->query("select * from main_candworkdetails where isactive = 1 AND cand_id=".$id.";");
             if (!$workData) 
             {

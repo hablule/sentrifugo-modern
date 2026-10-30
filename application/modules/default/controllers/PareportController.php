@@ -25,7 +25,7 @@ class Default_PareportController extends Zend_Controller_Action
     protected $_loginEmpId;
     
     /** @var array Array of authorized report codes fetched from map_report_acl */
-    protected $_authorizedReports = array();
+    protected $_authorizedReports = [];
 
     protected $_model;
     protected $_options;
@@ -78,7 +78,7 @@ class Default_PareportController extends Zend_Controller_Action
     {
         $session = sapp_Global::_readSession();
         if (!isset($session)) {
-            if ($this->getRequest()->isXmlHttpRequest()) die(Zend_Json::encode(array('login' => 'failed')));
+            if ($this->getRequest()->isXmlHttpRequest()) die(Zend_Json::encode(['login' => 'failed']));
             else $this->_redirect('');
         }
 
@@ -109,7 +109,7 @@ class Default_PareportController extends Zend_Controller_Action
     {
         // 1. RBAC CHECK
         if (!in_array('PA_EXEC_SUMMARY', $this->_authorizedReports)) {
-            $this->_helper->json(array('error' => 'Unauthorized to view this report.'));
+            $this->_helper->json(['error' => 'Unauthorized to view this report.']);
             return;
         }
 
@@ -120,9 +120,9 @@ class Default_PareportController extends Zend_Controller_Action
             // Note: The Model no longer applies dynamic $accessLevel WHERE clauses.
             // A report queries exactly what its catalog code implies.
             $kpiData = $this->_model->getDashboardKPIs($filters);
-            $this->_helper->json(array('status' => 'success', 'data' => $kpiData));
+            $this->_helper->json(['status' => 'success', 'data' => $kpiData]);
         } catch (\Throwable $e) {
-            $this->_helper->json(array('error' => 'Server Error: ' . $e->getMessage()));
+            $this->_helper->json(['error' => 'Server Error: ' . $e->getMessage()]);
         }
     }
 
@@ -136,7 +136,7 @@ class Default_PareportController extends Zend_Controller_Action
         $filters   = json_decode((string)$request->getParam('filters', '{}'), true);
         
         if (empty($chartType)) {
-            $this->_helper->json(array('error' => 'Missing chart type'));
+            $this->_helper->json(['error' => 'Missing chart type']);
             return;
         }
 
@@ -145,7 +145,7 @@ class Default_PareportController extends Zend_Controller_Action
                 
                 // 1. RBAC CHECK
                 if (!in_array('PA_EXEC_SUMMARY', $this->_authorizedReports)) {
-                    $this->_helper->json(array('error' => 'Unauthorized to view this report.'));
+                    $this->_helper->json(['error' => 'Unauthorized to view this report.']);
                     return;
                 }
 
@@ -153,17 +153,17 @@ class Default_PareportController extends Zend_Controller_Action
                 $dbResults = $this->_model->getStatusBreakdownChart($filters);
                 
                 // 3. Translate raw DB array into Chart.js format
-                $labels = array(); $data = array();
+                $labels = []; $data = [];
                 foreach ($dbResults as $row) { 
                     $labels[] = $row['status']; $data[] = $row['count']; 
                 }
                 
-                $this->_helper->json(array('status' => 'success', 'labels' => $labels, 'data' => $data));
+                $this->_helper->json(['status' => 'success', 'labels' => $labels, 'data' => $data]);
             } else {
-                $this->_helper->json(array('error' => 'Unknown chart type'));
+                $this->_helper->json(['error' => 'Unknown chart type']);
             }
         } catch (\Throwable $e) {
-            $this->_helper->json(array('error' => 'Server Error: ' . $e->getMessage()));
+            $this->_helper->json(['error' => 'Server Error: ' . $e->getMessage()]);
         }
     }
 }

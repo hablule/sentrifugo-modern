@@ -45,11 +45,11 @@ class Default_Model_Appraisalratings extends Zend_Db_Table_Abstract
 		}
 		$appraisalRatingsData = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('r'=>'main_pa_ratings'),array('r.*','rating' =>'concat(r.rating_value,"-",r.rating_text)','rating_type'=>'if (r.rating_type=1,"1-5","1-10")'))
-							->joinInner(array('i'=>'main_pa_initialization'), 'i.id = r.pa_initialization_id', array('appr_period'=>'concat(case when i.appraisal_mode = "Yearly" then "Y" when i.appraisal_mode = "Half-yearly" then "H" when i.appraisal_mode = "Quarterly" then "Q" end,"",i.appraisal_period," Appraisal, ",i.to_year)','i.enable_step','i.employee_response','i.initialize_status','appraisal_ratings'=>'if (i.appraisal_ratings=1,"1-5","1-10")', new Zend_Db_Expr("CASE WHEN i.status=1 THEN 'Open' WHEN i.status=2 THEN 'Closed' ELSE 'Force Closed' END as status "),
-							new Zend_Db_Expr("case when initialize_status = 1 then case when i.enable_step = 1 then 'Enabled to Managers' when i.enable_step = 2 then 'Enabled to Employees' end when initialize_status = 2 then 'Initialize later' when initialize_status is null then 'In progress' end as appraisal_process_status")))
-                           ->joinLeft(array('b'=>'main_businessunits'), 'i.businessunit_id = b.id', array('deptname'=>'ifnull(d.deptname,"--")'))
-                           ->joinLeft(array('d'=>'main_departments'), 'i.department_id = d.id', array('b.unitname'))
+                           ->from(['r'=>'main_pa_ratings'],['r.*','rating' =>'concat(r.rating_value,"-",r.rating_text)','rating_type'=>'if (r.rating_type=1,"1-5","1-10")'])
+							->joinInner(['i'=>'main_pa_initialization'], 'i.id = r.pa_initialization_id', ['appr_period'=>'concat(case when i.appraisal_mode = "Yearly" then "Y" when i.appraisal_mode = "Half-yearly" then "H" when i.appraisal_mode = "Quarterly" then "Q" end,"",i.appraisal_period," Appraisal, ",i.to_year)','i.enable_step','i.employee_response','i.initialize_status','appraisal_ratings'=>'if (i.appraisal_ratings=1,"1-5","1-10")', new Zend_Db_Expr("CASE WHEN i.status=1 THEN 'Open' WHEN i.status=2 THEN 'Closed' ELSE 'Force Closed' END as status "),
+							new Zend_Db_Expr("case when initialize_status = 1 then case when i.enable_step = 1 then 'Enabled to Managers' when i.enable_step = 2 then 'Enabled to Employees' end when initialize_status = 2 then 'Initialize later' when initialize_status is null then 'In progress' end as appraisal_process_status")])
+                           ->joinLeft(['b'=>'main_businessunits'], 'i.businessunit_id = b.id', ['deptname'=>'ifnull(d.deptname,"--")'])
+                           ->joinLeft(['d'=>'main_departments'], 'i.department_id = d.id', ['b.unitname'])
                            ->where($where)
     					   ->order("$by $sort")
     					   ->group('i.id') 
@@ -59,8 +59,8 @@ class Default_Model_Appraisalratings extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$implementationflag,$b='',$c='',$d='')
 	{		
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		if($searchData != '' && $searchData!='undefined')
 		{
 			$searchValues = json_decode($searchData);
@@ -81,16 +81,16 @@ class Default_Model_Appraisalratings extends Zend_Db_Table_Abstract
 			$searchQuery = rtrim($searchQuery," AND");					
 		}
 		$objName = 'appraisalratings';
-		$tableFields = array('action'=>'Action','appr_period'=>'Appraisal Period','unitname'=>'Business Unit','deptname' => 'Department','rating_type'=>'Rating Type','status'=>'Appraisal Status','appraisal_process_status'=>'Process Status');
+		$tableFields = ['action'=>'Action','appr_period'=>'Appraisal Period','unitname'=>'Business Unit','deptname' => 'Department','rating_type'=>'Rating Type','status'=>'Appraisal Status','appraisal_process_status'=>'Process Status'];
 		$tablecontent = $this->getAppraisalRatingsData($sort, $by, $pageNo, $perPage,$searchQuery,$implementationflag);
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -99,17 +99,17 @@ class Default_Model_Appraisalratings extends Zend_Db_Table_Abstract
 			'call'=>$call,
 			'actionparam'=>'yes',
 			'dashboardcall'=>$dashboardcall,
-							'search_filters' => array(                            
-								'rating_type' => array(
+							'search_filters' => [                            
+								'rating_type' => [
 										'type' => 'select',
-										'filter_data' => array('' => 'All',1 => '1-5', 2 => '1-10')
-									),
-								'status' => array(
+										'filter_data' => ['' => 'All',1 => '1-5', 2 => '1-10']
+									],
+								'status' => [
 								'type' => 'select',
-								'filter_data' => array('' => 'All',1 => 'Open', 2 => 'Close',3=>'Force Close')
-                            ),                           
-                        ),   
-		);
+								'filter_data' => ['' => 'All',1 => 'Open', 2 => 'Close',3=>'Force Close']
+                            ],                           
+                        ],   
+		];
 		return $dataTmp;
 	}
 	
@@ -188,7 +188,7 @@ public function getAppraisalRatingsbyID($id)
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('im'=>'main_pa_ratings'),array('im.*'))
+						->from(['im'=>'main_pa_ratings'],['im.*'])
 					    ->where('im.isactive = 1 AND im.pa_configured_id='.$id.' ');
 					    
 			//echo "select:".$select;		    
@@ -202,8 +202,8 @@ public function getAppraisalRatingsbyID($id)
 		{
 			$select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('r'=>'main_pa_ratings'),array('r.*'))
-						->joinInner(array('a'=>'main_pa_initialization'),'r.pa_initialization_id = a.id',array(" case when a.status = 1 then 'Open' 
+						->from(['r'=>'main_pa_ratings'],['r.*'])
+						->joinInner(['a'=>'main_pa_initialization'],'r.pa_initialization_id = a.id',[" case when a.status = 1 then 'Open' 
 							when a.status = 2 then 'Closed' 
 							when a.status = 3 then 'Force Closed' end as status, 
 						case 	when a.initialize_status = 2 then 'Initialize later' 
@@ -212,14 +212,14 @@ public function getAppraisalRatingsbyID($id)
 						case when a.enable_step = 1 then 'Enabled to Managers' 
 							 when a.enable_step = 2 then 'Enabled to Employees' end 
 						when (a.pa_configured_id is not null and a.initialize_status is null) then 'In progress' end as initialize_status													
-						"))
+						"])
 					    ->where('r.isactive = 1 AND r.id='.$initid.'');
 		}
 		else
 		{
 			$select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('im'=>'main_pa_ratings'),array('im.*'))
+						->from(['im'=>'main_pa_ratings'],['im.*'])
 					    ->where('im.isactive = 1 AND im.pa_initialization_id='.$initid.'')
 					    ->order('im.id');
 		}
@@ -230,7 +230,7 @@ public function getAppraisalRatingsbyID($id)
 	public function getManagerProfileImg($useridstring='')
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();
-		$emparr = array();
+		$emparr = [];
 		if($useridstring !='' && $useridstring !='null')
 		{
 			$qry = "select e.userfullname,e.user_id,e.emprole,e.profileimg from employees_summary e where e.user_id IN(".$useridstring.")";
@@ -249,7 +249,7 @@ public function getAppraisalRatingsbyID($id)
 	
 	public function getappdata($init_id)
     {
-        $data = array();
+        $data = [];
         if($init_id != '')
         {
             $db = Zend_Db_Table::getDefaultAdapter();
@@ -265,7 +265,7 @@ public function getAppraisalRatingsbyID($id)
 	
 	public function getApprisalDatawithConfigId($configId)
     {
-        $data = array();
+        $data = [];
         if($configId != '')
         {
             $db = Zend_Db_Table::getDefaultAdapter();

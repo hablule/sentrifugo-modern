@@ -47,7 +47,7 @@ class Default_Model_Menugroup extends Zend_Db_Table_Abstract
         if ($id) {
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = gmdate("Y-m-d H:i:s");
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return 'update';
         }
 
@@ -85,13 +85,13 @@ class Default_Model_Menugroup extends Zend_Db_Table_Abstract
 
     public function getPairs($activeOnly = true)
     {
-        $select = $this->select()->from($this->_name, array('id', 'name'))->order('name ASC');
+        $select = $this->select()->from($this->_name, ['id', 'name'])->order('name ASC');
         if ($activeOnly) {
             $select->where("isactive = 1");
         }
 
         $results = $this->fetchAll($select);
-        $data = array();
+        $data = [];
         foreach ($results as $row) {
             $data[$row->id] = $row->name;
         }
@@ -101,15 +101,15 @@ class Default_Model_Menugroup extends Zend_Db_Table_Abstract
     public function deleteRecord($id)
     {
         $userId = Zend_Auth::getInstance()->getStorage()->read()->id ?? 0;
-        $data = array('isactive' => 5, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s"));
-        return $this->update($data, array('id = ?' => (int)$id));
+        $data = ['isactive' => 5, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s")];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     public function toggleStatus($id, $status)
     {
         $userId = Zend_Auth::getInstance()->getStorage()->read()->id ?? 0;
-        $data = array('isactive' => $status, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s"));
-        return $this->update($data, array('id = ?' => (int)$id));
+        $data = ['isactive' => $status, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s")];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /**
@@ -123,13 +123,13 @@ class Default_Model_Menugroup extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->from(
                 $this->_name,
-                array(
+                [
                     'id',
                     'name',
                     'code',
                     'iconpath',
                     'backgroundcolor'
-                )
+                ]
             )
             ->where('isactive = 1')
             // Exclude the catch-all group for hidden utilities we created earlier
@@ -146,7 +146,7 @@ class Default_Model_Menugroup extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -164,17 +164,17 @@ class Default_Model_Menugroup extends Zend_Db_Table_Abstract
             }
         }
 
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'          => 'Action',
             'name'            => 'Group Name',
             'code'            => 'Code',
             'backgroundcolor' => 'Theme Color',
             'status_text'     => 'Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
@@ -182,17 +182,17 @@ class Default_Model_Menugroup extends Zend_Db_Table_Abstract
             'tablecontent'   => $tableContent,
             'objectname' => 'menugroup',
             'tableheader' => $tableHeaders,
-            'extra'          => array(),
+            'extra'          => [],
             'jsGridFnName' => 'getAjaxgridData',
             'jsFillFnName' => '',
             'searchArray'    => $searchArray,
             'menuName' => 'Menu Groups',
             'call' => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => array(
-                'status_text' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive'))
-            )
-        );
+            'search_filters' => [
+                'status_text' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']]
+            ]
+        ];
     }
 
     public function getGridData($sort, $by, $pageNo, $perPage, $searchQuery = '')
@@ -202,8 +202,8 @@ class Default_Model_Menugroup extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from(
-                array('mg' => $this->_name),
-                array('*', 'status_text' => new Zend_Db_Expr("CASE WHEN mg.isactive = 1 THEN 'Active' ELSE 'Inactive' END"))
+                ['mg' => $this->_name],
+                ['*', 'status_text' => new Zend_Db_Expr("CASE WHEN mg.isactive = 1 THEN 'Active' ELSE 'Inactive' END")]
             )
             ->where("mg.isactive != 5");
 

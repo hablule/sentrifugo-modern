@@ -58,7 +58,7 @@ class Default_Form_Paappraisal extends Zend_Form
         $rulebook_id->setLabel('Rulebook Template')
             ->setAttrib('class', 'formDataElement')
             ->setRequired(true)
-            ->addValidator('NotEmpty', true, array('messages' => 'Please select a Rulebook Template.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please select a Rulebook Template.']);
         // Options populated in Controller via getPairs()
 
         // Sentrifugo Core Period (e.g., 2026 Q1)
@@ -75,44 +75,44 @@ class Default_Form_Paappraisal extends Zend_Form
         // Campaign Name
         $name = new Zend_Form_Element_Text('name');
         $name->setLabel('Campaign Name')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '255', 'placeholder' => 'e.g., 2026 Q1 Marketing Review'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '255', 'placeholder' => 'e.g., 2026 Q1 Marketing Review'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', true, array('messages' => 'Please enter a Campaign name.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please enter a Campaign name.']);
 
         // SSOT VI.4: Standard Regex Validator (Spaces allowed)
-        $name->addValidator('Regex', true, array(
+        $name->addValidator('Regex', true, [
             'pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9 ]*)$/',
-            'messages' => array(Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space or contain special characters.')
-        ));
+            'messages' => [Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space or contain special characters.']
+        ]);
 
         // Start Date
         $start_date = new Zend_Form_Element_Text('start_date');
         $start_date->setLabel('Start Date')
-            ->setAttribs(array('class' => 'formDataElement', 'readonly' => 'readonly', 'id' => 'start_date'))
+            ->setAttribs(['class' => 'formDataElement', 'readonly' => 'readonly', 'id' => 'start_date'])
             ->setRequired(true)
-            ->addValidator('NotEmpty', true, array('messages' => 'Please select a start date.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please select a start date.']);
 
         // End Date
         $end_date = new Zend_Form_Element_Text('end_date');
         $end_date->setLabel('End Date')
-            ->setAttribs(array('class' => 'formDataElement', 'readonly' => 'readonly', 'id' => 'end_date'))
+            ->setAttribs(['class' => 'formDataElement', 'readonly' => 'readonly', 'id' => 'end_date'])
             ->setRequired(true)
-            ->addValidator('NotEmpty', true, array('messages' => 'Please select an end date.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please select an end date.']);
 
         // Cross-Field Validation: End Date must be >= Start Date
-        $end_date->addValidator('Callback', true, array(
+        $end_date->addValidator('Callback', true, [
             'callback' => function ($value, $context) {
                 if (empty($value) || empty($context['start_date'])) return true; // Pass if empty
                 $start = strtotime(sapp_Global::change_date($context['start_date'], 'database'));
                 $end   = strtotime(sapp_Global::change_date($value, 'database'));
                 return $end >= $start;
             },
-            'messages' => array(
+            'messages' => [
                 Zend_Validate_Callback::INVALID_VALUE => 'End Date must be greater than or equal to the Start Date.'
-            )
-        ));
+            ]
+        ]);
 
         /* --------------------------------------------------------------
          * 5. Textarea Elements
@@ -121,7 +121,7 @@ class Default_Form_Paappraisal extends Zend_Form
         // Description
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Description / Instructions')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -145,13 +145,13 @@ class Default_Form_Paappraisal extends Zend_Form
         // Standard Submit Button. NO inline JS onclick attribute.
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save Draft')
-            ->setAttribs(array('id' => 'submitbutton', 'class' => 'actbtn_btn'));
+            ->setAttribs(['id' => 'submitbutton', 'class' => 'actbtn_btn']);
 
         /* --------------------------------------------------------------
          * Build Form & Apply Decorators (SSOT VI.7)
          * -------------------------------------------------------------- */
 
-        $this->addElements(array(
+        $this->addElements([
             $idElement,
             $audiencePayload,
             $questionsPayload,
@@ -163,11 +163,11 @@ class Default_Form_Paappraisal extends Zend_Form
             $description,
             $isactive,
             $submit
-        ));
+        ]);
 
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
-            $element->setDecorators(array('ViewHelper'));
+            $element->setDecorators(['ViewHelper']);
         }
     }
 }

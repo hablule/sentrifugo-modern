@@ -11,7 +11,7 @@ class Default_Model_Eulalaname extends Zend_Db_Table_Abstract
         $data = $this
                     ->select()
                     ->setIntegrityCheck(false)
-                    ->from(array('s' => 'main_states'), array('s.*'))
+                    ->from(['s' => 'main_states'], ['s.*'])
                     ->where($where);
                    
         return $this->fetchAll($data)->toArray();

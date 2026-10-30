@@ -14,7 +14,7 @@ class Payroll_ReportController extends Zend_Controller_Action
 
 
         $missmodel = new Payroll_Model_report();
-        $inter_options = array();
+        $inter_options = [];
         $call = $this->_getParam('call');
         if ($call == 'ajaxcall')
             $this->_helper->layout->disableLayout();
@@ -22,9 +22,9 @@ class Payroll_ReportController extends Zend_Controller_Action
         $objname = $this->_getParam('objname');
         $refresh = $this->_getParam('refresh');
         $dashboardcall = $this->_getParam('dashboardcall');
-        $data = array();
+        $data = [];
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if ($refresh == 'refresh') {
             if ($dashboardcall == 'Yes')
@@ -36,7 +36,7 @@ class Payroll_ReportController extends Zend_Controller_Action
             $pageNo = 1;
             $searchData = '';
             $searchQuery = '';
-            $searchArray = array();
+            $searchArray = [];
         } else {
             $sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
             $by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'pr.id';
@@ -73,9 +73,9 @@ class Payroll_ReportController extends Zend_Controller_Action
             if ($this->getRequest()->isPost()) {
                 if ($form->isValid($this->getRequest()->getPost())) {
                     $empid = $this->_request->getParam('empid');
-                    $ot = array();
-                    $addunm = array();
-                    $missedhours = array();
+                    $ot = [];
+                    $addunm = [];
+                    $missedhours = [];
                     $empname = $form->empid->getValue();
                     $payroll = $repmode->getpayrollinfo($id);
                     $payroll_line = $repmode->getpayline($id, $empid);

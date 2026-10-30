@@ -41,7 +41,7 @@ class Default_Form_processes extends Zend_Form
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 		
-		$this->addElements(array($id,$process_status,$submit));
-        $this->setElementDecorators(array('ViewHelper')); 		
+		$this->addElements([$id,$process_status,$submit]);
+        $this->setElementDecorators(['ViewHelper']); 		
 	}
 }

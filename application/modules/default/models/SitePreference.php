@@ -81,7 +81,7 @@ class Default_Model_Sitepreference extends Zend_Db_Table_Abstract
 		$data['modifieddate'] = $currentDate;
 
 		// Force update to ID 1
-		$this->update($data, array('id = ?' => 1));
+		$this->update($data, ['id = ?' => 1]);
 
 		// SSOT X.2: Trigger Atomic Cache Rebuild
 		$this->generateConfigCacheFile();

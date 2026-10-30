@@ -53,28 +53,28 @@ class Default_Form_viewprofile extends Zend_Form
         $firstname->setAttrib("class", "formDataElement");
         $firstname->setAttrib('length', 70);
         $firstname->setRequired(true);
-        $firstname->addValidator('NotEmpty', false, array('messages' => 'Please enter first name.'));
-        $firstname->addValidator("regex",true,array(                           
+        $firstname->addValidator('NotEmpty', false, ['messages' => 'Please enter first name.']);
+        $firstname->addValidator("regex",true,[                           
                                    'pattern'=>'/^([a-zA-Z.]+ ?)+$/',
-                                   'messages'=>array(
+                                   'messages'=>[
                                       // 'regexNotMatch'=>'Please enter only alphabetic characters.'
                                     'regexNotMatch'=>'Please enter only alphabets.'
-                                   )
-                        ));
+                                   ]
+                        ]);
 
         $lastname = new Zend_Form_Element_Text("lastname");
         $lastname->setLabel("Last Name");	
         $lastname->setAttrib("class", "formDataElement");
         $lastname->setAttrib('length', 70);
         $lastname->setRequired(true);
-        $lastname->addValidator('NotEmpty', false, array('messages' => 'Please enter last name.'));
-        $lastname->addValidator("regex",true,array(                           
+        $lastname->addValidator('NotEmpty', false, ['messages' => 'Please enter last name.']);
+        $lastname->addValidator("regex",true,[                           
                                    'pattern'=>'/^([a-zA-Z.]+ ?)+$/',
-                                   'messages'=>array(
+                                   'messages'=>[
                                       // 'regexNotMatch'=>'Please enter only alphabetic characters.'
                                     'regexNotMatch'=>'Please enter only alphabets.'
-                                   )
-                        ));                
+                                   ]
+                        ]);                
                         
 			
         $emailaddress = new Zend_Form_Element_Text('emailaddress');
@@ -82,25 +82,25 @@ class Default_Form_viewprofile extends Zend_Form
         $emailaddress->setAttrib('maxLength', 50);
         $emailaddress->setLabel("Email");
         $emailaddress->addFilter('StripTags');
-        $emailaddress->addValidator('NotEmpty', false, array('messages' => 'Please enter email.'));
-		$emailaddress->addValidator("regex",true,array(
+        $emailaddress->addValidator('NotEmpty', false, ['messages' => 'Please enter email.']);
+		$emailaddress->addValidator("regex",true,[
 						    'pattern'=>'/^(?!.*\.{2})[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/',                            
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter valid email.'
-                           )
-        	));
+                           ]
+        	]);
         $emailaddress->addValidator(new Zend_Validate_Db_NoRecordExists(
-                                                                array('table' => 'main_users',
+                                                                ['table' => 'main_users',
                                                                 'field' => 'emailaddress',
                                                                 'exclude'=>'id!="'.$loginUserId.'"',
-																)));
+																]));
         $emailaddress->getValidator('Db_NoRecordExists')->setMessage('Email already exists.');
 				
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setAttrib('id', 'submitbutton');
         $submit->setLabel('Update');
 		
-        $this->addElements(array($id,$firstname,$lastname,$emailaddress,$submit));
-        $this->setElementDecorators(array('ViewHelper')); 		
+        $this->addElements([$id,$firstname,$lastname,$emailaddress,$submit]);
+        $this->setElementDecorators(['ViewHelper']); 		
     }
 }

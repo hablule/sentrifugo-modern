@@ -40,7 +40,7 @@ class Default_Form_Workeligibilitydetails extends Zend_Form
 		
 	 	//Document Issue Date...
 		$doc_issue_date = new ZendX_JQuery_Form_Element_DatePicker('doc_issue_date');
-		$doc_issue_date->setOptions(array('class' => 'brdr_none'));		
+		$doc_issue_date->setOptions(['class' => 'brdr_none']);		
 		$doc_issue_date->setAttrib('readonly', 'true');	
 		$doc_issue_date->setAttrib('onfocus', 'this.blur()');	
 		
@@ -48,7 +48,7 @@ class Default_Form_Workeligibilitydetails extends Zend_Form
 		$doc_expiry_date = new ZendX_JQuery_Form_Element_DatePicker('doc_expiry_date');
 		$doc_expiry_date->setAttrib('readonly', 'true');	
 		$doc_expiry_date->setAttrib('onfocus', 'this.blur()');
-		$doc_expiry_date->setOptions(array('class' => 'brdr_none'));		
+		$doc_expiry_date->setOptions(['class' => 'brdr_none']);		
 		// Expiration Date should be greater than today's date...
 		
 		
@@ -56,18 +56,18 @@ class Default_Form_Workeligibilitydetails extends Zend_Form
 		$issueAuth_name = new Zend_Form_Element_Text('issuingauth_name');
         $issueAuth_name->setAttrib('maxLength', 50);
         $issueAuth_name->addFilter(new Zend_Filter_StringTrim());
-		$issueAuth_name->addValidators(array(
-						 array(
+		$issueAuth_name->addValidators([
+						 [
 							 'validator'   => 'Regex',
 							 'breakChainOnFailure' => true,
-							 'options'     => array( 
+							 'options'     => [ 
 							 'pattern' =>'/^[a-zA-Z][a-zA-Z0-9\-\&\s]+$/i',
-								 'messages' => array(
+								 'messages' => [
 										 'regexNotMatch'=>'Please enter valid name.'
-								 )
-							 )
-						 )
-					 )); 
+								 ]
+							 ]
+						 ]
+					 ]); 
 		//issuing authority country.....
 		$country = new Zend_Form_Element_Select('issuingauth_country');
 		$country->setAttrib('onchange', 'displayParticularState(this,"","issuingauth_state","")');
@@ -93,40 +93,40 @@ class Default_Form_Workeligibilitydetails extends Zend_Form
 		$issuingAuth_pcode = new Zend_Form_Element_Text('issuingauth_postalcode');
 		$issuingAuth_pcode->addFilter(new Zend_Filter_StringTrim());
 		$issuingAuth_pcode->setAttrib("maxlength",10);
-		$issuingAuth_pcode->addValidators(array(array('StringLength',false,
-                                  array('min' => 3,
+		$issuingAuth_pcode->addValidators([['StringLength',false,
+                                  ['min' => 3,
                                   		'max' => 10,
-                                        'messages' => array(
+                                        'messages' => [
                                         Zend_Validate_StringLength::TOO_LONG =>
                                         'Issuing authority postal code must contain at most %max% characters.',
                                         Zend_Validate_StringLength::TOO_SHORT =>
-                                        'Issuing authority postal code must contain at least %min% characters.')))));
-		$issuingAuth_pcode->addValidators(array(
-					 array(
+                                        'Issuing authority postal code must contain at least %min% characters.']]]]);
+		$issuingAuth_pcode->addValidators([
+					 [
 						 'validator'   => 'Regex',
 						 'breakChainOnFailure' => true,
-						 'options'     => array( 
+						 'options'     => [ 
 						 
 						 'pattern'=>'/^(?!0{3})[0-9a-zA-Z]+$/',
-							 'messages' => array(
+							 'messages' => [
 									 'regexNotMatch'=>'Please enter valid postal code.'
-							 )
-						 )
-					 )
-				 )); 
+							 ]
+						 ]
+					 ]
+				 ]); 
 			
          // Form Submit ......... 
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setAttrib('id', 'submitbutton');
         $submit->setLabel('Save');
 
-        $this->addElements(array($id,$userid,$issuingauthflag,$docType,$doc_issue_date,$doc_expiry_date,$issueAuth_name,$country,$state,$city,$issuingAuth_pcode,$emptyflag,$submit));
+        $this->addElements([$id,$userid,$issuingauthflag,$docType,$doc_issue_date,$doc_expiry_date,$issueAuth_name,$country,$state,$city,$issuingAuth_pcode,$emptyflag,$submit]);
 		
-		$this->setElementDecorators(array('ViewHelper')); 
+		$this->setElementDecorators(['ViewHelper']); 
 		
-		$this->setElementDecorators(array(
+		$this->setElementDecorators([
                     'UiWidgetElement',
-        ),array('doc_issue_date','doc_expiry_date'));
+        ],['doc_issue_date','doc_expiry_date']);
 		
         }
 }

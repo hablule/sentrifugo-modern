@@ -58,62 +58,62 @@ class Default_Form_Position extends Zend_Form
          * 2. Text Elements
          * -------------------------------------------------------------- */
 
-        $codeRegex = array(
+        $codeRegex = [
             'Regex',
             true,
-            array(
+            [
                 'pattern'  => '/^[a-zA-Z0-9_\-]+$/',
-                'messages' => array(
+                'messages' => [
                     Zend_Validate_Regex::NOT_MATCH => 'Code must contain only letters, numbers, hyphens, or underscores.'
-                )
-            )
-        );
+                ]
+            ]
+        ];
 
         // Position Code (e.g., POS-ENG-001)
         $code = new Zend_Form_Element_Text('code');
         $code->setLabel('Position Seat Code')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '60', 'placeholder' => 'e.g., POS-ENG-001'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '60', 'placeholder' => 'e.g., POS-ENG-001'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
             ->addFilter('StringToUpper')
-            ->addValidator('NotEmpty', false, array('messages' => 'Please enter a position code.'))
-            ->addValidator('StringLength', false, array('max' => 60))
+            ->addValidator('NotEmpty', false, ['messages' => 'Please enter a position code.'])
+            ->addValidator('StringLength', false, ['max' => 60])
             ->addValidator($codeRegex[0], $codeRegex[1], $codeRegex[2]);
 
-        $codeVal = new Zend_Validate_Db_NoRecordExists(array(
+        $codeVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_position',
             'field'   => 'code',
-            'exclude' => ($idVal > 0) ? array('field' => 'id', 'value' => $idVal) : null
-        ));
+            'exclude' => ($idVal > 0) ? ['field' => 'id', 'value' => $idVal] : null
+        ]);
         $codeVal->setMessage('This position code is already assigned to another seat.');
         $code->addValidator($codeVal);
 
         // Position Name (Optional Override)
         $name = new Zend_Form_Element_Text('name');
         $name->setLabel('Position Name (Optional Override)')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '100', 'placeholder' => 'Leave blank to inherit Job Title name'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '100', 'placeholder' => 'Leave blank to inherit Job Title name'])
             ->setRequired(false) // Crucial: Must be false
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('StringLength', false, array('max' => 100))
-            ->addValidator('Regex', true, array(
+            ->addValidator('StringLength', false, ['max' => 100])
+            ->addValidator('Regex', true, [
                 'pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9 \-_]*)$/',
-                'messages' => array(Zend_Validate_Regex::NOT_MATCH => 'Name must contain letters and cannot start with a space.')
-            ));
+                'messages' => [Zend_Validate_Regex::NOT_MATCH => 'Name must contain letters and cannot start with a space.']
+            ]);
 
         // Max FTE (DECIMAL 4,2)
         $max_fte = new Zend_Form_Element_Text('max_fte');
         $max_fte->setLabel('Budgeted Headcount (FTE)')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '5', 'placeholder' => '1.00'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '5', 'placeholder' => '1.00'])
             ->setRequired(true)
             ->setValue('1.00')
             ->addFilter('StringTrim')
-            ->addValidator('NotEmpty', false, array('messages' => 'Please enter max FTE.'))
-            ->addValidator('Regex', true, array(
+            ->addValidator('NotEmpty', false, ['messages' => 'Please enter max FTE.'])
+            ->addValidator('Regex', true, [
                 'pattern' => '/^\d+(\.\d{1,2})?$/',
-                'messages' => array(Zend_Validate_Regex::NOT_MATCH => 'Please enter a valid FTE (e.g., 1.00 or 0.50).')
-            ));
+                'messages' => [Zend_Validate_Regex::NOT_MATCH => 'Please enter a valid FTE (e.g., 1.00 or 0.50).']
+            ]);
 
         /* --------------------------------------------------------------
          * 3. Select Elements (Blueprint & Status)
@@ -125,18 +125,18 @@ class Default_Form_Position extends Zend_Form
             ->setAttrib('class', 'formDataElement')
             ->setRegisterInArrayValidator(false) // Populated in Controller
             ->setRequired(true)
-            ->addValidator('NotEmpty', false, array('messages' => 'Please select the Job Title blueprint for this seat.'));
+            ->addValidator('NotEmpty', false, ['messages' => 'Please select the Job Title blueprint for this seat.']);
 
         // Position Status
         $status = new Zend_Form_Element_Select('status');
         $status->setLabel('Position Status')
             ->setAttrib('class', 'formDataElement')
-            ->addMultiOptions(array(
+            ->addMultiOptions([
                 'Proposed'   => 'Proposed (Pending Approval / Budget)',
                 'Active'     => 'Active (Available for Recruitment / Assignment)',
                 'Frozen'     => 'Frozen (Hiring Suspended)',
                 'Eliminated' => 'Eliminated (Retired Headcount)'
-            ))
+            ])
             ->setRequired(true)
             ->setValue('Proposed');
 
@@ -158,7 +158,7 @@ class Default_Form_Position extends Zend_Form
         $org_type->setLabel('Organizational Owner Level')
             ->setAttrib('class', 'formDataElement')
             ->setAttrib('onchange', 'toggleOrgOwnerDropdowns();')
-            ->addMultiOptions(array(
+            ->addMultiOptions([
                 ''             => 'Select Unit Level...',
                 'Department'   => 'Department',
                 'Section'      => 'Section',
@@ -166,9 +166,9 @@ class Default_Form_Position extends Zend_Form
                 'Division'     => 'Division',
                 'BusinessUnit' => 'Business Unit',
                 'Company'      => 'Company (Top-Level)'
-            ))
+            ])
             ->setRequired(true)
-            ->addValidator('NotEmpty', false, array('messages' => 'Please select the organizational level that owns this seat.'));
+            ->addValidator('NotEmpty', false, ['messages' => 'Please select the organizational level that owns this seat.']);
 
         // Specific Organization Unit Dropdowns
         $company_id = new Zend_Form_Element_Select('company_id');
@@ -206,7 +206,7 @@ class Default_Form_Position extends Zend_Form
          * -------------------------------------------------------------- */
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Seat Specific Notes')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -224,7 +224,7 @@ class Default_Form_Position extends Zend_Form
          * -------------------------------------------------------------- */
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save Position')
-            ->setAttribs(array('id' => 'submitbutton', 'class' => 'actbtn_btn'));
+            ->setAttribs(['id' => 'submitbutton', 'class' => 'actbtn_btn']);
 
         $urlAction  = "'position/save/format/json'";
         $jsFunction = "'redirecttocontroller(\\'position\\');'";
@@ -233,7 +233,7 @@ class Default_Form_Position extends Zend_Form
         /* --------------------------------------------------------------
          * Build Form
          * -------------------------------------------------------------- */
-        $this->addElements(array(
+        $this->addElements([
             $idElement,
             $code,
             $name,
@@ -251,11 +251,11 @@ class Default_Form_Position extends Zend_Form
             $description,
             $isactive,
             $submit
-        ));
+        ]);
 
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
-            $element->setDecorators(array('ViewHelper'));
+            $element->setDecorators(['ViewHelper']);
         }
     }
 }

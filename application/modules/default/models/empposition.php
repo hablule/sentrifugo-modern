@@ -22,17 +22,17 @@ class Default_Model_empposition extends Zend_Db_Table_Abstract{
 
         $bank = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('ep' => 'main_empposition'),array('ep.id as id','ep.position_id','ep.description','if(ep.isactive="Y","Yes","No") as isactive'))
-            ->joinLeft(array('p' => 'main_project'), "p.project_id =ep.project_id", array('project_id' => 'p.project_id','pro_name'=>'COALESCE(p.name,"--")'))
-            ->joinLeft(array('comp' => 'main_company'), "comp.company_id =ep.company_id", array('company_id' => 'comp.company_id','comp_name'=>'COALESCE(comp.name,"--")'))
-            ->joinLeft(array('bu' => 'main_sbunit'), "bu.sbunit_id =ep.sbunit_id", array('sbunit_id' => 'bu.sbunit_id','sbunit_name'=>'COALESCE(bu.name,"--")'))
-            ->joinLeft(array('di' => 'main_division'), "di.division_id =ep.division_id", array('division_id' => 'di.division_id','div_name'=>'COALESCE(di.name,"--")'))
-            ->joinLeft(array('d' => 'main_department'), "d.department_id =ep.department_id", array('departement_id' => 'd.department_id','dpt_name'=>'COALESCE(d.name,"--")'))
-            ->joinLeft(array('s' => 'main_section'), "s.section_id =ep.section_id", array('section_id' => 's.section_id','sec_name'=>'COALESCE(s.name,"--")'))  
-            ->joinLeft(array('t' => 'main_team'), "t.team_id =ep.team_id", array('team_id' => 't.team_id','team_name'=>'COALESCE(t.name,"--")'))  
-            ->joinLeft(array('jt' => 'main_jobtitle'), "jt.id =ep.jobtitle_id", array('jobtitle_id' => 'jt.id','job_name'=>'COALESCE(jt.name,"--")'))  
-            ->joinLeft(array('e' => 'main_employees'), "ep.employee_id =e.id", array('emp_id' => 'e.id','userfullname'=>'e.userfullname'))
-            ->joinLeft(array('jp' => 'main_position'), "ep.position_id =jp.id", array('jobposition_id' => 'jp.id','positionname'=>'jp.name'))
+            ->from(['ep' => 'main_empposition'],['ep.id as id','ep.position_id','ep.description','if(ep.isactive="Y","Yes","No") as isactive'])
+            ->joinLeft(['p' => 'main_project'], "p.project_id =ep.project_id", ['project_id' => 'p.project_id','pro_name'=>'COALESCE(p.name,"--")'])
+            ->joinLeft(['comp' => 'main_company'], "comp.company_id =ep.company_id", ['company_id' => 'comp.company_id','comp_name'=>'COALESCE(comp.name,"--")'])
+            ->joinLeft(['bu' => 'main_sbunit'], "bu.sbunit_id =ep.sbunit_id", ['sbunit_id' => 'bu.sbunit_id','sbunit_name'=>'COALESCE(bu.name,"--")'])
+            ->joinLeft(['di' => 'main_division'], "di.division_id =ep.division_id", ['division_id' => 'di.division_id','div_name'=>'COALESCE(di.name,"--")'])
+            ->joinLeft(['d' => 'main_department'], "d.department_id =ep.department_id", ['departement_id' => 'd.department_id','dpt_name'=>'COALESCE(d.name,"--")'])
+            ->joinLeft(['s' => 'main_section'], "s.section_id =ep.section_id", ['section_id' => 's.section_id','sec_name'=>'COALESCE(s.name,"--")'])  
+            ->joinLeft(['t' => 'main_team'], "t.team_id =ep.team_id", ['team_id' => 't.team_id','team_name'=>'COALESCE(t.name,"--")'])  
+            ->joinLeft(['jt' => 'main_jobtitle'], "jt.id =ep.jobtitle_id", ['jobtitle_id' => 'jt.id','job_name'=>'COALESCE(jt.name,"--")'])  
+            ->joinLeft(['e' => 'main_employees'], "ep.employee_id =e.id", ['emp_id' => 'e.id','userfullname'=>'e.userfullname'])
+            ->joinLeft(['jp' => 'main_position'], "ep.position_id =jp.id", ['jobposition_id' => 'jp.id','positionname'=>'jp.name'])
             
             ->order("$by $sort")
             ->where($where)
@@ -49,7 +49,7 @@ class Default_Model_empposition extends Zend_Db_Table_Abstract{
         else{
             $objName = 'empposition';
         }
-        $searchArray = array();
+        $searchArray = [];
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
             foreach ($searchValues as $key => $val) {
@@ -58,7 +58,7 @@ class Default_Model_empposition extends Zend_Db_Table_Abstract{
             }
             $searchQuery = rtrim($searchQuery, " AND");
         }
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'positionname' => 'Position',
             'isactive' => 'Active',
@@ -72,17 +72,17 @@ class Default_Model_empposition extends Zend_Db_Table_Abstract{
 
 
 
-        );
+        ];
 
         $tablecontent = $this->getData($sort, $by, $pageNo, $perPage, $searchQuery,$a);
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
             'perPage' => $perPage,
             'tablecontent' => $tablecontent,
             'objectname' => $objName,
-            'extra' => array(),
+            'extra' => [],
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
             'add'=>'add',
@@ -91,21 +91,21 @@ class Default_Model_empposition extends Zend_Db_Table_Abstract{
             'searchArray' => $searchArray,
             'call' => $call,
             'dashboardcall' => $dashboardcall,
-            'search_filters' => array( 
-                'isactive' => array(
+            'search_filters' => [ 
+                'isactive' => [
                     'type' => 'select',
-                    'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-    )
-        );
+                    'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+    ]
+        ];
         if($a!=''){
-            $dataTmp = array(
+            $dataTmp = [
                 'sort' => $sort,
                 'by' => $by,
                 'pageNo' => $pageNo,
                 'perPage' => $perPage,
                 'tablecontent' => $tablecontent,
                 'objectname' => $objName,
-                'extra' => array(),
+                'extra' => [],
                 'add' => 'add',
                 'tableheader' => $tableFields,
                 'jsGridFnName' => 'getEmployeeAjaxgridData',
@@ -119,12 +119,12 @@ class Default_Model_empposition extends Zend_Db_Table_Abstract{
                 'searchArray' => $searchArray,
                 'call' => $call,
                 'dashboardcall' => $dashboardcall,
-                'search_filters' => array( 
-                    'isactive' => array(
+                'search_filters' => [ 
+                    'isactive' => [
                         'type' => 'select',
-                        'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-        )
-            );
+                        'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+        ]
+            ];
         }
         return $dataTmp;
     }
@@ -158,8 +158,8 @@ class Default_Model_empposition extends Zend_Db_Table_Abstract{
 		
 		$groupData = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('h'=>'main_digitalpresence'),array('h.*'))
-						   ->join(array('lt'=>'main_digitalmedia'), 'lt.digitalmedia_id=h.digitalmedia_id',array('lt.name as ltname'))
+                           ->from(['h'=>'main_digitalpresence'],['h.*'])
+						   ->join(['lt'=>'main_digitalmedia'], 'lt.digitalmedia_id=h.digitalmedia_id',['lt.name as ltname'])
 						   ->where($where)
     					   ->order("$by $sort") 
     					   ->limitPage($pageNo, $perPage);
@@ -198,17 +198,17 @@ class Default_Model_empposition extends Zend_Db_Table_Abstract{
     {
         $bank = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('ep' => 'main_empposition'),array('ep.id as id','ep.position_id','ep.description','if(ep.isactive="Y","Yes","No") as isactive'))
-            ->joinLeft(array('p' => 'main_project'), "p.project_id =ep.project_id", array('project_id' => 'p.project_id','pro_name'=>'p.name'))
-            ->joinLeft(array('comp' => 'main_company'), "comp.company_id =ep.company_id", array('company_id' => 'comp.company_id','comp_name'=>'comp.name'))
-            ->joinLeft(array('bu' => 'main_sbunit'), "bu.sbunit_id =ep.sbunit_id", array('sbunit_id' => 'bu.sbunit_id','sbunit_name'=>'bu.name'))
-            ->joinLeft(array('di' => 'main_division'), "di.division_id =ep.division_id", array('division_id' => 'di.division_id','div_name'=>'di.name'))
-            ->joinLeft(array('d' => 'main_department'), "d.department_id =ep.department_id", array('departement_id' => 'd.department_id','dpt_name'=>'d.name'))
-            ->joinLeft(array('s' => 'main_section'), "s.section_id =ep.section_id", array('section_id' => 's.section_id','sec_name'=>'s.name'))  
-            ->joinLeft(array('t' => 'main_team'), "t.team_id =ep.team_id", array('team_id' => 't.team_id','team_name'=>'t.name'))  
-            ->joinLeft(array('jt' => 'main_jobtitle'), "jt.id =ep.jobtitle_id", array('jobtitle_id' => 'jt.id','job_name'=>'jt.name'))  
-            ->joinLeft(array('e' => 'main_employees'), "ep.employee_id =e.id", array('emp_id' => 'e.id','userfullname'=>'e.userfullname'))
-            ->joinLeft(array('jp' => 'main_position'), "ep.position_id =jp.id", array('jobposition_id' => 'jp.id','positionname'=>'jp.name'))
+            ->from(['ep' => 'main_empposition'],['ep.id as id','ep.position_id','ep.description','if(ep.isactive="Y","Yes","No") as isactive'])
+            ->joinLeft(['p' => 'main_project'], "p.project_id =ep.project_id", ['project_id' => 'p.project_id','pro_name'=>'p.name'])
+            ->joinLeft(['comp' => 'main_company'], "comp.company_id =ep.company_id", ['company_id' => 'comp.company_id','comp_name'=>'comp.name'])
+            ->joinLeft(['bu' => 'main_sbunit'], "bu.sbunit_id =ep.sbunit_id", ['sbunit_id' => 'bu.sbunit_id','sbunit_name'=>'bu.name'])
+            ->joinLeft(['di' => 'main_division'], "di.division_id =ep.division_id", ['division_id' => 'di.division_id','div_name'=>'di.name'])
+            ->joinLeft(['d' => 'main_department'], "d.department_id =ep.department_id", ['departement_id' => 'd.department_id','dpt_name'=>'d.name'])
+            ->joinLeft(['s' => 'main_section'], "s.section_id =ep.section_id", ['section_id' => 's.section_id','sec_name'=>'s.name'])  
+            ->joinLeft(['t' => 'main_team'], "t.team_id =ep.team_id", ['team_id' => 't.team_id','team_name'=>'t.name'])  
+            ->joinLeft(['jt' => 'main_jobtitle'], "jt.id =ep.jobtitle_id", ['jobtitle_id' => 'jt.id','job_name'=>'jt.name'])  
+            ->joinLeft(['e' => 'main_employees'], "ep.employee_id =e.id", ['emp_id' => 'e.id','userfullname'=>'e.userfullname'])
+            ->joinLeft(['jp' => 'main_position'], "ep.position_id =jp.id", ['jobposition_id' => 'jp.id','positionname'=>'jp.name'])
             ->where('ep.id= '.$id);
             return $this->fetchRow($bank)->toArray();
 
@@ -217,9 +217,9 @@ class Default_Model_empposition extends Zend_Db_Table_Abstract{
     {
         $select = $this->select()
                         ->setIntegrityCheck(false)
-                        ->from(array('empp'=>'main_empposition'),array('coalesce(p.name,jt.name) as pos'))
-                        ->joinLeft(array('p'=>'main_position'),'p.id = empp.position_id')
-                        ->joinLeft(array('jt'=>'main_jobtitle'),'jt.id = empp.jobtitle_id')
+                        ->from(['empp'=>'main_empposition'],['coalesce(p.name,jt.name) as pos'])
+                        ->joinLeft(['p'=>'main_position'],'p.id = empp.position_id')
+                        ->joinLeft(['jt'=>'main_jobtitle'],'jt.id = empp.jobtitle_id')
                         ->where('empp.employee_id = '.$empid);
                        
         return $this->fetchAll($select)->toArray();
@@ -230,8 +230,8 @@ class Default_Model_empposition extends Zend_Db_Table_Abstract{
     {
         $select = $this->select()
                        ->setIntegrityCheck(false)
-                       ->from(array('p'=>'main_empposition'),'p.reportto_id')
-                       ->join(array('e'=>'main_employees'),'e.id=p.reportto_id',array('e.userfullname','e.emailaddress'))
+                       ->from(['p'=>'main_empposition'],'p.reportto_id')
+                       ->join(['e'=>'main_employees'],'e.id=p.reportto_id',['e.userfullname','e.emailaddress'])
                        ->where('p.employee_id='.$empId);
         return $this->fetchAll($select)->toArray();
 

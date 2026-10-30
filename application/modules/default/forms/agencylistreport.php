@@ -41,22 +41,22 @@ class Default_Form_agencylistreport extends Zend_Form
 		$primaryphone->setAttrib('onblur', 'blurelement(this)');
         $primaryphone->setAttrib('maxLength', 15);
         $primaryphone->addFilter(new Zend_Filter_StringTrim());
-        $primaryphone->addValidators(array(array('StringLength',false,
-									  array('min' => 10,
+        $primaryphone->addValidators([['StringLength',false,
+									  ['min' => 10,
 											'max' => 15,
-											'messages' => array(
+											'messages' => [
 											Zend_Validate_StringLength::TOO_LONG =>
 											'Primary phone number must contain at most %max% characters',
 											Zend_Validate_StringLength::TOO_SHORT =>
 											'Primary phone number must contain at least %min% characters.'
-											)))));
-		$primaryphone->addValidator("regex",true,array(
+											]]]]);
+		$primaryphone->addValidator("regex",true,[
                            'pattern'=>'/^(?!0{10})[0-9]+$/', 
                           
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter valid phone number.'
-                           )
-        ));	
+                           ]
+        ]);	
 		 
 						 
 		$checktype = new Zend_Form_Element_Multiselect('bg_checktypef');
@@ -79,8 +79,8 @@ class Default_Form_agencylistreport extends Zend_Form
 		
 		
 		
-		$this->addElements(array($agencyname,$primaryphone,$checktype,$website));
-        $this->setElementDecorators(array('ViewHelper')); 
+		$this->addElements([$agencyname,$primaryphone,$checktype,$website]);
+        $this->setElementDecorators(['ViewHelper']); 
 	}
 }
 ?>

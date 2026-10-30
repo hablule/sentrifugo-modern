@@ -84,7 +84,7 @@ class Default_MenugroupController extends Zend_Controller_Action
             }
 
             $dataTmp = $this->_model->getGrid($sort, $by, $perPage, $page, rtrim($searchData, ','), $call, $dashboardcall);
-            $this->view->dataArray = array($dataTmp);
+            $this->view->dataArray = [$dataTmp];
             $this->view->call      = $call;
 
             // --- MESSAGE HANDLING FIX ---
@@ -94,10 +94,10 @@ class Default_MenugroupController extends Zend_Controller_Action
             // 2. Check for Custom Session Messages (Set by saveAction)
             if (isset($_SESSION['menugroup_msg'])) {
                 // Determine class (success/error)
-                $cls = isset($_SESSION['menugroup_cls']) ? $_SESSION['menugroup_cls'] : 'success';
+                $cls = $_SESSION['menugroup_cls'] ?? 'success';
                 
                 // Append to standard messages array format
-                $messages[] = array($cls => $_SESSION['menugroup_msg']);
+                $messages[] = [$cls => $_SESSION['menugroup_msg']];
                 
                 // Clear the session so it doesn't show again on refresh
                 unset($_SESSION['menugroup_msg']);
@@ -128,7 +128,7 @@ class Default_MenugroupController extends Zend_Controller_Action
     {
         $form = new Default_Form_Menugroup();
         $request = $this->getRequest();
-        $response = array('result' => 'error', 'message' => 'Invalid data');
+        $response = ['result' => 'error', 'message' => 'Invalid data'];
 
         if ($request->isPost()) {
             if ($form->isValid($request->getPost())) {
@@ -150,13 +150,13 @@ class Default_MenugroupController extends Zend_Controller_Action
                         }
                     }
 
-                    $data = array(
+                    $data = [
                         'name'            => trim($request->getParam('name')),
                         'code'            => trim($request->getParam('code')),
                         'backgroundcolor' => trim($request->getParam('backgroundcolor')),
                         'description'     => trim($request->getParam('description')),
                         'isactive'        => $newStatus,
-                    );
+                    ];
 
                     // --- File Upload Handling ---
                     if ($form->iconpath->isUploaded()) {
@@ -184,7 +184,7 @@ class Default_MenugroupController extends Zend_Controller_Action
                     }
 
                     $db->commit();
-                    $response = array('result' => 'saved', 'nomessage' => 'no', 'message' => "Menu Group $msg successfully.");
+                    $response = ['result' => 'saved', 'nomessage' => 'no', 'message' => "Menu Group $msg successfully."];
                     $_SESSION['menugroup_msg'] = $response['message'];
                     $_SESSION['menugroup_cls'] = 'success';
 

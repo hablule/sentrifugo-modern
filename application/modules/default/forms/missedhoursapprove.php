@@ -32,12 +32,12 @@ class Default_Form_missedhoursapprove extends Zend_Form
 		$managerstatus = new Zend_Form_Element_Select('managerstatus');
 		$managerstatus->setLabel("Action");
         $managerstatus->setRegisterInArrayValidator(false);
-        $managerstatus->setMultiOptions(array(	
+        $managerstatus->setMultiOptions([	
 			                ''=>'select...'		,				
 							'Y'=>'Approve' ,
 							'N'=>'Reject',
-							));
-							$managerstatus->addValidator('NotEmpty', false, array('messages' => 'Please select Action.')); 
+							]);
+							$managerstatus->addValidator('NotEmpty', false, ['messages' => 'Please select Action.']); 
 							$managerstatus->setRequired(true);
 							$approvedamount = new Zend_Form_Element_Text('approvedamount');
 							$approvedamount->setLabel("Comments");
@@ -49,7 +49,7 @@ class Default_Form_missedhoursapprove extends Zend_Form
 		$submit->setLabel('Save');
 		$submit->setAttrib('action',BASE_URL.'missedhoursapprove');
 
-		$this->addElements(array($id,$managerstatus,$approvedamount,$submit));
-        $this->setElementDecorators(array('ViewHelper'));
+		$this->addElements([$id,$managerstatus,$approvedamount,$submit]);
+        $this->setElementDecorators(['ViewHelper']);
 	}
 }

@@ -46,9 +46,9 @@ class Default_IdentitydocumentsController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 		
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 		
 		if($refresh == 'refresh')
@@ -97,7 +97,7 @@ class Default_IdentitydocumentsController extends Zend_Controller_Action
 		if($callval == 'ajaxcall')
 			$this->_helper->layout->disableLayout();
 		$identitydocumentsform = new Default_Form_identitydocuments();
-		$msgarray = array();
+		$msgarray = [];
 		$identitydocumentsform->setAttrib('action',BASE_URL.'identitydocuments/add');
 		$this->view->form = $identitydocumentsform; 
 		$this->view->msgarray = $msgarray; 
@@ -243,7 +243,7 @@ public function editAction()
 					$loginUserId = $auth->getStorage()->read()->id;
 		} 
 	    $identitydocumentsModel = new Default_Model_Identitydocuments();
-		$msgarray = array();
+		$msgarray = [];
 	    
 		  if($identitydocumentsform->isValid($this->_request->getPost())){
             try{
@@ -254,15 +254,15 @@ public function editAction()
 			$description = $this->_request->getParam('description');
 			$actionflag = '';
 			$tableid  = ''; 
-			   $data = array('document_name'=>$document_name,
+			   $data = ['document_name'=>$document_name,
 			   				 'mandatory'=>$mandatory,
 			   				 'expiry'=>$expiry,	 	 
 							 'description'=>($description!=''?trim($description):NULL),
 							  'modifiedby'=>$loginUserId,
 							  'modifieddate'=>gmdate("Y-m-d H:i:s")
-					);
+					];
 				if($id!=''){
-					$where = array('id=?'=>$id);  
+					$where = ['id=?'=>$id];  
 					$actionflag = 2;
 				}
 				else
@@ -277,12 +277,12 @@ public function editAction()
 				if($Id == 'update')
 				{
 				   $tableid = $id;
-				   $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Identity documents updated successfully."));
+				   $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Identity documents updated successfully."]);
 				}   
 				else
 				{
 				   $tableid = $Id; 	
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Identity documents added successfully."));					   
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Identity documents added successfully."]);					   
 				}   
 				$menuID = IDENTITYDOCUMENTS;
 				$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
@@ -329,9 +329,9 @@ public function editAction()
 			  if(!empty($identitydocumentdata))
 			   $documentname = $identitydocumentdata[0]['document_name'];
 			   
-			  $data = array('isactive'=>0,
-			                'modifieddate'=>gmdate("Y-m-d H:i:s"));
-			  $where = array('id=?'=>$id);
+			  $data = ['isactive'=>0,
+			                'modifieddate'=>gmdate("Y-m-d H:i:s")];
+			  $where = ['id=?'=>$id];
 			  $Id = $identitydocumentsModel->SaveorUpdateIdentitydocumentsData($data, $where);
 			    if($Id == 'update')
 				{
@@ -357,11 +357,11 @@ public function editAction()
 			{
 				if(	$messages['msgtype'] == 'error')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
 				}
 				if(	$messages['msgtype'] == 'success')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
 				}
 			}
 			$this->_helper->json($messages);

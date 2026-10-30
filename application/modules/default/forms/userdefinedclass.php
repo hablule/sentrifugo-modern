@@ -9,8 +9,8 @@ class Default_Form_userdefinedclass extends Zend_Form
     }
     public function createfields($number,$iscreated)
     {
-        $fields = array();
-        $namearray = array();
+        $fields = [];
+        $namearray = [];
         $id = new Zend_Form_Element_Hidden('id');
         $names = new Zend_Form_Element_Hidden('names');
         $id->setValue($number);

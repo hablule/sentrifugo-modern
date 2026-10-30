@@ -23,7 +23,7 @@ class Default_CertificatecategoryController extends Zend_Controller_Action
       $refresh = $this->_getParam('refresh');
       $dashboradcall = $this->_getParam('dashboradcall');
 
-      $data = array();
+      $data = [];
 
       if ($refresh == 'refresh') {
           if ($dashboradcall == 'Yes') {
@@ -122,18 +122,18 @@ class Default_CertificatecategoryController extends Zend_Controller_Action
         
                         $date = gmdate("Y-m-d H:i:s");
         
-                        $data = array(
+                        $data = [
                                     'name'  => $name,
                                     'code'  => $code,
                                     'description'  => $description,
                                     'isactive'=>utlis::getcheckboxvalue($this->_request->getParam('isactive')),
         
-                                    );
+                                    ];
                         if($id!=''){
         
                             $data['modifiedby'] = $loginUserId;
                             $data['modifieddate'] = $date;
-                            $where = array('certificatecategory_id=?'=>$id);
+                            $where = ['certificatecategory_id=?'=>$id];
                         }
                         else
                         {
@@ -146,11 +146,11 @@ class Default_CertificatecategoryController extends Zend_Controller_Action
                         
                         if($Id == 'update')
                         {
-                            $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Certificate Category updated successfully."));
+                            $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Certificate Category updated successfully."]);
                         }
                         else
                         {
-                         $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Certificate Category added successfully."));
+                         $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Certificate Category added successfully."]);
                         }
                             
                         $this->_redirect('certificatecategory');
@@ -190,13 +190,13 @@ class Default_CertificatecategoryController extends Zend_Controller_Action
         $form->setAction(BASE_URL.'certificatecategory/addpopup/id/'.$id);
         if ($this->getRequest()->isPost()) {
             if ($form->isValid($this->getRequest()->getPost())) {
-                $data = array(
+                $data = [
                     'name'=>$this->_request->getParam('name'),
                     'code'=>$this->_request->getParam('code'),
                     'description'=>$this->_request->getParam('description'),
                     'createdby'=>$loginUserId,
                     'createddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
                 $Id= $dmtmodel->SaveorUpdateData($data,'');
                 $tableid = $Id;
                 $actionflag = 1;

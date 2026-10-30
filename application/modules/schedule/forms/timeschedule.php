@@ -15,10 +15,10 @@ class Schedule_Form_Timeschedule extends Zend_Form{
         $id = new Zend_Form_Element_Hidden('id');
         $name = new Zend_Form_Element_Text('name');
         $name->setRequired(true);
-        $name->addValidator('NotEmpty',false,array('messages'=>'Name Required'));
+        $name->addValidator('NotEmpty',false,['messages'=>'Name Required']);
         $code = new Zend_Form_Element_Text('code');
         $code->setRequired(true);
-        $code->addValidator('NotEmpty',false,array('messages'=>' code Required'));
+        $code->addValidator('NotEmpty',false,['messages'=>' code Required']);
        /*  $code->addValidator(new Zend_Validate_Db_NoRecordExists(
             array(
                 'table'=>'main_schedule',
@@ -31,20 +31,20 @@ class Schedule_Form_Timeschedule extends Zend_Form{
        
         $startdate = new Zend_Form_Element_Text('startdate');
         $startdate->setRequired(true);
-        $startdate->addValidator('NotEmpty',false,array('messages'=>'Start date Required'));
+        $startdate->addValidator('NotEmpty',false,['messages'=>'Start date Required']);
         $startdate->setAttrib('readonly', 'true');	
         $startdate->setAttrib('onfocus', 'this.blur()');
         $enddate = new Zend_Form_Element_Text('enddate');
         $enddate->setRequired(true);
-        $enddate->addValidator('NotEmpty',false,array('messages'=>'End date Required'));
+        $enddate->addValidator('NotEmpty',false,['messages'=>'End date Required']);
         $enddate->setAttrib('readonly', 'true');	
         $enddate->setAttrib('onfocus', 'this.blur()');
       
         $cycle = new Zend_Form_Element_Select('cycle');
         $cycle->setLabel('Cycle');
-        $cycle->addValidator('NotEmpty',false,array('messages'=>'Cycle Required'));
+        $cycle->addValidator('NotEmpty',false,['messages'=>'Cycle Required']);
         $cycle->setRequired(true);
-        $cycle->addMultiOptions(array(''=>'Select..','DAILY'=>'DAILY','WEEKLY'=>'WEEKLY','MONTHLY'=>'MONTHLY'));
+        $cycle->addMultiOptions([''=>'Select..','DAILY'=>'DAILY','WEEKLY'=>'WEEKLY','MONTHLY'=>'MONTHLY']);
        
         $isverified=new Zend_Form_Element_Checkbox('isverified');
       
@@ -55,15 +55,15 @@ class Schedule_Form_Timeschedule extends Zend_Form{
         $test = new Zend_Form_Element_Textarea('test');
         $test2 = new Zend_Form_Element_Textarea('test2');
         $test2->setRequired(true);
-        $test2->addValidator('NotEmpty', false, array('messages'=>'need to add cycle'));
+        $test2->addValidator('NotEmpty', false, ['messages'=>'need to add cycle']);
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('save');
         $back = new Zend_Form_Element_Button('back');
         $back->setLabel('Cancel');
         //back->setAttrib('onClick', "parent.location='" . Zend_Controller_Front::getInstance()->getBaseUrl() .'/schedule' ."'");
-        $this->addElements(array($id, $test,$test2,$name,$back,$code,$startdate,$enddate,$submit,
-                            $isactive,$isverified,$description,$cycle));
-        $this->setElementDecorators(array('ViewHelper'));
+        $this->addElements([$id, $test,$test2,$name,$back,$code,$startdate,$enddate,$submit,
+                            $isactive,$isverified,$description,$cycle]);
+        $this->setElementDecorators(['ViewHelper']);
         
     }
 }

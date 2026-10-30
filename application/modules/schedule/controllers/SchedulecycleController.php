@@ -27,9 +27,9 @@ class Schedule_SchedulecycleController extends Zend_Controller_Action
         $view = Zend_Layout::getMvcInstance()->getView();
         $objname = $this->_getParam('objname');
         $refresh = $this->_getParam('refresh');
-        $data = array();
+        $data = [];
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         $tablecontent = '';
         $dashboardcall = $this->_getParam('dashboardcall');
 
@@ -43,7 +43,7 @@ class Schedule_SchedulecycleController extends Zend_Controller_Action
             $pageNo = 1;
             $searchData = '';
             $searchQuery = '';
-            $searchArray = array();
+            $searchArray = [];
         } else {
             $sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
             $by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'sc.modifieddate  ';
@@ -141,11 +141,11 @@ class Schedule_SchedulecycleController extends Zend_Controller_Action
 
                     $date = gmdate("Y-m-d H:i:s");
 
-                    $data = array(
+                    $data = [
                         'schedule_id' => $name,
                         'description' => $description,
                         'isactive' => utlis::getcheckboxvalue($this->_request->getParam('isactive')),
-                    );
+                    ];
                     $cycle = '';
                     if ($this->_request->getParam('daily') != '') {
                         $data['daily'] = $this->_request->getParam('daily');
@@ -162,7 +162,7 @@ class Schedule_SchedulecycleController extends Zend_Controller_Action
 
                         $data['modifiedby'] = $loginUserId;
                         $data['modifieddate'] = $date;
-                        $where = array('schedule_id=?' => $id);
+                        $where = ['schedule_id=?' => $id];
                     } else {
                         $data['createdby'] = $loginUserId;
                         $data['createddate'] = $date;
@@ -176,9 +176,9 @@ class Schedule_SchedulecycleController extends Zend_Controller_Action
                         $Id = $dmtmodel->saveORupdate($data, $where);
 
                         if ($Id == 'update') {
-                            $this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Schedule updated successfully."));
+                            $this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Schedule updated successfully."]);
                         } else {
-                            $this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Schedule added successfully."));
+                            $this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Schedule added successfully."]);
                         }
 
                         $this->_redirect('schedule/timeschedule');
@@ -332,7 +332,7 @@ class Schedule_SchedulecycleController extends Zend_Controller_Action
                             if ($this->_getParam('dayofweek') != ' ') {
 
                                 if ($unpackeddata[$this->_getParam('dayofweek')] == null) {
-                                    $info = array();
+                                    $info = [];
                                     $info['dayofweek'] = $this->_getParam('dayofweek');
                                     $info['description'] = $this->_getParam('description');
                                     $info['isactive'] = $this->_getParam('isactive');
@@ -341,7 +341,7 @@ class Schedule_SchedulecycleController extends Zend_Controller_Action
                                 }
                             } else if ($this->_getParam('dayofmonth') != ' ') {
                                 if ($unpackeddata[$this->_getParam('dayofmonth')] == null) {
-                                    $info = array();
+                                    $info = [];
                                     $info['dayofmonth'] = $this->_getParam('dayofmonth');
                                     $info['description'] = $this->_getParam('description');
                                     $info['isactive'] = $this->_getParam('isactive');
@@ -388,9 +388,9 @@ class Schedule_SchedulecycleController extends Zend_Controller_Action
                             $this->view->controllername = 'schedulecycle';
 
                             if ($Id == 'update') {
-                                $this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Schedule updated successfully."));
+                                $this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Schedule updated successfully."]);
                             } else {
-                                $this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Schedule added successfully."));
+                                $this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Schedule added successfully."]);
                             }
                         } else {
                             $message = 'Schedule shift Required';
@@ -449,12 +449,12 @@ class Schedule_SchedulecycleController extends Zend_Controller_Action
             $form->dayofweek->removeValidator('NotEmpty');
             $form->daily->removeValidator('NotEmpty');
             $form->dayofmonth->removeValidator('NotEmpty');
-            $cycleids = array();
+            $cycleids = [];
             if ($this->getRequest()->isPost()) {
                 if ($form->isValid($this->getRequest()->getPost())) {
                     $cycledata = $this->_getParam('cycleshiftdata');
                     $cycledata = json_decode($cycledata, true);
-                    $extraData = array();
+                    $extraData = [];
                     if ($this->_getParam('statedata') != null or $this->_getParam('statedata') != '') {
                         if ($this->_getParam('dayofweek') != ' ') {
                             $extraData['dayofweek'] = $this->_getParam('dayofweek');
@@ -475,11 +475,11 @@ class Schedule_SchedulecycleController extends Zend_Controller_Action
 
                     }
                     foreach ($cycledata as  $value) {
-                        $data = array(
+                        $data = [
                             'schedule_id' => $value['schedule_id'],
                             'description' => $this->_getParam('description'),
                             'isactive' => utlis::getcheckboxvalue($this->_getParam('isactive'), 'database')
-                        );
+                        ];
                         if ($value['schedulecycle_id'] == null || $value['schedulecycle_id'] == '') {
                             $cycleshiftmodel = new Schedule_Model_Cycleshift();
                             $cycle = $this->_getParam('id');
@@ -506,7 +506,7 @@ class Schedule_SchedulecycleController extends Zend_Controller_Action
                         }
                     }
 
-                    $ogids = array();
+                    $ogids = [];
                     $msgarray = [];
                     foreach ($ogdata as $og) {
                         array_push($ogids, $og['schedulecycle_id']);
@@ -553,7 +553,7 @@ class Schedule_SchedulecycleController extends Zend_Controller_Action
             $id = $this->_getParam('id');
             if ($id != null) {
                 $cycleData = $model->getCycleShift($id);
-                $newcycle = array();
+                $newcycle = [];
                 foreach ($cycleData as $value) {
                     $cycle = '';
                     $newcycledata = $value;
@@ -572,7 +572,7 @@ class Schedule_SchedulecycleController extends Zend_Controller_Action
                 }
                 $this->_helper->json($newcycle);
             }
-            $this->_helper->json(array());
+            $this->_helper->json([]);
         } catch (\Throwable $th) {
             Zend_Debug::dump($th->getMessage());
         }

@@ -28,7 +28,7 @@ class Default_Model_Employees extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 								->setIntegrityCheck(false)
-								->from(array('e'=>'main_employees'), array('repmangerid'=>'e.reporting_manager'))
+								->from(['e'=>'main_employees'], ['repmangerid'=>'e.reporting_manager'])
 								->where('e.id="'.$empid.'" AND e.isactive = 1 ');
 			 
 		return $this->fetchAll($select)->toArray();
@@ -39,8 +39,8 @@ class Default_Model_Employees extends Zend_Db_Table_Abstract
 	{
 	    $result =  $this->select()
     				->setIntegrityCheck(false) 	
-    				->from(array('e'=>'main_employees'),array('e.*'))
-					->joinInner(array('u'=>'main_users'),'u.empid=e.id')
+    				->from(['e'=>'main_employees'],['e.*'])
+					->joinInner(['u'=>'main_users'],'u.empid=e.id')
  	  				->where("u.isactive = 1 AND u.id =".$userid." ");
 		
     	return $this->fetchAll($result)->toArray();
@@ -55,10 +55,10 @@ class Default_Model_Employees extends Zend_Db_Table_Abstract
 	public function SaveorUpdateEmployees($data, $where)
 	{
 		
-		$config = array(
+		$config = [
 			'name'=>'main_empholiday',
 			'primary'=>'empholiday_id'
-		);
+		];
 		$table = new Zend_Db_Table($config);
 		
 		if($where != ''){
@@ -82,7 +82,7 @@ class Default_Model_Employees extends Zend_Db_Table_Abstract
 		}
 	    $result =  $this->select()
     				->setIntegrityCheck(false) 	
-    				->from(array('e'=>'main_empholiday'),array('e.*'))
+    				->from(['e'=>'main_empholiday'],['e.*'])
  	  				->where("e.empholiday_id =".$id."".$where);
     	return $this->fetchAll($result)->toArray();
 	
@@ -92,9 +92,9 @@ class Default_Model_Employees extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('ep'=>'main_empposition'),array('count'=>'count("ep.*")'))
-						   ->joinInner(array('e' => 'main_employees'), "e.id = ep.reportto_id ", array())
-						   ->joinInner(array('u' => 'main_users'), "u.empid = e.id ", array())
+                           ->from(['ep'=>'main_empposition'],['count'=>'count("ep.*")'])
+						   ->joinInner(['e' => 'main_employees'], "e.id = ep.reportto_id ", [])
+						   ->joinInner(['u' => 'main_users'], "u.empid = e.id ", [])
 
                            ->where("ep.isactive = 'Y' AND u.id = $loginUserId");
 		return $this->fetchAll($select)->toArray();       		
@@ -113,7 +113,7 @@ class Default_Model_Employees extends Zend_Db_Table_Abstract
 		
 		$managersData = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('emp' => 'employees_summary'),array('emp.*'))
+		->from(['emp' => 'employees_summary'],['emp.*'])
 		->where($where)
 		->group("reporting_manager")
 		->limit($limit,$offset);
@@ -123,28 +123,28 @@ class Default_Model_Employees extends Zend_Db_Table_Abstract
 	public function getReportingManagersCount($manager_id=0,$expense_created_by=0)
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();
-		
+
 		$manager_cond = '';
 		$createdby_con='';
 		if($manager_id>0)
 			$manager_cond = ' AND reporting_manager!='.$manager_id;
 		if($expense_created_by>0)
 			$createdby_con = ' AND reporting_manager!='.$expense_created_by;
-		
-		
+
+
 		$managersData = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('emp' => 'employees_summary'),array('emp.*'))
+		->from(['emp' => 'employees_summary'],['emp.*'])
 		->where('isactive = 1 AND reporting_manager != 0 '.$manager_cond.''.$createdby_con)
 		->group("reporting_manager");
-		
+
 		$count_array = $this->fetchAll($managersData)->toArray();
 		return count($count_array);
-		
+
 		//$count_query = "select * from employees_summary WHERE isactive = 1 AND reporting_manager != 0  $manager_cond $createdby_con GROUP BY reporting_manager";
 		//$count_result = $db->query($count_query);
 		//$count_row = $this->fetchAll($count_result)->toArray();
-		
+
 		//return $count_row['cnt'];  
 	}
 }

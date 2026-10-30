@@ -29,7 +29,7 @@ class Default_Model_Appraisalgroupemployees extends Zend_Db_Table_Abstract
 	{
 		 $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('pi'=>'main_pa_initialization'),array('pi.*'))
+						->from(['pi'=>'main_pa_initialization'],['pi.*'])
 					    ->where('pi.isactive = 1 AND pi.id='.$id.' ');
 		return $this->fetchAll($select)->toArray();
 		
@@ -37,7 +37,7 @@ class Default_Model_Appraisalgroupemployees extends Zend_Db_Table_Abstract
 	
 	public function getMappedEmployeeList($id,$tablename)
 	{
-		$options = array();
+		$options = [];
             $db = Zend_Db_Table::getDefaultAdapter();
             $query = "select employee_ids,group_id from $tablename 
                      where isactive = 1 and pa_initialization_id = ".$id." ";
@@ -47,9 +47,9 @@ class Default_Model_Appraisalgroupemployees extends Zend_Db_Table_Abstract
 		
 	}
 	
-	public function getGrouppedEmployeeList($initid,$groupid='',$tablename)
+	public function getGrouppedEmployeeList($initid,$groupid='',$tablename = null)
 	{
-		$options = array();
+		$options = [];
 			$where = 'isactive = 1 and pa_initialization_id = '.$initid.'';
 		if($groupid)
 			$where.= ' AND group_id = '.$groupid.' ';
@@ -62,7 +62,7 @@ class Default_Model_Appraisalgroupemployees extends Zend_Db_Table_Abstract
 		
 	}
 	
-	public function getEmployeeList($data,$employeeIds='',$flag)
+	public function getEmployeeList($data,$employeeIds='',$flag = null)
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$where = 'e.isactive=1';
@@ -137,7 +137,7 @@ class Default_Model_Appraisalgroupemployees extends Zend_Db_Table_Abstract
 	public function getEmployeeNameWithProfile($employeeIds)
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();
-		$options = array();
+		$options = [];
 		
 		if($employeeIds !='')
 		{

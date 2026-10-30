@@ -47,9 +47,9 @@ class Default_MonthslistController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 		
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 		
 		if($refresh == 'refresh')
@@ -187,7 +187,7 @@ class Default_MonthslistController extends Zend_Controller_Action
 			else
 			{
 			    $activeMonthsArr =  $monthslistmodel->getMonthsList();
-				$newarr = array();
+				$newarr = [];
 				$monthidstr = '';
 				if(!empty($activeMonthsArr))
 						{
@@ -228,15 +228,15 @@ class Default_MonthslistController extends Zend_Controller_Action
 			$date = new Zend_Date();
 			$actionflag = '';
 			$tableid  = '';
-				   $data = array('month_id'=>$month_id,
+				   $data = ['month_id'=>$month_id,
 				          'monthcode'=>trim($monthcode),
 						  'description'=>trim($description), 
                     	  'modifiedby'=>$loginUserId,
 						  'modifieddate'=>gmdate("Y-m-d H:i:s")
 						  
-						);
+						];
 					if($id!=''){
-						$where = array('id=?'=>$id);  
+						$where = ['id=?'=>$id];  
 						$actionflag = 2;
 					}
 					else
@@ -251,12 +251,12 @@ class Default_MonthslistController extends Zend_Controller_Action
 					if($Id == 'update')
 					{
 					   $tableid = $id;
-					   $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Month updated successfully."));
+					   $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Month updated successfully."]);
 					}   
 					else
 					{
                        $tableid = $Id; 
-						$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Month added successfully."));
+						$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Month added successfully."]);
 					}   
 					$menuID = MONTHSLIST;
 					$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
@@ -295,14 +295,14 @@ class Default_MonthslistController extends Zend_Controller_Action
 		
 		if($this->getRequest()->getPost()){
 		    if($monthslistform->isValid($this->_request->getPost())){
-				   $data = array('month_name'=>trim($monthname),
+				   $data = ['month_name'=>trim($monthname),
 				          'monthcode'=>trim($monthcode),
 						  'description'=>trim($description), 
                     	  'modifiedby'=>$loginUserId,
 						  'modifieddate'=>Zend_Registry::get('currentdate')
-						);
+						];
 					if($id!=''){
-						$where = array('id=?'=>$id);  
+						$where = ['id=?'=>$id];  
 						$messages['message']='Month updated successfully';
 						$actionflag = 2;
 						
@@ -353,8 +353,8 @@ class Default_MonthslistController extends Zend_Controller_Action
 			 $monthslistmodel = new Default_Model_Monthslist();
 			  $monthname = $monthslistmodel->getcombinedmonthname($id);
 			  
-			  $data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-			  $where = array('id=?'=>$id);
+			  $data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+			  $where = ['id=?'=>$id];
 			  $Id = $monthslistmodel->SaveorUpdateMonthListData($data, $where);
 			    if($Id == 'update')
 				{

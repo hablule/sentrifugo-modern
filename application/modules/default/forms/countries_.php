@@ -49,14 +49,14 @@ class Default_Form_countries extends Zend_Form
 				$country->addMultiOption('other','Other');
 			}	
         $country->setRequired(true);
-		$country->addValidator('NotEmpty', false, array('messages' => 'Please select country.')); 
+		$country->addValidator('NotEmpty', false, ['messages' => 'Please select country.']); 
 		
 		$country->addValidator(new Zend_Validate_Db_NoRecordExists(
-	                                            array(  'table'=>'main_countries',
+	                                            [  'table'=>'main_countries',
 	                                                     'field'=>'country_id_org',
 	                                                     'exclude'=>'id!="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('id').'" and isactive=1',    
 	
-	                                                      ) ) );
+	                                                      ] ) );
 		  $country->getValidator('Db_NoRecordExists')->setMessage('Country already exists.');
 		      
 			
@@ -66,34 +66,34 @@ class Default_Form_countries extends Zend_Form
 		$countrycode->setAttrib('onfocus', 'this.blur()');
         
         $countrycode->setRequired(true);
-        $countrycode->addValidator('NotEmpty', false, array('messages' => 'Please enter country code.'));  
-		$countrycode->addValidator("regex",true,array(
+        $countrycode->addValidator('NotEmpty', false, ['messages' => 'Please enter country code.']);  
+		$countrycode->addValidator("regex",true,[
 									
 									'pattern'=> '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9 ]*)$/',
 								   
-								   'messages'=>array(
+								   'messages'=>[
 									   'regexNotMatch'=>'Please enter valid country code.'
-								   )
-					));
+								   ]
+					]);
        	
 		$citizenship = new Zend_Form_Element_Text('citizenship');
         $citizenship->setAttrib('maxLength', 20);
         
-		$citizenship->addValidator("regex",true,array(
+		$citizenship->addValidator("regex",true,[
                           
                           
 						   'pattern' =>'/^[a-zA-Z\s]*$/i',
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter valid citizenship.'
-                           )
-        	));
+                           ]
+        	]);
 
         $submit = new Zend_Form_Element_Submit('submit');
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 
 
-		 $this->addElements(array($id,$country,$countrycode,$citizenship,$submit));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 $this->addElements([$id,$country,$countrycode,$citizenship,$submit]);
+         $this->setElementDecorators(['ViewHelper']); 
 	}
 }

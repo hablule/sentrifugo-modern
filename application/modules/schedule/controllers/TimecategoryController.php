@@ -18,9 +18,9 @@ class Schedule_TimecategoryController extends Zend_Controller_Action
         $view = Zend_Layout::getMvcInstance()->getView();
         $objname = $this->_getParam('objname');
         $refresh = $this->_getParam('refresh');
-        $data = array();
+        $data = [];
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         $tablecontent = '';
         $dashboardcall = $this->_getParam('dashboardcall');
 
@@ -34,7 +34,7 @@ class Schedule_TimecategoryController extends Zend_Controller_Action
             $pageNo = 1;
             $searchData = '';
             $searchQuery = '';
-            $searchArray = array();
+            $searchArray = [];
         } else {
             $sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
             $by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'modifiedby';
@@ -110,19 +110,19 @@ class Schedule_TimecategoryController extends Zend_Controller_Action
 
                     $date = gmdate("Y-m-d H:i:s");
 
-                    $data = array(
+                    $data = [
                         'name'  => $name,
                         'code'  => $code,
                         'description'  => $description,
                         'lablecolor'  => $lablecolor,
                         'isactive' => utlis::getcheckboxvalue($this->_request->getParam('isactive')),
 
-                    );
+                    ];
                     if ($id != '') {
 
                         $data['modifiedby'] = $loginUserId;
                         $data['modifieddate'] = $date;
-                        $where = array('timecategory_id=?' => $id);
+                        $where = ['timecategory_id=?' => $id];
                     } else {
                         $data['createdby'] = $loginUserId;
                         $data['createddate'] = $date;
@@ -132,9 +132,9 @@ class Schedule_TimecategoryController extends Zend_Controller_Action
                     $Id = $dmtmodel->saveORupdateCategory($data, $where);
 
                     if ($Id == 'update') {
-                        $this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Time Category updated successfully."));
+                        $this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Time Category updated successfully."]);
                     } else {
-                        $this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Time Category added successfully."));
+                        $this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Time Category added successfully."]);
                     }
 
                     $this->_redirect('schedule/timecategory');
@@ -256,9 +256,9 @@ class Schedule_TimecategoryController extends Zend_Controller_Action
         $id = $this->_request->getParam('objid');
 
         $where = 'timecategory_id =' . (int)$id;
-        $data = array(
+        $data = [
             'isactive' => 'N'
-        );
+        ];
         //die(json_encode($where));
         $actionflag = 3;
         $menuID = TIMECATEGORY;
@@ -266,7 +266,7 @@ class Schedule_TimecategoryController extends Zend_Controller_Action
         sapp_Global::logManager($menuID, $actionflag, $login, $id);
         //$res = $OTcategorymodel->saveORupdateCategory($data, $where);
         if ($res > 0)
-            return $this->_helper->json(array('flagtype' => 'time category', 'message' => 'Deleted'));
+            return $this->_helper->json(['flagtype' => 'time category', 'message' => 'Deleted']);
         die();
     }
 
@@ -323,19 +323,19 @@ class Schedule_TimecategoryController extends Zend_Controller_Action
 
                 $date = gmdate("Y-m-d H:i:s");
 
-                $data = array(
+                $data = [
                     'name'  => $name,
                     'code'  => $code,
                     'description'  => $description,
                     'lablecolor'  => $lablecolor,
                     'isactive' => utlis::getcheckboxvalue($this->_request->getParam('isactive')),
 
-                );
+                ];
                 if ($id != '') {
 
                     $data['modifiedby'] = $loginUserId;
                     $data['modifieddate'] = $date;
-                    $where = array('timecategory_id=?' => $id);
+                    $where = ['timecategory_id=?' => $id];
                 } else {
                     $data['createdby'] = $loginUserId;
                     $data['createddate'] = $date;
@@ -345,9 +345,9 @@ class Schedule_TimecategoryController extends Zend_Controller_Action
                 $Id = $dmtmodel->saveORupdateCategory($data, $where);
 
                 if ($Id == 'update') {
-                    $this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Time Category updated successfully."));
+                    $this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Time Category updated successfully."]);
                 } else {
-                    $this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Time Category added successfully."));
+                    $this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Time Category added successfully."]);
                     $this->view->pop = 'close';
                     $this->view->eventact = "added";
                     $this->view->controllername = 'schedule';

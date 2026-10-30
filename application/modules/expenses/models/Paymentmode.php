@@ -30,8 +30,8 @@ class Expenses_Model_Paymentmode extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{
 		$searchQuery = '';
-		$searchArray = array();
-		$data = array();
+		$searchArray = [];
+		$data = [];
 
 		  if($searchData != '' && $searchData!='undefined')
         {
@@ -52,22 +52,22 @@ class Expenses_Model_Paymentmode extends Zend_Db_Table_Abstract
 			
 		$objName = 'paymentmode';
 		
-		$tableFields = array(
+		$tableFields = [
 					'action'=>'Action',
 					'payment_method_name' => 'Payment Mode',
 					'userfullname' => 'Created By',
 					'created_date' => 'Created Date',
-		);
+		];
 	//echo "<pre/>"; print_r($tableFields);exit;
 		$tablecontent = $this->getPaymentModeData($sort, $by, $pageNo, $perPage,$searchQuery);
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -75,12 +75,12 @@ class Expenses_Model_Paymentmode extends Zend_Db_Table_Abstract
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall,
 			'menuName' => 'Payment Mode',
-			 'search_filters' => array(
+			 'search_filters' => [
                             
-                            'created_date'=>array('type'=>'datepicker'),
+                            'created_date'=>['type'=>'datepicker'],
                             
-                        ),
-			);
+                        ],
+			];
 			return $dataTmp;
 	}
 
@@ -104,11 +104,11 @@ class Expenses_Model_Paymentmode extends Zend_Db_Table_Abstract
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$payment_modes = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('p' => 'expense_payment_methods'),array('p.*','created_date'=>'DATE_FORMAT(created_date,"'.DATEFORMAT_MYSQL.'")','payment_method_name'=>'p.payment_method_name'))
-	    ->joinInner(array('u'=>'main_users'), "u.id = p.createdby and
-	    u.isactive = 1",array('id'=>'p.id'))
-		->joinInner(array('e'=>'main_employees'),'u.empid = e.id',array('userfullname'=>
-	    'e.userfullname'))
+		->from(['p' => 'expense_payment_methods'],['p.*','created_date'=>'DATE_FORMAT(created_date,"'.DATEFORMAT_MYSQL.'")','payment_method_name'=>'p.payment_method_name'])
+	    ->joinInner(['u'=>'main_users'], "u.id = p.createdby and
+	    u.isactive = 1",['id'=>'p.id'])
+		->joinInner(['e'=>'main_employees'],'u.empid = e.id',['userfullname'=>
+	    'e.userfullname'])
 		->where($where)
 		->order("$by $sort")
 		->limitPage($pageNo, $perPage); 
@@ -123,7 +123,7 @@ class Expenses_Model_Paymentmode extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('p'=>$this->_name),array('p.id','payment_method_name'))
+		->from(['p'=>$this->_name],['p.id','payment_method_name'])
 		->where('p.isactive = 1 ')
 		->order('p.payment_method_name');
 		return $this->fetchAll($select)->toArray();
@@ -156,7 +156,7 @@ class Expenses_Model_Paymentmode extends Zend_Db_Table_Abstract
 		$row = $this->fetchRow("id = '".$id."' and isactive = 1");
 		if (!$row) {
 			
-                    return array();
+                    return [];
 		}
                 else
 		return $row->toArray();

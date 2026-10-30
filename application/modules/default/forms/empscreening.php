@@ -64,15 +64,15 @@ class Default_Form_empscreening extends Zend_Form
 		if($agencyData == 'checked')
 		{
 			$agency->setRequired(true);
-			$agency->addValidator('NotEmpty', false, array('messages' => 'Please select agency.'));
+			$agency->addValidator('NotEmpty', false, ['messages' => 'Please select agency.']);
 		}
 		
 		$submit = new Zend_Form_Element_Submit('submit');
 		$submit->setAttrib('id', 'submitbutton');        
 		$submit->setLabel('Save');
 		
-		$this->addElements(array($id,$employee,$bgcheck_status,$checkagency,$checktype,$agency,$submit));
-        $this->setElementDecorators(array('ViewHelper')); 		
+		$this->addElements([$id,$employee,$bgcheck_status,$checkagency,$checktype,$agency,$submit]);
+        $this->setElementDecorators(['ViewHelper']); 		
 	}
 	
 }

@@ -54,7 +54,7 @@ class Default_ReportcatalogController extends Zend_Controller_Action
         $session = sapp_Global::_readSession();
         if (!isset($session)) {
             if ($this->getRequest()->isXmlHttpRequest()) {
-                die(Zend_Json::encode(array('login' => 'failed')));
+                die(Zend_Json::encode(['login' => 'failed']));
             } else {
                 $this->_redirect('');
             }
@@ -102,7 +102,7 @@ class Default_ReportcatalogController extends Zend_Controller_Action
 
             $dataTmp = $this->_model->getGrid($sort, $by, $perPage, $page, rtrim($searchData, ','), $call, $dashboardcall);
 
-            $this->view->dataArray = array($dataTmp);
+            $this->view->dataArray = [$dataTmp];
             $this->view->call      = $call;
             $this->view->messages  = $this->_helper->flashMessenger->getMessages();
         } catch (\Throwable $e) { // SSOT IX.2
@@ -153,14 +153,14 @@ class Default_ReportcatalogController extends Zend_Controller_Action
                 $db->beginTransaction(); // SSOT V.4
 
                 try {
-                    $data = array(
+                    $data = [
                         'menugroup_id' => (int)$request->getParam('menugroup_id'),
                         'category_id' => (int)$request->getParam('category_id'),
                         'code'        => trim($request->getParam('code')),
                         'name'        => trim($request->getParam('name')),
                         'description' => trim($request->getParam('description')),
                         'isactive'    => (int)$request->getParam('isactive', 1)
-                    );
+                    ];
 
                     $actionFlag = ($id > 0) ? 2 : 1;
                     $reportId = $this->_model->saveRecord($data, $id);
@@ -173,9 +173,9 @@ class Default_ReportcatalogController extends Zend_Controller_Action
                     $rolesRaw     = json_decode((string)$request->getParam('roles_payload'), true);
                     $employeesRaw = json_decode((string)$request->getParam('employees_payload'), true);
 
-                    $groups    = is_array($groupsRaw) ? $groupsRaw : array();
-                    $roles     = is_array($rolesRaw) ? $rolesRaw : array();
-                    $employees = is_array($employeesRaw) ? $employeesRaw : array();
+                    $groups    = is_array($groupsRaw) ? $groupsRaw : [];
+                    $roles     = is_array($rolesRaw) ? $rolesRaw : [];
+                    $employees = is_array($employeesRaw) ? $employeesRaw : [];
 
                     $this->_model->syncAclMappings($reportId, $groups, $roles, $employees);
 
@@ -186,18 +186,18 @@ class Default_ReportcatalogController extends Zend_Controller_Action
                     $db->commit();
 
                     $msg = ($actionFlag == 1) ? 'Added' : 'Updated';
-                    $this->_helper->flashMessenger->addMessage(array('success' => "Report Definition $msg successfully."));
+                    $this->_helper->flashMessenger->addMessage(['success' => "Report Definition $msg successfully."]);
 
                     // SSOT V.6: Strict JSON Response
-                    $this->_helper->json(array('result' => 'saved', 'nomessage' => 'yes'));
+                    $this->_helper->json(['result' => 'saved', 'nomessage' => 'yes']);
                 } catch (\Throwable $e) {
                     $db->rollBack();
                     error_log("ReportCatalog Save Error: " . $e->getMessage());
-                    $this->_helper->json(array('result' => 'exception', 'message' => 'System error occurred while saving.'));
+                    $this->_helper->json(['result' => 'exception', 'message' => 'System error occurred while saving.']);
                 }
             } else {
                 // SSOT V.8: Extract and flatten Zend Form error messages
-                $msgarray = array();
+                $msgarray = [];
                 foreach ($form->getMessages() as $field => $errors) {
                     $msgarray[$field] = current($errors);
                 }
@@ -220,13 +220,13 @@ class Default_ReportcatalogController extends Zend_Controller_Action
                 $menuId = defined('REPORTCATALOG');
                 sapp_Global::logManager($menuId, 3, $this->_loginUserId, $id);
 
-                $this->_helper->json(array('msgtype' => 'success', 'message' => 'Report definition deleted successfully.'));
+                $this->_helper->json(['msgtype' => 'success', 'message' => 'Report definition deleted successfully.']);
             } catch (\Throwable $e) {
                 // Dependency exception triggered by Model
-                $this->_helper->json(array('msgtype' => 'error', 'message' => $e->getMessage()));
+                $this->_helper->json(['msgtype' => 'error', 'message' => $e->getMessage()]);
             }
         } else {
-            $this->_helper->json(array('msgtype' => 'error', 'message' => 'Invalid Request.'));
+            $this->_helper->json(['msgtype' => 'error', 'message' => 'Invalid Request.']);
         }
     }
 
@@ -241,9 +241,9 @@ class Default_ReportcatalogController extends Zend_Controller_Action
             $menuId = defined('REPORTCATALOG');
             sapp_Global::logManager($menuId, 4, $this->_loginUserId, $id);
 
-            $this->_helper->json(array('result' => 'yes'));
+            $this->_helper->json(['result' => 'yes']);
         } catch (\Throwable $e) {
-            $this->_helper->json(array('result' => 'no'));
+            $this->_helper->json(['result' => 'no']);
         }
     }
 
@@ -263,7 +263,7 @@ class Default_ReportcatalogController extends Zend_Controller_Action
         $form->setAction(BASE_URL . 'reportcatalog/addpopup');
 
         $request = $this->getRequest();
-        $msgarray = array();
+        $msgarray = [];
         $this->view->popup = '';
 
         if ($request->isPost()) {
@@ -275,14 +275,14 @@ class Default_ReportcatalogController extends Zend_Controller_Action
                 $db->beginTransaction();
 
                 try {
-                    $data = array(
+                    $data = [
                         'menugroup_id' => (int)$request->getParam('menugroup_id'),
                         'category_id' => (int)$request->getParam('category_id'),
                         'code'        => trim($request->getParam('code')),
                         'name'        => trim($request->getParam('name')),
                         'description' => trim($request->getParam('description')),
                         'isactive'    => (int)$request->getParam('isactive', 1)
-                    );
+                    ];
 
                     $newId = $this->_model->saveRecord($data);
 

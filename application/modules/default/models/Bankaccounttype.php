@@ -37,7 +37,7 @@ class Default_Model_Bankaccounttype extends Zend_Db_Table_Abstract
 		
 		$bankaccounttypeData = $this->select()
     					   ->setIntegrityCheck(false)	    					
-						   ->from($this->_name,array('id','bankaccounttype','description','if(isactive="Y","Yes","No") as isactive'))
+						   ->from($this->_name,['id','bankaccounttype','description','if(isactive="Y","Yes","No") as isactive'])
     					   ->order("$by $sort")
 						   ->where($where) 
     					   ->limitPage($pageNo, $perPage);
@@ -62,7 +62,7 @@ class Default_Model_Bankaccounttype extends Zend_Db_Table_Abstract
 	{
 	  $accountclassTypeData = $this->select()
     					   ->setIntegrityCheck(false)	
-						   ->from(array('b'=>'main_bankaccounttype'),array('b.id','b.bankaccounttype'))
+						   ->from(['b'=>'main_bankaccounttype'],['b.id','b.bankaccounttype'])
                            ->where('b.isactive = 1')
 						   ->order('b.bankaccounttype');
       return $this->fetchAll($accountclassTypeData)->toArray();
@@ -81,8 +81,8 @@ class Default_Model_Bankaccounttype extends Zend_Db_Table_Abstract
 	}
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$exParam1='',$exParam2='',$exParam3='',$exParam4='')
 	{		
-        $searchQuery = '';$tablecontent = '';  $searchArray = array();$data = array();$id='';
-        $dataTmp = array();
+        $searchQuery = '';$tablecontent = '';  $searchArray = [];$data = [];$id='';
+        $dataTmp = [];
 		if($searchData != '' && $searchData!='undefined')
 		{
 			$searchValues = json_decode($searchData);
@@ -96,30 +96,30 @@ class Default_Model_Bankaccounttype extends Zend_Db_Table_Abstract
 		/** search from grid - END **/
 		$objName = 'bankaccounttype';
 		
-		$tableFields = array('action'=>'Action','bankaccounttype' => 'Bank Account Type','description' => 'Description','isactive'=>'Active');
+		$tableFields = ['action'=>'Action','bankaccounttype' => 'Bank Account Type','description' => 'Description','isactive'=>'Active'];
 		
-		$bool_arr = array(''=>'All','Y'=>'Yes','N'=>'No');	
+		$bool_arr = [''=>'All','Y'=>'Yes','N'=>'No'];	
 		$tablecontent = $this->getBankaccounttypeData($sort, $by, $pageNo, $perPage,$searchQuery);     
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
 			'searchArray' => $searchArray,
 			'call'=>$call,'dashboardcall'=>$dashboardcall,
-			'search_filters' => array(
-				'isactive' => array(
+			'search_filters' => [
+				'isactive' => [
 					'type' => 'select',
 					'filter_data' => $bool_arr,
-				)
-                )
-		);		
+				]
+                ]
+		];		
 			
 		return $dataTmp;
 	}

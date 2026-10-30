@@ -44,7 +44,7 @@ class Default_EmploymentstatusController extends Zend_Controller_Action
 		$objname = $this->_getParam('objname');
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall',null);
-		$data = array();$searchQuery = '';	$searchArray = array();	$tablecontent='';
+		$data = [];$searchQuery = '';	$searchArray = [];	$tablecontent='';
 
 		if($refresh == 'refresh')
 		{
@@ -54,7 +54,7 @@ class Default_EmploymentstatusController extends Zend_Controller_Action
 			$perPage = PERPAGE;
 
 			$sort = 'DESC';$by = 'e.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';
-			$searchArray = array();
+			$searchArray = [];
 		}
 		else
 		{
@@ -178,7 +178,7 @@ class Default_EmploymentstatusController extends Zend_Controller_Action
 			else
 			{
 				$activeEmploymentStatusArr =  $employmentstatusmodel->getEmploymentStatuslist();
-				$newarr = array();  $empstatusstr = '';
+				$newarr = [];  $empstatusstr = '';
 				if(!empty($activeEmploymentStatusArr))
 				{
 					for($i=0;$i<sizeof($activeEmploymentStatusArr);$i++)
@@ -221,14 +221,14 @@ class Default_EmploymentstatusController extends Zend_Controller_Action
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = '';
-				$data = array('workcode'=>trim($workcode),
+				$data = ['workcode'=>trim($workcode),
 				           'workcodename'=>trim($workcodename),
 						  'description'=>trim($description),
 						  'modifiedby'=>$loginUserId,
 							'modifieddate'		=>		gmdate("Y-m-d H:i:s")	
-				);
+				];
 				if($id!=''){
-					$where = array('id=?'=>$id);
+					$where = ['id=?'=>$id];
 					$actionflag = 2;
 				}
 				else
@@ -243,12 +243,12 @@ class Default_EmploymentstatusController extends Zend_Controller_Action
 				if($Id == 'update')
 				{
 					$tableid = $id;
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Employment status updated successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Employment status updated successfully."]);
 				}
 				else
 				{
 					$tableid = $Id;
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Employment status  added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Employment status  added successfully."]);
 				}
 				$menuID = EMPLOYMENTSTATUS;
 				$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
@@ -285,8 +285,8 @@ class Default_EmploymentstatusController extends Zend_Controller_Action
 		if($id)
 		{
 			$employmentstatusmodel = new Default_Model_Employmentstatus();
-			$data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-			$where = array('id=?'=>$id);
+			$data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+			$where = ['id=?'=>$id];
 			$status_data = $employmentstatusmodel->getsingleEmploymentstatusData($id);
 
 			$Id = $employmentstatusmodel->SaveorUpdateEmploymentStatusData($data, $where);
@@ -308,17 +308,17 @@ class Default_EmploymentstatusController extends Zend_Controller_Action
 		{
 			$messages['message'] = 'Employment status cannot be deleted.';$messages['msgtype'] = 'error';
 		}
-		
+
 		// delete success message after delete in view
 		if($deleteflag==1)
 		{
 			if(	$messages['msgtype'] == 'error')
 			{
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
 			}
 			if(	$messages['msgtype'] == 'success')
 			{
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
 			}
 			//$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Employment status deleted successfully.",'deleteflag'=>$deleteflag)); 
 		}
@@ -341,14 +341,14 @@ class Default_EmploymentstatusController extends Zend_Controller_Action
 		
         $boxid = $this->_getParam('boxid',null);
         $fromcontroller = $this->_getParam('fromcontroller',null);
-		$msgarray = array();
+		$msgarray = [];
 		$controllername = 'employmentstatus';
 		$employmentstatusform = new Default_Form_employmentstatus();
 		$employmentstatusmodel = new Default_Model_Employmentstatus();
 		$employmentstatusform->setAction(BASE_URL.'employmentstatus/addpopup');
 
 		$activeEmploymentStatusArr =  $employmentstatusmodel->getEmploymentStatuslist();
-		$newarr = array();  $empstatusstr = '';
+		$newarr = [];  $empstatusstr = '';
 		if(!empty($activeEmploymentStatusArr))
 		{
 			for($i=0;$i<sizeof($activeEmploymentStatusArr);$i++)
@@ -373,7 +373,7 @@ class Default_EmploymentstatusController extends Zend_Controller_Action
 			{
                             if($fromcontroller == 'requisition')
                             {
-                                if(!in_array($statusArr[$i]['id'], array(5,7,8,9,10)))
+                                if(!in_array($statusArr[$i]['id'], [5,7,8,9,10]))
                                     $employmentstatusform->workcodename->addMultiOption($statusArr[$i]['id'],utf8_encode($statusArr[$i]['employemnt_status']));
                             }
                             else 
@@ -398,14 +398,14 @@ class Default_EmploymentstatusController extends Zend_Controller_Action
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = '';
-				$data = array('workcode'=>trim($workcode),
+				$data = ['workcode'=>trim($workcode),
 				           'workcodename'=>trim($workcodename),
 						  'description'=>trim($description),
 						  'modifiedby'=>$loginUserId,
 							'modifieddate'		=>		gmdate("Y-m-d H:i:s")	
-				);
+				];
 				if($id!=''){
-					$where = array('id=?'=>$id);
+					$where = ['id=?'=>$id];
 					$actionflag = 2;
 				}
 				else

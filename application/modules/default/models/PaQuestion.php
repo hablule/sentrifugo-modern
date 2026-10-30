@@ -53,7 +53,7 @@ class Default_Model_Paquestion extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -74,18 +74,18 @@ class Default_Model_Paquestion extends Zend_Db_Table_Abstract
         }
 
         // SSOT IV.3: Strict headers. Action must be first.
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'        => 'Action',
             'name'          => 'Question Prompt',
             'category_name' => 'Category',
             'rating_name'   => 'Rating Scale',
             'weight'        => 'Weight',
             'status_text'   => 'Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
@@ -93,7 +93,7 @@ class Default_Model_Paquestion extends Zend_Db_Table_Abstract
             'tablecontent'   => $tableContent,
             'objectname'     => 'paquestion',
             'tableheader'    => $tableHeaders,
-            'extra'          => array(),
+            'extra'          => [],
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
             'searchArray'    => $searchArray,
@@ -101,10 +101,10 @@ class Default_Model_Paquestion extends Zend_Db_Table_Abstract
             'menuName'       => 'Appraisal Questions',
             'call'           => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => array(
-                'status_text' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive'))
-            )
-        );
+            'search_filters' => [
+                'status_text' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']]
+            ]
+        ];
     }
 
     public function getGridData($sort, $by, $pageNo, $perPage, $searchQuery = '')
@@ -115,14 +115,14 @@ class Default_Model_Paquestion extends Zend_Db_Table_Abstract
 
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('pq' => $this->_name), array(
+            ->from(['pq' => $this->_name], [
                 'id'          => 'pq.id', // SSOT IV.2: Mandatory Grid Aliasing
                 'name'        => 'pq.name',
                 'weight'      => 'pq.weight',
                 'status_text' => new Zend_Db_Expr("CASE WHEN pq.isactive = 1 THEN 'Active' ELSE 'Inactive' END")
-            ))
-            ->joinInner(array('pc' => 'main_pa_category'), 'pq.category_id = pc.id', array('category_name' => 'pc.name'))
-            ->joinInner(array('pr' => 'main_pa_rating'), 'pq.rating_id = pr.id', array('rating_name' => 'pr.name'))
+            ])
+            ->joinInner(['pc' => 'main_pa_category'], 'pq.category_id = pc.id', ['category_name' => 'pc.name'])
+            ->joinInner(['pr' => 'main_pa_rating'], 'pq.rating_id = pr.id', ['rating_name' => 'pr.name'])
             ->where('pq.isactive != 5');
 
         if (!empty($searchQuery)) {
@@ -135,7 +135,7 @@ class Default_Model_Paquestion extends Zend_Db_Table_Abstract
 
     public function getPairs($activeOnly = true)
     {
-        $select = $this->select()->from($this->_name, array('id', 'name'))->order('name ASC');
+        $select = $this->select()->from($this->_name, ['id', 'name'])->order('name ASC');
         if ($activeOnly) {
             $select->where("isactive = 1");
         }
@@ -170,7 +170,7 @@ class Default_Model_Paquestion extends Zend_Db_Table_Abstract
     public function getQuestionOptionsWithMetaData($activeOnly = true)
     {
         $select = $this->select()
-            ->from($this->_name, array('id', 'name', 'rating_id', 'weight'))
+            ->from($this->_name, ['id', 'name', 'rating_id', 'weight'])
             ->order('name ASC');
 
         if ($activeOnly) {
@@ -191,7 +191,7 @@ class Default_Model_Paquestion extends Zend_Db_Table_Abstract
         if (!empty($id)) {
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = gmdate("Y-m-d H:i:s");
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return 'update';
         }
 
@@ -212,23 +212,23 @@ class Default_Model_Paquestion extends Zend_Db_Table_Abstract
         }
 
         $userId = Zend_Auth::getInstance()->getStorage()->read()->id ?? 0;
-        $data = array(
+        $data = [
             'isactive'     => 5,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
-        return $this->update($data, array('id = ?' => (int)$id));
+        ];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     public function toggleStatus($id, $status)
     {
         $userId = Zend_Auth::getInstance()->getStorage()->read()->id ?? 0;
-        $data = array(
+        $data = [
             'isactive'     => (int)$status,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
-        return $this->update($data, array('id = ?' => (int)$id));
+        ];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* =================================================================================
@@ -284,18 +284,18 @@ class Default_Model_Paquestion extends Zend_Db_Table_Abstract
         $date = gmdate("Y-m-d H:i:s");
 
         // Hard delete existing mappings to prevent composite key collisions
-        $db->delete('map_pa_question_skill', array('question_id = ?' => (int)$questionId));
+        $db->delete('map_pa_question_skill', ['question_id = ?' => (int)$questionId]);
 
         if (!empty($skillIds)) {
             foreach ($skillIds as $skillId) {
                 if ((int)$skillId > 0) {
-                    $db->insert('map_pa_question_skill', array(
+                    $db->insert('map_pa_question_skill', [
                         'question_id' => (int)$questionId,
                         'skill_id'    => (int)$skillId,
                         'isactive'    => 1,
                         'createdby'   => $userId,
                         'createddate' => $date
-                    ));
+                    ]);
                 }
             }
         }

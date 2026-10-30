@@ -54,7 +54,7 @@ class Default_Model_Appraisalmanager extends Zend_Db_Table_Abstract
      */
     public function getManagergroups($appraisal_id,$manager_id)
     {
-        $result = array();
+        $result = [];
         if($appraisal_id != '')
         {
             $db = Zend_Db_Table::getDefaultAdapter();
@@ -109,8 +109,8 @@ class Default_Model_Appraisalmanager extends Zend_Db_Table_Abstract
     public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
     {		
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		
         if($searchData != '' && $searchData!='undefined')
         {
@@ -131,19 +131,19 @@ class Default_Model_Appraisalmanager extends Zend_Db_Table_Abstract
 			
         $objName = 'appraisalmanager';
 
-        $tableFields = array('action'=>'Action','unitname' => 'Business Unit','deptname' => 'Department','fin_year' => 'Financial Year',
-                    'appraisal_mode'=>'Appraisal Mode','app_period' => 'Period','status' => 'Appraisal Status','appraisal_process_status' => 'Process Status');
+        $tableFields = ['action'=>'Action','unitname' => 'Business Unit','deptname' => 'Department','fin_year' => 'Financial Year',
+                    'appraisal_mode'=>'Appraisal Mode','app_period' => 'Period','status' => 'Appraisal Status','appraisal_process_status' => 'Process Status'];
                    
         $tablecontent = $this->getAppraisalManagerData($sort, $by, $pageNo, $perPage,$searchQuery);     
         
-        $dataTmp = array(
+        $dataTmp = [
                 'sort' => $sort,
                 'by' => $by,
                 'pageNo' => $pageNo,
                 'perPage' => $perPage,				
                 'tablecontent' => $tablecontent,
                 'objectname' => $objName,
-                'extra' => array(),
+                'extra' => [],
                 'tableheader' => $tableFields,
                 'jsGridFnName' => 'getAjaxgridData',
                 'jsFillFnName' => '',
@@ -152,17 +152,17 @@ class Default_Model_Appraisalmanager extends Zend_Db_Table_Abstract
                 'call'=>$call,
                 //'encrypt_status' => 'yes',
                 'dashboardcall'=>$dashboardcall,
-                'search_filters' => array(
-                    'status' =>array(
+                'search_filters' => [
+                    'status' =>[
                         'type'=>'select',
-                        'filter_data' => array(''=>'All','1' => 'Open','2' => 'Closed','3' => 'Force Closed'),
-                    ),
-                    'appraisal_mode' => array(
+                        'filter_data' => [''=>'All','1' => 'Open','2' => 'Closed','3' => 'Force Closed'],
+                    ],
+                    'appraisal_mode' => [
                         'type' => 'select',
-                        'filter_data' => array('' => 'All','Quarterly' => 'Quarterly','Half-yearly' => 'Half-yearly','Yearly' => 'Yearly',),
-                    ),
-                ),
-        );
+                        'filter_data' => ['' => 'All','Quarterly' => 'Quarterly','Half-yearly' => 'Half-yearly','Yearly' => 'Yearly',],
+                    ],
+                ],
+        ];
         return $dataTmp;
     }
     /**
@@ -191,7 +191,7 @@ class Default_Model_Appraisalmanager extends Zend_Db_Table_Abstract
         {
             $init_data = $appraisalinit_model->checkAppraisalExists($businessunit_id, $department_id);
             $where .= " and ai.businessunit_id = '".$businessunit_id."'  ";
-			$flag = isset($init_data[0]['performance_app_flag'])?$init_data[0]['performance_app_flag']:'';
+			$flag = $init_data[0]['performance_app_flag'] ?? '';
             if($flag == 0)
 			{
 				$where .= " and ai.department_id = '".$department_id."' ";
@@ -205,15 +205,15 @@ class Default_Model_Appraisalmanager extends Zend_Db_Table_Abstract
 		
        $appInitData = $this->select()
 					->setIntegrityCheck(false)	
-					->from(array('ai'=>'main_pa_initialization'),array('ai.id','ai.enable_step','org_status' =>'ai.status','managerid_status'=>'find_in_set('.$loginUserId.',manager_ids)',
+					->from(['ai'=>'main_pa_initialization'],['ai.id','ai.enable_step','org_status' =>'ai.status','managerid_status'=>'find_in_set('.$loginUserId.',manager_ids)',
 						new Zend_Db_Expr("concat(from_year,'-',to_year) as fin_year"),'ai.appraisal_mode',
 						new Zend_Db_Expr("CASE WHEN ai.status=1 THEN 'Open' WHEN ai.status=2 THEN 'Closed' ELSE 'Force Closed' END as status"),
 						new Zend_Db_Expr("case when initialize_status = 1 then case when ai.enable_step = 1 then 'Enabled to Managers' when ai.enable_step = 2 then 'Enabled to Employees' end when initialize_status = 2 then 'Initialize later' when initialize_status is null then 'In progress' end as appraisal_process_status"),
 						new Zend_Db_Expr("case when ai.appraisal_mode = 'Quarterly' then concat('Q',ai.appraisal_period) when ai.appraisal_mode = 'Half-yearly' then concat('H',ai.appraisal_period) when ai.appraisal_mode = 'Yearly' then 'Yearly' end as app_period"),
-						))
-					->joinInner(array('p' => 'main_pa_questions_privileges'),"p.isactive = 1 and p.pa_initialization_id = ai.id and p.line_manager_1 = ".$loginUserId,array())
-					->joinLeft(array('b' => 'main_businessunits'),"b.id = ai.businessunit_id and b.isactive=1",array('unitname'))
-					->joinLeft(array('d' => 'main_department'),"d.department_id = ai.department_id and d.isactive=1",array('name'))                            
+						])
+					->joinInner(['p' => 'main_pa_questions_privileges'],"p.isactive = 1 and p.pa_initialization_id = ai.id and p.line_manager_1 = ".$loginUserId,[])
+					->joinLeft(['b' => 'main_businessunits'],"b.id = ai.businessunit_id and b.isactive=1",['unitname'])
+					->joinLeft(['d' => 'main_department'],"d.department_id = ai.department_id and d.isactive=1",['name'])                            
 					->where($where)
 					->group('ai.id')
 					->order("$by $sort") 
@@ -230,11 +230,11 @@ class Default_Model_Appraisalmanager extends Zend_Db_Table_Abstract
      */
     public function getEmpdata_managerapp($manager_id,$searchval='')
     {
-        $final_arr = array();
+        $final_arr = [];
         if($manager_id != '')
         {
-			$status_arr = array(0 => 'Pending employee ratings',1 => 'Pending L1 ratings',2 => 'Pending L2 ratings',
-				3 => 'Pending L3 ratings',4 => 'Pending L4 ratings',5 => 'Pending L5 ratings',6 => 'Completed');
+			$status_arr = [0 => 'Pending employee ratings',1 => 'Pending L1 ratings',2 => 'Pending L2 ratings',
+				3 => 'Pending L3 ratings',4 => 'Pending L4 ratings',5 => 'Pending L5 ratings',6 => 'Completed'];
 			$db = Zend_Db_Table::getDefaultAdapter();
 			$query = "select er.consolidated_rating,pi.pa_configured_id,pi.id init_id,pi.appraisal_ratings,es.userfullname,es.id,es.jobtitle_name,er.appraisal_status,er.line_rating_1,
                       er.line_rating_2,er.line_rating_3,er.line_rating_4,er.line_rating_5,es.profileimg
@@ -253,7 +253,7 @@ class Default_Model_Appraisalmanager extends Zend_Db_Table_Abstract
             foreach($result_set as $key => $emp)
             {
                 $final_arr[$key] = $emp;
-                $line_unique_arr = array_filter(array_unique(array(1 => $emp['line_manager_1'],2 => $emp['line_manager_2'],3 => $emp['line_manager_3'],4 => $emp['line_manager_4'],5 => $emp['line_manager_5'])),'strlen');
+                $line_unique_arr = array_filter(array_unique([1 => $emp['line_manager_1'],2 => $emp['line_manager_2'],3 => $emp['line_manager_3'],4 => $emp['line_manager_4'],5 => $emp['line_manager_5']]),'strlen');
                 $line_status = array_search($manager_id, $line_unique_arr);
                 $editing_status = array_search($emp['appraisal_status'], $status_arr);
                 $manager_editing_status = ($editing_status == $line_status)?"add_edit":"view";
@@ -272,13 +272,13 @@ class Default_Model_Appraisalmanager extends Zend_Db_Table_Abstract
      * @param integer $manager_id   = id of manager.
      * @return array Array of employees.
      */
-    public function getEmpdata_managerapphistory($manager_id,$searchval='',$init_id)
+    public function getEmpdata_managerapphistory($manager_id,$searchval='',$init_id = null)
     {
-        $final_arr = array();
+        $final_arr = [];
         if($manager_id != '')
         {
-			$status_arr = array(0 => 'Pending employee ratings',1 => 'Pending L1 ratings',2 => 'Pending L2 ratings',
-				3 => 'Pending L3 ratings',4 => 'Pending L4 ratings',5 => 'Pending L5 ratings',6 => 'Completed');
+			$status_arr = [0 => 'Pending employee ratings',1 => 'Pending L1 ratings',2 => 'Pending L2 ratings',
+				3 => 'Pending L3 ratings',4 => 'Pending L4 ratings',5 => 'Pending L5 ratings',6 => 'Completed'];
 			$db = Zend_Db_Table::getDefaultAdapter();
 			$query = "select er.consolidated_rating,pi.pa_configured_id,pi.id init_id,pi.appraisal_ratings,es.userfullname,es.id,es.jobtitle_name,er.appraisal_status,er.line_rating_1,
                       er.line_rating_2,er.line_rating_3,er.line_rating_4,er.line_rating_5,es.profileimg
@@ -297,7 +297,7 @@ class Default_Model_Appraisalmanager extends Zend_Db_Table_Abstract
             foreach($result_set as $key => $emp)
             {
                 $final_arr[$key] = $emp;
-                $line_unique_arr = array_filter(array_unique(array(1 => $emp['line_manager_1'],2 => $emp['line_manager_2'],3 => $emp['line_manager_3'],4 => $emp['line_manager_4'],5 => $emp['line_manager_5'])),'strlen');
+                $line_unique_arr = array_filter(array_unique([1 => $emp['line_manager_1'],2 => $emp['line_manager_2'],3 => $emp['line_manager_3'],4 => $emp['line_manager_4'],5 => $emp['line_manager_5']]),'strlen');
                 $line_status = array_search($manager_id, $line_unique_arr);
                 $editing_status = array_search($emp['appraisal_status'], $status_arr);
                 $manager_editing_status = ($editing_status == $line_status)?"add_edit":"view";
@@ -318,7 +318,7 @@ class Default_Model_Appraisalmanager extends Zend_Db_Table_Abstract
         {
             $loginUserId = $auth->getStorage()->read()->id;
         }   
-        $final_arr = array();
+        $final_arr = [];
         $edit_flag = 'false';
         if($appraisal_id != '' && $manager_id != '' && $user_id != '' && $flag != '')
         {   
@@ -344,7 +344,7 @@ class Default_Model_Appraisalmanager extends Zend_Db_Table_Abstract
             	}
             }
             $emp_ques = (!empty($employee_response))?array_keys($employee_response):"";
-			$category_arr = array();
+			$category_arr = [];
 			if(!empty($emp_ques))
 			{
 					$ques_query = "select q.id question_id,q.description,c.category_name,q.question from main_pa_questions q 
@@ -355,14 +355,14 @@ class Default_Model_Appraisalmanager extends Zend_Db_Table_Abstract
 				{
 					foreach($ques_result as $ques)
 					{
-						$category_arr[$ques['category_name']][] = array('question_id' => $ques['question_id'],'question' => $ques['question'],'description' => $ques['description']); 
+						$category_arr[$ques['category_name']][] = ['question_id' => $ques['question_id'],'question' => $ques['question'],'description' => $ques['description']]; 
 					}
 				}
             }
             $rating_query = "select id,rating_text,rating_value from main_pa_ratings "
                     . "where pa_initialization_id = '".$appraisal_id."' and isactive = 1";
             $rating_result = $db->query($rating_query)->fetchAll();
-            $rating_arr = array();
+            $rating_arr = [];
             if(!empty($rating_result))
 			{
 				foreach($rating_result as $rating)
@@ -377,7 +377,7 @@ class Default_Model_Appraisalmanager extends Zend_Db_Table_Abstract
             
             $skill_query = "select id,skill_name from main_pa_skills where isactive = 1";
             $skill_result = $db->query($skill_query)->fetchAll();
-            $skill_arr = array();
+            $skill_arr = [];
             
             foreach($skill_result as $skill)
             {
@@ -396,7 +396,7 @@ class Default_Model_Appraisalmanager extends Zend_Db_Table_Abstract
 	public function getManagerGroupCount($appraisalid,$managerid)
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();
-		$options = array();
+		$options = [];
 		
 		if($appraisalid !='')
 		{
@@ -419,15 +419,15 @@ class Default_Model_Appraisalmanager extends Zend_Db_Table_Abstract
      */
 public function getSearchEmpdata_managerapp($manager_id,$searchval)
     {
-        $final_arr = array();
+        $final_arr = [];
         /*if($searchstring!='')
         {
         	$searchval = ' and es.userfullname like "%'.$searchstring.'%" '; 
         }*/
         if($manager_id != '')
         {
-            $status_arr = array(0 => 'Pending employee ratings',1 => 'Pending L1 ratings',2 => 'Pending L2 ratings',
-                3 => 'Pending L3 ratings',4 => 'Pending L4 ratings',5 => 'Pending L5 ratings',6 => 'Completed');
+            $status_arr = [0 => 'Pending employee ratings',1 => 'Pending L1 ratings',2 => 'Pending L2 ratings',
+                3 => 'Pending L3 ratings',4 => 'Pending L4 ratings',5 => 'Pending L5 ratings',6 => 'Completed'];
             $db = Zend_Db_Table::getDefaultAdapter();
             $query = "select er.consolidated_rating,pi.pa_configured_id,pi.id init_id,pi.appraisal_ratings,es.userfullname,es.is,es.jobtitle_name,er.appraisal_status,er.line_rating_1,
                       er.line_rating_2,er.line_rating_3,er.line_rating_4,er.line_rating_5,es.profileimg
@@ -446,7 +446,7 @@ public function getSearchEmpdata_managerapp($manager_id,$searchval)
             foreach($result_set as $key => $emp)
             {
                 $final_arr[$key] = $emp;
-                $line_unique_arr = array_unique(array(1 => $emp['line_manager_1'],2 => $emp['line_manager_2'],3 => $emp['line_manager_3'],4 => $emp['line_manager_4'],5 => $emp['line_manager_5']));
+                $line_unique_arr = array_unique([1 => $emp['line_manager_1'],2 => $emp['line_manager_2'],3 => $emp['line_manager_3'],4 => $emp['line_manager_4'],5 => $emp['line_manager_5']]);
                 $line_status = array_search($manager_id, $line_unique_arr);
                 $editing_status = array_search($emp['appraisal_status'], $status_arr);
                 $manager_editing_status = ($editing_status == $line_status)?"add_edit":"view";
@@ -469,7 +469,7 @@ public function getSearchEmpdata_managerapp($manager_id,$searchval)
      */
     public function getStatusEmpdata_managerapp($manager_id,$appraisalstatus)
     {
-        $final_arr = array();
+        $final_arr = [];
         $appwhere = '';
         /*if($searchstring!='')
         {
@@ -480,8 +480,8 @@ public function getSearchEmpdata_managerapp($manager_id,$searchval)
         	if($appraisalstatus)
         	  $appwhere = ' and er.appraisal_status='.$appraisalstatus.' ';	
         	  
-            $status_arr = array(0 => 'Pending employee ratings',1 => 'Pending L1 ratings',2 => 'Pending L2 ratings',
-                3 => 'Pending L3 ratings',4 => 'Pending L4 ratings',5 => 'Pending L5 ratings',6 => 'Completed');
+            $status_arr = [0 => 'Pending employee ratings',1 => 'Pending L1 ratings',2 => 'Pending L2 ratings',
+                3 => 'Pending L3 ratings',4 => 'Pending L4 ratings',5 => 'Pending L5 ratings',6 => 'Completed'];
             $db = Zend_Db_Table::getDefaultAdapter();
             $query = "select er.consolidated_rating,pi.pa_configured_id,pi.id init_id,pi.appraisal_ratings,es.userfullname,es.id,es.jobtitle_name,er.appraisal_status,er.line_rating_1,
                       er.line_rating_2,er.line_rating_3,er.line_rating_4,er.line_rating_5,es.profileimg
@@ -500,7 +500,7 @@ public function getSearchEmpdata_managerapp($manager_id,$searchval)
             foreach($result_set as $key => $emp)
             {
                 $final_arr[$key] = $emp;
-                $line_unique_arr = array_unique(array(1 => $emp['line_manager_1'],2 => $emp['line_manager_2'],3 => $emp['line_manager_3'],4 => $emp['line_manager_4'],5 => $emp['line_manager_5']));
+                $line_unique_arr = array_unique([1 => $emp['line_manager_1'],2 => $emp['line_manager_2'],3 => $emp['line_manager_3'],4 => $emp['line_manager_4'],5 => $emp['line_manager_5']]);
 				$line_status = array_search($manager_id, $line_unique_arr);
                 $editing_status = array_search($emp['appraisal_status'], $status_arr);
                 $manager_editing_status = ($editing_status == $line_status)?"add_edit":"view";

@@ -36,17 +36,17 @@ class Default_Form_monthslist extends Zend_Form
         $monthname->setAttrib('class', 'selectoption');
         $monthname->setRegisterInArrayValidator(false);
         $monthname->setRequired(true);
-		$monthname->addValidator('NotEmpty', false, array('messages' => 'Please select month name.'));	
+		$monthname->addValidator('NotEmpty', false, ['messages' => 'Please select month name.']);	
 			
 		$monthcode = new Zend_Form_Element_Text('monthcode');
         $monthcode->setAttrib('maxLength', 20);
         $monthcode->addFilter(new Zend_Filter_StringTrim());
 		
 		$monthcode->addValidator(new Zend_Validate_Db_NoRecordExists(
-                                              array('table'=>'main_monthslist',
+                                              ['table'=>'main_monthslist',
                                                         'field'=>'monthcode',
                                                       'exclude'=>'id!="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('id').'" and isactive=1',    
-                                                 ) )  
+                                                 ] )  
                                     );
         $monthcode->getValidator('Db_NoRecordExists')->setMessage('Month code already exists.'); 	
 		
@@ -64,7 +64,7 @@ class Default_Form_monthslist extends Zend_Form
 		$toggleDivId = "''";
 		$jsFunction = "'redirecttocontroller(\'monthslist\');'";;
 
-		 $this->addElements(array($id,$monthname,$monthcode,$description,$submit));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 $this->addElements([$id,$monthname,$monthcode,$description,$submit]);
+         $this->setElementDecorators(['ViewHelper']); 
 	}
 }

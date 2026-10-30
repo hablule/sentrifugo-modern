@@ -43,9 +43,9 @@ class Default_AppraisalconfigController extends Zend_Controller_Action
 		$objname = $this->_getParam('objname');
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 		if($refresh == 'refresh')
 		{
@@ -96,7 +96,7 @@ class Default_AppraisalconfigController extends Zend_Controller_Action
 	   if(!empty($bunitdata))
 	   {	
 			$appraisalconfigform = new Default_Form_Appraisalconfig($bunitdata);
-			$msgarray = array();
+			$msgarray = [];
 			$appraisalconfigform->setAttrib('action',BASE_URL.'appraisalconfig/add');
 			$this->view->form = $appraisalconfigform; 
 			$this->view->msgarray = $msgarray;
@@ -110,7 +110,7 @@ class Default_AppraisalconfigController extends Zend_Controller_Action
 	   else
 	   {
 	   	$appraisalconfigform = new Default_Form_Appraisalconfig();
-		$msgarray = array();
+		$msgarray = [];
 		$appraisalconfigform->setAttrib('action',BASE_URL.'appraisalconfig/add');
 		$this->view->form = $appraisalconfigform; 
 		$this->view->msgarray = $msgarray; 
@@ -165,7 +165,7 @@ class Default_AppraisalconfigController extends Zend_Controller_Action
 						
 						$bunitModel = new Default_Model_Businessunits();
 						$bunitdata = $bunitModel->fetchAll('isactive=1','unitname');
-						$appraisalconfigform->businessunit_id->addMultiOptions(array(''=>'Select Business unit','0'=>'No Business Unit'));
+						$appraisalconfigform->businessunit_id->addMultiOptions([''=>'Select Business unit','0'=>'No Business Unit']);
 
 						foreach ($bunitdata->toArray() as $bdata){
 							$appraisalconfigform->businessunit_id->addMultiOption($bdata['id'],$bdata['unitname']);
@@ -258,7 +258,7 @@ class Default_AppraisalconfigController extends Zend_Controller_Action
 		$bunitModel = new Default_Model_Businessunits();
 		$appraisalconfigmodel = new Default_Model_Appraisalconfig();
 		$departmentsmodel = new Default_Model_Departments();
-		$msgarray = array();
+		$msgarray = [];
 		$appraisalconfigform->submit->setLabel('Update');
 		try
         {		
@@ -294,11 +294,11 @@ class Default_AppraisalconfigController extends Zend_Controller_Action
 								$departmentlistArr = $departmentsmodel->getSingleDepartmentData($data['department_id']);
 							}	 
 							else
-								$departmentlistArr = array();
+								$departmentlistArr = [];
 							
 							// Disable 'Business unit wise' option when 'No Business Unit' was selected
 							if($data["businessunit_id"] == 0) {
-								$appraisalconfigform->performance_app_flag->setOptions(array('disable' => array(1)));
+								$appraisalconfigform->performance_app_flag->setOptions(['disable' => [1]]);
 							}
 							
 							$appraisalconfigform->populate($data);
@@ -372,9 +372,9 @@ public function save($appraisalconfigform)
 	    $appraisalconfigmodel = new Default_Model_Appraisalconfig();
 	    $departmentsmodel = new Default_Model_Departments();
 	    $businessunitsmodel = new Default_Model_Businessunits();
-		$msgarray = array();
-		$resultArr = array();
-		$arrData = array();
+		$msgarray = [];
+		$resultArr = [];
+		$arrData = [];
 		$prevBusinessunit = '';
 		$errorflag = "true";
 		 $id = $this->_request->getParam('id');
@@ -386,7 +386,7 @@ public function save($appraisalconfigform)
          $appraisal_ratings = $this->_request->getParam('appraisal_ratings');
 
 		// Validation to check duplicate combinations
-		$arrData = array("business_unit_id" => $businessunit_id, "department_id" => $department_id, "id" => $id);
+		$arrData = ["business_unit_id" => $businessunit_id, "department_id" => $department_id, "id" => $id];
 		if ($appraisalconfigmodel->combinationExists($arrData)) {
 			$msgarray['businessunit_id'] = 'Business unit or department configuration already exists.';
 			$errorflag = "false";
@@ -435,7 +435,7 @@ public function save($appraisalconfigform)
             try{
 			$actionflag = '';
 			$tableid  = '';
-			$data = array('businessunit_id'=>$businessunit_id,
+			$data = ['businessunit_id'=>$businessunit_id,
 			                 'department_id'=>($department_id!=''?$department_id:NULL), 
 							 'performance_app_flag'=>$performance_app_flag,
 							 'appraisal_mode'=> $appraisal_mode,
@@ -444,10 +444,10 @@ public function save($appraisalconfigform)
 							 'module_flag' => 1,	
 			                 'modifiedby'=>$loginUserId,
 							  'modifieddate'=>gmdate("Y-m-d H:i:s")
-					);
+					];
 				if($id!=''){
 					/* for Update record  */
-					$where = array('id=?'=>$id);  
+					$where = ['id=?'=>$id];  
 					$actionflag = 2;
 				}
 				else
@@ -466,12 +466,12 @@ public function save($appraisalconfigform)
 				if($Id == 'update')
 				{
 				   $tableid = $id;
-				   $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Appraisal settings updated successfully"));
+				   $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Appraisal settings updated successfully"]);
 				}   
 				else
 				{
 				   $tableid = $Id; 	
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Appraisal settings added successfully"));					   
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Appraisal settings added successfully"]);					   
 				}   
 				
 				/*
@@ -512,7 +512,7 @@ public function save($appraisalconfigform)
 						$emp_id_str = ($loginuserRole == SUPERADMINROLE) ? " ":"($loginUserEmpId)";
 							
             					//Preparing Employee array for BCc
-								$empArr = array();
+								$empArr = [];
 								if(!empty($employeeDetailsArr))
 								{
 									$empArrList = '';
@@ -595,7 +595,7 @@ public function save($appraisalconfigform)
             $businessunitsmodel = new Default_Model_Businessunits();
             $appraisalconfigmodel = new Default_Model_Appraisalconfig();
             $bunitid = $this->_request->getParam('bunitid');
-            $result = array();
+            $result = [];
             $appInitModel = new Default_Model_Appraisalinit();
             if($bunitid !='')
             {
@@ -624,7 +624,7 @@ public function getdepartmentsAction()
 		$appraisalconfigmodel = new Default_Model_Appraisalconfig();
 		$bunitid = $this->_request->getParam('bunitid');
 		$deptid = $this->_request->getParam('deptid');
-		$implementationData = array();
+		$implementationData = [];
 	
 		if($bunitid !='')
 		{
@@ -657,12 +657,12 @@ public function getdepartmentsAction()
             $init_cnt = $model->check_delete($id);
             if($init_cnt == 0)
             {
-                $data = array( 
+                $data = [ 
                     'isactive' => 0,
                     'modifieddate' => gmdate("Y-m-d H:i:s"),                    
                     'modifiedby' => $loginUserId,
-                );
-                $where = array('id=?'=>$id);
+                ];
+                $where = ['id=?'=>$id];
                 $Id = $model->SaveorUpdateAppraisalConfigData($data, $where);
                 if($Id == 'update')
                 {                                        

@@ -28,7 +28,7 @@ class Default_Form_Mvc extends Zend_Form
 
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Create');
-        $this->addElements(array($id,$newmodulename,$modulename,$controllername, $table_name, $submit));
-        $this->setElementDecorators(array('ViewHelper')); 
+        $this->addElements([$id,$newmodulename,$modulename,$controllername, $table_name, $submit]);
+        $this->setElementDecorators(['ViewHelper']); 
     }
 }

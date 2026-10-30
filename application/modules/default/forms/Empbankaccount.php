@@ -79,14 +79,14 @@ class Default_Form_Empbankaccount extends Zend_Form
 		$accountnumber = new Zend_Form_Element_Text('accountnumber');
 		$accountnumber->setAttrib('maxlength', 20);
 		$accountnumber->setLabel('Account Number');
-		$accountnumber->addFilters(array('StringTrim'));
-		$accountnumber->addValidator("regex", true, array(
+		$accountnumber->addFilters(['StringTrim']);
+		$accountnumber->addValidator("regex", true, [
 			'pattern' => '/^[0-9 ]*$/',
 
-			'messages' => array(
+			'messages' => [
 				'regexNotMatch' => 'Please enter only numeric characters.'
-			)
-		));
+			]
+		]);
 		$accountnumber->setRequired(true);
 
 		$submit = new Zend_Form_Element_Submit('submit');
@@ -95,12 +95,12 @@ class Default_Form_Empbankaccount extends Zend_Form
 		$isactive = new Zend_Form_Element_Checkbox('isactive');
 		$isactive->setLabel('Active');
 
-		$this->addElements(array(
+		$this->addElements([
 			$id, $bankname,/*  $accountholder_name, $accountholding, */ $accountclasstypeid,
 			// $bankaccountid,
 			$accountnumber, $description, $iban, $bban, $isdefault, $location, $submit,
 			$isactive
-		));
-		$this->setElementDecorators(array('ViewHelper'));
+		]);
+		$this->setElementDecorators(['ViewHelper']);
 	}
 }

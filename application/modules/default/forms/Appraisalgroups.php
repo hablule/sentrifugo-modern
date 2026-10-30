@@ -34,19 +34,19 @@ class Default_Form_Appraisalgroups extends Zend_Form
 		$appraisalgroup->setAttrib('maxLength', 30);
 		$appraisalgroup->addFilter(new Zend_Filter_StringTrim());
 		$appraisalgroup->setRequired(true);
-        $appraisalgroup->addValidator('NotEmpty', false, array('messages' => 'Please enter group.'));
-		$appraisalgroup->addValidator("regex",true,array(                           
+        $appraisalgroup->addValidator('NotEmpty', false, ['messages' => 'Please enter group.']);
+		$appraisalgroup->addValidator("regex",true,[                           
                            'pattern'=>'/^[a-zA-Z0-9.\- ?]+$/',
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter valid group.'
-                           )
-        	));
+                           ]
+        	]);
         $appraisalgroup->addValidator(new Zend_Validate_Db_NoRecordExists(
-	                                            array(  'table'=>'main_pa_groups',
+	                                            [  'table'=>'main_pa_groups',
 	                                                     'field'=>'group_name',
 	                                                     'exclude'=>'id!="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('id').'" AND isactive=1',    
 	
-	                                                      ) ) );
+	                                                      ] ) );
 		$appraisalgroup->getValidator('Db_NoRecordExists')->setMessage('Group name already exists.');	
 
 		$description = new Zend_Form_Element_Textarea('description');
@@ -59,7 +59,7 @@ class Default_Form_Appraisalgroups extends Zend_Form
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 
-		 $this->addElements(array($id,$appraisalgroup,$description,$submit));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 $this->addElements([$id,$appraisalgroup,$description,$submit]);
+         $this->setElementDecorators(['ViewHelper']); 
 	}
 }

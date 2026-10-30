@@ -47,13 +47,13 @@ class Default_Form_Projectco extends Zend_Form{
         $section_id->setAttrib('onchange','disableSelect(event)'); 
         $project_id = new Zend_Form_Element_Select('project_id');
         $project_id ->setLabel('project_id');   
-        $project_id->addValidator('NotEmpty', false, array('messages' => 'Please fill the field.')); 
+        $project_id->addValidator('NotEmpty', false, ['messages' => 'Please fill the field.']); 
         $project_id->setRequired(true);
             $project_id->addValidator(new Zend_Validate_Db_NoRecordExists(
-                array(
+                [
                     'table'=>'main_projectco',
                     'field'=>'project_id'
-                )
+                ]
                 ));
       $project_id->getValidator('Db_NoRecordExists')->setMessage('Project already exists.');
    
@@ -70,8 +70,8 @@ class Default_Form_Projectco extends Zend_Form{
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save');
 
-        $this->addElements(array($id,$description,$isactive,$company_id,$sbunit_id,$departement_id,$division_id,$submit,$section_id,$project_id,$associateproject_id));
-        $this->setElementDecorators(array('ViewHelper')); 
+        $this->addElements([$id,$description,$isactive,$company_id,$sbunit_id,$departement_id,$division_id,$submit,$section_id,$project_id,$associateproject_id]);
+        $this->setElementDecorators(['ViewHelper']); 
     } 
  } 
  ?>

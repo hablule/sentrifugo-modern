@@ -38,8 +38,8 @@ class Default_EmpskillsController extends Zend_Controller_Action
 	{
 		
 				$userID = "";
-				$levelsArr = array();
-				$empcompetencyLevelsArr = array();
+				$levelsArr = [];
+				$empcompetencyLevelsArr = [];
 				$auth = Zend_Auth::getInstance();
 				if ($auth->hasIdentity()) {
 					$loginUserId = $auth->getStorage()->read()->id;
@@ -55,7 +55,7 @@ class Default_EmpskillsController extends Zend_Controller_Action
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 
 				$employeeModal = new Default_Model_Employee();
 				try {
@@ -74,9 +74,9 @@ class Default_EmpskillsController extends Zend_Controller_Action
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall', null);
-								$data = array();
+								$data = [];
 								$searchQuery = '';
-								$searchArray = array();
+								$searchArray = [];
 								$tablecontent = '';
 								if ($refresh == 'refresh') {
 									if ($dashboardcall == 'Yes')
@@ -130,8 +130,8 @@ class Default_EmpskillsController extends Zend_Controller_Action
 				$usersModel = new Default_Model_Users();
 
 					$userID = "";
-					$levelsArr = array();
-					$empcompetencyLevelsArr = array();
+					$levelsArr = [];
+					$empcompetencyLevelsArr = [];
 					$auth = Zend_Auth::getInstance();
 					if ($auth->hasIdentity()) {
 						$loginUserId = $auth->getStorage()->read()->id;
@@ -147,7 +147,7 @@ class Default_EmpskillsController extends Zend_Controller_Action
 						$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 					}
 					if ($id == '')		$id = $userID;
-					$Uid = ($id) ? $id : $userID;
+					$Uid = $id ?: $userID;
 					if ($Uid != "") {
 						$employeeData = $usersModel->getUserDetailsByIDandFlag($Uid);
 					}
@@ -169,9 +169,9 @@ class Default_EmpskillsController extends Zend_Controller_Action
 									$objname = $this->_getParam('objname');
 									$refresh = $this->_getParam('refresh');
 									$dashboardcall = $this->_getParam('dashboardcall', null);
-									$data = array();
+									$data = [];
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 									$tablecontent = '';
 									if ($refresh == 'refresh') {
 										if ($dashboardcall == 'Yes')
@@ -244,7 +244,7 @@ class Default_EmpskillsController extends Zend_Controller_Action
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 
 				$employeeModal = new Default_Model_Employee();
 				try {
@@ -263,9 +263,9 @@ class Default_EmpskillsController extends Zend_Controller_Action
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall', null);
-								$data = array();
+								$data = [];
 								$searchQuery = '';
-								$searchArray = array();
+								$searchArray = [];
 								$tablecontent = '';
 								if ($refresh == 'refresh') {
 									if ($dashboardcall == 'Yes')
@@ -278,7 +278,7 @@ class Default_EmpskillsController extends Zend_Controller_Action
 									$pageNo = 1;
 									$searchData = '';
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 								} else {
 									$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 									$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'isactive';
@@ -334,7 +334,7 @@ class Default_EmpskillsController extends Zend_Controller_Action
 
 		// Allowed image types
 		//$allowtype = array('gif', 'jpg', 'jpeg', 'png');
-		$allowtype = array('gif', 'jpg', 'jpeg', 'png', 'GIF', 'JPG', 'JPEG', 'PNG');
+		$allowtype = ['gif', 'jpg', 'jpeg', 'png', 'GIF', 'JPG', 'JPEG', 'PNG'];
 
 		/** Uploading the image **/
 
@@ -365,7 +365,7 @@ class Default_EmpskillsController extends Zend_Controller_Action
 							$rezultat = $filename;
 							$setWidth = 265;
 							$setHeight = 40;
-							list($imgwidth, $imgheight) = getimagesize($newfilename);
+							[$imgwidth, $imgheight] = getimagesize($newfilename);
 							if ($imgwidth < 265) {
 								$setWidth = $imgwidth;
 							}
@@ -396,11 +396,11 @@ class Default_EmpskillsController extends Zend_Controller_Action
 			$result_msg = 'Please upload only .gif, .jpg, .jpeg, .png images.';
 		}
 
-		$result = array(
+		$result = [
 			'result' => $result_status,
 			'img' => $rezultat,
 			'msg' => $result_msg
-		);
+		];
 		return $result;
 	}
 	public function addpopupAction()
@@ -438,7 +438,7 @@ class Default_EmpskillsController extends Zend_Controller_Action
 			$measurementindexModel = new Default_Model_measurementindex();
 			//---------------
 			$skilllevelArr = $skillModel->getskilllistnonsummary();
-			$msgarray = array();
+			$msgarray = [];
 			$empskillsform->skill_id->addMultiOption('', 'Select Skill');
 			if (!empty($skilllevelArr)) {
 
@@ -454,7 +454,7 @@ class Default_EmpskillsController extends Zend_Controller_Action
 			//-------------------------------------//
 			//---------------
 			$skilllsourcelevelArr = $skillsourceModel->getskillsourcelist();
-			$msgarray = array();
+			$msgarray = [];
 			$empskillsform->skillsource_id->addMultiOption('', 'Select Skill source');
 			if (!empty($skilllsourcelevelArr)) {
 
@@ -470,7 +470,7 @@ class Default_EmpskillsController extends Zend_Controller_Action
 			//-------------------------------------//
 			//---------------
 			$measurementlevelArr = $measurementindexModel->getmeasurementlist();
-			$msgarray = array();
+			$msgarray = [];
 			$empskillsform->measurementindex_id->addMultiOption('', 'Select measurement Index');
 			if (!empty($measurementlevelArr)) {
 
@@ -490,7 +490,7 @@ class Default_EmpskillsController extends Zend_Controller_Action
 			$this->view->emptyFlag = $emptyFlag;
 			$this->view->controllername = 'empskills';
 			if ($this->getRequest()->getPost()) {
-				$result = $this->save($empskillsform, $id);
+				$result = $this->save($empskillsform);
 				$this->view->msgarray = $result;
 			}
 		} catch (\Throwable $th) {
@@ -570,7 +570,7 @@ class Default_EmpskillsController extends Zend_Controller_Action
 			$measurementindexModel = new Default_Model_measurementindex();
 			//---------------
 			$skilllevelArr = $skillModelb->getskilllistnonsummary();
-			$msgarray = array();
+			$msgarray = [];
 			$empskillsform->skill_id->addMultiOption('', 'Select Skill');
 			if (!empty($skilllevelArr)) {
 
@@ -586,7 +586,7 @@ class Default_EmpskillsController extends Zend_Controller_Action
 			//-------------------------------------//
 			//---------------
 			$skilllsourcelevelArr = $skillsourceModel->getskillsourcelist();
-			$msgarray = array();
+			$msgarray = [];
 			$empskillsform->skillsource_id->addMultiOption('', 'Select Skill source');
 			if (!empty($skilllsourcelevelArr)) {
 
@@ -602,7 +602,7 @@ class Default_EmpskillsController extends Zend_Controller_Action
 			//-------------------------------------//
 			//---------------
 			$measurementlevelArr = $measurementindexModel->getmeasurementlist();
-			$msgarray = array();
+			$msgarray = [];
 			$empskillsform->measurementindex_id->addMultiOption('', 'Select measurement Index');
 			if (!empty($measurementlevelArr)) {
 
@@ -717,7 +717,7 @@ class Default_EmpskillsController extends Zend_Controller_Action
 				if (sizeof($imageArr) > 1) {
 					$imagename = $imageArr[0];
 					$imageext = $imageArr[1];
-					$extArr = array('gif', 'jpg', 'jpeg', 'png');
+					$extArr = ['gif', 'jpg', 'jpeg', 'png'];
 					if (!in_array($imageext, $extArr)) {
 						$msgarray['attestation_image_value'] = 'Please upload an appropriate image file.';
 						$flag = 'false';
@@ -783,7 +783,7 @@ class Default_EmpskillsController extends Zend_Controller_Action
 								}
 							}
 						}
-						$data = array(
+						$data = [
 							'skillname' => $skillname,
 							'skill_id' => $skill_id,
 							'skillsource_id' => $skillsource_id,
@@ -795,7 +795,7 @@ class Default_EmpskillsController extends Zend_Controller_Action
 							'emp_id' => $unitid,
 							'attestation' => $imagepath,
 							'description' => $description,
-						);
+						];
 						if ($id != '') {
 
 							$where = 'empskill_id= ' . $id;
@@ -862,8 +862,8 @@ class Default_EmpskillsController extends Zend_Controller_Action
 		$actionflag = 3;
 		if ($id) {
 			$empskillsModal = new Default_Model_Empskills();
-			$data = array('isactive' => 0, 'modifieddate' => gmdate("Y-m-d H:i:s"));
-			$where = array('id=?' => $id);
+			$data = ['isactive' => 0, 'modifieddate' => gmdate("Y-m-d H:i:s")];
+			$where = ['id=?' => $id];
 			$Id = $empskillsModal->SaveorUpdateEmpSkills($data, $where);
 			if ($Id == 'update') {
 				$menuID = EMPLOYEE;

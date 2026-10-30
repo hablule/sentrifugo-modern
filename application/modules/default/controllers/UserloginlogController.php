@@ -44,7 +44,7 @@ class Default_UserloginlogController extends Zend_Controller_Action
 		{
 			if($this->getRequest()->isXmlHttpRequest())
 			{
-				echo Zend_Json::encode( array('login' => 'failed') );
+				echo Zend_Json::encode( ['login' => 'failed'] );
 				die();
 			}
 			else
@@ -77,9 +77,9 @@ class Default_UserloginlogController extends Zend_Controller_Action
 		$objname = $this->_getParam('objname');
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 			
 		if($refresh == 'refresh')
 		{
@@ -88,7 +88,7 @@ class Default_UserloginlogController extends Zend_Controller_Action
 			else
 			$perPage = PERPAGE;
 			$sort = 'DESC';$by = 'r.logindatetime';$pageNo = 1;$searchData = '';$searchQuery = '';
-			$searchArray = array();
+			$searchArray = [];
 		}
 		else
 		{
@@ -123,7 +123,7 @@ class Default_UserloginlogController extends Zend_Controller_Action
 	 */
 	public function empnameautoAction(){
 		$term = $this->_getParam('term',null);
-		$output = array(array('id' => '','value' => 'No records','label' => 'No records'));
+		$output = [['id' => '','value' => 'No records','label' => 'No records']];
 			
 		if($term != '')
 		{
@@ -131,10 +131,10 @@ class Default_UserloginlogController extends Zend_Controller_Action
 
 			if(count($emp_arr)>0)
 			{
-				$output = array();
+				$output = [];
 				foreach($emp_arr as $emp)
 				{
-					$output[] = array('id' => $emp['emp_name'],'value' => $emp['emp_name'],'label' => $emp['emp_name'],'profile_img' => $emp['profileimg']);
+					$output[] = ['id' => $emp['emp_name'],'value' => $emp['emp_name'],'label' => $emp['emp_name'],'profile_img' => $emp['profileimg']];
 				}
 			}
 		}
@@ -151,7 +151,7 @@ class Default_UserloginlogController extends Zend_Controller_Action
 	 */
 	public function empidautoAction(){
 		$term = $this->_getParam('term',null);
-		$output = array(array('id' => '','value' => 'No records','label' => 'No records'));
+		$output = [['id' => '','value' => 'No records','label' => 'No records']];
 			
 		if($term != '')
 		{
@@ -159,10 +159,10 @@ class Default_UserloginlogController extends Zend_Controller_Action
 
 			if(count($emp_arr)>0)
 			{
-				$output = array();
+				$output = [];
 				foreach($emp_arr as $emp)
 				{
-					$output[] = array('id' => $emp['emp_id'],'value' => $emp['emp_id'],'label' => $emp['emp_id']);
+					$output[] = ['id' => $emp['emp_id'],'value' => $emp['emp_id'],'label' => $emp['emp_id']];
 				}
 			}
 		}
@@ -179,7 +179,7 @@ class Default_UserloginlogController extends Zend_Controller_Action
 	 */
 	public function empipaddressautoAction(){
 		$term = $this->_getParam('term',null);
-		$output = array(array('id' => '','value' => 'No records','label' => 'No records'));
+		$output = [['id' => '','value' => 'No records','label' => 'No records']];
 			
 		if($term != '')
 		{
@@ -187,10 +187,10 @@ class Default_UserloginlogController extends Zend_Controller_Action
 
 			if(count($emp_arr)>0)
 			{
-				$output = array();
+				$output = [];
 				foreach($emp_arr as $emp)
 				{
-					$output[] = array('id' => $emp['emp_ipaddress'],'value' => $emp['emp_ipaddress'],'label' => $emp['emp_ipaddress']);
+					$output[] = ['id' => $emp['emp_ipaddress'],'value' => $emp['emp_ipaddress'],'label' => $emp['emp_ipaddress']];
 				}
 			}
 		}
@@ -207,7 +207,7 @@ class Default_UserloginlogController extends Zend_Controller_Action
 	 */
 	public function empemailautoAction(){
 		$term = $this->_getParam('term',null);
-		$output = array(array('id' => '','value' => 'No records','label' => 'No records'));
+		$output = [['id' => '','value' => 'No records','label' => 'No records']];
 			
 		if($term != '')
 		{
@@ -215,10 +215,10 @@ class Default_UserloginlogController extends Zend_Controller_Action
 
 			if(count($emp_arr)>0)
 			{
-				$output = array();
+				$output = [];
 				foreach($emp_arr as $emp)
 				{
-					$output[] = array('id' => $emp['emp_email'],'value' => $emp['emp_email'],'label' => $emp['emp_email']);
+					$output[] = ['id' => $emp['emp_email'],'value' => $emp['emp_email'],'label' => $emp['emp_email']];
 				}
 			}
 		}

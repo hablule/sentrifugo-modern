@@ -35,18 +35,18 @@ class Default_Form_bankaccounttype extends Zend_Form
         $bankaccounttype->setAttrib('maxLength', 50);
         
         $bankaccounttype->setRequired(true);
-        $bankaccounttype->addValidator('NotEmpty', false, array('messages' => 'Please enter bank account type.'));  
-		$bankaccounttype->addValidator("regex",true,array(
+        $bankaccounttype->addValidator('NotEmpty', false, ['messages' => 'Please enter bank account type.']);  
+		$bankaccounttype->addValidator("regex",true,[
 			'pattern'=>'/^[a-zA-Z.\-?]+$/',
-			'messages'=>array(
+			'messages'=>[
 				'regexNotMatch'=>'Name not valid'
-			)
-			));	
+			]
+			]);	
 					 $bankaccounttype->addValidator(new Zend_Validate_Db_NoRecordExists(
-						array(
+						[
 							'table'=>'main_bankaccounttype',
 							'field'=>'bankaccounttype'
-						)
+						]
 						));
 					$bankaccounttype->getValidator('Db_NoRecordExists')->setMessage('Name already exists.');
 		
@@ -60,7 +60,7 @@ class Default_Form_bankaccounttype extends Zend_Form
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 				
-		 $this->addElements(array($id,$bankaccounttype,$description,$isactive,$submit));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 $this->addElements([$id,$bankaccounttype,$description,$isactive,$submit]);
+         $this->setElementDecorators(['ViewHelper']); 
 	}
 }

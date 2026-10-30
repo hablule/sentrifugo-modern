@@ -29,9 +29,9 @@ class Default_CompanyengagmentController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 		if($refresh == 'refresh')
 		{
@@ -73,7 +73,7 @@ class Default_CompanyengagmentController extends Zend_Controller_Action
 			$loginUserId = $auth->getStorage()->read()->id;
 		}
 
-		$msgarray = array();
+		$msgarray = [];
 		$controllername = 'companyengagment';
 		$form = new Default_Form_Companyengagment();
 		$model = new Default_Model_Companyengagment();
@@ -92,7 +92,7 @@ class Default_CompanyengagmentController extends Zend_Controller_Action
 			$msgarray['company_id'] = 'Company is not configured yet.';
 		} else {
 			
-				$form->company_id->addMultiOptions(array($add[0]['id'] => $add[0]['organisationname']));
+				$form->company_id->addMultiOptions([$add[0]['id'] => $add[0]['organisationname']]);
 
 		
 
@@ -103,7 +103,7 @@ class Default_CompanyengagmentController extends Zend_Controller_Action
 			$msgarray['businessdomain_id'] = 'Business Domain is not configured yet.';
 		} else {
 			foreach($bdd as $bdds){
-				$form->businessdomain_id->addMultiOptions(array($bdds['businessdomain_id'] => $bdds['name']));
+				$form->businessdomain_id->addMultiOptions([$bdds['businessdomain_id'] => $bdds['name']]);
 			}
 		}
 
@@ -116,10 +116,10 @@ class Default_CompanyengagmentController extends Zend_Controller_Action
 					$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = '';
-				$data = array(
+				$data = [
 					'businessdomain_id' =>$businessdomain_id[$i],
 					'company_id' => $company_id
-				);
+				];
 
 				$data['createdby'] = $loginUserId;
 				$data['createddate'] = gmdate("Y-m-d H:i:s");
@@ -130,7 +130,7 @@ class Default_CompanyengagmentController extends Zend_Controller_Action
 				}
 				
 				$tableid = $Id;
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Company Engagment   added successfully."));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Company Engagment   added successfully."]);
 
 
 				$this->_redirect('companyengagment');
@@ -161,7 +161,7 @@ Zend_Debug::dump($th->getMessage());	}
 			$loginUserId = $auth->getStorage()->read()->id;
 		}
 
-		$msgarray = array();
+		$msgarray = [];
 		$controllername = 'companyengagment';
 		$form = new Default_Form_Companyengagment();
 		$model = new Default_Model_Companyengagment();
@@ -179,7 +179,7 @@ Zend_Debug::dump($th->getMessage());	}
 			$msgarray['company_id'] = 'Business Unit is not configured yet.';
 		} else {
 			
-				$form->company_id->addMultiOptions(array($add[0]['id'] => $add[0]['organisationname']));
+				$form->company_id->addMultiOptions([$add[0]['id'] => $add[0]['organisationname']]);
 
 			
 
@@ -190,7 +190,7 @@ Zend_Debug::dump($th->getMessage());	}
 			$msgarray['businessdomain_id'] = 'Business Domain is not configured yet.';
 		} else {
 			foreach($bdd as $bdds){
-				$form->businessdomain_id2->addMultiOptions(array($bdds['businessdomain_id'] => $bdds['name']));
+				$form->businessdomain_id2->addMultiOptions([$bdds['businessdomain_id'] => $bdds['name']]);
 			}
 		}
 
@@ -211,10 +211,10 @@ Zend_Debug::dump($th->getMessage());	}
 					$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = '';
-				$data = array(
+				$data = [
 					'businessdomain_id' =>$businessdomain_id2,
 					'company_id' => $company_id
-				);
+				];
 
 				$data['createdby'] = $loginUserId;
 				$data['createddate'] = gmdate("Y-m-d H:i:s");
@@ -225,7 +225,7 @@ Zend_Debug::dump($th->getMessage());	}
 				
 				
 				$tableid = $Id;
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Company Engagment   edit successfully."));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Company Engagment   edit successfully."]);
 
 
 				$this->_redirect('companyengagment');

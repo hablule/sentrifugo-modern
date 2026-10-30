@@ -26,8 +26,8 @@ class Default_Form_emphealthissue extends Zend_Form
         $isactive = new Zend_Form_Element_Checkbox('isactive');
         $isactive->setLabel('Active');
         $submit = new Zend_Form_Element_Submit('submit');
-        $this->addElements(array($id,$healthissue_id,$severity_id,$severitylevel,$description,$diagnosedon,$isactive,$submit));
-        $this->setElementDecorators(array('ViewHelper')); 
+        $this->addElements([$id,$healthissue_id,$severity_id,$severitylevel,$description,$diagnosedon,$isactive,$submit]);
+        $this->setElementDecorators(['ViewHelper']); 
     }
 }
 

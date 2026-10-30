@@ -51,7 +51,7 @@ class Assets_Form_Assetinstant extends Zend_Form
         $serialidentification = new Zend_Form_Element_Text("serialidentification");
 		$serialidentification->setLabel('Serial Identification');
 
-        $serialidentification->addValidator('NotEmpty',false,array('messages'=>'serialidentification required'));
+        $serialidentification->addValidator('NotEmpty',false,['messages'=>'serialidentification required']);
         $serialidentification->setRequired(true);
         
         $Text2 = new Zend_Form_Element_Text("description");
@@ -63,10 +63,10 @@ class Assets_Form_Assetinstant extends Zend_Form
         $isactive->setValue(1);
 
         $serialidentification->addValidator(new Zend_Validate_Db_NoRecordExists(
-            array('table'=>'main_assetinstant',
+            ['table'=>'main_assetinstant',
                       'field'=>'serialidentification',
                     'exclude'=>'assetinstant_id!="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('id').'"',    
-               ) )  
+               ] )  
         );
         
         $serialidentification->getValidator('Db_NoRecordExists')->setMessage('serialidentification already exists.');
@@ -77,13 +77,13 @@ class Assets_Form_Assetinstant extends Zend_Form
 		$submit->setLabel('Save');
 
 		$this->addElements(
-						array
-								(
+						
+								[
 								$id,$serialidentification ,$Text2,
 								$isactive,$asset_id,$submit
-								)
+								]
 							);
-        $this->setElementDecorators(array('ViewHelper')); 
+        $this->setElementDecorators(['ViewHelper']); 
 	
 	}
 	

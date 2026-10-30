@@ -42,36 +42,36 @@ class Default_Form_leavereport extends Zend_Form
               
         $leavestatus = new Zend_Form_Element_Select('leavestatus');
 		$leavestatus->setLabel('Leave Status');
-        $leavestatus->setMultiOptions(array(
+        $leavestatus->setMultiOptions([
                             ''=>'Select Leave Status',
 							'Pending'=>'Pending for approval' ,
 							'Approved'=>'Approved',
 							'Rejected'=>'Rejected',
 							'Canceled'=>'Canceled',
-							));
+							]);
         $leavestatus->setRegisterInArrayValidator(false);	
 
         $from_date = new ZendX_JQuery_Form_Element_DatePicker('from_date');
 		$from_date->setLabel('From Date');
 		$from_date->setAttrib('readonly', 'true');
 		$from_date->setAttrib('onfocus', 'this.blur()');
-		$from_date->setOptions(array('class' => 'brdr_none'));	
+		$from_date->setOptions(['class' => 'brdr_none']);	
 		
 		
         $to_date = new ZendX_JQuery_Form_Element_DatePicker('to_date');
 		$to_date->setLabel('To Date');
 		$to_date->setAttrib('readonly', 'true');
 		$to_date->setAttrib('onfocus', 'this.blur()');
-		$to_date->setOptions(array('class' => 'brdr_none'));	
+		$to_date->setOptions(['class' => 'brdr_none']);	
 		
         $submit = new Zend_Form_Element_Submit('submit');
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 
-		$this->addElements(array($id,$employeename,$leave,$leavestatus,$to_date,$from_date,$submit));
-        $this->setElementDecorators(array('ViewHelper'));
-        $this->setElementDecorators(array(
+		$this->addElements([$id,$employeename,$leave,$leavestatus,$to_date,$from_date,$submit]);
+        $this->setElementDecorators(['ViewHelper']);
+        $this->setElementDecorators([
                     'UiWidgetElement',
-        ),array('from_date'));   		 
+        ],['from_date']);   		 
 	}
 }

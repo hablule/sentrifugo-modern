@@ -60,9 +60,9 @@ class Timemanagement_DefaulttasksController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 
 		if($refresh == 'refresh')
@@ -154,13 +154,13 @@ class Timemanagement_DefaulttasksController extends Zend_Controller_Action
 				$task= $this->_request->getParam('task');
 				$date = new Zend_Date();
 
-				$data = array( 'task'=>trim($task),
+				$data = [ 'task'=>trim($task),
 				               'is_default'=>1, 
 				   			   'modified_by'=>$loginUserId,
 							   'modified'=>gmdate("Y-m-d H:i:s")	
-				);
+				];
 				if($id!=''){
-					$where = array('id=?'=>$id);
+					$where = ['id=?'=>$id];
 				}
 				else
 				{
@@ -172,11 +172,11 @@ class Timemanagement_DefaulttasksController extends Zend_Controller_Action
 				$Id = $taskModel->SaveorUpdateTaskData($data, $where);
 				if($Id == 'update')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Default task updated successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Default task updated successfully."]);
 				}
 				else
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Default task added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Default task added successfully."]);
 				}
 					
 				$this->_redirect('timemanagement/defaulttasks');
@@ -251,8 +251,8 @@ class Timemanagement_DefaulttasksController extends Zend_Controller_Action
 			$taskModel = new Timemanagement_Model_Tasks();
 			$checkProjects = $taskModel->checkProjectTasks($id);
 			if($checkProjects == 0){
-				$data = array('is_active'=>0,'modified'=>gmdate("Y-m-d H:i:s"));
-				$where = array('id=?'=>$id);
+				$data = ['is_active'=>0,'modified'=>gmdate("Y-m-d H:i:s")];
+				$where = ['id=?'=>$id];
 				$taskData = $taskModel->getTaskData($id);
 				$Id = $taskModel->SaveorUpdateTaskData($data, $where);
 				if($Id == 'update')
@@ -279,11 +279,11 @@ class Timemanagement_DefaulttasksController extends Zend_Controller_Action
 		{
 			if(	$messages['msgtype'] == 'error')
 			{
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
 			}
 			if(	$messages['msgtype'] == 'success')
 			{
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
 			}
 			
 		}
@@ -301,9 +301,9 @@ class Timemanagement_DefaulttasksController extends Zend_Controller_Action
 		$taskexists = $taskModel->getcheckDupTask($taskname);
 
 		if(count($taskexists) > 0){
-			$this->_helper->json(array('result'=>'exists'));
+			$this->_helper->json(['result'=>'exists']);
 		}else{
-			$this->_helper->json(array('result'=>'notexists'));
+			$this->_helper->json(['result'=>'notexists']);
 		}
 
 	}

@@ -57,7 +57,7 @@ class Default_Model_Logmanager extends Zend_Db_Table_Abstract{
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('cc'=>'main_logmanager'),array('cc.*'))
+		->from(['cc'=>'main_logmanager'],['cc.*'])
 		->where('cc.id = '.$id.' and cc.is_active = 1 and cc.user_action != 4');
 			
 		return $this->fetchAll($select)->toArray();
@@ -74,7 +74,7 @@ class Default_Model_Logmanager extends Zend_Db_Table_Abstract{
 	 *
 	 * @return  ResultSet;
 	 */
-	public function getLogManagerDataReport($by="last_modifieddate",$order="desc",$pageNo=1, $perPage=20,$searchQuery=1,$selectfield=array('*'))
+	public function getLogManagerDataReport($by="last_modifieddate",$order="desc",$pageNo=1, $perPage=20,$searchQuery=1,$selectfield=['*'])
 	{
 		$where = "menuId != 0 AND is_active = 1 AND user_action != 4";
 		$str = '';
@@ -105,16 +105,16 @@ class Default_Model_Logmanager extends Zend_Db_Table_Abstract{
 
 			$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array($this->_name),$selectfield)
-			->joinInner(array('m'=>'main_menu'), "m.id = menuId and m.isactive = 1",array())
+			->from([$this->_name],$selectfield)
+			->joinInner(['m'=>'main_menu'], "m.id = menuId and m.isactive = 1",[])
 			->where($where)
 			->order($order)
 			->limitPage($pageNo, $perPage);
 		}else if($by == 'user_action'){
 			$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array($this->_name),$selectfield)
-			->joinInner(array('m'=>'main_menu'), "m.id = menuId and m.isactive = 1",array())
+			->from([$this->_name],$selectfield)
+			->joinInner(['m'=>'main_menu'], "m.id = menuId and m.isactive = 1",[])
 			->where($where)
 			->order(new Zend_Db_Expr($str))
 			->limitPage($pageNo, $perPage);			
@@ -122,16 +122,16 @@ class Default_Model_Logmanager extends Zend_Db_Table_Abstract{
 		else if($pageNo == ''){
 			$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array($this->_name),$selectfield)
-			->joinInner(array('m'=>'main_menu'), "m.id = menuId and m.isactive = 1",array())
+			->from([$this->_name],$selectfield)
+			->joinInner(['m'=>'main_menu'], "m.id = menuId and m.isactive = 1",[])
 			->where($where)
 			->order("$by $order");
 			
 		}else{
 			$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array($this->_name),$selectfield)
-			->joinInner(array('m'=>'main_menu'), "m.id = menuId and m.isactive = 1",array())
+			->from([$this->_name],$selectfield)
+			->joinInner(['m'=>'main_menu'], "m.id = menuId and m.isactive = 1",[])
 			->where($where)
 			->order("$by $order")
 			->limitPage($pageNo, $perPage);
@@ -153,7 +153,7 @@ class Default_Model_Logmanager extends Zend_Db_Table_Abstract{
 	public function getUsernameOrderForLog($order)
 	{
 		$users = "";
-		$userorderArray = array();
+		$userorderArray = [];
 		$qry = "select id from main_users where isactive = 1 order by userfullname {$order}";
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$sqlRes = $db->query($qry);
@@ -178,7 +178,7 @@ class Default_Model_Logmanager extends Zend_Db_Table_Abstract{
 	public function getEmpidOrderForLog($order)
 	{
 		$users = "";
-		$userorderArray = array();
+		$userorderArray = [];
 		$qry = "select id from main_users where isactive = 1 order by employeeId {$order}";
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$sqlRes = $db->query($qry);
@@ -203,7 +203,7 @@ class Default_Model_Logmanager extends Zend_Db_Table_Abstract{
 	public function getMenuOrderForLog($order)
 	{
 		$users = "";
-		$menuorderArray = array();
+		$menuorderArray = [];
 		$qry = "select id from main_menu where isactive = 1 order by menuName {$order}";
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$sqlRes = $db->query($qry);
@@ -239,7 +239,7 @@ class Default_Model_Logmanager extends Zend_Db_Table_Abstract{
                   order by emp desc
                   limit 0,10";
 		$result = $db->query($query);
-		$emp_arr = array();
+		$emp_arr = [];
 		$emp_arr = $result->fetchAll();
 		return $emp_arr;
 	}
@@ -255,7 +255,7 @@ class Default_Model_Logmanager extends Zend_Db_Table_Abstract{
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('cc'=>'main_logmanager'),array('cc.*'));		
+		->from(['cc'=>'main_logmanager'],['cc.*']);		
 			
 		return $this->fetchAll($select)->toArray();
 	}
@@ -264,10 +264,10 @@ class Default_Model_Logmanager extends Zend_Db_Table_Abstract{
 	{
 	    $date= gmdate("Y-m-d H:i:s");
            
-	    $data = array('log_details'=>$jsonlogarr,
+	    $data = ['log_details'=>$jsonlogarr,
 					  'last_modifieddate'=>$date						 
-					 );
-		$where = array('id=?'=>$id);   
+					 ];
+		$where = ['id=?'=>$id];   
 	    if($where != ''){
 			$this->update($data, $where);
 			return true;

@@ -38,20 +38,20 @@ class Timemanagement_Model_Reports extends Zend_Db_Table_Abstract
 	public function getProjectsListByRole(){
 		$storage = new Zend_Auth_Storage_Session();
 		$sessionData = $storage->read();
-		$result = array();
+		$result = [];
 		$tm_role = Zend_Registry::get('tm_role');
 		if($tm_role == "Admin") {
 			$select = $this->select()
 						   ->setIntegrityCheck(false)
-						   ->from(array('p'=>$this->_name),array('p.id','project_name'))
+						   ->from(['p'=>$this->_name],['p.id','project_name'])
 						   ->where('p.is_active = 1 ')
 						   ->order('p.project_name asc');
 			$result = $this->fetchAll($select)->toArray();
 		}else{
 			$select = $this->select()
 							->setIntegrityCheck(false)
-							->from(array('p' => $this->_name),array('id'=>'p.id','project_name' => 'p.project_name',))
-							->joinLeft(array('tpe'=>'tm_project_employees'), 'tpe.project_id=p.id AND tpe.is_active=1',array())
+							->from(['p' => $this->_name],['id'=>'p.id','project_name' => 'p.project_name',])
+							->joinLeft(['tpe'=>'tm_project_employees'], 'tpe.project_id=p.id AND tpe.is_active=1',[])
 							->where('p.is_active=1 AND tpe.emp_id ='.$sessionData['id'])
 							->order("p.project_name asc")
 							->group('p.id');
@@ -65,7 +65,7 @@ class Timemanagement_Model_Reports extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 					->setIntegrityCheck(false)
-					->from(array('e'=>'employees_summary'), array('id'=>'e.user_id','text'=>'e.userfullname','pic'=>'e.profileimg'))
+					->from(['e'=>'employees_summary'], ['id'=>'e.user_id','text'=>'e.userfullname','pic'=>'e.profileimg'])
 					->where("e.isactive = 1 ")
 					->order("e.userfullname ASC")
 					->distinct('e.id');
@@ -77,8 +77,8 @@ class Timemanagement_Model_Reports extends Zend_Db_Table_Abstract
 			$start_date, $end_date, $projid,$org_start_date,$org_end_date,$param=''){
 		
 		$searchQuery = '';
-		$searchArray = array();
-		$data = array();
+		$searchArray = [];
+		$data = [];
 
 		if($searchData != '' && $searchData!='undefined')
 		{
@@ -94,23 +94,23 @@ class Timemanagement_Model_Reports extends Zend_Db_Table_Abstract
 		$objName = 'reports';
 
 		//email,phone_no,poc,address,country_id,state_id,created_by
-		$tableFields = array(
+		$tableFields = [
 					//'action'=>'Action',
 					'userfullname' => 'Employee',
 					//'project_type' => 'Project Type',
 					'duration' => 'Hours',
-		);
+		];
 
 		$tablecontent = $this->getEmployeeReportsData($sort, $by, $pageNo, $perPage, $searchQuery, $start_date, $end_date, $projid, $param);
 		
-		$dataTmp = array(
+		$dataTmp = [
 				'sort' => $sort,
 				'by' => $by,
 				'pageNo' => $pageNo,
 				'perPage' => $perPage,				
 				'tablecontent' => $tablecontent,
 				'objectname' => $objName,
-				'extra' => array(),
+				'extra' => [],
 				'tableheader' => $tableFields,
 				'jsGridFnName' => 'getAjaxgridData',
 				'jsFillFnName' => '',
@@ -122,7 +122,7 @@ class Timemanagement_Model_Reports extends Zend_Db_Table_Abstract
 				'projectId' => $projid,
 				'start_date' => $org_start_date,
 				'end_date' => $org_end_date,
-			);
+			];
 			return $dataTmp;
  	 }
 	
@@ -239,11 +239,11 @@ class Timemanagement_Model_Reports extends Zend_Db_Table_Abstract
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$select = $this->select()
 			   		   ->setIntegrityCheck(false)
-					   ->from(array('et' => 'tm_emp_timesheets'),array('e.userfullname','p.project_type','userId'=>'et.emp_id',
-				                                'duration'=>$duration,'duration_sort'=>$duration_sort))  
-					   ->joinInner(array('pt'=>'tm_project_tasks'), 'pt.id = et.project_task_id',array())
-					   ->joinInner(array('p'=>'tm_projects'), 'p.id = pt.project_id',array())
-					   ->joinInner(array('e'=>'employees_summary'), 'e.user_id = et.emp_id',array())
+					   ->from(['et' => 'tm_emp_timesheets'],['e.userfullname','p.project_type','userId'=>'et.emp_id',
+				                                'duration'=>$duration,'duration_sort'=>$duration_sort])  
+					   ->joinInner(['pt'=>'tm_project_tasks'], 'pt.id = et.project_task_id',[])
+					   ->joinInner(['p'=>'tm_projects'], 'p.id = pt.project_id',[])
+					   ->joinInner(['e'=>'employees_summary'], 'e.user_id = et.emp_id',[])
 					   ->where('et.is_active=1 and pt.is_active =1 and p.is_active = 1 and e.isactive = 1'.$andwhere)
 					   ->order("$by $sort")
 					   ->group('et.emp_id')
@@ -256,12 +256,12 @@ class Timemanagement_Model_Reports extends Zend_Db_Table_Abstract
 		return $select;
 	}
 	
-	function getProjectReportsbyEmployeeId($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall,
+	public function getProjectReportsbyEmployeeId($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall,
 			 $start_date, $end_date, $empid,$org_start_date,$org_end_date,$param=""){
 
 		$searchQuery = '';
-		$searchArray = array();
-		$data = array();
+		$searchArray = [];
+		$data = [];
 
 		if($searchData != '' && $searchData!='undefined')
 		{
@@ -277,23 +277,23 @@ class Timemanagement_Model_Reports extends Zend_Db_Table_Abstract
 		$objName = 'reports';
 
 		//email,phone_no,poc,address,country_id,state_id,created_by
-		$tableFields = array(
+		$tableFields = [
 		//'action'=>'Action',
 					'project_name' => 'Project',
 					'project_type' => 'Project Type',
 					'duration' => 'Hours',
-		);
+		];
 
 		$tablecontent = $this->getProjectReportsData($sort, $by, $pageNo, $perPage, $searchQuery, $start_date, $end_date, $empid, $param);
 
-		$dataTmp = array(
+		$dataTmp = [
 				'sort' => $sort,
 				'by' => $by,
 				'pageNo' => $pageNo,
 				'perPage' => $perPage,				
 				'tablecontent' => $tablecontent,
 				'objectname' => $objName,
-				'extra' => array(),
+				'extra' => [],
 				'tableheader' => $tableFields,
 				'jsGridFnName' => 'getAjaxgridData',
 				'jsFillFnName' => '',
@@ -305,12 +305,12 @@ class Timemanagement_Model_Reports extends Zend_Db_Table_Abstract
 				'emp_id' => $empid,
 				'start_date' => $org_start_date,
 				'end_date' => $org_end_date,
-		);
+		];
 		return $dataTmp;
 		
 	}
 	
-	function getProjectReportsData($sort, $by, $pageNo, $perPage, $searchQuery, $start_date, $end_date, $empid, $param="",$flag=""){
+	public function getProjectReportsData($sort, $by, $pageNo, $perPage, $searchQuery, $start_date, $end_date, $empid, $param="",$flag=""){
 		
 		$andwhere = " AND (1=1)";
 		if($start_date != "")
@@ -407,12 +407,12 @@ class Timemanagement_Model_Reports extends Zend_Db_Table_Abstract
 		//'SUM(TIME_TO_SEC(et.week_duration))'
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('et' => 'tm_emp_timesheets'),array('p.project_name','proj_category'=>'p.project_type','p.id','project_type'=>'IF(p.project_type="billable","Billable",IF(p.project_type="non_billable","Non billable","Revenue generation"))',
-                                'duration'=>$duration,'duration_sort'=>$duration_sort))  
-		->joinInner(array('pt'=>'tm_project_tasks'), 'pt.id = et.project_task_id',array())
-		->joinInner(array('p'=>'tm_projects'), 'p.id = pt.project_id and p.id = et.project_id',array())
-		->joinInner(array('e'=>'employees_summary'), 'e.user_id = et.emp_id',array())
-		->joinLeft(array('pm'=>'tm_project_employees'), 'p.id = pm.project_id and pm.emp_id = et.emp_id ',array())
+		->from(['et' => 'tm_emp_timesheets'],['p.project_name','proj_category'=>'p.project_type','p.id','project_type'=>'IF(p.project_type="billable","Billable",IF(p.project_type="non_billable","Non billable","Revenue generation"))',
+                                'duration'=>$duration,'duration_sort'=>$duration_sort])  
+		->joinInner(['pt'=>'tm_project_tasks'], 'pt.id = et.project_task_id',[])
+		->joinInner(['p'=>'tm_projects'], 'p.id = pt.project_id and p.id = et.project_id',[])
+		->joinInner(['e'=>'employees_summary'], 'e.user_id = et.emp_id',[])
+		->joinLeft(['pm'=>'tm_project_employees'], 'p.id = pm.project_id and pm.emp_id = et.emp_id ',[])
 		//->joinLeft(array('pm'=>new Zend_Db_Expr('(SELECT project_id,GROUP_CONCAT(emp_id) as manager_ids FROM tm_project_employees 
 		//WHERE is_active=1 and emp_type = \'manager\' GROUP BY project_id)')), 'pm.project_id = pt.project_id',array())
 		->where('et.is_active=1 '.$andwhere)
@@ -502,8 +502,8 @@ class Timemanagement_Model_Reports extends Zend_Db_Table_Abstract
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$select = $this->select()
 			   		   ->setIntegrityCheck(false)
-					   ->from(array('et' => 'tm_emp_timesheets'),array('p.project_name','et.project_id','userId'=>'et.emp_id','duration'=>$duration))  
-					   ->joinInner(array('p'=>'tm_projects'), 'p.id = et.project_id',array())
+					   ->from(['et' => 'tm_emp_timesheets'],['p.project_name','et.project_id','userId'=>'et.emp_id','duration'=>$duration])  
+					   ->joinInner(['p'=>'tm_projects'], 'p.id = et.project_id',[])
 					   ->where('et.is_active=1  and p.is_active = 1 '.$andwhere.' and et.emp_id = '.$empId)
 					   ->group('et.project_id');
 					  // echo $select;
@@ -589,13 +589,13 @@ class Timemanagement_Model_Reports extends Zend_Db_Table_Abstract
 		
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('et' => 'tm_emp_timesheets'),array('p.project_name','t.task',
-                                'duration'=>$duration))  
-		->joinInner(array('pt'=>'tm_project_tasks'), 'pt.id = et.project_task_id',array())
-		->joinInner(array('t'=>'tm_tasks'), 't.id = pt.task_id',array())
-		->joinInner(array('p'=>'tm_projects'), 'p.id = pt.project_id and p.id = et.project_id',array())
-		->joinInner(array('e'=>'employees_summary'), 'e.user_id = et.emp_id',array())
-		->joinLeft(array('pm'=>'tm_project_employees'), 'p.id = pm.project_id and pm.emp_id = et.emp_id ',array())
+		->from(['et' => 'tm_emp_timesheets'],['p.project_name','t.task',
+                                'duration'=>$duration])  
+		->joinInner(['pt'=>'tm_project_tasks'], 'pt.id = et.project_task_id',[])
+		->joinInner(['t'=>'tm_tasks'], 't.id = pt.task_id',[])
+		->joinInner(['p'=>'tm_projects'], 'p.id = pt.project_id and p.id = et.project_id',[])
+		->joinInner(['e'=>'employees_summary'], 'e.user_id = et.emp_id',[])
+		->joinLeft(['pm'=>'tm_project_employees'], 'p.id = pm.project_id and pm.emp_id = et.emp_id ',[])
 		->where('et.is_active=1 and p.id='.$project_id.' '.$andwhere)
 		->group('t.id');
 		//echo $select;//exit;

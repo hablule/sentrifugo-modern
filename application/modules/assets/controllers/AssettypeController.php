@@ -23,7 +23,7 @@ class Assets_AssettypeController extends Zend_Controller_Action
       $refresh = $this->_getParam('refresh');
       $dashboradcall = $this->_getParam('dashboradcall');
 
-      $data = array();
+      $data = [];
 
       if ($refresh == 'refresh') {
           if ($dashboradcall == 'Yes') {
@@ -133,18 +133,18 @@ class Assets_AssettypeController extends Zend_Controller_Action
 
 				$date = gmdate("Y-m-d H:i:s");
 
-				$data = array(
+				$data = [
 							'name'  => $name ,
 							'code'  => $code,
                             'description'  => $description,
                             'isactive'=>utlis::getcheckboxvalue($this->_request->getParam('isactive')),
 
-							);
+							];
 				if($id!=''){
 
 					$data['modifiedby'] = $loginUserId;
 					$data['modifieddate'] = $date;
-					$where = array('assettype_id=?'=>$id);
+					$where = ['assettype_id=?'=>$id];
 				}
 				else
 				{
@@ -158,11 +158,11 @@ class Assets_AssettypeController extends Zend_Controller_Action
 				
 				if($Id == 'update')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Asset Type updated successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Asset Type updated successfully."]);
 				}
 				else
 				{
-			     $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Asset Type added successfully."));
+			     $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Asset Type added successfully."]);
 				}
 					
 				$this->_redirect('assets/assettype');
@@ -206,7 +206,7 @@ Zend_Debug::dump($th->getMessage());    }
         $form->setAction(BASE_URL.'assets/assettype/addpopup/id/'.$id);
         if ($this->getRequest()->isPost()) {
             if ($form->isValid($this->getRequest()->getPost())) {
-                $data = array(
+                $data = [
                     'name'=>$this->_request->getParam('name'),
                     'code'=>$this->_request->getParam('code'),
                     'description'=>$this->_request->getParam('description'),
@@ -214,7 +214,7 @@ Zend_Debug::dump($th->getMessage());    }
                     'isactive'=>utlis::getcheckboxvalue($this->_request->getParam('isactive')),
 
                     'createddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
                 $Id= $dmtmodel->SaveorUpdateData($data,'');
                 $tableid = $Id;
                 $actionflag = 1;

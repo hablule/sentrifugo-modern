@@ -77,9 +77,9 @@ class Exit_ExitprocController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 		$context = $this->_getParam('context');
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 		/** check for refresh button event 
 		**  If yes, build default parameters
@@ -142,18 +142,18 @@ Zend_Debug::dump($th->getMessage());	}
 		$exitType = $this->_request->getParam('exit_type');	
 		$comments = $this->_request->getParam('comments');	
 		$epSettingsObj = $this->exitProcModel->getSettings($this->businessunit_id,$this->department_id);
-		$msgarray = array();
+		$msgarray = [];
 		$auth = Zend_Auth::getInstance();
 		//get login user reporting manager
-		$reporting_manager = ($auth->getStorage()->read()->reporting_manager)?$auth->getStorage()->read()->reporting_manager:'';
+		$reporting_manager = $auth->getStorage()->read()->reporting_manager ?: '';
 		
-		$managersArray = array();
+		$managersArray = [];
 		$ep_config_id ='';
 		$noticeperiod_days='';
 		if(!empty($epSettingsObj))
 		{
 			$ep_config_id = $epSettingsObj[0]['id'];
-			$managersArray = array($reporting_manager,$epSettingsObj[0]['l2_manager'],$epSettingsObj[0]['hr_manager'],$epSettingsObj[0]['sys_admin'],$epSettingsObj[0]['general_admin'],$epSettingsObj[0]['finance_manager']);
+			$managersArray = [$reporting_manager,$epSettingsObj[0]['l2_manager'],$epSettingsObj[0]['hr_manager'],$epSettingsObj[0]['sys_admin'],$epSettingsObj[0]['general_admin'],$epSettingsObj[0]['finance_manager']];
 			$noticeperiod_days = $epSettingsObj[0]['notice_period'];// notice period days
 		}
 
@@ -190,7 +190,7 @@ Zend_Debug::dump($th->getMessage());	}
 			}
 
 			
-				$data = array(
+				$data = [
 					"employee_id" =>  $this->loggedInUser ,
 					"exit_settings_id" => $ep_config_id,
 					"exit_type_id" => $exitType,
@@ -204,7 +204,7 @@ Zend_Debug::dump($th->getMessage());	}
 					"createdby" => $this->loggedInUser ,
 					"createddate" => gmdate("Y-m-d H:i:s") ,
 					"relieving_date" => $expecting_releaving_date
-				);
+				];
 			
 			$res = $this->exitProcModel->save($data);
 			if($res)
@@ -213,23 +213,23 @@ Zend_Debug::dump($th->getMessage());	}
 				sapp_Global::logManager(INITIATE_EXIT_PROC,1,$this->loggedInUser,$res);
 				
 				/** insert into exit proc history - START **/
-				$history_data = array(
+				$history_data = [
 					"exit_request_id" =>  $res ,
 					"description" => "<name> has initiated exit procedure on <createddate>",	
 					"createdby" => $this->loggedInUser ,
 					"createddate" => gmdate("Y-m-d H:i:s")
-				);
+				];
 				
 				$this->exitProcModel->exitProcHistory($history_data);
 				/** insert into exit proc history - END **/
 				
 				/** insert into exit main_exit_types - START **/
 				$this->exitTypesModel = new Exit_Model_Exittypes();
-				$update_data = array("isused"=>1,
+				$update_data = ["isused"=>1,
 									"modifieddate"=>gmdate("Y-m-d H:i:s"),
 									"modifiedby"=>$this->loggedInUser 
-									);
-				$update_where = array('id=?' => $exitType);					
+									];
+				$update_where = ['id=?' => $exitType];					
 				$this->exitTypesModel->SaveorUpdateExitTypesData($update_data,$update_where);
 				
 				/** insert into exit main_exit_types - END **/
@@ -237,14 +237,14 @@ Zend_Debug::dump($th->getMessage());	}
 				
 				
 				/** notification mail - START **/
-				$managers_email_array = array();
-				$email_array = array();
+				$managers_email_array = [];
+				$email_array = [];
 				if(!empty($managersArray)){
 					foreach($managersArray as $userId){
 						if($userId!=''){
 							$email_array = $this->exitProcModel->getUserEmail($userId);
-							$userfullname = ($email_array[0]['userfullname'])?$email_array[0]['userfullname']:'';
-							$emailaddress = ($email_array[0]['emailaddress'])?$email_array[0]['emailaddress']:'';
+							$userfullname = $email_array[0]['userfullname'] ?: '';
+							$emailaddress = $email_array[0]['emailaddress'] ?: '';
 							$managers_email_array[$userfullname] = $emailaddress;
 						}
 					}
@@ -274,12 +274,12 @@ Zend_Debug::dump($th->getMessage());	}
 				
 				/** notification mail - END **/
 				
-				$this->_helper->getHelper('FlashMessenger')->addMessage(array('success' => 'Employee exit procedure has been initiated successfully.'));
+				$this->_helper->getHelper('FlashMessenger')->addMessage(['success' => 'Employee exit procedure has been initiated successfully.']);
 				$this->_redirect('exit/exitproc/view/id/'.$res);
 			}
 			else
 			{
-				$this->_helper->getHelper('FlashMessenger')->addMessage(array('error' => 'Failed to initiate employee exit procedure. Please try again.'));
+				$this->_helper->getHelper('FlashMessenger')->addMessage(['error' => 'Failed to initiate employee exit procedure. Please try again.']);
 				$this->_redirect('exit/exitproc');
 			}
 			
@@ -311,8 +311,8 @@ Zend_Debug::dump($th->getMessage());	}
 		$this->exitQnModel = new Exit_Model_Questionsresponse();
 		$id = $this->getRequest()->getParam('id');
 		$employee_questions_str_array = $this->exitQnModel->getEmployeeQuestionsData($this->loggedInUser,$id);
-		$employee_questions_array = array();
-		$emp_response_array = array();
+		$employee_questions_array = [];
+		$emp_response_array = [];
 		$emp_comments = '';
 		if(!empty($employee_questions_str_array)){
 			$qustions_str = $employee_questions_str_array[0]['hr_qs'];
@@ -349,7 +349,7 @@ Zend_Debug::dump($th->getMessage());	}
 		}
 		else
 		{
-			$this->view->empDetailsObj = array();
+			$this->view->empDetailsObj = [];
 		}
 
 		$this->view->l2managerDetails = $l2managerDetails;
@@ -358,7 +358,7 @@ Zend_Debug::dump($th->getMessage());	}
 		
 		
 		/*array to display after exit process approved */
-		$tabsarray = array('employeedetails','questions');
+		$tabsarray = ['employeedetails','questions'];
 		$this->view->tabsarray = $tabsarray;
 		$this->view->objName = 'exitproc';
 		/**
@@ -406,7 +406,7 @@ Zend_Debug::dump($th->getMessage());	}
 			$empIdsStr = trim($empIdsStr,",");
 			
 			$managersDataObj_tmp = $this->exitProcModel->getEmployeeDetails($empIdsStr,'multiple');
-			$managersDataObj = array();
+			$managersDataObj = [];
 
 			if(!empty($managersDataObj_tmp))
 			{
@@ -485,15 +485,15 @@ Zend_Debug::dump($th->getMessage());	}
 		$employee_id = $this->getRequest()->getParam('employee_id');
 		$employee_comments = $this->getRequest()->getParam('emp_comment');
 		$encoded_emp_comments = json_encode($employee_comments,true);	
-		$questions_array = array('employee_response'=>$encoded_emp_comments,
+		$questions_array = ['employee_response'=>$encoded_emp_comments,
 								'modifiedby'=>$this->loggedInUser,
-								'modifieddate'=>gmdate("Y-m-d H:i:s"));
-		$questions_where = array('exit_initiation_id=?' => $exitprocessId,'user_id=?'=>$employee_id);
+								'modifieddate'=>gmdate("Y-m-d H:i:s")];
+		$questions_where = ['exit_initiation_id=?' => $exitprocessId,'user_id=?'=>$employee_id];
 		$result = $this->exitQnModel->SaveorUpdateQuestionsData($questions_array,$questions_where);	
 		if($result=='update')
 		{
 			$msg = 'saved';
-			$this->_helper->getHelper('FlashMessenger')->addMessage(array('success' => 'Exit procedure answers saved successfully.'));
+			$this->_helper->getHelper('FlashMessenger')->addMessage(['success' => 'Exit procedure answers saved successfully.']);
 			/** notification mail - START **/
 			$this->allExitProcsModel = new Exit_Model_Allexitprocs();
 					$processData = $this->allExitProcsModel->getExitProcessData($exitprocessId);//function to get exit request data
@@ -526,11 +526,11 @@ Zend_Debug::dump($th->getMessage());	}
 		}
 		else{
 			$msg = 'err';
-			$this->_helper->getHelper('FlashMessenger')->addMessage(array('error' => 'Exit procedure answers failed to add'));
+			$this->_helper->getHelper('FlashMessenger')->addMessage(['error' => 'Exit procedure answers failed to add']);
 		}
 			
 		
-		$this->_helper->json(array('msg'=>$msg));
+		$this->_helper->json(['msg'=>$msg]);
 	}
 
 }

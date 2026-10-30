@@ -90,11 +90,11 @@ die(Zend_Debug::dump($th->getMessage())) ;   }
 	/*
 		This function is to get privileges of a particular menu of particular group.
 	*/
-	public function getObjPrivileges($objId,$groupId = "",$role_id,$idCsv=0)
+	public function getObjPrivileges($objId,$groupId = "",$role_id = null,$idCsv=0)
 	{
        
 
-		$privilege_arr=array();
+		$privilege_arr=[];
 		$db = Zend_Db_Table::getDefaultAdapter();
         if($objId !="" && $role_id != "" && $idCsv == 0)
 		{
@@ -141,8 +141,8 @@ die(Zend_Debug::dump($th->getMessage())) ;   }
     { 
         $select = $this->select()
         ->setIntegrityCheck(false)
-        ->from(array('t'=>'main_pagetab'),array('tabcode'=>'t.tabcode'))
-        ->joinInner(array('tp'=>'main_pagetabprivilege'),'tp.pagetab_id=t.pagetab_id',array())
+        ->from(['t'=>'main_pagetab'],['tabcode'=>'t.tabcode'])
+        ->joinInner(['tp'=>'main_pagetabprivilege'],'tp.pagetab_id=t.pagetab_id',[])
 
         ->where('tp.isactive="Y" and t.isactive="Y" and tp.group_id='.$id.'');
 return $this->fetchAll($select)->toArray();
@@ -152,15 +152,15 @@ return $this->fetchAll($select)->toArray();
         if($id==1){
             $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('t'=>'main_pagetab'),array('tabcode'=>'t.tabcode'))
-            ->joinInner(array('tp'=>'main_pagetabprivilege'),'tp.pagetab_id=t.pagetab_id',array())
+            ->from(['t'=>'main_pagetab'],['tabcode'=>'t.tabcode'])
+            ->joinInner(['tp'=>'main_pagetabprivilege'],'tp.pagetab_id=t.pagetab_id',[])
             ->where('tp.isactive="Y" and t.isactive="Y"  and tp.canedit="Y"');
     return $this->fetchAll($select)->toArray();
         }else{
             $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('t'=>'main_pagetab'),array('tabcode'=>'t.tabcode'))
-            ->joinInner(array('tp'=>'main_pagetabprivilege'),'tp.pagetab_id=t.pagetab_id',array())
+            ->from(['t'=>'main_pagetab'],['tabcode'=>'t.tabcode'])
+            ->joinInner(['tp'=>'main_pagetabprivilege'],'tp.pagetab_id=t.pagetab_id',[])
     
             ->where('tp.isactive="Y" and t.isactive="Y" and tp.role_id='.$id.' and tp.canedit="Y"');
     return $this->fetchAll($select)->toArray();
@@ -172,16 +172,16 @@ return $this->fetchAll($select)->toArray();
         if($id==1){
             $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('t'=>'main_pagetab'),array('tabcode'=>'t.tabcode'))
-            ->joinInner(array('tp'=>'main_pagetabprivilege'),'tp.pagetab_id=t.pagetab_id',array())
+            ->from(['t'=>'main_pagetab'],['tabcode'=>'t.tabcode'])
+            ->joinInner(['tp'=>'main_pagetabprivilege'],'tp.pagetab_id=t.pagetab_id',[])
 
             ->where('tp.isactive="Y" and t.isactive="Y" and tp.canview="Y"');
     return $this->fetchAll($select)->toArray();
         }else{
             $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('t'=>'main_pagetab'),array('tabcode'=>'t.tabcode'))
-            ->joinInner(array('tp'=>'main_pagetabprivilege'),'tp.pagetab_id=t.pagetab_id',array())
+            ->from(['t'=>'main_pagetab'],['tabcode'=>'t.tabcode'])
+            ->joinInner(['tp'=>'main_pagetabprivilege'],'tp.pagetab_id=t.pagetab_id',[])
     
             ->where('tp.isactive="Y" and t.isactive="Y" and tp.role_id='.$id.' and tp.canview="Y"');
     return $this->fetchAll($select)->toArray();

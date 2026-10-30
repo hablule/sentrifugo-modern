@@ -15,9 +15,9 @@ class Default_Model_Reqposition extends Zend_Db_Table_Abstract
     {
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('mrp' => $this->_name))
-            ->joinInner(array('p' => 'main_position'), 'mrp.position_id = p.id', array('position_code' => 'p.code'))
-            ->joinInner(array('jt' => 'main_jobtitle'), 'p.jobtitle_id = jt.id', array('jobtitle_name' => 'jt.name'))
+            ->from(['mrp' => $this->_name])
+            ->joinInner(['p' => 'main_position'], 'mrp.position_id = p.id', ['position_code' => 'p.code'])
+            ->joinInner(['jt' => 'main_jobtitle'], 'p.jobtitle_id = jt.id', ['jobtitle_name' => 'jt.name'])
             ->where('mrp.requisition_id = ?', $requisitionId)
             ->where('mrp.isactive != ?', 5);
 
@@ -34,12 +34,12 @@ class Default_Model_Reqposition extends Zend_Db_Table_Abstract
     {
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('log' => 'log_requisition_position_status'))
-            ->joinInner(array('mrp' => 'map_requisition_position'), 'log.map_req_pos_id = mrp.id', array())
-            ->joinInner(array('p' => 'main_position'), 'mrp.position_id = p.id', array('position_code' => 'p.code'))
-            ->joinLeft(array('rsr' => 'main_req_status_reason'), 'log.status_reason_id = rsr.id', array('reason_name' => 'rsr.name'))
-            ->joinLeft(array('emp_a' => 'main_employee'), 'log.createdby = emp_a.id', array('actor_name' => new Zend_Db_Expr("COALESCE(NULLIF(emp_a.userfullname, ''), emp_a.firstname)")))
-            ->joinLeft(array('emp_h' => 'main_employee'), 'log.filled_by_employee_id = emp_h.id', array('hired_name' => new Zend_Db_Expr("COALESCE(NULLIF(emp_h.userfullname, ''), emp_h.firstname)")))
+            ->from(['log' => 'log_requisition_position_status'])
+            ->joinInner(['mrp' => 'map_requisition_position'], 'log.map_req_pos_id = mrp.id', [])
+            ->joinInner(['p' => 'main_position'], 'mrp.position_id = p.id', ['position_code' => 'p.code'])
+            ->joinLeft(['rsr' => 'main_req_status_reason'], 'log.status_reason_id = rsr.id', ['reason_name' => 'rsr.name'])
+            ->joinLeft(['emp_a' => 'main_employee'], 'log.createdby = emp_a.id', ['actor_name' => new Zend_Db_Expr("COALESCE(NULLIF(emp_a.userfullname, ''), emp_a.firstname)")])
+            ->joinLeft(['emp_h' => 'main_employee'], 'log.filled_by_employee_id = emp_h.id', ['hired_name' => new Zend_Db_Expr("COALESCE(NULLIF(emp_h.userfullname, ''), emp_h.firstname)")])
             ->where('mrp.requisition_id = ?', $requisitionId)
             ->order('log.createddate DESC');
 
@@ -64,10 +64,10 @@ class Default_Model_Reqposition extends Zend_Db_Table_Abstract
         foreach ($positionsPayload as $pos) {
             $mapId  = isset($pos['id']) ? (int)$pos['id'] : 0;
             // If mapId > 0, it is an existing record; default to 'update' unless explicitly marked 'delete'
-            $action = isset($pos['action']) ? $pos['action'] : ($mapId > 0 ? 'update' : 'new');
+            $action = $pos['action'] ?? ($mapId > 0 ? 'update' : 'new');
             $status = isset($pos['status']) ? trim($pos['status']) : 'Targeted';
 
-            $data = array(
+            $data = [
                 'requisition_id'   => $requisitionId,
                 'position_id'      => (int)$pos['position_id'],
                 'target_fte'       => (float)$pos['target_fte'],
@@ -75,19 +75,19 @@ class Default_Model_Reqposition extends Zend_Db_Table_Abstract
                 'status'           => $status,
                 'description'      => isset($pos['description']) ? trim((string)$pos['description']) : null,
                 'isactive'         => 1
-            );
+            ];
 
             // 1. DELETE
             if ($action === 'delete' && $mapId > 0) {
-                $this->update(array('isactive' => 5, 'modifiedby' => $userId, 'modifieddate' => $currentDate), array('id = ?' => $mapId));
+                $this->update(['isactive' => 5, 'modifiedby' => $userId, 'modifieddate' => $currentDate], ['id = ?' => $mapId]);
             }
             // 2. UPDATE EXISTING RECORD (Only update if mapId > 0)
             elseif ($mapId > 0) {
-                $oldRecord = $this->fetchRow(array('id = ?' => $mapId));
+                $oldRecord = $this->fetchRow(['id = ?' => $mapId]);
 
                 $data['modifiedby']   = $userId;
                 $data['modifieddate'] = $currentDate;
-                $this->update($data, array('id = ?' => $mapId));
+                $this->update($data, ['id = ?' => $mapId]);
 
                 // If status changed, write to immutable ledger
                 if ($oldRecord && $oldRecord->status !== $status) {
@@ -111,13 +111,13 @@ class Default_Model_Reqposition extends Zend_Db_Table_Abstract
      */
     protected function _logStatusEvent(int $mapId, string $status, ?int $reasonId, ?string $notes, int $userId, string $date)
     {
-        $this->getAdapter()->insert('log_requisition_position_status', array(
+        $this->getAdapter()->insert('log_requisition_position_status', [
             'map_req_pos_id'   => $mapId,
             'status'           => $status,
             'status_reason_id' => $reasonId,
             'notes'            => $notes,
             'createdby'        => $userId,
             'createddate'      => $date
-        ));
+        ]);
     }
 }

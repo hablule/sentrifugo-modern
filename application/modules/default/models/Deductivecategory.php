@@ -8,7 +8,7 @@ class Default_Model_Deductivecategory extends Zend_Db_Table_Abstract{
     public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if($searchData!='' && $searchData!='undefined')
         {
@@ -28,17 +28,17 @@ class Default_Model_Deductivecategory extends Zend_Db_Table_Abstract{
         }
         $objName = 'deductivecategory';
         $objID = 'deductivecategory';
-        $tableFields = array(
+        $tableFields = [
             'action'=>'Action',
             'name'=>'Name',
             'description'=>'description',
             'isactive'=>'Active',
 
-        );
+        ];
 
        $tablecontent = $this->getdeductivecategory($sort, $by, $pageNo, $perPage,$searchQuery);
       
-        $dataTmp = array(
+        $dataTmp = [
             'sort'=>$sort,
             'by'=>$by,
             'pageNo'=>$pageNo,
@@ -46,7 +46,7 @@ class Default_Model_Deductivecategory extends Zend_Db_Table_Abstract{
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
             'objectId' => $objID,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -55,14 +55,14 @@ class Default_Model_Deductivecategory extends Zend_Db_Table_Abstract{
             'add'=>'add',
 			'dashboardcall'=>$dashboardcall,
             'menuName' => 'Load Category',
-            'search_filters' => array(
-                'isactive' => array(
+            'search_filters' => [
+                'isactive' => [
                     'type' => 'select',
-                    'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-    )
+                    'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+    ]
           
 
-        );
+        ];
 
         return $dataTmp;
     }
@@ -75,7 +75,7 @@ class Default_Model_Deductivecategory extends Zend_Db_Table_Abstract{
 
         $pctable = $this->select()
                           ->setIntegrityCheck(false)
-                          ->from(array('lc'=>'main_loadcategory'),array('load_category_id'=>'lc.load_category_id','name'=>'lc.name','description'=>'lc.description','isactive'=>'if(lc.isactive="N","No","Yes")'))
+                          ->from(['lc'=>'main_loadcategory'],['load_category_id'=>'lc.load_category_id','name'=>'lc.name','description'=>'lc.description','isactive'=>'if(lc.isactive="N","No","Yes")'])
                           ->order("$by $sort")
                           ->where($where)
                           ->limitPage($pageNo ,$perPage);
@@ -85,10 +85,10 @@ class Default_Model_Deductivecategory extends Zend_Db_Table_Abstract{
         return $pctable;
     }
     public function addCategory($data){
-        $config = array(
+        $config = [
             'name' => 'main_loadcategory',
             'primary' => 'load_category_id'
-        );
+        ];
         $this->table = new Zend_Db_Table($config);
         $this->table->insert($data);
         return $this->getAdapter()->lastInsertId($config['name'],$config['primary']);
@@ -96,7 +96,7 @@ class Default_Model_Deductivecategory extends Zend_Db_Table_Abstract{
     public function getSingleDeductivecategory($id){
         $query = $this->select()
                        ->setIntegrityCheck(false)
-                       ->from(array('lc'=>'main_loadcategory'))
+                       ->from(['lc'=>'main_loadcategory'])
                        ->where('load_category_id='.$id);
        return $this->fetchAll($query)->toArray();
     }

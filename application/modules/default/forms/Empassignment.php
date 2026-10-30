@@ -43,7 +43,7 @@ class Default_Form_Empassignment extends Zend_Form
             ->setAttrib('class', 'formDataElement')
             ->setRegisterInArrayValidator(false) // Populated in Controller
             ->setRequired(true)
-            ->addValidator('NotEmpty', false, array('messages' => 'Please select an employee.'));
+            ->addValidator('NotEmpty', false, ['messages' => 'Please select an employee.']);
 
         // Freeze employee dropdown on edit to prevent accidental human re-assignment
         if ($idVal > 0) {
@@ -58,18 +58,18 @@ class Default_Form_Empassignment extends Zend_Form
             ->setAttrib('class', 'formDataElement')
             ->setRegisterInArrayValidator(false) // Populated in Controller
             ->setRequired(true)
-            ->addValidator('NotEmpty', false, array('messages' => 'Please select a position seat.'));
+            ->addValidator('NotEmpty', false, ['messages' => 'Please select a position seat.']);
 
         // Assignment Type
         $assignment_type = new Zend_Form_Element_Select('assignment_type');
         $assignment_type->setLabel('Assignment Type')
             ->setAttrib('class', 'formDataElement')
-            ->addMultiOptions(array(
+            ->addMultiOptions([
                 'Primary'    => 'Primary Role (Full Time / Main Seat)',
                 'Secondary'  => 'Secondary Role (Concurrent / Part-Time)',
                 'Acting'     => 'Acting / Interim Role',
                 'Secondment' => 'Secondment (Temporary Loan)'
-            ))
+            ])
             ->setRequired(true)
             ->setValue('Primary');
 
@@ -79,7 +79,7 @@ class Default_Form_Empassignment extends Zend_Form
             ->setAttrib('class', 'formDataElement')
             ->setRegisterInArrayValidator(false) // Populated in Controller
             ->setRequired(true)
-            ->addValidator('NotEmpty', false, array('messages' => 'Please select an employment contract type.'));
+            ->addValidator('NotEmpty', false, ['messages' => 'Please select an employment contract type.']);
 
         // Assignment Reason (Vocabulary of Change)
         $assignment_reason_id = new Zend_Form_Element_Select('assignment_reason_id');
@@ -87,7 +87,7 @@ class Default_Form_Empassignment extends Zend_Form
             ->setAttrib('class', 'formDataElement')
             ->setRegisterInArrayValidator(false) // Populated in Controller
             ->setRequired(true)
-            ->addValidator('NotEmpty', false, array('messages' => 'Please select the reason for this assignment.'));
+            ->addValidator('NotEmpty', false, ['messages' => 'Please select the reason for this assignment.']);
 
         /* --------------------------------------------------------------
          * 3. Text Elements (FTE Math)
@@ -95,15 +95,15 @@ class Default_Form_Empassignment extends Zend_Form
 
         $allocated_fte = new Zend_Form_Element_Text('allocated_fte');
         $allocated_fte->setLabel('Allocated Headcount (FTE)')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '5', 'placeholder' => '1.00'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '5', 'placeholder' => '1.00'])
             ->setRequired(true)
             ->setValue('1.00')
             ->addFilter('StringTrim')
-            ->addValidator('NotEmpty', false, array('messages' => 'Please enter allocated FTE.'))
-            ->addValidator('Regex', true, array(
+            ->addValidator('NotEmpty', false, ['messages' => 'Please enter allocated FTE.'])
+            ->addValidator('Regex', true, [
                 'pattern'  => '/^\d+(\.\d{1,2})?$/',
-                'messages' => array(Zend_Validate_Regex::NOT_MATCH => 'Please enter a valid FTE decimal (e.g., 1.00 or 0.50).')
-            ));
+                'messages' => [Zend_Validate_Regex::NOT_MATCH => 'Please enter a valid FTE decimal (e.g., 1.00 or 0.50).']
+            ]);
 
         /* --------------------------------------------------------------
          * 4. Date Elements (Effective Boundaries)
@@ -111,21 +111,21 @@ class Default_Form_Empassignment extends Zend_Form
 
         $start_date = new ZendX_JQuery_Form_Element_DatePicker('start_date');
         $start_date->setLabel('Effective Start Date')
-            ->setAttribs(array(
+            ->setAttribs([
                 'class'    => 'brdr_none formDataElement',
                 'readonly' => 'true',
                 'onfocus'  => 'this.blur()'
-            ))
+            ])
             ->setRequired(true)
-            ->addValidator('NotEmpty', false, array('messages' => 'Please select the effective start date.'));
+            ->addValidator('NotEmpty', false, ['messages' => 'Please select the effective start date.']);
 
         $end_date = new ZendX_JQuery_Form_Element_DatePicker('end_date');
         $end_date->setLabel('Effective End Date (Optional)')
-            ->setAttribs(array(
+            ->setAttribs([
                 'class'    => 'brdr_none formDataElement',
                 'readonly' => 'true',
                 'onfocus'  => 'this.blur()'
-            ));
+            ]);
         // Note: end_date is optional. NULL indicates an active, ongoing assignment.
 
         /* --------------------------------------------------------------
@@ -134,7 +134,7 @@ class Default_Form_Empassignment extends Zend_Form
 
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Assignment Terms / Notes')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -154,7 +154,7 @@ class Default_Form_Empassignment extends Zend_Form
 
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save Assignment')
-            ->setAttribs(array('id' => 'submitbutton', 'class' => 'actbtn_btn'));
+            ->setAttribs(['id' => 'submitbutton', 'class' => 'actbtn_btn']);
 
         // SSOT VI.9: Strict String Quoting for standard AJAX saveDetails()
         $urlAction  = "'empassignment/save/format/json'";
@@ -164,7 +164,7 @@ class Default_Form_Empassignment extends Zend_Form
         /* --------------------------------------------------------------
          * Build Form
          * -------------------------------------------------------------- */
-        $this->addElements(array(
+        $this->addElements([
             $idElement,
             $employee_id,
             $position_id,
@@ -177,15 +177,15 @@ class Default_Form_Empassignment extends Zend_Form
             $description,
             $isactive,
             $submit
-        ));
+        ]);
 
         // SSOT VI.7: Strip default Zend Decorators
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
             if ($element instanceof ZendX_JQuery_Form_Element_DatePicker) {
-                $element->setDecorators(array('UiWidgetElement'));
+                $element->setDecorators(['UiWidgetElement']);
             } else {
-                $element->setDecorators(array('ViewHelper'));
+                $element->setDecorators(['ViewHelper']);
             }
         }
     }

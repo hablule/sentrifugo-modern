@@ -45,7 +45,7 @@ class Default_WorkeligibilitydetailsController extends Zend_Controller_Action
 			$empOrganizationTabs = explode(",",EMPTABCONFIGS);
 
 		 if(in_array('workeligibilitydetails',$empOrganizationTabs)){
-		 	$msgarray = array();
+		 	$msgarray = [];
 		 	$auth = Zend_Auth::getInstance();
 		 	if($auth->hasIdentity())
 		 	{
@@ -90,7 +90,7 @@ class Default_WorkeligibilitydetailsController extends Zend_Controller_Action
 
 		 	$this->view->WorkeligibilitydoctypesPermission = sapp_Global::_checkprivileges(WORKELIGIBILITYDOCTYPES,$loginUserGroup,$loginUserRole,'add');
 		 	
-		 	$popConfigPermission = array();
+		 	$popConfigPermission = [];
 		    if(sapp_Global::_checkprivileges(COUNTRIES,$loginUserGroup,$loginUserRole,'add') == 'Yes'){
 					array_push($popConfigPermission,'country');
 			}
@@ -106,13 +106,13 @@ class Default_WorkeligibilitydetailsController extends Zend_Controller_Action
 		 	$employeeModal = new Default_Model_Employee();
 		 	$workeligibilityform = new Default_Form_Workeligibilitydetails();
 		 	$workeligibilityModel = new Default_Model_Workeligibilitydetails();
-		 	$msgarray = array();
+		 	$msgarray = [];
 		 	$emptyFlag=0;
 			$issuingauthority = '';
 			//To check previliges for edit
 		 		$myEmployees_model = new Default_Model_Myemployees();
 			 	$getMyTeamIds = $myEmployees_model->getTeamIds($loginUserId);
-			 	$teamIdArr = array();
+			 	$teamIdArr = [];
 			 	if(!empty($getMyTeamIds))
 			 	{
 				 	foreach($getMyTeamIds as $teamId)
@@ -292,25 +292,25 @@ class Default_WorkeligibilitydetailsController extends Zend_Controller_Action
 		  $issuingauthority = $issuingauthorityArr[0]['issuingauthority'];
 		     if($issuingauthority == 1){
 		     	$workeligibilityform->issuingauth_country->setRequired(true)->addErrorMessage('Please select country.');
-				$workeligibilityform->issuingauth_country->addValidator('NotEmpty', false, array('messages' => 'Please select country.'));
+				$workeligibilityform->issuingauth_country->addValidator('NotEmpty', false, ['messages' => 'Please select country.']);
 		     }
 		     else if($issuingauthority == 2)
 			 {
 			 	$workeligibilityform->issuingauth_country->setRequired(true)->addErrorMessage('Please select country.');
-				$workeligibilityform->issuingauth_country->addValidator('NotEmpty', false, array('messages' => 'Please select country.'));
+				$workeligibilityform->issuingauth_country->addValidator('NotEmpty', false, ['messages' => 'Please select country.']);
 				
 			    $workeligibilityform->issuingauth_state->setRequired(true)->addErrorMessage('Please select state.');
-				$workeligibilityform->issuingauth_state->addValidator('NotEmpty', false, array('messages' => 'Please select state.'));
+				$workeligibilityform->issuingauth_state->addValidator('NotEmpty', false, ['messages' => 'Please select state.']);
 			 }else if($issuingauthority == 3)
 			 {
 			 	$workeligibilityform->issuingauth_country->setRequired(true)->addErrorMessage('Please select country.');
-				$workeligibilityform->issuingauth_country->addValidator('NotEmpty', false, array('messages' => 'Please select country.'));
+				$workeligibilityform->issuingauth_country->addValidator('NotEmpty', false, ['messages' => 'Please select country.']);
 				
 			    $workeligibilityform->issuingauth_state->setRequired(true)->addErrorMessage('Please select state.');
-				$workeligibilityform->issuingauth_state->addValidator('NotEmpty', false, array('messages' => 'Please select state.'));
+				$workeligibilityform->issuingauth_state->addValidator('NotEmpty', false, ['messages' => 'Please select state.']);
 				
 				$workeligibilityform->issuingauth_city->setRequired(true)->addErrorMessage('Please select city.');
-				$workeligibilityform->issuingauth_city->addValidator('NotEmpty', false, array('messages' => 'Please select city.')); 
+				$workeligibilityform->issuingauth_city->addValidator('NotEmpty', false, ['messages' => 'Please select city.']); 
 			 }
 		}  
 		if($workeligibilityform->isValid($this->_request->getPost()))
@@ -344,7 +344,7 @@ class Default_WorkeligibilitydetailsController extends Zend_Controller_Action
 				$docissueDate = sapp_Global::change_date($doc_issue_date, 'database');
 				$docexpiryDate = sapp_Global::change_date($doc_expiry_date, 'database');
 	
-				$data = array(  'documenttype_id'=>$documenttype_id,
+				$data = [  'documenttype_id'=>$documenttype_id,
 									'doc_issue_date'=>$docissueDate,
 									'doc_expiry_date'=>$docexpiryDate,
 									'issuingauth_name'=>$issuingauth_name,
@@ -354,10 +354,10 @@ class Default_WorkeligibilitydetailsController extends Zend_Controller_Action
 									'issuingauth_postalcode'=>$issuingauth_postalcode,
 									'user_id'=>$user_id,
 									'modifiedby'=>$loginUserId,
-									'modifieddate'=>gmdate("Y-m-d H:i:s"));
+									'modifieddate'=>gmdate("Y-m-d H:i:s")];
 				if($id!='')
 				{
-					$where = array('user_id=?'=>$user_id);
+					$where = ['user_id=?'=>$user_id];
 					$actionflag = 2;
 				}
 				else
@@ -371,17 +371,17 @@ class Default_WorkeligibilitydetailsController extends Zend_Controller_Action
 				if($Id == 'update')
 				{
 					$tableid = $id;
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Employee work eligibility details updated successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Employee work eligibility details updated successfully."]);
 				}
 				else
 				{
 					$tableid = $Id;
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Employee work eligibility details added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Employee work eligibility details added successfully."]);
 				}
 				$menuID = EMPLOYEE;
 				$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$user_id);
            	} else {
-           		$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>FIELDMSG));
+           		$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>FIELDMSG]);
 			}
 			$this->_redirect('workeligibilitydetails/edit/userid/'.$user_id);
 		}
@@ -452,7 +452,7 @@ class Default_WorkeligibilitydetailsController extends Zend_Controller_Action
 		 	if($auth->hasIdentity()){
 					$loginUserId = $auth->getStorage()->read()->id;
 		 	}
-		 	$employeeData=array();
+		 	$employeeData=[];
 		 	$id = $this->getRequest()->getParam('userid');
 		 	$callval = $this->getRequest()->getParam('call');
 		 	if($callval == 'ajaxcall')

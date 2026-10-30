@@ -33,19 +33,19 @@ class Default_Form_systempreference extends Zend_Form
         $dateformatid->setAttrib('class', 'selectoption');
         $dateformatid->setRegisterInArrayValidator(false);
         $dateformatid->setRequired(true);
-		$dateformatid->addValidator('NotEmpty', false, array('messages' => 'Please select date format.'));
+		$dateformatid->addValidator('NotEmpty', false, ['messages' => 'Please select date format.']);
 		
 		$timeformatid = new Zend_Form_Element_Select('timeformatid');
         $timeformatid->setAttrib('class', 'selectoption');
         $timeformatid->setRegisterInArrayValidator(false);
         $timeformatid->setRequired(true);
-        $timeformatid->addValidator('NotEmpty', false, array('messages' => 'Please select time format.')); 
+        $timeformatid->addValidator('NotEmpty', false, ['messages' => 'Please select time format.']); 
 
         $timezoneid = new Zend_Form_Element_Select('timezoneid');
         $timezoneid->setAttrib('class', 'selectoption');
         $timezoneid->setRegisterInArrayValidator(false);
         $timezoneid->setRequired(true);
-        $timezoneid->addValidator('NotEmpty', false, array('messages' => 'Please select time zone preference.'));	
+        $timezoneid->addValidator('NotEmpty', false, ['messages' => 'Please select time zone preference.']);	
 		$timezoneid->addMultiOption('','Select Time zone');
 		$timezoneModal = new Default_Model_Timezone();
 	    	$timezoneData = $timezoneModal->fetchAll('isactive=1','timezone')->toArray();;
@@ -57,14 +57,14 @@ class Default_Form_systempreference extends Zend_Form
         $currencyid->setAttrib('class', 'selectoption');
         $currencyid->setRegisterInArrayValidator(false);
         $currencyid->setRequired(true);
-		$currencyid->addValidator('NotEmpty', false, array('messages' => 'Please select currency.'));	
+		$currencyid->addValidator('NotEmpty', false, ['messages' => 'Please select currency.']);	
 
         $passwordid = new Zend_Form_Element_Select('passwordid');
         $passwordid->setAttrib('class', 'selectoption');
 		$passwordid->setAttrib('onchange', 'displayPasswordDesc(this)');
         $passwordid->setRegisterInArrayValidator(false);
         $passwordid->setRequired(true);
-		$passwordid->addValidator('NotEmpty', false, array('messages' => 'Please select default password.'));  		
+		$passwordid->addValidator('NotEmpty', false, ['messages' => 'Please select default password.']);  		
    	
 		$description = new Zend_Form_Element_Textarea('description');
         $description->setAttrib('rows', 10);
@@ -75,7 +75,7 @@ class Default_Form_systempreference extends Zend_Form
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 
-		 $this->addElements(array($timezoneid,$id,$dateformatid,$timeformatid,$currencyid,$passwordid,$description,$submit));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 $this->addElements([$timezoneid,$id,$dateformatid,$timeformatid,$currencyid,$passwordid,$description,$submit]);
+         $this->setElementDecorators(['ViewHelper']); 
 	}
 }

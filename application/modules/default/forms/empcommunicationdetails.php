@@ -36,13 +36,13 @@ class Default_Form_empcommunicationdetails extends Zend_Form
         $personalemail->setAttrib('maxLength', 50);
         $personalemail->addFilter('StripTags');
         $personalemail->addFilter('StringTrim');
-		$personalemail->addValidator("regex",true,array(
+		$personalemail->addValidator("regex",true,[
                            
 						    'pattern'=>'/^(?!.*\.{2})[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/',                            
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter valid email.'
-                           )
-        	));
+                           ]
+        	]);
 				
         $perm_streetaddress = new Zend_Form_Element_Text('perm_streetaddress');
         $perm_streetaddress->setAttrib('maxLength', 100);
@@ -64,22 +64,22 @@ class Default_Form_empcommunicationdetails extends Zend_Form
         $perm_pincode = new Zend_Form_Element_Text('perm_pincode');
         $perm_pincode->setAttrib('maxLength', 10);
         $perm_pincode->addFilter(new Zend_Filter_StringTrim());
-        $perm_pincode->addValidators(array(array('StringLength',false,
-                                  array('min' => 3,
+        $perm_pincode->addValidators([['StringLength',false,
+                                  ['min' => 3,
                                   		'max' => 10,
-                                        'messages' => array(
+                                        'messages' => [
                                         Zend_Validate_StringLength::TOO_LONG =>
                                         'Postal code must contain at most %max% characters.',
                                         Zend_Validate_StringLength::TOO_SHORT =>
-                                        'Postal code must contain at least %min% characters.')))));
+                                        'Postal code must contain at least %min% characters.']]]]);
 		
-        $perm_pincode->addValidator("regex",true,array(
+        $perm_pincode->addValidator("regex",true,[
                            'pattern'=>'/^(?!0{3})[0-9a-zA-Z]+$/', 
 
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter valid postal code.'
-                           )
-        	));
+                           ]
+        	]);
         			
 
         $current_streetaddress = new Zend_Form_Element_Text('current_streetaddress');
@@ -108,23 +108,23 @@ class Default_Form_empcommunicationdetails extends Zend_Form
         $current_pincode = new Zend_Form_Element_Text('current_pincode');
         $current_pincode->setAttrib('maxLength', 10);
         $current_pincode->addFilter(new Zend_Filter_StringTrim());
-        $current_pincode->addValidators(array(array('StringLength',false,
-                                  array('min' => 3,
+        $current_pincode->addValidators([['StringLength',false,
+                                  ['min' => 3,
                                   		'max' => 10,
-                                        'messages' => array(
+                                        'messages' => [
                                         Zend_Validate_StringLength::TOO_LONG =>
                                         'Postal code must contain at most %max% characters.',
                                         Zend_Validate_StringLength::TOO_SHORT =>
-                                        'Postal code must contain at least %min% characters.')))));
+                                        'Postal code must contain at least %min% characters.']]]]);
 		
-        $current_pincode->addValidator("regex",true,array(
+        $current_pincode->addValidator("regex",true,[
 		                    'pattern'=>'/^(?!0{3})[0-9a-zA-Z]+$/', 
                            
                           
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter valid postal code.'
-                           )
-        	));	
+                           ]
+        	]);	
 		
         $address_flag = new Zend_Form_Element_Checkbox('address_flag');
         $address_flag->setAttrib('onclick', 'populateCurrentAddress(this)');
@@ -133,42 +133,42 @@ class Default_Form_empcommunicationdetails extends Zend_Form
         $emergency_number = new Zend_Form_Element_Text('emergency_number');
         $emergency_number->setAttrib('maxLength', 10);
         $emergency_number->addFilter(new Zend_Filter_StringTrim());
-        $emergency_number->addValidator("regex",true,array(
+        $emergency_number->addValidator("regex",true,[
                            'pattern'=>'/^(?!0{10})[0-9]+$/', 
                           
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter valid phone number.'
-                           )
-        	));
+                           ]
+        	]);
 		
         $emergency_name = new Zend_Form_Element_Text('emergency_name');
         $emergency_name->setAttrib('maxLength', 50);
         $emergency_name->addFilter(new Zend_Filter_StringTrim());
-        $emergency_name->addValidator("regex",true,array(                           
+        $emergency_name->addValidator("regex",true,[                           
                                    'pattern'=>'/^([a-zA-Z.]+ ?)+$/',
-                                   'messages'=>array(
+                                   'messages'=>[
                                        'regexNotMatch'=>'Please enter only alphabets.'
-                                   )
-                        ));
+                                   ]
+                        ]);
         $emergency_email = new Zend_Form_Element_Text('emergency_email');
         $emergency_email->setAttrib('maxLength', 50);
         $emergency_email->addFilter(new Zend_Filter_StringTrim());
 		
         
-		$emergency_email->addValidator("regex",true,array(
+		$emergency_email->addValidator("regex",true,[
                            
 						    'pattern'=>'/^(?!.*\.{2})[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/',                            
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter valid email.'
-                           )
-        	));
+                           ]
+        	]);
 		
 		 		
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setAttrib('id', 'submitbutton');
         $submit->setLabel('Save');
 		
-        $this->addElements(array($id,$userid,$personalemail,$perm_streetaddress,$perm_country,$perm_state,$perm_city,$perm_pincode,$current_streetaddress,$current_country,$current_state,$current_city,$current_pincode,$address_flag,$emergency_number,$emergency_name,$emergency_email,$submit));
-        $this->setElementDecorators(array('ViewHelper')); 		
+        $this->addElements([$id,$userid,$personalemail,$perm_streetaddress,$perm_country,$perm_state,$perm_city,$perm_pincode,$current_streetaddress,$current_country,$current_state,$current_city,$current_pincode,$address_flag,$emergency_number,$emergency_name,$emergency_email,$submit]);
+        $this->setElementDecorators(['ViewHelper']); 		
     }
 }

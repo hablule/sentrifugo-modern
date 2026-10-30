@@ -47,9 +47,9 @@ class Default_EmailcontactsController extends Zend_Controller_Action
 			$refresh = $this->_getParam('refresh');
 			$dashboardcall = $this->_getParam('dashboardcall');
 			
-			$data = array();
+			$data = [];
 			$searchQuery = '';
-			$searchArray = array();
+			$searchArray = [];
 			$tablecontent='';
 			if($refresh == 'refresh')
 			{
@@ -85,7 +85,7 @@ class Default_EmailcontactsController extends Zend_Controller_Action
 	
     public function addAction()
     {
-        $msgarray = array();
+        $msgarray = [];
         $auth = Zend_Auth::getInstance();
      	if($auth->hasIdentity())
         {
@@ -97,7 +97,7 @@ class Default_EmailcontactsController extends Zend_Controller_Action
         $bunits_options = $business_unit_model->getBusinessUnitsList();
         $emailContactsform = new Default_Form_emailcontacts();
         $emailContactsform->setAttrib('action',BASE_URL.'emailcontacts/add');
-        $group_options = array();
+        $group_options = [];
         if(isset($_POST['business_unit_id']) && $_POST['business_unit_id'] != '')
         {
             $bunit_val = $_POST['business_unit_id'];
@@ -129,8 +129,8 @@ class Default_EmailcontactsController extends Zend_Controller_Action
         {
             $msgarray['group_id'] = "No more groups are available for this business unit.";
         }
-        $emailContactsform->group_id->addMultiOptions(array(''=>'Select Group')+$group_options);
-        $emailContactsform->business_unit_id->addMultiOptions(array('0'=>'No Business Unit')+$bunits_options);
+        $emailContactsform->group_id->addMultiOptions([''=>'Select Group']+$group_options);
+        $emailContactsform->business_unit_id->addMultiOptions(['0'=>'No Business Unit']+$bunits_options);
         $this->view->form = $emailContactsform; 	
         $this->view->msgarray = $msgarray;
         $this->view->bunits_options = $bunits_options;
@@ -158,8 +158,8 @@ class Default_EmailcontactsController extends Zend_Controller_Action
         $emailContactsModel = new Default_Model_Emailcontacts();
         $group_options = $emailgroup_model->getEgroupsOptions();
         
-        $emailContactsform->group_id->addMultiOptions(array(''=>'Select Group')+$group_options);
-        $emailContactsform->business_unit_id->addMultiOptions(array(''=>'Select Business Unit')+$bunits_options);
+        $emailContactsform->group_id->addMultiOptions([''=>'Select Group']+$group_options);
+        $emailContactsform->business_unit_id->addMultiOptions([''=>'Select Business Unit']+$bunits_options);
         try
         {
             if($id && $id>0 && is_numeric($id))
@@ -225,7 +225,7 @@ class Default_EmailcontactsController extends Zend_Controller_Action
                 }
             }
         }
-        $this->_helper->json(array('options' => $options));
+        $this->_helper->json(['options' => $options]);
     }
     public function save($emailContactsform)
     {   
@@ -250,19 +250,19 @@ class Default_EmailcontactsController extends Zend_Controller_Action
                 $grpEmail = $this->_request->getParam('groupEmail');
                 $business_unit_id = $this->_request->getParam('business_unit_id');
                 $hid_groupemail = $this->_request->getParam('hid_groupemail',null);
-                $data = array(  'group_id'=>$group_id,
+                $data = [  'group_id'=>$group_id,
                                 'groupEmail'=>$grpEmail,
                                 'business_unit_id' => $business_unit_id,
                                 'modifiedby'=>$loginUserId,
                                 'modifieddate'=>gmdate("Y-m-d H:i:s"),
                                 'createdby'=>$loginUserId,
                                 'createddate'=>gmdate("Y-m-d H:i:s"),
-                            );
-                $updata = array(
+                            ];
+                $updata = [
                             'isactive' => 0,
                             'modifiedby'=>$loginUserId,
 							'modifieddate'=>gmdate("Y-m-d H:i:s")
-                );
+                ];
                 
                 if($id!='')
                 {
@@ -272,10 +272,10 @@ class Default_EmailcontactsController extends Zend_Controller_Action
                     if($hid_groupemail == $grpEmail)
                     {
                         $where = " id = ".$id;
-                        $data = array(
+                        $data = [
                                 'modifiedby'=>$loginUserId,
                                 'modifieddate'=>gmdate("Y-m-d H:i:s"),
-                        );
+                        ];
                     }
                     else 
                     {
@@ -292,12 +292,12 @@ class Default_EmailcontactsController extends Zend_Controller_Action
                 if($id)
                 {
                     $tableid = $id;
-                    $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Email contacts updated successfully."));
+                    $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Email contacts updated successfully."]);
                 }   
                 else
                 {
                     $tableid = $Id; 	
-                    $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Email contacts added successfully."));					   
+                    $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Email contacts added successfully."]);					   
                 }   
 			    $menuID = EMAILCONTACTS;
                 $result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
@@ -351,8 +351,8 @@ class Default_EmailcontactsController extends Zend_Controller_Action
                     {
                     	$emailContactsform->setDefault("id",$id);                    
 						$emailContactsform->setDefault("groupEmail",$data["groupEmail"]);                    
-						$emailContactsform->group_id->addMultiOptions(array(''=>$data['group_name']));
-						$emailContactsform->business_unit_id->addMultiOptions(array(''=>$data['unitname']));
+						$emailContactsform->group_id->addMultiOptions([''=>$data['group_name']]);
+						$emailContactsform->business_unit_id->addMultiOptions([''=>$data['unitname']]);
 						$emailContactsform->group_id->setAttrib('disabled','disabled');
 						$emailContactsform->groupEmail->setAttrib('disabled','disabled');
 						$emailContactsform->business_unit_id->setAttrib('disabled','disabled');
@@ -404,8 +404,8 @@ class Default_EmailcontactsController extends Zend_Controller_Action
         {
             $econtact_model = new Default_Model_Emailcontacts();
 			$emailgroupdata = $econtact_model->getgroupEmailRecord($id);
-            $data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-            $where = array('id=?'=>$id);
+            $data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+            $where = ['id=?'=>$id];
             $Id = $econtact_model->SaveorUpdateEmailcontactsData($data, $where);
             if($Id == 'update')
             {
@@ -431,11 +431,11 @@ class Default_EmailcontactsController extends Zend_Controller_Action
         {
         	if(	$messages['msgtype'] == 'error')
         	{
-        		$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+        		$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
         	}
         	if(	$messages['msgtype'] == 'success')
         	{
-        		$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+        		$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
         	}
         		
         }
@@ -451,7 +451,7 @@ class Default_EmailcontactsController extends Zend_Controller_Action
         $cnt = $email_model->getemailcnt($bunit_id, $group_id);
         if($cnt > 0)
             $result = "yes";
-        $this->_helper->json(array('result'=>$result));
+        $this->_helper->json(['result'=>$result]);
         
     }    
 }

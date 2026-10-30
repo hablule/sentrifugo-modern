@@ -8,28 +8,28 @@ public function init(){
 
     $id = new Zend_Form_Element_Hidden('OT_id');
     $name = new Zend_Form_Element_Text('name');
-    $name->addValidator('NotEmpty',false,array('messages'=>'Name Required'));
+    $name->addValidator('NotEmpty',false,['messages'=>'Name Required']);
     $name->setRequired(true);
     $name->setLabel('Name');
-    $name->addValidator("regex",true,array(
+    $name->addValidator("regex",true,[
         'pattern'=>'/^[a-zA-Z.\-?]+$/',
-        'messages'=>array(
+        'messages'=>[
             'regexNotMatch'=>'Please enter valid Name.'
-        )
+        ]
 
         
-        ));
+        ]);
         $name->addValidator(new Zend_Validate_Db_NoRecordExists(
-            array(
+            [
                 'table'=>'main_overtime',
                 'field'=>'name',
              
-            )
+            ]
             ));
             $name->getValidator('Db_NoRecordExists')->setMessage('Name already exists');
     $name->setAttrib('maxlength',60);
     $base = new Zend_Form_Element_Select('base');
-    $base->addMultiOptions(array('empty'=>'Select...','Time'=>'Time','Day'=>'Day','Date'=>'Date', 'Period'=>'Period','Off-Shift'=>'Off-Shift','Holidays'=>'Holidays'));
+    $base->addMultiOptions(['empty'=>'Select...','Time'=>'Time','Day'=>'Day','Date'=>'Date', 'Period'=>'Period','Off-Shift'=>'Off-Shift','Holidays'=>'Holidays']);
     $base->setLabel('Base');
     $base_start_time = new Zend_Form_Element_Text('base_start_time');
     $base_start_time->setAttrib('readonly','readonly');
@@ -44,19 +44,19 @@ public function init(){
     $base_end_date->setAttrib('readonly','readonly');
     $base_end_date->setLabel('End Date');
     $base_day = new Zend_Form_Element_Select('base_day');
-    $base_day->addMultiOptions(array('empty'=>'Select...','Monday'=>'Monday','Tuseday'=>'Tuseday','Wendsday'=>'Wendsday','Thursday'=>'Thursday','Friday'=>'Friday','Saturday'=>'Saturday','Sunday'=>'Sunday'));
+    $base_day->addMultiOptions(['empty'=>'Select...','Monday'=>'Monday','Tuseday'=>'Tuseday','Wendsday'=>'Wendsday','Thursday'=>'Thursday','Friday'=>'Friday','Saturday'=>'Saturday','Sunday'=>'Sunday']);
     $category = new Zend_Form_Element_Select('category');
     $category->setLabel('Category');
-    $category->addValidator('NotEmpty',false,array('messages'=>'Category Required'));
+    $category->addValidator('NotEmpty',false,['messages'=>'Category Required']);
     $category->setRequired(true);
     $description = new Zend_Form_Element_Textarea('description');
     $description->setLabel('Description');
     $begining = new Zend_Form_Element_Text('begining');
     $begining->setAttrib('readonly','readonly');
-    $begining->addValidator('NotEmpty',false,array('messages'=>'Start time Required'));
+    $begining->addValidator('NotEmpty',false,['messages'=>'Start time Required']);
     $begining->setRequired(true);
     $ending = new Zend_Form_Element_Text('ending');
-    $ending->addValidator('NotEmpty',false,array('messages'=>'End time Required'));
+    $ending->addValidator('NotEmpty',false,['messages'=>'End time Required']);
     $ending->setRequired(true);
     $ending->setAttrib('readonly','readonly');
     $rate = new Zend_Form_Element_Text('rate');
@@ -64,15 +64,15 @@ public function init(){
     $autoapv = new Zend_Form_Element_Checkbox('autoapv');
     $autoapv->setLabel('Auto Approve');
     $autoapv->setRequired(true);
-    $autoapv->addValidator('NotEmpty',false,array('messages'=>'Select Auto Approval'));
+    $autoapv->addValidator('NotEmpty',false,['messages'=>'Select Auto Approval']);
     $submit = new Zend_Form_Element_Submit('submit');
     $submit->setLabel('Save');
     $back = new Zend_Form_Element_Button('back');
     $back->setLabel('Cancel');
     $back->setAttrib('onClick', "parent.location='" . Zend_Controller_Front::getInstance()->getBaseUrl() .'/schedule/overtime' ."'");
 
-    $this->addElements(array($id,$name,$base,$base_start_time,$base_end_time,$base_start_date,$base_end_date,$base_day,$category,$description,$begining,$autoapv,$ending,$rate,$submit,$back));
-    $this->setElementDecorators(array('ViewHelper'));
+    $this->addElements([$id,$name,$base,$base_start_time,$base_end_time,$base_start_date,$base_end_date,$base_day,$category,$description,$begining,$autoapv,$ending,$rate,$submit,$back]);
+    $this->setElementDecorators(['ViewHelper']);
 }
 }
 ?>

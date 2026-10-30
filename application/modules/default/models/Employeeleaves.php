@@ -53,8 +53,8 @@ class Default_Model_Employeeleaves extends Zend_Db_Table_Abstract
 
 		$empskillsData = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('ls' => 'main_leavesetting'), array('id' => 'ls.leave_setting_id','ls.isactive' => 'if(ls.isactive="N","No","Yes")', 'alloteddays'=>'if(l.durationtype="Individual",ls.alloteddays,l.alloteddays)'))
-			->joinInner(array('l' => 'main_leave'), 'l.leave_id = ls.leave_id',array('l.name','l.durationtype','l.description','l.paytype','l.baseperiod','l.approvedrequired','l.ispreset'))
+			->from(['ls' => 'main_leavesetting'], ['id' => 'ls.leave_setting_id','ls.isactive' => 'if(ls.isactive="N","No","Yes")', 'alloteddays'=>'if(l.durationtype="Individual",ls.alloteddays,l.alloteddays)'])
+			->joinInner(['l' => 'main_leave'], 'l.leave_id = ls.leave_id',['l.name','l.durationtype','l.description','l.paytype','l.baseperiod','l.approvedrequired','l.ispreset'])
 			->where($where)
 			
 			->limitPage($pageNo, $perPage);
@@ -66,11 +66,11 @@ class Default_Model_Employeeleaves extends Zend_Db_Table_Abstract
 	{
 		$searchQuery = '';
 		$tablecontent = '';
-		$level_opt = array();
-		$searchArray = array();
-		$data = array();
+		$level_opt = [];
+		$searchArray = [];
+		$data = [];
 		$id = '';
-		$dataTmp = array();
+		$dataTmp = [];
 		if ($searchData != '' && $searchData != 'undefined') {
 			$searchValues = json_decode($searchData);
 			// die(json_encode($searchValues));
@@ -87,7 +87,7 @@ class Default_Model_Employeeleaves extends Zend_Db_Table_Abstract
 		}
 		/** search from grid - END **/
 		$objName = 'empleaves';
-		$tableFields = array(
+		$tableFields = [
 			'action' => 'Action',
 			'name' => 'Name',
 			'description' => 'Description',
@@ -95,11 +95,11 @@ class Default_Model_Employeeleaves extends Zend_Db_Table_Abstract
 			'paytype' => 'Pay Type',
 			'alloteddays'=> 'Alloted Days',
 			'ls.isactive'=>'Active'
-		);
+		];
 
 		$tablecontent = $this->getEmpLeavesData($sort, $by, $pageNo, $perPage, $searchQuery, $exParam1);
 
-		$dataTmp = array(
+		$dataTmp = [
 			'userid' => $exParam1,
 			'sort' => $sort,
 			'by' => $by,
@@ -107,7 +107,7 @@ class Default_Model_Employeeleaves extends Zend_Db_Table_Abstract
 			'perPage' => $perPage,
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getEmployeeAjaxgridData',
 			'jsFillFnName' => '',
@@ -121,13 +121,13 @@ class Default_Model_Employeeleaves extends Zend_Db_Table_Abstract
 			'dashboardcall' => $dashboardcall,
 			'call' => $call,
 			'context' => $exParam2,
-			'search_filters' => array(
+			'search_filters' => [
 
-						'ls.isactive' => array(
+						'ls.isactive' => [
 							'type' => 'select',
-							'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-				),
-		);
+							'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+				],
+		];
 		return $dataTmp;
 	}
 
@@ -135,7 +135,7 @@ class Default_Model_Employeeleaves extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('el' => 'main_employeeleaves'), array('el.*'))
+			->from(['el' => 'main_employeeleaves'], ['el.*'])
 			->where('el.user_id=' . $id . ' AND el.isactive = 1 AND el.alloted_year = year(now())');
 
 		return $this->fetchAll($select)->toArray();
@@ -144,11 +144,11 @@ class Default_Model_Employeeleaves extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('ls' => 'main_leavesetting'), array('id' => 'ls.leave_setting_id', 'alloteddays' => 'ls.alloteddays', 'isactive' => 'if(ls.isactive="N","No","Yes")'))
-			->joinInner(array('ml' => 'main_leave'), "ls.leave_id = ml.leave_id", array('leave_id' => 'ml.leave_id', 'leavecategory' => 'ml.leavecategory_id', 'name' => 'ml.name', 'isact' => 'ml.isactive', 'duarationtype' => 'ml.durationtype', 'paytype' => 'ml.paytype', 'description' => 'ml.description', 'baseperiod' => 'ml.baseperiod', 'approvedrequired' => 'if(ml.approvedrequired="N","No","Yes")', 'ispreset' => 'if(ml.ispreset="N","No","Yes")', 'isactivecheck' => 'ml.isactive', 'alloteddays' => 'ml.alloteddays', 'classPath' => 'ml.classPath', 'classfun' => 'ml.method', 'parameters' => 'ml.parameters'))
-			->joinInner(array('u' => 'main_employees'), 'ls.emp_id=u.id', array('userfullname' => 'u.userfullname', 'useremail' => 'u.emailaddress'))
-			->joinLeft(array('y' => 'main_fiscalyear'), 'y.year_id=ls.year_id', array('yearname' => 'y.name'))
-			->joinLeft(array('p' => 'main_period'), 'p.period_id=ls.period_id', array('periodname' => 'p.name'))
+			->from(['ls' => 'main_leavesetting'], ['id' => 'ls.leave_setting_id', 'alloteddays' => 'ls.alloteddays', 'isactive' => 'if(ls.isactive="N","No","Yes")'])
+			->joinInner(['ml' => 'main_leave'], "ls.leave_id = ml.leave_id", ['leave_id' => 'ml.leave_id', 'leavecategory' => 'ml.leavecategory_id', 'name' => 'ml.name', 'isact' => 'ml.isactive', 'duarationtype' => 'ml.durationtype', 'paytype' => 'ml.paytype', 'description' => 'ml.description', 'baseperiod' => 'ml.baseperiod', 'approvedrequired' => 'if(ml.approvedrequired="N","No","Yes")', 'ispreset' => 'if(ml.ispreset="N","No","Yes")', 'isactivecheck' => 'ml.isactive', 'alloteddays' => 'ml.alloteddays', 'classPath' => 'ml.classPath', 'classfun' => 'ml.method', 'parameters' => 'ml.parameters'])
+			->joinInner(['u' => 'main_employees'], 'ls.emp_id=u.id', ['userfullname' => 'u.userfullname', 'useremail' => 'u.emailaddress'])
+			->joinLeft(['y' => 'main_fiscalyear'], 'y.year_id=ls.year_id', ['yearname' => 'y.name'])
+			->joinLeft(['p' => 'main_period'], 'p.period_id=ls.period_id', ['periodname' => 'p.name'])
 			->where('ls.leave_setting_id=' . $id . ' AND ls.isactive = "Y"');
 			return $this->fetchAll($select)->toArray();
 	}
@@ -156,11 +156,11 @@ class Default_Model_Employeeleaves extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('ls' => 'main_leavesetting'), array('id' => 'ls.leave_setting_id', 'alloteddays' => 'ls.alloteddays', 'isactive' => 'if(ls.isactive="N","No","Yes")'))
-			->joinInner(array('ml' => 'main_leave'), "ls.leave_id = ml.leave_id", array('leave_id' => 'ml.leave_id', 'leavecategory' => 'ml.leavecategory_id', 'name' => 'ml.name', 'isact' => 'ml.isactive', 'duarationtype' => 'ml.durationtype', 'paytype' => 'ml.paytype', 'description' => 'ml.description', 'baseperiod' => 'ml.baseperiod', 'approvedrequired' => 'if(ml.approvedrequired="N","No","Yes")', 'ispreset' => 'if(ml.ispreset="N","No","Yes")', 'isactivecheck' => 'ml.isactive', 'classPath' => 'ml.classPath', 'classfun' => 'ml.method', 'parameters' => 'ml.parameters'))
-			->joinInner(array('u' => 'main_employees'), 'ls.emp_id=u.id', array('userfullname' => 'u.userfullname', 'useremail' => 'u.emailaddress'))
-			->joinLeft(array('y' => 'main_fiscalyear'), 'y.year_id=ls.year_id', array('yearname' => 'y.name'))
-			->joinLeft(array('p' => 'main_period'), 'p.period_id=ls.period_id', array('periodname' => 'p.name'))
+			->from(['ls' => 'main_leavesetting'], ['id' => 'ls.leave_setting_id', 'alloteddays' => 'ls.alloteddays', 'isactive' => 'if(ls.isactive="N","No","Yes")'])
+			->joinInner(['ml' => 'main_leave'], "ls.leave_id = ml.leave_id", ['leave_id' => 'ml.leave_id', 'leavecategory' => 'ml.leavecategory_id', 'name' => 'ml.name', 'isact' => 'ml.isactive', 'duarationtype' => 'ml.durationtype', 'paytype' => 'ml.paytype', 'description' => 'ml.description', 'baseperiod' => 'ml.baseperiod', 'approvedrequired' => 'if(ml.approvedrequired="N","No","Yes")', 'ispreset' => 'if(ml.ispreset="N","No","Yes")', 'isactivecheck' => 'ml.isactive', 'classPath' => 'ml.classPath', 'classfun' => 'ml.method', 'parameters' => 'ml.parameters'])
+			->joinInner(['u' => 'main_employees'], 'ls.emp_id=u.id', ['userfullname' => 'u.userfullname', 'useremail' => 'u.emailaddress'])
+			->joinLeft(['y' => 'main_fiscalyear'], 'y.year_id=ls.year_id', ['yearname' => 'y.name'])
+			->joinLeft(['p' => 'main_period'], 'p.period_id=ls.period_id', ['periodname' => 'p.name'])
 			->where('ls.leave_setting_id=' . $id . ' AND ls.isactive = "Y"');
 			return $this->fetchAll($select)->toArray();
 	}
@@ -168,11 +168,11 @@ class Default_Model_Employeeleaves extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('ls' => 'main_leavesetting'), array('id' => 'ls.leave_setting_id', 'alloteddays' => 'ls.alloteddays', 'isactive' => 'if(ls.isactive="N","No","Yes")'))
-			->joinInner(array('ml' => 'main_leave'), "ls.leave_id = ml.leave_id", array('leave_id' => 'ml.leave_id', 'leavecategory' => 'ml.leavecategory_id', 'name' => 'ml.name', 'isact' => 'ml.isactive', 'duarationtype' => 'ml.durationtype', 'paytype' => 'ml.paytype', 'description' => 'ml.description', 'baseperiod' => 'ml.baseperiod', 'approvedrequired' => 'if(ml.approvedrequired="N","No","Yes")', 'ispreset' => 'if(ml.ispreset="N","No","Yes")', 'isactivecheck' => 'ml.isactive', 'alloteddays' => 'ml.alloteddays', 'classPath' => 'ml.classPath', 'classfun' => 'ml.method', 'parameters' => 'ml.parameters'))
-			->joinInner(array('u' => 'main_employees'), 'ls.emp_id=u.id', array('userfullname' => 'u.userfullname', 'useremail' => 'u.emailaddress'))
-			->joinLeft(array('y' => 'main_fiscalyear'), 'y.year_id=ls.year_id', array('yearname' => 'y.name'))
-			->joinLeft(array('p' => 'main_period'), 'p.period_id=ls.period_id', array('periodname' => 'p.name'))
+			->from(['ls' => 'main_leavesetting'], ['id' => 'ls.leave_setting_id', 'alloteddays' => 'ls.alloteddays', 'isactive' => 'if(ls.isactive="N","No","Yes")'])
+			->joinInner(['ml' => 'main_leave'], "ls.leave_id = ml.leave_id", ['leave_id' => 'ml.leave_id', 'leavecategory' => 'ml.leavecategory_id', 'name' => 'ml.name', 'isact' => 'ml.isactive', 'duarationtype' => 'ml.durationtype', 'paytype' => 'ml.paytype', 'description' => 'ml.description', 'baseperiod' => 'ml.baseperiod', 'approvedrequired' => 'if(ml.approvedrequired="N","No","Yes")', 'ispreset' => 'if(ml.ispreset="N","No","Yes")', 'isactivecheck' => 'ml.isactive', 'alloteddays' => 'ml.alloteddays', 'classPath' => 'ml.classPath', 'classfun' => 'ml.method', 'parameters' => 'ml.parameters'])
+			->joinInner(['u' => 'main_employees'], 'ls.emp_id=u.id', ['userfullname' => 'u.userfullname', 'useremail' => 'u.emailaddress'])
+			->joinLeft(['y' => 'main_fiscalyear'], 'y.year_id=ls.year_id', ['yearname' => 'y.name'])
+			->joinLeft(['p' => 'main_period'], 'p.period_id=ls.period_id', ['periodname' => 'p.name'])
 			->where('ls.emp_id=' . $user_id . ' AND ls.isactive = "Y" AND ml.isactive="Y"');
 		// die($select);
 			return $this->fetchAll($select)->toArray();
@@ -181,7 +181,7 @@ class Default_Model_Employeeleaves extends Zend_Db_Table_Abstract
 	{
 		$query = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('ls' => 'main_leavesetting'))
+			->from(['ls' => 'main_leavesetting'])
 			->where('ls.leave_setting_id=' . $leave_setting_id);
 		return $this->fetchAll($query)->toArray();
 	}
@@ -190,7 +190,7 @@ class Default_Model_Employeeleaves extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('el' => 'main_employeeleaves'), array('el.*', 'remainingleaves' => new Zend_Db_Expr('el.emp_leave_limit - el.used_leaves')))
+			->from(['el' => 'main_employeeleaves'], ['el.*', 'remainingleaves' => new Zend_Db_Expr('el.emp_leave_limit - el.used_leaves')])
 			->where('el.user_id=' . $id . ' AND el.isactive = 1 AND el.alloted_year = year(now())-1');
 
 		return $this->fetchAll($select)->toArray();
@@ -209,7 +209,7 @@ class Default_Model_Employeeleaves extends Zend_Db_Table_Abstract
 	{
 		$query = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('l' => 'main_leave'), array('l.leave_id', 'l.name', 'l.durationtype', 'l.baseperiod', ''))
+			->from(['l' => 'main_leave'], ['l.leave_id', 'l.name', 'l.durationtype', 'l.baseperiod', ''])
 			->where("l.isactive='Y' AND l.durationtype='Individual'");
 			//die($query);
 		return $this->fetchAll($query)->toArray();
@@ -262,7 +262,7 @@ class Default_Model_Employeeleaves extends Zend_Db_Table_Abstract
 	{
 		$allotedLeavesDetailsmodel = new Default_Model_Allottedleaveslog();
 		$date = gmdate("Y-m-d H:i:s");
-		$data = array(
+		$data = [
 			'userid' => $userid,
 			'assignedleaves' => !empty($postedArr['leave_limit']) ? $postedArr['leave_limit'] : $totLeaves,
 			'totalleaves' => $totLeaves,
@@ -271,7 +271,7 @@ class Default_Model_Employeeleaves extends Zend_Db_Table_Abstract
 			'modifiedby' => $loginUserId,
 			'createddate' => $date,
 			'modifieddate' => $date
-		);
+		];
 		$id = $allotedLeavesDetailsmodel->SaveorUpdateAllotedLeavesDetails($data, '');
 		return $id;
 	}

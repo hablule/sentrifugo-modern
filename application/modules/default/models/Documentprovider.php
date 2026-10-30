@@ -13,10 +13,10 @@ class Default_Model_Documentprovider extends Zend_Db_Table_Abstract{
 
         $bank = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('l' => 'main_iddocumentprovider'), array('id' => 'l.iddocumentprovider_id', 'name' => 'l.name', 'code' => 'l.code', 'description' => 'l.description','isactive'=>'if(l.isactive="Y","Yes","No")'))
-            ->joinLeft(array('c' => 'tbl_countries'), "l.country_id=c.id ", array('country' => 'c.country_name'))
-            ->joinLeft(array('s' => 'tbl_states'), "l.state_id=s.id", array('region' => 's.state_name'))
-            ->joinLeft(array('ci' => 'tbl_cities'), "l.city_id=ci.id ", array('city' => 'ci.city_name'))            ->order("$by $sort")
+            ->from(['l' => 'main_iddocumentprovider'], ['id' => 'l.iddocumentprovider_id', 'name' => 'l.name', 'code' => 'l.code', 'description' => 'l.description','isactive'=>'if(l.isactive="Y","Yes","No")'])
+            ->joinLeft(['c' => 'tbl_countries'], "l.country_id=c.id ", ['country' => 'c.country_name'])
+            ->joinLeft(['s' => 'tbl_states'], "l.state_id=s.id", ['region' => 's.state_name'])
+            ->joinLeft(['ci' => 'tbl_cities'], "l.city_id=ci.id ", ['city' => 'ci.city_name'])            ->order("$by $sort")
             ->where($where)
             ->limitPage($pageNo, $perPage);
        
@@ -25,7 +25,7 @@ class Default_Model_Documentprovider extends Zend_Db_Table_Abstract{
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $a = '', $b = '', $c = '', $d = '')
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
             foreach ($searchValues as $key => $val) {
@@ -50,7 +50,7 @@ class Default_Model_Documentprovider extends Zend_Db_Table_Abstract{
             $searchQuery = rtrim($searchQuery, " AND");
         }
         $objName = 'documentprovider';
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'name' => 'Name',
             'code' => 'code',
@@ -60,17 +60,17 @@ class Default_Model_Documentprovider extends Zend_Db_Table_Abstract{
             'region' => 'State',
             'city' => 'City',
 
-        );
+        ];
 
         $tablecontent = $this->getData($sort, $by, $pageNo, $perPage, $searchQuery);
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
             'perPage' => $perPage,
             'tablecontent' => $tablecontent,
             'objectname' => $objName,
-            'extra' => array(),
+            'extra' => [],
             // 'add'=>'add',
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
@@ -78,12 +78,12 @@ class Default_Model_Documentprovider extends Zend_Db_Table_Abstract{
             'searchArray' => $searchArray,
             'call' => $call,
             'dashboardcall' => $dashboardcall,
-            'search_filters' => array(
-                'isactive' => array(
+            'search_filters' => [
+                'isactive' => [
                     'type' => 'select',
-                    'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-            )
-        );
+                    'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+            ]
+        ];
         return $dataTmp;
     }
 

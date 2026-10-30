@@ -30,7 +30,7 @@ class Default_ApprovedrequisitionsController extends Zend_Controller_Action
         {
             if($this->getRequest()->isXmlHttpRequest())
             {
-                echo Zend_Json::encode( array('login' => 'failed') );
+                echo Zend_Json::encode( ['login' => 'failed'] );
                 die();	
             }
             else
@@ -66,9 +66,9 @@ class Default_ApprovedrequisitionsController extends Zend_Controller_Action
 		$statusid =  sapp_Global::_decrypt($statusidstring);
                 $queryflag = 'Approved';
         $refresh = $this->_getParam('refresh');
-        $data = array();
+        $data = [];
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         $tablecontent='';
 
         if($refresh == 'refresh')
@@ -78,7 +78,7 @@ class Default_ApprovedrequisitionsController extends Zend_Controller_Action
 			else	
 				$perPage = PERPAGE;
             $sort = 'DESC';$by = 'r.modifiedon';$pageNo = 1;$searchData = '';$searchQuery = '';$searchQuery = '';$searchArray='';
-            $searchArray = array();
+            $searchArray = [];
         }
         else 
         {
@@ -109,7 +109,7 @@ class Default_ApprovedrequisitionsController extends Zend_Controller_Action
         $requi_model = new Default_Model_Requisition();		
 		$clientsModel = new Default_Model_Clients();    
 		$usersModel = new Default_Model_Users();            
-        $data = array();
+        $data = [];
         try
         {
             if($id >0 && is_numeric($id))
@@ -183,7 +183,7 @@ class Default_ApprovedrequisitionsController extends Zend_Controller_Action
                     $perPage = $this->_getParam('per_page',10);
                     $pageNo = $this->_getParam('page', 1);            
                     $searchQuery = '';
-                    $searchArray = array();
+                    $searchArray = [];
                     $tablecontent='';
                     /** search from grid - START **/
                     $searchData = $this->_getParam('searchData');	
@@ -202,23 +202,23 @@ class Default_ApprovedrequisitionsController extends Zend_Controller_Action
                     }
                     /** search from grid - END **/
                     $objName = 'apprreqcandidates';
-                    $tableFields = array('action'=>'Action',
+                    $tableFields = ['action'=>'Action',
                                          'candidate_name' => 'Candidate Name',
                                          'cand_status' => 'Candidate Status',
-                                        );
+                                        ];
                     $candidate_model = new Default_Model_Candidatedetails();
                     $tablecontent = $candidate_model->getCandidatesData_requisition($sort, $by, $pageNo, $perPage,$searchQuery,$id);     
-                    $cand_status_opt = array('' => 'All','Shortlisted' => 'Shortlisted','Selected' => 'Selected','Rejected' => 'Rejected',
+                    $cand_status_opt = ['' => 'All','Shortlisted' => 'Shortlisted','Selected' => 'Selected','Rejected' => 'Rejected',
                                             'On hold' => 'On hold','Disqualified' => 'Disqualified','Scheduled' => 'Scheduled',
-                                            'Not Scheduled' => 'Not Scheduled','Recruited' => 'Recruited','Requisition Closed/Completed' => 'Requisition Closed/Completed');
-                    $dataTmp = array(
+                                            'Not Scheduled' => 'Not Scheduled','Recruited' => 'Recruited','Requisition Closed/Completed' => 'Requisition Closed/Completed'];
+                    $dataTmp = [
                             'sort' => $sort,
                             'by' => $by,
                             'pageNo' => $pageNo,
                             'perPage' => $perPage,				
                             'tablecontent' => $tablecontent,
                             'objectname' => $objName,
-                            'extra' => array(),
+                            'extra' => [],
                             'tableheader' => $tableFields,
                             'jsGridFnName' => 'getAjaxgridData',
                             'jsFillFnName' => '',
@@ -226,13 +226,13 @@ class Default_ApprovedrequisitionsController extends Zend_Controller_Action
                             'searchArray' => $searchArray,
                             'menuName' => 'Candidate details',
                             'call'=>'',
-                            'search_filters' => array(
-                                'cand_status' => array(
+                            'search_filters' => [
+                                'cand_status' => [
                                     'type' => 'select',
                                     'filter_data' => $cand_status_opt,
-                                ),
-                            ),
-                    );	
+                                ],
+                            ],
+                    ];	
                 if($data['req_priority'] == 1) {
                     	$data['req_priority']='High';
                     }else if($data['req_priority'] == 2) {
@@ -270,7 +270,7 @@ class Default_ApprovedrequisitionsController extends Zend_Controller_Action
 	public function editAction()
 	{
 		$id = $this->getRequest()->getParam('id');
-		$data = array();$jobtitle = '';
+		$data = [];$jobtitle = '';
 		$auth = Zend_Auth::getInstance();
             if($auth->hasIdentity())
             {
@@ -379,29 +379,29 @@ class Default_ApprovedrequisitionsController extends Zend_Controller_Action
 			$data['onboard_date'] = sapp_Global::change_date($data['onboard_date'], 'view');
 			if($data['req_status'] == 'Approved')
 			{
-				$form->req_status->addMultiOptions(array(
+				$form->req_status->addMultiOptions([
 								'Approved'				=>		'Approved',
 								'Closed'		=>		'Closed',
 								'On hold'		=> 		'On hold',
 								'Complete'		=> 		'Complete'							
-									));
+									]);
 			}else if($data['req_status'] == 'Complete'){
-				$form->req_status->addMultiOptions(array(
+				$form->req_status->addMultiOptions([
 								'Complete'		=> 		'Complete'							
-							));
+							]);
 				$form->req_status->setAttrib('disabled','disabled');
 				$form->removeElement('submit');
 			}else{
-				$form->req_status->addMultiOptions(array(
+				$form->req_status->addMultiOptions([
 								''				=>		'Select status',
 								'Closed'		=>		'Closed',
 								'On hold'		=> 		'On hold',
 								'Complete'		=> 		'Complete',
                                                                 'In process' => 'In process',
-									));
+									]);
 			}
 			$form->req_status->setRequired(true);
-			$form->req_status->addValidator('NotEmpty', false, array('messages' => 'Please select option.'));
+			$form->req_status->addValidator('NotEmpty', false, ['messages' => 'Please select option.']);
 			
 			$form->populate($data);	
 			$form->setDefault('req_status',$data['req_status']);		
@@ -425,7 +425,7 @@ class Default_ApprovedrequisitionsController extends Zend_Controller_Action
                         $perPage = $this->_getParam('per_page',10);
                         $pageNo = $this->_getParam('page', 1);            
                         $searchQuery = '';
-                        $searchArray = array();
+                        $searchArray = [];
                         $tablecontent='';
                         /** search from grid - START **/
                         $searchData = $this->_getParam('searchData');	
@@ -447,23 +447,23 @@ class Default_ApprovedrequisitionsController extends Zend_Controller_Action
 
                         $objName = 'apprreqcandidates';
 
-                        $tableFields = array('action'=>'Action',
+                        $tableFields = ['action'=>'Action',
                                              'candidate_name' => 'Candidate Name',
                                              'cand_status' => 'Candidate Status',
-                                            );
+                                            ];
                         $candidate_model = new Default_Model_Candidatedetails();
                         $tablecontent = $candidate_model->getCandidatesData_requisition($sort, $by, $pageNo, $perPage,$searchQuery,$id);     
-                        $cand_status_opt = array('' => 'All','Shortlisted' => 'Shortlisted','Selected' => 'Selected','Rejected' => 'Rejected',
+                        $cand_status_opt = ['' => 'All','Shortlisted' => 'Shortlisted','Selected' => 'Selected','Rejected' => 'Rejected',
                                                 'On hold' => 'On hold','Disqualified' => 'Disqualified','Scheduled' => 'Scheduled',
-                                                'Not Scheduled' => 'Not Scheduled','Recruited' => 'Recruited','Requisition Closed/Completed' => 'Requisition Closed/Completed');
-                        $dataTmp = array(
+                                                'Not Scheduled' => 'Not Scheduled','Recruited' => 'Recruited','Requisition Closed/Completed' => 'Requisition Closed/Completed'];
+                        $dataTmp = [
                                 'sort' => $sort,
                                 'by' => $by,
                                 'pageNo' => $pageNo,
                                 'perPage' => $perPage,				
                                 'tablecontent' => $tablecontent,
                                 'objectname' => $objName,
-                                'extra' => array(),
+                                'extra' => [],
                                 'tableheader' => $tableFields,
                                 'jsGridFnName' => 'getAjaxgridData',
                                 'jsFillFnName' => '',
@@ -471,14 +471,14 @@ class Default_ApprovedrequisitionsController extends Zend_Controller_Action
                                 'searchArray' => $searchArray,
                                 'menuName' => 'Candidate details',
                                 'call'=>'',
-                                'search_filters' => array(
-                                    'cand_status' => array(
+                                'search_filters' => [
+                                    'cand_status' => [
                                         'type' => 'select',
                                         'filter_data' => $cand_status_opt,
-                                    ),
-                                ),
+                                    ],
+                                ],
                                 
-                        );			
+                        ];			
                         array_push($data,$dataTmp);
                         $this->view->dataArray = $dataTmp;
 			if($this->getRequest()->getPost())
@@ -522,14 +522,14 @@ class Default_ApprovedrequisitionsController extends Zend_Controller_Action
 			$id = $this->_getParam('id',null);
 			$req_status	 = $this->_getParam('req_status',null);	
 			$onboard_date = $this->_getParam('onboard_date',null);
-			$data = array(
+			$data = [
 					'req_status' 		=>	$req_status,
 					'modifiedby' 		=> 	trim($loginUserId),
 					'modifiedon' 		=> 	gmdate("Y-m-d H:i:s")
-				);
+				];
                         if($onboard_date != '')
                         {
-                            $data = $data + array('onboard_date' => sapp_Global::change_date($onboard_date,'database'));
+                            $data = $data + ['onboard_date' => sapp_Global::change_date($onboard_date,'database')];
                         }
 			$where = "id = ".$id;
                         
@@ -543,7 +543,7 @@ class Default_ApprovedrequisitionsController extends Zend_Controller_Action
 					$modifiedby=$loginUserId;
 				}
 		       $reqh_model = new Default_Model_Requisitionhistory();
-				$requisition_history = array(											
+				$requisition_history = [											
 									'requisition_id' =>$requisition_id,
 									'description' => $history,
 									'createdby' => $createdby,
@@ -551,7 +551,7 @@ class Default_ApprovedrequisitionsController extends Zend_Controller_Action
 									'isactive' => 1,
 									'createddate' =>gmdate("Y-m-d H:i:s"),
 									'modifieddate'=> gmdate("Y-m-d H:i:s"),
-								);
+								];
 				$where = '';
 				$historyId = $reqh_model->saveOrUpdateRequisitionHistory($requisition_history,$where); 
 			//end
@@ -602,16 +602,16 @@ class Default_ApprovedrequisitionsController extends Zend_Controller_Action
 				$objID = $objidArr[0]['id'];
 				$result = sapp_Global::logManager($objID,$actionflag,$loginUserId,$tableid);
 				if($id != '')
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Requisition updated successfully."));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Requisition updated successfully."]);
 				else
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Requisition added successfully."));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Requisition added successfully."]);
 				$this->_redirect('/approvedrequisitions');
 			}
 		}
 		else
 		{
 			$messages = $requisitionform->getMessages();
-			$msgarray = array();
+			$msgarray = [];
 			foreach ($messages as $key => $val)
 			{
 				foreach($val as $key2 => $val2)

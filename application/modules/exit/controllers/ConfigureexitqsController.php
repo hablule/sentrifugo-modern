@@ -44,9 +44,9 @@ class Exit_ConfigureexitqsController extends Zend_Controller_Action
 		$objname = $this->_getParam('objname');
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 		
 		if($refresh == 'refresh')
@@ -106,8 +106,8 @@ class Exit_ConfigureexitqsController extends Zend_Controller_Action
 			
 			$exitquestionsform = new Exit_Form_Exitquestions();
 			$exittypesModel = new Exit_Model_Exittypes();
-			$msgarray = array();
-			$popConfigPermission = array();
+			$msgarray = [];
+			$popConfigPermission = [];
 			
 			if(sapp_Global::_checkprivileges(EXIT_QUESTIONS,$loginuserGroup,$loginuserRole,'add') == 'Yes'){
 				array_push($popConfigPermission,'exitquestions');
@@ -164,8 +164,8 @@ class Exit_ConfigureexitqsController extends Zend_Controller_Action
 		$exitquestionsform = new Exit_Form_Exitquestions();
 		$exittypesModel = new Exit_Model_Exittypes();
 		$exitquestionsModel = new Exit_Model_Exitquestions();
-		$msgarray = array();
-		$popConfigPermission = array();
+		$msgarray = [];
+		$popConfigPermission = [];
 		
 		if(sapp_Global::_checkprivileges(EXIT_QUESTIONS,$loginuserGroup,$loginuserRole,'edit') == 'Yes'){
 	 		array_push($popConfigPermission,'exitquestions');
@@ -237,7 +237,7 @@ class Exit_ConfigureexitqsController extends Zend_Controller_Action
 				 $loginuserGroup = $auth->getStorage()->read()->group_id;
 		} 
 		$exitquestionsModel = new Exit_Model_Exitquestions();
-		$msgarray = array();
+		$msgarray = [];
 		  if($exitquestionsform->isValid($this->_request->getPost())){
        try{
             $id = $this->_request->getParam('id');
@@ -246,14 +246,14 @@ class Exit_ConfigureexitqsController extends Zend_Controller_Action
 			$description = trim($this->_request->getParam('description'));
 			$actionflag = '';
 			$tableid  = ''; 
-			   $data = array('exit_type_id'=>$exit_type_id,
+			   $data = ['exit_type_id'=>$exit_type_id,
 			                 'question'=>$question, 
 							 'description'=>($description!=''?$description:NULL),			   		   
 							 'modifiedby'=>$loginUserId,
 							 'modifieddate'=>gmdate("Y-m-d H:i:s")
-					);
+					];
 				if($id!=''){
-					$where = array('id=?'=>$id);  
+					$where = ['id=?'=>$id];  
 					$actionflag = 2;
 				}
 				else
@@ -269,12 +269,12 @@ class Exit_ConfigureexitqsController extends Zend_Controller_Action
 				if($Id == 'update')
 				{
 				   $tableid = $id;
-				   $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Question updated successfully."));
+				   $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Question updated successfully."]);
 				}   
 				else
 				{
 				   $tableid = $Id; 	
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Questions added successfully."));					   
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Questions added successfully."]);					   
 				}   
 				$menuID = EXIT_QUESTIONS;
 				$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
@@ -310,7 +310,7 @@ class Exit_ConfigureexitqsController extends Zend_Controller_Action
 				 $loginuserGroup = $auth->getStorage()->read()->group_id;
 		} 
 	    $exitquestionsmodel = new Exit_Model_Exitquestions();	
-		$msgarray = array();
+		$msgarray = [];
 		$errorflag = 'true';
 		$exit_type_id = $this->_request->getParam('exit_type_id');
 		$question_arr = $this->_request->getParam('question');
@@ -341,7 +341,7 @@ class Exit_ConfigureexitqsController extends Zend_Controller_Action
 			$where = '';
 			for($i=0;$i<sizeof($question_arr);$i++)
 			{
-			   $data = array('exit_type_id'=>$exit_type_id,
+			   $data = ['exit_type_id'=>$exit_type_id,
 			                 'question'=>trim($question_arr[$i]), 
 							 'description'=>($description_arr[$i]!=''?trim($description_arr[$i]):NULL),
 							  'createdby' => $loginUserId,
@@ -349,7 +349,7 @@ class Exit_ConfigureexitqsController extends Zend_Controller_Action
 							  'modifieddate'=>gmdate("Y-m-d H:i:s"),
 							  'createddate'=> gmdate("Y-m-d H:i:s"),
 							  'isactive'=> 1
-					);
+					];
 				// save exit type questions 
 				$Id = $exitquestionsmodel->SaveorUpdateExitQuestionData($data, $where);
 				$tableid = $Id; 	
@@ -357,7 +357,7 @@ class Exit_ConfigureexitqsController extends Zend_Controller_Action
 				$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
 			}
 				
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Questions added successfully."));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Questions added successfully."]);
 				$this->_redirect('exit/configureexitqs');	
                   }
         catch(Exception $e)
@@ -470,8 +470,8 @@ class Exit_ConfigureexitqsController extends Zend_Controller_Action
 				//if question is in use in exit process it can not be deleted
 				if($questionsdata[0]['isused'] == 0)	
 				{
-					  $data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"),'modifiedby'=>$loginUserId);
-					  $where = array('id=?'=>$id);
+					  $data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"),'modifiedby'=>$loginUserId];
+					  $where = ['id=?'=>$id];
 					  $Id = $exitquestionsmodel->SaveorUpdateExitQuestionData($data, $where);
 					    if($Id == 'update')
 						{
@@ -501,11 +501,11 @@ class Exit_ConfigureexitqsController extends Zend_Controller_Action
 			{
 				if(	$messages['msgtype'] == 'error')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
 				}
 				if(	$messages['msgtype'] == 'success')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
 				}
 				
 			}
@@ -533,7 +533,7 @@ class Exit_ConfigureexitqsController extends Zend_Controller_Action
 		
 		if($this->getRequest()->getPost()){
 			$exitquestionsmodel = new Exit_Model_Exitquestions();	
-			$msgarray = array();
+			$msgarray = [];
 			$errorflag = 'true';
 			$exit_type_id = $this->_request->getParam('exit_type_id');
 			$question_arr = $this->_request->getParam('question');
@@ -563,7 +563,7 @@ class Exit_ConfigureexitqsController extends Zend_Controller_Action
 				$where = '';
 				for($i=0;$i<sizeof($question_arr);$i++)
 				{
-				   $data = array('exit_type_id'=>$exit_type_id,
+				   $data = ['exit_type_id'=>$exit_type_id,
 								 'question'=>trim($question_arr[$i]), 
 								 'description'=>($description_arr[$i]!=''?trim($description_arr[$i]):NULL),
 								  'createdby' => $loginUserId,
@@ -571,7 +571,7 @@ class Exit_ConfigureexitqsController extends Zend_Controller_Action
 								  'modifieddate'=>gmdate("Y-m-d H:i:s"),
 								  'createddate'=> gmdate("Y-m-d H:i:s"),
 								  'isactive'=> 1
-						);
+						];
 					// save exit type questions 
 					$Id = $exitquestionsmodel->SaveorUpdateExitQuestionData($data, $where);
 					$tableid = $Id; 	

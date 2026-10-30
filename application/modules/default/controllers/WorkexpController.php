@@ -23,18 +23,18 @@ class Default_WorkexpController extends Zend_Controller_Action
         //Displaying forms from DB Start
         $elements = $FormModel->getActiveElements('Work Experience');
 
-        $elementNames = array();
-        $elementLabels = array();
-        $elementOptions = array();
-        $elementTypes = array();
-        $validators = array();
+        $elementNames = [];
+        $elementLabels = [];
+        $elementOptions = [];
+        $elementTypes = [];
+        $validators = [];
         foreach ($elements as $element) {
             $elementName = $element['elementNameOrID'];
-            $elementOption = array();
+            $elementOption = [];
             if ($element['occupyWholeLine']) {
-                $elementOption = array('OccupyLine' => 'OccupyLine');
+                $elementOption = ['OccupyLine' => 'OccupyLine'];
             } else if ($element['startNewLine']) {
-                $elementOption = array('NewLine' => 'NewLine');
+                $elementOption = ['NewLine' => 'NewLine'];
             }
             $workxpform->addElement($element['dataType'], $element['elementNameOrID']);
             array_push($elementNames, $element['elementNameOrID']);
@@ -59,9 +59,9 @@ class Default_WorkexpController extends Zend_Controller_Action
             }
             if ($element['validator'] != '') {
                 $validatorKeys = $FormModel->getValidators($element['validator']);
-                $validator = array();
+                $validator = [];
                 foreach ($validatorKeys as $validats) {
-                    $tempArray = array();
+                    $tempArray = [];
                     $val = $validats['validate'];
                     $message = $validats['description'];
                     //$candidatedetails->$elementName->addValidator($val, false, array('messages' => $message));
@@ -80,14 +80,14 @@ class Default_WorkexpController extends Zend_Controller_Action
         $workxpform->start_date->setAttrib('maxLength', 10);
         $workxpform->start_date->setAttrib('readonly', 'readonly');
         $workxpform->start_date->setAttrib('onfocus', 'this.blur()');
-        $workxpform->start_date->addValidator('NotEmpty', false, array('messages' => 'Please select start date.'));
+        $workxpform->start_date->addValidator('NotEmpty', false, ['messages' => 'Please select start date.']);
         $workxpform->start_date->setRequired(true);
 
         $workxpform->end_date->setAttrib('title', 'Due Date.');
         $workxpform->end_date->setAttrib('maxLength', 10);
         $workxpform->end_date->setAttrib('readonly', 'readonly');
         $workxpform->end_date->setAttrib('onfocus', 'this.blur()');
-        $workxpform->end_date->addValidator('NotEmpty', false, array('messages' => 'Please select start date.'));
+        $workxpform->end_date->addValidator('NotEmpty', false, ['messages' => 'Please select start date.']);
         $workxpform->end_date->setRequired(true);
         //Displaying forms from DB End 
         // $jobpositions = $jobpositionmodel->getTotalPositionList();
@@ -110,7 +110,7 @@ class Default_WorkexpController extends Zend_Controller_Action
         $this->view->elementLabels = $elementLabels;
         $this->view->elementOptions = $elementOptions;
         $this->view->elementTypes = $elementTypes;
-        $this->view->count = array();
+        $this->view->count = [];
         $this->view->candidate_id = $this->_request->getParam('candidate_id');
         $this->view->validators = $validators;
         //die($this->_request->getParam('candidate_id'));
@@ -150,7 +150,7 @@ class Default_WorkexpController extends Zend_Controller_Action
     }
     public function nextAction()
     {
-        $this->_forward('index', 'candidateeducation', 'default', array('candidate_id' => $this->_request->getParam('id')));
+        $this->_forward('index', 'candidateeducation', 'default', ['candidate_id' => $this->_request->getParam('id')]);
     }
     public function addpersonaldetailAction()
     {

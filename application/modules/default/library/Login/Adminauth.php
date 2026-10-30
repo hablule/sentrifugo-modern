@@ -35,7 +35,7 @@ class Login_Adminauth {
 		if (empty($adapter) || empty($options) || !is_array($options)) {
             return false;
         }
-        if (!in_array($adapter,array('ldap','db'))) {
+        if (!in_array($adapter,['ldap','db'])) {
         	return false;
         }
 		if (!array_key_exists('username',$options) ||  !array_key_exists('user_password',$options)) {

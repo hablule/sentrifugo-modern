@@ -50,7 +50,7 @@ class Default_ModuleController extends Zend_Controller_Action
         $session = sapp_Global::_readSession();
         if (!isset($session)) {
             if ($this->getRequest()->isXmlHttpRequest()) {
-                echo Zend_Json::encode(array('login' => 'failed'));
+                echo Zend_Json::encode(['login' => 'failed']);
                 die();
             } else {
                 $this->_redirect('');
@@ -96,7 +96,7 @@ class Default_ModuleController extends Zend_Controller_Action
             // Override default actions (Remove Add/Edit/Delete, keep View only)
             $dataTmp['tableheader']['action'] = 'View Details'; 
 
-            $this->view->dataArray = array($dataTmp);
+            $this->view->dataArray = [$dataTmp];
             $this->view->call      = $call;
             $this->view->messages  = $this->_helper->flashMessenger->getMessages();
 
@@ -148,10 +148,10 @@ class Default_ModuleController extends Zend_Controller_Action
             // Log the system scan
             // sapp_Global::logManager(MODULE_REGISTRY_MENU_ID, 2, $this->_loginUserId, 0);
 
-            $this->_helper->json(array('status' => 'success', 'message' => $msg));
+            $this->_helper->json(['status' => 'success', 'message' => $msg]);
 
         } catch (Exception $e) {
-            $this->_helper->json(array('status' => 'error', 'message' => 'Scanner failed: ' . $e->getMessage()));
+            $this->_helper->json(['status' => 'error', 'message' => 'Scanner failed: ' . $e->getMessage()]);
         }
     }
 }

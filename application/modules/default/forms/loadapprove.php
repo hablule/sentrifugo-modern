@@ -33,12 +33,12 @@ class Default_Form_loadapprove extends Zend_Form
 		$managerstatus = new Zend_Form_Element_Select('managerstatus');
 		$managerstatus->setLabel("Action");
 		$managerstatus->setRegisterInArrayValidator(false);
-		$managerstatus->setMultiOptions(array(
+		$managerstatus->setMultiOptions([
 			''=>'Select...',
 			'Y' => 'Approve',
 			'N' => 'Reject',
-		));
-        $managerstatus->addValidator('NotEmpty', false, array('messages' => 'Please select Action.')); 
+		]);
+        $managerstatus->addValidator('NotEmpty', false, ['messages' => 'Please select Action.']); 
 $managerstatus->setRequired(true);
 		$approvedamount = new Zend_Form_Element_Text('approvedamount');
 		$approvedamount->setLabel("Comments");
@@ -51,7 +51,7 @@ $managerstatus->setRequired(true);
 		$submit->setLabel('Save');
 		$submit->setAttrib('action', BASE_URL . 'loadapprove');
 
-		$this->addElements(array($id, $managerstatus, $approvedamount, $submit));
-		$this->setElementDecorators(array('ViewHelper'));
+		$this->addElements([$id, $managerstatus, $approvedamount, $submit]);
+		$this->setElementDecorators(['ViewHelper']);
 	}
 }

@@ -23,32 +23,32 @@ class Default_Model_Weekdays extends Zend_Db_Table_Abstract
 {
     protected $_name = 'main_weekdays';
     protected $_primary = 'id';
-	
+
 	public function getWeekDaysData($sort, $by, $pageNo, $perPage,$searchQuery)
 	{
 		$where = "w.isactive = 1 AND wk.isactive=1 ";
-		
+
 		if($searchQuery)
 			$where .= " AND ".$searchQuery;
 		$db = Zend_Db_Table::getDefaultAdapter();		
-		
+
 		$weekDaysData = $this->select()
     					   ->setIntegrityCheck(false)
-						    ->from(array('w'=>'main_weekdays'),array( 'w.*'))
-                            ->joinLeft(array('wk'=>'tbl_weeks'), 'wk.week_id=w.day_name',array('week_name'=>'wk.week_name'))							   
+						    ->from(['w'=>'main_weekdays'],[ 'w.*'])
+                            ->joinLeft(['wk'=>'tbl_weeks'], 'wk.week_id=w.day_name',['week_name'=>'wk.week_name'])							   
 						   ->where($where)
     					   ->order("$by $sort") 
     					   ->limitPage($pageNo, $perPage);
-		
+
 		return $weekDaysData;       		
 	}
-	
+
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{		
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
-		
+        $searchArray = [];
+        $data = [];
+
 		if($searchData != '' && $searchData!='undefined')
 			{
 				$searchValues = json_decode($searchData);
@@ -60,31 +60,31 @@ class Default_Model_Weekdays extends Zend_Db_Table_Abstract
 				$searchQuery = rtrim($searchQuery," AND");					
 			}
 		$objName = 'weekdays';
-		
-		$tableFields = array('action'=>'Action','week_name' => 'Day','dayshortcode' => 'Short Code','daylongcode' => 'Long Code','description' => 'Description');
+
+		$tableFields = ['action'=>'Action','week_name' => 'Day','dayshortcode' => 'Short Code','daylongcode' => 'Long Code','description' => 'Description'];
 		$tablecontent = $this->getWeekDaysData($sort, $by, $pageNo, $perPage,$searchQuery);     
-		
-		$dataTmp = array(
+
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
 			'searchArray' => $searchArray,
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall
-		);	
+		];	
 		return $dataTmp;
 	}
-	
+
 	public function getsingleWeekdayData($id)
 	{
-		
+
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$weekDaysData = $db->query("SELECT * FROM main_weekdays WHERE id = ".$id." AND isactive=1");
 		$res = $weekDaysData->fetchAll();
@@ -95,17 +95,17 @@ class Default_Model_Weekdays extends Zend_Db_Table_Abstract
 		else
 			return 'norows';
 	}
-	
+
 	public function getWeekdayDataByID($id)
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('w'=>'main_weekdays'),array('w.*'))
+						->from(['w'=>'main_weekdays'],['w.*'])
 					    ->where('w.isactive = 1 AND w.id='.$id.' ');
 		return $this->fetchAll($select)->toArray();
-	
+
 	}
-	
+
 	public function SaveorUpdateWeekdaysdataData($data, $where)
 	{
 	    if($where != ''){
@@ -116,113 +116,113 @@ class Default_Model_Weekdays extends Zend_Db_Table_Abstract
 			$id=$this->getAdapter()->lastInsertId('main_weekdays');
 			return $id;
 		}
-			
+
 	}
-	
+
 	public function getWeeklist()
 	{
 	  $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('w'=>'main_weekdays'),array('w.id','w.day_name','w.daylongcode'))
+						->from(['w'=>'main_weekdays'],['w.id','w.day_name','w.daylongcode'])
 					    ->where('w.isactive = 1')
-						
+
                                                 ;
 		return $this->fetchAll($select)->toArray();
-	
+
 	}
-	
+
 	public function getWeeklistData()
 	{
 	  $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('w'=>'main_weekdays'),array('w.id','day_id'=>'w.day_name','w.daylongcode'))
-						->joinLeft(array('wk'=>'tbl_weeks'), 'wk.week_id=w.day_name',array('day_name'=>'wk.week_name'))							   
+						->from(['w'=>'main_weekdays'],['w.id','day_id'=>'w.day_name','w.daylongcode'])
+						->joinLeft(['wk'=>'tbl_weeks'], 'wk.week_id=w.day_name',['day_name'=>'wk.week_name'])							   
 					    ->where('w.isactive = 1')
                         ->order('wk.id')
                   ;
 		return $this->fetchAll($select)->toArray();
-	
+
 	}
-	
+
 	public function getWeekEndDetails($weekendnumberstr)
 	{
 	    $db = Zend_Db_Table::getDefaultAdapter();
-        
+
         $query = "select w.id,w.day_name from main_weekdays w where w.isactive = 1 and w.id IN(".$weekendnumberstr.")";
         $result = $db->query($query)->fetchAll();
 	    return $result;
-	
+
 	}
-	
+
 	/* Queries from tbl_weeks
 	    one query to get weekids which are not added to main_weekdays
 		second query is to get total weekids from tbl_weeks
 		third query is to get particular week id from tbl_weeks
-		
+
 		START
 	*/
-	
+
 	public function getWeekdayslist($weekidstr='')
 	{
 	 if($weekidstr !='')
 	  $params = explode(",",$weekidstr);
-	  
+
 	  $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('w'=>'tbl_weeks'),array('w.*'))
+						->from(['w'=>'tbl_weeks'],['w.*'])
 					    ->where('w.isactive = 1 AND week_id NOT IN(?)', $params)
-		
+
                   ;
 		return $this->fetchAll($select)->toArray();
-	
+
 	}
-	
+
 	public function getCompleteWeekdayslist()
 	{
-	  
+
 	  $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('w'=>'tbl_weeks'),array('w.*'))
+						->from(['w'=>'tbl_weeks'],['w.*'])
 					    ->where('w.isactive = 1 ')
-		
+
                   ;
 		return $this->fetchAll($select)->toArray();
-	
+
 	}
-	
+
 	public function getParticularWeekDayName($weekid)
 	{
-	  
+
 	  $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('w'=>'tbl_weeks'),array('w.*'))
+						->from(['w'=>'tbl_weeks'],['w.*'])
 					    ->where('w.isactive = 1 AND w.week_id ='.$weekid.' ');
 		return $this->fetchAll($select)->toArray();
-	
+
 	}
-	
+
 	public function getcombinedweekname($id)
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('w'=>'main_weekdays'),array('w.*'))
+						->from(['w'=>'main_weekdays'],['w.*'])
 					    ->where('w.isactive = 1 AND w.id='.$id.' ');
 		$weekdata = $this->fetchAll($select)->toArray();
-		
+
 		if(!empty($weekdata))
 		{
 		 $selectweekname = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('w'=>'tbl_weeks'),array('w.*'))
+						->from(['w'=>'tbl_weeks'],['w.*'])
 					    ->where('w.isactive = 1 AND w.week_id ='.$weekdata[0]['day_name'].' ');
-		
+
 		 $weeknamearr = $this->fetchAll($selectweekname)->toArray();
 		 return $weeknamearr;
 		}
-		
-		
-	
+
+
+
 	}
-	
+
 	/* END  */
 }

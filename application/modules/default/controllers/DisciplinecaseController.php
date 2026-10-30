@@ -55,7 +55,7 @@ class Default_DisciplinecaseController extends Zend_Controller_Action
         $session = sapp_Global::_readSession();
         if (!isset($session)) {
             if ($this->getRequest()->isXmlHttpRequest()) {
-                die(Zend_Json::encode(array('login' => 'failed')));
+                die(Zend_Json::encode(['login' => 'failed']));
             } else {
                 $this->_redirect('');
             }
@@ -97,7 +97,7 @@ class Default_DisciplinecaseController extends Zend_Controller_Action
 
             $dataTmp = $this->_model->getGrid($sort, $by, $perPage, $page, rtrim($searchData, ','), $call, $dashboardcall);
 
-            $this->view->dataArray = array($dataTmp);
+            $this->view->dataArray = [$dataTmp];
             $this->view->call      = $call;
             $this->view->messages  = $this->_helper->flashMessenger->getMessages();
         } catch (\Throwable $e) { 
@@ -161,7 +161,7 @@ class Default_DisciplinecaseController extends Zend_Controller_Action
                     $dateExpDb = !empty($expRaw) ? sapp_Global::change_date($expRaw, 'database') : null;
 
                     // 2. Format Data Payload (Omit employee_id if editing)
-                    $data = array(
+                    $data = [
                         'violation_id'       => (int)$request->getParam('violation_id'),
                         'date_of_occurrence' => $dateOccDb,
                         'employer_statement' => trim($request->getParam('employer_statement')),
@@ -169,7 +169,7 @@ class Default_DisciplinecaseController extends Zend_Controller_Action
                         'employee_statement' => trim($request->getParam('employee_statement')),
                         'case_status'        => trim($request->getParam('case_status')),
                         'isactive'           => (int)$request->getParam('isactive', 1)
-                    );
+                    ];
 
                     // Add optional Enums/Lookups safely
                     if ($request->getParam('action_id')) $data['action_id'] = (int)$request->getParam('action_id');
@@ -219,16 +219,16 @@ class Default_DisciplinecaseController extends Zend_Controller_Action
                     $db->commit();
 
                     $msg = ($id > 0) ? 'Updated' : 'Initiated';
-                    $this->_helper->flashMessenger->addMessage(array('success' => "Case $msg successfully."));
-                    $this->_helper->json(array('result' => 'saved', 'nomessage' => 'yes'));
+                    $this->_helper->flashMessenger->addMessage(['success' => "Case $msg successfully."]);
+                    $this->_helper->json(['result' => 'saved', 'nomessage' => 'yes']);
 
                 } catch (\Throwable $e) {
                     $db->rollBack();
                     error_log("DisciplineCase Save Error: " . $e->getMessage());
-                    $this->_helper->json(array('result' => 'exception', 'message' => 'System error occurred while saving the case.'));
+                    $this->_helper->json(['result' => 'exception', 'message' => 'System error occurred while saving the case.']);
                 }
             } else {
-                $msgarray = array();
+                $msgarray = [];
                 foreach ($form->getMessages() as $field => $errors) {
                     $msgarray[$field] = current($errors);
                 }
@@ -249,12 +249,12 @@ class Default_DisciplinecaseController extends Zend_Controller_Action
                 $this->_model->deleteRecord($id);
                 $menuId = defined('RAISE_INCIDENT') ? RAISE_INCIDENT : 203;
                 sapp_Global::logManager($menuId, 3, $this->_loginUserId, $id);
-                $this->_helper->json(array('msgtype' => 'success', 'message' => 'Case deleted successfully.'));
+                $this->_helper->json(['msgtype' => 'success', 'message' => 'Case deleted successfully.']);
             } catch (\Throwable $e) {
-                $this->_helper->json(array('msgtype' => 'error', 'message' => $e->getMessage()));
+                $this->_helper->json(['msgtype' => 'error', 'message' => $e->getMessage()]);
             }
         } else {
-            $this->_helper->json(array('msgtype' => 'error', 'message' => 'Invalid Request.'));
+            $this->_helper->json(['msgtype' => 'error', 'message' => 'Invalid Request.']);
         }
     }
 
@@ -269,9 +269,9 @@ class Default_DisciplinecaseController extends Zend_Controller_Action
             $menuId = defined('RAISE_INCIDENT') ? RAISE_INCIDENT : 203;
             sapp_Global::logManager($menuId, 4, $this->_loginUserId, $id);
 
-            $this->_helper->json(array('result' => 'yes'));
+            $this->_helper->json(['result' => 'yes']);
         } catch (\Throwable $e) {
-            $this->_helper->json(array('result' => 'no'));
+            $this->_helper->json(['result' => 'no']);
         }
     }
 

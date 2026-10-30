@@ -77,8 +77,8 @@ class Timemanagement_Model_Tasks extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{
 		$searchQuery = '';
-		$searchArray = array();
-		$data = array();
+		$searchArray = [];
+		$data = [];
 
 		if($searchData != '' && $searchData!='undefined')
 		{
@@ -93,11 +93,11 @@ class Timemanagement_Model_Tasks extends Zend_Db_Table_Abstract
 			
 		$objName = 'defaulttasks';
 
-		$tableFields = array('action'=>'Action','task' => 'Default task');
+		$tableFields = ['action'=>'Action','task' => 'Default task'];
 
 		$tablecontent = $this->getDefaultTaskData($sort, $by, $pageNo, $perPage,$searchQuery);
 
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
@@ -105,14 +105,14 @@ class Timemanagement_Model_Tasks extends Zend_Db_Table_Abstract
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
 		    'menuName' => 'Default Tasks',
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
 			'searchArray' => $searchArray,
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall
-		);
+		];
 		return $dataTmp;
 	}
 
@@ -132,7 +132,7 @@ class Timemanagement_Model_Tasks extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('t'=>$this->_name),array('t.*'))
+		->from(['t'=>$this->_name],['t.*'])
 		->where('t.is_active = 1 AND t.id='.$id.' ');
 		return $this->fetchAll($select)->toArray();
 	}
@@ -147,7 +147,7 @@ class Timemanagement_Model_Tasks extends Zend_Db_Table_Abstract
 	public function getcheckDupTask($taskname){
 		$select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('t'=>$this->_name),array('t.*'))
+						->from(['t'=>$this->_name],['t.*'])
 						->where('t.is_active = 1 AND t.task="'.$taskname.'" ');
 						
 		return $this->fetchAll($select)->toArray();

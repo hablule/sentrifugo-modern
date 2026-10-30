@@ -13,8 +13,8 @@ class Default_Model_empdevice extends Zend_Db_Table_Abstract{
     
         $device = $this->select()
                     ->setIntegrityCheck(false)
-                    ->from(array('md'=>'main_device_user_config'), array('id'=>'md.config_id','num_of_fingers' => 'md.num_of_fingers','num_of_card' => 'md.num_of_card', 'num_of_faces'=>'md.num_of_faces', 'security_level'=>'md.security_level'))
-                    ->join(array('du'=>'main_device_users'), 'du.config_id = md.config_id')
+                    ->from(['md'=>'main_device_user_config'], ['id'=>'md.config_id','num_of_fingers' => 'md.num_of_fingers','num_of_card' => 'md.num_of_card', 'num_of_faces'=>'md.num_of_faces', 'security_level'=>'md.security_level'])
+                    ->join(['du'=>'main_device_users'], 'du.config_id = md.config_id')
                     ->where("md.employee_id = $empid")
                     ->order("$by $sort")
                     ->limitPage($pageNo, $perPage);
@@ -26,8 +26,8 @@ class Default_Model_empdevice extends Zend_Db_Table_Abstract{
     {
         $select = $this->select()
                     ->setIntegrityCheck(false)
-                    ->from(array('md'=>'main_device_user_config'))
-                    ->join(array('du'=>'main_device_users'), 'du.employee_id = md.employee_id')
+                    ->from(['md'=>'main_device_user_config'])
+                    ->join(['du'=>'main_device_users'], 'du.employee_id = md.employee_id')
                     ->where("md.config_id = $id");
         $result = $this->fetchRow($select)->toArray();
         //Zend_Debug::dump($result['isDataSynced']);die;
@@ -43,7 +43,7 @@ class Default_Model_empdevice extends Zend_Db_Table_Abstract{
         else{
             $objName = 'empdevice';
         }
-        $searchArray = array();
+        $searchArray = [];
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
             foreach ($searchValues as $key => $val) {
@@ -53,7 +53,7 @@ class Default_Model_empdevice extends Zend_Db_Table_Abstract{
             $searchQuery = rtrim($searchQuery, " AND");
         }
         //Zend_Debug::dump($a);die;
-		$tableFields = array(
+		$tableFields = [
 			        'action' => 'Action',
 			        'num_of_fingers' => 'Number of Fingers',
 			        'num_of_card' => 'Number of Cards',
@@ -61,11 +61,11 @@ class Default_Model_empdevice extends Zend_Db_Table_Abstract{
                     'security_level' => 'Security Level',
                     'isDataSynced' => 'Sync Status'
 			
-			    );
+			    ];
 
         $tablecontent = $this->getData($sort, $by, $pageNo, $perPage, $searchQuery,$a);
        
-        $dataTmp = array(
+        $dataTmp = [
             'unitId' => $a,
             'sort' => $sort,
             'by' => $by,
@@ -73,7 +73,7 @@ class Default_Model_empdevice extends Zend_Db_Table_Abstract{
             'perPage' => $perPage,
             'tablecontent' => $tablecontent,
             'objectname' => $objName,
-            'extra' => array(),
+            'extra' => [],
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getEmployeeAjaxgridData',
             'jsFillFnName' => '',
@@ -85,12 +85,12 @@ class Default_Model_empdevice extends Zend_Db_Table_Abstract{
             'searchArray' => $searchArray,
             'call' => $call,
             'dashboardcall' => $dashboardcall,
-            'search_filters' => array( 
-                'isactive' => array(
+            'search_filters' => [ 
+                'isactive' => [
                     'type' => 'select',
-                    'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-    )
-        );
+                    'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+    ]
+        ];
         
         return $dataTmp;
     }
@@ -111,8 +111,8 @@ class Default_Model_empdevice extends Zend_Db_Table_Abstract{
     {
         $select = $this->select()
                     ->setIntegrityCheck(false)
-                    ->from(array('md'=>'main_device_user_config'))
-                    ->join(array('du'=>'main_device_users'), 'du.employee_id = md.employee_id')
+                    ->from(['md'=>'main_device_user_config'])
+                    ->join(['du'=>'main_device_users'], 'du.employee_id = md.employee_id')
                     ->where("md.config_id = $id");
         $result = $this->fetchRow($select);
         return $result;

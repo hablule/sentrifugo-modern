@@ -42,7 +42,7 @@ class Default_EmpphonenoController extends Zend_Controller_Action
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 				if ($Uid != "") {
 					$employeeData = $usersModel->getUserDetailsByIDandFlag($Uid);
 				}
@@ -63,9 +63,9 @@ class Default_EmpphonenoController extends Zend_Controller_Action
 									$objname = $this->_getParam('objname');
 									$refresh = $this->_getParam('refresh');
 									$dashboardcall = $this->_getParam('dashboardcall', null);
-									$data = array();
+									$data = [];
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 									$tablecontent = '';
 									if ($refresh == 'refresh') {
 										if ($dashboardcall == 'Yes')
@@ -78,7 +78,7 @@ class Default_EmpphonenoController extends Zend_Controller_Action
 										$pageNo = 1;
 										$searchData = '';
 										$searchQuery = '';
-										$searchArray = array();
+										$searchArray = [];
 									} else {
 										$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 										$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'phoneno';
@@ -134,7 +134,7 @@ class Default_EmpphonenoController extends Zend_Controller_Action
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 
 				$employeeModal = new Default_Model_Employee();
 				try {
@@ -153,9 +153,9 @@ class Default_EmpphonenoController extends Zend_Controller_Action
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall', null);
-								$data = array();
+								$data = [];
 								$searchQuery = '';
-								$searchArray = array();
+								$searchArray = [];
 								$tablecontent = '';
 								if ($refresh == 'refresh') {
 									if ($dashboardcall == 'Yes')
@@ -168,7 +168,7 @@ class Default_EmpphonenoController extends Zend_Controller_Action
 									$pageNo = 1;
 									$searchData = '';
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 								} else {
 									$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 									$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'contact';
@@ -259,8 +259,8 @@ $this->view->categorypermission = $categorypermission;
 				$tableid  = '';
 				session_start();
 				
-				$data = array(
-					'location_id' => isset($_SESSION['location'])?$_SESSION['location']:115,
+				$data = [
+					'location_id' => $_SESSION['location'] ?? 115,
 					'phoneno' => $this->_request->getParam('phone'),
 					'contact' =>$this->_request->getParam('contact'),
                     'linetype_id'=>$this->_getParam('linetype_id'),
@@ -268,7 +268,7 @@ $this->view->categorypermission = $categorypermission;
 					'description' => $this->_request->getParam('description'),
 					'employee_id'=> $unitid,
 					
-				);
+				];
 
 				$data['createdby'] = $loginUserId;
 				$data['createddate'] = gmdate("Y-m-d H:i:s");
@@ -356,7 +356,7 @@ $this->view->categorypermission = $categorypermission;
 				//session_start();
 			
                 
-				$data = array(
+				$data = [
 					'location_id' =>( $_SESSION['location']!='')?$_SESSION['location']:127,
 					'phoneno' => $this->_request->getParam('phoneno'),
 					'contact' =>$this->_request->getParam('contact'),
@@ -366,7 +366,7 @@ $this->view->categorypermission = $categorypermission;
 					'employee_id'=> $unitid,
                     'isactive'=>$util::getcheckboxvalue($this->_getParam('isactive'))
 					
-				);
+				];
                // die(Zend_Debug::dump($data));
 				$data['modifiedby'] = $loginUserId;
 				$data['modifieddate'] = gmdate("Y-m-d H:i:s");

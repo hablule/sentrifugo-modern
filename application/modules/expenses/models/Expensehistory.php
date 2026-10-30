@@ -104,8 +104,8 @@ class Expenses_Model_Expensehistory extends Zend_Db_Table_Abstract
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$expenseData = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('ex' => 'expense_history'))
-		->joinInner(array('mu'=>'main_users'), "mu.id = ex.createdby",array('userfullname'=>'mu.userfullname'))		
+		->from(['ex' => 'expense_history'])
+		->joinInner(['mu'=>'main_users'], "mu.id = ex.createdby",['userfullname'=>'mu.userfullname'])		
 		->where('ex.isactive=1 and ex.expense_id='.$expense_id);
 		return $this->fetchAll($expenseData)->toArray();
 	}

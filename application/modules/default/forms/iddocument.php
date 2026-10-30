@@ -12,14 +12,14 @@ class Default_Form_iddocument extends Zend_Form
         $this->setAttrib('name','iddocument');
         $id = new Zend_Form_Element_Hidden('id');
         $name = new Zend_Form_Element_Text('name');
-        $name->addValidator('NotEmpty',false,array("messages"=>"Name required"));
+        $name->addValidator('NotEmpty',false,["messages"=>"Name required"]);
         $code = new Zend_Form_Element_Text('code');
-        $code->addValidator('NotEmpty',false,array('messages'=>'Code required'));
+        $code->addValidator('NotEmpty',false,['messages'=>'Code required']);
         $description = new Zend_Form_Element_Textarea('description');
         $isnumberd = new Zend_Form_Element_Checkbox('isnumberd');
         $isphotoid = new Zend_Form_Element_Checkbox('isphotoid');
         $iddocumentpurpose_id = new Zend_Form_Element_Select('iddocumentpurpose_id');
-        $iddocumentpurpose_id->addValidator('NotEmpty',false,array('messages'=>'Document purpose required'));
+        $iddocumentpurpose_id->addValidator('NotEmpty',false,['messages'=>'Document purpose required']);
         $iddocumentcategory = new Zend_Form_Element_Select('iddocumentcategory_id');
         $iddocumentcategory->addMultiOption('','Select category');
         $model = new Default_Model_Documentcategory();	
@@ -51,8 +51,8 @@ class Default_Form_iddocument extends Zend_Form
 
         $isactive = new Zend_Form_Element_Checkbox('isactive');
         $submit = new Zend_Form_Element_Submit('submit');
-       $this->addElements(array($id,$name,$code,$description,$iddocumentcategory,$iddocumentpurpose_id,$iddocumenttype_id,$isactive,$isnumberd,$isphotoid,$submit,$status));
-       $this->setElementDecorators(array('ViewHelper')); 
+       $this->addElements([$id,$name,$code,$description,$iddocumentcategory,$iddocumentpurpose_id,$iddocumenttype_id,$isactive,$isnumberd,$isphotoid,$submit,$status]);
+       $this->setElementDecorators(['ViewHelper']); 
           //code...
         } catch (\Throwable $th) {
            Zend_Debug::dump($th->getMessage());

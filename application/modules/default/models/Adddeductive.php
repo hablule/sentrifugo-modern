@@ -34,8 +34,8 @@ class Default_Model_Adddeductive extends Zend_Db_Table_Abstract
 
         $AdditionData = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('p' => 'main_load'), array('load_id' => 'p.load_id', 'name' => 'p.name', 'code' => 'p.code', 'description' => 'p.description', 'start' =>  'DATE_FORMAT(p.start,"'.DATEFORMAT_MYSQL.'")', 'end' =>  'DATE_FORMAT(p.end,"'.DATEFORMAT_MYSQL.'")', 'type' => 'p.type', 'isactive' => 'if(p.isactive="N","No","Yes")','autoapprove' => 'p.autoapprove'))
-            ->joinInner(array('pc' => 'main_loadcategory'), "pc.load_category_id = p.load_category_id ", array('category' => 'pc.name'))
+            ->from(['p' => 'main_load'], ['load_id' => 'p.load_id', 'name' => 'p.name', 'code' => 'p.code', 'description' => 'p.description', 'start' =>  'DATE_FORMAT(p.start,"'.DATEFORMAT_MYSQL.'")', 'end' =>  'DATE_FORMAT(p.end,"'.DATEFORMAT_MYSQL.'")', 'type' => 'p.type', 'isactive' => 'if(p.isactive="N","No","Yes")','autoapprove' => 'p.autoapprove'])
+            ->joinInner(['pc' => 'main_loadcategory'], "pc.load_category_id = p.load_category_id ", ['category' => 'pc.name'])
             //    ->joinInner(array('pc'=>'main_perkcategory'), 's.id=c.state',array('state_name'=>'s.state_name'))	
             ->where($where)
             ->order("$by $sort")
@@ -45,8 +45,8 @@ class Default_Model_Adddeductive extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $p1, $p2, $p3, $p4)
     {
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
         $db = Zend_Db_Table::getDefaultAdapter();
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
@@ -76,7 +76,7 @@ class Default_Model_Adddeductive extends Zend_Db_Table_Abstract
         $objName = 'adddeductive';
         $objId = 'add';
 
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'name' => 'Name',
             'code' => 'Code',
@@ -87,10 +87,10 @@ class Default_Model_Adddeductive extends Zend_Db_Table_Abstract
             'type' => 'Type',
             'isactive' => 'Active',
 
-        );
+        ];
         $catemodel = new Default_Model_Deductivecategory();
         $categoryArray = $catemodel->getloadcategory();
-        $category = array();
+        $category = [];
         $category['']='All';
         foreach ($categoryArray as $value) {
             $category[$value['name']] = $value['name'];
@@ -100,7 +100,7 @@ class Default_Model_Adddeductive extends Zend_Db_Table_Abstract
         /* $category =  */
       
         $tablecontent = $this->getAdditionData($sort, $by, $pageNo, $perPage, $searchQuery);
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
@@ -109,7 +109,7 @@ class Default_Model_Adddeductive extends Zend_Db_Table_Abstract
             'objectname' => $objName,
             'objectId' => $objId,
             'menuName' => 'Load List',
-            'extra' => array(),
+            'extra' => [],
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
             'jsFillFnName' => '',
@@ -117,36 +117,36 @@ class Default_Model_Adddeductive extends Zend_Db_Table_Abstract
             'add' => 'deductive',
             'call' => $call,
             'dashboardcall' => $dashboardcall,
-            'search_filters' => array(
-                'start' => array('type' => 'datepicker'),
-                    'end' => array('type' => 'datepicker'),
-                    'isactive' => array(
+            'search_filters' => [
+                'start' => ['type' => 'datepicker'],
+                    'end' => ['type' => 'datepicker'],
+                    'isactive' => [
                         'type' => 'select',
-                        'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-                    'category'=>array(
+                        'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+                    'category'=>[
                         'type'=>'select',
                         'filter_data'=>$category
-                    )
-            ),
+                    ]
+            ],
                 
-        );
+        ];
         return $dataTmp;
     }
     
     public function saveMultiEmpLoad($datas)
     {
 
-        $config = array(
+        $config = [
             'name' => 'main_employeeload',
             'primary' => 'employeeload_id'
-        );
+        ];
         $this->table = new Zend_Db_Table($config);
 
         foreach ($datas as $data) {
             $this->table->update($data,'emp_id='.$data['emp_id'].' AND load_id='.$data['load_id']);
             $query = $this->select()
                 ->setIntegrityCheck(false)
-                ->from(array('e' => 'main_employeeload'), 'e.employeeload_id')
+                ->from(['e' => 'main_employeeload'], 'e.employeeload_id')
                 ->where('e.emp_id = ' . $data['emp_id'] . ' AND e.load_id = ' . $data['load_id']);
             $result = $this->fetchAll($query)->toArray();
             if(count($result)<=0){
@@ -166,7 +166,7 @@ class Default_Model_Adddeductive extends Zend_Db_Table_Abstract
         //     $this->table = new Zend_Db_Table($config);
         $query = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('e' => 'main_employees'), 'e.user_id')
+            ->from(['e' => 'main_employees'], 'e.user_id')
             ->where('e.id =' . $id);
         return $this->fetchAll($query)->toArray();
     }
@@ -180,32 +180,32 @@ class Default_Model_Adddeductive extends Zend_Db_Table_Abstract
         //     $this->table = new Zend_Db_Table($config);
         $query = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('e' => 'main_employeeload'), 'e.emp_id')
+            ->from(['e' => 'main_employeeload'], 'e.emp_id')
             ->where('e.load_id =' . $id);
         return $this->fetchAll($query)->toArray();
     }
     public function getloadamount($id)
     {
-            $config = array(
+            $config = [
                 'name' => 'main_load',
                 'primary' => 'load_id'
-            );
+            ];
             $this->table = new Zend_Db_Table($config);
         $query =$this->table ->select()
             ->setIntegrityCheck(false)
-            ->from(array('ml' => 'main_load'), 'ml.amount')
+            ->from(['ml' => 'main_load'], 'ml.amount')
             ->where('ml.load_id =' . $id);
         return $this->table ->fetchAll($query)->toArray();
     }    public function getloadtype($id)
     {
-            $config = array(
+            $config = [
                 'name' => 'main_load',
                 'primary' => 'load_id'
-            );
+            ];
             $this->table = new Zend_Db_Table($config);
         $query =$this->table ->select()
             ->setIntegrityCheck(false)
-            ->from(array('ml' => 'main_load'),array ('ml.type','ml.autoapprove'))
+            ->from(['ml' => 'main_load'], ['ml.type','ml.autoapprove'])
             ->where('ml.load_id =' . $id);
         return $this->table ->fetchAll($query)->toArray();
     }
@@ -213,7 +213,7 @@ class Default_Model_Adddeductive extends Zend_Db_Table_Abstract
     {
         $result = $this->select()
         ->setIntegrityCheck(false)
-        ->from(array('s' => 'main_empsalarydetails'),array('amount' => 's.amount'))
+        ->from(['s' => 'main_empsalarydetails'],['amount' => 's.amount'])
         ->where('s.emp_id='.$id.' AND s.isactive="Y"');
  //die($result);
             return $this->fetchAll($result)->toArray();

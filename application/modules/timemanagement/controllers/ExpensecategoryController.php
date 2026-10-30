@@ -45,9 +45,9 @@ class Timemanagement_ExpensecategoryController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 
 		if($refresh == 'refresh')
@@ -140,13 +140,13 @@ class Timemanagement_ExpensecategoryController extends Zend_Controller_Action
 				$unitPrice= $this->_request->getParam('unit_price');
 				$date = new Zend_Date();
 
-				$data = array( 'expense_category'=>trim($category),
+				$data = [ 'expense_category'=>trim($category),
 							   'unit_price'=>trim($unitPrice),
 				               'modified_by'=>$loginUserId,
 							   'modified'=>gmdate("Y-m-d H:i:s")	
-				);
+				];
 				if($id!=''){
-					$where = array('id=?'=>$id);
+					$where = ['id=?'=>$id];
 				}
 				else
 				{
@@ -158,11 +158,11 @@ class Timemanagement_ExpensecategoryController extends Zend_Controller_Action
 				$Id = $expenseCategoryModel->SaveorUpdateExpenseCategoryData($data, $where);
 				if($Id == 'update')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Expense Category updated successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Expense Category updated successfully."]);
 				}
 				else
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Expense Category added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Expense Category added successfully."]);
 				}
 					
 				$this->_redirect('timemanagement/expensecategory');
@@ -248,8 +248,8 @@ class Timemanagement_ExpensecategoryController extends Zend_Controller_Action
 			$expenseCategoryModel = new Timemanagement_Model_Expensecategories();
 			$checkExpenses = $expenseCategoryModel->checkExpenses($id);
 			if($checkExpenses == 0){
-				$data = array('is_active'=>0,'modified'=>gmdate("Y-m-d H:i:s"));
-				$where = array('id=?'=>$id);
+				$data = ['is_active'=>0,'modified'=>gmdate("Y-m-d H:i:s")];
+				$where = ['id=?'=>$id];
 				$expenseCategoryData = $expenseCategoryModel->getExpenseCategoryDataById($id);
 				$Id = $expenseCategoryModel->SaveorUpdateExpenseCategoryData($data, $where);
 				if($Id == 'update')
@@ -277,7 +277,7 @@ class Timemanagement_ExpensecategoryController extends Zend_Controller_Action
 	
     public function addpopupAction()
 	{
-		$msgarray = array();
+		$msgarray = [];
 		$emptyFlag = '';
 		Zend_Layout::getMvcInstance()->setLayoutPath(APPLICATION_PATH."/layouts/scripts/popup/");
 		$auth = Zend_Auth::getInstance();
@@ -296,12 +296,12 @@ class Timemanagement_ExpensecategoryController extends Zend_Controller_Action
 				$category = $this->_request->getParam('category');
 				$date = gmdate("Y-m-d H:i:s");
  
-			   $data = array(
+			   $data = [
 							'category'  => $category,
 			                'created_by' => $loginUserId,
 			                'created' => gmdate("Y-m-d H:i:s"),
 			                'is_active' => 1,
-				);
+				];
 				
 				$where = '';
 		

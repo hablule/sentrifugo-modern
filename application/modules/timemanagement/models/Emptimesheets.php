@@ -33,7 +33,7 @@ class Timemanagement_Model_Emptimesheets extends Zend_Db_Table_Abstract
 	{
 		$select=$this->select()
 		->setIntegrityCheck(false)
-		->from(array('e'=>'employees_summary'),array('minyear'=>'min(year(e.date_of_joining))'))
+		->from(['e'=>'employees_summary'],['minyear'=>'min(year(e.date_of_joining))'])
 		->where("e.isactive=1 and e.date_of_joining!='0000-00-00 00:00:00'");
 		$data=$this->fetchRow($select)->toArray();
 		$minyear=$data['minyear'];
@@ -44,13 +44,13 @@ class Timemanagement_Model_Emptimesheets extends Zend_Db_Table_Abstract
 	{
 		if($selmn!='')
 		{
-			$week=array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday');
+			$week=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 			$date=date($selmn.'-01');
 			$dt_arr=preg_split('/-/',$date);
 			$lsday = cal_days_in_month(CAL_GREGORIAN, $dt_arr[1], $dt_arr[0]);
 			$wday = date('l',mktime(0,0,0,$dt_arr[1],$dt_arr[2],$dt_arr[0]));
 			$wval = array_search($wday, $week);
-			$master=array();
+			$master=[];
 			$j=1;
 			for($i=0;$i<42;$i++)
 			{
@@ -67,25 +67,25 @@ class Timemanagement_Model_Emptimesheets extends Zend_Db_Table_Abstract
 
 	public function daysOftheweek()
 	{
-		$config = array(
+		$config = [
 			'name'=>'tbl_weeks',
 			'primary'=>'id'
-		);
+		];
 		$table = new Zend_Db_Table($config);
 		$result=$table->select()
 			  		  ->setIntegrityCheck(false)
-			  		  ->from(array('w'=>'tbl_weeks'),array('id'=>'w.id','weekid'=>'w.week_id','weekname'=>'w.week_name'))
+			  		  ->from(['w'=>'tbl_weeks'],['id'=>'w.id','weekid'=>'w.week_id','weekname'=>'w.week_name'])
 			  		  ->where('w.isactive=1');
 		
 		return $table->fetchAll($result)->toArray();
 
 	}
 
-	public function getEmployeesAsscociatedWithProject($manager_id = "",$year,$month,$search="",$clicked_status,$emp_list_flag="",$week="",$current_page){
+	public function getEmployeesAsscociatedWithProject($manager_id = "",$year = null,$month = null,$search="",$clicked_status = null,$emp_list_flag="",$week="",$current_page = null){
 		
 		$search=urldecode($search);
-		$stat_arr=array('enabled'=>'Enabled','blocked'=>'Blocked','rejected'=>'Rejected','submitted'=>'For Approval','approved'=>'Approved','saved'=>'Saved');
-		$fin_arr=array();
+		$stat_arr=['enabled'=>'Enabled','blocked'=>'Blocked','rejected'=>'Rejected','submitted'=>'For Approval','approved'=>'Approved','saved'=>'Saved'];
+		$fin_arr=[];
 		$i=0;
 		$where = " WHERE (ms.isactive = 1 AND pe.is_active=1 ) ";
 		$per_page = 8;
@@ -163,11 +163,11 @@ IF(FIND_IN_SET('enabled',GROUP_CONCAT(sun_project_status,',',mon_project_status,
 		
 	}
 	
-	public function getEmployeesForMonthly($manager_id = "",$year,$month,$search="",$clicked_status,$emp_list_flag="",$week="",$current_page)
+	public function getEmployeesForMonthly($manager_id = "",$year = null,$month = null,$search="",$clicked_status = null,$emp_list_flag="",$week="",$current_page = null)
 	{
 		$search=urldecode($search);
-		$stat_arr=array('enabled'=>'Enabled','blocked'=>'Blocked','rejected'=>'Rejected','submitted'=>'For Approval','approved'=>'Approved','saved'=>'Saved');
-		$fin_arr=array();
+		$stat_arr=['enabled'=>'Enabled','blocked'=>'Blocked','rejected'=>'Rejected','submitted'=>'For Approval','approved'=>'Approved','saved'=>'Saved'];
+		$fin_arr=[];
 		$i=0;
 		$where = " WHERE (ms.isactive = 1) ";
 		$per_page = 8;
@@ -242,11 +242,11 @@ IF(FIND_IN_SET('enabled',GROUP_CONCAT(sun_project_status,',',mon_project_status,
 
 	}
 
-	function getEmployeeTimsheetDetails($year,$month,$week="",$user_id,$project_ids="",$emplistflag=""){
+	public function getEmployeeTimsheetDetails($year,$month,$week="",$user_id = null,$project_ids="",$emplistflag=""){
 		
 
-		$stat_arr=array('enabled'=>'Enabled','blocked'=>'Blocked','rejected'=>'Rejected','submitted'=>'For Approval','approved'=>'Approved','saved'=>'Saved');
-		$fin_arr=array();
+		$stat_arr=['enabled'=>'Enabled','blocked'=>'Blocked','rejected'=>'Rejected','submitted'=>'For Approval','approved'=>'Approved','saved'=>'Saved'];
+		$fin_arr=[];
 		$i=0;
 		$where = "";
 		$db = Zend_Db_Table::getDefaultAdapter();
@@ -316,15 +316,15 @@ IF(FIND_IN_SET('enabled',GROUP_CONCAT(sun_project_status,',',mon_project_status,
 	{
 		$select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('t' => $this->_ts_status),
+						->from(['t' => $this->_ts_status],
 						//array('ts_week_dates' => "concat(concat(sun_date,'#',sun_status),'$',concat(mon_date,'#',mon_status),'$',concat(tue_date,'#',tue_status),'$',concat(wed_date,'#',wed_status),'$',concat(thu_date,'#',thu_status),'$',concat(fri_date,'#',fri_status),'$',concat(sat_date,'#',sat_status))"))
-						array('ts_week_dates' => "concat(concat(sun_date,'#',sun_status,'#','sun'),'$',
+						['ts_week_dates' => "concat(concat(sun_date,'#',sun_status,'#','sun'),'$',
 												concat(mon_date,'#',mon_status,'#','mon'),'$',
 												concat(tue_date,'#',tue_status,'#','tue'),'$',
 												concat(wed_date,'#',wed_status,'#','wed'),'$',
 												concat(thu_date,'#',thu_status,'#','thu'),'$',
 												concat(fri_date,'#',fri_status,'#','fri'),'$',
-												concat(sat_date,'#',sat_status,'#','sat'))"))
+												concat(sat_date,'#',sat_status,'#','sat'))"])
 						->where("t.emp_id=".$empid." AND t.is_active=1 AND t.cal_week = '".$cal_week."' AND t.ts_month='".$month."' AND t.ts_year = '".$startDateYear."' ")
 						->group('t.emp_id');
 						//echo $select;exit();
@@ -334,22 +334,22 @@ IF(FIND_IN_SET('enabled',GROUP_CONCAT(sun_project_status,',',mon_project_status,
 	public function getEachDayTsDateCronWithProject($empid,$cal_week,$startDateYear,$month=""){
 		$select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('t' => $this->_ts_status),
-							  array('project_id'=>'project_id',
+						->from(['t' => $this->_ts_status],
+							  ['project_id'=>'project_id',
 						  			'ts_week_dates' => "concat(concat(sun_date,'#',sun_project_status,'#','sun'),'$',
 													concat(mon_date,'#',mon_project_status,'#','mon'),'$',
 													concat(tue_date,'#',tue_project_status,'#','tue'),'$',
 													concat(wed_date,'#',wed_project_status,'#','wed'),'$',
 													concat(thu_date,'#',thu_project_status,'#','thu'),'$',
 													concat(fri_date,'#',fri_project_status,'#','fri'),'$',
-													concat(sat_date,'#',sat_project_status,'#','sat'))"))
+													concat(sat_date,'#',sat_project_status,'#','sat'))"])
 						->where("t.emp_id=".$empid." AND t.project_id IS NOT NULL AND t.is_active=1 AND t.cal_week = '".$cal_week."' AND t.ts_month='".$month."' AND t.ts_year = '".$startDateYear."' ");
 		//echo $select;exit();
 		return $this->fetchAll($select)->toArray();
 		
 	}
 	
-	function updateEmployeeTimesheet($emp_id="",$year="",$month="",$lastday="",$calenderWeekArray="",$flag="",$rejectNote="",$emplistflag){
+	public function updateEmployeeTimesheet($emp_id="",$year="",$month="",$lastday="",$calenderWeekArray="",$flag="",$rejectNote="",$emplistflag = null){
 
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$month_start_date = $year."-".$month."-"."01";
@@ -380,9 +380,9 @@ IF(FIND_IN_SET('enabled',GROUP_CONCAT(sun_project_status,',',mon_project_status,
 		}
 	}
 
-	function rejectEmployeeTimesheetStatus($emp_id="", $calweek="", $year="", $datesArr="",$rejectNote="",$month="",$emplistflag){
-		$resultData = array();
-		$ts_filled_dates = array();
+	public function rejectEmployeeTimesheetStatus($emp_id="", $calweek="", $year="", $datesArr="",$rejectNote="",$month="",$emplistflag = null){
+		$resultData = [];
+		$ts_filled_dates = [];
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$isprojectManager = false;
 		$conditionCheck = "submitted";
@@ -407,9 +407,9 @@ IF(FIND_IN_SET('enabled',GROUP_CONCAT(sun_project_status,',',mon_project_status,
 				$resultData = $this->getEachDayTsDateCronWithProject($emp_id,$calweek,$year,$month);
 				if(sizeof($resultData) > 0){
 					foreach ($resultData as $tmpresultData){
-						$updateArray = array();
-						$updateRejProjStatus = array();
-						$updateStatus = array();
+						$updateArray = [];
+						$updateRejProjStatus = [];
+						$updateStatus = [];
 						$ts_week_dates = $tmpresultData['ts_week_dates'];
 						$project_id = $tmpresultData['project_id'];
 						$ts_weekArray = explode('$',$ts_week_dates);
@@ -441,7 +441,7 @@ IF(FIND_IN_SET('enabled',GROUP_CONCAT(sun_project_status,',',mon_project_status,
 								//print_r($updateArray);
 								$result = $db->update($this->_ts_status, $updateArray ,$whereStmt);
 								
-								$updateStatusArray = array();
+								$updateStatusArray = [];
 								$getDayStatusForEmp = $this->getEmpDayStatusByProjectStatusForWeek($emp_id,$month, $calweek, $year);
 								foreach($getDayStatusForEmp as $key => $value){
 									if(isset($updateStatus[$key])){
@@ -460,7 +460,7 @@ IF(FIND_IN_SET('enabled',GROUP_CONCAT(sun_project_status,',',mon_project_status,
 								
 								$weekStatus = $this->getEmpWeekStatus($emp_id,$calweek,$year,$month);
 								$week_status = $weekStatus['week_status'];
-								$db->update($this->_ts_status, array('week_status' => $week_status) ,$statusWhere);
+								$db->update($this->_ts_status, ['week_status' => $week_status] ,$statusWhere);
 								
 							}	
 						}
@@ -469,8 +469,8 @@ IF(FIND_IN_SET('enabled',GROUP_CONCAT(sun_project_status,',',mon_project_status,
 			}
 			
 		}else{
-			$updateArray = array();
-			$updateRejProjStatus = array();
+			$updateArray = [];
+			$updateRejProjStatus = [];
 			$resultData = $this->getEachDayTsDateCron($emp_id,$calweek,$year,$month);
 			if(!empty($resultData[0])){
 				$ts_week_dates = $resultData[0]['ts_week_dates'];
@@ -492,7 +492,7 @@ IF(FIND_IN_SET('enabled',GROUP_CONCAT(sun_project_status,',',mon_project_status,
 						$db->update($this->_ts_status, $updateArray ,$whereStmt);
 						$weekStatus = $this->getEmpWeekStatus($emp_id,$calweek,$year,$month);
 						$week_status = $weekStatus['week_status'];
-						$db->update($this->_ts_status, array('week_status' => $week_status) ,$whereStmt);
+						$db->update($this->_ts_status, ['week_status' => $week_status] ,$whereStmt);
 						if(sizeof($updateRejProjStatus) > 0){
 							$db->update('tm_emp_ts_notes', $updateRejProjStatus ,$whereStmt);
 						}
@@ -503,10 +503,10 @@ IF(FIND_IN_SET('enabled',GROUP_CONCAT(sun_project_status,',',mon_project_status,
 		
 	}
 	
-	function updateEmployeeTimesheetStatus($emp_id="", $calweek="", $year="", $flag="", $datesArr="",$month="",$emplistflag){
+	public function updateEmployeeTimesheetStatus($emp_id="", $calweek="", $year="", $flag="", $datesArr="",$month="",$emplistflag = null){
 
-		$resultData = array();
-		$ts_filled_dates = array();
+		$resultData = [];
+		$ts_filled_dates = [];
 		$conditionCheck = "";
 		$statusUpdate = "";
 		$db = Zend_Db_Table::getDefaultAdapter();
@@ -536,8 +536,8 @@ IF(FIND_IN_SET('enabled',GROUP_CONCAT(sun_project_status,',',mon_project_status,
 				$resultData = $this->getEachDayTsDateCronWithProject($emp_id,$calweek,$year,$month);
 				if(sizeof($resultData) > 0){
 					foreach ($resultData as $tmpresultData){
-						$updateArray = array();
-						$updateStatus = array();
+						$updateArray = [];
+						$updateStatus = [];
 						$approvedDates = "";
 						$ts_week_dates = $tmpresultData['ts_week_dates'];
 						$project_id = $tmpresultData['project_id'];
@@ -566,7 +566,7 @@ IF(FIND_IN_SET('enabled',GROUP_CONCAT(sun_project_status,',',mon_project_status,
 							if(sizeof($updateArray) > 0){
 								$result = $db->update($this->_ts_status, $updateArray ,$whereStmt);
 								if($result > 0){
-									$updateStatusArray = array();
+									$updateStatusArray = [];
 									$getDayStatusForEmp = $this->getEmpDayStatusByProjectStatusForWeek($emp_id,$month, $calweek, $year);
 									foreach($getDayStatusForEmp as $key => $value){
 										if(isset($updateStatus[$key])){
@@ -580,7 +580,7 @@ IF(FIND_IN_SET('enabled',GROUP_CONCAT(sun_project_status,',',mon_project_status,
 																	
 									$weekStatus = $this->getEmpWeekStatus($emp_id,$calweek,$year,$month);
 									$week_status = $weekStatus['week_status'];
-									$db->update($this->_ts_status, array('week_status' => $week_status) ,$statusWhere);
+									$db->update($this->_ts_status, ['week_status' => $week_status] ,$statusWhere);
 									
 									if($statusUpdate == "approved" && $approvedDates != ""){
 										$this->saveProcessNotes($emp_id,$approvedDates,$data->id);
@@ -602,7 +602,7 @@ IF(FIND_IN_SET('enabled',GROUP_CONCAT(sun_project_status,',',mon_project_status,
 				}
 			}
 		}else{
-			$updateArray = array();
+			$updateArray = [];
 			$approvedDates = "";
 			$resultData = $this->getEachDayTsDateCron($emp_id,$calweek,$year,$month);
 			if(!empty($resultData[0])){
@@ -628,7 +628,7 @@ IF(FIND_IN_SET('enabled',GROUP_CONCAT(sun_project_status,',',mon_project_status,
 						$db->update($this->_ts_status, $updateArray ,$whereStmt);
 						$weekStatus = $this->getEmpWeekStatus($emp_id,$calweek,$year,$month);
 						$week_status = $weekStatus['week_status'];
-						$db->update($this->_ts_status, array('week_status' => $week_status) ,$whereStmt);
+						$db->update($this->_ts_status, ['week_status' => $week_status] ,$whereStmt);
 						if($approvedDates != ""){
 							$this->saveProcessNotes($emp_id,$approvedDates,$data->id);
 							/*$insertProcessUpdates = array(
@@ -649,18 +649,18 @@ IF(FIND_IN_SET('enabled',GROUP_CONCAT(sun_project_status,',',mon_project_status,
 	
 	}
 
-	function getEmpDayStatusByProjectStatus($emp_id="",$month="", $calweek="", $year="",$project_status="",$day_status="",$day_date_column ="", $day_date=""){
+	public function getEmpDayStatusByProjectStatus($emp_id="",$month="", $calweek="", $year="",$project_status="",$day_status="",$day_date_column ="", $day_date=""){
 		
 		$select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('t' => $this->_ts_status),
-						array("$day_status" => "IF(FIND_IN_SET('blocked',GROUP_CONCAT(DISTINCT ".$project_status."))!=0,'blocked',
+						->from(['t' => $this->_ts_status],
+						["$day_status" => "IF(FIND_IN_SET('blocked',GROUP_CONCAT(DISTINCT ".$project_status."))!=0,'blocked',
 												IF(FIND_IN_SET('saved',GROUP_CONCAT(DISTINCT ".$project_status."))!=0,'saved',
 											    IF(FIND_IN_SET('rejected',GROUP_CONCAT(DISTINCT ".$project_status."))!=0,'rejected',
 												IF(FIND_IN_SET('submitted',GROUP_CONCAT(DISTINCT ".$project_status."))!=0,'submitted',
 											    IF(FIND_IN_SET('approved',GROUP_CONCAT(DISTINCT ".$project_status."))!=0,'approved',											    
 											    IF(FIND_IN_SET('enabled',GROUP_CONCAT(DISTINCT ".$project_status."))!=0,'enabled','No Entry'))))))
-												"))
+												"])
 						->where("emp_id=".$emp_id." AND ts_month=".$month." AND project_id IS NOT NULL  
 								AND is_active=1 AND cal_week = '".$calweek."' AND ts_year = '".$year."' AND ".$day_date_column." = '".$day_date."'");
 		$result = $this->fetchAll($select)->toArray();
@@ -668,11 +668,11 @@ IF(FIND_IN_SET('enabled',GROUP_CONCAT(sun_project_status,',',mon_project_status,
 		
 	}
 	
-	function getEmpDayStatusByProjectStatusForWeek($emp_id="",$month="", $calweek="", $year=""){
+	public function getEmpDayStatusByProjectStatusForWeek($emp_id="",$month="", $calweek="", $year=""){
 		$select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('t' => $this->_ts_status),
-							  array("mon_status" => " IF(FIND_IN_SET('blocked',GROUP_CONCAT(DISTINCT mon_project_status))!=0,'blocked',
+						->from(['t' => $this->_ts_status],
+							  ["mon_status" => " IF(FIND_IN_SET('blocked',GROUP_CONCAT(DISTINCT mon_project_status))!=0,'blocked',
 							  						IF(FIND_IN_SET('saved',GROUP_CONCAT(DISTINCT mon_project_status))!=0,'saved',
 												    IF(FIND_IN_SET('rejected',GROUP_CONCAT(DISTINCT mon_project_status))!=0,'rejected',
 												    IF(FIND_IN_SET('submitted',GROUP_CONCAT(DISTINCT mon_project_status))!=0,'submitted',
@@ -720,7 +720,7 @@ IF(FIND_IN_SET('enabled',GROUP_CONCAT(sun_project_status,',',mon_project_status,
 												    IF(FIND_IN_SET('submitted',GROUP_CONCAT(DISTINCT sun_project_status))!=0,'submitted',
 												    IF(FIND_IN_SET('approved',GROUP_CONCAT(DISTINCT sun_project_status))!=0,'approved',												    
 												    IF(FIND_IN_SET('enabled',GROUP_CONCAT(DISTINCT sun_project_status))!=0,'enabled','no_entry'))))))"
-							  )
+							  ]
 						)
 						->where("emp_id=".$emp_id." AND ts_month=".$month." AND project_id IS NOT NULL  
 								AND is_active=1 AND cal_week = '".$calweek."' AND ts_year =".$year);
@@ -729,18 +729,18 @@ IF(FIND_IN_SET('enabled',GROUP_CONCAT(sun_project_status,',',mon_project_status,
 	}
 	
 	
-	function getEmpWeekStatus($emp_id="", $calweek="", $year="", $month=""){
+	public function getEmpWeekStatus($emp_id="", $calweek="", $year="", $month=""){
 
 		$select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('t' => $this->_ts_status),
-						array('week_status' => "IF(FIND_IN_SET('blocked',CONCAT(sun_status,',',mon_status,',',tue_status,',',wed_status,',',thu_status,',',fri_status,',',sat_status))!=0,'blocked',
+						->from(['t' => $this->_ts_status],
+						['week_status' => "IF(FIND_IN_SET('blocked',CONCAT(sun_status,',',mon_status,',',tue_status,',',wed_status,',',thu_status,',',fri_status,',',sat_status))!=0,'blocked',
 											   IF(FIND_IN_SET('submitted',CONCAT(sun_status,',',mon_status,',',tue_status,',',wed_status,',',thu_status,',',fri_status,',',sat_status))!=0,'submitted',
 											   IF(FIND_IN_SET('rejected',CONCAT(sun_status,',',mon_status,',',tue_status,',',wed_status,',',thu_status,',',fri_status,',',sat_status))!=0,'rejected',
 											   IF(FIND_IN_SET('saved',CONCAT(sun_status,',',mon_status,',',tue_status,',',wed_status,',',thu_status,',',fri_status,',',sat_status))!=0,'saved',											   
 											   IF(FIND_IN_SET('approved',CONCAT(sun_status,',',mon_status,',',tue_status,',',wed_status,',',thu_status,',',fri_status,',',sat_status))!=0,'approved',											   
 											   IF(FIND_IN_SET('enabled',CONCAT(sun_status,',',mon_status,',',tue_status,',',wed_status,',',thu_status,',',fri_status,',',sat_status))!=0,'enabled','no_entry'))))))
-												"))
+												"])
 						->where("emp_id=".$emp_id." AND is_active=1 AND ts_month=".$month." AND cal_week = '".$calweek."' AND ts_year = '".$year."' ")
 						->group('emp_id');
 						//echo $select;
@@ -780,8 +780,8 @@ IF(FIND_IN_SET('enabled',GROUP_CONCAT(sun_project_status,',',mon_project_status,
 	
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$profiler = $db->getProfiler();
-		$resultData = array();
-		$ts_filled_dates = array();
+		$resultData = [];
+		$ts_filled_dates = [];
 		$conditionCheck = "";
 		$statusUpdate = "";
 		$isprojectManager = false;
@@ -818,8 +818,8 @@ IF(FIND_IN_SET('enabled',GROUP_CONCAT(sun_project_status,',',mon_project_status,
 					if(sizeof($project_ids)> 0){
 						for($i=0; $i<sizeof($project_ids); $i++){
 							if(in_array($project_ids[$i],$projects)){
-								$updateArray = array();
-								$updateRejProjStatus = array();
+								$updateArray = [];
+								$updateRejProjStatus = [];
 								
 								$updateArray[$day.'_project_status'] = $statusUpdate;
 								$updateArray[$day.'_status_date'] = gmdate("Y-m-d H:i:s");
@@ -833,9 +833,9 @@ IF(FIND_IN_SET('enabled',GROUP_CONCAT(sun_project_status,',',mon_project_status,
 								if(sizeof($updateArray) > 0){
 									$result = $db->update($this->_ts_status, $updateArray ,$whereStmt);
 									$day_status = $this->getEmpDayStatusByProjectStatus($emp_id,$month,$calweek,$year,$day.'_project_status',$day.'_status',$day.'_date', $date);
-									$update_day_status_Array = array(
+									$update_day_status_Array = [
 										$day.'_status'	=>$day_status[$day.'_status']
-									);
+									];
 									$where_day_status = " emp_id = $emp_id AND ts_year = $year AND ts_month =".(int)$month." AND cal_week = $calweek AND ".$day."_date = '".$date."'";
 									//print_r($update_day_status_Array);
 									//echo $where_day_status;
@@ -844,7 +844,7 @@ IF(FIND_IN_SET('enabled',GROUP_CONCAT(sun_project_status,',',mon_project_status,
 									$where_week_status_Array = " emp_id = $emp_id AND ts_year = $year AND ts_month =".(int)$month." AND cal_week = $calweek";
 									$weekStatus = $this->getEmpWeekStatus($emp_id,$calweek,$year,$month);
 									$week_status = $weekStatus['week_status'];
-									$db->update($this->_ts_status, array('week_status' => $week_status) ,$where_week_status_Array);
+									$db->update($this->_ts_status, ['week_status' => $week_status] ,$where_week_status_Array);
 									
 									if($flag=="approve"){
 										
@@ -866,8 +866,8 @@ IF(FIND_IN_SET('enabled',GROUP_CONCAT(sun_project_status,',',mon_project_status,
 					}
 				}
 			}else{
-				$updateArray = array();
-				$updateRejProjStatus = array();
+				$updateArray = [];
+				$updateRejProjStatus = [];
 				$updateArray[$day.'_status'] = $statusUpdate;
 				$updateArray[$day.'_project_status'] = $statusUpdate;
 				$updateArray[$day.'_status_date'] = gmdate("Y-m-d H:i:s");
@@ -879,7 +879,7 @@ IF(FIND_IN_SET('enabled',GROUP_CONCAT(sun_project_status,',',mon_project_status,
 					$db->update($this->_ts_status, $updateArray ,$whereStmt);
 					$weekStatus = $this->getEmpWeekStatus($emp_id,$calweek,$year,$month);
 					$week_status = $weekStatus['week_status'];
-					$db->update($this->_ts_status, array('week_status' => $week_status) ,$whereStmt);
+					$db->update($this->_ts_status, ['week_status' => $week_status] ,$whereStmt);
 				}
 				if($flag=="approve"){
 					
@@ -925,7 +925,7 @@ IF(FIND_IN_SET('enabled',GROUP_CONCAT(sun_project_status,',',mon_project_status,
 		
 		 $select = $this->select()
 				  ->setIntegrityCheck(false)
-				  ->from(array('et'=>$this->_name),array(
+				  ->from(['et'=>$this->_name],[
 				  	'ts.ts_week,et.sun_date,et.mon_date,et.tue_date,et.wed_date,et.thu_date,et.fri_date,et.sat_date,
 				  	if(et.sun_duration is null,"00:00",time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.sun_duration as time)))),"%H:%i"))sun_duration,ifnull(ts.sun'.$status.',"no_entry")sun_status,
 					if(et.mon_duration is null,"00:00",time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.mon_duration as time)))),"%H:%i"))mon_duration,ifnull(ts.mon'.$status.',"no_entry")mon_status,
@@ -935,14 +935,14 @@ IF(FIND_IN_SET('enabled',GROUP_CONCAT(sun_project_status,',',mon_project_status,
 					if(et.fri_duration is null,"00:00",time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.fri_duration as time)))),"%H:%i"))fri_duration,ifnull(ts.fri'.$status.',"no_entry")fri_status,
 					if(et.sat_duration is null,"00:00",time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.sat_duration as time)))),"%H:%i"))sat_duration,ifnull(ts.sat'.$status.',"no_entry")sat_status,
 				  	if(et.week_duration is null,"00:00",time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.week_duration as time)))),"%H:%i"))week_duration'.$select_list
-					));
+					]);
 			  if($project_ids != ""){
-			  	$select->joinInner(array('ts'=> $this->_ts_status),'ts.emp_id = et.emp_id and et.ts_year= ts.ts_year and et.ts_month= ts.ts_month and et.ts_week = ts.ts_week and et.project_id = ts.project_id and et.project_id IN ('.$project_ids.')',array());
+			  	$select->joinInner(['ts'=> $this->_ts_status],'ts.emp_id = et.emp_id and et.ts_year= ts.ts_year and et.ts_month= ts.ts_month and et.ts_week = ts.ts_week and et.project_id = ts.project_id and et.project_id IN ('.$project_ids.')',[]);
 			  }else{
 			  //	$select->joinInner(array('ts'=> $this->_ts_status),'ts.emp_id = et.emp_id and et.ts_year= ts.ts_year and et.ts_month= ts.ts_month and et.ts_week = ts.ts_week and et.project_id = ts.project_id',array());
-			 	 	$select->joinInner(array('ts'=> $this->_ts_status),'ts.emp_id = et.emp_id and et.ts_year= ts.ts_year and et.ts_month= ts.ts_month and et.ts_week = ts.ts_week and (et.project_id = ts.project_id OR ts.project_id IS NULL)',array());
+			 	 	$select->joinInner(['ts'=> $this->_ts_status],'ts.emp_id = et.emp_id and et.ts_year= ts.ts_year and et.ts_month= ts.ts_month and et.ts_week = ts.ts_week and (et.project_id = ts.project_id OR ts.project_id IS NULL)',[]);
 			  }
-			  $select->joinInner(array('en'=> 'tm_emp_ts_notes'),'en.emp_id = et.emp_id and et.ts_year= en.ts_year and et.ts_month= en.ts_month and et.ts_week = en.ts_week ',array());
+			  $select->joinInner(['en'=> 'tm_emp_ts_notes'],'en.emp_id = et.emp_id and et.ts_year= en.ts_year and et.ts_month= en.ts_month and et.ts_week = en.ts_week ',[]);
 	  	  	  $select->where("et.is_active=1 and ts.is_active=1 and et.ts_year = $year and  et.ts_month = $month and et.emp_id = $empId");
 			  $select->group('ts.ts_week');
 			// echo $select;//exit;
@@ -952,13 +952,13 @@ IF(FIND_IN_SET('enabled',GROUP_CONCAT(sun_project_status,',',mon_project_status,
 	public function getWeeklyTimesheetData($empId,$year,$month,$week,$project_ids="") { 
 		$select = $this->select()
 				  ->setIntegrityCheck(false)
-				  ->from(array('pte'=>'tm_project_task_employees'),array(
+				  ->from(['pte'=>'tm_project_task_employees'],[
 				  	'pte.project_id','p.project_name','pte.project_task_id','t.task','sun_duration'=>'ifnull(et.sun_duration,0)','mon_duration'=>'ifnull(et.mon_duration,0)',
-				  	'tue_duration'=>'ifnull(et.tue_duration,0)','wed_duration'=>'ifnull(et.wed_duration,0)','thu_duration'=>'ifnull(et.thu_duration,0)','fri_duration'=>'ifnull(et.fri_duration,0)','sat_duration'=>'ifnull(et.sat_duration,0)','week_duration'=>'ifnull(et.week_duration,0)'))
-				  ->joinInner(array('pt'=>'tm_project_tasks'),'pt.id = pte.project_task_id',array())
-				  ->joinInner(array('p'=>'tm_projects'),'p.id = pt.project_id and p.id = pte.project_id',array())
-				  ->joinInner(array('t'=>'tm_tasks'),'t.id = pt.task_id',array())
-		          ->joinInner(array('et'=>'tm_emp_timesheets'),'et.project_task_id = pte.project_task_id and et.ts_year='.$year.' and et.ts_month='.$month.' and et.ts_week = '.$week.' and et.emp_id= '.$empId,array());
+				  	'tue_duration'=>'ifnull(et.tue_duration,0)','wed_duration'=>'ifnull(et.wed_duration,0)','thu_duration'=>'ifnull(et.thu_duration,0)','fri_duration'=>'ifnull(et.fri_duration,0)','sat_duration'=>'ifnull(et.sat_duration,0)','week_duration'=>'ifnull(et.week_duration,0)'])
+				  ->joinInner(['pt'=>'tm_project_tasks'],'pt.id = pte.project_task_id',[])
+				  ->joinInner(['p'=>'tm_projects'],'p.id = pt.project_id and p.id = pte.project_id',[])
+				  ->joinInner(['t'=>'tm_tasks'],'t.id = pt.task_id',[])
+		          ->joinInner(['et'=>'tm_emp_timesheets'],'et.project_task_id = pte.project_task_id and et.ts_year='.$year.' and et.ts_month='.$month.' and et.ts_week = '.$week.' and et.emp_id= '.$empId,[]);
 		  $select->where("et.is_active=1 and pte.is_active=1 and pte.emp_id =".$empId); 
 		  if($project_ids != ""){
 		  	$select->where("p.id IN (".$project_ids.")");
@@ -970,14 +970,14 @@ IF(FIND_IN_SET('enabled',GROUP_CONCAT(sun_project_status,',',mon_project_status,
 
 	public function saveProcessNotes($emp_id,$date,$user_id){
 		$db = Zend_Db_Table::getDefaultAdapter();
-		$insertProcessUpdates = array(
+		$insertProcessUpdates = [
 				'emp_id' => $emp_id,
 				'ts_dates' => $date,
 				'action_type' => 'approved',
 				'alert' => 1,
 				'action_by' => $user_id,
 				'created' => gmdate("Y-m-d H:i:s")
-		);
+		];
 		$db->insert('tm_process_updates',$insertProcessUpdates);
 		return $db->lastInsertId();
 	}

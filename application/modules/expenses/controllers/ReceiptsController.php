@@ -104,7 +104,7 @@ class Expenses_ReceiptsController extends Zend_Controller_Action
 	    $expense_id=$this->_getParam('expense_id');
 		$receiptsModel = new Expenses_Model_Receipts();
 		$receiptData = $receiptsModel->getExpenseReceipts($expense_id);
-		$fileNames = array();
+		$fileNames = [];
 		if(count($receiptData)>0)
 		{
 			foreach($receiptData as $receipts)
@@ -127,10 +127,10 @@ class Expenses_ReceiptsController extends Zend_Controller_Action
 	    die;
 	}
 
-	function zipFilesDownload($file_names){
+	public function zipFilesDownload($file_names){
 		
 		$file_path = EXPENSES_RECEIPTS_PATH;
-		$archive_file_name = time().rand(8,8).'.zip';
+		$archive_file_name = time().random_int(8,8).'.zip';
 		
 		$zip = new ZipArchive();
 		if ($zip->open($file_path.$archive_file_name, ZIPARCHIVE::CREATE )!==TRUE) {
@@ -158,8 +158,8 @@ class Expenses_ReceiptsController extends Zend_Controller_Action
 		{
 			foreach($receipt_ids_array as $receipt_id)
 			{
-				$data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-				$where = array('id=?'=>$receipt_id);
+				$data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+				$where = ['id=?'=>$receipt_id];
 				$Id = $receiptsModel->deleteReceipt($data, $where);
 			}
 		}
@@ -171,11 +171,11 @@ class Expenses_ReceiptsController extends Zend_Controller_Action
 	{
 		$receiptsModel = new Expenses_Model_Receipts();
 		$user_id = sapp_Global::_readSession('id');
-        $filedata = array();
+        $filedata = [];
         
     	// Validate file with size greater than default(Upload Max Filesize)limit
         if ($_FILES["myfile"]["size"] == 0 || $_FILES["myfile"]["size"] > (2*1024*1024)) {
-            $this->_helper->json(array('error' => 'filesize'));
+            $this->_helper->json(['error' => 'filesize']);
         } else if(isset($_FILES["myfile"])) {
             $fileName = $_FILES["myfile"]["name"];
             $fileName = preg_replace('/[^a-zA-Z0-9.\']/', '_', $fileName);			  	
@@ -188,32 +188,32 @@ class Expenses_ReceiptsController extends Zend_Controller_Action
 			$file_type = $file_type_array[1];
             
         	move_uploaded_file($_FILES["myfile"]["tmp_name"],EXPENSES_RECEIPTS_PATH.$newName);
-			$data = array(
+			$data = [
 					'receipt_name' => $filedata['original_name'],
 					'receipt_filename' => $filedata['new_name'],
 					'receipt_file_type' => $file_type,
 					'createdby' => $user_id,
 					'createddate'=>gmdate("Y-m-d H:i:s")
-			);
+			];
 			$where='';
             $receiptId = $receiptsModel->saveReceipts($data, $where);
 			$filedata['last_inserted_ids'] = $receiptId;
-            $this->_helper->json(array('filedata' => $filedata));
+            $this->_helper->json(['filedata' => $filedata]);
         } 
 	}
 	public function displayreceiptsAction()
 	{
-		$param=$this->_getParam('param')?$this->_getParam('param'):'';
+		$param=$this->_getParam('param') ?: '';
 		// $receipt_ids_str = '"'. implode('","', explode(',', $receipt_ids)) .'"';
 		
 		
-		$search_str = $this->_getParam('searchstr')?$this->_getParam('searchstr'):'';
-		$start_date = $this->_getParam('start_date')?$this->_getParam('start_date'):'';
-		$end_date = $this->_getParam('end_date')?$this->_getParam('end_date'):'';
+		$search_str = $this->_getParam('searchstr') ?: '';
+		$start_date = $this->_getParam('start_date') ?: '';
+		$end_date = $this->_getParam('end_date') ?: '';
 		
 		
-		$limit = $this->_getParam('limit')?$this->_getParam('limit'):8;
-		$offset = $this->_getParam('offset')?$this->_getParam('offset'):0;
+		$limit = $this->_getParam('limit') ?: 8;
+		$offset = $this->_getParam('offset') ?: 0;
 		
 		$receiptsModel = new Expenses_Model_Receipts();
 		$dataReceipts = $receiptsModel->getReceipts($param,$limit,$offset,$search_str,$start_date,$end_date);
@@ -237,12 +237,12 @@ class Expenses_ReceiptsController extends Zend_Controller_Action
 	}
 	public function viewmorereceiptsAction()
 	{
-		$limit = $this->_getParam('limit')?$this->_getParam('limit'):8;
-		$offset = $this->_getParam('offset')?$this->_getParam('offset'):0;
-		$param = $this->_getParam('param')?$this->_getParam('param'):'';
-		$searchstr = $this->_getParam('searchstr')?$this->_getParam('searchstr'):'';
-		$start_date = $this->_getParam('start_date')?$this->_getParam('start_date'):'';
-		$end_date = $this->_getParam('end_date')?$this->_getParam('end_date'):'';
+		$limit = $this->_getParam('limit') ?: 8;
+		$offset = $this->_getParam('offset') ?: 0;
+		$param = $this->_getParam('param') ?: '';
+		$searchstr = $this->_getParam('searchstr') ?: '';
+		$start_date = $this->_getParam('start_date') ?: '';
+		$end_date = $this->_getParam('end_date') ?: '';
 		$receiptsModel = new Expenses_Model_Receipts();
 		$dataReceipts = $receiptsModel->getReceipts($param,$limit,$offset,$searchstr,$start_date,$end_date);
 		$getAllReceiptsCount = $receiptsModel->getReceiptsCount($isUnreported='',$searchstr,$start_date,$end_date);
@@ -264,8 +264,8 @@ class Expenses_ReceiptsController extends Zend_Controller_Action
 	{
 		$limit = 4;
 		$offset=0;
-		$receipt_id = $this->_getParam('receipt_id')?$this->_getParam('receipt_id'):0;
-		$expense_id = $this->_getParam('expense_id')?$this->_getParam('expense_id'):'';
+		$receipt_id = $this->_getParam('receipt_id') ?: 0;
+		$expense_id = $this->_getParam('expense_id') ?: '';
 		$expenseModel = new Expenses_Model_Expenses();
 		$expenseslist = $expenseModel->getExpenses($expense_id,$limit,$offset);
 		$this->view->expenseslist = $expenseslist;
@@ -282,24 +282,24 @@ class Expenses_ReceiptsController extends Zend_Controller_Action
 		if($auth->hasIdentity()){
 			$loginUserId = $auth->getStorage()->read()->id;
 		}
-		$receipt_id = $this->_getParam('receipt_id')?$this->_getParam('receipt_id'):0;
-		$expense_id = $this->_getParam('expense_id')?$this->_getParam('expense_id'):0;
+		$receipt_id = $this->_getParam('receipt_id') ?: 0;
+		$expense_id = $this->_getParam('expense_id') ?: 0;
 		
 		$date = gmdate("Y-m-d H:i:s");
 		$data['expense_id'] = $expense_id;
 		$data['modifieddate'] = $date;
 		$data['modifiedby'] = $loginUserId;
-		$where = array('id=?'=>$receipt_id);
+		$where = ['id=?'=>$receipt_id];
 		$receiptsModel = new Expenses_Model_Receipts();
 		$receiptsModel->updateReceiptsData($data,$where);
-		$this->_helper->json(array('message'=>'success','status'=> 'Receipt Added To Expense.'));
+		$this->_helper->json(['message'=>'success','status'=> 'Receipt Added To Expense.']);
 	}
 	public function viewmoreexpensesAction()
 	{
-		$limit = $this->_getParam('limit')?$this->_getParam('limit'):8;
-		$offset = $this->_getParam('offset')?$this->_getParam('offset'):0;
-		$expense_id = $this->_getParam('expense_id')?$this->_getParam('expense_id'):0;
-		$receipt_id = $this->_getParam('receipt_id')?$this->_getParam('receipt_id'):0;
+		$limit = $this->_getParam('limit') ?: 8;
+		$offset = $this->_getParam('offset') ?: 0;
+		$expense_id = $this->_getParam('expense_id') ?: 0;
+		$receipt_id = $this->_getParam('receipt_id') ?: 0;
 		
 		$expenseModel = new Expenses_Model_Expenses();
 		$expenseslist = $expenseModel->getExpenses($expense_id,$limit,$offset);
@@ -315,7 +315,7 @@ class Expenses_ReceiptsController extends Zend_Controller_Action
 	{
 		$receiptsModel = new Expenses_Model_Receipts();
 		$limit=8;$offset=0;
-		$param = $this->_getParam('param')?$this->_getParam('param'):'';
+		$param = $this->_getParam('param') ?: '';
 		$dataTmp = $receiptsModel->getReceipts($param,$limit,$offset);	
 		$this->view->dataArray = $dataTmp;
 		$unreportedReceipts = $receiptsModel->getReceipts($isUnreported='yes',$limit,$offset);
@@ -331,10 +331,10 @@ class Expenses_ReceiptsController extends Zend_Controller_Action
 	}
 	public function showreceiptspopupAction()
 	{
-		$key = $this->_getParam('key')?$this->_getParam('key'):'';
-		$receipts_ids = $this->_getParam('cls_receipts_id')?$this->_getParam('cls_receipts_id'):'';
+		$key = $this->_getParam('key') ?: '';
+		$receipts_ids = $this->_getParam('cls_receipts_id') ?: '';
 		//echo 'ids.'.$receipts_ids;die();
-		$msgarray = array();
+		$msgarray = [];
 		$emptyFlag = '';
 		Zend_Layout::getMvcInstance()->setLayoutPath(APPLICATION_PATH."/layouts/scripts/popup/");
 		$auth = Zend_Auth::getInstance();
@@ -357,8 +357,8 @@ class Expenses_ReceiptsController extends Zend_Controller_Action
 	{
 		$limit = 4;
 		$offset=0;
-		$expense_id = $this->_getParam('expense_id')?$this->_getParam('expense_id'):'';
-		$tripId = $this->_getParam('tripId')?$this->_getParam('tripId'):'';
+		$expense_id = $this->_getParam('expense_id') ?: '';
+		$tripId = $this->_getParam('tripId') ?: '';
 		$tripsModel = new Expenses_Model_Trips();
 		$tripslist = $tripsModel->getTrips($limit,$offset,$tripId);
 		
@@ -372,9 +372,9 @@ class Expenses_ReceiptsController extends Zend_Controller_Action
 	}
 	public function viewmoretripsAction()
 	{
-		$limit = $this->_getParam('limit')?$this->_getParam('limit'):8;
-		$offset = $this->_getParam('offset')?$this->_getParam('offset'):0;
-		$expense_id = $this->_getParam('expense_id')?$this->_getParam('expense_id'):0;
+		$limit = $this->_getParam('limit') ?: 8;
+		$offset = $this->_getParam('offset') ?: 0;
+		$expense_id = $this->_getParam('expense_id') ?: 0;
 		
 		$tripsModel = new Expenses_Model_Trips();
 		$tripslist = $tripsModel->getTrips($limit,$offset);
@@ -391,17 +391,17 @@ class Expenses_ReceiptsController extends Zend_Controller_Action
 		if($auth->hasIdentity()){
 			$loginUserId = $auth->getStorage()->read()->id;
 		}
-		$trip_id = $this->_getParam('trip_id')?$this->_getParam('trip_id'):0;
-		$expense_id = $this->_getParam('expense_id')?$this->_getParam('expense_id'):0;
+		$trip_id = $this->_getParam('trip_id') ?: 0;
+		$expense_id = $this->_getParam('expense_id') ?: 0;
 		
 		$date = gmdate("Y-m-d H:i:s");
 		$data['trip_id'] = $trip_id;
 		$data['modifieddate'] = $date;
 		$data['modifiedby'] = $loginUserId;
-		$where = array('id=?'=>$expense_id);
+		$where = ['id=?'=>$expense_id];
 		$ExpensesModel = new Expenses_Model_Expenses();
 		$ExpensesModel->saveOrUpdateExpensesData($data,$where);
-		$this->_helper->json(array('message'=>'success','status'=> 'Expense Added To Trip.'));
+		$this->_helper->json(['message'=>'success','status'=> 'Expense Added To Trip.']);
 	}
 }
 

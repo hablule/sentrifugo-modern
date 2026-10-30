@@ -24,7 +24,7 @@ class Default_Model_Emplistdeductive extends Zend_Db_Table_Abstract
 {
     protected $_name = 'main_employees';
     protected $_primary = 'id';
-    public function getEmpData($sort2, $by2, $perPage2, $pageNo2, $searchData2, $call2, $dashboardcall2,$a='', $b='',$c='',$d='',$managerid='',$loginUserId,$limit,$offset,$search_val,$search_str,$role_id,$empids,$perm,$searchQuery2)
+    public function getEmpData($sort2, $by2, $perPage2, $pageNo2, $searchData2, $call2, $dashboardcall2,$a='', $b='',$c='',$d='',$managerid='',$loginUserId = null,$limit = null,$offset = null,$search_val = null,$search_str = null,$role_id = null,$empids = null,$perm = null,$searchQuery2 = null)
     {
         $auth = Zend_Auth::getInstance();
                 $request = Zend_Controller_Front::getInstance();
@@ -56,10 +56,10 @@ class Default_Model_Emplistdeductive extends Zend_Db_Table_Abstract
     
         $EmpData = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('e' => 'main_employees'), array('e.*','date_of_joining' => 'DATE_FORMAT(e.date_of_joining,"'.DATEFORMAT_MYSQL.'")'))
-            ->joinLeft(array('u' => 'main_users'), 'e.id=u.empid', array('user_id' => 'u.id'))
-            ->joinLeft(array('ur' => 'main_userrole'), 'u.id=ur.user_id', array('userrole_id' => 'ur.userrole_id'))
-            ->joinLeft(array('r' => 'main_role'), 'ur.role_id=r.id', array('role' => 'GROUP_CONCAT(r.name)'))
+            ->from(['e' => 'main_employees'], ['e.*','date_of_joining' => 'DATE_FORMAT(e.date_of_joining,"'.DATEFORMAT_MYSQL.'")'])
+            ->joinLeft(['u' => 'main_users'], 'e.id=u.empid', ['user_id' => 'u.id'])
+            ->joinLeft(['ur' => 'main_userrole'], 'u.id=ur.user_id', ['userrole_id' => 'ur.userrole_id'])
+            ->joinLeft(['r' => 'main_role'], 'ur.role_id=r.id', ['role' => 'GROUP_CONCAT(r.name)'])
             ->where($where)
             ->group("e.id")
 
@@ -68,11 +68,11 @@ class Default_Model_Emplistdeductive extends Zend_Db_Table_Abstract
         // die($EmpData);
         return $EmpData;
     }
-    public function getGrid($sort2, $by2, $perPage2, $pageNo2, $searchData2, $call2, $dashboardcall2,$a='', $b='',$c='',$d='',$managerid='',$loginUserId,$limit,$offset,$search_val,$search_str,$role_id,$empids,$perm)
+    public function getGrid($sort2, $by2, $perPage2, $pageNo2, $searchData2, $call2, $dashboardcall2,$a='', $b='',$c='',$d='',$managerid='',$loginUserId = null,$limit = null,$offset = null,$search_val = null,$search_str = null,$role_id = null,$empids = null,$perm = null)
     {
         $searchQuery2 = '';
-        $searchArray2 = array();
-        $data = array();
+        $searchArray2 = [];
+        $data = [];
         $db = Zend_Db_Table::getDefaultAdapter();
 
         if ($searchData2 != '' && $searchData2 != 'undefined') {
@@ -104,7 +104,7 @@ class Default_Model_Emplistdeductive extends Zend_Db_Table_Abstract
         }
            $objName = 'overtime';
       $objId = 'emp';
-        $tableFields = array(
+        $tableFields = [
             'action' => '<div>
             <input type="checkbox" id="selectAll" name="selectAll">
             <label for="selectAll">Check All</label><br>
@@ -117,10 +117,10 @@ class Default_Model_Emplistdeductive extends Zend_Db_Table_Abstract
 
             'backgroundchk_status' => 'Background Check',
             'date_of_joining' => 'Date of Joining'
-        );
+        ];
 
         $tablecontent = $this->getEmpData($sort2, $by2, $perPage2, $pageNo2, $searchData2, $call2, $dashboardcall2,$a='', $b='',$c='',$d='',$managerid='',$loginUserId,$limit,$offset,$search_val,$search_str,$role_id,$empids,$perm,$searchQuery2);
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort2,
                         'by' => $by2,
                         'pageNo' => $pageNo2,
@@ -129,7 +129,7 @@ class Default_Model_Emplistdeductive extends Zend_Db_Table_Abstract
                         'objectname' => $objName,
                         'menuName' => 'Employees List',
                         'objectId' => $objId,
-                        'extra' => array(),
+                        'extra' => [],
                         'tableheader' => $tableFields,
                         'jsGridFnName' => 'getAjaxgridData',
                         'jsFillFnName' => '',
@@ -138,12 +138,12 @@ class Default_Model_Emplistdeductive extends Zend_Db_Table_Abstract
                         'perm' => $perm,
             
                         'dashboardcall2' => $dashboardcall2,
-                        'search_filters' => array(
+                        'search_filters' => [
             
-                            'date_of_joining' => array('type' => 'datepicker'),
+                            'date_of_joining' => ['type' => 'datepicker'],
                                
-                            ),
-        );
+                            ],
+        ];
         return $dataTmp;
     }
 

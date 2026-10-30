@@ -46,7 +46,7 @@ class Default_Plugin_SecurityCheck extends Zend_Controller_Plugin_Abstract
         
        	$this->_action= $this->getRequest()->getActionName();  
 		
-        $withoutloginActionArr = array('index','login','loginsave','loginpopupsave','forgotpassword','editforgotpassword','sendpassword','popup');
+        $withoutloginActionArr = ['index','login','loginsave','loginpopupsave','forgotpassword','editforgotpassword','sendpassword','popup'];
 		
         if($this->_module == self::MODULE && $data['username']){
 
@@ -69,7 +69,7 @@ class Default_Plugin_SecurityCheck extends Zend_Controller_Plugin_Abstract
 		
         $redirect = '';
        
-        $withoutloginArr = array('default_cronjob_logcron','default_cronjob_inactiveusers','default_cronjob_requisition','default_cronjob_leaveapprove','default_cronjob_empexpiry','default_cronjob_empdocsexpiry','default_cronjob_index','default_index_index','default_index_loginpopupsave','default_index_login','default_index_loginsave','default_index_browserfailure','default_index_forgotpassword','default_index_editforgotpassword','default_index_sendpassword','default_index_popup','services_index_index','services_index_post','services_index_get','services_index_login','timemanagement_cronjob_index','timemanagement_cronjob_mailreminder','timemanagement_cronjob_monthlyempblockremainder','timemanagement_cronjob_monthlyblockedemp','schedule_cronjob_index','payroll_cronjob_index');
+        $withoutloginArr = ['default_cronjob_logcron','default_cronjob_inactiveusers','default_cronjob_requisition','default_cronjob_leaveapprove','default_cronjob_empexpiry','default_cronjob_empdocsexpiry','default_cronjob_index','default_index_index','default_index_loginpopupsave','default_index_login','default_index_loginsave','default_index_browserfailure','default_index_forgotpassword','default_index_editforgotpassword','default_index_sendpassword','default_index_popup','services_index_index','services_index_post','services_index_get','services_index_login','timemanagement_cronjob_index','timemanagement_cronjob_mailreminder','timemanagement_cronjob_monthlyempblockremainder','timemanagement_cronjob_monthlyblockedemp','schedule_cronjob_index','payroll_cronjob_index'];
         $contolleractionstring = $this->_module.'_'.$this->_controller.'_'.$this->_action; 
       
         if(!in_array($contolleractionstring,$withoutloginArr))
@@ -105,9 +105,9 @@ class Default_Plugin_SecurityCheck extends Zend_Controller_Plugin_Abstract
 				Zend_Session::namespaceUnset('prevUrl');
         		$auth->clearIdentity();
         		
-        		$content = array(
+        		$content = [
 					'login' => 'failed'
-				);
+				];
 				
 			$jsonData = Zend_Json::encode($content);
 				$this->getResponse()
@@ -121,7 +121,7 @@ class Default_Plugin_SecurityCheck extends Zend_Controller_Plugin_Abstract
         		
 				/*** Previous URL redirection after login - start ***/
 				$prevUrl = new Zend_Session_Namespace('prevUrl');        
-				$prevUrl->prevUrlObject = array(); 
+				$prevUrl->prevUrlObject = []; 
 				array_push($prevUrl->prevUrlObject,$_SERVER['REQUEST_URI']);
 				/*** Previous URL redirection after login - end ***/
 				Zend_Session::namespaceUnset('recentlyViewed');
@@ -166,12 +166,12 @@ class Default_Plugin_SecurityCheck extends Zend_Controller_Plugin_Abstract
     		 !($acl instanceof Zend_Acl)) {
     			return false;
     	}
-    	$resources= array (
+    	$resources=  [
     		'*/*/*',
     		$this->_module.'/*/*', 
     		$this->_module.'/'.$this->_controller.'/*', 
     		$this->_module.'/'.$this->_controller.'/'.$this->_action
-    	);
+    	];
     	$result=false;
     	foreach ($resources as $res) {
     		if ($acl->has($res)) { 

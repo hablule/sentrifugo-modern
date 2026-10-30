@@ -46,7 +46,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 		$cand_id = $this->_getParam('cand_id', null);
 		$cand_model = new Default_Model_Candidatedetails();
 		$cand_data = $cand_model->getCandidateById($cand_id);
-		$this->_helper->json(array('requi_code' => $cand_data['requisition_code']));
+		$this->_helper->json(['requi_code' => $cand_data['requisition_code']]);
 	}
 
 
@@ -57,7 +57,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 			$limit = LIMIT;
 			$offset = 0;
 			$auth = Zend_Auth::getInstance();
-			$popConfigPermission = array();
+			$popConfigPermission = [];
 			if ($auth->hasIdentity()) {
 				$loginUserId = $auth->getStorage()->read()->id;
 				$loginuserRole = $auth->getStorage()->read()->emprole;
@@ -77,9 +77,9 @@ class Default_EmployeeController extends Zend_Controller_Action
 			$view = Zend_Layout::getMvcInstance()->getView();
 			$objname = $this->_getParam('objname');
 			$refresh = $this->_getParam('refresh');
-			$data = array();
+			$data = [];
 			$searchQuery = '';
-			$searchArray = array();
+			$searchArray = [];
 			$tablecontent = '';
 			$dashboardcall = $this->_getParam('dashboardcall');
 
@@ -93,7 +93,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 				$pageNo = 1;
 				$searchData = '';
 				$searchQuery = '';
-				$searchArray = array();
+				$searchArray = [];
 			} else {
 				$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'ASC';
 				$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'e.id';
@@ -143,7 +143,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 			$limit = LIMIT;
 			$offset = 0;
 			$auth = Zend_Auth::getInstance();
-			$popConfigPermission = array();
+			$popConfigPermission = [];
 			if ($auth->hasIdentity()) {
 				$loginUserId = $auth->getStorage()->read()->id;
 				$loginuserRole = $auth->getStorage()->read()->emprole;
@@ -173,7 +173,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 
 				$this->view->popConfigPermission = $popConfigPermission;
 
-				$data = array();
+				$data = [];
 
 				$search_val = $this->_request->getParam('search_val', null);
 				$search_str = $this->_request->getParam('search_str', null);
@@ -236,8 +236,8 @@ class Default_EmployeeController extends Zend_Controller_Action
 		$empids = $access['empids'];
 		$perm = $access['perm'];
 		$call = $this->_getParam('call');
-		$popConfigPermission = array();
-		$data = array();
+		$popConfigPermission = [];
+		$data = [];
 		$limit = $this->_getParam('limit');
 		$offset = $this->_getParam('offset');
 		$count_remaining = $this->_getParam('count_remaining');
@@ -304,7 +304,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 		$positionsmodel = new Default_Model_Positions();
 		$form = new Default_Form_Organisationhead();
 		$form->setAttrib('action', BASE_URL . 'employee');
-		$msgarray = array();
+		$msgarray = [];
 		$role_data = $role_model->getRolesList_orginfo();
 		$flag = 'true';
 
@@ -324,7 +324,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 
 		$form->employeeId->setValue($emp_id);
 
-		$form->emprole->addMultiOptions(array('' => 'Select Role') + $role_data);
+		$form->emprole->addMultiOptions(['' => 'Select Role'] + $role_data);
 		if (empty($role_data)) {
 			$msgarray['emprole'] = 'Roles are not added yet.';
 			$flag = 'false';
@@ -375,7 +375,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 		$form->position_id->addMultiOption('', 'Select a Position');
 		if (isset($_POST['jobtitle_id']) && $_POST['jobtitle_id'] != '') {
 			$jobtitle_id =  $_POST['jobtitle_id'];
-			$positionlistArr = $positionsmodel->getPositionList($jobtitle_id);
+			$positionlistArr = $positionsmodel->getPositionList();
 
 			if (sizeof($positionlistArr) > 0) {
 				foreach ($positionlistArr as $positionlistres) {
@@ -424,7 +424,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 					$prefix_id = $this->_request->getParam('prefix_id', null);
 					$user_id = $this->_request->getParam('user_id', null);
 
-					$user_data = array(
+					$user_data = [
 						'emprole' => $emprole,
 						'firstname' => $first_name,
 						'middlename' => $middlename,
@@ -442,8 +442,8 @@ class Default_EmployeeController extends Zend_Controller_Action
 						'modifiedby' => $loginUserId,
 						'modifieddate' => gmdate("Y-m-d H:i:s"),
 						'isactive' => 1,
-					);
-					$emp_data = array(
+					];
+					$emp_data = [
 						'jobtitle_id' => $jobtitle_id,
 						'position_id' => $position_id,
 						'prefix_id' => $prefix_id,
@@ -455,11 +455,11 @@ class Default_EmployeeController extends Zend_Controller_Action
 						'modifieddate' => gmdate("Y-m-d H:i:s"),
 						'isactive' => 1,
 						'is_orghead' => 1,
-					);
-					$org_data = array(
+					];
+					$org_data = [
 						'modifiedby' => $loginUserId,
 						'modifieddate' => gmdate("Y-m-d H:i:s"),
-					);
+					];
 
 					$user_data['employeeId'] = $emp_id;
 
@@ -492,7 +492,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 						$options['message'] = $text;
 						$result = sapp_Global::_sendEmail($options);
 
-						$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Organization head added successfully."));
+						$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Organization head added successfully."]);
 						$this->_redirect('employee');
 					} catch (Exception $e) {
 						$db->rollBack();
@@ -543,8 +543,8 @@ class Default_EmployeeController extends Zend_Controller_Action
 				$jobtitlesModel = new Default_Model_Jobtitles();
 				$employeeModal = new Default_Model_Employee();
 				$positionsmodel = new Default_Model_Positions();
-				$msgarray = array();
-				$orgheadsData = array();
+				$msgarray = [];
+				$orgheadsData = [];
 
 				$form->setAttrib('action', BASE_URL . 'employee/changeorghead/orgid/' . $org_user_id);
 				if ($org_user_id)
@@ -567,7 +567,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 				}
 				$form->employeeId->setValue($emp_id);
 
-				$form->emprole->addMultiOptions(array('' => 'Select Role') + $role_data);
+				$form->emprole->addMultiOptions(['' => 'Select Role'] + $role_data);
 				if (empty($role_data)) {
 					$msgarray['emprole'] = 'Roles are not added yet.';
 					$flag = 'false';
@@ -596,7 +596,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 				$form->position_id->addMultiOption('', 'Select a Position');
 				if (isset($_POST['jobtitle_id']) && $_POST['jobtitle_id'] != '') {
 					$jobtitle_id =  $_POST['jobtitle_id'];
-					$positionlistArr = $positionsmodel->getPositionList($jobtitle_id);
+					$positionlistArr = $positionsmodel->getPositionList();
 
 					if (sizeof($positionlistArr) > 0) {
 						foreach ($positionlistArr as $positionlistres) {
@@ -690,25 +690,25 @@ class Default_EmployeeController extends Zend_Controller_Action
 						$prefix_id = $this->_request->getParam('prefix_id', null);
 						$user_id = $this->_request->getParam('user_id', null);
 
-						$old_org_head = array(
+						$old_org_head = [
 							'reporting_manager' => $orghead_repmangr,
 							'modifiedby' => $loginUserId,
 							'modifieddate' => gmdate("Y-m-d H:i:s"),
 							'is_orghead' => 0,
-						);
-						$old_org_where = array('user_id=?' => $org_user_id);
+						];
+						$old_org_where = ['user_id=?' => $org_user_id];
 
 						if ($selectedtab == 1) {
-							$new_org_head = array(
+							$new_org_head = [
 								'reporting_manager' => 0,
 								'modifiedby' => $loginUserId,
 								'modifieddate' => gmdate("Y-m-d H:i:s"),
 								'is_orghead' => 1,
-							);
-							$new_org_where = array('user_id=?' => $currentorghead);
+							];
+							$new_org_where = ['user_id=?' => $currentorghead];
 						} else {
 
-							$user_data = array(
+							$user_data = [
 								'emprole' => $emprole,
 								'firstname' => $first_name,
 								'middlename' => $middlename,
@@ -726,8 +726,8 @@ class Default_EmployeeController extends Zend_Controller_Action
 								'modifiedby' => $loginUserId,
 								'modifieddate' => gmdate("Y-m-d H:i:s"),
 								'isactive' => 1,
-							);
-							$emp_data = array(
+							];
+							$emp_data = [
 								'location' => $location,
 								'jobtitle_id' => $jobtitle_id,
 								'position_id' => $position_id,
@@ -740,7 +740,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 								'modifieddate' => gmdate("Y-m-d H:i:s"),
 								'isactive' => 1,
 								'is_orghead' => 1,
-							);
+							];
 						}
 
 						/*if($emp_identity_code!='')
@@ -787,7 +787,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 							//Sending mails to SuperAdmin,Management Employees
 							$mangmntEmployees = $employeeModal->getMngmntEmployees();
 							//Preparing Employee array for Bcc
-							$empArr = array();
+							$empArr = [];
 							if (!empty($mangmntEmployees)) {
 								$empArrList = '';
 								$org_head_name = '';
@@ -810,7 +810,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 												<div style='padding:20px 0 10px 0;'>Please <a href=" . BASE_URL . " target='_blank' style='color:#b3512f;'>click here</a> to login  to your <b>" . APPLICATION_NAME . "</b> account to check the details.</div>
 												</div> ";
 							$mail_id =  sapp_Global::_sendEmail($options);
-							$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Organization head changed succesfully."));
+							$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Organization head changed succesfully."]);
 							$this->_redirect('employee');
 						} catch (Exception $e) {
 							$db->rollBack();
@@ -844,8 +844,8 @@ class Default_EmployeeController extends Zend_Controller_Action
 			//code...
 
 			$emptyFlag = 0;
-			$report_opt = array();
-			$popConfigPermission = array();
+			$report_opt = [];
+			$popConfigPermission = [];
 			$auth = Zend_Auth::getInstance();
 			$candidateid = $this->_request->getParam('cid');
 			if ($auth->hasIdentity()) {
@@ -900,7 +900,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 				$branchModel = new Default_Model_Branch();
 				$titleModel = new Default_Model_Title();
 				$util = new utlis();
-				$msgarray = array();
+				$msgarray = [];
 				$identity_code_model = new Default_Model_Identitycodes();
 				$identity_codes = $identity_code_model->getIdentitycodesRecord();
 
@@ -924,14 +924,14 @@ class Default_EmployeeController extends Zend_Controller_Action
 				$roles_arr = $role_model->getRolesList();
 
 				if (sizeof($roles_arr) > 0) {
-					$employeeform->emprole->addMultiOptions(array('' => 'Select Role') + $roles_arr);
+					$employeeform->emprole->addMultiOptions(['' => 'Select Role'] + $roles_arr);
 				} else {
-					$employeeform->emprole->addMultiOptions(array('' => 'Select Role'));
+					$employeeform->emprole->addMultiOptions(['' => 'Select Role']);
 					$msgarray['emprole'] = 'Roles are not configured yet.';
 				}
 				$candidate_options = $candidate_model->getCandidatesNamesForUsers();
 				if (sizeof($candidate_options) > 0) {
-					$employeeform->rccandidatename->addMultiOptions(array('' => 'Select Candidate') + $candidate_options);
+					$employeeform->rccandidatename->addMultiOptions(['' => 'Select Candidate'] + $candidate_options);
 				} else {
 					$msgarray['rccandidatename'] = 'No candidates.';
 				}
@@ -946,7 +946,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 				$referedby_options = $user_model->getRefferedByForUsers();
 
 				if (sizeof($referedby_options) > 0) {
-					$employeeform->candidatereferredby->addMultiOptions(array('' => 'Select referred by') + $referedby_options);
+					$employeeform->candidatereferredby->addMultiOptions(['' => 'Select referred by'] + $referedby_options);
 				} else {
 					$msgarray['candidatereferredby'] = 'Employees are not added yet.';
 				}
@@ -1063,10 +1063,10 @@ class Default_EmployeeController extends Zend_Controller_Action
 
 		try {
 			//code...
-			$popConfigPermission = array();
+			$popConfigPermission = [];
 			$auth = Zend_Auth::getInstance();
-			$report_opt = array();
-			$role_datap = array();
+			$report_opt = [];
+			$role_datap = [];
 			$empGroup = "";
 			if ($auth->hasIdentity()) {
 				$loginUserId = $auth->getStorage()->read()->id;
@@ -1151,7 +1151,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 						$phoneno = new Default_Model_Phoneno();
 						$employeeposModel = new Default_Model_empposition();
 
-						$data = array();
+						$data = [];
 						$empDeptId = "";
 						$empRoleId = "";
 						$data = $employeeModal->getsingleEmployeeData($id);
@@ -1206,7 +1206,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 								}
 							}
 
-							$positionlistArr = $positionsmodel->getPositionList($data['jobtitle_id']);
+							$positionlistArr = $positionsmodel->getPositionList();
 
 							if (sizeof($positionlistArr) > 0) {
 
@@ -1305,7 +1305,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 							$employeeform->setAttrib('action', BASE_URL . 'employee/edit/id/' . $id);
 
 
-							$empDeptId = (isset($_POST['department_id'])) ? $_POST['department_id'] : $data['department_id'];
+							$empDeptId = $_POST['department_id'] ?? $data['department_id'];
 							if (isset($_POST['emprole']) && $_POST['emprole'] != '') {
 								$role_split = preg_split('/_/', $_POST['emprole']);
 								$empRoleId = $role_split[0];
@@ -1318,7 +1318,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 									$role_datap = $role_model->getRoleDataById($empRoleId);
 									$reportingManagerData = $usersModel->getReportingManagerList_employees($empDeptId, $data['id'], $role_datap['group_id']);
 								} catch (Exception $e) {
-									$reportingManagerData = array();
+									$reportingManagerData = [];
 								}
 							}
 
@@ -1427,7 +1427,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 					if (sizeof($roles_arr) > 0) {
 						$employeeform->emprole->addMultiOption($roles_arr[0]['id'] . '_' . $roles_arr[0]['group_id'], utf8_encode($roles_arr[0]['rolename']));
 					}
-					$prefix_data = array();
+					$prefix_data = [];
 					if ($data['prefix_id'] != '' && $data['prefix_id'] != 'null')
 						$prefix_data = $prefix_model->getsinglePrefixData($data['prefix_id']);
 					if (!empty($prefix_data) && $prefix_data != 'norows') {
@@ -1475,7 +1475,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 						}
 					}
 
-					$positionlistArr = $positionsmodel->getPositionList($data['jobtitle_id']);
+					$positionlistArr = $positionsmodel->getPositionList();
 					if (sizeof($positionlistArr) > 0) {
 						$employeeform->position_id->addMultiOption('', 'Select a Position');
 						foreach ($positionlistArr as $positionlistres) {
@@ -1563,7 +1563,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 					$branchModel = new Default_Model_Branch();
 					$titleModel = new Default_Model_Title();
 					$phoneno = new Default_Model_Phoneno();
-					$data = array();
+					$data = [];
 
 					$data = $employeeModal->getsingleEmployeeData($id);
 					$empdata = $employeeModal->getActiveEmployeeData($id);
@@ -1834,7 +1834,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 			sapp_Global::logManager(EMPLOYEE, $actionFlag, $loginUserId, $tableId);
 			$db->commit();
 
-			$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => $msg));
+			$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => $msg]);
 
 			if ($isUpdate) {
 				$this->_sendUpdateNotification($params);
@@ -1952,7 +1952,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 		$jobtitle_id = $request->getParam('jobtitle_id');
 		if (!empty($jobtitle_id)) {
 			$posModel = new Default_Model_Positions();
-			$positions = $posModel->getPositionList($jobtitle_id);
+			$positions = $posModel->getPositionList();
 
 			$employeeform->position_id->clearMultiOptions();
 			$employeeform->position_id->addMultiOption('', 'Select Position');
@@ -2106,11 +2106,11 @@ class Default_EmployeeController extends Zend_Controller_Action
 		}
 
 		// 2. Update the main Employee record
-		$empWhere = array('id = ?' => $id);
+		$empWhere = ['id = ?' => $id];
 		$models->employee->SaveorUpdateEmployeeData($employeeData, $empWhere);
 
 		// 3. Update the User/Login record
-		$userWhere = array('id = ?' => $userId);
+		$userWhere = ['id = ?' => $userId];
 		$models->users->SaveorUpdateUserData($userData, $userWhere);
 
 		// 4. Synchronize status and "isactive" flags across tables
@@ -2161,7 +2161,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 		}
 
 		if (!empty($userStatusData)) {
-			$where = array('id = ?' => $userIdInt);
+			$where = ['id = ?' => $userIdInt];
 			$models->users->SaveorUpdateUserData($userStatusData, $where);
 
 			// Ensure the employee table is in sync with the user table state
@@ -2326,7 +2326,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 		$exceptionMsg = $e->getMessage();
 
 		// Check for duplicate entry errors (common in Sentrifugo if IDs overlap)
-		if (!empty($exceptionMsg) && strpos($exceptionMsg, "Duplicate entry '" . $empNumId . "'") !== false) {
+		if (!empty($exceptionMsg) && str_contains($exceptionMsg, "Duplicate entry '" . $empNumId . "'")) {
 			$msgarray['employeeNumId'] = "Employee ID already exists. Please try again.";
 		} else {
 			$msgarray['employeeId'] = "Something went wrong, please try again later. Error: " . $exceptionMsg;
@@ -2343,7 +2343,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 		$requisition_data = $requisition_data[0];
 		$report_person_data = $user_model->getUserDataById($requisition_data['createdby']);
 		$closed_person_data = $user_model->getUserDataById($loginUserId);
-		$mail_arr = array();
+		$mail_arr = [];
 		$mail_arr[0]['name'] = 'HR';
 		$mail_arr[0]['email'] = defined('REQ_HR_' . $requisition_data['businessunit_id']) ? constant('REQ_HR_' . $requisition_data['businessunit_id']) : "";
 		$mail_arr[0]['type'] = 'HR';
@@ -2390,7 +2390,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 			$leavemanagementmodel = new Default_Model_Leavemanagement();
 			$departmentidsArr = $leavemanagementmodel->getActiveDepartmentIds();
 			$depatrmentidstr = '';
-			$newarr = array();
+			$newarr = [];
 			if (!empty($departmentidsArr)) {
 				$where = '';
 				for ($i = 0; $i < sizeof($departmentidsArr); $i++) {
@@ -2439,7 +2439,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 		$employeeform = new Default_Form_employee();
 		$positionsmodel = new Default_Model_Positions();
 		$flag = '';
-		$positionlistArr = $positionsmodel->getPositionList($jobtitle_id);
+		$positionlistArr = $positionsmodel->getPositionList();
 		if (empty($positionlistArr))
 			$flag = 'true';
 
@@ -2463,10 +2463,10 @@ class Default_EmployeeController extends Zend_Controller_Action
 		if ($id) {
 			$employeemodel = new Default_Model_Employee();
 			$usersModel = new Default_Model_Users();
-			$empdata = array('isactive' => 5);
-			$empwhere = array('user_id=?' => $id);
-			$userdata = array('isactive' => 5);
-			$userwhere = array('id=?' => $id);
+			$empdata = ['isactive' => 5];
+			$empwhere = ['user_id=?' => $id];
+			$userdata = ['isactive' => 5];
+			$userwhere = ['id=?' => $id];
 			$empId = $employeemodel->SaveorUpdateEmployeeData($empdata, $empwhere);
 			$userId = $usersModel->addOrUpdateUserModel($userdata, $userwhere);
 
@@ -2497,7 +2497,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 		$employee_id = $this->_getParam('empId', null);
 		$employee_group = $this->_getParam('empgroup', null);
 		$usersModel = new Default_Model_Users();
-		$reportingManagerData = array();
+		$reportingManagerData = [];
 		$flag = '';
 		if ($dept_id == 'undefined')
 			$dept_id = '';
@@ -2538,8 +2538,8 @@ class Default_EmployeeController extends Zend_Controller_Action
 		$empData = $employeeModal->getsingleEmployeeData($emp_id);
 
 		if ($hasteam == 'true') {
-			$employessunderEmpId = array();
-			$reportingmanagersList = array();
+			$employessunderEmpId = [];
+			$reportingmanagersList = [];
 			$employessunderEmpId = $employeeModal->getEmployeesUnderRM($emp_id);
 
 			if ($empData[0]['is_orghead'] == 1) {
@@ -2561,39 +2561,39 @@ class Default_EmployeeController extends Zend_Controller_Action
 			$db->beginTransaction();
 			try {
 				if ($status == 'active') {
-					$data = array(
+					$data = [
 						'isactive' => 1,
 						'emptemplock' => 0,
-					);
-					$empdata = array('isactive' => 1);
-					$logarr = array(
+					];
+					$empdata = ['isactive' => 1];
+					$logarr = [
 						'userid' => $loginUserId,
 						'recordid' => $emp_id,
 						'date' => gmdate("Y-m-d H:i:s"),
 						'isactive' => 1
-					);
+					];
 					$jsonlogarr = json_encode($logarr);
 				} else if ($status == 'inactive') {
-					$data = array(
+					$data = [
 						'isactive' => 0,
 						'emptemplock' => 1,
-					);
-					$empdata = array('isactive' => 0);
-					$logarr = array(
+					];
+					$empdata = ['isactive' => 0];
+					$logarr = [
 						'userid' => $loginUserId,
 						'recordid' => $emp_id,
 						'date' => gmdate("Y-m-d H:i:s"),
 						'isactive' => 0
-					);
+					];
 					$jsonlogarr = json_encode($logarr);
 				}
 				$where = "id = " . $emp_id;
 				$user_model->SaveorUpdateUserData($data, $where);
 				$employeeModal->SaveorUpdateEmployeeData($empdata, "user_id =" . $emp_id);
 				if ($empData[0]['is_orghead'] == '1') {
-					$headData = array(
+					$headData = [
 						'is_orghead' => 0
-					);
+					];
 					$headWhere = "user_id = " . $emp_id;
 					$employeeModal->SaveorUpdateEmployeeData($headData, $headWhere);
 				}
@@ -2606,7 +2606,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 				$db->rollBack();
 				$result = 'failed';
 			}
-			$this->_helper->json(array('result' => ($result == 'update') ? "yes" : "no"));
+			$this->_helper->json(['result' => ($result == 'update') ? "yes" : "no"]);
 		}
 	}
 
@@ -2634,14 +2634,14 @@ class Default_EmployeeController extends Zend_Controller_Action
 									</div>';
 			$result = sapp_Global::_sendEmail($options);
 		}
-		$this->_helper->json(array('result' => $updateTable));
+		$this->_helper->json(['result' => $updateTable]);
 	}
 
 	public function addemppopupAction()
 	{
 		$flag = 'true';
 		$controllername = 'employee';
-		$msgarray = array();
+		$msgarray = [];
 		$emptyFlag = 0;
 		Zend_Layout::getMvcInstance()->setLayoutPath(APPLICATION_PATH . "/layouts/scripts/popup/");
 		$auth = Zend_Auth::getInstance();
@@ -2651,7 +2651,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 
 		$deptidforhead = $this->_getParam('deptidforhead', null);
 
-		$report_opt = array();
+		$report_opt = [];
 		$emp_form = new Default_Form_employee();
 		$user_model = new Default_Model_Usermanagement();
 		$role_model = new Default_Model_Roles();
@@ -2681,7 +2681,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 		$emp_form->employeeId->setValue($emp_id);
 
 		$role_data = $role_model->getRolesList_Dept($deptidforhead);   //in add screen $deptidforhead is null and we can get only Management role,In edit screen getting all roles
-		$emp_form->emprole->addMultiOptions(array('' => 'Select Role') + $role_data);
+		$emp_form->emprole->addMultiOptions(['' => 'Select Role'] + $role_data);
 		if (empty($role_data)) {
 			$msgarray['emprole'] = 'Roles are not configured yet.';
 			$flag = 'false';
@@ -2711,7 +2711,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 		}
 
 		if (isset($_POST['jobtitle_id']) && $_POST['jobtitle_id'] != '') {
-			$positionlistArr = $positionsmodel->getPositionList($_POST['jobtitle_id']);
+			$positionlistArr = $positionsmodel->getPositionList();
 			if (sizeof($positionlistArr) > 0) {
 				$emp_form->position_id->addMultiOption('', 'Select Position');
 				foreach ($positionlistArr as $positionlistres) {
@@ -2730,7 +2730,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 			$msgarray['emp_status_id'] = 'Employment status is not configured yet.';
 			$emptyFlag++;
 		}
-		$reportingManagerData = array();
+		$reportingManagerData = [];
 		$emprole = $this->_getParam('emprole', null);
 		$businessunit_id = null;
 		//if department id and role are not empty(for edit department screen)
@@ -2805,7 +2805,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 					$user_id = $this->_getParam('user_id', null);
 					$emp_status_id = $this->_getParam('emp_status_id', null);
 
-					$user_data = array(
+					$user_data = [
 						'emprole' => !empty($emprole[0]) ? $emprole[0] : null,
 						'firstname' => ($firstname != '') ? $firstname : NULL,
 						'lastname' => ($lastname != '') ? $lastname : NULL,
@@ -2819,8 +2819,8 @@ class Default_EmployeeController extends Zend_Controller_Action
 						'modeofentry' => 'Direct',
 						'selecteddate' => $date_of_joining,
 						'userstatus' => 'old',
-					);
-					$emp_data = array(
+					];
+					$emp_data = [
 						'user_id' => $user_id,
 						'jobtitle_id' => $jobtitle_id,
 						'position_id' => $position_id,
@@ -2835,7 +2835,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 						'emp_status_id' => $emp_status_id,
 						'modifiedby' => $loginUserId,
 						'modifieddate' => gmdate("Y-m-d H:i:s")
-					);
+					];
 					$user_data['createdby'] = $loginUserId;
 					$user_data['createddate'] = gmdate("Y-m-d H:i:s");
 					$user_data['isactive'] = 1;
@@ -2922,7 +2922,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 		$savefolder = EMP_EXCEL_UPLOAD_PATH;		// folder for upload									
 		$max_size = 1048576;			// maxim size for image file, in KiloBytes
 		// Allowed file types		
-		$allowtype = array('xls', 'xlsx');
+		$allowtype = ['xls', 'xlsx'];
 
 		$rezultat = '';
 		$result_status = '';
@@ -2972,11 +2972,11 @@ class Default_EmployeeController extends Zend_Controller_Action
 			$result_msg = 'Please upload only .gif, .jpg, .jpeg, .png images.';
 		}
 
-		$result = array(
+		$result = [
 			'result' => $result_status,
 			'img' => $rezultat,
 			'msg' => $result_msg
-		);
+		];
 
 		$this->_helper->json($result);
 	} //end of upload excel action

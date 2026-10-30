@@ -13,9 +13,9 @@ class Payroll_Form_report extends Zend_Form
         $id = new Zend_Form_Element_Hidden('id');
         $empid = new Zend_Form_Element_Select('empid');
         $empid->setRequired();
-        $empid->addValidator('NotEmpty',false,array('messages'=>'need parameter'));
+        $empid->addValidator('NotEmpty',false,['messages'=>'need parameter']);
         $submit = new Zend_Form_Element_Submit('submit');
-        $this->addElements(array($id,$empid,$submit));
+        $this->addElements([$id,$empid,$submit]);
     }
 }
 

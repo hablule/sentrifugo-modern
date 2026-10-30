@@ -47,7 +47,7 @@ class Timemanagement_Model_Mailslist extends Zend_Db_Table_Abstract
 	public function getPendingMailsData(){
 		$emailData = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('ml' => $this->_name),array('ml.*'))
+						->from(['ml' => $this->_name],['ml.*'])
 						->where("ml.is_mail_sent = 0")
 						->order("ml.id");
 		return $this->fetchAll($emailData)->toArray();

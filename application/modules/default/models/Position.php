@@ -56,7 +56,7 @@ class Default_Model_Position extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if (!empty($searchData) && $searchData !== 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -80,7 +80,7 @@ class Default_Model_Position extends Zend_Db_Table_Abstract
             }
         }
 
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'          => 'Action',
             'code'            => 'Position Code',
             'display_name'    => 'Position Name',
@@ -89,18 +89,18 @@ class Default_Model_Position extends Zend_Db_Table_Abstract
             'org_owner_name'  => 'Organizational Unit',
             'status'          => 'Status',
             'max_fte'         => 'Max FTE'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
             'perPage'        => $perPage,
             'tablecontent'   => $tableContent,
             'objectname'     => 'position',
-            'extra'          => array(),
+            'extra'          => [],
             'tableheader'    => $tableHeaders,
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
@@ -108,10 +108,10 @@ class Default_Model_Position extends Zend_Db_Table_Abstract
             'menuName'       => 'Positions',
             'call'           => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => array(
-                'status' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Proposed' => 'Proposed', 'Active' => 'Active', 'Frozen' => 'Frozen', 'Eliminated' => 'Eliminated'))
-            )
-        );
+            'search_filters' => [
+                'status' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Proposed' => 'Proposed', 'Active' => 'Active', 'Frozen' => 'Frozen', 'Eliminated' => 'Eliminated']]
+            ]
+        ];
     }
 
     public function getGridData($sort, $by, $pageNo, $perPage, $searchQuery = '')
@@ -123,8 +123,8 @@ class Default_Model_Position extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from(
-                array('p' => $this->_name),
-                array(
+                ['p' => $this->_name],
+                [
                     'id' => 'p.id',
                     'code',
                     'status',
@@ -132,22 +132,22 @@ class Default_Model_Position extends Zend_Db_Table_Abstract
                     'display_name' => new Zend_Db_Expr("COALESCE(p.name, jt.name)"),
                     'status_text' => new Zend_Db_Expr("CASE WHEN p.isactive = 1 THEN 'Active' ELSE 'Inactive' END"),
                     'org_owner_name' => new Zend_Db_Expr("COALESCE(comp.name, bu.name, divn.name, dept.name, sec.name, tm.name, 'Unassigned')")
-                )
+                ]
             )
             // Blueprint Join
-            ->joinInner(array('jt' => 'main_jobtitle'), 'p.jobtitle_id = jt.id', array('jobtitle_name' => 'jt.name'))
+            ->joinInner(['jt' => 'main_jobtitle'], 'p.jobtitle_id = jt.id', ['jobtitle_name' => 'jt.name'])
 
             // Parent Position (Reports To) Join & its Job Title for COALESCE fallback
-            ->joinLeft(array('pp' => 'main_position'), 'p.reports_to_position_id = pp.id', array('reports_to_name' => new Zend_Db_Expr("CONCAT(pp.code, ' - ', COALESCE(pp.name, pjt.name))")))
-            ->joinLeft(array('pjt' => 'main_jobtitle'), 'pp.jobtitle_id = pjt.id', array())
+            ->joinLeft(['pp' => 'main_position'], 'p.reports_to_position_id = pp.id', ['reports_to_name' => new Zend_Db_Expr("CONCAT(pp.code, ' - ', COALESCE(pp.name, pjt.name))")])
+            ->joinLeft(['pjt' => 'main_jobtitle'], 'pp.jobtitle_id = pjt.id', [])
 
             // Org Unit Joins
-            ->joinLeft(array('comp' => 'main_company'), 'p.company_id = comp.id', array())
-            ->joinLeft(array('bu' => 'main_businessunit'), 'p.businessunit_id = bu.id', array())
-            ->joinLeft(array('divn' => 'main_division'), 'p.division_id = divn.id', array())
-            ->joinLeft(array('dept' => 'main_department'), 'p.department_id = dept.id', array())
-            ->joinLeft(array('sec' => 'main_section'), 'p.section_id = sec.id', array())
-            ->joinLeft(array('tm' => 'main_team'), 'p.team_id = tm.id', array())
+            ->joinLeft(['comp' => 'main_company'], 'p.company_id = comp.id', [])
+            ->joinLeft(['bu' => 'main_businessunit'], 'p.businessunit_id = bu.id', [])
+            ->joinLeft(['divn' => 'main_division'], 'p.division_id = divn.id', [])
+            ->joinLeft(['dept' => 'main_department'], 'p.department_id = dept.id', [])
+            ->joinLeft(['sec' => 'main_section'], 'p.section_id = sec.id', [])
+            ->joinLeft(['tm' => 'main_team'], 'p.team_id = tm.id', [])
             ->where('p.isactive != ?', 5);
 
         if (!empty($searchQuery)) {
@@ -164,10 +164,10 @@ class Default_Model_Position extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from(
-                array('p' => $this->_name),
-                array('id' => 'p.id', 'label' => new Zend_Db_Expr("CONCAT(p.code, ' - ', COALESCE(p.name, jt.name))"))
+                ['p' => $this->_name],
+                ['id' => 'p.id', 'label' => new Zend_Db_Expr("CONCAT(p.code, ' - ', COALESCE(p.name, jt.name))")]
             )
-            ->joinInner(array('jt' => 'main_jobtitle'), 'p.jobtitle_id = jt.id', array())
+            ->joinInner(['jt' => 'main_jobtitle'], 'p.jobtitle_id = jt.id', [])
             ->order('p.code ASC');
 
         if ($activeOnly) {
@@ -200,7 +200,7 @@ class Default_Model_Position extends Zend_Db_Table_Abstract
             }
             $data['modifiedby'] = $userId;
             $data['modifieddate'] = $currentDate;
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return 'update';
         }
 
@@ -218,16 +218,16 @@ class Default_Model_Position extends Zend_Db_Table_Abstract
     {
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? (int)$auth->getStorage()->read()->id : 0;
-        $data = array('isactive' => 5, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s"));
-        return $this->update($data, array('id = ?' => (int)$id));
+        $data = ['isactive' => 5, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s")];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     public function toggleStatus($id, $status)
     {
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? (int)$auth->getStorage()->read()->id : 0;
-        $data = array('isactive' => (int)$status, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s"));
-        return $this->update($data, array('id = ?' => (int)$id));
+        $data = ['isactive' => (int)$status, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s")];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* =================================================================================
@@ -251,13 +251,13 @@ class Default_Model_Position extends Zend_Db_Table_Abstract
         $db = $this->getAdapter();
         // Check assignments
         try {
-            $modernCheck = $db->select()->from('main_emp_assignment', array('id'))->where('position_id = ?', $positionId);
+            $modernCheck = $db->select()->from('main_emp_assignment', ['id'])->where('position_id = ?', $positionId);
             if ($db->fetchRow($modernCheck)) return true;
         } catch (\Throwable $e) {
         }
 
         // Check if other positions report to this one
-        $childCheck = $db->select()->from('main_position', array('id'))->where('reports_to_position_id = ?', $positionId)->where('isactive != ?', 5);
+        $childCheck = $db->select()->from('main_position', ['id'])->where('reports_to_position_id = ?', $positionId)->where('isactive != ?', 5);
         if ($db->fetchRow($childCheck)) return true;
 
         return false;

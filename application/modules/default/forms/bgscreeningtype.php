@@ -33,13 +33,13 @@ class Default_Form_bgscreeningtype extends Zend_Form
         $type->setAttrib('maxLength', 50);
         $type->addFilter(new Zend_Filter_StringTrim());
         $type->setRequired(true);
-        $type->addValidator('NotEmpty', false, array('messages' => 'Please enter screening type.'));  
-		$type->addValidator("regex",true,array(                           
+        $type->addValidator('NotEmpty', false, ['messages' => 'Please enter screening type.']);  
+		$type->addValidator("regex",true,[                           
                            'pattern'=>'/^[a-zA-Z.\- ?]+$/',
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter valid screening type.'
-                           )
-        	));
+                           ]
+        	]);
 			
 		$description = new Zend_Form_Element_Textarea('description');
         $description->setAttrib('rows', 10);
@@ -49,7 +49,7 @@ class Default_Form_bgscreeningtype extends Zend_Form
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 		
-		$this->addElements(array($id,$type,$description,$submit));
-        $this->setElementDecorators(array('ViewHelper')); 
+		$this->addElements([$id,$type,$description,$submit]);
+        $this->setElementDecorators(['ViewHelper']); 
      }
 }

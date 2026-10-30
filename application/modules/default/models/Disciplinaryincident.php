@@ -51,14 +51,14 @@ class Default_Model_Disciplinaryincident extends Zend_Db_Table_Abstract
                 }   
               $myDisciplinaryData = $this->select()
                             ->setIntegrityCheck(false)  
-                            ->from(array('i'=>'main_disciplinary_incident'),array('i.*','employee_appeal'=>'if(i.employee_appeal = 1,"Yes","No")'
+                            ->from(['i'=>'main_disciplinary_incident'],['i.*','employee_appeal'=>'if(i.employee_appeal = 1,"Yes","No")'
                                         ,'cao_verdict'=>'if(i.cao_verdict = 1,"Guilty","Not Guilty")',new Zend_Db_Expr("if(CURDATE()<=i.violation_expiry,'notexpired','expired') as dateexpired")
-                                        ,'date_of_occurrence'=>'DATE_FORMAT(date_of_occurrence,"'.DATEFORMAT_MYSQL.'")'))
-                            ->joinLeft(array('mu'=>'main_users'), 'mu.id=i.employee_id',array('mu.empid','employeeemail'=>'e.emailaddress'))
-                            ->joinInner(array('e'=>'main_employees'),'e.id = mu.empid',array('employeename'=>'e.userfullname',))
-                            ->joinLeft(array('bu'=>'main_sbunit'), 'bu.sbunit_id=i.employee_bu_id',array('bu.name as unitname'))
-                            ->joinLeft(array('d'=>'main_department'), 'd.department_id=i.employee_dept_id',array('d.name as deptname'))
-                            ->joinLeft(array('v'=>'main_disciplinary_violation_types'), 'v.id=i.violation_id',array('v.violationname'))
+                                        ,'date_of_occurrence'=>'DATE_FORMAT(date_of_occurrence,"'.DATEFORMAT_MYSQL.'")'])
+                            ->joinLeft(['mu'=>'main_users'], 'mu.id=i.employee_id',['mu.empid','employeeemail'=>'e.emailaddress'])
+                            ->joinInner(['e'=>'main_employees'],'e.id = mu.empid',['employeename'=>'e.userfullname',])
+                            ->joinLeft(['bu'=>'main_sbunit'], 'bu.sbunit_id=i.employee_bu_id',['bu.name as unitname'])
+                            ->joinLeft(['d'=>'main_department'], 'd.department_id=i.employee_dept_id',['d.name as deptname'])
+                            ->joinLeft(['v'=>'main_disciplinary_violation_types'], 'v.id=i.violation_id',['v.violationname'])
                             ->where($where)
                             ->order("$by $sort") 
                             ->limitPage($pageNo, $perPage);
@@ -69,15 +69,15 @@ class Default_Model_Disciplinaryincident extends Zend_Db_Table_Abstract
     public function getIncidentData($id) {
         $incidentData = $this->select()
                             ->setIntegrityCheck(false)  
-                            ->from(array('i'=>'main_disciplinary_incident'),array('i.*','i.id as i_id','employee_appeal'=>'if(i.employee_appeal = 1,"Yes","No")'
-                                        ,'cao_verdict'=>'if(i.cao_verdict = 1,"Guilty","Not Guilty")',new Zend_Db_Expr("if(CURDATE()<=i.violation_expiry,'notexpired','expired') as dateexpired")))
-                            ->joinLeft(array('u'=>'main_employees'), 'u.id=i.employee_rep_mang_id',array('reportingmanagername'=>'u.userfullname','reportingmanageremail'=>'u.emailaddress'))
-                            ->joinLeft(array('mu'=>'main_employees'), 'mu.id=i.employee_id',array('employeename'=>'mu.userfullname','mu.id as eid','employeeemail'=>'mu.emailaddress'))
-                            ->joinLeft(array('mus'=>'main_employees'), 'mus.id=i.incident_raised_by',array('incidentraisedby'=>'mus.userfullname','managementemail'=>'mus.emailaddress'))
-                            ->joinLeft(array('bu'=>'main_sbunit'), 'bu.sbunit_id=i.employee_bu_id',array('bu.name as unitname'))
-                            ->joinLeft(array('d'=>'main_department'), 'd.department_id=i.employee_dept_id',array('d.name as deptname'))
-                            ->joinLeft(array('v'=>'main_disciplinary_violation_types'), 'v.id=i.violation_id',array('v.violationname'))
-                            ->joinLeft(array('j'=>'main_jobtitle'), 'j.jobtitle_id=i.employee_job_title_id',array('j.name as jobtitlename'))
+                            ->from(['i'=>'main_disciplinary_incident'],['i.*','i.id as i_id','employee_appeal'=>'if(i.employee_appeal = 1,"Yes","No")'
+                                        ,'cao_verdict'=>'if(i.cao_verdict = 1,"Guilty","Not Guilty")',new Zend_Db_Expr("if(CURDATE()<=i.violation_expiry,'notexpired','expired') as dateexpired")])
+                            ->joinLeft(['u'=>'main_employees'], 'u.id=i.employee_rep_mang_id',['reportingmanagername'=>'u.userfullname','reportingmanageremail'=>'u.emailaddress'])
+                            ->joinLeft(['mu'=>'main_employees'], 'mu.id=i.employee_id',['employeename'=>'mu.userfullname','mu.id as eid','employeeemail'=>'mu.emailaddress'])
+                            ->joinLeft(['mus'=>'main_employees'], 'mus.id=i.incident_raised_by',['incidentraisedby'=>'mus.userfullname','managementemail'=>'mus.emailaddress'])
+                            ->joinLeft(['bu'=>'main_sbunit'], 'bu.sbunit_id=i.employee_bu_id',['bu.name as unitname'])
+                            ->joinLeft(['d'=>'main_department'], 'd.department_id=i.employee_dept_id',['d.name as deptname'])
+                            ->joinLeft(['v'=>'main_disciplinary_violation_types'], 'v.id=i.violation_id',['v.violationname'])
+                            ->joinLeft(['j'=>'main_jobtitle'], 'j.jobtitle_id=i.employee_job_title_id',['j.name as jobtitlename'])
                             ->where('i.id='.$id.' and i.isactive=1 ');
         return $this->fetchAll($incidentData)->toArray();                            
     }
@@ -85,8 +85,8 @@ class Default_Model_Disciplinaryincident extends Zend_Db_Table_Abstract
         public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$flag='',$b='',$c='',$d='')
         {       
             $searchQuery = '';
-            $searchArray = array();
-            $data = array();
+            $searchArray = [];
+            $data = [];
 
             if($searchData != '' && $searchData!='undefined')
             {
@@ -120,26 +120,26 @@ class Default_Model_Disciplinaryincident extends Zend_Db_Table_Abstract
                     $tablecontent = $this->getDisciplinaryIncidents($sort, $by, $pageNo, $perPage,$searchQuery,$flag);
                 }
         if($flag=='myincident') {
-            $tableFields = array('action'=>'Action','unitname' => 'Business Unit','deptname' => 'Department',
+            $tableFields = ['action'=>'Action','unitname' => 'Business Unit','deptname' => 'Department',
                                 'violationname' => 'Violation Name','date_of_occurrence'=>'Date Of Occurence',
-                                'employee_appeal'=>'Appealed','cao_verdict' => 'Verdict');
+                                'employee_appeal'=>'Appealed','cao_verdict' => 'Verdict'];
         }else{        
-            $tableFields = array('action'=>'Action','employeename'=>'Employee Name','unitname' => 'Business Unit',
+            $tableFields = ['action'=>'Action','employeename'=>'Employee Name','unitname' => 'Business Unit',
                             'deptname' => 'Department','violationname' => 'Violation Name','date_of_occurrence'=>'Date Of Occurence',
-                            'employee_appeal'=>'Appealed','cao_verdict' => 'Verdict');
+                            'employee_appeal'=>'Appealed','cao_verdict' => 'Verdict'];
         }   
         
-        $verdict_array = array('' => 'All',1 =>'Guilty',2 => 'Not Guilty');
-        $employee_appeal_array = array('' => 'All',1 =>'Yes',2 => 'No');
+        $verdict_array = ['' => 'All',1 =>'Guilty',2 => 'Not Guilty'];
+        $employee_appeal_array = ['' => 'All',1 =>'Yes',2 => 'No'];
         
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
             'perPage' => $perPage,              
             'tablecontent' => $tablecontent,
             'objectname' => $objName,
-            'extra' => array(),
+            'extra' => [],
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
             'jsFillFnName' => '',
@@ -148,18 +148,18 @@ class Default_Model_Disciplinaryincident extends Zend_Db_Table_Abstract
             'call'=>$call,
             'actionparam'=>'yes',
             'dashboardcall'=>$dashboardcall,
-            'search_filters' => array(
-                'cao_verdict' => array(
+            'search_filters' => [
+                'cao_verdict' => [
                     'type' => 'select',
                     'filter_data' => $verdict_array,
-                ),
-                'employee_appeal' => array(
+                ],
+                'employee_appeal' => [
                     'type' => 'select',
                     'filter_data' => $employee_appeal_array,
-                ),
-                'date_of_occurrence' => array('type' => 'datepicker'),
-            )
-        );
+                ],
+                'date_of_occurrence' => ['type' => 'datepicker'],
+            ]
+        ];
         return $dataTmp;
     }
     

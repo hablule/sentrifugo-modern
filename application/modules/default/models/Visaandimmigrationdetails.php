@@ -31,7 +31,7 @@ class Default_Model_Visaandimmigrationdetails extends Zend_Db_Table_Abstract
 		if($searchQuery)
 			$where .= " AND ".$searchQuery;		
 		$creditcarddata = $this->select()
-						->from(array('v'=>'main_empvisadetails'))
+						->from(['v'=>'main_empvisadetails'])
 						 ->where($where)
 						  ->order("$by $sort") 
 						  ->limitPage($pageNo, $perPage);
@@ -45,7 +45,7 @@ class Default_Model_Visaandimmigrationdetails extends Zend_Db_Table_Abstract
 		{
 			$where = "user_id =".$id." AND isactive = 1";
 			$creditcardDetailsData = $this->select()
-									->from(array('v'=>'main_empvisadetails'))
+									->from(['v'=>'main_empvisadetails'])
 									->where($where);
 			$creditcardDetailsArr = $this->fetchAll($creditcardDetailsData)->toArray(); 
         }
@@ -71,7 +71,7 @@ class Default_Model_Visaandimmigrationdetails extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$exParam1='',$exParam2='',$exParam3='',$exParam4='')
 	{
 		$searchQuery = '';$tablecontent = '';
-		$searchArray = array();$data = array(); $dataTmp = array();
+		$searchArray = [];$data = []; $dataTmp = [];
 		/** search from grid - START **/
 		if($searchData != '' && $searchData!='undefined')
 		{
@@ -92,17 +92,17 @@ class Default_Model_Visaandimmigrationdetails extends Zend_Db_Table_Abstract
 		/** search from grid - END **/
 			$objName = 'visaandimmigrationdetails';
 	
-	    	$tableFields = array('action'=>'Action','passport_number'=>'Passport Number','passport_expiry_date'=>'Passport Expiry Date','visa_number'=>'Visa Number','visa_expiry_date'=>'Visa Expiry Date','inine_status'=>'Inine Status','ininetyfour_status'=>'Ininetyfour Status');
+	    	$tableFields = ['action'=>'Action','passport_number'=>'Passport Number','passport_expiry_date'=>'Passport Expiry Date','visa_number'=>'Visa Number','visa_expiry_date'=>'Visa Expiry Date','inine_status'=>'Inine Status','ininetyfour_status'=>'Ininetyfour Status'];
 						
 			$tablecontent = $this->getEmpVisaDetails($sort,$by,$pageNo,$perPage,$searchQuery,$exParam1);
-			$dataTmp = array('userid'=>$exParam1,
+			$dataTmp = ['userid'=>$exParam1,
 					'sort' => $sort,
 					'by' => $by,
 					'pageNo' => $pageNo,
 					'perPage' => $perPage,
 					'tablecontent' => $tablecontent,
 					'objectname' => $objName,
-					'extra' => array(),
+					'extra' => [],
 					'tableheader' => $tableFields,
 					'jsGridFnName' => 'getEmployeeAjaxgridData',
 					'jsFillFnName' => '',
@@ -115,11 +115,11 @@ class Default_Model_Visaandimmigrationdetails extends Zend_Db_Table_Abstract
 					'dashboardcall'=>$dashboardcall,
 					'call'=>$call,
 					'context'=>$exParam2,
-					'search_filters' => array(
-					 	'passport_expiry_date'=>array('type'=>'datepicker'),
-					  	'visa_expiry_date'=>array('type'=>'datepicker')	
-					)
-		);
+					'search_filters' => [
+					 	'passport_expiry_date'=>['type'=>'datepicker'],
+					  	'visa_expiry_date'=>['type'=>'datepicker']	
+					]
+		];
 	     return $dataTmp;
 	}
 	public function getEmpVisaDetails($sort, $by, $pageNo, $perPage,$searchQuery,$id)
@@ -132,7 +132,7 @@ class Default_Model_Visaandimmigrationdetails extends Zend_Db_Table_Abstract
 	
 		$empvisaData = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('e' => 'main_empvisadetails'),array('id'=>'e.id','passport_number'=>'e.passport_number','passport_expiry_date'=>'DATE_FORMAT(e.passport_expiry_date,"'.DATEFORMAT_MYSQL.'")','visa_number'=>'e.visa_number','visa_expiry_date'=>'DATE_FORMAT(e.visa_expiry_date,"'.DATEFORMAT_MYSQL.'")','inine_status'=>'e.inine_status','ininetyfour_status'=>'e.ininetyfour_status'))
+		->from(['e' => 'main_empvisadetails'],['id'=>'e.id','passport_number'=>'e.passport_number','passport_expiry_date'=>'DATE_FORMAT(e.passport_expiry_date,"'.DATEFORMAT_MYSQL.'")','visa_number'=>'e.visa_number','visa_expiry_date'=>'DATE_FORMAT(e.visa_expiry_date,"'.DATEFORMAT_MYSQL.'")','inine_status'=>'e.inine_status','ininetyfour_status'=>'e.ininetyfour_status'])
 		->where($where)
 		->order("$by $sort")
 		->limitPage($pageNo, $perPage);
@@ -142,7 +142,7 @@ class Default_Model_Visaandimmigrationdetails extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('es'=>'main_empvisadetails'),array('es.*'))
+		->from(['es'=>'main_empvisadetails'],['es.*'])
 		->where('es.id='.$id.' AND es.isactive = 1');
 			
 		return $this->fetchAll($select)->toArray();

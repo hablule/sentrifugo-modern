@@ -44,9 +44,9 @@ class Default_EmpscreeningController extends Zend_Controller_Action
 		$view = Zend_Layout::getMvcInstance()->getView();		
 		$objname = $this->_getParam('objname');
 		$refresh = $this->_getParam('refresh');
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent = '';
 		$dashboardcall = $this->_getParam('dashboardcall');
 		$statusidstring = $this->_request->getParam('status');
@@ -115,7 +115,7 @@ class Default_EmpscreeningController extends Zend_Controller_Action
      	if($auth->hasIdentity()){
 			$loginUserId = $auth->getStorage()->read()->id;
 		}
-		$msgarray = array();$errorflag = 'true';
+		$msgarray = [];$errorflag = 'true';
 		$callval = $this->getRequest()->getParam('call');
 		if($callval == 'ajaxcall')
 			$this->_helper->layout->disableLayout();
@@ -130,21 +130,21 @@ class Default_EmpscreeningController extends Zend_Controller_Action
 			/* Add multi-options to the employee dropdown */
 			$employeeData = $empscreeningModel->getEmployeesForScreening();
 			$candidateData = $empscreeningModel->getCandidatesForScreening();
-			$specimenArr = array();$empArr = array();$candArr = array();
+			$specimenArr = [];$empArr = [];$candArr = [];
 			
 	    	foreach ($employeeData as $eData){								
-				$empArr[] = array(
+				$empArr[] = [
 						'id' =>$eData['id'],
 						'name' => $eData['name'].', '.$eData['jobtitle'],
 						'profileimg' => $eData['profileimg']
-					);
+					];
 	    	}					
 			foreach ($candidateData as $cData){				
-				$candArr[] = array(
+				$candArr[] = [
 						'id' =>$cData['id'],
 						'name' => $cData['name'],
 						'profileimg' => ''
-					);
+					];
 	    	}
 			
 			if(sapp_Global::_isactivemodule(RESOURCEREQUISITION))
@@ -287,7 +287,7 @@ class Default_EmpscreeningController extends Zend_Controller_Action
 		$candid = $this->_request->getParam('candid'); 
 		$empid = $this->getRequest()->getParam('empid');
 		$specimenId = '';$empFlag = 1;$bgtypes = '';$BGStatus = '';$newStatus = 'In process';$inprocess = 'no';
-		$options = array();
+		$options = [];
 		if($employee)
 		{
 			$empArr = explode('-',$employee);
@@ -354,7 +354,7 @@ class Default_EmpscreeningController extends Zend_Controller_Action
 		{
 			for($i=0;$i<sizeof($checktype);$i++)
 			{
-				$processStatus = array();
+				$processStatus = [];
 				$processStatus = $processesmodel->getProcessStatus($specimenId,$empFlag,$agencyids,$checktype[$i]);		
 				if(!empty($processStatus) && sizeof($processStatus > 0))
 				{
@@ -369,11 +369,11 @@ class Default_EmpscreeningController extends Zend_Controller_Action
 			}
 		}
 		/* END */
-		$agencyData = array();	$agencyPOCData = array();	$empData = array();$personalData = array(); $addressData = array(); $companyData = array();
+		$agencyData = [];	$agencyPOCData = [];	$empData = [];$personalData = []; $addressData = []; $companyData = [];
 		$empscreeningModel = new Default_Model_Empscreening();	
 		if(!empty($checktype))
 		{
-			$agencyArr = array();
+			$agencyArr = [];
 			$agencyArr = $checktype;
 			$agencyData = $empscreeningModel->getAgencyData($agencyArr,'','');			
 		}	
@@ -388,7 +388,7 @@ class Default_EmpscreeningController extends Zend_Controller_Action
 		}
 		if(isset($id) && $id!='')
 		{			
-			$idArr = array();
+			$idArr = [];
 			$idArr = explode('-',$id);
 			$specimenid = $idArr[0];$userflag = $idArr[1]; 
 			$personalData = $empscreeningModel->getEmpPersonalData($specimenid,$userflag);
@@ -437,27 +437,27 @@ class Default_EmpscreeningController extends Zend_Controller_Action
 				/*	A New process is created for a user whose background check status is in 'Complete' status. Then updating the bg status to 'In process' */
 				if($BGStatus == 'Complete' && ($newStatus == 'In process'))
 				{
-					$totalstatusData = array(
+					$totalstatusData = [
 							'bgcheck_status'	=>		'In process',
 							'modifiedby'		=>		$loginUserId,
 							'modifieddate'		=>		gmdate("Y-m-d H:i:s")
-						);
-					$totalstatusWhere = array(
+						];
+					$totalstatusWhere = [
 							'specimen_id=?'		=>		$specimenId,
 							'flag=?'			=>		$empFlag
-						);
+						];
 					$empscreeningModel->SaveorUpdateDetails($totalstatusData, $totalstatusWhere);					
 				}	
 				/* END */
 			
-				$data = array(  
+				$data = [  
 						'specimen_id'		=>		$specimenId,
 						'flag'				=>		$empFlag,
 						'bgagency_id'		=>		$agencyids,
 						'bgagency_pocid'	=>		$radio_pocId,
 						'modifiedby'		=>		$loginUserId,
 						'modifieddate'		=>		gmdate("Y-m-d H:i:s")
-				);		
+				];		
 				$data['process_status'] = $newStatus;
 				$data['createdby'] = $loginUserId;
 				$data['createddate'] = gmdate("Y-m-d H:i:s");
@@ -475,23 +475,23 @@ class Default_EmpscreeningController extends Zend_Controller_Action
 				}
 				/* Updating back ground check status to In process in employees/candidates status */
 				if($empFlag == 1){
-					$empInsertionData = array(
+					$empInsertionData = [
 							'backgroundchk_status' => 	'In process',
 							'modifiedby'		=>		$loginUserId,
 							'modifieddate'		=>		gmdate("Y-m-d H:i:s")
-						);
-					$empWhere = array('id=?'=>$specimenId);
+						];
+					$empWhere = ['id=?'=>$specimenId];
 					$usermodel->addOrUpdateUserModel($empInsertionData, $empWhere,$specimenId);
 					$options['subject'] = APPLICATION_NAME.' :: Employee Screening';				
 				}
 				else {
 					$candModel = new Default_Model_Candidatedetails();
-					$candData = array(
+					$candData = [
 							'backgroundchk_status' => 	'In process',
 							'modifiedby'		=>		$loginUserId,
 							'modifieddate'		=>		gmdate("Y-m-d H:i:s")
-						);
-					$candWhere = array('id=?'=>$specimenId);
+						];
+					$candWhere = ['id=?'=>$specimenId];
 					$candModel->SaveorUpdateUserData($candData, $candWhere);
 					$options['subject'] = APPLICATION_NAME.' :: Candidate Screening';					
 				}
@@ -519,25 +519,25 @@ class Default_EmpscreeningController extends Zend_Controller_Action
 
 				if(isset($lmanager1Email) && $lmanager1Email != '')	
 				{	
-					$manager1 = array($lmanager1Email);
+					$manager1 = [$lmanager1Email];
 				}
-				else $manager1 = array();
+				else $manager1 = [];
 				
 				if(isset($agencyEmail) && $agencyEmail != '')	
 				{	
-					$agencyemail1 = array($agencyEmail);
+					$agencyemail1 = [$agencyEmail];
 				}
-				else $agencyemail1 = array();
+				else $agencyemail1 = [];
 				
 				if (defined('BG_CHECKS_MNGMNT_'.$bid) && $bid !='')
 				   $mngmntemailId = explode(",",constant('BG_CHECKS_MNGMNT_'.$bid));
 				else   
-				   $mngmntemailId = array();
+				   $mngmntemailId = [];
 				
 				if (defined('BG_CHECKS_HR_'.$bid) && $bid !='')
 				   $hremailId = explode(",",constant('BG_CHECKS_HR_'.$bid));
 				else   
-				   $hremailId = array();	   
+				   $hremailId = [];	   
 				
 				
 				$emailArr =  array_merge($manager1,$agencyemail1,$mngmntemailId,$hremailId);
@@ -598,10 +598,10 @@ class Default_EmpscreeningController extends Zend_Controller_Action
 						$agencylname = $agencyPOCData[$i]['last_name'];
 					}
 				}
-				$data = array(  						
+				$data = [  						
 						'modifiedby'		=>		$loginUserId,
 						'modifieddate'		=>		gmdate("Y-m-d H:i:s")
-				);		
+				];		
 				$empArr = explode('-',$id);
 				$specimenId = $empArr[0];
 				$empFlag = $empArr[1];
@@ -621,28 +621,28 @@ class Default_EmpscreeningController extends Zend_Controller_Action
 						if($inprocess != 'yes')
 						{
 							$data['bgcheck_status'] = $bgcheck_status;
-							$where = array('specimen_id=?'=>$specimenId,'flag=?'=>$empFlag,'isactive = 1');				 
+							$where = ['specimen_id=?'=>$specimenId,'flag=?'=>$empFlag,'isactive = 1'];				 
 							$actionflag = 2;
 							$detailId = $empscreeningModel->SaveorUpdateDetails($data, $where);
 							/* Updating back ground check status to Completed in employees/candidates status */
 							if($empFlag == 1){
 								$usermodel = new Default_Model_Users();
-								$empinsertionData = array(
+								$empinsertionData = [
 										'backgroundchk_status' => 	'Completed',
 										'modifiedby'		=>		$loginUserId,
 										'modifieddate'		=>		gmdate("Y-m-d H:i:s")
-									);
-								$empWhere = array('id=?'=>$specimenId);
+									];
+								$empWhere = ['id=?'=>$specimenId];
 								$usermodel->addOrUpdateUserModel($empinsertionData, $empWhere,$specimenId);
 							}
 							else {
 								$candModel = new Default_Model_Candidatedetails();
-								$candData = array(
+								$candData = [
 										'backgroundchk_status' => 	'Completed',
 										'modifiedby'		=>		$loginUserId,
 										'modifieddate'		=>		gmdate("Y-m-d H:i:s")
-									);
-								$candWhere = array('id=?'=>$specimenId);
+									];
+								$candWhere = ['id=?'=>$specimenId];
 								$candModel->SaveorUpdateUserData($candData, $candWhere);
 							}
 							/* END */
@@ -656,20 +656,20 @@ class Default_EmpscreeningController extends Zend_Controller_Action
 							
 							if(isset($lmanager1Email) && $lmanager1Email != '')	
 							{	
-								$manager1 = array($lmanager1Email);
+								$manager1 = [$lmanager1Email];
 							}
-							else $manager1 = array();			
+							else $manager1 = [];			
 							
 							
 							if (defined('BG_CHECKS_MNGMNT_'.$bid) && $bid !='')
 							   $mngmntemailId = explode(",",constant('BG_CHECKS_MNGMNT_'.$bid));
 							else   
-							   $mngmntemailId = array();
+							   $mngmntemailId = [];
 							
 							if (defined('BG_CHECKS_HR_'.$bid) && $bid !='')
 							   $hremailId = explode(",",constant('BG_CHECKS_HR_'.$bid));
 							else   
-							   $hremailId = array();	
+							   $hremailId = [];	
 							   
 							$emailArr =  array_merge($manager1,$mngmntemailId,$hremailId);							
 							for($i = 0;$i<sizeof($emailArr);$i++)
@@ -717,29 +717,29 @@ class Default_EmpscreeningController extends Zend_Controller_Action
 					else
 					{
 						$data['bgcheck_status'] = $bgcheck_status;
-						$where = array('specimen_id=?'=>$specimenId,'flag=?'=>$empFlag,'isactive = 1');				 
+						$where = ['specimen_id=?'=>$specimenId,'flag=?'=>$empFlag,'isactive = 1'];				 
 						$actionflag = 2;
 						$detailId = $empscreeningModel->SaveorUpdateDetails($data, $where);
 						
 						if($empFlag == 1){
 							$usermodel = new Default_Model_Users();
-							$empInsertionData = array(
+							$empInsertionData = [
 									'backgroundchk_status' => 	$bgcheck_status,
 									'modifiedby'		=>		$loginUserId,
 									'modifieddate'		=>		gmdate("Y-m-d H:i:s")
-								);
-							$empWhere = array('id=?'=>$specimenId);
+								];
+							$empWhere = ['id=?'=>$specimenId];
 							$usermodel->addOrUpdateUserModel($empInsertionData, $empWhere,$specimenId);
 							$options['subject'] = APPLICATION_NAME.' :: Employee Screening';				
 						}
 						else {
 							$candModel = new Default_Model_Candidatedetails();
-							$candData = array(
+							$candData = [
 									'backgroundchk_status' => 	$bgcheck_status,
 									'modifiedby'		=>		$loginUserId,
 									'modifieddate'		=>		gmdate("Y-m-d H:i:s")
-								);
-							$candWhere = array('id=?'=>$specimenId);
+								];
+							$candWhere = ['id=?'=>$specimenId];
 							$candModel->SaveorUpdateUserData($candData, $candWhere);
 						}
 						
@@ -764,9 +764,9 @@ class Default_EmpscreeningController extends Zend_Controller_Action
 				$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$specimenId.'-'.$empFlag);			
 				
 				if($detailId == 'update')
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Background check process is updated successfully."));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Background check process is updated successfully."]);
 				else
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Background check process is added successfully."));					   
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Background check process is added successfully."]);					   
 				
 				if($empFlag == 2)
 				$this->_redirect('empscreening/con/pQ==');
@@ -813,19 +813,19 @@ class Default_EmpscreeningController extends Zend_Controller_Action
 			else	
 				$perPage = PERPAGE;
 		$empscreeningModel = new Default_Model_Processes();
-		$sort = 'DESC';$by = 'b.modifieddate';$pageNo = 1;$searchData = '';$searchArray=array();
+		$sort = 'DESC';$by = 'b.modifieddate';$pageNo = 1;$searchData = '';$searchArray=[];
 		$objName = 'processes';
-		$tableFields = array('action'=>'Action','type' => 'Check Type','agencyname' =>'Agency Name','email'=>'POC Email','process_status'=>'Process Status','explanation'=>'Explanation','isactive'=>'Active Status','startdate'=> 'Started On','enddate'=>'Ended On', 'recentlycommenteddate'=>'Recently Commented On');
+		$tableFields = ['action'=>'Action','type' => 'Check Type','agencyname' =>'Agency Name','email'=>'POC Email','process_status'=>'Process Status','explanation'=>'Explanation','isactive'=>'Active Status','startdate'=> 'Started On','enddate'=>'Ended On', 'recentlycommenteddate'=>'Recently Commented On'];
 		$tablecontent = $empscreeningModel->getProcessesData($sort, $by, $pageNo, $perPage,'',$id,$loginUserId,$loginuserGroup);     
-		$data = array();
-		$dataTmp = array(
+		$data = [];
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -836,14 +836,14 @@ class Default_EmpscreeningController extends Zend_Controller_Action
 			'dashboardcall'=>$dashboardcall,
 			'unitId' => $id,
 			'empstatus'=>$empstatus,
-			'search_filters' => array(
-                    'isactive' => array('type'=>'select',
-                         'filter_data'=>array(''=>'All',1 => 'Active','2'=>'Agency deleted','3'=>'Agency User deleted','4'=>'POC deleted',0 => 'Process deleted' )),
-					'startdate' =>array('type'=>'datepicker'),
-					'enddate' =>array('type'=>'datepicker'),
-					'recentlycommenteddate' =>array('type'=>'datepicker')	
-            )
-		);		
+			'search_filters' => [
+                    'isactive' => ['type'=>'select',
+                         'filter_data'=>[''=>'All',1 => 'Active','2'=>'Agency deleted','3'=>'Agency User deleted','4'=>'POC deleted',0 => 'Process deleted' ]],
+					'startdate' =>['type'=>'datepicker'],
+					'enddate' =>['type'=>'datepicker'],
+					'recentlycommenteddate' =>['type'=>'datepicker']	
+            ]
+		];		
 		array_push($data,$dataTmp);
 		return $data;
 	}
@@ -857,7 +857,7 @@ class Default_EmpscreeningController extends Zend_Controller_Action
 		}
 		$idData = $this->getRequest()->getParam('id');
 		/* Checking for configurations - screening type and agencies*/
-		$msgarray = array(); $errorflag = 'true';
+		$msgarray = []; $errorflag = 'true';
 		$checktypeModal = new Default_Model_Bgscreeningtype();
 		$agencymodel = new Default_Model_Agencylist();
 	    $typesData = $checktypeModal->fetchAll('isactive=1','type')->toArray();		
@@ -880,7 +880,7 @@ class Default_EmpscreeningController extends Zend_Controller_Action
 	    $empscreeningModel = new Default_Model_Empscreening();			
 		$submitButon = $empscreeningform->getElement("submit");
 		$submitButon->setAttrib('style', 'display:none;');	
-		$idArr = array();
+		$idArr = [];
 		$idArr = explode('-',$idData);
 		if(sizeof($idArr)>1)
 		{
@@ -906,7 +906,7 @@ class Default_EmpscreeningController extends Zend_Controller_Action
 					$empscreeningform->populate($data);			
 					$specimenId = $data['specimen_id'];
 					$hrEmail = 'false';$mngmntEmail = 'false';
-					$empData = array();		$personalData = array(); 	$addressData = array();	$companyData = array();
+					$empData = [];		$personalData = []; 	$addressData = [];	$companyData = [];
 					if(isset($specimenId) && isset($flag))
 					{
 						$personalData = $empscreeningModel->getEmpPersonalData($specimenId,$flag);
@@ -991,8 +991,8 @@ class Default_EmpscreeningController extends Zend_Controller_Action
 		$objName='empscreening';
 		$empscreeningform = new Default_Form_empscreening();
 	    $empscreeningModel = new Default_Model_Empscreening();			
-		$processData = array();	
-		$idArr = array();
+		$processData = [];	
+		$idArr = [];
 		$idArr = explode('-',$idData);
 		if(sizeof($idArr)>1)
 		{
@@ -1026,7 +1026,7 @@ class Default_EmpscreeningController extends Zend_Controller_Action
 						}
 					}
 					$specimenId = $data['specimen_id'];
-					$empData = array();			
+					$empData = [];			
 					if(isset($specimenId) && isset($flag))
 					{
 						$personalData = $empscreeningModel->getEmpPersonalData($specimenId,$flag);
@@ -1086,10 +1086,10 @@ class Default_EmpscreeningController extends Zend_Controller_Action
 		$limit = 1; $page = 1;
 		$checktypes = $this->_request->getParam('checktypeid');
 		$this->_helper->layout->disableLayout();
-		$agencyArr = array();
+		$agencyArr = [];
 		$agencyArr = explode(',',$checktypes);
 		$empscreeningModel = new Default_Model_Empscreening();	
-		$agencyData = array();$agencyPOCData = array();
+		$agencyData = [];$agencyPOCData = [];
 		$agencyData = $empscreeningModel->getAgencyData($agencyArr,$limit,$page);
 		if(!empty($agencyData))
 		{
@@ -1134,27 +1134,27 @@ class Default_EmpscreeningController extends Zend_Controller_Action
 		if(isset($getAllRecords[0]['reporting_manager']))$reportmanagername = $getAllRecords[0]['reporting_manager'];
 		else $reportmanagername = '';
 			
-		if($count == '')
+		if($count == 0)
 		{			
 			$this->view->dataArray = $getAllRecords;
 		}
 		$close = '';
-		if($count != '')
+		if($count != 0)
 		{
 			for($i = 0;$i < $count;$i++)
 			{
 				$id = intval($this->_request->getParam('id'.$i));				
 				$explanation = $this->_request->getParam('text'.$i);
 				$date = new Zend_Date();
-				$data = array( 
+				$data = [ 
 						'process_status'	=>      'Complete',  
 						'explanation'		=>		$explanation,
 						'modifiedby'		=>		$loginUserId,
 						'modifieddate'		=>		gmdate("Y-m-d H:i:s")
-				);	
-				$where = array('specimen_id=?'=>$specimenId,'flag=?'=>$empFlag,'process_status=?'=>'In process','id=?'=>$id);
+				];	
+				$where = ['specimen_id=?'=>$specimenId,'flag=?'=>$empFlag,'process_status=?'=>'In process','id=?'=>$id];
 				$detailId = $empscreeningModel->SaveorUpdateDetails($data, $where);
-				$where = array('specimen_id=?'=>$specimenId,'flag=?'=>$empFlag,'process_status'=>'On hold','id=?'=>$id);
+				$where = ['specimen_id=?'=>$specimenId,'flag=?'=>$empFlag,'process_status'=>'On hold','id=?'=>$id];
 				$detailId = $empscreeningModel->SaveorUpdateDetails($data, $where);
 				if($detailId == 'update')
 					$tableid = $id;
@@ -1165,35 +1165,35 @@ class Default_EmpscreeningController extends Zend_Controller_Action
 				$menuID = EMPSCREENING;
 				$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$specimenId.'-'.$empFlag);					
 			}
-			$bgdata = array(  
+			$bgdata = [  
 						'bgcheck_status'	=>		'Complete',
 						'modifiedby'		=>		$loginUserId,
 						'modifieddate'		=>		gmdate("Y-m-d H:i:s")
 						
-				);	
-			$where = array('specimen_id=?'=>$specimenId,'flag=?'=>$empFlag,'isactive = 1');				 
+				];	
+			$where = ['specimen_id=?'=>$specimenId,'flag=?'=>$empFlag,'isactive = 1'];				 
 			$actionflag = 2;
 			$detailId = $empscreeningModel->SaveorUpdateDetails($bgdata, $where);
 			/* Updating back ground check status to Completed in employees/candidates status */
 			if($empFlag == 1){
 			$usermodel = new Default_Model_Users();
-			$empData = array(
+			$empData = [
 					'backgroundchk_status' => 	'Completed',
 					'modifiedby'		=>		$loginUserId,
 					'modifieddate'		=>		gmdate("Y-m-d H:i:s")
-				);
+				];
 				
-			$empWhere = array('id=?'=>$specimenId);
+			$empWhere = ['id=?'=>$specimenId];
 			$usermodel->addOrUpdateUserModel($empData, $empWhere,$specimenId);
 			}
 			else {
 				$candModel = new Default_Model_Candidatedetails();
-				$candData = array(
+				$candData = [
 						'backgroundchk_status' => 	'Completed',
 						'modifiedby'		=>		$loginUserId,
 						'modifieddate'		=>		gmdate("Y-m-d H:i:s")
-					);
-				$candWhere = array('id=?'=>$specimenId);
+					];
+				$candWhere = ['id=?'=>$specimenId];
 				$candModel->SaveorUpdateUserData($candData, $candWhere);
 			}
 			/* END */	
@@ -1206,19 +1206,19 @@ class Default_EmpscreeningController extends Zend_Controller_Action
 			
 			if(isset($reportmanagerEmail) && $reportmanagerEmail != '')	
 			{	
-				$manager1 = array($reportmanagerEmail);
+				$manager1 = [$reportmanagerEmail];
 			}
-			else $manager1 = array();
+			else $manager1 = [];
 			
 			if (defined('BG_CHECKS_MNGMNT_'.$bid) && $bid !='')
 			   $mngmntemailId = explode(",",constant('BG_CHECKS_MNGMNT_'.$bid));
 			else   
-			   $mngmntemailId = array();
+			   $mngmntemailId = [];
 			
 			if (defined('BG_CHECKS_HR_'.$bid) && $bid !='')
 			   $hremailId = explode(",",constant('BG_CHECKS_HR_'.$bid));
 			else   
-			   $hremailId = array();	
+			   $hremailId = [];	
 			
 			$emailArr =  array_merge($manager1,$mngmntemailId,$hremailId);			
 			for($i=0;$i<sizeof($emailArr);$i++)
@@ -1275,7 +1275,7 @@ class Default_EmpscreeningController extends Zend_Controller_Action
 				}
 		 $idData = $this->_request->getParam('objid');
 		 $deleteflag= $this->_request->getParam('deleteflag');
-		 $idArr = array();
+		 $idArr = [];
 		 $idArr = explode('-',$idData);
 		 $id = $idArr[0];$userflag = $idArr[1]; 
 		 $messages['message'] = '';
@@ -1283,8 +1283,8 @@ class Default_EmpscreeningController extends Zend_Controller_Action
 		    if($id)
 			{
 	    	  $empscreeningModel = new Default_Model_Empscreening();
-			  $data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-			  $where = array('specimen_id=?'=>$id,'flag=?'=>$userflag);
+			  $data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+			  $where = ['specimen_id=?'=>$id,'flag=?'=>$userflag];
 			  $Id = $empscreeningModel->SaveorUpdateDetails($data, $where);			
 			  $empscreeningModel->updateusersondelete($id,$userflag);
 			    if($Id == 'update')
@@ -1309,11 +1309,11 @@ class Default_EmpscreeningController extends Zend_Controller_Action
 			{
 				if(	$messages['msgtype'] == 'error')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
 				}
 				if(	$messages['msgtype'] == 'success')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
 				}
 					
 			}
@@ -1374,7 +1374,7 @@ class Default_EmpscreeningController extends Zend_Controller_Action
     // To delete feedback file
     public function deletefeedbackAction(){
     	$emp_screeing_model = new Default_Model_Empscreening();
-        $data = array('feedback_file'=>NULL, 'feedback_deletedby'=>$emp_screeing_model->getLoginUserId());
+        $data = ['feedback_file'=>NULL, 'feedback_deletedby'=>$emp_screeing_model->getLoginUserId()];
     	$where = 'id="'.$this->_getParam('rec_id').'"';
     	
     	// To empty feedback file name in DB
@@ -1384,7 +1384,7 @@ class Default_EmpscreeningController extends Zend_Controller_Action
     	if($message=='update'){
     		@unlink(UPLOAD_PATH_FEEDBACK . "/" . $this->_getParam('feedback_file'));
     	}
-		$this->_helper->json(array('action'=>$message));  
+		$this->_helper->json(['action'=>$message]);  
     }
     
 }

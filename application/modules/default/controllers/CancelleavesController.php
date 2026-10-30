@@ -52,9 +52,9 @@ class Default_CancelleavesController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 		
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';		
 		
 		if($refresh == 'refresh')
@@ -202,8 +202,8 @@ class Default_CancelleavesController extends Zend_Controller_Action
 		    if($id)
 			{
 			$leaverequestmodel = new Default_Model_Leaverequest();
-			  $data = array('leavestatus'=>4);
-			  $where = array('id=?'=>$id);
+			  $data = ['leavestatus'=>4];
+			  $where = ['id=?'=>$id];
 			  $Id = $leaverequestmodel->SaveorUpdateLeaveRequest($data, $where);
 			    if($Id == 'update')
 				{

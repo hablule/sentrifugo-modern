@@ -20,9 +20,9 @@ class Schedule_OvertimeController extends Zend_Controller_Action
         $view = Zend_Layout::getMvcInstance()->getView();
         $objname = $this->_getParam('objname');
         $refresh = $this->_getParam('refresh');
-        $data = array();
+        $data = [];
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         $tablecontent = '';
         $dashboardcall = $this->_getParam('dashboardcall');
 
@@ -38,7 +38,7 @@ class Schedule_OvertimeController extends Zend_Controller_Action
             $pageNo = 1;
             $searchData = '';
             $searchQuery = '';
-            $searchArray = array();
+            $searchArray = [];
         } else {
             $sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
             $by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'ot.overtime_id';
@@ -106,11 +106,11 @@ class Schedule_OvertimeController extends Zend_Controller_Action
         
           $temp_id = $_POST['emp_ids'];
         $temp_ot_id = $_POST['OT_ids'];
-        $datas = array();
+        $datas = [];
         foreach ($temp_id as $id) {
 
             foreach ($temp_ot_id as $ot_id) {
-                $data = array();
+                $data = [];
                 //$emp_id = $payrollmodel->getEmpId($id);
 
                 //$data['emp_id'] = (int)$emp_id[0]['user_id'];
@@ -151,9 +151,9 @@ class Schedule_OvertimeController extends Zend_Controller_Action
         if (empty($OTcategories)) {
             $errmsg['category'] = 'Category not configured!';
         } else {
-            $form->category->addMultiOptions(array('' => 'Select...'));
+            $form->category->addMultiOptions(['' => 'Select...']);
             foreach ($OTcategories as $category) {
-                $form->category->addMultiOptions(array($category['OT_category_id'] => $category['name']));
+                $form->category->addMultiOptions([$category['OT_category_id'] => $category['name']]);
             }
         }
 
@@ -193,7 +193,7 @@ class Schedule_OvertimeController extends Zend_Controller_Action
 
             $where = 'overtime_id=' . $id;
             $where_schedule = 'OT_id=' . $id;
-            $data = array(
+            $data = [
                 'name' => $this->_request->getParam('name'),
                 'base' => $this->_request->getParam('base'),
                 'OT_category_id' => $this->_request->getParam('category'),
@@ -204,9 +204,9 @@ class Schedule_OvertimeController extends Zend_Controller_Action
                 'modifieddate' => date('Y-m-d H:i:s'),
                 'isactive' => utlis::getcheckboxvalue($this->_request->getParam('isactive')),
                 'autoapprove' => utlis::getcheckboxvalue($this->_request->getParam('autoapv'), 'database'),
-            );
+            ];
             $base = $this->_request->getParam('base');
-            $data_schedule = array();
+            $data_schedule = [];
             if ($base == 'Time') {
                 $data_schedule['start_time'] = sapp_Global::change_time($this->_request->getParam('base_start_time'), 'database');
                 $data_schedule['end_time'] = sapp_Global::change_time($this->_request->getParam('base_end_time'), 'database');
@@ -237,7 +237,7 @@ class Schedule_OvertimeController extends Zend_Controller_Action
             $actionflag = 2;
             $menuID = OVERTIME;
             sapp_Global::logManager($menuID,$actionflag,$loginuserid,$id);
-            $this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Overtime Update Successfully."));
+            $this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Overtime Update Successfully."]);
             $this->_redirect(BASE_URL . 'schedule/overtime');
         }
 
@@ -269,10 +269,10 @@ class Schedule_OvertimeController extends Zend_Controller_Action
             $actionflag = 3;
             $menuID = OVERTIME;
             sapp_Global::logManager($menuID,$actionflag,$loginuserid,$objId);
-            $response = array(
+            $response = [
                 'message' => 'Overtime Successfully Removed.',
                 'msgtype' => 'success'
-            );
+            ];
 
             //  die(json_encode($response));
         } else {
@@ -300,9 +300,9 @@ class Schedule_OvertimeController extends Zend_Controller_Action
         if (empty($OTcategories)) {
             $errmsg['category'] = 'Category not configured!';
         } else {
-            $form->category->addMultiOptions(array('empty' => 'Select...'));
+            $form->category->addMultiOptions(['empty' => 'Select...']);
             foreach ($OTcategories as $category) {
-                $form->category->addMultiOptions(array($category['OT_category_id'] => $category['name']));
+                $form->category->addMultiOptions([$category['OT_category_id'] => $category['name']]);
             }
         }
         $auth = Zend_Auth::getInstance();
@@ -313,7 +313,7 @@ class Schedule_OvertimeController extends Zend_Controller_Action
 
             if ($form->isValid($this->getRequest()->getPost())) {
 
-                $data = array(
+                $data = [
                     'name' => $this->_request->getParam('name'),
                     'base' => $this->_request->getParam('base'),
                     'OT_category_id' => $this->_request->getParam('category'),
@@ -327,9 +327,9 @@ class Schedule_OvertimeController extends Zend_Controller_Action
                     'modifiedby' => $loginuserid,
                     'createddate' => date('Y-m-d H:i:s'),
                     'modifieddate' => date('Y-m-d H:i:s')
-                );
+                ];
                 $base = $this->_request->getParam('base');
-                $data_schedule = array();
+                $data_schedule = [];
                 if ($base == 'Time') {
                     $data_schedule['start_time'] = sapp_Global::change_time($this->_request->getParam('base_start_time'), 'database');
                     $data_schedule['end_time'] = sapp_Global::change_time($this->_request->getParam('base_end_time'), 'database');
@@ -351,7 +351,7 @@ class Schedule_OvertimeController extends Zend_Controller_Action
                 $actionflag = 1;
                 $menuID = OVERTIME;
                 sapp_Global::logManager($menuID,$actionflag,$loginuserid,$id);
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Overtime Added Successfully."));
+                $this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Overtime Added Successfully."]);
                 $this->_redirect('schedule/overtime');
             }
 
@@ -378,10 +378,10 @@ class Schedule_OvertimeController extends Zend_Controller_Action
         $categoryForm->setAction(BASE_URL . 'schedule/overtime/addcategory');
         if ($this->getRequest()->isPost()) {
             if ($categoryForm->isValid($this->getRequest()->getPost())) {
-                $data = array(
+                $data = [
                     'name' => $this->_request->getParam('name_cat'),
                     'description' => $this->_request->getParam('description_cat'),
-                );
+                ];
                 
                 $formModel->saveORupdateCategory($data, '');
                 $categoryData = $formModel->getAllOTCategories();

@@ -12,32 +12,32 @@ class Schedule_Form_Overtimecategory extends Zend_Form
         $this->setAttrib('action',BASE_URL.'schedule/overtimecategory/add');
         $id = new Zend_Form_Element_Hidden('id');
         $name = new Zend_Form_Element_Text('name_cat');
-        $name->addValidator('NotEmpty',false,array('messages'=>'please fill name'));
+        $name->addValidator('NotEmpty',false,['messages'=>'please fill name']);
         $name->setRequired(true);
         $name->setAttrib('maxlength',60);
         $description = new Zend_Form_Element_Textarea('description_cat');
         $description->setLabel("Description");
         $submit = new Zend_Form_Element_Submit('submit_cat');
         $submit->setLabel('Save');
-        $name->addValidator("regex",true,array(
+        $name->addValidator("regex",true,[
             'pattern'=>'/^[a-zA-Z.\-?]+$/',
-            'messages'=>array(
+            'messages'=>[
                 'regexNotMatch'=>'Please enter valid Name.'
-            )
+            ]
     
             
-            ));
+            ]);
             $name->addValidator(new Zend_Validate_Db_NoRecordExists(
-                array(
+                [
                     'table'=>'main_overtime_category',
                     'field'=>'name',
                  
-                )
+                ]
                 ));
              $name->getValidator('Db_NoRecordExists')->setMessage('Name already exists');
     
-        $this->addElements(array($id,$name,$description,$submit));
-        $this->setElementDecorators(array('ViewHelper'));
+        $this->addElements([$id,$name,$description,$submit]);
+        $this->setElementDecorators(['ViewHelper']);
 
     }
 }

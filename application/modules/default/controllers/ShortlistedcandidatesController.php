@@ -30,7 +30,7 @@ class Default_ShortlistedcandidatesController extends Zend_Controller_Action
         {
             if($this->getRequest()->isXmlHttpRequest())
             {
-                echo Zend_Json::encode( array('login' => 'failed') );
+                echo Zend_Json::encode( ['login' => 'failed'] );
                 die();	
             }
             else
@@ -62,9 +62,9 @@ class Default_ShortlistedcandidatesController extends Zend_Controller_Action
 		$dashboardcall = $this->_getParam('dashboardcall');
 		$queryflag = '';
         $refresh = $this->_getParam('refresh');
-        $data = array();
+        $data = [];
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         $tablecontent='';
 		
 		
@@ -112,7 +112,7 @@ class Default_ShortlistedcandidatesController extends Zend_Controller_Action
 			else	
 				$perPage = PERPAGE;
             $sort = 'DESC';$by = 'c.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';
-            $searchArray = array();
+            $searchArray = [];
         }
         else 
         {
@@ -166,8 +166,8 @@ class Default_ShortlistedcandidatesController extends Zend_Controller_Action
 		$jobtitleModel = new Default_Model_Jobtitles();
 		$form = new Default_Form_shortlistedcandidates();
 		$form->setAttrib('action',BASE_URL.'shortlistedcandidates/edit/id/'.$id);
-		$intrvwroundsData = array();$intrvwData = array();$cand_status = '';
-		$requisitionData = array();$jobtitle = '';$requisitionData['jobtitlename'] = '';
+		$intrvwroundsData = [];$intrvwData = [];$cand_status = '';
+		$requisitionData = [];$jobtitle = '';$requisitionData['jobtitlename'] = '';
                 $cancel_name = 'Cancel';
 		try{
 			$candidateData = $candidatesmodel->getcandidateData($id);			
@@ -234,7 +234,7 @@ class Default_ShortlistedcandidatesController extends Zend_Controller_Action
 		$candidatesmodel = new Default_Model_Shortlistedcandidates();
 		$requi_model = new Default_Model_Requisition();		
 		$jobtitleModel = new Default_Model_Jobtitles();		
-		$intrvwroundsData = array();$intrvwData = array();
+		$intrvwroundsData = [];$intrvwData = [];
 		$jobtitle = '';
 		try{
 			$candidateData = $candidatesmodel->getcandidateData($id);			
@@ -308,11 +308,11 @@ class Default_ShortlistedcandidatesController extends Zend_Controller_Action
 			
 			$candidateData = $candidatesmodel->getcandidateData($id);
 			$req_id = $candidateData['requisition_id'];			
-			$data = array(
+			$data = [
                                         'cand_status' => trim($status),
                                         'modifiedby' => trim($loginUserId),						
                                         'modifieddate' => gmdate("Y-m-d H:i:s")
-					);
+					];
 			$where = "id = ".$id;			
 			$result = $candidatesmodel->SaveorUpdateCandidateDetails($data,$where);
 			 //for candidate history
@@ -334,7 +334,7 @@ class Default_ShortlistedcandidatesController extends Zend_Controller_Action
 					$modifiedby = $loginUserId;
 					
 					 $reqh_model = new Default_Model_Requisitionhistory();
-					$requisition_history = array(
+					$requisition_history = [
                                         'candidate_id' =>$id,	
                                         'candidate_name'=>  $candidateData['candidate_name'],	
 										'requisition_id' =>$candidateData['requisition_id'],
@@ -344,7 +344,7 @@ class Default_ShortlistedcandidatesController extends Zend_Controller_Action
 										'isactive' => 1,
 										'createddate' =>gmdate("Y-m-d H:i:s"),
 										'modifieddate'=> gmdate("Y-m-d H:i:s"),
-									);
+									];
 					$where = '';
 					$historyId = $reqh_model->saveOrUpdateRequisitionHistory($requisition_history,$where); 
 				}
@@ -359,15 +359,15 @@ class Default_ShortlistedcandidatesController extends Zend_Controller_Action
                             $cand_data = $cand_model->getCandidateById($id);
                             $requisition_data = $requimodel->getRequisitionDataById($req_id);                            
                             $report_person_data = $user_model->getUserDataById($requisition_data['reporting_id']);
-                            $mail_arr = array(  'HR'=>  defined('REQ_HR_'.$requisition_data['businessunit_id'])?constant('REQ_HR_'.$requisition_data['businessunit_id']):"",
+                            $mail_arr = [  'HR'=>  defined('REQ_HR_'.$requisition_data['businessunit_id'])?constant('REQ_HR_'.$requisition_data['businessunit_id']):"",
                                                  'Management'=>defined("REQ_MGMT_".$requisition_data['businessunit_id'])?constant("REQ_MGMT_".$requisition_data['businessunit_id']):"",
                                                 $report_person_data['userfullname'] => $report_person_data['emailaddress']
-                                );
-                            $cstat_arr = array(		
+                                ];
+                            $cstat_arr = [		
 							'0'	=>	'Select status',
 							'2'	=>	'Selected' ,
 							'3'	=>	'Rejected'
-							);
+							];
 							
                             foreach($mail_arr as $ename => $email)
                             {
@@ -399,7 +399,7 @@ class Default_ShortlistedcandidatesController extends Zend_Controller_Action
 			$objidArr = $menumodel->getMenuObjID('/shortlistedcandidates');
 			$objID = $objidArr[0]['id'];
 			$result = sapp_Global::logManager($objID,$actionflag,$loginUserId,$tableid);
-			$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Requisition updated successfully."));
+			$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Requisition updated successfully."]);
 			$this->_redirect('/shortlistedcandidates');		
 		}
 		else
@@ -430,8 +430,8 @@ class Default_ShortlistedcandidatesController extends Zend_Controller_Action
         if($id)
         {
             $candidatesmodel = new Default_Model_Shortlistedcandidates();
-            $data = array('isactive'=>0);
-            $where = array('id=?'=>$id);
+            $data = ['isactive'=>0];
+            $where = ['id=?'=>$id];
 			$Id = $candidatesmodel->SaveorUpdateCandidateDetails($data,$where);
             if($Id == 'update')
             {

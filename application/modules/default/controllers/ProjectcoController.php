@@ -21,9 +21,9 @@ class Default_ProjectcoController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent = '';
 
 		if ($refresh == 'refresh') {
@@ -85,7 +85,7 @@ class Default_ProjectcoController extends Zend_Controller_Action
 			$propermission = '';
 			$propermission = sapp_Global::_checkprivileges(PROJECT,$loginuserGroup,$loginuserRole,'add');
 			$this->view->propermission = $propermission;
-			$msgarray = array();
+			$msgarray = [];
 
 			$controllername = 'projectco';
 
@@ -127,13 +127,13 @@ class Default_ProjectcoController extends Zend_Controller_Action
 			if (empty($compdatas)) {
 				$msgarray['company_id'] = 'Company is not configured yet.';
 			} else {
-				$form->company_id->addMultiOptions(array($compdatas['company_id'] => $compdatas['name']));
+				$form->company_id->addMultiOptions([$compdatas['company_id'] => $compdatas['name']]);
 			}
 			if (empty($sbunitdatas)) {
 				$msgarray['sbunit_id'] = 'Bussiness Unit is not configured yet.';
 			} else {
 				foreach ($sbunitdatas as $sbunitdata) {
-					$form->sbunit_id->addMultiOptions(array($sbunitdata['sbunit_id'] => $sbunitdata['name']));
+					$form->sbunit_id->addMultiOptions([$sbunitdata['sbunit_id'] => $sbunitdata['name']]);
 				}
 			}
 
@@ -141,21 +141,21 @@ class Default_ProjectcoController extends Zend_Controller_Action
 				$msgarray['division_id'] = 'Division is not configured yet.';
 			} else {
 				foreach ($devisiondatas as $devisiondata) {
-					$form->division_id->addMultiOptions(array($devisiondata['division_id'] => $devisiondata['name']));
+					$form->division_id->addMultiOptions([$devisiondata['division_id'] => $devisiondata['name']]);
 				}
 			}
 			if (empty($dptdata)) {
 				$msgarray['departement_id'] = 'Department is not configured yet.';
 			} else {
 				foreach ($dptdata as $dptdatas) {
-					$form->departement_id->addMultiOptions(array($dptdatas['department_id'] => $dptdatas['name']));
+					$form->departement_id->addMultiOptions([$dptdatas['department_id'] => $dptdatas['name']]);
 				}
 			}
 			if (empty($secdata)) {
 				$msgarray['section_id'] = 'Section is not configured yet.';
 			} else {
 				foreach ($secdata as $secdatas) {
-					$form->section_id->addMultiOptions(array($secdatas['section_id'] => $secdatas['name']));
+					$form->section_id->addMultiOptions([$secdatas['section_id'] => $secdatas['name']]);
 				}
 			}
 			if (empty($projectdata)) {
@@ -163,8 +163,8 @@ class Default_ProjectcoController extends Zend_Controller_Action
 				$msgarray['associateproject_id'] = 'Project is not configured yet.';
 			} else {
 				foreach ($projectdata as $projectdatas) {
-					$form->associateproject_id->addMultiOptions(array($projectdatas['project_id'] => $projectdatas['name']));
-					$form->project_id->addMultiOptions(array($projectdatas['project_id'] => $projectdatas['name']));
+					$form->associateproject_id->addMultiOptions([$projectdatas['project_id'] => $projectdatas['name']]);
+					$form->project_id->addMultiOptions([$projectdatas['project_id'] => $projectdatas['name']]);
 				}
 			}
 			if ($this->getRequest()->getPost()) {
@@ -188,7 +188,7 @@ class Default_ProjectcoController extends Zend_Controller_Action
 						$date = new Zend_Date();
 						$actionflag = '';
 						$tableid  = '';
-						$data = array(
+						$data = [
 							'project_id' => $project_id,
 							'description' => $description,
 							'company_id' => $company_id,
@@ -197,7 +197,7 @@ class Default_ProjectcoController extends Zend_Controller_Action
 							'department_id' => $departement_id,
 							'section_id' => $section_id,
 							'associateproject_id' => $associateproject_id
-						);
+						];
 
 						$data['createdby'] = $loginUserId;
 						$data['createddate'] = gmdate("Y-m-d H:i:s");
@@ -208,7 +208,7 @@ class Default_ProjectcoController extends Zend_Controller_Action
 						$Id = $model->SaveorUpdateData($data, $where);
 						$tableid = $Id;
 						$result = sapp_Global::logManager($menuID, $actionflag, $loginUserId, $tableid);
-						$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Project co   added successfully."));
+						$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Project co   added successfully."]);
 						$this->view->messages = $this->_helper->flashMessenger->getMessages();
 
 
@@ -264,7 +264,7 @@ class Default_ProjectcoController extends Zend_Controller_Action
 			$this->view->propermission = $propermission;
 			$id = $this->_request->getParam("id");
 
-			$msgarray = array();
+			$msgarray = [];
 
 			$controllername = 'projectco';
 
@@ -300,13 +300,13 @@ class Default_ProjectcoController extends Zend_Controller_Action
 			if (empty($compdatas)) {
 				$msgarray['company_id'] = 'Company is not configured yet.';
 			} else {
-				$form->company_id->addMultiOptions(array($compdatas['company_id'] => $compdatas['name']));
+				$form->company_id->addMultiOptions([$compdatas['company_id'] => $compdatas['name']]);
 			}
 			if (empty($sbunitdatas)) {
 				$msgarray['sbunit_id'] = 'Bussiness Unit is not configured yet.';
 			} else {
 				foreach ($sbunitdatas as $sbunitdata) {
-					$form->sbunit_id->addMultiOptions(array($sbunitdata['sbunit_id'] => $sbunitdata['name']));
+					$form->sbunit_id->addMultiOptions([$sbunitdata['sbunit_id'] => $sbunitdata['name']]);
 				}
 			}
 
@@ -314,21 +314,21 @@ class Default_ProjectcoController extends Zend_Controller_Action
 				$msgarray['division_id'] = 'Division is not configured yet.';
 			} else {
 				foreach ($devisiondatas as $devisiondata) {
-					$form->division_id->addMultiOptions(array($devisiondata['division_id'] => $devisiondata['name']));
+					$form->division_id->addMultiOptions([$devisiondata['division_id'] => $devisiondata['name']]);
 				}
 			}
 			if (empty($dptdata)) {
 				$msgarray['departement_id'] = 'Department is not configured yet.';
 			} else {
 				foreach ($dptdata as $dptdatas) {
-					$form->departement_id->addMultiOptions(array($dptdatas['department_id'] => $dptdatas['name']));
+					$form->departement_id->addMultiOptions([$dptdatas['department_id'] => $dptdatas['name']]);
 				}
 			}
 			if (empty($secdata)) {
 				$msgarray['section_id'] = 'Section is not configured yet.';
 			} else {
 				foreach ($secdata as $secdatas) {
-					$form->section_id->addMultiOptions(array($secdatas['section_id'] => $secdatas['name']));
+					$form->section_id->addMultiOptions([$secdatas['section_id'] => $secdatas['name']]);
 				}
 			}
 			if (empty($projectdata)) {
@@ -336,8 +336,8 @@ class Default_ProjectcoController extends Zend_Controller_Action
 				$msgarray['associateproject_id'] = 'Project is not configured yet.';
 			} else {
 				foreach ($projectdata as $projectdatas) {
-					$form->associateproject_id->addMultiOptions(array($projectdatas['project_id'] => $projectdatas['name']));
-					$form->project_id->addMultiOptions(array($projectdatas['project_id'] => $projectdatas['name']));
+					$form->associateproject_id->addMultiOptions([$projectdatas['project_id'] => $projectdatas['name']]);
+					$form->project_id->addMultiOptions([$projectdatas['project_id'] => $projectdatas['name']]);
 				}
 			}
 
@@ -390,7 +390,7 @@ class Default_ProjectcoController extends Zend_Controller_Action
 						$date = new Zend_Date();
 						$actionflag = '';
 						$tableid  = '';
-						$data = array(
+						$data = [
 							'description' => $description,
 							'project_id' => $project_id,
 							'company_id' => $company_id,
@@ -402,7 +402,7 @@ class Default_ProjectcoController extends Zend_Controller_Action
 
 
 							'isactive' => $isactive
-						);
+						];
 
 						$data['modifiedby'] = $loginUserId;
 						$data['modifieddate'] = gmdate("Y-m-d H:i:s");
@@ -412,7 +412,7 @@ class Default_ProjectcoController extends Zend_Controller_Action
 						$Id = $model->SaveorUpdateData($data, $where);
 						$tableid = $Id;
 						$result = sapp_Global::logManager($menuID, $actionflag, $loginUserId, $tableid);
-						$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Project Co Updated successfully."));
+						$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Project Co Updated successfully."]);
 						$this->view->messages = $this->_helper->flashMessenger->getMessages();
 
 
@@ -507,7 +507,7 @@ class Default_ProjectcoController extends Zend_Controller_Action
 		$secdata = $smodel->getsectionlist();
 		$projectdata = $modelpro->getprojectlist();
 		$auth = Zend_Auth::getInstance();
-		$compdatas = array($compdatas);
+		$compdatas = [$compdatas];
 		$form->setAttrib('action',BASE_URL.'projectco/addpopup');
 		$form->division_id = $util->populate_select($form->division_id,$devisiondatas,'division_id','name','select');
 		$form->project_id = $util->populate_select($form->project_id,$projectdata,'project_id','name','select');
@@ -521,7 +521,7 @@ class Default_ProjectcoController extends Zend_Controller_Action
 		}
 		if ($this->getRequest()->isPost()) {
 			if ($form->isValid($this->getRequest()->getPost())) {
-				$data = array(
+				$data = [
 					'project_id' => $this->_getParam('project_id'),
 					'description' => $this->_getParam('description'),
 					'company_id' => $this->_getParam('company_id'),
@@ -530,7 +530,7 @@ class Default_ProjectcoController extends Zend_Controller_Action
 					'department_id' => $this->_getParam('department_id'),
 					'section_id' => $this->_getParam('section_id'),
 					'associateproject_id' => $this->_getParam('associateproject_id')
-				);
+				];
 
 				$data['createdby'] = $loginUserId;
 				$data['createddate'] = gmdate("Y-m-d H:i:s");

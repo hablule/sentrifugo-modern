@@ -54,9 +54,9 @@ class Default_BusinessunitsController extends Zend_Controller_Action
 				$objname = $this->_getParam('objname');
 				$refresh = $this->_getParam('refresh');
 				$dashboardcall = $this->_getParam('dashboardcall');
-				$data = array();
+				$data = [];
 				$searchQuery = '';
-				$searchArray = array();
+				$searchArray = [];
 				$tablecontent='';	
 				if($refresh == 'refresh')
 				{
@@ -100,7 +100,7 @@ class Default_BusinessunitsController extends Zend_Controller_Action
 			$loginUserId = $auth->getStorage()->read()->id;
 		}
 
-		$msgarray = array();
+		$msgarray = [];
 
 		$controllername = 'businessunits';
 	 
@@ -124,14 +124,14 @@ class Default_BusinessunitsController extends Zend_Controller_Action
 		if (empty($compdatas)) {
 			$msgarray['company_id'] = 'Company is not configured yet.';
 		} else {
-				$form->company_id->addMultiOptions(array($compdatas['company_id'] => $compdatas['name']));
+				$form->company_id->addMultiOptions([$compdatas['company_id'] => $compdatas['name']]);
 		
 		}
 		if (empty($sbunitdatas)) {
 			$msgarray['parentsbu_id'] = 'Bussiness Unit is not configured yet.';
 		} else {
 			foreach($sbunitdatas as $sbunitdata){
-				$form->parentsbu_id->addMultiOptions(array($sbunitdata['sbunit_id'] => $sbunitdata['name']));
+				$form->parentsbu_id->addMultiOptions([$sbunitdata['sbunit_id'] => $sbunitdata['name']]);
 
 			}
 		
@@ -140,7 +140,7 @@ class Default_BusinessunitsController extends Zend_Controller_Action
 			$msgarray['representative_id'] = 'Employee is not configured yet.';
 		} else {
 			foreach($empdatas as $empdata){
-				$form->representative_id->addMultiOptions(array($empdata['id'] => $empdata['userfullname']));
+				$form->representative_id->addMultiOptions([$empdata['id'] => $empdata['userfullname']]);
 
 			}
 		
@@ -162,14 +162,14 @@ $this->view->msgarray = $msgarray;
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = '';
-				$data = array(	
+				$data = [	
 				'name' => $name,
 				'code'=>$code,
 				'description' => $description,
 				'representative_id' => $representative_id,
 				'company_id' => $company_id,   
 				'parentsbu_id' => $parentsbu_id, 
-				);
+				];
 
 					$data['createdby'] = $loginUserId;
 					$data['createddate'] = gmdate("Y-m-d H:i:s");
@@ -181,7 +181,7 @@ $this->view->msgarray = $msgarray;
 				$Id = $model->SaveorUpdateBusinessUnits($data, $where);
 				$tableid = $Id;
 				$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Bussieness Unit   added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Bussieness Unit   added successfully."]);
 					$this->view->messages = $this->_helper->flashMessenger->getMessages();
 
 				
@@ -223,7 +223,7 @@ Zend_Debug::dump($th->getMessage());
 			$loginUserId = $auth->getStorage()->read()->id;
 		}
 
-		$msgarray = array();
+		$msgarray = [];
 		$id = $this->_request->getParam("id");
 
 		$controllername = 'businessunits';
@@ -248,14 +248,14 @@ Zend_Debug::dump($th->getMessage());
 		if (empty($compdatas)) {
 			$msgarray['company_id'] = 'Company is not configured yet.';
 		} else {
-				$form->company_id->addMultiOptions(array($compdatas['company_id'] => $compdatas['name']));
+				$form->company_id->addMultiOptions([$compdatas['company_id'] => $compdatas['name']]);
 		
 		}
 		if (empty($sbunitdatas)) {
 			$msgarray['parentsbu_id'] = 'Bussiness Unit is not configured yet.';
 		} else {
 			foreach($sbunitdatas as $sbunitdata){
-				$form->parentsbu_id->addMultiOptions(array($sbunitdata['sbunit_id'] => $sbunitdata['name']));
+				$form->parentsbu_id->addMultiOptions([$sbunitdata['sbunit_id'] => $sbunitdata['name']]);
 
 			}
 		
@@ -264,7 +264,7 @@ Zend_Debug::dump($th->getMessage());
 			$msgarray['representative_id'] = 'Employee is not configured yet.';
 		} else {
 			foreach($empdatas as $empdata){
-				$form->representative_id->addMultiOptions(array($empdata['id'] => $empdata['userfullname']));
+				$form->representative_id->addMultiOptions([$empdata['id'] => $empdata['userfullname']]);
 
 			}
 		
@@ -305,7 +305,7 @@ $name = $this->_request->getParam('name');
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = '';
-				$data = array(	
+				$data = [	
 				'name' => $name,
 				'code'=>$code,
 				'description' => $description,
@@ -313,7 +313,7 @@ $name = $this->_request->getParam('name');
 				'company_id' => $company_id,   
 				'parentsbu_id' => $parentsbu_id, 
 				'isactive'=>$isactive
-				);
+				];
 
 					$data['modifiedby'] = $loginUserId;
 					$data['modifieddate'] = gmdate("Y-m-d H:i:s");
@@ -323,7 +323,7 @@ $name = $this->_request->getParam('name');
 				$Id = $model->SaveorUpdateBusinessUnits($data, $where);
 				$tableid = $Id;
 				$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Business Unit   Updated successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Business Unit   Updated successfully."]);
 					$this->view->messages = $this->_helper->flashMessenger->getMessages();
 
 				
@@ -413,7 +413,7 @@ Zend_Debug::dump($th->getMessage());
 		}
 		$id = $this->_request->getParam('id');
 		$this->view->status=$id;
-		$msgarray = array();
+		$msgarray = [];
 
 		$controllername = 'businessunits';
 	 
@@ -436,14 +436,14 @@ Zend_Debug::dump($th->getMessage());
 		if (empty($compdatas)) {
 			$msgarray['company_id'] = 'Company is not configured yet.';
 		} else {
-				$form->company_id->addMultiOptions(array($compdatas['company_id'] => $compdatas['name']));
+				$form->company_id->addMultiOptions([$compdatas['company_id'] => $compdatas['name']]);
 		
 		}
 		if (empty($sbunitdatas)) {
 			$msgarray['parentsbu_id'] = 'Bussiness Unit is not configured yet.';
 		} else {
 			foreach($sbunitdatas as $sbunitdata){
-				$form->parentsbu_id->addMultiOptions(array($sbunitdata['sbunit_id'] => $sbunitdata['name']));
+				$form->parentsbu_id->addMultiOptions([$sbunitdata['sbunit_id'] => $sbunitdata['name']]);
 
 			}
 		
@@ -452,7 +452,7 @@ Zend_Debug::dump($th->getMessage());
 			$msgarray['representative_id'] = 'Employee is not configured yet.';
 		} else {
 			foreach($empdatas as $empdata){
-				$form->representative_id->addMultiOptions(array($empdata['id'] => $empdata['userfullname']));
+				$form->representative_id->addMultiOptions([$empdata['id'] => $empdata['userfullname']]);
 
 			}
 		
@@ -477,14 +477,14 @@ $this->view->msgarray = $msgarray;
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = '';
-				$data = array(	
+				$data = [	
 				'name' => $name,
 				'code'=>$code,
 				'description' => $description,
 				'representative_id' => $representative_id,
 				'company_id' => $company_id,   
 				'parentsbu_id' => $parentsbu_id, 
-				);
+				];
 
 					$data['createdby'] = $loginUserId;
 					$data['createddate'] = gmdate("Y-m-d H:i:s");

@@ -43,9 +43,9 @@ class Default_ServicedeskrequestController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 		
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 		
 		if($refresh == 'refresh')
@@ -94,8 +94,8 @@ class Default_ServicedeskrequestController extends Zend_Controller_Action
 			$this->_helper->layout->disableLayout();
 		$servicedeskrequestsform = new Default_Form_servicedeskrequest();
 		$servicedeskdepartmentmodel = new Default_Model_Servicedeskdepartment();
-		$msgarray = array();
-		$popConfigPermission = array();
+		$msgarray = [];
+		$popConfigPermission = [];
 		
 	 	if(sapp_Global::_checkprivileges(SERVICEDESKDEPARTMENT,$loginuserGroup,$loginuserRole,'add') == 'Yes'){
 	 		array_push($popConfigPermission,'servicedeskdepartment');
@@ -211,8 +211,8 @@ class Default_ServicedeskrequestController extends Zend_Controller_Action
 		$servicedeskrequestsform = new Default_Form_servicedeskrequest();
 		$servicedeskdepartmentmodel = new Default_Model_Servicedeskdepartment();
 		$servicedeskrequestmodel = new Default_Model_Servicedeskrequest();	
-		$msgarray = array();
-		$popConfigPermission = array();
+		$msgarray = [];
+		$popConfigPermission = [];
 		
 	 	if(sapp_Global::_checkprivileges(SERVICEDESKDEPARTMENT,$loginuserGroup,$loginuserRole,'add') == 'Yes'){
 	 		array_push($popConfigPermission,'servicedeskdepartment');
@@ -273,7 +273,7 @@ class Default_ServicedeskrequestController extends Zend_Controller_Action
 				 $loginUserId = $auth->getStorage()->read()->id;
 		} 
 	    $servicedeskrequestmodel = new Default_Model_Servicedeskrequest();	
-		$msgarray = array();
+		$msgarray = [];
 		$errorflag = 'true';
 		$service_desk_id = $this->_request->getParam('service_desk_id');
 		$service_request_name_arr = $this->_request->getParam('service_request_name');
@@ -324,7 +324,7 @@ class Default_ServicedeskrequestController extends Zend_Controller_Action
 			$where = '';
 			for($i=0;$i<sizeof($service_request_name_arr);$i++)
 			{
-			   $data = array('service_desk_id'=>$service_desk_id,
+			   $data = ['service_desk_id'=>$service_desk_id,
 			                 'service_request_name'=>trim($service_request_name_arr[$i]), 
 							 'description'=>($description_arr[$i]!=''?trim($description_arr[$i]):NULL),
 							  'modifiedby'=>$loginUserId,
@@ -332,7 +332,7 @@ class Default_ServicedeskrequestController extends Zend_Controller_Action
 			   				  'createdby' => $loginUserId,
 							  'createddate'=> gmdate("Y-m-d H:i:s"),
 							  'isactive'=> 1
-					);
+					];
 				
 				$Id = $servicedeskrequestmodel->SaveorUpdateServiceDeskRequestData($data, $where);
 				$tableid = $Id; 	
@@ -340,7 +340,7 @@ class Default_ServicedeskrequestController extends Zend_Controller_Action
 				$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
 			}
 				
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Request types added successfully."));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Request types added successfully."]);
 				$this->_redirect('servicedeskrequest');	
                   }
         catch(Exception $e)
@@ -372,7 +372,7 @@ class Default_ServicedeskrequestController extends Zend_Controller_Action
 				 $loginUserId = $auth->getStorage()->read()->id;
 		} 
 	    $servicedeskrequestmodel = new Default_Model_Servicedeskrequest();	
-		$msgarray = array();
+		$msgarray = [];
 		  if($servicedeskrequestsform->isValid($this->_request->getPost())){
             try{
             $id = $this->_request->getParam('id');
@@ -381,14 +381,14 @@ class Default_ServicedeskrequestController extends Zend_Controller_Action
 			$description = trim($this->_request->getParam('description'));
 			$actionflag = '';
 			$tableid  = ''; 
-			   $data = array('service_desk_id'=>$service_desk_id,
+			   $data = ['service_desk_id'=>$service_desk_id,
 			                 'service_request_name'=>$service_request_name, 
 							 'description'=>($description!=''?$description:NULL),
 							  'modifiedby'=>$loginUserId,
 							  'modifieddate'=>gmdate("Y-m-d H:i:s")
-					);
+					];
 				if($id!=''){
-					$where = array('id=?'=>$id);  
+					$where = ['id=?'=>$id];  
 					$actionflag = 2;
 				}
 				else
@@ -403,12 +403,12 @@ class Default_ServicedeskrequestController extends Zend_Controller_Action
 				if($Id == 'update')
 				{
 				   $tableid = $id;
-				   $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Request type updated successfully."));
+				   $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Request type updated successfully."]);
 				}   
 				else
 				{
 				   $tableid = $Id; 	
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Request type added successfully."));					   
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Request type added successfully."]);					   
 				}   
 				$menuID = SERVICEDESKREQUEST;
 				$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
@@ -457,8 +457,8 @@ class Default_ServicedeskrequestController extends Zend_Controller_Action
 			  if($count < 1)	
 			  {
 			  $servicedeskrequestdata = $servicedeskrequestmodel->getServiceDeskRequestbyID($id);
-			  $data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-			  $where = array('id=?'=>$id);
+			  $data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+			  $where = ['id=?'=>$id];
 			  $Id = $servicedeskrequestmodel->SaveorUpdateServiceDeskRequestData($data, $where);
 			    if($Id == 'update')
 				{
@@ -488,11 +488,11 @@ class Default_ServicedeskrequestController extends Zend_Controller_Action
 			{
 				if(	$messages['msgtype'] == 'error')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
 				}
 				if(	$messages['msgtype'] == 'success')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
 				}
 				
 			}

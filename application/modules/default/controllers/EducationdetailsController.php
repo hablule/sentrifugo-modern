@@ -55,7 +55,7 @@ class Default_EducationdetailsController extends Zend_Controller_Action
 		 		$conText = ($this->_getParam('context') !='')? $this->_getParam('context'):$this->getRequest()->getParam('context');
 		 	}
 		 	if($userid == '') $userid = $userID;
-		 	$Uid = ($userid)?$userid:$userID;
+		 	$Uid = $userid ?: $userID;
 
 		 	$educationdetailsModel = new Default_Model_Educationdetails();
 		 	$employeeModal = new Default_Model_Employee();
@@ -81,7 +81,7 @@ class Default_EducationdetailsController extends Zend_Controller_Action
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
 							$dashboardcall = $this->_getParam('dashboardcall',null);
-							$data = array();$searchQuery = '';$searchArray = array();
+							$data = [];$searchQuery = '';$searchArray = [];
 							$tablecontent = '';
 							if($refresh == 'refresh')
 							{
@@ -90,7 +90,7 @@ class Default_EducationdetailsController extends Zend_Controller_Action
 								else
 								$perPage = PERPAGE;
 
-								$sort = 'DESC';$by = 'e.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = array();
+								$sort = 'DESC';$by = 'e.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = [];
 
 							}
 							else
@@ -153,7 +153,7 @@ class Default_EducationdetailsController extends Zend_Controller_Action
 		 		$conText = ($this->_getParam('context') !='')? $this->_getParam('context'):$this->getRequest()->getParam('context');
 		 	}
 		 	if($userid == '') $userid = $userID;
-		 	$Uid = ($userid)?$userid:$userID;
+		 	$Uid = $userid ?: $userID;
 		 	$educationdetailsModel = new Default_Model_Educationdetails();
 		 	$employeeModal = new Default_Model_Employee();
 		 	try
@@ -178,7 +178,7 @@ class Default_EducationdetailsController extends Zend_Controller_Action
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
 							$dashboardcall = $this->_getParam('dashboardcall',null);
-							$data = array();$searchQuery = '';$searchArray = array();
+							$data = [];$searchQuery = '';$searchArray = [];
 							$tablecontent = '';
 							if($refresh == 'refresh')
 							{
@@ -187,7 +187,7 @@ class Default_EducationdetailsController extends Zend_Controller_Action
 								else
 								$perPage = PERPAGE;
 
-								$sort = 'DESC';$by = 'e.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = array();
+								$sort = 'DESC';$by = 'e.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = [];
 							}
 							else
 							{
@@ -241,7 +241,7 @@ class Default_EducationdetailsController extends Zend_Controller_Action
 			$loginUserGroup = $auth->getStorage()->read()->group_id;
 			}
 		 	$userID = '';
-			$empdata=array();
+			$empdata=[];
 			$conText = "";
 			$objName = 'educationdetails';
 		 	$userid = $this->getRequest()->getParam('userid');
@@ -253,7 +253,7 @@ class Default_EducationdetailsController extends Zend_Controller_Action
 		 		$conText = ($this->_getParam('context') !='')? $this->_getParam('context'):$this->getRequest()->getParam('context');
 		 	}
 		 	if($userid == '') $userid = $userID;
-             $Uid = ($userid)?$userid:$userID;
+             $Uid = $userid ?: $userID;
 		 	$educationdetailsModel = new Default_Model_Educationdetails();
 		 	$employeeModal = new Default_Model_Employee();
 		 	try
@@ -277,7 +277,7 @@ class Default_EducationdetailsController extends Zend_Controller_Action
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
 							$dashboardcall = $this->_getParam('dashboardcall',null);
-							$data = array();$searchQuery = '';$searchArray = array();
+							$data = [];$searchQuery = '';$searchArray = [];
 							$tablecontent = '';
 							if($refresh == 'refresh')
 							{
@@ -286,7 +286,7 @@ class Default_EducationdetailsController extends Zend_Controller_Action
 								else
 								$perPage = PERPAGE;
 
-								$sort = 'DESC';$by = 'e.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = array();
+								$sort = 'DESC';$by = 'e.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = [];
 
 							}
 							else
@@ -351,7 +351,7 @@ class Default_EducationdetailsController extends Zend_Controller_Action
 		$studylevel_model = new Default_Model_studylevel();
 		$studyfield_model = new Default_Model_studyfield();
 		$educationlevelcodemodel = new Default_Model_Educationlevelcode();
-		$msgarray = array();
+		$msgarray = [];
 		$emptyFlag = '';
 		$educationlevelArr = $educationlevelcodemodel->getEducationlevelData();
 		$studylevelArr = $studylevel_model->GetStudylevel();
@@ -526,7 +526,7 @@ class Default_EducationdetailsController extends Zend_Controller_Action
 			if (sizeof($imageArr) > 1) {
 				$imagename = $imageArr[0];
 				$imageext = $imageArr[1];
-				$extArr = array('gif', 'jpg', 'jpeg', 'png');
+				$extArr = ['gif', 'jpg', 'jpeg', 'png'];
 				if (!in_array($imageext, $extArr)) {
 					$msgarray['attestation_image_value'] = 'Please upload an appropriate image file.';
 					$flag = 'false';
@@ -582,7 +582,7 @@ class Default_EducationdetailsController extends Zend_Controller_Action
 			$actionflag = '';
 			$tableid  = '';
 
-			$data = array(		 'emp_id'=>$user_id,
+			$data = [		 'emp_id'=>$user_id,
 				                 'institution_name'=>$institution_name,
 								 'studyfield'=>$studyfield_name,
 								 'institution_id'=>$institution,
@@ -598,10 +598,10 @@ class Default_EducationdetailsController extends Zend_Controller_Action
 								 'modifiedby'=>$loginUserId,
 								 'attestation'=>$imagepath,
 			                     'modifieddate'=>gmdate("Y-m-d H:i:s")
-			);
+			];
 			
 			if($id!=''){
-				$where = array('id=?'=>$id);
+				$where = ['id=?'=>$id];
 				$actionflag = 2;
 			}
 			else
@@ -669,7 +669,7 @@ class Default_EducationdetailsController extends Zend_Controller_Action
 
 		// Allowed image types
 		//$allowtype = array('gif', 'jpg', 'jpeg', 'png');
-		$allowtype = array('gif', 'jpg', 'jpeg', 'png', 'GIF', 'JPG', 'JPEG', 'PNG');
+		$allowtype = ['gif', 'jpg', 'jpeg', 'png', 'GIF', 'JPG', 'JPEG', 'PNG'];
 
 		/** Uploading the image **/
 
@@ -700,7 +700,7 @@ class Default_EducationdetailsController extends Zend_Controller_Action
 							$rezultat = $filename;
 							$setWidth = 265;
 							$setHeight = 40;
-							list($imgwidth, $imgheight) = getimagesize($newfilename);
+							[$imgwidth, $imgheight] = getimagesize($newfilename);
 							if ($imgwidth < 265) {
 								$setWidth = $imgwidth;
 							}
@@ -731,11 +731,11 @@ class Default_EducationdetailsController extends Zend_Controller_Action
 			$result_msg = 'Please upload only .gif, .jpg, .jpeg, .png images.';
 		}
 
-		$result = array(
+		$result = [
 			'result' => $result_status,
 			'img' => $rezultat,
 			'msg' => $result_msg
-		);
+		];
 		return $result;
 	}
 
@@ -752,8 +752,8 @@ class Default_EducationdetailsController extends Zend_Controller_Action
 		if($id)
 		{
 			$educationDetailsModel = new Default_Model_Educationdetails();
-			$data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-			$where = array('id=?'=>$id);
+			$data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+			$where = ['id=?'=>$id];
 			$Id = $educationDetailsModel->SaveorUpdateEducationDetails($data, $where);
 			if($Id == 'update')
 			{

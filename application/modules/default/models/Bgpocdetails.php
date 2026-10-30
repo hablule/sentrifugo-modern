@@ -69,11 +69,11 @@ class Default_Model_Bgpocdetails extends Zend_Db_Table_Abstract
 	public function deleteBGcheckdetails($agencyid,$pocid,$userid)
 	{
 		$screeningmodel = new Default_Model_Empscreening();
-		$data = array(
+		$data = [
 			'isactive' => 4,
 			'modifieddate' => gmdate("Y-m-d H:i:s"),
 			'modifiedby' => $this->getLoginUserId()
-		);
+		];
 		$where = "isactive = 1 and bgagency_pocid = ".$pocid." and bgagency_id = ".$agencyid;
 		$screeningmodel->SaveorUpdateDetails($data,$where);
 	}

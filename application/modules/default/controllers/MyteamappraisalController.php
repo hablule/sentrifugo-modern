@@ -29,11 +29,11 @@ class Default_MyteamappraisalController extends Zend_Controller_Action
 {
     private $_options;
     
-    public $app_history_disc_array = array(1=>APP_TXT_EMP_SUBMIT, 2=>APP_TXT_L1_SUBMIT, 3=>APP_TXT_L2_SUBMIT, 4=>APP_TXT_L3_SUBMIT,
-										5=>APP_TXT_L4_SUBMIT, 6=>APP_TXT_L5_SUBMIT, 7=>APP_TXT_COMPLETED);
+    public $app_history_disc_array = [1=>APP_TXT_EMP_SUBMIT, 2=>APP_TXT_L1_SUBMIT, 3=>APP_TXT_L2_SUBMIT, 4=>APP_TXT_L3_SUBMIT,
+										5=>APP_TXT_L4_SUBMIT, 6=>APP_TXT_L5_SUBMIT, 7=>APP_TXT_COMPLETED];
 										
-	public $app_status_array = array(1=>APP_PENDING_EMP, 2=>APP_PENDING_L1, 3=>APP_PENDING_L2, 4=>APP_PENDING_L3,
-										5=>APP_PENDING_L4, 6=>APP_PENDING_L5, 7=>APP_COMPLETED);
+	public $app_status_array = [1=>APP_PENDING_EMP, 2=>APP_PENDING_L1, 3=>APP_PENDING_L2, 4=>APP_PENDING_L3,
+										5=>APP_PENDING_L4, 6=>APP_PENDING_L5, 7=>APP_COMPLETED];
     
     public function preDispatch()
     {
@@ -61,7 +61,7 @@ class Default_MyteamappraisalController extends Zend_Controller_Action
     {
     	
         $post_values = $this->getRequest()->getPost();
-        $result = array('status' => 'fail','msg' => 'Something went wrong, please try again.');
+        $result = ['status' => 'fail','msg' => 'Something went wrong, please try again.'];
         if(count($post_values) > 0)
         {
             // if($post_values['consol_rating'] != '' && $post_values['consol_comments'] != '')
@@ -77,11 +77,11 @@ class Default_MyteamappraisalController extends Zend_Controller_Action
 					$loginuserEmail = $auth->getStorage()->read()->emailaddress;
 					$loginuserEmpId = $auth->getStorage()->read()->employeeId;
 					
-                    $loginuserArr = array(
+                    $loginuserArr = [
                         'loginuserid' => $loginUserId,
                         'loginuserrole'=>$loginuserRole,
                         'loginusergroup'=>$loginuserGroup,	
-                    );            
+                    ];            
                 }
 
                 $model = new Default_Model_Appraisalemployeeratings();
@@ -107,7 +107,7 @@ class Default_MyteamappraisalController extends Zend_Controller_Action
                 //Not updating consolidated value for for draft status 
                 $new_rating = ($flag == 'draft')? $total_ratings/($hid_line_status-1) : ($total_ratings+$manager_rating)/$hid_line_status;  
                // $rating_arr = $model->getRatingsByInitId($appraisal_id);
-                $save_data = array(                                        
+                $save_data = [                                        
                     'line_comment_'.$hid_line_status => $consol_comments,
                     //'line_rating_'.$hid_line_status => $rating_arr[$consol_rating],
                 	'line_rating_'.$hid_line_status => $manager_rating,
@@ -116,7 +116,7 @@ class Default_MyteamappraisalController extends Zend_Controller_Action
                     'modifiedby_role' => $loginuserRole,
                     'modifiedby_group' => $loginuserGroup,
                     'modifieddate' => gmdate("Y-m-d H:i:s"),
-                );
+                ];
                 if($flag != 'draft')
                 {
                 	/* Using this db call because to get latest value of number of line 
@@ -147,7 +147,7 @@ class Default_MyteamappraisalController extends Zend_Controller_Action
                     }
                          //$history_desc : changing the description text according to the draft flag and submit flag(Ref Array:app_history_disc_array)
                  		$history_desc = $this->app_history_disc_array[$hid_line_status+1];
-                        $appHistoryData = array(
+                        $appHistoryData = [
 									'employee_id'=>$employee_id,
 									'pa_initialization_id'=>$appraisal_id,
 									'description'=>$history_desc,
@@ -158,7 +158,7 @@ class Default_MyteamappraisalController extends Zend_Controller_Action
 									'createddate'=>gmdate("Y-m-d H:i:s"),
 	            					'modifiedby'=>$loginUserId,
 									'modifieddate'=>gmdate("Y-m-d H:i:s"),
-								);
+								];
 						$appHistoryModel = new Default_Model_Appraisalhistory();
 						//$result2 = $appHistoryModel->SaveorUpdateAppraisalHistoryData($appHistoryData);
                 }
@@ -182,11 +182,11 @@ class Default_MyteamappraisalController extends Zend_Controller_Action
 								}
 					  			
 					  			//Preparing Employee array for Bcc
-								$empArr = array();
+								$empArr = [];
 								if(!empty($employeeDetailsArr))
 								{
 									$empArrList = '';
-									$empUserIdArr = array();
+									$empUserIdArr = [];
 									$toEmailId = '';
 									$toEmailName = '';
 									foreach($employeeDetailsArr as $emp)
@@ -221,7 +221,7 @@ class Default_MyteamappraisalController extends Zend_Controller_Action
 						}
                 
                 if($save_result)                        
-                    $result = array('status' => 'success','msg' => 'Employee appraisal process '.($flag == 'draft'?"drafted":"submitted").' successfully');
+                    $result = ['status' => 'success','msg' => 'Employee appraisal process '.($flag == 'draft'?"drafted":"submitted").' successfully'];
             // }
         }
         $this->_helper->json($result);
@@ -229,7 +229,7 @@ class Default_MyteamappraisalController extends Zend_Controller_Action
     public function savemngresponseAction()
     {
         $post_values = $this->getRequest()->getPost();
-        $result = array('status' => 'fail','msg' => 'Something went wrong, please try again.');
+        $result = ['status' => 'fail','msg' => 'Something went wrong, please try again.'];
         if(count($post_values) > 0)
         {
             if(isset($post_values['hid_employee_id']) && $post_values['hid_employee_id'] != ''  && isset($post_values['hid_appraisal_id']) && $post_values['hid_appraisal_id'] != '' )
@@ -246,27 +246,27 @@ class Default_MyteamappraisalController extends Zend_Controller_Action
                         $loginuserEmail = $auth->getStorage()->read()->emailaddress;
 						$loginuserProfileImg = $auth->getStorage()->read()->profileimg;
 						$loginuserEmpId = $auth->getStorage()->read()->employeeId;
-                        $loginuserArr = array(
+                        $loginuserArr = [
                             'loginuserid' => $loginUserId,
                             'loginuserrole'=>$loginuserRole,
                             'loginusergroup'=>$loginuserGroup,	
-                        );            
+                        ];            
                     } 
                                     
 					$model = new Default_Model_Appraisalemployeeratings();
 					$appEmpRatingsModel = new Default_Model_Appraisalemployeeratings();
 					$consol_rating = (isset($post_values['consol_rating']) && trim($post_values['consol_rating']) != 0)?$post_values['consol_rating']:NULL;
-					$consol_comments = isset($post_values['consol_comments'])?$post_values['consol_comments']:'';
+					$consol_comments = $post_values['consol_comments'] ?? '';
 					$employee_id = $post_values['hid_employee_id'];
 					$appraisal_id = $post_values['hid_appraisal_id'];
-					$question_rating = isset($post_values['question_rating'])?$post_values['question_rating']:'';
-					$question_comments = isset($post_values['question_comments'])?$post_values['question_comments']:'';
-					$skill_ids = isset($post_values['emp_skills'])?$post_values['emp_skills']:'';
-					$skill_rating = isset($post_values['skill_rating'])?$post_values['skill_rating']:'';
+					$question_rating = $post_values['question_rating'] ?? '';
+					$question_comments = $post_values['question_comments'] ?? '';
+					$skill_ids = $post_values['emp_skills'] ?? '';
+					$skill_rating = $post_values['skill_rating'] ?? '';
 					$flag = $post_values['hid_btn_flag'];
 					$ratings_ids_arr = $model->getRatingsByInitId($appraisal_id);
-					$mng_response_arr = array();
-					$skill_response_arr = array();
+					$mng_response_arr = [];
+					$skill_response_arr = [];
 					$response_json = '';
 					$skill_json = '';
                     if(!empty($ratings_ids_arr))
@@ -278,14 +278,14 @@ class Default_MyteamappraisalController extends Zend_Controller_Action
 		                    	// if($qc!='')
 		                          $mng_response_arr[$qid]['comment'] = (isset($qc) && trim($qc) != '')?$qc:'';
 		                        // if($qid!='' && $question_rating[$qid]!='') 
-		                          $mng_response_arr[$qid]['rating'] = isset($ratings_ids_arr[$question_rating[$qid]])?$ratings_ids_arr[$question_rating[$qid]]:'';
+		                          $mng_response_arr[$qid]['rating'] = $ratings_ids_arr[$question_rating[$qid]] ?? '';
 		                    }
 	                    }
 	                    if(!empty($skill_ids))
 	                    {
 		                    foreach($skill_ids as $key => $sk_id)
 		                    {
-		                        $skill_response_arr[$sk_id] = isset($ratings_ids_arr[$skill_rating[$key]])?$ratings_ids_arr[$skill_rating[$key]]:0;
+		                        $skill_response_arr[$sk_id] = $ratings_ids_arr[$skill_rating[$key]] ?? 0;
 		                    }
 	                    }
                     }
@@ -295,7 +295,7 @@ class Default_MyteamappraisalController extends Zend_Controller_Action
                     if(!empty($skill_response_arr))	{
                     	$skill_json = json_encode($skill_response_arr);
                     }
-                    $save_data = array(
+                    $save_data = [
                         'manager_response' => $response_json!=''?$response_json:NULL,
                         'skill_response' => $skill_json!=''?$skill_json:NULL,
                         'line_comment_1' => $consol_comments,
@@ -305,7 +305,7 @@ class Default_MyteamappraisalController extends Zend_Controller_Action
                         'modifiedby_role' => $loginuserRole,
                         'modifiedby_group' => $loginuserGroup,
                         'modifieddate' => gmdate("Y-m-d H:i:s"),
-                    );
+                    ];
                     if($flag != 'draft')
                     {	
                     	$line_2_mgr = '';
@@ -323,7 +323,7 @@ class Default_MyteamappraisalController extends Zend_Controller_Action
                     	}
                         	
                         $history_desc = $this->app_history_disc_array[2];
-		            	$appHistoryData = array(
+		            	$appHistoryData = [
 										'employee_id'=>$employee_id,
 										'pa_initialization_id'=>$appraisal_id,
 										'description'=>$history_desc,
@@ -334,7 +334,7 @@ class Default_MyteamappraisalController extends Zend_Controller_Action
 										'createddate'=>gmdate("Y-m-d H:i:s"),
 		            					'modifiedby'=>$loginUserId,
 										'modifieddate'=>gmdate("Y-m-d H:i:s"),
-									);
+									];
 									
 						$appHistoryModel = new Default_Model_Appraisalhistory();
 						$result2 = $appHistoryModel->SaveorUpdateAppraisalHistoryData($appHistoryData);	
@@ -369,11 +369,11 @@ class Default_MyteamappraisalController extends Zend_Controller_Action
 								}
 					  			//echo "<pre>";print_r($employeeDetailsArr);
 							//Preparing Employee array for Bcc
-								$empArr = array();
+								$empArr = [];
 								if(!empty($employeeDetailsArr))
 								{
 									$empArrList = '';
-									$empUserIdArr = array();
+									$empUserIdArr = [];
 									$toEmailId = '';
 									$toEmailName = '';
 									foreach($employeeDetailsArr as $emp)
@@ -417,7 +417,7 @@ class Default_MyteamappraisalController extends Zend_Controller_Action
                    
 					  
                     if($save_result)                        
-                        $result = array('status' => 'success','msg' => 'Employee appraisal process '.($flag == 'draft'?"drafted":"submitted").' successfully');
+                        $result = ['status' => 'success','msg' => 'Employee appraisal process '.($flag == 'draft'?"drafted":"submitted").' successfully'];
                 //}
             }
         }
@@ -439,16 +439,16 @@ class Default_MyteamappraisalController extends Zend_Controller_Action
             $history_flag = isset($post_values['history_flag'])?sapp_Global::_decrypt($post_values['history_flag']):'';
             $key = $post_values['key'];
             $appEmpRatingsModel = new Default_Model_Appraisalemployeeratings();
-            $data = array();
+            $data = [];
             if($appraisal_id != '' && $manager_id != '' && $user_id != '' && $flag != '')
             {
                 $model = new Default_Model_Appraisalmanager();                
                 $data = $model->getempcontent($appraisal_id,$manager_id,$user_id,$flag,$app_config_id);                                                    
             }
             $appEmpQuesPrivData = $appEmpRatingsModel->getAppEmpQuesPrivData($appraisal_id, $user_id);
-            $hr_ques_previs = array();
-			$mgr_ques_previs = array();
-            $ratingType = array();
+            $hr_ques_previs = [];
+			$mgr_ques_previs = [];
+            $ratingType = [];
 				if($appEmpQuesPrivData[0]['hr_group_qs_privileges'])
 					$hr_ques_previs = json_decode($appEmpQuesPrivData[0]['hr_group_qs_privileges'],true);
 					
@@ -492,8 +492,8 @@ class Default_MyteamappraisalController extends Zend_Controller_Action
         $app_rating_model = new Default_Model_Appraisalratings();
         $ratingflag = 'false';
         $linemangerids = '';
-        $managerprofileimgArr = array();
-        $businessUnits = array();
+        $managerprofileimgArr = [];
+        $businessUnits = [];
 		$business_unit_model = new Default_Model_Businessunits();
 		$businessUnits = $business_unit_model->getBusinessUnitsList();
 		
@@ -524,7 +524,7 @@ class Default_MyteamappraisalController extends Zend_Controller_Action
         		}
         		$emp_data[$key]= $emp_data[$key]+$managerprofileimgArr;
         		$linemangerids = '';
-        		$managerprofileimgArr = array();
+        		$managerprofileimgArr = [];
         		
         	}
         }
@@ -560,7 +560,7 @@ class Default_MyteamappraisalController extends Zend_Controller_Action
         $app_rating_model = new Default_Model_Appraisalratings();
         $ratingflag = 'false';
         $linemangerids = '';
-        $managerprofileimgArr = array();
+        $managerprofileimgArr = [];
 		
         if($searchstring!='')
         {
@@ -586,7 +586,7 @@ class Default_MyteamappraisalController extends Zend_Controller_Action
         		}
         		$emp_data[$key]= $emp_data[$key]+$managerprofileimgArr;
         		$linemangerids = '';
-        		$managerprofileimgArr = array();
+        		$managerprofileimgArr = [];
         		
         	}
         }
@@ -682,7 +682,7 @@ class Default_MyteamappraisalController extends Zend_Controller_Action
                     $empAppraisalData = $appraisalManagerModelObj->getEmpdata_managerapp($manager_id,$searchval);
                 }
             }
-            $data = array();
+            $data = [];
             if($appraisal_id != '' && $user_id != '' && $flag != '')
             {
                 $model = new Default_Model_Appraisalmanager();
@@ -702,9 +702,9 @@ class Default_MyteamappraisalController extends Zend_Controller_Action
                 }
             }
             $appEmpQuesPrivData = $appEmpRatingsModel->getAppEmpQuesPrivData($appraisal_id, $user_id);
-            $hr_ques_previs = array();
-            $mgr_ques_previs = array();
-            $ratingType = array();
+            $hr_ques_previs = [];
+            $mgr_ques_previs = [];
+            $ratingType = [];
            if($appEmpQuesPrivData[0]['hr_group_qs_privileges'])
                 $hr_ques_previs = json_decode($appEmpQuesPrivData[0]['hr_group_qs_privileges'],true);
                 
@@ -733,7 +733,7 @@ class Default_MyteamappraisalController extends Zend_Controller_Action
             $this->view->appText = $appText; 
             $text = $view->render('myteamappraisal/appraisalpdf.phtml');
             //generating file name
-            $file_name_params_array = array($empAppraisalData[0]['userfullname'],$empAppraisalData[0]['from_year'],$empAppraisalData[0]['to_year'],$appText);
+            $file_name_params_array = [$empAppraisalData[0]['userfullname'],$empAppraisalData[0]['from_year'],$empAppraisalData[0]['to_year'],$appText];
             $file_name = $this->_helper->PdfHelper->generateFileName($file_name_params_array);
             //mpdf
             require_once 'MPDF57/mpdf.php';
@@ -780,9 +780,9 @@ class Default_MyteamappraisalController extends Zend_Controller_Action
         
         // get all questions data based on above question ids
         $questions_data = $appEmpRatingsModel->getAppQuesDataByIDs($ques_csv);
-        $final_array = array();
-        $id_array = array();
-        $name_array = array();
+        $final_array = [];
+        $id_array = [];
+        $name_array = [];
         foreach ($categories_data as $key => $value) 
         {
             foreach ($questions_data as $k => $v) 
@@ -802,11 +802,11 @@ public function downloadUploadedFileAction()
       $cand_details_model = new Default_Model_Candidatedetails();
     	$result = $cand_details_model->getcandidateData($this->_getParam('id'));
     	if(!empty($result['cand_resume'])){
-    		$status = array();
+    		$status = [];
 			$file = BASE_PATH.'/uploads/resumes/'.$result['cand_resume'];
 			$status = sapp_Global::downloadFile($file);
 			if(!empty($status['message'])){				
-                            $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$status['message']));
+                            $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$status['message']]);
 			}
     	}
   		$this->_redirect('candidatedetails/index');

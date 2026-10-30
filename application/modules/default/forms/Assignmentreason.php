@@ -56,53 +56,53 @@ class Default_Form_Assignmentreason extends Zend_Form
          * 2. Text Elements
          * -------------------------------------------------------------- */
 
-        $ssotRegexValidator = array(
+        $ssotRegexValidator = [
             'Regex',
             true,
-            array(
+            [
                 'pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9 ]*)$/',
-                'messages' => array(
+                'messages' => [
                     Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space or contain special characters.'
-                )
-            )
-        );
+                ]
+            ]
+        ];
 
         // Code
         $code = new Zend_Form_Element_Text('code');
         $code->setLabel('Reason Code')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '60', 'placeholder' => 'e.g., PROMO, TRANS, HIRE'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '60', 'placeholder' => 'e.g., PROMO, TRANS, HIRE'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
             ->addFilter('StringToUpper')
-            ->addValidator('NotEmpty', false, array('messages' => 'Please enter a reason code.'))
-            ->addValidator('StringLength', false, array('max' => 60))
+            ->addValidator('NotEmpty', false, ['messages' => 'Please enter a reason code.'])
+            ->addValidator('StringLength', false, ['max' => 60])
             ->addValidator($ssotRegexValidator[0], $ssotRegexValidator[1], $ssotRegexValidator[2]);
 
-        $codeVal = new Zend_Validate_Db_NoRecordExists(array(
+        $codeVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_assignment_reason',
             'field'   => 'code',
-            'exclude' => ($idVal > 0) ? array('field' => 'id', 'value' => $idVal) : null
-        ));
+            'exclude' => ($idVal > 0) ? ['field' => 'id', 'value' => $idVal] : null
+        ]);
         $codeVal->setMessage('This code is already assigned to another reason.');
         $code->addValidator($codeVal);
 
         // Name
         $name = new Zend_Form_Element_Text('name');
         $name->setLabel('Reason Name')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '100', 'placeholder' => 'e.g., Promotion, Internal Transfer'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '100', 'placeholder' => 'e.g., Promotion, Internal Transfer'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', false, array('messages' => 'Please enter a reason name.'))
-            ->addValidator('StringLength', false, array('max' => 100))
+            ->addValidator('NotEmpty', false, ['messages' => 'Please enter a reason name.'])
+            ->addValidator('StringLength', false, ['max' => 100])
             ->addValidator($ssotRegexValidator[0], $ssotRegexValidator[1], $ssotRegexValidator[2]);
 
-        $nameVal = new Zend_Validate_Db_NoRecordExists(array(
+        $nameVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_assignment_reason',
             'field'   => 'name',
-            'exclude' => ($idVal > 0) ? array('field' => 'id', 'value' => $idVal) : null
-        ));
+            'exclude' => ($idVal > 0) ? ['field' => 'id', 'value' => $idVal] : null
+        ]);
         $nameVal->setMessage('This reason name already exists.');
         $name->addValidator($nameVal);
 
@@ -111,7 +111,7 @@ class Default_Form_Assignmentreason extends Zend_Form
          * -------------------------------------------------------------- */
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Description')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -129,7 +129,7 @@ class Default_Form_Assignmentreason extends Zend_Form
          * -------------------------------------------------------------- */
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save')
-            ->setAttribs(array('id' => 'submitbutton', 'class' => 'actbtn_btn'));
+            ->setAttribs(['id' => 'submitbutton', 'class' => 'actbtn_btn']);
 
         $urlAction  = "'assignmentreason/save/format/json'";
         $jsFunction = "'redirecttocontroller(\\'assignmentreason\\');'";
@@ -138,18 +138,18 @@ class Default_Form_Assignmentreason extends Zend_Form
         /* --------------------------------------------------------------
          * Build Form
          * -------------------------------------------------------------- */
-        $this->addElements(array(
+        $this->addElements([
             $idElement,
             $code,
             $name,
             $description,
             $isactive,
             $submit
-        ));
+        ]);
 
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
-            $element->setDecorators(array('ViewHelper'));
+            $element->setDecorators(['ViewHelper']);
         }
     }
 }

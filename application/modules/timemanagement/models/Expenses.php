@@ -60,11 +60,11 @@ class Timemanagement_Model_Expenses extends Zend_Db_Table_Abstract
 
 		$expensesData = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('ex'=>'tm_emp_expenses'),array('ex.id','expense_date'=>'date_format(ex.expense_date,"'.DATEFORMAT_MYSQL.'")','expense_amount'=> new Zend_Db_Expr("CONCAT(mc.currencycode, ' ', ex.expense_amount)"),'is_billable'=>'if (ex.is_billable=1,"Yes","No")','ex.expense_status','ex.receipt_file','ex.note'))
-		->joinInner(array('ec'=>'tm_expense_categories'),'ec.id = ex.expense_cat_id',array('ec.expense_category'))
-		->joinInner(array('c'=>'tm_clients'),'c.id = ex.client_id',array('c.client_name'))
-		->joinInner(array('p'=>'tm_projects'),'p.id = ex.project_id',array('p.project_name'))
-		->joinInner(array('mc'=>'main_currency'),'mc.id = p.currency_id',array('mc.currencycode'))
+		->from(['ex'=>'tm_emp_expenses'],['ex.id','expense_date'=>'date_format(ex.expense_date,"'.DATEFORMAT_MYSQL.'")','expense_amount'=> new Zend_Db_Expr("CONCAT(mc.currencycode, ' ', ex.expense_amount)"),'is_billable'=>'if (ex.is_billable=1,"Yes","No")','ex.expense_status','ex.receipt_file','ex.note'])
+		->joinInner(['ec'=>'tm_expense_categories'],'ec.id = ex.expense_cat_id',['ec.expense_category'])
+		->joinInner(['c'=>'tm_clients'],'c.id = ex.client_id',['c.client_name'])
+		->joinInner(['p'=>'tm_projects'],'p.id = ex.project_id',['p.project_name'])
+		->joinInner(['mc'=>'main_currency'],'mc.id = p.currency_id',['mc.currencycode'])
 		->where($andwhere)
 		->order("$by $sort")
 		->limitPage($pageNo, $perPage);
@@ -96,8 +96,8 @@ ORDER BY ex.created DESC;*/
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall, $start_date, $end_date, $org_start_date,$org_end_date,$employee_id)
 	{
 		$searchQuery = '';
-		$searchArray = array();
-		$data = array();
+		$searchArray = [];
+		$data = [];
 
 		if($searchData != '' && $searchData!='undefined')
 		{
@@ -112,7 +112,7 @@ ORDER BY ex.created DESC;*/
 			
 		$objName = 'expenses';
 
-		$tableFields = array(
+		$tableFields = [
 								'action'=>'Action'
 								,'expense_date' => 'Date'
 								,'client_name' => 'Client'
@@ -126,11 +126,11 @@ ORDER BY ex.created DESC;*/
 								//,'note' => 'Notes'
 								,'att' => 'Attachment'
 					
-		);
+		];
 
 		$tablecontent = $this->getExpensesData($sort, $by, $pageNo, $perPage,$searchQuery, $start_date, $end_date,$employee_id);
 		//echo"<pre>";print_r($tablecontent);die;
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
@@ -139,7 +139,7 @@ ORDER BY ex.created DESC;*/
 			'objectname' => $objName,
 		    'menuName' => 'Expenses',
 			'otheraction' => 'expensereports',
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -148,7 +148,7 @@ ORDER BY ex.created DESC;*/
 			'dashboardcall'=>$dashboardcall,
 			'start_date' => $org_start_date,
 			'end_date' => $org_end_date,
-		);
+		];
 		return $dataTmp;
 	}
 
@@ -168,7 +168,7 @@ ORDER BY ex.created DESC;*/
 	{
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('ec'=>$this->_name),array('ec.*'))
+		->from(['ec'=>$this->_name],['ec.*'])
 		->where('ec.is_active = 1 AND ec.id='.$id.' ');
 		return $this->fetchAll($select)->toArray();
 	}
@@ -183,8 +183,8 @@ ORDER BY ex.created DESC;*/
 	public function getViewExpensesGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall, $start_date, $end_date, $org_start_date,$org_end_date,$employee_id,$type)
 	{
 		$searchQuery = '';
-		$searchArray = array();
-		$data = array();
+		$searchArray = [];
+		$data = [];
 
 		if($searchData != '' && $searchData!='undefined')
 		{
@@ -199,7 +199,7 @@ ORDER BY ex.created DESC;*/
 			
 		$objName = 'expenses';
 
-		$tableFields = array(
+		$tableFields = [
 								//'action'=>'Action',
 								'expense_date' => 'Date'
 								,'client_name' => 'Client'
@@ -215,11 +215,11 @@ ORDER BY ex.created DESC;*/
 								,'att' => 'Attachment'
 								,'acc' => 'Action'
 					
-		);
+		];
 
 		$tablecontent = $this->getViewExpensesData($sort, $by, $pageNo, $perPage,$searchQuery, $start_date, $end_date,$employee_id,$type);
 		//echo"<pre>";print_r($tablecontent);die;
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
@@ -228,7 +228,7 @@ ORDER BY ex.created DESC;*/
 			'objectname' => $objName,
 		    'menuName' => 'view expenses',
 			'otheraction' => 'viewexpensereports',
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -237,7 +237,7 @@ ORDER BY ex.created DESC;*/
 			'dashboardcall'=>$dashboardcall,
 			'start_date' => $org_start_date,
 			'end_date' => $org_end_date,
-		);
+		];
 		return $dataTmp;
 	}
 	
@@ -265,12 +265,12 @@ ORDER BY ex.created DESC;*/
 	
 			$expensesData = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('ex'=>'tm_emp_expenses'),array('ex.id','expense_date'=>'date_format(ex.expense_date,"'.DATEFORMAT_MYSQL.'")','expense_amount'=> new Zend_Db_Expr("CONCAT(mc.currencycode, ' ', ex.expense_amount)"),'is_billable'=>'if (ex.is_billable=1,"Yes","No")','ex.expense_status','ex.receipt_file','ex.note'))
-			->joinInner(array('ec'=>'tm_expense_categories'),'ec.id = ex.expense_cat_id',array('ec.expense_category'))
-			->joinInner(array('c'=>'tm_clients'),'c.id = ex.client_id',array('c.client_name'))
-			->joinInner(array('p'=>'tm_projects'),'p.id = ex.project_id',array('p.project_name'))
-			->joinInner(array('mc'=>'main_currency'),'mc.id = p.currency_id',array('mc.currencycode'))
-			 ->joinInner(array('mec'=>'employees_summary'),'mec.id = ex.emp_id',array('employee_name'=> new Zend_Db_Expr("CONCAT(mec.firstname, ' ', mec.lastname)")))
+			->from(['ex'=>'tm_emp_expenses'],['ex.id','expense_date'=>'date_format(ex.expense_date,"'.DATEFORMAT_MYSQL.'")','expense_amount'=> new Zend_Db_Expr("CONCAT(mc.currencycode, ' ', ex.expense_amount)"),'is_billable'=>'if (ex.is_billable=1,"Yes","No")','ex.expense_status','ex.receipt_file','ex.note'])
+			->joinInner(['ec'=>'tm_expense_categories'],'ec.id = ex.expense_cat_id',['ec.expense_category'])
+			->joinInner(['c'=>'tm_clients'],'c.id = ex.client_id',['c.client_name'])
+			->joinInner(['p'=>'tm_projects'],'p.id = ex.project_id',['p.project_name'])
+			->joinInner(['mc'=>'main_currency'],'mc.id = p.currency_id',['mc.currencycode'])
+			 ->joinInner(['mec'=>'employees_summary'],'mec.id = ex.emp_id',['employee_name'=> new Zend_Db_Expr("CONCAT(mec.firstname, ' ', mec.lastname)")])
 
 			->where($andwhere)
 			->order("$by $sort")
@@ -280,8 +280,8 @@ ORDER BY ex.created DESC;*/
 			
 			/** **/
 			$search=urldecode($search);
-			$stat_arr=array('enabled'=>'Enabled','blocked'=>'Blocked','rejected'=>'Rejected','submitted'=>'For Approval','approved'=>'Approved','saved'=>'Saved');
-			$fin_arr=array();
+			$stat_arr=['enabled'=>'Enabled','blocked'=>'Blocked','rejected'=>'Rejected','submitted'=>'For Approval','approved'=>'Approved','saved'=>'Saved'];
+			$fin_arr=[];
 			$i=0;
 			$where = " WHERE (ms.isactive = 1 AND pe.is_active=1 ) ";
 			$per_page = 8;

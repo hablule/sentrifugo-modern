@@ -46,8 +46,8 @@ class Default_Form_empholidays extends Zend_Form
         $submit = new Zend_Form_Element_Submit('submit');
 		$submit->setLabel('Save');
 
-		 $this->addElements(array($id,$holiday_id,$holidaycategory_id,$description,$isactive,$submit));
-        $this->setElementDecorators(array('ViewHelper'));
+		 $this->addElements([$id,$holiday_id,$holidaycategory_id,$description,$isactive,$submit]);
+        $this->setElementDecorators(['ViewHelper']);
      		
 	}
 }

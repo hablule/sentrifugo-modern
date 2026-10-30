@@ -23,7 +23,7 @@ class Default_DocumentpurposeController extends Zend_Controller_Action
       $refresh = $this->_getParam('refresh');
       $dashboradcall = $this->_getParam('dashboradcall');
 
-      $data = array();
+      $data = [];
 
       if ($refresh == 'refresh') {
           if ($dashboradcall == 'Yes') {
@@ -79,13 +79,13 @@ class Default_DocumentpurposeController extends Zend_Controller_Action
            
             
             if ($Form->isValid($this->getRequest()->getPost())) {
-                $data = array(
+                $data = [
                     'name'=>$this->_request->getParam('name'),
                     'code'=>$this->_request->getParam('code'),
                     'description'=>$this->_request->getParam('description'),
                     'createdby'=>$loginUserId,
                     'createddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
                 $Id= $model->SaveorUpdateData($data,'');
                 $tableid = $Id;
                 $actionflag = 1;
@@ -194,18 +194,18 @@ class Default_DocumentpurposeController extends Zend_Controller_Action
 
 				$date = gmdate("Y-m-d H:i:s");
 
-				$data = array(
+				$data = [
 							'name'  => $name,
                             'code'  => $code,
                             'description'  => $description,
                             'isactive'=>utlis::getcheckboxvalue($this->_request->getParam('isactive')),
 
-							);
+							];
 				if($id!=''){
 
 					$data['modifiedby'] = $loginUserId;
 					$data['modifieddate'] = $date;
-					$where = array('iddocumentpurpose_id=?'=>$id);
+					$where = ['iddocumentpurpose_id=?'=>$id];
 				}
 				else
 				{
@@ -219,11 +219,11 @@ class Default_DocumentpurposeController extends Zend_Controller_Action
 				
 				if($Id == 'update')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Document Purpose updated successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Document Purpose updated successfully."]);
 				}
 				else
 				{
-			     $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Document Purpose added successfully."));
+			     $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Document Purpose added successfully."]);
 				}
 					
 				$this->_redirect('documentpurpose');

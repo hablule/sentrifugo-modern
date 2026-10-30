@@ -39,7 +39,7 @@ class Default_Form_addpersonaldetail extends Zend_Form
         $firstname->setAttrib('maxLength', 60);
         $firstname->setLabel('First Name');    
         $firstname->setRequired(true);
-        $firstname->addValidator('NotEmpty', false, array('messages' => 'Please fill name.'));  
+        $firstname->addValidator('NotEmpty', false, ['messages' => 'Please fill name.']);  
         $lastname = new Zend_Form_Element_Text('lastname');
         $lastname->setAttrib('maxLength', 60);
         $lastname->setLabel('Last Name');    
@@ -48,7 +48,7 @@ class Default_Form_addpersonaldetail extends Zend_Form
         $middlename->setAttrib('maxLength', 60);
         $middlename->setLabel('Middle Name');    
         $middlename->setRequired(true);
-        $middlename->addValidator('NotEmpty', false, array('messages' => 'Please fill name.'));  
+        $middlename->addValidator('NotEmpty', false, ['messages' => 'Please fill name.']);  
         $address1 = new Zend_Form_Element_Text('address2');
         $address1->setAttrib('maxLength', 60);
         $address1->setLabel('Street Address One');    
@@ -72,7 +72,7 @@ class Default_Form_addpersonaldetail extends Zend_Form
         	$country->setRequired(true);
         }
         
-        $country->addValidator('NotEmpty', false, array('messages' => 'Please select country.'));
+        $country->addValidator('NotEmpty', false, ['messages' => 'Please select country.']);
         $country->setRequired(true);
 
         $state = new Zend_Form_Element_Select("state");
@@ -82,8 +82,8 @@ class Default_Form_addpersonaldetail extends Zend_Form
 			$state->setRequired(true);
         }
         
-		$state->addValidator('NotEmpty', false, array('messages' => 'Please select state.')); 
-        $state->addMultiOptions(array(''=>'Select State'));
+		$state->addValidator('NotEmpty', false, ['messages' => 'Please select state.']); 
+        $state->addMultiOptions([''=>'Select State']);
         $state->setLabel("State");		
         $state->setAttrib("class", "formDataElement"); 
         $state->setAttrib('onchange', 'displayParticularCity_normal(this,"","city","")');
@@ -93,7 +93,7 @@ class Default_Form_addpersonaldetail extends Zend_Form
         
         $city = new Zend_Form_Element_Select("city");
         $city->setRegisterInArrayValidator(false);
-        $city->addMultiOptions(array(''=>'Select City'));
+        $city->addMultiOptions([''=>'Select City']);
         $city->setLabel("City");		
         $city->setAttrib("class", "formDataElement");         
         $city->setAttrib('title', 'City');
@@ -102,22 +102,22 @@ class Default_Form_addpersonaldetail extends Zend_Form
 			$city->setRequired(true);
         }
         
-		$city->addValidator('NotEmpty', false, array('messages' => 'Please select city.'));
+		$city->addValidator('NotEmpty', false, ['messages' => 'Please select city.']);
         $city->setRequired(true);
         $contactprefer = new Zend_Form_Element_Select('contactprefer');
-        $contactprefer->addMultiOptions(array(
+        $contactprefer->addMultiOptions([
             ' ' => 'Select...',
             '1' => 'Home Number',
             '2' => 'Mobile Number',
         
-        ));
+        ]);
       
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save');
         
       
 		
-        $this->addElements(array($address1,$address2,$address3,$address4,$isactive,$postal,$country,$state,$city,$map_coordinate,$submit));
-        $this->setElementDecorators(array('ViewHelper'));
+        $this->addElements([$address1,$address2,$address3,$address4,$isactive,$postal,$country,$state,$city,$map_coordinate,$submit]);
+        $this->setElementDecorators(['ViewHelper']);
     }
 }

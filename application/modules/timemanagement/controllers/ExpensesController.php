@@ -98,9 +98,9 @@ class Timemanagement_ExpensesController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 
 		if($refresh == 'refresh')
@@ -197,7 +197,7 @@ class Timemanagement_ExpensesController extends Zend_Controller_Action
 		//pre populate data
 		$clientsModel = new Timemanagement_Model_Clients();
 		$clientsData = $clientsModel->getActiveClientsData();
-		$msgarray = array();
+		$msgarray = [];
 		if(sizeof($clientsData) > 0){
 			foreach ($clientsData as $client){
 				$expensesForm->client_id->addMultiOption($client['id'],$client['client_name']);
@@ -282,7 +282,7 @@ class Timemanagement_ExpensesController extends Zend_Controller_Action
 				$projectID = $this->_request->getParam('project_id');
 				$imagepath = $this->_request->getParam('expense_image_value');			
 				$date = new Zend_Date();
-				$data = array( 'client_id'=>$clientID,
+				$data = [ 'client_id'=>$clientID,
 							   'emp_id'=>$loginUserId,
 							   'expense_amount'=>trim($expenseAmount),
 							   'expense_cat_id'=>trim($expenseCategoryID),
@@ -293,7 +293,7 @@ class Timemanagement_ExpensesController extends Zend_Controller_Action
 							   'receipt_file'=>trim($imagepath),
 				               'expense_status'=>'saved',
 							   'modified'=>gmdate("Y-m-d H:i:s")	
-				);
+				];
 				
 				$path = EXPENSES_UPLOAD_PATH;
 				
@@ -322,7 +322,7 @@ class Timemanagement_ExpensesController extends Zend_Controller_Action
 				else if($filecopy == 'error')
 					unset($data['receipt_file']);				
 				if($id!=''){
-					$where = array('id=?'=>$id);
+					$where = ['id=?'=>$id];
 				}
 				else
 				{
@@ -334,11 +334,11 @@ class Timemanagement_ExpensesController extends Zend_Controller_Action
 				$Id = $expensesModel->SaveorUpdateExpensesData($data, $where);
 				if($Id == 'update')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Expenses updated successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Expenses updated successfully."]);
 				}
 				else
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Expenses added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Expenses added successfully."]);
 				}
 					
 				$this->_redirect('timemanagement/expenses');
@@ -424,8 +424,8 @@ class Timemanagement_ExpensesController extends Zend_Controller_Action
 			$expenseCategoryModel = new Timemanagement_Model_Expensecategories();
 			$checkExpenses = $expenseCategoryModel->checkExpenses($id);
 			if($checkExpenses == 0){
-				$data = array('is_active'=>0,'modified'=>gmdate("Y-m-d H:i:s"));
-				$where = array('id=?'=>$id);
+				$data = ['is_active'=>0,'modified'=>gmdate("Y-m-d H:i:s")];
+				$where = ['id=?'=>$id];
 				$expenseCategoryData = $expenseCategoryModel->getExpenseCategoryDataById($id);
 				$Id = $expenseCategoryModel->SaveorUpdateExpenseCategoryData($data, $where);
 				if($Id == 'update')
@@ -453,7 +453,7 @@ class Timemanagement_ExpensesController extends Zend_Controller_Action
 	
     public function addpopupAction()
 	{
-		$msgarray = array();
+		$msgarray = [];
 		$emptyFlag = '';
 		Zend_Layout::getMvcInstance()->setLayoutPath(APPLICATION_PATH."/layouts/scripts/popup/");
 		$auth = Zend_Auth::getInstance();
@@ -472,12 +472,12 @@ class Timemanagement_ExpensesController extends Zend_Controller_Action
 				$category = $this->_request->getParam('category');
 				$date = gmdate("Y-m-d H:i:s");
  
-			   $data = array(
+			   $data = [
 							'category'  => $category,
 			                'created_by' => $loginUserId,
 			                'created' => gmdate("Y-m-d H:i:s"),
 			                'is_active' => 1,
-				);
+				];
 				
 				$where = '';
 		
@@ -518,7 +518,7 @@ class Timemanagement_ExpensesController extends Zend_Controller_Action
 		$id = $this->_getParam('id', NULL);
 		$expensesModel = new Timemanagement_Model_Expenses();
 		$data = $expensesModel->getExpensesDataById($id);
-		$this->_helper->json(array('file_name'=>$data[0]['receipt_file']));
+		$this->_helper->json(['file_name'=>$data[0]['receipt_file']]);
 		//print_r($data[0]['receipt_file']);die;
 	}
 	
@@ -550,7 +550,7 @@ class Timemanagement_ExpensesController extends Zend_Controller_Action
 
 		// Allowed image types
 		//$allowtype = array('gif', 'jpg', 'jpeg', 'png');
-		$allowtype = array('gif', 'jpg', 'jpeg', 'png','GIF','JPG','JPEG','PNG','pdf','PDF','doc','docx','xps');
+		$allowtype = ['gif', 'jpg', 'jpeg', 'png','GIF','JPG','JPEG','PNG','pdf','PDF','doc','docx','xps'];
 
 		/** Uploading the image **/
 
@@ -567,7 +567,7 @@ class Timemanagement_ExpensesController extends Zend_Controller_Action
 
 					if ($file['error'] == 0) {
 						//$newname = 'preview_'.date("His").'.'.$type[1];
-						$newname = 'expense_'.rand().time().'.'.$type[1];
+						$newname = 'expense_'.random_int(0, mt_getrandmax()).time().'.'.$type[1];
 						$thefile = $savefolder . "/" . $file['name'];
 						$newfilename = $savefolder . "/" . $newname;
 						$filename = $newname;
@@ -601,11 +601,11 @@ class Timemanagement_ExpensesController extends Zend_Controller_Action
 
 		}
 
-		$result = array(
+		$result = [
 				'result'=>$result_status,
 				'img'=>$rezultat,
 				'msg'=>$result_msg
-		);
+		];
 		return $result;
 	}
 
@@ -621,9 +621,9 @@ class Timemanagement_ExpensesController extends Zend_Controller_Action
 		$id = $this->getRequest()->getParam('id');
 		$expensesModel = new Timemanagement_Model_Expenses();
 		$data['expense_status'] = 'submitted';
-		$where = array('id=?'=>$id); 
+		$where = ['id=?'=>$id]; 
 		$Id = $expensesModel->SaveorUpdateExpensesData($data, $where);
-		$this->_helper->json(array("status"=>"success","msg"=>"Expense submitted successfully."));		
+		$this->_helper->json(["status"=>"success","msg"=>"Expense submitted successfully."]);		
 	}
 	
 	//Admin Approcal
@@ -685,9 +685,9 @@ class Timemanagement_ExpensesController extends Zend_Controller_Action
 		$dashboardcall = $this->_getParam('dashboardcall');
 		$type=$this->_getParam('type');
 		
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 
 		if($refresh == 'refresh')
@@ -733,11 +733,11 @@ class Timemanagement_ExpensesController extends Zend_Controller_Action
 		}	
 		$expensesModel = new Timemanagement_Model_Expenses();
 		
-		$where = array('id=?'=>$id); 
+		$where = ['id=?'=>$id]; 
 		$Id = $expensesModel->SaveorUpdateExpensesData($data, $where);
 		if($Id == 'update')
-			$this->_helper->json(array("status"=>"success","msg"=>"Expense updated successfully."));
+			$this->_helper->json(["status"=>"success","msg"=>"Expense updated successfully."]);
 		else
-			$this->_helper->json(array("status"=>"failed","msg"=>"Expense updatation failed."));
+			$this->_helper->json(["status"=>"failed","msg"=>"Expense updatation failed."]);
 	}
 }

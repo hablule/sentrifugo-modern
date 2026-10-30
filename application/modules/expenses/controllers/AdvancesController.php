@@ -64,7 +64,7 @@ class Expenses_AdvancesController extends Zend_Controller_Action
 		$advancesModel = new Expenses_Model_Advances();
 
 		$this->view->loginUserId=$loginUserId;
-		$msgarray = array();
+		$msgarray = [];
 	    $usersData = $advancesModel->getUserList($loginUserId );
 		if(sizeof($usersData) > 0)
 		{
@@ -117,7 +117,7 @@ class Expenses_AdvancesController extends Zend_Controller_Action
 				if(is_numeric($id) && $id>0)
 				{
 					$projectModel = new Timemanagement_Model_Projects();
-						$projectData = array();
+						$projectData = [];
 						foreach ($projectData as $project){
 							$advancesForm->project_id->addMultiOption($project_id['id'],utf8_encode($project_id['project_name']));
 						}
@@ -175,7 +175,7 @@ class Expenses_AdvancesController extends Zend_Controller_Action
 			{
 				$projectsmodel = new Timemanagement_Model_Projects();
 				$projects = $projectsmodel->getEmployeeProjects(intval($_POST['to_id']));
-				$project_array = array();
+				$project_array = [];
 				if(count($projects) > 0)
 				{
 					foreach($projects as $project)
@@ -183,7 +183,7 @@ class Expenses_AdvancesController extends Zend_Controller_Action
 						$project_array[$project['id']] = $project['project_name'];
 					}
 				}
-				$advancesForm->project_id->addMultiOptions(array(''=>'Select Project')+$project_array);
+				$advancesForm->project_id->addMultiOptions([''=>'Select Project']+$project_array);
 			}
 			if($advancesForm->isValid($this->_request->getPost())){
 			
@@ -199,7 +199,7 @@ class Expenses_AdvancesController extends Zend_Controller_Action
 				$description = $this->_request->getParam('description');
 
 				$date = new Zend_Date();
-				$data = array('to_id'=>$to_id,
+				$data = ['to_id'=>$to_id,
 							  'project_id'=>$project_id,
 				              'currency_id'=>$currency,
 							  'amount'=>$amount,
@@ -214,7 +214,7 @@ class Expenses_AdvancesController extends Zend_Controller_Action
 							 //'modifieddate' =>gmdate("Y-m-d H:i:s"),
 							 'isactive'=>1
 							
-				);
+				];
 
                     
 					$where = '';
@@ -231,26 +231,26 @@ class Expenses_AdvancesController extends Zend_Controller_Action
 				$advancesummary = new Expenses_Model_Advancesummary();
 				$isRecordExist = $advancesummary->getAdvanceDetailsById($to_id);
 				
-				$summerydata = array();
+				$summerydata = [];
 				if(count($isRecordExist)>0)
 				{
 					$totalsum = $isRecordExist[0]['total']+$amount;
 					$balence = $isRecordExist[0]['balance']+$amount;
-					$summerydata = array('total'=>$totalsum,
+					$summerydata = ['total'=>$totalsum,
 										'balance'=>$balence,
 								 'modifiedby'=> $loginUserId,
 								 'modifieddate' =>gmdate("Y-m-d H:i:s")
-							   );
-					$summeryWhere = array('employee_id=?'=>$to_id); 		   
+							   ];
+					$summeryWhere = ['employee_id=?'=>$to_id]; 		   
 				}else
 				{
 					$totalsum  = $amount;
-					$summerydata = array('total'=>$totalsum,
+					$summerydata = ['total'=>$totalsum,
 										'balance'=>$totalsum,
 								 'createdby'=> $loginUserId,
 								 'employee_id'=>$to_id,
 								 'createddate' =>gmdate("Y-m-d H:i:s")
-							   );
+							   ];
 					$summeryWhere  = "";
 				}	
 				$insertSummey = $advancesummary->SaveAdvanceData($summerydata, $summeryWhere);
@@ -259,12 +259,12 @@ class Expenses_AdvancesController extends Zend_Controller_Action
 		
 				if($insertedId == 'update')    
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"advance  updated successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"advance  updated successfully."]);
 				}
 				else
 				{
 
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Advance added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Advance added successfully."]);
 				}
 
 				$this->_redirect('expenses/advances');
@@ -303,7 +303,7 @@ class Expenses_AdvancesController extends Zend_Controller_Action
 			}
 		}
 		
-		$this->_helper->json(array('options'=>utf8_encode($opt)));
+		$this->_helper->json(['options'=>utf8_encode($opt)]);
 	}
    
 	public function myadvancesAction()
@@ -346,10 +346,10 @@ class Expenses_AdvancesController extends Zend_Controller_Action
 	{
         $auth = Zend_Auth::getInstance();
 		$loginUserId = $auth->getStorage()->read()->id;
-		$limit = $this->_getParam('limit')?$this->_getParam('limit'):4;
-		$offset = $this->_getParam('offset')?$this->_getParam('offset'):0;
+		$limit = $this->_getParam('limit') ?: 4;
+		$offset = $this->_getParam('offset') ?: 0;
 		
-		$searchstr = $this->_getParam('searchstr')?$this->_getParam('searchstr'):'';
+		$searchstr = $this->_getParam('searchstr') ?: '';
 		
 		$advancesModel = new Expenses_Model_Advances();
 		$dataAdvances = $advancesModel->getMyAdvances($limit,$offset,$loginUserId,$searchstr);
@@ -393,7 +393,7 @@ class Expenses_AdvancesController extends Zend_Controller_Action
 	}
 	public function addreturnpopupAction()
 	{
-		$msgarray = array();
+		$msgarray = [];
 		$emptyFlag = '';
 		Zend_Layout::getMvcInstance()->setLayoutPath(APPLICATION_PATH."/layouts/scripts/popup/");
 		$auth = Zend_Auth::getInstance();
@@ -523,7 +523,7 @@ class Expenses_AdvancesController extends Zend_Controller_Action
 				
 
 				$date = new Zend_Date();
-				$data = array('to_id'=>$to_id,
+				$data = ['to_id'=>$to_id,
 				              'currency_id'=>$currency,
 							  'amount'=>$amount,
 							  'application_amount'=>$application_amount,
@@ -536,7 +536,7 @@ class Expenses_AdvancesController extends Zend_Controller_Action
 							 'createddate' => gmdate("Y-m-d H:i:s"),
 							 'isactive'=>1
 							
-				);
+				];
 
 				$where = '';
 				$insertedId = '';
@@ -556,8 +556,8 @@ class Expenses_AdvancesController extends Zend_Controller_Action
 					
 					$returned = $advanceData[0]['returned'];
 					$bal = $advanceData[0]['balance'];
-					$adva_summary_array = array('returned'=>($returned+$application_amount),'balance'=>($bal-$application_amount),'modifiedby'=>$loginUserId,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-					$adva_summary_where = array('employee_id=?'=>$loginUserId,'isactive=?'=>1);
+					$adva_summary_array = ['returned'=>($returned+$application_amount),'balance'=>($bal-$application_amount),'modifiedby'=>$loginUserId,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+					$adva_summary_where = ['employee_id=?'=>$loginUserId,'isactive=?'=>1];
 					$adv_summary_id = $advancesummaryModel->SaveAdvanceData($adva_summary_array, $adva_summary_where);
 					
 					$this->view->eventact = 'returned';

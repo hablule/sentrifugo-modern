@@ -41,28 +41,28 @@ class Expenses_Form_Expenses extends Zend_Form
         $expense_name->setAttrib('maxLength', 50);
         $expense_name->addFilter(new Zend_Filter_StringTrim());
         $expense_name->setRequired(TRUE);
-        $expense_name->addValidator('NotEmpty', false, array('messages' => 'Please enter expense name.'));  
-		$expense_name->addValidator("regex",true,array(                           
+        $expense_name->addValidator('NotEmpty', false, ['messages' => 'Please enter expense name.']);  
+		$expense_name->addValidator("regex",true,[                           
                            'pattern'=>'/^(?![0-9]*$)[a-zA-Z0-9.,&\(\)\/\-_\' ?]+$/',
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter a valid expense name.'
-                           )
-        			));
+                           ]
+        			]);
 					
 		$expense_category = new Zend_Form_Element_Select('category_id');
 		$expense_category->setLabel("Category");
 		$expense_category->addMultiOption('','Select Category');
 		$expense_category->setRequired(true);
-		$expense_category->addValidator('NotEmpty', false, array('messages' => 'Please select category.'));
+		$expense_category->addValidator('NotEmpty', false, ['messages' => 'Please select category.']);
 		$expense_category->setRegisterInArrayValidator(false);
     		
 		$expense_date = new ZendX_JQuery_Form_Element_DatePicker('expense_date');
 		$expense_date->setLabel("Expense date");
-		$expense_date->setOptions(array('class' => 'brdr_none'));
+		$expense_date->setOptions(['class' => 'brdr_none']);
 		$expense_date->setRequired(true);
 		$expense_date->setAttrib('readonly', 'true');
 		$expense_date->setAttrib('onfocus', 'this.blur()');
-		$expense_date->addValidator('NotEmpty', false, array('messages' => 'Please select expense date.'));  
+		$expense_date->addValidator('NotEmpty', false, ['messages' => 'Please select expense date.']);  
 	
 		
 		$base_project = new Zend_Form_Element_Select('project_id');
@@ -75,27 +75,27 @@ class Expenses_Form_Expenses extends Zend_Form
 		$currency->setRegisterInArrayValidator(false);	
         $currency->setRequired(true);
         $currency->setAttrib('onchange', 'getCurrency()');
-        $currency->addValidator('NotEmpty', false, array('messages' => 'Please select currency.'));
+        $currency->addValidator('NotEmpty', false, ['messages' => 'Please select currency.']);
          
 		$currency->addValidator(new Zend_Validate_Db_RecordExists(
-										array('table' => 'main_currency',
+										['table' => 'main_currency',
                                         		'field' => 'id',
                                                 'exclude'=>'isactive = 1',
-										)));
+										]));
 		$currency->getValidator('Db_RecordExists')->setMessage('Selected currency is inactivated.');
 		
         $expense_amount = new Zend_Form_Element_Text('expense_amount');
         $expense_amount->setAttrib('maxLength', 180);
         $expense_amount->setLabel("Expense amount");
 		$expense_amount->setRequired(true);
-		$expense_amount->addValidator('NotEmpty', false, array('messages' => 'Please enter amount.'));
+		$expense_amount->addValidator('NotEmpty', false, ['messages' => 'Please enter amount.']);
         $expense_amount->addFilter(new Zend_Filter_StringTrim());
-		$expense_amount->addValidator("regex",true,array(
+		$expense_amount->addValidator("regex",true,[
 						  'pattern'=>'/^[0-9]*\.?[0-9]+$/', 
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter only numbers.'
-                           )
-        	));
+                           ]
+        	]);
 			
 			
 		
@@ -108,7 +108,7 @@ class Expenses_Form_Expenses extends Zend_Form
 		$is_reimbursable->setAttrib('onchange', 'getReimbursable()');
 		//$is_reimbursable->setAttrib('class', 'with-gap');
 		$is_reimbursable->setRegisterInArrayValidator(false);
-		$is_reimbursable->addValidator('NotEmpty', false, array('messages' => 'Please select  reimbursable.'));
+		$is_reimbursable->addValidator('NotEmpty', false, ['messages' => 'Please select  reimbursable.']);
 		$is_reimbursable->addMultiOption('1','Yes');
 		$is_reimbursable->addMultiOption('0','No');
 	
@@ -116,7 +116,7 @@ class Expenses_Form_Expenses extends Zend_Form
 		$expense_payment_methods->setLabel("Payment Mode");
 		$expense_payment_methods->addMultiOption('','Select Payment Mode');
 		$expense_payment_methods->setRequired(true);
-		$expense_payment_methods->addValidator('NotEmpty', false, array('messages' => 'Please select payment mode.'));
+		$expense_payment_methods->addValidator('NotEmpty', false, ['messages' => 'Please select payment mode.']);
 		$expense_payment_methods->setRegisterInArrayValidator(false);
 		
 		$expense_trips = new Zend_Form_Element_Select('trip_id');
@@ -160,11 +160,11 @@ class Expenses_Form_Expenses extends Zend_Form
 		
 
 
-		$this->addElements(array($id,$expense_name,$expense_date,$expense_amount,$base_project,$currency,$expense_category,$is_reimbursable,$expense_payment_methods,$expense_trips,$payment_ref_no,$is_from_advance,$description,$submit));
-        $this->setElementDecorators(array('ViewHelper')); 
-		 $this->setElementDecorators(array(
+		$this->addElements([$id,$expense_name,$expense_date,$expense_amount,$base_project,$currency,$expense_category,$is_reimbursable,$expense_payment_methods,$expense_trips,$payment_ref_no,$is_from_advance,$description,$submit]);
+        $this->setElementDecorators(['ViewHelper']); 
+		 $this->setElementDecorators([
                     'UiWidgetElement',
-        ),array('expense_date')); 
+        ],['expense_date']); 
          
 	}
 	

@@ -36,24 +36,24 @@ class Default_Form_empscreeningreport extends Zend_Form
 		
 	    $empname = new Zend_Form_Element_Text('empname');
 		$empname->setLabel('Employee / Candidate Name');
-		$empname->addValidator("regex",true,array(                           
+		$empname->addValidator("regex",true,[                           
                                    'pattern'=>'/^([a-zA-Z.\-]+ ?)+$/',
-                                   'messages'=>array(
+                                   'messages'=>[
                                        'regexNotMatch'=>'Please enter only alphabets.'
-                                   )
-                        ));
+                                   ]
+                        ]);
 		$empname->setAttrib('onblur', 'clearEmpScreeningAutoCompleteNames(this)');	
        
         		
 		$agencyname = new Zend_Form_Element_Text('agencyname');
 		$agencyname->setLabel('Agency Name');		
         $agencyname->setAttrib('class', 'selectoption');      
-		$agencyname->addValidator("regex",true,array(                           
+		$agencyname->addValidator("regex",true,[                           
                                    'pattern'=>'/^([a-zA-Z.\-]+ ?)+$/',
-                                   'messages'=>array(
+                                   'messages'=>[
                                        'regexNotMatch'=>'Please enter only alphabets.'
-                                   )
-                        ));
+                                   ]
+                        ]);
 		$agencyname->setAttrib('onblur', 'clearEmpScreeningAutoCompleteNames(this)');	
 		
 		$screeningtype = new Zend_Form_Element_Multiselect('screeningtype');
@@ -77,10 +77,10 @@ class Default_Form_empscreeningreport extends Zend_Form
 		$month = new Zend_Form_Element_Select('month');
         $month->setLabel('Select Month');					    
 	    $month->addMultiOption('','Select Month');
-		$monthnamesarray = array(
+		$monthnamesarray = [
 								'1'=>'January','2'=>'February','3'=>'March','4'=>'April','5'=>'May','6'=>'June',
 								'7'=>'July','8'=>'August','9'=>'September','10'=>'October','11'=>'November',
-								'12'=>'December');
+								'12'=>'December'];
 		for($i=1;$i<=sizeof($monthnamesarray);$i++)
 		{
 			$month->addMultiOption($i,$monthnamesarray[$i]);
@@ -97,8 +97,8 @@ class Default_Form_empscreeningreport extends Zend_Form
 		}
 		
 		
-		$this->addElements(array($specimen,$empname,$agencyname,$screeningtype,$process_status,$month,$year));
-        $this->setElementDecorators(array('ViewHelper')); 
+		$this->addElements([$specimen,$empname,$agencyname,$screeningtype,$process_status,$month,$year]);
+        $this->setElementDecorators(['ViewHelper']); 
 	}
 }
 

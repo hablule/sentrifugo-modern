@@ -46,7 +46,7 @@ class Default_EducationlevelcodeController extends Zend_Controller_Action
 		$objname = $this->_getParam('objname');
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall',null);
-		$data = array();$searchQuery = '';	$searchArray = array();	$tablecontent='';
+		$data = [];$searchQuery = '';	$searchArray = [];	$tablecontent='';
 		
 		if($refresh == 'refresh')
 		{
@@ -56,7 +56,7 @@ class Default_EducationlevelcodeController extends Zend_Controller_Action
 				$perPage = PERPAGE;
 										
 			$sort = 'DESC';$by = 'modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	
-			$searchArray = array();
+			$searchArray = [];
 		}
 		else 
 		{
@@ -66,12 +66,12 @@ class Default_EducationlevelcodeController extends Zend_Controller_Action
 				$perPage = $this->_getParam('per_page',DASHBOARD_PERPAGE);
 			else 
 				$perPage = $this->_getParam('per_page',PERPAGE);
-			
+
 			$pageNo = $this->_getParam('page', 1);
 			/** search from grid - START **/
 			$searchData = $this->_getParam('searchData');	
 			$searchData = rtrim($searchData,',');	
-			
+
 			/** search from grid - END **/
 		}
 		$dataTmp = $educationlevelcodemodel->getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall);	
@@ -178,13 +178,13 @@ class Default_EducationlevelcodeController extends Zend_Controller_Action
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = ''; 
-				   $data = array( 'educationlevelcode'=>trim($educationlevelcode),
+				   $data = [ 'educationlevelcode'=>trim($educationlevelcode),
 				      			 'description'=>trim($description),
 								  'modifiedby'=>$loginUserId,
 								  'modifieddate'=>gmdate("Y-m-d H:i:s")
-						);
+						];
 					if($id!=''){
-						$where = array('id=?'=>$id);  
+						$where = ['id=?'=>$id];  
 						$actionflag = 2;
 					}
 					else
@@ -199,12 +199,12 @@ class Default_EducationlevelcodeController extends Zend_Controller_Action
 					if($Id == 'update')
 					{
 					   $tableid = $id;
-					   $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Education level updated successfully."));
+					   $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Education level updated successfully."]);
 					}   
 					else
 					{
                        $tableid = $Id; 	
-						$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Education level added successfully."));					   
+						$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Education level added successfully."]);					   
 					}   
 					$menuID = EDUCATIONLEVELCODE;
 					$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
@@ -239,8 +239,8 @@ class Default_EducationlevelcodeController extends Zend_Controller_Action
 		    if($id)
 			{
 			$educationlevelcodemodel = new Default_Model_Educationlevelcode();
-			  $data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-			  $where = array('id=?'=>$id);
+			  $data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+			  $where = ['id=?'=>$id];
                           $elevel_data = $educationlevelcodemodel->getsingleEducationLevelCodeData($id);
 			  $Id = $educationlevelcodemodel->SaveorUpdateEducationlevelData($data, $where);
 			    if($Id == 'update')
@@ -266,11 +266,11 @@ class Default_EducationlevelcodeController extends Zend_Controller_Action
 			{
 				if(	$messages['msgtype'] == 'error')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
 				}
 				if(	$messages['msgtype'] == 'success')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
 				}
 			}
 			$this->_helper->json($messages);

@@ -46,12 +46,12 @@ class Default_Form_Employeereport extends Zend_Form
 		
         $modeofentry = new Zend_Form_Element_Select("modeofentry");                
         $modeofentry->setLabel("Mode of Employment")
-                            ->addMultiOptions(array('' => 'Select Mode Of Employment',
+                            ->addMultiOptions(['' => 'Select Mode Of Employment',
                                                     'Direct' => 'Direct',
                                                     'Interview' => 'Interview',                                                    
                                                     'Reference' => 'Reference',
                                                     'Other' => 'Other',
-                                                    ));        
+                                                    ]);        
         // Form elelment name 'emailaddress' has to be DB table field name
         $email_id = new Zend_Form_Element_Text("emailaddress");
         $email_id->setLabel("Email ID");
@@ -75,15 +75,15 @@ class Default_Form_Employeereport extends Zend_Form
         
         $position_id = new Zend_Form_Element_Select("position_id");
         $position_id->setLabel("Position");        
-        $position_id->addMultiOptions(array(''=>'Select Position'));
+        $position_id->addMultiOptions([''=>'Select Position']);
         
         $emp_type = new Zend_Form_Element_Select("emp_status_id");
         $emp_type->setLabel("Employment Status");        
-        $emp_type->addMultiOptions(array(''=>'Select Employment Status'));
+        $emp_type->addMultiOptions([''=>'Select Employment Status']);
         
         $emprole = new Zend_Form_Element_Select("emprole");
         $emprole->setLabel("Role");        
-        $emprole->addMultiOptions(array(''=>'Select Role'));
+        $emprole->addMultiOptions([''=>'Select Role']);
         
         // $department_id = new Zend_Form_Element_Multiselect("department_id");
         // $department_id->setLabel("Department");        
@@ -94,21 +94,21 @@ class Default_Form_Employeereport extends Zend_Form
 
         $isactive = new Zend_Form_Element_Select("isactive");                
         $isactive->setLabel("User Status")
-                            ->addMultiOptions(array('' => 'Select User Status',
+                            ->addMultiOptions(['' => 'Select User Status',
                                                     '0' => 'Inactive',
                                                     '1' => 'Active',                                                    
                                                     '2' => 'Resigned',
                                                     '3' => 'Left',
                             						'4' => 'Suspended',
-                                                    ));  
+                                                    ]);  
         
         
         $submit = new Zend_Form_Element_Button('submit');        
         $submit->setAttrib('id', 'idsubmitbutton');
         $submit->setLabel('Report'); 
         
-        $this->addElements(array($reporting_manager,$submit,$joined_date,$modeofentry,$email_id, $emp_name,$jobtitle,$position_id,
-                                 $emp_type,$emprole,$employeeid,$userfullname,$isactive));
-        $this->setElementDecorators(array('ViewHelper')); 
+        $this->addElements([$reporting_manager,$submit,$joined_date,$modeofentry,$email_id, $emp_name,$jobtitle,$position_id,
+                                 $emp_type,$emprole,$employeeid,$userfullname,$isactive]);
+        $this->setElementDecorators(['ViewHelper']); 
     }
 }

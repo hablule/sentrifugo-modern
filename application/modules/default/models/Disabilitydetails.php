@@ -35,10 +35,10 @@ class Default_Model_Disabilitydetails extends Zend_Db_Table_Abstract
 
 		$empskillsData = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('ed' => 'main_empdisability'),array('id'=>'ed.empdisability_id','ed.*','onsetdate'=>'DATE_FORMAT(ed.onsetdate,"'.DATEFORMAT_MYSQL.'")','isactive'=>'if(ed.isactive="Y","Yes","No")'))
-		->joinLeft(array('md'=>'main_disability'),'ed.disability_id=md.disability_id',array('disabilityname'=>'md.name'))
-		->joinLeft(array('mdc'=>'main_disabilitycategory'),'md.disabilitycategory_id=mdc.disabilitycategory_id',array('categoryname'=>'mdc.name'))
-		->joinLeft(array('mdt'=>'main_disabilitytype'),'md.disabilitytype_id=mdt.disabilitytype_id',array('typename'=>'mdt.name'))
+		->from(['ed' => 'main_empdisability'],['id'=>'ed.empdisability_id','ed.*','onsetdate'=>'DATE_FORMAT(ed.onsetdate,"'.DATEFORMAT_MYSQL.'")','isactive'=>'if(ed.isactive="Y","Yes","No")'])
+		->joinLeft(['md'=>'main_disability'],'ed.disability_id=md.disability_id',['disabilityname'=>'md.name'])
+		->joinLeft(['mdc'=>'main_disabilitycategory'],'md.disabilitycategory_id=mdc.disabilitycategory_id',['categoryname'=>'mdc.name'])
+		->joinLeft(['mdt'=>'main_disabilitytype'],'md.disabilitytype_id=mdt.disabilitytype_id',['typename'=>'mdt.name'])
 		->where($where)
 		->order("$by $sort")
 		->limitPage($pageNo, $perPage);
@@ -64,7 +64,7 @@ class Default_Model_Disabilitydetails extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$exPadam4='')
 	{
 		$searchQuery = '';$tablecontent = '';
-		$searchArray = array();$data = array(); $dataTmp = array();
+		$searchArray = [];$data = []; $dataTmp = [];
 		/** search from grid - START **/
 		if($searchData != '' && $searchData!='undefined')
 		{
@@ -103,7 +103,7 @@ class Default_Model_Disabilitydetails extends Zend_Db_Table_Abstract
 
 		$objName = 'disabilitydetails';
 
-		$tableFields = array('action'=>'Action',
+		$tableFields = ['action'=>'Action',
 		
 		'disabilityname'=>'Disability',
 		'categoryname'=>'Category',
@@ -113,16 +113,16 @@ class Default_Model_Disabilitydetails extends Zend_Db_Table_Abstract
 		
 
 		
-	);
+	];
 			
 		$tablecontent = $this->getempDisabilitydetails($sort,$by,$pageNo,$perPage,$searchQuery,$a);
-		$dataTmp = array( 'sort' => $sort,
+		$dataTmp = [ 'sort' => $sort,
 		'by' => $by,
 		'pageNo' => $pageNo,
 		'perPage' => $perPage,
 		'tablecontent' => $tablecontent,
 		'objectname' => $objName,
-		'extra' => array(),
+		'extra' => [],
 		'add' => 'add',
 		'tableheader' => $tableFields,
 		'jsGridFnName' => 'getEmployeeAjaxgridData',
@@ -136,14 +136,14 @@ class Default_Model_Disabilitydetails extends Zend_Db_Table_Abstract
 		'searchArray' => $searchArray,
 		'call' => $call,
 		'dashboardcall' => $dashboardcall,
-						'search_filters' => array(
-							'isactive' => array(
+						'search_filters' => [
+							'isactive' => [
 								'type' => 'select',
-								'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No'),
-							),	
-						'onsetday'=>array('type'=>'datepicker')
-		)
-		);
+								'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No'],
+							],	
+						'onsetday'=>['type'=>'datepicker']
+		]
+		];
 		return $dataTmp;
 	}
 	public function getdisabilitydetails($id)
@@ -158,10 +158,10 @@ class Default_Model_Disabilitydetails extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('ed' => 'main_empdisability'),array('id'=>'ed.empdisability_id','ed.*','onsetdate'=>'DATE_FORMAT(ed.onsetdate,"'.DATEFORMAT_MYSQL.'")','isactive'=>'if(ed.isactive="Y","Yes","No")'))
-		->joinLeft(array('md'=>'main_disability'),'ed.disability_id=md.disability_id',array('disabilityname'=>'md.name'))
-		->joinLeft(array('mdc'=>'main_disabilitycategory'),'md.disabilitycategory_id=mdc.disabilitycategory_id',array('categoryname'=>'mdc.name'))
-		->joinLeft(array('mdt'=>'main_disabilitytype'),'md.disabilitytype_id=mdt.disabilitytype_id',array('typename'=>'mdt.name'))
+		->from(['ed' => 'main_empdisability'],['id'=>'ed.empdisability_id','ed.*','onsetdate'=>'DATE_FORMAT(ed.onsetdate,"'.DATEFORMAT_MYSQL.'")','isactive'=>'if(ed.isactive="Y","Yes","No")'])
+		->joinLeft(['md'=>'main_disability'],'ed.disability_id=md.disability_id',['disabilityname'=>'md.name'])
+		->joinLeft(['mdc'=>'main_disabilitycategory'],'md.disabilitycategory_id=mdc.disabilitycategory_id',['categoryname'=>'mdc.name'])
+		->joinLeft(['mdt'=>'main_disabilitytype'],'md.disabilitytype_id=mdt.disabilitytype_id',['typename'=>'mdt.name'])
 		->where('ed.empdisability_id='.$id);
 		return $this->fetchAll($select)->toArray();
 	}

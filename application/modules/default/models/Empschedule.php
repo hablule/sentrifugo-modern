@@ -16,18 +16,18 @@ class Default_Model_Empschedule extends Zend_Db_Table_Abstract
     {
         $emptbl = $this->select()
                        ->setIntegrityCheck(false)
-                       ->from(array('emp'=>$this->_name),array('empschid'=>'emp.empschedule_id'))
-                       ->join(array('sch'=>'main_schedule'),'emp.schedule_id=sch.schedule_id','sch.*')
+                       ->from(['emp'=>$this->_name],['empschid'=>'emp.empschedule_id'])
+                       ->join(['sch'=>'main_schedule'],'emp.schedule_id=sch.schedule_id','sch.*')
                        ->where('emp.empschedule_id = '.$id);
                       
         return $this->fetchRow($emptbl)->toArray();
     }
     public function getSchedulebyemp($userid)
     {
-        $config = array(
+        $config = [
             'name' => 'main_empschedule',
             'primary' => 'empschedule_id'
-        );
+        ];
         $db = new Zend_Db_Table($config);
         $tblweeks = $db->select()
             ->from($config['name'])
@@ -38,10 +38,10 @@ class Default_Model_Empschedule extends Zend_Db_Table_Abstract
     }
     public function getSchedule()
     {
-        $config = array(
+        $config = [
             'name' => 'main_schedule',
             'primary' => 'schedule_id'
-        );
+        ];
         $db = new Zend_Db_Table($config);
         $tblweeks = $db->select()
             ->setIntegrityCheck(false)
@@ -51,14 +51,14 @@ class Default_Model_Empschedule extends Zend_Db_Table_Abstract
 
     public function getSchedulebyid($id)
     {
-        $config = array(
+        $config = [
             'name' => 'main_schedule',
             'primary' => 'schedule_id'
-        );
+        ];
         $db = new Zend_Db_Table($config);
         $tblweeks = $db->select()
             ->setIntegrityCheck(false)
-            ->from(array('s' => 'main_schedule'), array('id' => 's.schedule_id', 'schedule_name' => 's.schedule_name'))
+            ->from(['s' => 'main_schedule'], ['id' => 's.schedule_id', 'schedule_name' => 's.schedule_name'])
             ->where('schedule_id=' . $id);
         return $db->fetchAll($tblweeks)->toArray();
     }
@@ -66,8 +66,8 @@ class Default_Model_Empschedule extends Zend_Db_Table_Abstract
     {
         $query = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('emp_sch' => 'main_empschedule'), '')
-            ->joinInner(array('sch' => 'main_schedule'), 'emp_sch.schedule_id = sch.schedule_id', array('schedule_name' => 'sch.name', 'sch_id' => 'sch.schedule_id'))
+            ->from(['emp_sch' => 'main_empschedule'], '')
+            ->joinInner(['sch' => 'main_schedule'], 'emp_sch.schedule_id = sch.schedule_id', ['schedule_name' => 'sch.name', 'sch_id' => 'sch.schedule_id'])
             ->where('emp_sch.emp_id=' . $emp);
         //die($query);
         $data = $this->fetchAll($query)->toArray();
@@ -77,7 +77,7 @@ class Default_Model_Empschedule extends Zend_Db_Table_Abstract
     {
         $query = $this->select()
                         ->setIntegrityCheck(false)
-                        ->from(array('emp_sch'=>'main_empschedule'))
+                        ->from(['emp_sch'=>'main_empschedule'])
                         ->where('schedule_id = '.$id);
         return $this->fetchAll($query)->toArray();
     }
@@ -105,9 +105,9 @@ class Default_Model_Empschedule extends Zend_Db_Table_Abstract
 
         $bank = $this->select()
         ->setIntegrityCheck(false)
-        ->from(array('a' => 'main_schedule'), array('sch_id'=>'a.schedule_id','name' => 'a.name', 'startdate' => 'DATE_FORMAT(l.start_date,"'.DATEFORMAT_MYSQL.'")', 'enddate' => 'DATE_FORMAT(l.end_date,"'.DATEFORMAT_MYSQL.'")'))
-        ->joinInner(array('l' => 'main_empschedule'), "l.schedule_id = a.schedule_id ", array('id' => 'l.empschedule_id','isactive'=>'if(l.isactive="Y","Yes","No")'))
-        ->joinInner(array('u'=>'main_employees'),'l.emp_id = u.id',array('eid'=>'u.id'))
+        ->from(['a' => 'main_schedule'], ['sch_id'=>'a.schedule_id','name' => 'a.name', 'startdate' => 'DATE_FORMAT(l.start_date,"'.DATEFORMAT_MYSQL.'")', 'enddate' => 'DATE_FORMAT(l.end_date,"'.DATEFORMAT_MYSQL.'")'])
+        ->joinInner(['l' => 'main_empschedule'], "l.schedule_id = a.schedule_id ", ['id' => 'l.empschedule_id','isactive'=>'if(l.isactive="Y","Yes","No")'])
+        ->joinInner(['u'=>'main_employees'],'l.emp_id = u.id',['eid'=>'u.id'])
         ->order("$by $sort")
         ->where($where)
         ->limitPage($pageNo, $perPage);
@@ -119,7 +119,7 @@ class Default_Model_Empschedule extends Zend_Db_Table_Abstract
     {
         $select = $this->select()
                         ->setIntegrityCheck(false)
-                        ->from(array('m'=>'main_empschedule'), 'm.schedule_id')
+                        ->from(['m'=>'main_empschedule'], 'm.schedule_id')
                         ->where('m.schedule_id in('.$ids.')');
         return $this->fetchAll($select)->toArray();
     }
@@ -128,8 +128,8 @@ class Default_Model_Empschedule extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $exParam1 = '', $exParam2 = '', $exParam3 = '', $exParam4 = '')
     {
 		$searchQuery = '';
-		$searchArray = array();
-		$data = array();
+		$searchArray = [];
+		$data = [];
 
 		if ($searchData != '' && $searchData != 'undefined') {
 			$searchValues = json_decode($searchData);
@@ -157,16 +157,16 @@ class Default_Model_Empschedule extends Zend_Db_Table_Abstract
 			$searchQuery = rtrim($searchQuery, " AND");
 		}
         $objName = 'empschedule';
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'name' => 'Schedule Name',
             'startdate' => 'Start Date',
             'enddate' => 'End Date',
             'isactive' => 'Active'
-        );
+        ];
 
         $tablecontent = $this->getData($sort, $by, $pageNo, $perPage, $searchQuery, $exParam1);
-        $dataTmp = array(
+        $dataTmp = [
             'userid' => $exParam1,
 			'sort' => $sort,
 			'by' => $by,
@@ -174,7 +174,7 @@ class Default_Model_Empschedule extends Zend_Db_Table_Abstract
 			'perPage' => $perPage,
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getEmployeeAjaxgridData',
 			'jsFillFnName' => '',
@@ -186,15 +186,15 @@ class Default_Model_Empschedule extends Zend_Db_Table_Abstract
 			'call' => $call,
 			'userAction' => $exParam3,	
 			'context' => $exParam2,
-            'search_filters' => array(
-                'isactive' => array(
+            'search_filters' => [
+                'isactive' => [
 					'type' => 'select',
-					'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No'),
-				),	
-            'startdate' => array('type' => 'datepicker'),
-		    'enddate' => array('type' => 'datepicker')
-            )
-        );
+					'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No'],
+				],	
+            'startdate' => ['type' => 'datepicker'],
+		    'enddate' => ['type' => 'datepicker']
+            ]
+        ];
         return $dataTmp;
     }
 

@@ -45,9 +45,9 @@ class Assets_AssetsController extends Zend_Controller_Action
 			$refresh = $this->_getParam('refresh');
 			
 			$dashboardcall = $this->_getParam('dashboardcall',null);
-				$data = array();		
+				$data = [];		
 				$searchQuery = '';		
-				$searchArray = array();		
+				$searchArray = [];		
 				$tablecontent='';		
 			
 			if($refresh == 'refresh')
@@ -58,7 +58,7 @@ class Assets_AssetsController extends Zend_Controller_Action
 					$perPage = PERPAGE;
 
 					$sort = 'DESC';$by = 'modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';
-					$searchArray = array();
+					$searchArray = [];
 				
 				}
 			else
@@ -100,11 +100,11 @@ Zend_Debug::dump($th->getMessage());		}
 			if($callval == 'ajaxcall')
 			$this->_helper->layout->disableLayout();
 
-		$popConfigPermission = array();
+		$popConfigPermission = [];
 	    $assetsForm = new Assets_Form_Assets();
 		$assetsModel = new Assets_Model_Assets();
 	
-		$msgarray = array();
+		$msgarray = [];
 		array_push($popConfigPermission,'assetcategory');
 		array_push($popConfigPermission,'assettype');
 
@@ -175,7 +175,7 @@ Zend_Debug::dump($th->getMessage());		}
 					$uom_id	= $this->_request->getParam('uom_id');
 					$description = $this->_request->getParam('description');
 				$date = gmdate("Y-m-d H:i:s");		
-				$data = array( 
+				$data = [ 
 								'name' => $name,
 								'code'=> $code,
 								'assetcategory_id'=>$assetcategory_id,
@@ -185,13 +185,13 @@ Zend_Debug::dump($th->getMessage());		}
 								'description'=>$description,
 								'isactive'=>utlis::getcheckboxvalue($this->_request->getParam('isactive')),
 
-							);	
+							];	
 				//ToCheckThe EncrpName
 				if($id!='')
 					{
 						$data['modifiedby'] = $loginUserId;
 						$data['modifieddate'] = $date;
-						$where = array('asset_id=?'=>$id);
+						$where = ['asset_id=?'=>$id];
 					}
 				else
 					{
@@ -206,7 +206,7 @@ Zend_Debug::dump($th->getMessage());		}
 	
 				if($Id == 'update')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Asset updated successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Asset updated successfully."]);
 					//insert asset history
 					
 				}
@@ -214,7 +214,7 @@ Zend_Debug::dump($th->getMessage());		}
 				{	
 					
 					
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Asset added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Asset added successfully."]);
 					
 				}
 					
@@ -265,7 +265,7 @@ Zend_Debug::dump($th->getMessage());		}
         $form->setAction(BASE_URL.'assets/assets/addpopup/id/'.$id);
         if ($this->getRequest()->isPost()) {
             if ($form->isValid($this->getRequest()->getPost())) {
-                $data = array(
+                $data = [
                     'name'=>$this->_request->getParam('name'),
                     'code'=>$this->_request->getParam('code'),
                     'description'=>$this->_request->getParam('description'),
@@ -276,7 +276,7 @@ Zend_Debug::dump($th->getMessage());		}
 					'isactive'=>utlis::getcheckboxvalue($this->_request->getParam('isactive')),
 
                     'createddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
                 $Id= $dmtmodel->saveOrUpdateAssetsData($data,'');
                 $tableid = $Id;
                 $actionflag = 1;
@@ -330,7 +330,7 @@ Zend_Debug::dump($th->getMessage());		}
         $form->setAction(BASE_URL.'assets/assets/addpopup/id/'.$id);
         if ($this->getRequest()->isPost()) {
             if ($form->isValid($this->getRequest()->getPost())) {
-                $data = array(
+                $data = [
                     'name'=>$this->_request->getParam('name'),
                     'code'=>$this->_request->getParam('code'),
                     'description'=>$this->_request->getParam('description'),
@@ -341,7 +341,7 @@ Zend_Debug::dump($th->getMessage());		}
 					'isactive'=>utlis::getcheckboxvalue($this->_request->getParam('isactive')),
 
                     'createddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
                 $Id= $dmtmodel->saveOrUpdateAssetsData($data,'');
                 $tableid = $Id;
                 $actionflag = 1;

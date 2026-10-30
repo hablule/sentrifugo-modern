@@ -45,9 +45,9 @@ class Default_TimeformatController extends Zend_Controller_Action
 		$view = Zend_Layout::getMvcInstance()->getView();		
 		$objname = $this->_getParam('objname');
 		$refresh = $this->_getParam('refresh');
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 		
 		if($refresh == 'refresh')
@@ -77,23 +77,23 @@ class Default_TimeformatController extends Zend_Controller_Action
 				
 		$objName = 'timeformat';
 		
-		$tableFields = array('action'=>'Action','timeformat' => 'Time Format','description' => 'Description');
+		$tableFields = ['action'=>'Action','timeformat' => 'Time Format','description' => 'Description'];
 		
 		$tablecontent = $timeformat->getTimeFormatData($sort, $by, $pageNo, $perPage,$searchQuery);     
 		
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
 			'searchArray' => $searchArray,'call'=>$call
-		);			
+		];			
 		array_push($data,$dataTmp);
 		$this->view->dataArray = $data;
 		$this->view->call = $call ;
@@ -191,13 +191,13 @@ class Default_TimeformatController extends Zend_Controller_Action
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = '';
-				   $data = array('timeformat'=>trim($timeformat),
+				   $data = ['timeformat'=>trim($timeformat),
 						  'description'=>trim($description),
 						  'modifiedby'=>$loginUserId,
 						  'modifieddate'=>$date->get('yyyy-MM-dd HH:mm:ss')
-						);
+						];
 					if($id!=''){
-						$where = array('id=?'=>$id);  
+						$where = ['id=?'=>$id];  
 						$actionflag = 2;
 					}
 					else
@@ -212,12 +212,12 @@ class Default_TimeformatController extends Zend_Controller_Action
 					if($Id == 'update')
 					{
 					   $tableid = $id;
-					    $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Time format updated successfully."));
+					    $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Time format updated successfully."]);
 					}   
 					else
 					{
                        $tableid = $Id; 					
-					    $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Time format added successfully."));
+					    $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Time format added successfully."]);
 					}   
 					$menuID = TIMEFORMAT;
 					$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
@@ -256,13 +256,13 @@ class Default_TimeformatController extends Zend_Controller_Action
 		
 		if($this->getRequest()->getPost()){
 		    if($timeformatform->isValid($this->_request->getPost())){
-				   $data = array('timeformat'=>trim($timeformat),
+				   $data = ['timeformat'=>trim($timeformat),
 						  'description'=>trim($description),
 						  'modifiedby'=>$loginUserId,
 						  'modifieddate'=>Zend_Registry::get('currentdate')
-						);
+						];
 					if($id!=''){
-						$where = array('id=?'=>$id);  
+						$where = ['id=?'=>$id];  
 						$messages['message']='Time format updated successfully.';
 						$actionflag = 2;
 					}
@@ -309,8 +309,8 @@ class Default_TimeformatController extends Zend_Controller_Action
 		    if($id)
 			{
 			 $timeformatmodel = new Default_Model_Timeformat();
-			  $data = array('isactive'=>0);
-			  $where = array('id=?'=>$id);
+			  $data = ['isactive'=>0];
+			  $where = ['id=?'=>$id];
 			  $Id = $timeformatmodel->SaveorUpdateTimeFormatData($data, $where);
 			    if($Id == 'update')
 				{

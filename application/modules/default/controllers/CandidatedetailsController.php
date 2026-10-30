@@ -30,7 +30,7 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
         {
             if($this->getRequest()->isXmlHttpRequest())
             {
-                echo Zend_Json::encode( array('login' => 'failed') );
+                echo Zend_Json::encode( ['login' => 'failed'] );
                 die();	
             }
             else
@@ -62,7 +62,7 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
 			$form->req_id->addMultiOption($value['id'],$value['req_code']);
 		}
 		   
-		$inter_options = array();
+		$inter_options = [];
         $call = $this->_getParam('call');
         if($call == 'ajaxcall')
             $this->_helper->layout->disableLayout();
@@ -70,9 +70,9 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
         $view = Zend_Layout::getMvcInstance()->getView();		
         $objname = $this->_getParam('objname');
         $refresh = $this->_getParam('refresh');
-        $data = array();
+        $data = [];
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         $tablecontent='';
         $dashboardcall = $this->_getParam('dashboardcall');
 
@@ -83,7 +83,7 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
 			else	
 				$perPage = PERPAGE;
             $sort = 'DESC';$by = 'c.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';
-            $searchArray = array();
+            $searchArray = [];
         }
         else 
         {
@@ -100,7 +100,7 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
         }
         $dataTmp = $cand_model->getGrid($sort, $by, $perPage, $pageNo, $searchData, $call,$dashboardcall,'','','','');
 		$result=$dataTmp['tablecontent']->query()->fetchAll();
-		$isdifferent = array();
+		$isdifferent = [];
 		foreach ($result as $key => $value) {
 			$isdifferent[$value['id']] = $value['isdifferent'];
 		}
@@ -204,9 +204,9 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
         $country_model = new Default_Model_Countries();
         $role_model = new Default_Model_Roles();
         $auth = Zend_Auth::getInstance();
-        $data = array();$jobtitle = '';
+        $data = [];$jobtitle = '';
      //   $req_data['jobtitlename'] = '';
-        $popConfigPermission = array();
+        $popConfigPermission = [];
      	if($auth->hasIdentity())
         {
             $loginUserId = $auth->getStorage()->read()->id;
@@ -244,7 +244,7 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
 						}
 						else 
 						{
-							$req_data=array();
+							$req_data=[];
 						}
 						
 						$form->source->setValue($candidateData['source']);
@@ -262,7 +262,7 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
 						{
 							$vendorsmodel= new Default_Model_Vendors();
 							$vendorsdataArr=$vendorsmodel->getVendorsList();
-							$req_options = array();
+							$req_options = [];
 							foreach($vendorsdataArr as $vendorsdata){
 								$form->vendors->addMultiOption($vendorsdata['id'],utf8_encode($vendorsdata['name']));
 							}
@@ -270,8 +270,8 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
 							$form->vendors->setValue($candidateData['source_val']);
 						}
 						// To show it on edit view
-						$data['cand_resume'] = (isset($candidateData['cand_resume']))?$candidateData['cand_resume']:NULL;
-						$data['rec_id'] = (isset($id))?$id:NULL;
+						$data['cand_resume'] = $candidateData['cand_resume'] ?? NULL;
+						$data['rec_id'] = $id ?? NULL;
 						$data['selected_option'] = $this->_getParam('selected_option');
 						if(count($req_data)>0)
 						{
@@ -287,11 +287,11 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
 							{
 								$statsflag = 'true';
 								$reqforcv_data = $req_model->getRequisitionsForCV("'Approved','In process'");
-								$req_options = array();
+								$req_options = [];
 								foreach($reqforcv_data as $req){
 									$req_options[$req['id']] = $req['requisition_code'].' - '.$req['jobtitlename'];
 								}
-								$form->requisition_id->addMultiOptions(array(''=>'Select Requisition ID')+$req_options);
+								$form->requisition_id->addMultiOptions([''=>'Select Requisition ID']+$req_options);
 								
 								$form->cand_status->addMultiOption('','Select Status');		
 								$form->cand_status->addMultiOption('Not Scheduled','Not Scheduled');						
@@ -404,8 +404,8 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
     	$countriesModel = new Default_Model_Countries();
     	$controllername = 'candidatedetails';
     	$auth = Zend_Auth::getInstance();
-    	$msgarray = array();
-    	$popConfigPermission = array();
+    	$msgarray = [];
+    	$popConfigPermission = [];
     	if($auth->hasIdentity()){
     		$loginUserId = $auth->getStorage()->read()->id;
     		$loginuserRole = $auth->getStorage()->read()->emprole;
@@ -423,7 +423,7 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
     	}
     	
     	$req_data = $req_model->getRequisitionsForCV("'Approved','In process'");
-    	$req_options = array();
+    	$req_options = [];
     	foreach($req_data as $req){
     		$req_options[$req['id']] = $req['requisition_code'].' - '.$req['jobtitlename'];
     	}
@@ -449,12 +449,12 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
     			$msgarray['country'] = 'Countries are not configured yet.';
     		}
     	
-    		$form->requisition_id->addMultiOptions(array(''=>'Select Requisition ID')+$req_options);
+    		$form->requisition_id->addMultiOptions([''=>'Select Requisition ID']+$req_options);
     		if(isset($_POST['country']) && $_POST['country']!='')
     		{
     			$statesmodel = new Default_Model_States();
     			$statesmodeldata = $statesmodel->getStatesList(intval($_POST['country']));
-    			$st_opt = array();
+    			$st_opt = [];
     			if(count($statesmodeldata) > 0)
     			{
     				foreach($statesmodeldata as $dstate)
@@ -462,13 +462,13 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
     					$st_opt[$dstate['id'].'!@#'.$dstate['state_name']] = $dstate['state_name'];
     				}
     			}
-    			$form->state->addMultiOptions(array(''=>'Select State')+$st_opt);
+    			$form->state->addMultiOptions([''=>'Select State']+$st_opt);
     		}
     		if(isset($_POST['state']) && $_POST['state']!='')
     		{
     			$citiesmodel = new Default_Model_Cities();
     			$citiesmodeldata = $citiesmodel->getCitiesList(intval($_POST['state']));
-    			$ct_opt = array();
+    			$ct_opt = [];
     			if(count($citiesmodeldata) > 0)
     			{
     				foreach($citiesmodeldata as $dcity)
@@ -476,9 +476,9 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
     					$ct_opt[$dcity['id'].'!@#'.$dcity['city_name']] = $dcity['city_name'];
     				}
     			}
-    			$form->city->addMultiOptions(array(''=>'Select City')+$ct_opt);
+    			$form->city->addMultiOptions([''=>'Select City']+$ct_opt);
     		}
-    		$data = array();
+    		$data = [];
     	
     		$data['cand_resume'] = $this->_getParam('cand_resume');
     		$data['selected_option'] = $this->_getParam('selected_option');
@@ -550,15 +550,15 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
 				$req_records = $cand_model->getcountofrecords($requisition_id);
 				if(empty($req_records)) 
 				{
-					$rdata = array(
+					$rdata = [
 							'req_status' => 'In process',
 							'modifiedby' => trim($loginUserId),
 							'modifiedon' => gmdate("Y-m-d H:i:s")
-					);
+					];
 					$rwhere = ' id = '.$requisition_id;
 					$req_model->SaveorUpdateRequisitionData($rdata, $rwhere);
 				}
-				$data = array(
+				$data = [
                     'requisition_id' => $requisition_id,
 					'candidate_firstname' => trim($candidate_firstname),
 					'candidate_lastname' => trim($candidate_lastname),
@@ -582,7 +582,7 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
                     'modifiedby' => trim($loginUserId),
                     'createddate' => gmdate("Y-m-d H:i:s"),
                     'modifieddate' => gmdate("Y-m-d H:i:s"),
-                );
+                ];
                 if(trim($contact_number)=='')
                     unset($data['contact_number']);
                 if(trim($emailid)=='')
@@ -612,7 +612,7 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
                         {
                             if($cname != '')
                             {
-                                $cdata = array(
+                                $cdata = [
                                     'cand_id' => $tableid,
                                     'company_name' => $cname,
                                     'contact_number' => $txt_cnumber[$k],
@@ -626,7 +626,7 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
                                     'modifiedby' => trim($loginUserId),
                                     'createddate' => gmdate("Y-m-d H:i:s"),
                                     'modifieddate' => gmdate("Y-m-d H:i:s"), 
-                                );
+                                ];
                                 $cwhere = ($hidworkdata[$k]!='')?"id = ".$hidworkdata[$k]:"";
                                 $candwork_model->SaveorUpdateCandidateWorkData($cdata, $cwhere);
                             }
@@ -647,7 +647,7 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
                 {
                 	$candData = $cand_model->fetchAll('isactive = 1 and requisition_id = '.$requisition_id)->toArray();
                 }
-                else $candData = array();
+                else $candData = [];
                 
                 $opt ='';
                 if(count($candData)>0)
@@ -723,8 +723,8 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
         $cand_work_model = new Default_Model_Candidateworkdetails();
         $countriesModel = new Default_Model_Countries();
         $auth = Zend_Auth::getInstance();
-        $msgarray = array();
-        $popConfigPermission = array();
+        $msgarray = [];
+        $popConfigPermission = [];
      	if($auth->hasIdentity()){
             $loginUserId = $auth->getStorage()->read()->id;
             $loginuserRole = $auth->getStorage()->read()->emprole;
@@ -742,7 +742,7 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
 		}
                 
         $req_data = $req_model->getRequisitionsForCV("'Approved','In process'");
-        $req_options = array();
+        $req_options = [];
         foreach($req_data as $req){
             $req_options[$req['id']] = $req['requisition_code'].' - '.$req['jobtitlename'];
         }
@@ -775,13 +775,13 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
 		/**
        NA->Not applicable candidate value defined in constant
         **/
-		$notapplicable=array(NA=>'Not Applicable Candidate');
-		$form->requisition_id->addMultiOptions(array(''=>'Select Requisition ID')+$req_options+$notapplicable);
+		$notapplicable=[NA=>'Not Applicable Candidate'];
+		$form->requisition_id->addMultiOptions([''=>'Select Requisition ID']+$req_options+$notapplicable);
         if(isset($_POST['country']) && $_POST['country']!='')
         {
             $statesmodel = new Default_Model_States();
             $statesmodeldata = $statesmodel->getStatesList(intval($_POST['country']));
-            $st_opt = array();
+            $st_opt = [];
             if(count($statesmodeldata) > 0)
             {
                 foreach($statesmodeldata as $dstate)
@@ -789,13 +789,13 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
                     $st_opt[$dstate['id'].'!@#'.$dstate['state_name']] = $dstate['state_name'];
                 }
             }
-            $form->state->addMultiOptions(array(''=>'Select State')+$st_opt);
+            $form->state->addMultiOptions([''=>'Select State']+$st_opt);
         }
         if(isset($_POST['state']) && $_POST['state']!='')
         {
             $citiesmodel = new Default_Model_Cities();
             $citiesmodeldata = $citiesmodel->getCitiesList(intval($_POST['state']));
-            $ct_opt = array();
+            $ct_opt = [];
             if(count($citiesmodeldata) > 0)
             {
                 foreach($citiesmodeldata as $dcity)
@@ -803,14 +803,14 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
                     $ct_opt[$dcity['id'].'!@#'.$dcity['city_name']] = $dcity['city_name'];
                 }
             }
-            $form->city->addMultiOptions(array(''=>'Select City')+$ct_opt);
+            $form->city->addMultiOptions([''=>'Select City']+$ct_opt);
         }
 		if(isset($_POST['source']) && $_POST['source']=='Vendor')
         {
          
 			$vendorsmodel= new Default_Model_Vendors();
 			$vendorsdataArr=$vendorsmodel->getVendorsList();
-		    $vendors_array = array();
+		    $vendors_array = [];
 			if(sizeof($vendorsdataArr)>0){
 				
 				foreach($vendorsdataArr as $vendors)
@@ -818,11 +818,11 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
 					  $vendors_array[$vendors['id']] = $vendors['name'];
 				}
 			}
-               $form->vendors->addMultiOptions(array(''=>'Select Vendor')+$vendors_array);
+               $form->vendors->addMultiOptions([''=>'Select Vendor']+$vendors_array);
         }
 		
 		
-        $data = array();
+        $data = [];
         
 		$data['cand_resume'] = $this->_getParam('cand_resume');       
 		$data['selected_option'] = $this->_getParam('selected_option'); 
@@ -918,15 +918,15 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
 				$req_records = $cand_model->getcountofrecords($requisition_id);
 				if(empty($req_records)) 
 				{
-					$rdata = array(
+					$rdata = [
 							'req_status' => 'In process',
 							'modifiedby' => trim($loginUserId),
 							'modifiedon' => gmdate("Y-m-d H:i:s")
-					);
+					];
 					$rwhere = ' id = '.$requisition_id;
 					$req_model->SaveorUpdateRequisitionData($rdata, $rwhere);
 				}
-				$data = array(
+				$data = [
                     'requisition_id' => $requisition_id,
 					'candidate_firstname' => trim($candidate_firstname),
 					'candidate_lastname' => trim($candidate_lastname),
@@ -954,7 +954,7 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
                     'modifieddate' => gmdate("Y-m-d H:i:s"),
 					'candidate_id'=>1
 						
-                );
+                ];
 			
                 if(trim($contact_number)=='')
                     unset($data['contact_number']);
@@ -1004,7 +1004,7 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
 					$modifiedby = $loginUserId;
 					
 					 $reqh_model = new Default_Model_Requisitionhistory();
-					$requisition_history = array(
+					$requisition_history = [
                                         'candidate_id' =>$result,	
                                         'candidate_name'=>  $candidateData['candidate_name'],	
 										'requisition_id' =>$requisition_id,
@@ -1014,7 +1014,7 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
 										'isactive' => 1,
 										'createddate' =>gmdate("Y-m-d H:i:s"),
 										'modifieddate'=> gmdate("Y-m-d H:i:s"),
-									);
+									];
 					$where = '';
 					$historyId = $reqh_model->saveOrUpdateRequisitionHistory($requisition_history,$where); 
 				}
@@ -1042,7 +1042,7 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
                         {
                             if($cname != '')
                             {
-                                $cdata = array(
+                                $cdata = [
                                     'cand_id' => $tableid,
                                     'company_name' => $cname,
                                     'contact_number' => $txt_cnumber[$k],
@@ -1056,7 +1056,7 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
                                     'modifiedby' => trim($loginUserId),
                                     'createddate' => gmdate("Y-m-d H:i:s"),
                                     'modifieddate' => gmdate("Y-m-d H:i:s"), 
-                                );
+                                ];
                                 $cwhere = ($hidworkdata[$k]!='')?"id = ".$hidworkdata[$k]:"";
                                 $candwork_model->SaveorUpdateCandidateWorkData($cdata, $cwhere);
                             }
@@ -1071,12 +1071,12 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
                     if($id == '')
                     {
                         //$this->_helper->FlashMessenger()->setNamespace('success')->addMessage('Candidate details added successfully.'); 
-                        $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Candidate details added successfully."));
+                        $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Candidate details added successfully."]);
                     }    
                     else
                     {
                         //$this->_helper->FlashMessenger()->setNamespace('success')->addMessage('Candidate details updated successfully.');
-                        $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Candidate details updated successfully."));
+                        $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Candidate details updated successfully."]);
                     }    
                     if($buttonval=="Save" || $buttonval=="Update")
                     {
@@ -1155,36 +1155,36 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
             $interview_model = new Default_Model_Interviewdetails();
             $interview_round_model = new Default_Model_Interviewrounddetails();
             $menumodel = new Default_Model_Menu();
-            $data = array(
+            $data = [
                         'isactive' => 0,
                         'modifiedby' => $loginUserId,
                         'modifieddate' => gmdate("Y-m-d H:i:s"),
-                );
-            $where = array('id=?'=>$id);
+                ];
+            $where = ['id=?'=>$id];
             $Id = $cand_model->SaveorUpdateCandidateData($data, $where);
             if($Id == 'update')
             {
-                $cand_work_data = array(
+                $cand_work_data = [
                         'isactive' => 0,
                         'modifiedby' => $loginUserId,
                         'modifieddate' => gmdate("Y-m-d H:i:s"),
-                );
+                ];
                 $cand_work_where = "cand_id = ".$id;
                 $cand_work_model->SaveorUpdateCandidateWorkData($cand_work_data, $cand_work_where);
                 
-                $interview_data = array(
+                $interview_data = [
                         'isactive' => 0,
                         'modifiedby' => $loginUserId,
                         'modifieddate' => gmdate("Y-m-d H:i:s"),
-                );
+                ];
                 $interview_where = "candidate_id = ".$id;
                 $interview_model->SaveorUpdateInterviewData($interview_data, $interview_where);
                 
-                $interview_round_data = array(
+                $interview_round_data = [
                         'isactive' => 0,
                         'modifiedby' => $loginUserId,
                         'modifieddate' => gmdate("Y-m-d H:i:s"),
-                );
+                ];
                 $interview_round_where = "candidate_id = ".$id;
                 $interview_round_model->SaveorUpdateInterviewroundData($interview_round_data, $interview_round_where);
                 $objidArr = $menumodel->getMenuObjID('/candidatedetails');
@@ -1208,11 +1208,11 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
 		{
 			if(	$messages['msgtype'] == 'error')
 			{
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
 			}
 			if(	$messages['msgtype'] == 'success')
 			{
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
 			}
 			
 		}
@@ -1243,11 +1243,11 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
 		{
 			if(	$status == 'no')
 			{
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>"Candidate cannot be deleted.","msgtype"=>"error" ,"deleteflag"=>$deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>"Candidate cannot be deleted.","msgtype"=>"error" ,"deleteflag"=>$deleteflag]);
 			}
 			
 		} 
-        $this->_helper->_json(array('status'=>$status));
+        $this->_helper->_json(['status'=>$status]);
     }
 
     // To upload resume of the candidate
@@ -1260,7 +1260,7 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
     // To delete resume
     public function deleteresumeAction(){
     	$cand_details_model = new Default_Model_Candidatedetails();
-    	$data = array('cand_resume'=>NULL, 'cand_resume_deletedby'=>$cand_details_model->getLoginUserId());
+    	$data = ['cand_resume'=>NULL, 'cand_resume_deletedby'=>$cand_details_model->getLoginUserId()];
     	$where = 'id="'.$this->_getParam('rec_id').'"';
     	
     	// To empty resume name in DB
@@ -1270,7 +1270,7 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
     	if($message=='update'){
     		@unlink(UPLOAD_PATH_RESUMES . "/" . $this->_getParam('resume_name'));
     	}
-		$this->_helper->json(array('action'=>$message));   
+		$this->_helper->json(['action'=>$message]);   
     }
     
     // To download resume
@@ -1278,11 +1278,11 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
 		$cand_details_model = new Default_Model_Candidatedetails();
     	$result = $cand_details_model->getcandidateData($this->_getParam('id'));
     	if(!empty($result['cand_resume'])){
-    		$status = array();
+    		$status = [];
 			$file = BASE_PATH.'/uploads/resumes/'.$result['cand_resume'];
 			$status = sapp_Global::downloadFile($file);
 			if(!empty($status['message'])){				
-                            $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$status['message']));
+                            $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$status['message']]);
 			}
     	}
   		$this->_redirect('candidatedetails/index');
@@ -1297,7 +1297,7 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
         }
         $priv_check = sapp_Global::_checkprivileges(CANDIDATEDETAILS,'',$auth->getStorage()->read()->emprole,'add');
         if($priv_check == 'Yes'){
-	        $msgarray = $req_options =array();
+	        $msgarray = $req_options =[];
 	    	$form = new Default_Form_Multipleresume();   
 	        $form->setAction(BASE_URL.'candidatedetails/multipleresume');
 	
@@ -1316,8 +1316,8 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
 			/**
 		   NA->Not applicable candidate value defined in constant
 			**/
-			$notapplicable=array(NA=>'Not Applicable Candidate');
-			$form->requisition_id->addMultiOptions(array(''=>'Select Requisition ID')+$req_options+$notapplicable);
+			$notapplicable=[NA=>'Not Applicable Candidate'];
+			$form->requisition_id->addMultiOptions([''=>'Select Requisition ID']+$req_options+$notapplicable);
 			
 			//$form->requisition_id->addMultiOptions(array(''=>'Select Requisition ID')+$req_options);
 		
@@ -1336,25 +1336,25 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
 					
 					$curr_date = gmdate("Y-m-d H:i:s");
 					if(empty($req_records)){
-						$rdata = array(
+						$rdata = [
 								'req_status' => 'In process',
 								'modifiedby' => $loginUserId,
 								'modifiedon' => $curr_date
-						);
+						];
 						$rwhere = ' id = '.$requisition_id;
 						$req_model->SaveorUpdateRequisitionData($rdata, $rwhere);
 					}
 					
 					
 					// To insert records in a single query
-					$records = array();
+					$records = [];
 					foreach($candidate_firstname as $key=>$candidate_fname){
 						$cfull_name =$candidate_fname.' '.$candidate_lastname[$key]; 
 						$records[] = "($requisition_id, '$candidate_fname','$candidate_lastname[$key]','$cfull_name', '$cand_resumes[$key]', '$cand_status', 1, $loginUserId, $loginUserId, '$curr_date', '$curr_date')";
 					} 
-					$data_fields = array('requisition_id', 'candidate_firstname','candidate_lastname','candidate_name', 'cand_resume', 'cand_status', 'isactive', 'createdby', 'modifiedby', 'createddate', 'modifieddate');
+					$data_fields = ['requisition_id', 'candidate_firstname','candidate_lastname','candidate_name', 'cand_resume', 'cand_status', 'isactive', 'createdby', 'modifiedby', 'createddate', 'modifieddate'];
 				 
-                    $last_insert_id=array();	
+                    $last_insert_id=[];	
 					for($i=0;$i<sizeof($records);$i++)
 					{
 						$last_insert_id[] = $cand_details_model->insertMultipleRecords($data_fields, $records[$i]);
@@ -1395,7 +1395,7 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
 							$modifiedby = $loginUserId;
 							
 							 $reqh_model = new Default_Model_Requisitionhistory();
-							$requisition_history = array(
+							$requisition_history = [
 												'candidate_id' =>$result[$j],	
 												'candidate_name'=>  $candidateData['candidate_name'],	
 												'requisition_id' =>$requisition_id,
@@ -1405,7 +1405,7 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
 												'isactive' => 1,
 												'createddate' =>gmdate("Y-m-d H:i:s"),
 												'modifieddate'=> gmdate("Y-m-d H:i:s"),
-											);
+											];
 							$where = '';
 							$historyId = $reqh_model->saveOrUpdateRequisitionHistory($requisition_history,$where); 
 						}
@@ -1419,7 +1419,7 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
 		                $objID = $objidArr[0]['id'];
 		                $log_status = sapp_Global::logManager($objID,1,$loginUserId,$last_insert_id);
 		                //$this->_helper->FlashMessenger()->setNamespace('success')->addMessage('Candidate details added successfully.');
-		                $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Candidate details added successfully.")); 
+		                $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Candidate details added successfully."]); 
 		                $this->_redirect('/candidatedetails');
 					}
 				
@@ -1464,7 +1464,7 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
     	
     	
     	    	
-    	$this->_helper->json(array('options'=>utf8_encode($opt)));
+    	$this->_helper->json(['options'=>utf8_encode($opt)]);
     	
     	
     }
@@ -1507,14 +1507,14 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
 		{
 			$vendorsmodel= new Default_Model_Vendors();
 			$vendorsdataArr=$vendorsmodel->getVendorsList();
-			$req_options = array();
+			$req_options = [];
 			foreach($vendorsdataArr as $vendorsdata){
 				$form->vendors->addMultiOption($vendorsdata['id'],utf8_encode($vendorsdata['name']));
 			}
 			
 			$form->vendors->setValue($candidateData['source_val']);
 		}
-		$cdata = array();
+		$cdata = [];
 	    $cdata['selected_option'] = "candidatedetails"; 
 		$this->view->cdata =  $cdata;
         $form->populate($candidateData);		
@@ -1530,12 +1530,12 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
             $candidate_lastname = $this->_getParam('candidate_lastname',null);
             $candidate_name = $candidate_firstname.' '.$candidate_lastname;
 			
-			$data =array(
+			$data =[
                    	'candidate_firstname' => trim($candidate_firstname),
 					'candidate_lastname' => trim($candidate_lastname),
                     'candidate_name' => trim($candidate_name),
                     'modifieddate' => gmdate("Y-m-d H:i:s"),
-                      );
+                      ];
 				
 			$where = "id = ".$id;
 			$result = $cand_model->SaveorUpdateCandidateData($data, $where);
@@ -1543,7 +1543,7 @@ class Default_CandidatedetailsController extends Zend_Controller_Action
                 {
 					$candData  = $cand_model->getSelectedCandidatesDetails();
                 }
-                else $candData = array();
+                else $candData = [];
                 $opt ='';
                 if(count($candData)>0)
                 {

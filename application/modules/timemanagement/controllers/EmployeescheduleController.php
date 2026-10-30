@@ -15,9 +15,9 @@ class Timemanagement_EmployeescheduleController extends Zend_Controller_Action{
         $model = new Timemanagement_Model_Emptimesheets();
         $days = $model->daysOftheweek();
         foreach ($days as $day) {
-            $form->workdays->addMultiOptions(array(
+            $form->workdays->addMultiOptions([
                 $day['id']=>$day['weekname']
-            ));
+            ]);
         }
         $this->view->form = $form;
     }

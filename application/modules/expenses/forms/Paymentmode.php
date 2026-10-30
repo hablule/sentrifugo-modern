@@ -36,32 +36,32 @@ class Expenses_Form_Paymentmode extends Zend_Form
         
        $payment_method_name ->addFilter(new Zend_Filter_StringTrim());
 	   $payment_method_name ->setRequired(true);
-       $payment_method_name ->addValidator('NotEmpty', false, array('messages' => 'Please enter Payment Mode.'));  
+       $payment_method_name ->addValidator('NotEmpty', false, ['messages' => 'Please enter Payment Mode.']);  
         
-	   $payment_method_name ->addValidator("regex",true,array(
+	   $payment_method_name ->addValidator("regex",true,[
 
                            'pattern'=>'/^([a-zA-Z0-9_@.]+ ?)+$/', 
         
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Enter valid Payment Mode.'
-                           )
-        	));	
+                           ]
+        	]);	
 		
 		$payment_method_name->addValidator(new Zend_Validate_Db_NoRecordExists(
-                                                        array('table' => 'expense_payment_methods',
+                                                        ['table' => 'expense_payment_methods',
                                                         'field' => 'payment_method_name',
                                                         'exclude'=>'id!="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('id',0).'" and isactive=1',
-                                                        )));
+                                                        ]));
         $payment_method_name->getValidator('Db_NoRecordExists')->setMessage('Payment mode already  exist.');
 		 
 		$submit = new Zend_Form_Element_Submit('submit');
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 		
-		$this->addElements(array($id,$payment_method_name ,$submit));
+		$this->addElements([$id,$payment_method_name ,$submit]);
 		
 		
-        $this->setElementDecorators(array('ViewHelper')); 
+        $this->setElementDecorators(['ViewHelper']); 
 	}
 }
 ?>

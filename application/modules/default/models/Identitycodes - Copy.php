@@ -28,7 +28,7 @@ class Default_Model_Identitycodes extends Zend_Db_Table_Abstract
 	{	$identityCodesArr="";
 		$db = Zend_Db_Table::getDefaultAdapter();		
 	    $select = $this->select()
-                            ->from(array('i'=>'main_identitycodes'),array('i.*'));    					   				
+                            ->from(['i'=>'main_identitycodes'],['i.*']);    					   				
 		$identityCodesArr = $this->fetchAll($select)->toArray(); 
 		
 		return  $identityCodesArr; 
@@ -38,7 +38,7 @@ class Default_Model_Identitycodes extends Zend_Db_Table_Abstract
 	{	$identityCodesArr="";
 		$db = Zend_Db_Table::getDefaultAdapter();		
 	    $select = $this->select()
-                            ->from(array('i'=>'main_identitycodes'),array('i.*'))
+                            ->from(['i'=>'main_identitycodes'],['i.*'])
                             ->where("id = ".$id);
 		$identityCodesArr = $this->fetchAll($select)->toArray(); 
 		

@@ -46,9 +46,9 @@ class Schedule_TimetableController extends Zend_Controller_Action
 			$refresh = $this->_getParam('refresh');
 			$dashboardcall = $this->_getParam('dashboardcall');
 
-			$data = array();
+			$data = [];
 			$searchQuery = '';
-			$searchArray = array();
+			$searchArray = [];
 			$tablecontent = '';
 
 			if ($refresh == 'refresh') {
@@ -120,7 +120,7 @@ class Schedule_TimetableController extends Zend_Controller_Action
 					$desc = $this->_request->getParam('description');
 					$time_in = $this->_request->getParam('time_in');
 					$time_out = $this->_request->getParam('time_out');
-					$data = array(
+					$data = [
 						'name' => $name,
 						'description' => $desc,
 						'code' => $this->_request->getParam('code'),
@@ -137,12 +137,12 @@ class Schedule_TimetableController extends Zend_Controller_Action
 						'modifiedby' => $login,
 						'createddate' => date('Y-m-d H:i:s'),
 						'modifieddate' => date('Y-m-d H:i:s')
-					);
+					];
 					$menuID = TIMETABLE;
 
 					$tableid = $timetablemodel->saveandupdate('', $data);
 					sapp_Global::logManager($menuID, $this->actionadd, $login, $tableid);
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array('success' => 'Added Successfully'));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(['success' => 'Added Successfully']);
 					$this->_redirect('schedule/timetable');
 				}
 			}
@@ -181,7 +181,7 @@ class Schedule_TimetableController extends Zend_Controller_Action
 					$name = $this->_request->getParam('name');
 					$time_in = $this->_request->getParam('time_in');
 					$time_out = $this->_request->getParam('time_out');
-					$data = array(
+					$data = [
 						'name'=>$name,
 						'description' => $desc,
 						'code' => $this->_request->getParam('code'),
@@ -198,12 +198,12 @@ class Schedule_TimetableController extends Zend_Controller_Action
 						'modifiedby' => $login,
 						'createddate' => date('Y-m-d H:i:s'),
 						'modifieddate' => date('Y-m-d H:i:s')
-					);
+					];
 					$menuID = TIMETABLE;
 
 					$tableid = $timetablemodel->saveandupdate('', $data);
 					sapp_Global::logManager($menuID, $this->actionadd, $login, $tableid);
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array('success' => 'Added Successfully'));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(['success' => 'Added Successfully']);
 				}
 			}
 			$messages = $timetableform->getMessages();
@@ -264,7 +264,7 @@ class Schedule_TimetableController extends Zend_Controller_Action
 			if ($this->_request->isPost()) {
 				if($timetableform->isValid($this->getRequest()->getPost())){
 				$where = 'shift_id=' . $this->_request->getParam('id');
-				$data = array(
+				$data = [
 					'name' => $this->_request->getParam('name'),
 					'description' => $this->_request->getParam('description'),
 					'code' => $this->_request->getParam('code'),
@@ -282,7 +282,7 @@ class Schedule_TimetableController extends Zend_Controller_Action
 					'modifiedby' => $login,
 					'createddate' => date('Y-m-d H:i:s'),
 					'modifieddate' => date('Y-m-d H:i:s')
-				);
+				];
 
 				/* $data = array(
 				'name' => $this->_request->getParam('description'),
@@ -299,7 +299,7 @@ class Schedule_TimetableController extends Zend_Controller_Action
 				$tableid = $this->_getParam('id');
 				$timetablemodel->saveandupdate($where, $data);
 				sapp_Global::logManager($menuID, $this->actionupdate, $login, $tableid);
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array('success' => 'Updated Successfully'));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(['success' => 'Updated Successfully']);
 
 				$this->_redirect('schedule/timetable');
 			}
@@ -351,18 +351,18 @@ class Schedule_TimetableController extends Zend_Controller_Action
 		$timetablemodel = new Schedule_Model_Timeschedule();
 		$id = $this->_request->getParam('objid');
 		$where = 'shift_id=' . (int)$id;
-		$data = array(
+		$data = [
 			'isactive' => 0
-		);
+		];
 		//die(json_encode($where));
 		$tableid = $id;
 		$menuID = TIMETABLE;
 		$res = $timetablemodel->deleteData($where, 'main_shift', 'shift_id');
 		sapp_Global::logManager($menuID, $this->actiondelete, $login, $tableid);
 		if ($res > 0)
-			return $this->_helper->json(array('flagtype' => 'process', 'message' => 'Deleted'));
+			return $this->_helper->json(['flagtype' => 'process', 'message' => 'Deleted']);
 		else
-			$this->_helper->json(array('flagtype' => 'timetable', 'message' => 'Deleted'));
+			$this->_helper->json(['flagtype' => 'timetable', 'message' => 'Deleted']);
 	}
 
 	public function getshiftnameAction()

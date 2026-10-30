@@ -29,7 +29,7 @@ class Default_Model_Languagelevel extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('ll'=>'main_languagelevel'),array('ll.id','ll.language_level'))
+						->from(['ll'=>'main_languagelevel'],['ll.id','ll.language_level'])
 					    ->where('ll.isactive = 1')
 						->order('ll.language_level');
 		return $this->fetchAll($select)->toArray();

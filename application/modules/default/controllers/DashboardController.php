@@ -56,7 +56,7 @@ class Default_DashboardController extends Zend_Controller_Action{
 		$roledashboards = $employee->getUserid()->getEmprole()->getMain_dashboardpriviledgesRoleidAssocRolesid();
 
 		if($roledashboards->count()){
-			$dashsettings = array();
+			$dashsettings = [];
 			foreach($roledashboards as $roledashboard){
 				if($roledashboard->getActive()==1){
 					$activeDashboard = $roledashboard->getDashboardid();
@@ -120,7 +120,7 @@ class Default_DashboardController extends Zend_Controller_Action{
 		$roledashboards = $employee->getUserid()->getEmprole()->getMain_dashboardpriviledgesRoleidAssocRolesid();
 
 		if($roledashboards->count()){
-			$dashboardsettings = array();
+			$dashboardsettings = [];
 			foreach($roledashboards as $roledashboard){
 				if($roledashboard->getActive()==1){
 					$activeDashboard = $roledashboard->getDashboardid();
@@ -135,8 +135,8 @@ class Default_DashboardController extends Zend_Controller_Action{
 							$GridMxmlarray = $this->_helper->HtmlFormCodeGeneratorHelper->getObjectMxml($viewid);
 							$fieldcount = 0;
 							$lookupcount = 0;
-							$this->gridFields["Fields"]= array();
-							$this->gridFields["Lookup"]= array();
+							$this->gridFields["Fields"]= [];
+							$this->gridFields["Lookup"]= [];
 							foreach($GridMxmlarray['fields'] as $field){
 
 
@@ -155,12 +155,12 @@ class Default_DashboardController extends Zend_Controller_Action{
 								}
 							}
 							$entityname = ucfirst($GridMxmlarray['objectName']);
-							$genderObj = $this->em->getRepository("Entities\\$entityname")->findBy(array('sentrifugo_status' => 1));
-							$genderGridJson = array();
+							$genderObj = $this->em->getRepository("Entities\\$entityname")->findBy(['sentrifugo_status' => 1]);
+							$genderGridJson = [];
 							$genderGridJson['count'] = count($genderObj);
 							$genderGridJson['dashboardname'] = $widget->getTitle();
-							$genderGridJson['datafields'] = array();
-							$genderGridJson['rows'] = array();
+							$genderGridJson['datafields'] = [];
+							$genderGridJson['rows'] = [];
 							$j=0;
 							if($genderObj){
 								foreach($genderObj as $row){
@@ -286,7 +286,7 @@ class Default_DashboardController extends Zend_Controller_Action{
                 $loginuserGroup = $auth->getStorage()->read()->group_id;
                 $loginuserName = $auth->getStorage()->read()->userfullname;
             }
-            $msgarray = array();
+            $msgarray = [];
             $errorflag = 'true';
          
 		   /* if(extension_loaded('openssl'))
@@ -325,7 +325,7 @@ class Default_DashboardController extends Zend_Controller_Action{
 				$port = $this->_request->getParam('port');
 				
 				$usersModel = new Default_Model_Users();
-				$options = array();
+				$options = [];
 							
 
 				$options['username'] = !empty($username)?$username:"";
@@ -347,16 +347,16 @@ class Default_DashboardController extends Zend_Controller_Action{
 					$result = sapp_Mail::_checkMail($options);
 					if($result === true)
 					{
-           			 $data = array( 'username'=>$username,
+           			 $data = [ 'username'=>$username,
 				                 'password'=>$password,
 				   				 'server_name'=>$server_name,
 				   				 'auth'=>$auth,	
 				                 'tls'=>$tls,
 				   				 'port'=>$port,
  								 'modifieddate'=>gmdate("Y-m-d H:i:s")
-						);
+						];
 					if($id!=''){
-						$where = array('id=?'=>$id);  
+						$where = ['id=?'=>$id];  
 				
 					}
 					else
@@ -370,16 +370,16 @@ class Default_DashboardController extends Zend_Controller_Action{
 					
 					if($Id == 'update')
 					{
-					   $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Mail Settings updated successfully."));
+					   $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Mail Settings updated successfully."]);
 					}   
 					else
 					{
-                        $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Mail Settings added successfully."));					   
+                        $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Mail Settings added successfully."]);					   
 					}   
 				}
 				else
 				{
-					 $this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>"Invalid parameters."));
+					 $this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>"Invalid parameters."]);
 				}
                     $this->_redirect('dashboard/emailsettings');
             }
@@ -441,7 +441,7 @@ class Default_DashboardController extends Zend_Controller_Action{
 					$msgarray['theme'] = 'Theme is not configured yet.';
 				} else {
 					foreach ($themedata as $themedatas) {
-						$form->theme->addMultiOptions(array($themedatas['theme_id'] => $themedatas['theme_name']));
+						$form->theme->addMultiOptions([$themedatas['theme_id'] => $themedatas['theme_name']]);
 					}
 				}
 
@@ -538,85 +538,85 @@ if(isset($_SESSION['theme'])){
 				if($sitepreferenceArr[0]['passwordid'] == 1)
 				{ 
 				
-					$changepasswordform->newpassword->addValidator("regex",true,array(
+					$changepasswordform->newpassword->addValidator("regex",true,[
 									'pattern'=> '/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/',
-								   'messages'=>array(
+								   'messages'=>[
 									   'regexNotMatch'=>'Please enter only alphanumeric characters.'
-								   )
-					)); 
+								   ]
+					]); 
 					
-					$changepasswordform->passwordagain->addValidator("regex",true,array(
+					$changepasswordform->passwordagain->addValidator("regex",true,[
 									'pattern'=> '/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/',
-								   'messages'=>array(
+								   'messages'=>[
 									   'regexNotMatch'=>'Please enter only alphanumeric characters.'
-								   )
-					));			
+								   ]
+					]);			
 				} 
 				
 				else if($sitepreferenceArr[0]['passwordid'] == 2)
 				{
-					$changepasswordform->newpassword->addValidator("regex",true,array(
+					$changepasswordform->newpassword->addValidator("regex",true,[
 								  'pattern'=> '/^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[.\-#$@&\_*])([a-zA-Z0-9.\-#$@&\_*]+)$/',
-								   'messages'=>array(
+								   'messages'=>[
 									   'regexNotMatch'=>'Please enter only characters,numbers and special characters.'
-								   )
-					));
+								   ]
+					]);
 					
-					$changepasswordform->passwordagain->addValidator("regex",true,array(
+					$changepasswordform->passwordagain->addValidator("regex",true,[
 								  'pattern'=> '/^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[.\-#$@&\_*])([a-zA-Z0-9.\-#$@&\_*]+)$/',
-								   'messages'=>array(
+								   'messages'=>[
 									   'regexNotMatch'=>'Please enter only characters,numbers and special characters.'
-								   )
-					));
+								   ]
+					]);
 				}
 				else if($sitepreferenceArr[0]['passwordid'] == 3)
 				{
-					$changepasswordform->newpassword->addValidator("regex",true,array(
+					$changepasswordform->newpassword->addValidator("regex",true,[
 								   'pattern'=>'/^[0-9]+$/', 
-								   'messages'=>array(
+								   'messages'=>[
 									   'regexNotMatch'=>'Please enter numbers only.'
-								   )
-					));
+								   ]
+					]);
 					
-					$changepasswordform->passwordagain->addValidator("regex",true,array(
+					$changepasswordform->passwordagain->addValidator("regex",true,[
 								   'pattern'=>'/^[0-9]+$/', 
-								   'messages'=>array(
+								   'messages'=>[
 									   'regexNotMatch'=>'Please enter numbers only.'
-								   )
-					));
+								   ]
+					]);
 				}
 				else
 				{
-					$changepasswordform->newpassword->addValidator("regex",true,array(
+					$changepasswordform->newpassword->addValidator("regex",true,[
 									'pattern'=> '/^(?=.*[0-9])(?=.*[.\-#$@&\_*])([0-9.\-#$@&\_*]+)$/',
-								   'messages'=>array(
+								   'messages'=>[
 									   'regexNotMatch'=>'Please enter only numbers and special characters.'
-								   )
-					)); 
+								   ]
+					]); 
 					
-					$changepasswordform->passwordagain->addValidator("regex",true,array(
+					$changepasswordform->passwordagain->addValidator("regex",true,[
 									'pattern'=> '/^(?=.*[0-9])(?=.*[.\-#$@&\_*])([0-9.\-#$@&\_*]+)$/',
-								   'messages'=>array(
+								   'messages'=>[
 									   'regexNotMatch'=>'Please enter only numbers and special characters.'
-								   )
-					));			
+								   ]
+					]);			
 				}
 		}
 		else
         {
-		    $changepasswordform->newpassword->addValidator("regex",true,array(
+		    $changepasswordform->newpassword->addValidator("regex",true,[
 									'pattern'=> '/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/', 
-								   'messages'=>array(
+								   'messages'=>[
 									   'regexNotMatch'=>'Please enter only alphanumeric characters.'
-								   )
-					)); 
+								   ]
+					]); 
 					
-			$changepasswordform->passwordagain->addValidator("regex",true,array(
+			$changepasswordform->passwordagain->addValidator("regex",true,[
 							'pattern'=> '/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/', 
-						   'messages'=>array(
+						   'messages'=>[
 							   'regexNotMatch'=>'Please enter only alphanumeric characters.'
-						   )
-			));	
+						   ]
+			]);	
         } 		
 
         /* Logic ends for site preference password validation
@@ -632,18 +632,18 @@ if(isset($_SESSION['theme'])){
 // die();			
 					$newpwd = password_hash($newpassword,PASSWORD_DEFAULT);
 					$loginmodel->editadminPassword($newpwd,$id,$email,$employeid);
-					$this->_helper->json(array('result'=>'saved','message'=>"Password changed successfully."));	
+					$this->_helper->json(['result'=>'saved','message'=>"Password changed successfully."]);	
 				
     		}else{
     			$messages = $changepasswordform->getMessages();
     			if(($sespwd != $pwd) && $password!=''){
-    				$messages['password']=array('Wrong password. Please enter correct password.');
+    				$messages['password']=['Wrong password. Please enter correct password.'];
     			}
 		    	if(($newpwd!=$confpwd)&& $newpassword !='' && $confpassword!=''){
-		    		$messages['passwordagain']=array('New password and confirm password did not match.');
+		    		$messages['passwordagain']=['New password and confirm password did not match.'];
 		    	}
 				if(($pwd==$newpwd)&& $newpassword !='' && $password!=''){
-		    		$messages['newpassword']=array('Please choose a different password.');
+		    		$messages['newpassword']=['Please choose a different password.'];
 		    	}
     			$messages['result']='error';
     			$this->_helper->json($messages);
@@ -666,10 +666,10 @@ if(isset($_SESSION['theme'])){
    			
         }              				
         $usermodel = new Default_Model_Users();                   					
-        $data = array('profileimg'=>$imagepath,
+        $data = ['profileimg'=>$imagepath,
                       
-					  );							  				               
-        $where = array("id=?" => $userid);                                    
+					  ];							  				               
+        $where = ["id=?" => $userid];                                    
         $status = $usermodel->addOrUpdateProfileImage($data,$where); 
         if($status == 'update')
         {
@@ -707,7 +707,7 @@ if(isset($_SESSION['theme'])){
 		$max_size = 1024;			
 
 		// Allowed image types
-		$allowtype = array('gif', 'jpg', 'jpeg', 'png');
+		$allowtype = ['gif', 'jpg', 'jpeg', 'png'];
 
 		/** Uploading the image **/
 
@@ -769,11 +769,11 @@ if(isset($_SESSION['theme'])){
 			$result_msg = 'Please upload only .gif, .jpg, .jpeg, .png images.';
 		}
 
-		$result = array(
+		$result = [
 			'result'=>$result_status,
 			'img'=>$rezultat,
 			'msg'=>$result_msg
-		);
+		];
 		return $result;
 	}
 	
@@ -843,15 +843,15 @@ if(isset($_SESSION['theme'])){
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = ''; 
-				   $data = array('firstname'=>$firstname,
+				   $data = ['firstname'=>$firstname,
 				   				 'lastname'=>$lastname,
 				   				 'userfullname'=>$userfullname,
 				                 'emailaddress'=>$emailaddress,
  								 'modifiedby'=>$loginUserId,
 								 'modifieddate'=>gmdate("Y-m-d H:i:s")
-						);
+						];
 					if($id!=''){
-						$where = array('id=?'=>$id);  
+						$where = ['id=?'=>$id];  
 						$actionflag = 2;
 					}
 					else
@@ -916,19 +916,19 @@ if(isset($_SESSION['theme'])){
 		$settingsmodel = new Default_Model_Settings();
 		$widgetsArr = '';
 		$shortcutArr = '';
-		$widgets = array();
-		$shortcuts = array();
+		$widgets = [];
+		$shortcuts = [];
 		$flag = '';
 		$menuflag = '';
 		$menucount = '';
 		$shortflag = '';
 		$shortcount = '';
 		$flag = '';
-		$menuids2 = array();$mids = array();
+		$menuids2 = [];$mids = [];
 		$menuids = $settingsmodel->getallmenuids($userid);	
 		$menuidsString = '';
-		$shortcuts = array();
-		$widgets = array();
+		$shortcuts = [];
+		$widgets = [];
 		$menuids_SC='';
 		$menuids_W='';
 		if(!empty($menuids))
@@ -942,12 +942,12 @@ if(isset($_SESSION['theme'])){
 					$menuids_SC = explode(',',$menuids[$i]['menuid']);		
 			}
 			$idCsv=1;	//flag 
-			$menuIdsArr=array();
+			$menuIdsArr=[];
 			$menuIdsCsv="";
 			$menusString="";
 			$privilege_model = new Default_Model_Privileges();
 			$privilegesofObj = $privilege_model->getObjPrivileges(trim($menuidsString,','),"",$role_id,$idCsv);
-			$menuwithaddprivilegeArr = array(SITEPREFERENCE,LEAVEREQUEST,IDENTITYCODES,IDENTITYDOCUMENTS);
+			$menuwithaddprivilegeArr = [SITEPREFERENCE,LEAVEREQUEST,IDENTITYCODES,IDENTITYDOCUMENTS];
 			if(!empty($privilegesofObj) && isset($privilegesofObj))
 			{
 				for($i=0;$i<sizeof($privilegesofObj);$i++)
@@ -1037,8 +1037,8 @@ if(isset($_SESSION['theme'])){
 		$GridMxmlarray = $this->_helper->HtmlFormCodeGeneratorHelper->getObjectMxml($objectId,$objectName);
 		$fieldcount = 0;
 		$lookupcount = 0;
-		$gridFields["Fields"]= array();
-		$gridFields["Lookup"]= array();
+		$gridFields["Fields"]= [];
+		$gridFields["Lookup"]= [];
 		foreach($GridMxmlarray['fields'] as $field){
 			if($field['dataType']!='LOOKUP' && $field['dataType']!='GRID' && $field['gridField']==1){
 				if($field['fieldName']){
@@ -1088,27 +1088,27 @@ if(isset($_SESSION['theme'])){
        $getdatacount = $settingsmodel->getActiveCountSettings($userid,$flag);
 	   $where='';
 	   if($getdatacount[0]['count']>0){
-		      $where = array('userid=?'=>$userid,
+		      $where = ['userid=?'=>$userid,
 						           'flag=?'=>$flag,
 						           'isactive=?'=>1 
-								);
+								];
 
-		      $data = array(		
+		      $data = [		
                             'menuid'=>$menuidstring, 
                     		'modified'=>$date->get('yyyy-MM-dd HH:mm:ss')
-    					 );
+    					 ];
           $id = $settingsmodel->addOrUpdateMenus($data, $where);
 		  $successmessage['result'] = 'update';
 
        }else{
-		   $data = array(		
+		   $data = [		
     							'userid'=>$userid,
                                 'menuid'=>$menuidstring, 
                                 'flag'=>$flag, 
        							'isactive'=> 1,
     							'created'=>$date->get('yyyy-MM-dd HH:mm:ss'),
     							'modified'=>$date->get('yyyy-MM-dd HH:mm:ss')
-    					 );
+    					 ];
           $id = $settingsmodel->addOrUpdateMenus($data, $where);
 		  if($id !='')
 		     $successmessage['result']= 'save';
@@ -1130,10 +1130,10 @@ if(isset($_SESSION['theme'])){
            $successmessage['result']= 'success';
        else
 		   $successmessage['result']= 'error';
-	   $data = array('menuname'=>$getmenuname[0]['menuName'],
+	   $data = ['menuname'=>$getmenuname[0]['menuName'],
                       'message'=>$successmessage['result'],
                       
-        );
+        ];
 	   $this->_helper->json($data);
 	}
 	
@@ -1159,22 +1159,22 @@ if(isset($_SESSION['theme'])){
 	   if($privilegesofObj['isactive'] == 1)
 	   {
 	       if(!empty($getmenuname)){
-	            $data = array('menuname'=>$getmenuname[0]['menuName'],
+	            $data = ['menuname'=>$getmenuname[0]['menuName'],
 		                 'menuicon'=>$getmenuname[0]['iconPath'], 
 						  'menuurl'=>$getmenuname[0]['url'], 
 	                      'message'=>'success'
-	                      );
+	                      ];
 			}	
 	       else{
-			   $data = array(
+			   $data = [
 	                      'message'=>'error'
-	            );
+	            ];
 			}
 	   }else
 	   {
-	    $data = array(
+	    $data = [
 	                      'message'=>'error'
-	            );	
+	            ];	
 	   }         
 		/**
 			*	Added By	:	Sapplica.
@@ -1186,14 +1186,14 @@ if(isset($_SESSION['theme'])){
 		//Removed: Manager status
 	   if($tabFlag != "" && $tabFlag == "widgets")
 		{
-			$menusNotdraggable = array(REPORTS,ORGANISATIONINFO,STRUCTURE,HEIRARCHY,IDENTITYCODES,IDENTITYDOCUMENTS,ANNOUNCEMENTS,INITIALIZE_APPRAISAL,APPRAISALRATINGS,APPRAISAL_SETTINGS,INITIALIZE_FEEDFORWARD,MANAGER_FEEDFORWARD,MY_TEAM_APPRAISAL,EXPENSES,EXPENSE_CATEGORY,EXPENSE_PAYMENTMODE,EXPENSE_PAYMENTMODE,RECEIPTS,TRIPS,ADVANCES,MYADVANCES,EMPLOYEEADVANCES,SUB_EXPENSES,MYEMPLOYEEEXPENSES,ASSETS,ASSETCATEGORIES,SUBASSET,VIOLATION_TYPE,RAISE_INCIDENT,MY_INCIDENT,TEAM_INCIDENT);
+			$menusNotdraggable = [REPORTS,ORGANISATIONINFO,STRUCTURE,HEIRARCHY,IDENTITYCODES,IDENTITYDOCUMENTS,ANNOUNCEMENTS,INITIALIZE_APPRAISAL,APPRAISALRATINGS,APPRAISAL_SETTINGS,INITIALIZE_FEEDFORWARD,MANAGER_FEEDFORWARD,MY_TEAM_APPRAISAL,EXPENSES,EXPENSE_CATEGORY,EXPENSE_PAYMENTMODE,EXPENSE_PAYMENTMODE,RECEIPTS,TRIPS,ADVANCES,MYADVANCES,EMPLOYEEADVANCES,SUB_EXPENSES,MYEMPLOYEEEXPENSES,ASSETS,ASSETCATEGORIES,SUBASSET,VIOLATION_TYPE,RAISE_INCIDENT,MY_INCIDENT,TEAM_INCIDENT];
 			if(in_array($menuid,$menusNotdraggable))
-				$data = array('message'=>'error');
+				$data = ['message'=>'error'];
 		}
 		
 	   }else
 	   {
-	   	     $data = array('message'=>'error');
+	   	     $data = ['message'=>'error'];
 	   }	
 	   
 
@@ -1207,9 +1207,9 @@ if(isset($_SESSION['theme'])){
 		$settingsmodel = new Default_Model_Settings();
 
 		$result = $settingsmodel->getNavigationIds();
-		$menuIdsArr = array();
-		$navIdsArr = array();
-		$parentMenuIdsArr = array();
+		$menuIdsArr = [];
+		$navIdsArr = [];
+		$parentMenuIdsArr = [];
 		for($m=0;$m < sizeof($result); $m++)
 		{
 			$menuIdsArr[$result[$m]['menuId']] = $result[$m]['parent'];			
@@ -1279,10 +1279,10 @@ if(isset($_SESSION['theme'])){
            }    			
         }              				
         $usermodel = new Default_Model_Users();                   					
-        $data = array('profileimg'=>$profileimagepath,
+        $data = ['profileimg'=>$profileimagepath,
                       
-					  );							  				               
-        $where = array("id=?" => $userid);                                    
+					  ];							  				               
+        $where = ["id=?" => $userid];                                    
         $status = $usermodel->addOrUpdateProfileImage($data,$where); 
         
         

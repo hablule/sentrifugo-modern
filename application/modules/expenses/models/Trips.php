@@ -50,8 +50,8 @@ class Expenses_Model_Trips extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{
 		$searchQuery = '';
-		$searchArray = array();
-		$data = array();
+		$searchArray = [];
+		$data = [];
 
 		  if($searchData != '' && $searchData!='undefined')
         {
@@ -71,24 +71,24 @@ class Expenses_Model_Trips extends Zend_Db_Table_Abstract
         }
 		$objName = 'trips';
 		
-		$tableFields = array(
+		$tableFields = [
 					'action'=>'Action',
 					'trip_name' => 'Trip',
 					'from_date' => 'From date',
 					'to_date' => 'To date',
 					'description' => 'Description',
-		);
+		];
 
 		$tablecontent = $this->getTripsData($sort, $by, $pageNo, $perPage,$searchQuery);
 	
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -96,13 +96,13 @@ class Expenses_Model_Trips extends Zend_Db_Table_Abstract
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall,
 			'menuName' => 'Trips',
-				 'search_filters' => array(
+				 'search_filters' => [
                             
-                            'from_date'=>array('type'=>'datepicker'),
-							  'to_date'=>array('type'=>'datepicker'),
+                            'from_date'=>['type'=>'datepicker'],
+							  'to_date'=>['type'=>'datepicker'],
                             
-                        ),
-			);
+                        ],
+			];
 			
 			return $dataTmp;
 	}
@@ -142,7 +142,7 @@ class Expenses_Model_Trips extends Zend_Db_Table_Abstract
 		
 		$tripsData = $this->select()
 		->setIntegrityCheck(false)
-		 ->from(array('t'=>'expense_trips'),array('t.*','from_date'=>'DATE_FORMAT(from_date,"'.DATEFORMAT_MYSQL.'")','to_date'=>'DATE_FORMAT(to_date,"'.DATEFORMAT_MYSQL.'")'))
+		 ->from(['t'=>'expense_trips'],['t.*','from_date'=>'DATE_FORMAT(from_date,"'.DATEFORMAT_MYSQL.'")','to_date'=>'DATE_FORMAT(to_date,"'.DATEFORMAT_MYSQL.'")'])
 		->where($where)
 		->order("$by $sort")
 		->limitPage($pageNo, $perPage);
@@ -177,7 +177,7 @@ class Expenses_Model_Trips extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('c'=>$this->_name),array('c.*'))						
+						->from(['c'=>$this->_name],['c.*'])						
 						->where('c.isactive = 1 AND c.id='.$id.' ');
 						
 		return $this->fetchAll($select)->toArray();
@@ -192,11 +192,11 @@ class Expenses_Model_Trips extends Zend_Db_Table_Abstract
 		$select =
 		$this->select()
 		->setIntegrityCheck(false)
-		->from(array('et' => 'expense_trips'))
-	    ->joinLeft(array('ex'=>'expenses'), "ex.trip_id = et.id and ex.isactive = 1",array('expense_date'=>'ex.expense_date','expense_conversion_rate'=>'ex.expense_conversion_rate','expense_id'=>'ex.id','is_reimbursable'=>'ex.is_reimbursable','expense_amount'=>'ex.expense_amount','application_amount'=>'ex.application_amount','status'=>'ex.status as status_expense','receipt_count'=>'(select count(*) from expense_receipts er where er.isactive=1 and er.expense_id = ex.id )'))
-		->joinInner(array('mc'=>'main_currency'), "mc.id = ex.expense_currency_id " ,array('currencycode'=>'mc.currencycode'))
-		->joinInner(array('ec'=>'expense_categories'), "ec.id = ex.category_id",array('expense_category_name'=>'ec.expense_category_name'))
-		->joinLeft(array('tp'=>'tm_projects'), "tp.id = ex.project_id",array('project_name'=>'tp.project_name'))
+		->from(['et' => 'expense_trips'])
+	    ->joinLeft(['ex'=>'expenses'], "ex.trip_id = et.id and ex.isactive = 1",['expense_date'=>'ex.expense_date','expense_conversion_rate'=>'ex.expense_conversion_rate','expense_id'=>'ex.id','is_reimbursable'=>'ex.is_reimbursable','expense_amount'=>'ex.expense_amount','application_amount'=>'ex.application_amount','status'=>'ex.status as status_expense','receipt_count'=>'(select count(*) from expense_receipts er where er.isactive=1 and er.expense_id = ex.id )'])
+		->joinInner(['mc'=>'main_currency'], "mc.id = ex.expense_currency_id " ,['currencycode'=>'mc.currencycode'])
+		->joinInner(['ec'=>'expense_categories'], "ec.id = ex.category_id",['expense_category_name'=>'ec.expense_category_name'])
+		->joinLeft(['tp'=>'tm_projects'], "tp.id = ex.project_id",['project_name'=>'tp.project_name'])
 		->where('ex.isactive = 1 AND et.id='.$id.' ') 
 		->order("ex.id DESC"); 
 		return $this->fetchAll($select)->toArray();
@@ -210,7 +210,7 @@ class Expenses_Model_Trips extends Zend_Db_Table_Abstract
 		echo $select =
 		$this->select()
 		->setIntegrityCheck(false)
-		->from(array('et' => 'expense_trips'))
+		->from(['et' => 'expense_trips'])
 		->where('et.isactive = 1 AND et.id='.$id.' ') ;
 		return $this->fetchAll($select)->toArray();
 	}
@@ -225,7 +225,7 @@ class Expenses_Model_Trips extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('c'=>$this->_name),array('c.id','c.client_name'))
+		->from(['c'=>$this->_name],['c.id','c.client_name'])
 		->where('c.is_active = 1 ')
 		->order('c.client_name');
 		return $this->fetchAll($select)->toArray();
@@ -257,7 +257,7 @@ class Expenses_Model_Trips extends Zend_Db_Table_Abstract
         }
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('p'=>$this->_name),array('p.id','trip_name'))
+		->from(['p'=>$this->_name],['p.id','trip_name'])
 		->where('p.isactive = 1 and p.status!="A" and p.status!="S" and p.createdby='.$loginUserId)
 		->order('p.trip_name');
 		return $this->fetchAll($select)->toArray();
@@ -279,7 +279,7 @@ class Expenses_Model_Trips extends Zend_Db_Table_Abstract
 		
 		 $tripsData = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('tr' => 'expense_trips'),array('tr.id','tr.trip_name','tr.status'))
+		->from(['tr' => 'expense_trips'],['tr.id','tr.trip_name','tr.status'])
 		->where($where)
 		->limit($limit,$offset)
 		;
@@ -307,7 +307,7 @@ class Expenses_Model_Trips extends Zend_Db_Table_Abstract
 		//$loginUserId=3;
 		$select =  $this->select()
 						->setIntegrityCheck(false)
-						->from(array('c'=>'employees_summary'),array('c.reporting_manager_name'))						
+						->from(['c'=>'employees_summary'],['c.reporting_manager_name'])						
 						->where('c.user_id='.$loginUserId);
 		return $this->fetchAll($select)->toArray();
 		
@@ -317,7 +317,7 @@ class Expenses_Model_Trips extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('e'=>'expenses'),array('e.status'))
+		->from(['e'=>'expenses'],['e.status'])
 		->where('e.isactive = 1 and e.trip_id = '.$trip_id);
 		return $this->fetchAll($select)->toArray();
 	}
@@ -326,8 +326,8 @@ class Expenses_Model_Trips extends Zend_Db_Table_Abstract
 	{
 	    $select =  $this->select()
                             ->setIntegrityCheck(false)	
-                            ->from(array('s'=>'main_sitepreference'),array('s.*'))
-                            ->joinLeft(array('c'=>'main_currency'), 'c.id=s.currencyid AND c.isactive=1',array('currencycode'=>'c.currencycode'))						   
+                            ->from(['s'=>'main_sitepreference'],['s.*'])
+                            ->joinLeft(['c'=>'main_currency'], 'c.id=s.currencyid AND c.isactive=1',['currencycode'=>'c.currencycode'])						   
                             ->where('s.isactive = 1');
     	  
 		return $this->fetchAll($select)->toArray();   

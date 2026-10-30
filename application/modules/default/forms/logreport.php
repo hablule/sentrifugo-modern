@@ -69,7 +69,7 @@ class Default_Form_logreport extends Zend_Form
 		$logindate->setLabel("Login Date");
 		$logindate->setAttrib('readonly', 'true');
 		$logindate->setAttrib('onfocus', 'this.blur()');
-		$logindate->setOptions(array('class' => 'brdr_none'));
+		$logindate->setOptions(['class' => 'brdr_none']);
 
 		$ipaddress = new Zend_Form_Element_Text('ipaddress');
 		$ipaddress->setAttrib('onblur', 'clearautocompleteuserlog(this)');
@@ -77,10 +77,10 @@ class Default_Form_logreport extends Zend_Form
 		$ipaddress->setLabel("Ip Address");
 
 		
-		$this->addElements(array($emprole,$group,$employeeId,$username,$emailId,$logindate,$ipaddress));
-		$this->setElementDecorators(array('ViewHelper'));
-		$this->setElementDecorators(array(
+		$this->addElements([$emprole,$group,$employeeId,$username,$emailId,$logindate,$ipaddress]);
+		$this->setElementDecorators(['ViewHelper']);
+		$this->setElementDecorators([
                     'UiWidgetElement',
-		),array('logindate'));
+		],['logindate']);
 	}
 }

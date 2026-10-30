@@ -29,7 +29,7 @@ class Login_Auth {
 		if (empty($adapter) || empty($options) || !is_array($options)) {
             return false;
         }
-        if (!in_array($adapter,array('ldap','db','email'))) {
+        if (!in_array($adapter,['ldap','db','email'])) {
         	return false;
         }
 		if (!array_key_exists('username',$options) ||  !array_key_exists('user_password',$options)) {

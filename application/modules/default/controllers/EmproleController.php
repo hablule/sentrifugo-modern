@@ -43,13 +43,13 @@ class Default_EmproleController extends Zend_Controller_Action
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 				if ($Uid != "") {
 					$employeeData = $usersModel->getUserDetailsByIDandFlag($Uid);
 				}
 				$usrdata = $usersModel->getUserFromEmp($id);
 				$tmp_id = $Uid;
-				$Uid = (isset($usrdata[0]['id']))?$usrdata[0]['id']:-1;
+				$Uid = $usrdata[0]['id'] ?? -1;
 				$employeeleavesModel = new Default_Model_emprole();
 				$employeeModal = new Default_Model_Employee();
 				$isrowexist = $employeeModal->getsingleEmployeeData($id);
@@ -66,9 +66,9 @@ class Default_EmproleController extends Zend_Controller_Action
 					$objname = $this->_getParam('objname');
 					$refresh = $this->_getParam('refresh');
 					$dashboardcall = $this->_getParam('dashboardcall', null);
-					$data = array();
+					$data = [];
 					$searchQuery = '';
-					$searchArray = array();
+					$searchArray = [];
 					$tablecontent = '';
 					if ($refresh == 'refresh') {
 						if ($dashboardcall == 'Yes')
@@ -81,7 +81,7 @@ class Default_EmproleController extends Zend_Controller_Action
 						$pageNo = 1;
 						$searchData = '';
 						$searchQuery = '';
-						$searchArray = array();
+						$searchArray = [];
 					} else {
 						$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 						$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'r.id';
@@ -162,7 +162,7 @@ Zend_Debug::dump($th->getMessage());
       
 			if ($form->isValid($this->_request->getPost())) {
 		
-                $data = array(
+                $data = [
                     'role_id'=>$this->_getParam('role_id'),
                     'user_id'=>$usrdata[0]['id'],
                     'datefrom' => sapp_Global::change_date($this->_request->getParam('datefrom'), 'database'),
@@ -171,7 +171,7 @@ Zend_Debug::dump($th->getMessage());
                     'description'=>$this->_getParam('description'),
                     'createddate'=>gmdate('Y-m-d H:i:s'),
 					'isactive'=>'Y'
-                );
+                ];
 
 				$where = '';
 				$actionflag = 1;
@@ -353,7 +353,7 @@ Zend_Debug::dump($th->getMessage());        }
 
 				if ($form->isValid($this->_request->getPost())) {
 		
-                $data = array(
+                $data = [
                     'role_id'=>$this->_getParam('role_id'),
                     'user_id'=>$usrdata[0]['id'],
                     'datefrom' => sapp_Global::change_date($this->_request->getParam('datefrom'), 'database'),
@@ -362,7 +362,7 @@ Zend_Debug::dump($th->getMessage());        }
 					'isactive'=>$util::getcheckboxvalue($this->_getParam('isactive'))
 
                   
-                );
+                ];
                 $data['modifiedby'] = $loginUserId;
                 		$data['modifieddate'] = gmdate("Y-m-d H:i:s");
             		$where = 'userrole_id='.$id;
@@ -447,7 +447,7 @@ Zend_Debug::dump($th->getMessage());        }
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 
 				$employeeModal = new Default_Model_Employee();
 				try {
@@ -466,9 +466,9 @@ Zend_Debug::dump($th->getMessage());        }
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall', null);
-								$data = array();
+								$data = [];
 								$searchQuery = '';
-								$searchArray = array();
+								$searchArray = [];
 								$tablecontent = '';
 								if ($refresh == 'refresh') {
 									if ($dashboardcall == 'Yes')
@@ -481,7 +481,7 @@ Zend_Debug::dump($th->getMessage());        }
 									$pageNo = 1;
 									$searchData = '';
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 								} else {
 									$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 									$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'isactive';

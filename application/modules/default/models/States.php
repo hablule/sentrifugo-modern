@@ -38,8 +38,8 @@ class Default_Model_States extends Zend_Db_Table_Abstract
 		
 		$statesData = $this->select()
     					   ->setIntegrityCheck(false)	
-						   ->from(array('s'=>'main_state'),array('s.*'))
-                           ->joinLeft(array('c'=>'tbl_countries'), 's.countryid=c.id',array('country_name'=>'c.country_name'))						   
+						   ->from(['s'=>'main_state'],['s.*'])
+                           ->joinLeft(['c'=>'tbl_countries'], 's.countryid=c.id',['country_name'=>'c.country_name'])						   
 						   ->where($where)
     					   ->order("$by $sort") 
     					   ->limitPage($pageNo, $perPage);
@@ -50,8 +50,8 @@ class Default_Model_States extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{		
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		
 		if($searchData != '' && $searchData!='undefined')
 			{
@@ -65,25 +65,25 @@ class Default_Model_States extends Zend_Db_Table_Abstract
 			}
 		$objName = 'states';
 		
-		$tableFields = array('action'=>'Action','country_name' => 'Country','state' => 'State');
+		$tableFields = ['action'=>'Action','country_name' => 'Country','state' => 'State'];
 		
 		$tablecontent = $this->getStatesData($sort, $by, $pageNo, $perPage,$searchQuery);     
 		
-	    $dataTmp = array(
+	    $dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
 			'searchArray' => $searchArray,
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall
-		);	
+		];	
 		return $dataTmp;
 	}
 	
@@ -104,7 +104,7 @@ class Default_Model_States extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('s'=>'main_state'),array('s.*'))
+						->from(['s'=>'main_state'],['s.*'])
 					    ->where('s.isactive = 1 AND s.id='.$id.' ');
 		return $this->fetchAll($select)->toArray();
 	
@@ -160,7 +160,7 @@ class Default_Model_States extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('s'=>'tbl_states'),array('s.id','s.state_name'))
+						->from(['s'=>'tbl_states'],['s.id','s.state_name'])
 						->order('s.state_name');
 					
 		return $this->fetchAll($select)->toArray();
@@ -174,8 +174,8 @@ class Default_Model_States extends Zend_Db_Table_Abstract
 		{
 			$select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('s'=>'tbl_states'),array('s.*'))
-						->joinLeft(array('m'=>'main_state'), "m.state_id_org = s.id and m.isactive = 1",array())
+						->from(['s'=>'tbl_states'],['s.*'])
+						->joinLeft(['m'=>'main_state'], "m.state_id_org = s.id and m.isactive = 1",[])
 						->where('s.country_id='.$countryid.' AND s.isactive=1 AND m.state_id_org is null')
 						->order('s.state_name');
 		}
@@ -183,7 +183,7 @@ class Default_Model_States extends Zend_Db_Table_Abstract
 		{
 			$select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('s'=>'tbl_states'),array('s.*'))
+						->from(['s'=>'tbl_states'],['s.*'])
 						->where('s.country_id='.$countryid.' AND s.isactive=1 ')
 						->order('s.state_name');
 		}
@@ -209,7 +209,7 @@ class Default_Model_States extends Zend_Db_Table_Abstract
 	{
 	     $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('s'=>'tbl_states'),array('statename'=>'s.state_name','s.id'))
+						->from(['s'=>'tbl_states'],['statename'=>'s.state_name','s.id'])
 						->where('s.id='.$stateid.' AND s.isactive=1 ');
 						
 		
@@ -221,7 +221,7 @@ class Default_Model_States extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
                             ->setIntegrityCheck(false)
-                            ->from(array('s'=>'main_state'),array('s.*'))
+                            ->from(['s'=>'main_state'],['s.*'])
                             ->where('s.countryid='.$countryid.' AND s.isactive=1 ')
                             ->order('s.state');
 		//die($select);
@@ -232,7 +232,7 @@ class Default_Model_States extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('s'=>'main_state'),array('s.id','s.state_id_org','s.state'))
+						->from(['s'=>'main_state'],['s.id','s.state_id_org','s.state'])
 						->where('s.state_id_org='.$state_id_org.' AND s.isactive=1 ');
 						
 		
@@ -242,7 +242,7 @@ class Default_Model_States extends Zend_Db_Table_Abstract
 	public function getStateNamesByIds($stateIdArray)
 	{
 		$resultstring = implode(',', $stateIdArray);
-		$stateArray = array();
+		$stateArray = [];
 		if($resultstring)
 		{
 			try

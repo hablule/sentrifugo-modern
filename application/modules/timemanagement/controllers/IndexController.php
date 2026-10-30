@@ -210,9 +210,9 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 			$employeesmodel = new Default_Model_Employees();
 			$weekdaysmodel = new Default_Model_Weekdays();
 			$holidaydatesmodel = new Default_Model_Holidaydates();
-			$msgarray = array();
-			$dateofjoiningArr = array();
-			$holidayDateslistArr = array();
+			$msgarray = [];
+			$dateofjoiningArr = [];
+			$holidayDateslistArr = [];
 			$rMngr = 'No';
 			$availableleaves = '';
 			$rep_mang_id = '';
@@ -244,7 +244,7 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 						$year = $dateofjoining[0];
 						$month = $dateofjoining[1];
 						$day = $dateofjoining[2];
-						$dateofjoiningArr = array('year' => $year, 'month' => $month, 'day' => $day, 'datetimestamp' => $datofjoiningtimestamp);
+						$dateofjoiningArr = ['year' => $year, 'month' => $month, 'day' => $day, 'datetimestamp' => $datofjoiningtimestamp];
 					}
 					$reportingmanagerId = $loggedInEmployeeDetails[0]['reporting_manager'];
 					$employeeDepartmentId = $loggedInEmployeeDetails[0]['department_id'];
@@ -322,9 +322,9 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 					$this->view->rMngr = $rMngr;
 					$this->view->hremailgroup = $hremailgroup;
 					$this->view->dateofjoiningArr = $dateofjoiningArr;
-					$this->view->leaverequestdetails = !empty($leaverequestdetails) ? $leaverequestdetails : array();
+					$this->view->leaverequestdetails = !empty($leaverequestdetails) ? $leaverequestdetails : [];
 					$this->view->holidayDateslistArr = $holidayDateslistArr;
-					$this->view->managerrequestdetails = !empty($managerrequestdetails) ? $managerrequestdetails : array();
+					$this->view->managerrequestdetails = !empty($managerrequestdetails) ? $managerrequestdetails : [];
 					$this->view->isReportingManagerFlag = $isReportingManagerFlag;
 					$this->view->searchRepFlag = $searchRepFlag;
 					$this->view->searchMeFlag = $searchMeFlag;
@@ -360,7 +360,7 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 		Query to get the number of available leaves for the employee 
 		*/
 			$getavailbaleleaves = $leaverequestmodel->getAvailableLeaves($loginUserId);
-			
+
 			if (!empty($getavailbaleleaves)) {
 				$leaverequestform->no_of_days->setValue($getavailbaleleaves[0]['remainingleaves']);
 				$availableleaves = $getavailbaleleaves[0]['remainingleaves'];
@@ -376,7 +376,7 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 			$this->view->messages = $this->_helper->flashMessenger->getMessages();
 			/*leave request code ends*/
 
-		
+
 			//START code to show pending weeks for submit in current month
 
 			$projmodel = new Timemanagement_Model_Projects();
@@ -395,7 +395,7 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 					$this->view->prev_str = $prev_week_status;
 				}
 			}
-			
+
 			//END code to show pending weeks for submit in current month
 
 	}
@@ -570,9 +570,9 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 		$employeesmodel = new Default_Model_Employees();
 		$weekdaysmodel = new Default_Model_Weekdays();
 		$holidaydatesmodel = new Default_Model_Holidaydates();
-		$msgarray = array();
-		$dateofjoiningArr = array();
-		$holidayDateslistArr = array();
+		$msgarray = [];
+		$dateofjoiningArr = [];
+		$holidayDateslistArr = [];
 		$rMngr = 'No';
 		$availableleaves = '';
 		$rep_mang_id = '';
@@ -602,7 +602,7 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 					$year = $dateofjoining[0];
 					$month = $dateofjoining[1];
 					$day = $dateofjoining[2];
-					$dateofjoiningArr = array('year' => $year, 'month' => $month, 'day' => $day, 'datetimestamp' => $datofjoiningtimestamp);
+					$dateofjoiningArr = ['year' => $year, 'month' => $month, 'day' => $day, 'datetimestamp' => $datofjoiningtimestamp];
 				}
 				$reportingmanagerId = $loggedInEmployeeDetails[0]['reporting_manager'];
 				$employeeDepartmentId = $loggedInEmployeeDetails[0]['department_id'];
@@ -675,9 +675,9 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 				$this->view->rMngr = $rMngr;
 				$this->view->hremailgroup = $hremailgroup;
 				$this->view->dateofjoiningArr = $dateofjoiningArr;
-				$this->view->leaverequestdetails = !empty($leaverequestdetails) ? $leaverequestdetails : array();
+				$this->view->leaverequestdetails = !empty($leaverequestdetails) ? $leaverequestdetails : [];
 				$this->view->holidayDateslistArr = $holidayDateslistArr;
-				$this->view->managerrequestdetails = !empty($managerrequestdetails) ? $managerrequestdetails : array();
+				$this->view->managerrequestdetails = !empty($managerrequestdetails) ? $managerrequestdetails : [];
 				$this->view->isReportingManagerFlag = $isReportingManagerFlag;
 				$this->view->searchRepFlag = $searchRepFlag;
 				$this->view->searchMeFlag = $searchMeFlag;
@@ -772,8 +772,8 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 
 			$selYrMonArray = explode('-', $selYrMon);
 			$myTsModel = new Timemanagement_Model_MyTimesheet();
-			$projTasksArray = array();
-			$projsArray = array();
+			$projTasksArray = [];
+			$projsArray = [];
 			$date = new Zend_Date();
 
 			$projectId = '';
@@ -850,7 +850,7 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 
 					array_push($projTasksArray, $taskDataArray[0]);
 
-					$data = array(
+					$data = [
 						'emp_id' => $sessionData->id,
 						'project_task_id' => $taskDataArray[0],
 						'project_id' => $taskDataArray[1],
@@ -877,7 +877,7 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 						//  'modified_by'=>NULL,
 						'is_active' => 1,
 						'created' => Zend_Registry::get('currentdate') //gmdate("Y-m-d H:i:s")
-					);
+					];
 					$checkProjNull = $myTsModel->getProjNullRecordCountInTimeSheet($sessionData->id, $selYrMonArray[0], $selYrMonArray[1], $week);
 
 					if ($checkProjNull != 0) {
@@ -901,7 +901,7 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 					$projHrsData = $myTsModel->getWeekProjectHrs($sessionData->id, $proj, $selYrMonArray[0], $selYrMonArray[1], $week);
 					//	print_r($projHrsData); exit;
 
-					$statusData = array(
+					$statusData = [
 						'emp_id' => $sessionData->id,
 						'project_id' => $proj,
 						'ts_year' => $selYrMonArray[0],
@@ -947,7 +947,7 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 						'created_by' => $sessionData->id,
 						'is_active' => 1,
 						'created' => Zend_Registry::get('currentdate') //gmdate("Y-m-d H:i:s")
-					);
+					];
 					//print_r($statusData); //exit;
 					$checkProjNull = $myTsModel->getProjNullRecordCountInStatus($sessionData->id, $selYrMonArray[0], $selYrMonArray[1], $week);
 
@@ -962,7 +962,7 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 					}
 				}
 
-				$notesData = array(
+				$notesData = [
 					'emp_id' => $sessionData->id,
 					'ts_year' => $selYrMonArray[0],
 					'ts_month' => $selYrMonArray[1],
@@ -993,7 +993,7 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 					'created_by' => $sessionData->id,
 					'is_active' => 1,
 					'created' => Zend_Registry::get('currentdate') //gmdate("Y-m-d H:i:s")
-				);
+				];
 				$myTsModel->SaveOrUpdateTimesheetNotes($notesData);
 			}
 
@@ -1003,7 +1003,7 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 			if (is_array($empDeletedTasks)) {
 
 				foreach ($empDeletedTasks as $taskId) {
-					$deleteTasksData = array(
+					$deleteTasksData = [
 						'emp_id' => $sessionData->id,
 						'project_task_id' => $taskId,
 						'ts_year' => $selYrMonArray[0],
@@ -1021,7 +1021,7 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 						'is_active' => 0,
 						'modified_by' => $sessionData->id,
 						'modified' => Zend_Registry::get('currentdate') //gmdate("Y-m-d H:i:s")
-					);
+					];
 
 					$myTsModel->deleteTimesheetTask($sessionData->id, $deleteTasksData, $taskId, $selYrMonArray[0], $selYrMonArray[1], $week);
 				}
@@ -1031,7 +1031,7 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 			if (is_array($empDeletedProjects)) {
 
 				foreach ($empDeletedProjects as $projId) {
-					$deleteProjectsData = array(
+					$deleteProjectsData = [
 						'emp_id' => $sessionData->id,
 						'project_id' => $projId,
 						'ts_year' => $selYrMonArray[0],
@@ -1049,7 +1049,7 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 						'is_active' => 0,
 						'modified_by' => $sessionData->id,
 						'modified' => Zend_Registry::get('currentdate') //gmdate("Y-m-d H:i:s")
-					);
+					];
 
 
 					$myTsModel->deleteWeekProjectStatus($sessionData->id, $deleteProjectsData, $projId, $selYrMonArray[0], $selYrMonArray[1], $week);
@@ -1105,7 +1105,7 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 			$week = ($calWeek - $startCalWeek) + 1;
 			$dayName = strtolower(date('D', strtotime($selYrMon . '-' . $selDay)));
 		}
-		$statusData = array(
+		$statusData = [
 			'emp_id' => $sessionData->id,
 			'ts_year' => $yrMon[0],
 			'ts_month' => $yrMon[1],
@@ -1114,7 +1114,7 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 			'week_status' => 'submitted',
 			'modified_by' => $sessionData->id,
 			'modified' => Zend_Registry::get('currentdate')
-		);
+		];
 		if ($selDay != '') {
 			//$statusData[$dayName.'_project_status']= 'submitted';
 			$statusData[$dayName . '_status'] = 'submitted';
@@ -1137,7 +1137,7 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 
 		$projId = '';
 		foreach ($weekDaysProjStatus as $projStatusArray) {
-			$projStatusData = array();
+			$projStatusData = [];
 			foreach ($projStatusArray as $key => $value) {
 				if ($key == 'project_id') $projId = $value;
 				if ($value == 'saved') {
@@ -1191,18 +1191,18 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 			$calWeek = $this->_getParam('calWeek');
 			$yrMon = explode('-', $selYrMon);
 
-			$statusData = array(
+			$statusData = [
 				'modified_by' => $sessionData->id,
 				'modified' => Zend_Registry::get('currentdate')
-			);
-			$TasksData = array(
+			];
+			$TasksData = [
 				'modified_by' => $sessionData->id,
 				'modified' => Zend_Registry::get('currentdate') //gmdate("Y-m-d H:i:s")
-			);
-			$notesData = array(
+			];
+			$notesData = [
 				'modified_by' => $sessionData->id,
 				'modified' => Zend_Registry::get('currentdate') //gmdate("Y-m-d H:i:s")
-			);
+			];
 			$weekDaysStatus =  $myTsModel->getWeekDaysDailyStatus($sessionData->id, $yrMon[0], $yrMon[1], $week);
 			foreach ($weekDaysStatus[0] as $key => $value) {
 				if ($value == 'saved') {
@@ -1242,7 +1242,7 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 		foreach ($statesData as $state) {
 			$opt .= "<option value='" . $state['id'] . "'>" . $state['state_name'] . "</option>";
 		}
-		$this->_helper->json(array('options' => utf8_encode($opt)));
+		$this->_helper->json(['options' => utf8_encode($opt)]);
 	}
 	//get notification alerts
 	public function getapprovedtimesheetAction()
@@ -1266,6 +1266,6 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 		$selYrMon = $this->_getParam('day');
 		$callval = $this->_getParam('yearmonth');
 		$date = sapp_Global::change_date($callval, 'view');
-		$this->_helper->json(array('conerteddate' => $date));
+		$this->_helper->json(['conerteddate' => $date]);
 	}
 }

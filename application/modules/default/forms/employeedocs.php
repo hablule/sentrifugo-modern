@@ -10,8 +10,8 @@ class Default_Form_Employeedocs extends Zend_Form{
         $doctype = new Zend_Form_Element_Select('doctype');
         $doctype->setLabel('Document Type');
 
-        $this->addElements(array($id, $doctype));
-        $this->setElementDecorators(array('ViewHelper')); 
+        $this->addElements([$id, $doctype]);
+        $this->setElementDecorators(['ViewHelper']); 
     }
 }
 ?>

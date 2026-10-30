@@ -43,25 +43,25 @@ class Default_Form_Parating extends Zend_Form
         $data_type->setLabel('Data Type')
             ->setAttrib('class', 'formDataElement')
             ->setRequired(true)
-            ->addMultiOptions(array('Structured' => 'Structured (Pre-defined Options)', 'Unstructured' => 'Unstructured (Free Text)'));
+            ->addMultiOptions(['Structured' => 'Structured (Pre-defined Options)', 'Unstructured' => 'Unstructured (Free Text)']);
 
         $ui_widget = new Zend_Form_Element_Select('ui_widget');
         $ui_widget->setLabel('UI Widget')
             ->setAttrib('class', 'formDataElement')
             ->setRequired(true)
-            ->addMultiOptions(array('Dropdown' => 'Dropdown', 'Radio' => 'Radio Buttons', 'Slider' => 'Slider', 'Stars' => 'Stars', 'Textarea' => 'Textarea', 'Textbox' => 'Textbox'));
+            ->addMultiOptions(['Dropdown' => 'Dropdown', 'Radio' => 'Radio Buttons', 'Slider' => 'Slider', 'Stars' => 'Stars', 'Textarea' => 'Textarea', 'Textbox' => 'Textbox']);
 
         // Step Value (Only applies to Sliders)
         $step_value = new Zend_Form_Element_Text('step_value');
         $step_value->setLabel('Slider Increment Step')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '5', 'placeholder' => 'e.g., 0.5 or 1.0'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '5', 'placeholder' => 'e.g., 0.5 or 1.0'])
             ->setRequired(false)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('Float', true, array(
+            ->addValidator('Float', true, [
                 'locale'   => 'en_US', 
-                'messages' => array(Zend_Validate_Float::NOT_FLOAT => 'Step value must be a valid number.')
-            ));
+                'messages' => [Zend_Validate_Float::NOT_FLOAT => 'Step value must be a valid number.']
+            ]);
 
         /* --------------------------------------------------------------
          * TYPE: TEXT (Alphabetical)
@@ -69,23 +69,23 @@ class Default_Form_Parating extends Zend_Form
 
         $code = new Zend_Form_Element_Text('code');
         $code->setLabel('Scale Code')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '60', 'placeholder' => 'e.g., STANDARD_1_5'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '60', 'placeholder' => 'e.g., STANDARD_1_5'])
             ->setRequired(true)
             ->addFilter('StringTrim')->addFilter('StripTags')
-            ->addValidator('NotEmpty', true, array('messages' => 'Please enter a scale code.'))
-            ->addValidator('Regex', true, array('pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9_]*)$/', 'messages' => array(Zend_Validate_Regex::NOT_MATCH => 'Code must contain letters, no spaces allowed.')));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please enter a scale code.'])
+            ->addValidator('Regex', true, ['pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9_]*)$/', 'messages' => [Zend_Validate_Regex::NOT_MATCH => 'Code must contain letters, no spaces allowed.']]);
 
-        $codeVal = new Zend_Validate_Db_NoRecordExists(array('table' => 'main_pa_rating', 'field' => 'code', 'exclude' => ($idVal > 0) ? "id != $idVal AND isactive != 5" : "isactive != 5"));
+        $codeVal = new Zend_Validate_Db_NoRecordExists(['table' => 'main_pa_rating', 'field' => 'code', 'exclude' => ($idVal > 0) ? "id != $idVal AND isactive != 5" : "isactive != 5"]);
         $codeVal->setMessage('This scale code already exists.');
         $code->addValidator($codeVal);
 
         $name = new Zend_Form_Element_Text('name');
         $name->setLabel('Scale Name')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '100'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '100'])
             ->setRequired(true)
             ->addFilter('StringTrim')->addFilter('StripTags')
-            ->addValidator('NotEmpty', true, array('messages' => 'Please enter a scale name.'))
-            ->addValidator('Regex', true, array('pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9 ]*)$/', 'messages' => array(Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters.')));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please enter a scale name.'])
+            ->addValidator('Regex', true, ['pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9 ]*)$/', 'messages' => [Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters.']]);
 
         /* --------------------------------------------------------------
          * TYPE: TEXTAREA (Alphabetical)
@@ -93,7 +93,7 @@ class Default_Form_Parating extends Zend_Form
 
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Description')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')->addFilter('StripTags');
 
         /* --------------------------------------------------------------
@@ -108,13 +108,13 @@ class Default_Form_Parating extends Zend_Form
          * -------------------------------------------------------------- */
 
         $submit = new Zend_Form_Element_Submit('submit');
-        $submit->setLabel('Save')->setAttribs(array('id' => 'submitbutton', 'class' => 'actbtn_btn'));
+        $submit->setLabel('Save')->setAttribs(['id' => 'submitbutton', 'class' => 'actbtn_btn']);
 
         /* --------------------------------------------------------------
          * BUILD & DECORATE
          * -------------------------------------------------------------- */
 
-        $this->addElements(array(
+        $this->addElements([
             $idElement,
             $options_payload, // Hidden
             $data_type,
@@ -125,11 +125,11 @@ class Default_Form_Parating extends Zend_Form
             $description,                 // Textarea
             $isactive,                    // Checkbox
             $submit                       // Submit
-        ));
+        ]);
 
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
-            $element->setDecorators(array('ViewHelper'));
+            $element->setDecorators(['ViewHelper']);
         }
     }
 }

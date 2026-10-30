@@ -58,7 +58,7 @@ class Default_Model_Digitalpresence extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -79,18 +79,18 @@ class Default_Model_Digitalpresence extends Zend_Db_Table_Abstract
             $searchQuery = rtrim($searchQuery, " AND");
         }
 
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'         => 'Action',
             'media_name'     => 'Media Platform',
             'digitaladdress' => 'URL / Handle',
             'owner_type'     => 'Entity Type',
             'owner_name'     => 'Assigned To',
             'status_text'    => 'Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
@@ -98,17 +98,17 @@ class Default_Model_Digitalpresence extends Zend_Db_Table_Abstract
             'tablecontent'   => $tableContent,
             'objectname'     => 'digitalpresence',
             'tableheader'    => $tableHeaders,
-            'extra'          => array(),
+            'extra'          => [],
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
             'searchArray'    => $searchArray,
             'menuName'       => 'Digital Presence',
             'call'           => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => array(
-                'status_text' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive'))
-            )
-        );
+            'search_filters' => [
+                'status_text' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']]
+            ]
+        ];
     }
 
     /**
@@ -123,7 +123,7 @@ class Default_Model_Digitalpresence extends Zend_Db_Table_Abstract
 
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('dp' => $this->_name), array(
+            ->from(['dp' => $this->_name], [
                 'id'             => 'dp.id', // SSOT IV.2
                 'digitaladdress' => 'dp.digitaladdress',
                 'status_text'    => new Zend_Db_Expr("CASE WHEN dp.isactive = 1 THEN 'Active' ELSE 'Inactive' END"),
@@ -143,16 +143,16 @@ class Default_Model_Digitalpresence extends Zend_Db_Table_Abstract
                 "),
                 // Resolve Owner Name dynamically
                 'owner_name'     => new Zend_Db_Expr("COALESCE(c.name, bu.name, di.name, de.name, se.name, pr.name, tm.name, em.userfullname)")
-            ))
-            ->joinInner(array('dm' => 'main_digitalmedia'), 'dp.digitalmedia_id = dm.id', array('media_name' => 'dm.name'))
-            ->joinLeft(array('c'  => 'main_company'), 'dp.company_id = c.id', array())
-            ->joinLeft(array('bu' => 'main_businessunit'), 'dp.sbunit_id = bu.id', array())
-            ->joinLeft(array('di' => 'main_division'), 'dp.division_id = di.id', array())
-            ->joinLeft(array('de' => 'main_department'), 'dp.department_id = de.id', array())
-            ->joinLeft(array('se' => 'main_section'), 'dp.section_id = se.id', array())
-            ->joinLeft(array('pr' => 'main_project'), 'dp.project_id = pr.id', array())
-            ->joinLeft(array('tm' => 'main_team'), 'dp.team_id = tm.id', array())
-            ->joinLeft(array('em' => 'main_employee'), 'dp.employee_id = em.id', array())
+            ])
+            ->joinInner(['dm' => 'main_digitalmedia'], 'dp.digitalmedia_id = dm.id', ['media_name' => 'dm.name'])
+            ->joinLeft(['c'  => 'main_company'], 'dp.company_id = c.id', [])
+            ->joinLeft(['bu' => 'main_businessunit'], 'dp.sbunit_id = bu.id', [])
+            ->joinLeft(['di' => 'main_division'], 'dp.division_id = di.id', [])
+            ->joinLeft(['de' => 'main_department'], 'dp.department_id = de.id', [])
+            ->joinLeft(['se' => 'main_section'], 'dp.section_id = se.id', [])
+            ->joinLeft(['pr' => 'main_project'], 'dp.project_id = pr.id', [])
+            ->joinLeft(['tm' => 'main_team'], 'dp.team_id = tm.id', [])
+            ->joinLeft(['em' => 'main_employee'], 'dp.employee_id = em.id', [])
             ->where('dp.isactive != 5');
 
         if (!empty($searchQuery)) {
@@ -172,7 +172,7 @@ class Default_Model_Digitalpresence extends Zend_Db_Table_Abstract
 
     public function getPairs($activeOnly = true)
     {
-        $select = $this->select()->from($this->_name, array('id', 'digitaladdress'))->order('digitaladdress ASC');
+        $select = $this->select()->from($this->_name, ['id', 'digitaladdress'])->order('digitaladdress ASC');
         if ($activeOnly) $select->where("isactive = 1");
         return $this->getAdapter()->fetchPairs($select);
     }
@@ -196,7 +196,7 @@ class Default_Model_Digitalpresence extends Zend_Db_Table_Abstract
         if (!empty($id)) {
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = gmdate("Y-m-d H:i:s");
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return 'update';
         }
 
@@ -219,8 +219,8 @@ class Default_Model_Digitalpresence extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array('isactive' => 5, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s"));
-        return $this->update($data, array('id = ?' => (int)$id));
+        $data = ['isactive' => 5, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s")];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     public function toggleStatus($id, $status)
@@ -228,8 +228,8 @@ class Default_Model_Digitalpresence extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array('isactive' => (int)$status, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s"));
-        return $this->update($data, array('id = ?' => (int)$id));
+        $data = ['isactive' => (int)$status, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s")];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* =================================================================================

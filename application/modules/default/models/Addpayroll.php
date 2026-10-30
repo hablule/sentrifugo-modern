@@ -33,8 +33,8 @@ class Default_Model_Addperk extends Zend_Db_Table_Abstract
 
         $AdditionData = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('p' => 'main_perk'), array('perk_id' => 'perk_id', 'name' => 'p.name', 'code' => 'p.code', 'description' => 'p.description', 'start' => 'p.start', 'end' => 'p.end', 'type' => 'p.type', 'isactive' => 'p.isactive'))
-            ->joinInner(array('pc' => 'main_perkcategory'), "pc.perkcategory_id = p.category ", array('category' => 'pc.name'))
+            ->from(['p' => 'main_perk'], ['perk_id' => 'perk_id', 'name' => 'p.name', 'code' => 'p.code', 'description' => 'p.description', 'start' => 'p.start', 'end' => 'p.end', 'type' => 'p.type', 'isactive' => 'p.isactive'])
+            ->joinInner(['pc' => 'main_perkcategory'], "pc.perkcategory_id = p.category ", ['category' => 'pc.name'])
             //    ->joinInner(array('pc'=>'main_perkcategory'), 's.id=c.state',array('state_name'=>'s.state_name'))	
             ->where($where)
             ->order("$by $sort")
@@ -44,8 +44,8 @@ class Default_Model_Addperk extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $p1, $p2, $p3, $p4)
     {
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
         $db = Zend_Db_Table::getDefaultAdapter();
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
@@ -71,7 +71,7 @@ class Default_Model_Addperk extends Zend_Db_Table_Abstract
         $objName = 'addperk';
         $objId = 'add';
 
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'name' => 'Name',
             'code' => 'Code',
@@ -81,17 +81,17 @@ class Default_Model_Addperk extends Zend_Db_Table_Abstract
             'end' => 'End date',
             'type' => 'Type',
             'isactive' => 'isactive'
-        );
+        ];
 
         $tablecontent = $this->getAdditionData($sort, $by, $pageNo, $perPage, $searchQuery);
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
             'perPage' => $perPage,
             'tablecontent' => $tablecontent,
             'objectname' => $objName,
-            'extra' => array(),
+            'extra' => [],
             'tableheader' => $tableFields,
             'add' =>'perk',
             'objectId' => $objId,
@@ -101,24 +101,24 @@ class Default_Model_Addperk extends Zend_Db_Table_Abstract
 
             'call' => $call,
             'dashboardcall' => $dashboardcall
-        );
+        ];
         return $dataTmp;
     }
 
     public function saveMultiEmpPerk($datas)
     {
 
-        $config = array(
+        $config = [
             'name' => 'main_employeeperk',
             'primary' => 'employeeperk_id'
-        );
+        ];
         $this->table = new Zend_Db_Table($config);
 
         foreach ($datas as $data) {
             $this->table->update($data,'emp_id='.$data['emp_id'].' AND perk_id='.$data['perk_id']);
             $query = $this->select()
                 ->setIntegrityCheck(false)
-                ->from(array('e' => 'main_employeeperk'), 'e.employeeperk_id')
+                ->from(['e' => 'main_employeeperk'], 'e.employeeperk_id')
                 ->where('e.emp_id = ' . $data['emp_id'] . ' AND e.perk_id = ' . $data['perk_id']);
             $result = $this->fetchAll($query)->toArray();
             if(count($result)<=0){
@@ -138,7 +138,7 @@ class Default_Model_Addperk extends Zend_Db_Table_Abstract
         //     $this->table = new Zend_Db_Table($config);
         $query = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('e' => 'main_employees'), 'e.user_id')
+            ->from(['e' => 'main_employees'], 'e.user_id')
             ->where('e.id =' . $id);
         return $this->fetchAll($query)->toArray();
     }
@@ -152,7 +152,7 @@ class Default_Model_Addperk extends Zend_Db_Table_Abstract
         //     $this->table = new Zend_Db_Table($config);
         $query = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('e' => 'main_employeeperk'), 'e.emp_id')
+            ->from(['e' => 'main_employeeperk'], 'e.emp_id')
             ->where('e.perk_id =' . $id);
         return $this->fetchAll($query)->toArray();
     }

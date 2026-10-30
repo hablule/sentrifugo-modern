@@ -20,7 +20,7 @@ class Default_militaryrankController extends Zend_Controller_Action
             $refresh = $this->_getParam('refresh');
             $dashboradcall = $this->_getParam('dashboradcall');
 
-            $data = array();
+            $data = [];
 
             if ($refresh == 'refresh') {
                 if ($dashboradcall == 'Yes') {
@@ -138,15 +138,15 @@ class Default_militaryrankController extends Zend_Controller_Action
 			$actionflag = '';
 			$tableid  = '';
 
-			$data = array(
+			$data = [
 				                 'name'=>$name,
 				                 'code'=>$code,
 								 'description'=>$description,
                                  'natocode'=>$natocode,
                                  'isactive'=>utlis::getcheckboxvalue($isactive)
-			);
+			];
 			if($id!=''){
-				$where = array('militaryrank_id=?'=>$id);
+				$where = ['militaryrank_id=?'=>$id];
                 $data['modifiedby'] = $loginUserId;
                 $data['modifieddate'] = gmdate("Y-m-d H:i:s");
 				$actionflag = 2;

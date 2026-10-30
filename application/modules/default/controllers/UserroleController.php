@@ -61,7 +61,7 @@ class Default_UserroleController extends Zend_Controller_Action
         try {
             // 1. Initialize session for view preference (Card vs Grid)
             $session = new Zend_Session_Namespace('userrole_view_pref');
-            $viewType = $this->_getParam('view_type', ($session->view_type ? $session->view_type : 'card'));
+            $viewType = $this->_getParam('view_type', ($session->view_type ?: 'card'));
             $session->view_type = $viewType;
             $this->view->viewType = $viewType;
 
@@ -96,7 +96,7 @@ class Default_UserroleController extends Zend_Controller_Action
             }
 
             // 4. Permission Check (Sentrifugo Pattern)
-            $popConfigPermission = array();
+            $popConfigPermission = [];
             if (sapp_Global::_checkprivileges(USERROLE_MENU_ID, $this->_loginuserGroup, $this->_loginuserRole, 'add') == 'Yes') {
                 array_push($popConfigPermission, 'userrole');
             }
@@ -104,7 +104,7 @@ class Default_UserroleController extends Zend_Controller_Action
 
             // 5. Fetch Data for the automated Grid Helper ($this->grid())
             // This prepares the headers, filters, and paginated row content
-            $data = array();
+            $data = [];
             $dataTmp = $this->_model->getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall);
             array_push($data, $dataTmp);
 
@@ -185,7 +185,7 @@ class Default_UserroleController extends Zend_Controller_Action
 
         $id   = (int)$this->_getParam('id');
         $form = $this->_prepareForm($id);
-        $msgarray = array();
+        $msgarray = [];
 
         if ($form->isValid($this->_request->getPost())) {
             $params = $this->_request->getPost();
@@ -218,7 +218,7 @@ class Default_UserroleController extends Zend_Controller_Action
                     sapp_Global::logManager(USERROLE_MENU_ID, $logAction, $this->_loginUserId, $id);
                     $db->commit();
 
-                    $this->_helper->flashMessenger->addMessage(array('success' => $message));
+                    $this->_helper->flashMessenger->addMessage(['success' => $message]);
                     return $this->_redirect('userrole/index');
                 } catch (Exception $e) {
                     $db->rollBack();
@@ -227,7 +227,7 @@ class Default_UserroleController extends Zend_Controller_Action
             }
         } else {
             $messages = $form->getMessages();
-            $msgarray = array();
+            $msgarray = [];
 
             // Flatten the nested array into simple strings
             foreach ($messages as $field => $errors) {
@@ -283,18 +283,18 @@ class Default_UserroleController extends Zend_Controller_Action
     public function deleteAction()
     {
         $id = (int)$this->_getParam('objid');
-        $response = array('msgtype' => 'error', 'message' => 'Invalid request');
+        $response = ['msgtype' => 'error', 'message' => 'Invalid request'];
 
         if ($id) {
             try {
-                $this->_model->saveRecord(array(
+                $this->_model->saveRecord([
                     'isactive'      => '5', // Sentrifugo delete status
                     'modifiedby'    => $this->_loginUserId,
                     'modifieddate'  => gmdate('Y-m-d H:i:s')
-                ), $id);
+                ], $id);
 
                 sapp_Global::logManager(USERROLE_MENU_ID, 3, $this->_loginUserId, $id);
-                $response = array('msgtype' => 'success', 'message' => 'Assignment deleted successfully.');
+                $response = ['msgtype' => 'success', 'message' => 'Assignment deleted successfully.'];
             } catch (Exception $e) {
                 $response['message'] = $e->getMessage();
             }
@@ -310,14 +310,14 @@ class Default_UserroleController extends Zend_Controller_Action
         try {
             $id = (int)$this->_getParam('id');
             $this->_model->saveRecord(
-                array('isactive' => $this->_getParam('status')),
+                ['isactive' => $this->_getParam('status')],
                 $id
             );
 
             sapp_Global::logManager(USERROLE_MENU_ID, 4, $this->_loginUserId, $id);
-            $this->_helper->json(array('result' => 'yes'));
+            $this->_helper->json(['result' => 'yes']);
         } catch (Exception $e) {
-            $this->_helper->json(array('result' => 'no'));
+            $this->_helper->json(['result' => 'no']);
         }
     }
 
@@ -330,7 +330,7 @@ class Default_UserroleController extends Zend_Controller_Action
 
         $uid  = $this->_getParam('uid');
         $form = $this->_prepareForm();
-        $msgarray = array();
+        $msgarray = [];
 
         $form->setAction(BASE_URL . 'userrole/adduserrolepopup/uid/' . $uid);
 
@@ -493,7 +493,7 @@ class Default_UserroleController extends Zend_Controller_Action
 
             } else {
                 // Record not found, redirect back to index
-                $this->_helper->flashMessenger->addMessage(array('error' => 'Record not found.'));
+                $this->_helper->flashMessenger->addMessage(['error' => 'Record not found.']);
                 return $this->_redirect('userrole/index');
             }
 
@@ -511,15 +511,15 @@ class Default_UserroleController extends Zend_Controller_Action
 
     private function _mapPostData($params)
     {
-        return array(
+        return [
             'user_id'      => $params['user_id'],
             'role_id'      => $params['role_id'],
             'description'  => $params['description'],
             'datefrom'     => sapp_Global::change_date($params['datefrom'], 'database'),
             'dateto'       => !empty($params['dateto']) ? sapp_Global::change_date($params['dateto'], 'database') : null,
-            'isactive'     => isset($params['isactive']) ? $params['isactive'] : '1',
+            'isactive'     => $params['isactive'] ?? '1',
             'modifiedby'   => $this->_loginUserId,
             'modifieddate' => gmdate('Y-m-d H:i:s')
-        );
+        ];
     }
 }

@@ -25,9 +25,9 @@ class Default_BankController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 
 		if($refresh == 'refresh')
@@ -71,7 +71,7 @@ class Default_BankController extends Zend_Controller_Action
                     $loginUserId = $auth->getStorage()->read()->id;
                 }
                 $model = new Default_Model_Bank();
-                $data = array(
+                $data = [
                     'name' => $this->getRequest()->getParam('name'),
                     'description' => $this->getRequest()->getParam('description'),
                     'routingno' => $this->getRequest()->getParam('routingno'),
@@ -82,13 +82,13 @@ class Default_BankController extends Zend_Controller_Action
                     'createdby' => $loginUserId,
                     'modifieddate' => gmdate("Y-m-d H:i:s"),
                     'modifiedby' => $loginUserId
-                );
+                ];
 
                 $tableid=$model->SaveorUpdateBankData($data, '');
                 $menuID = BANK;
                 sapp_Global::logManager($menuID,$this->actionadd,$loginUserId,$tableid);
                 $successmessagestr  = "Bank added successfully.";
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array('messages' => $successmessagestr));
+                $this->_helper->getHelper("FlashMessenger")->addMessage(['messages' => $successmessagestr]);
 
                 $this->_redirect('bank');
             }
@@ -116,7 +116,7 @@ class Default_BankController extends Zend_Controller_Action
                     $loginUserId = $auth->getStorage()->read()->id;
                 }
                 $model = new Default_Model_Bank();
-                $data = array(
+                $data = [
                     'name' => $this->getRequest()->getParam('name'),
                     'description' => $this->getRequest()->getParam('description'),
                     'routingno' => $this->getRequest()->getParam('routingno'),
@@ -127,7 +127,7 @@ class Default_BankController extends Zend_Controller_Action
                     'createdby' => $loginUserId,
                     'modifieddate' => gmdate("Y-m-d H:i:s"),
                     'modifiedby' => $loginUserId
-                );
+                ];
 
                 $tableid=$model->SaveorUpdateBankData($data, '');
                 $menuID = BANK;
@@ -181,7 +181,7 @@ class Default_BankController extends Zend_Controller_Action
             if ($bank_form->isValid($this->getRequest()->getPost())) {
                 $id = $this->_request->getParam('id');
                 $where = 'bank_id=' . $id;
-                $data = array(
+                $data = [
                     'name' => $this->getRequest()->getParam('name'),
                     'description' => $this->getRequest()->getParam('description'),
                     'routingno' => $this->getRequest()->getParam('routingno'),
@@ -190,13 +190,13 @@ class Default_BankController extends Zend_Controller_Action
                     'isactive' => utlis::getcheckboxvalue($this->_request->getParam('isactive')),
                     'modifieddate' => gmdate("Y-m-d H:i:s"),
                     'modifiedby' => $loginUserId
-                );
+                ];
 
                 $bank_model->SaveorUpdateBankData($data, $where);
                 $menuID=BANK;
                 sapp_Global::logManager($menuID,$this->actionupdate,$loginUserId,$id);
                 $successmessagestr  = "Bank updated successfully.";
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array('messages' => $successmessagestr));
+                $this->_helper->getHelper("FlashMessenger")->addMessage(['messages' => $successmessagestr]);
                 $this->_redirect('bank');
             }
             $messages = $bank_form->getMessages();
@@ -227,15 +227,15 @@ class Default_BankController extends Zend_Controller_Action
             if ($auth->hasIdentity()) {
                 $loginUserId = $auth->getStorage()->read()->id;
             }
-            $data = array(
+            $data = [
                 'isactive' => 'N'
-            );
-            $where = array('bank_id=?' => $id);
+            ];
+            $where = ['bank_id=?' => $id];
             $bank_model->deleteData($where, 'main_bank', 'bank_id');
             // die();
             $menuID = BANK;
             sapp_Global::logManager($menuID,$this->actionupdate,$loginUserId,$id);
-            return $this->_helper->json(array('flagtype' => 'process', 'message' => 'Deleted'));
+            return $this->_helper->json(['flagtype' => 'process', 'message' => 'Deleted']);
             // $bank_model->SaveorUpdateBankData($data, $where);
         } catch (\Throwable $th) {
             Zend_Debug::dump($th->getMessage());

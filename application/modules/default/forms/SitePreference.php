@@ -41,42 +41,42 @@ class Default_Form_Sitepreference extends Zend_Form
             ->setAttrib('class', 'formDataElement')
             ->setRequired(true)
             ->setRegisterInArrayValidator(false)
-            ->addValidator('NotEmpty', false, array('messages' => 'Please select a default Nationality context.'));
+            ->addValidator('NotEmpty', false, ['messages' => 'Please select a default Nationality context.']);
 
         $language_id = new Zend_Form_Element_Select('language_id');
         $language_id->setLabel('Default System Locale (Language)')
             ->setAttrib('class', 'formDataElement')
             ->setRequired(true)
             ->setRegisterInArrayValidator(false)
-            ->addValidator('NotEmpty', false, array('messages' => 'Please select a default Language.'));
+            ->addValidator('NotEmpty', false, ['messages' => 'Please select a default Language.']);
 
         $dateformat_id = new Zend_Form_Element_Select('dateformat_id');
         $dateformat_id->setLabel('Global Date Format')
             ->setAttrib('class', 'formDataElement')
             ->setRequired(true)
             ->setRegisterInArrayValidator(false)
-            ->addValidator('NotEmpty', false, array('messages' => 'Please select a Date Format.'));
+            ->addValidator('NotEmpty', false, ['messages' => 'Please select a Date Format.']);
 
         $timeformat_id = new Zend_Form_Element_Select('timeformat_id');
         $timeformat_id->setLabel('Global Time Format')
             ->setAttrib('class', 'formDataElement')
             ->setRequired(true)
             ->setRegisterInArrayValidator(false)
-            ->addValidator('NotEmpty', false, array('messages' => 'Please select a Time Format.'));
+            ->addValidator('NotEmpty', false, ['messages' => 'Please select a Time Format.']);
 
         $timezone_id = new Zend_Form_Element_Select('timezone_id');
         $timezone_id->setLabel('Global Operating Timezone')
             ->setAttrib('class', 'formDataElement')
             ->setRequired(true)
             ->setRegisterInArrayValidator(false)
-            ->addValidator('NotEmpty', false, array('messages' => 'Please select an Operating Timezone.'));
+            ->addValidator('NotEmpty', false, ['messages' => 'Please select an Operating Timezone.']);
 
         $currency_id = new Zend_Form_Element_Select('currency_id');
         $currency_id->setLabel('Base Operating Currency')
             ->setAttrib('class', 'formDataElement')
             ->setRequired(true)
             ->setRegisterInArrayValidator(false)
-            ->addValidator('NotEmpty', false, array('messages' => 'Please select a Base Currency.'));
+            ->addValidator('NotEmpty', false, ['messages' => 'Please select a Base Currency.']);
 
         $password_policy_id = new Zend_Form_Element_Select('password_policy_id');
         $password_policy_id->setLabel('Global Password Policy')
@@ -90,23 +90,23 @@ class Default_Form_Sitepreference extends Zend_Form
         $week_start_day = new Zend_Form_Element_Select('week_start_day');
         $week_start_day->setLabel('Start of Week (For Timesheets & Calendars)')
             ->setAttrib('class', 'formDataElement')
-            ->addMultiOptions(array(
+            ->addMultiOptions([
                 'Monday'   => 'Monday',
                 'Sunday'   => 'Sunday',
                 'Saturday' => 'Saturday'
-            ))
+            ])
             ->setRequired(true);
 
         $default_per_page = new Zend_Form_Element_Select('default_per_page');
         $default_per_page->setLabel('Default Grid Pagination (Rows per Page)')
             ->setAttrib('class', 'formDataElement')
-            ->addMultiOptions(array(
+            ->addMultiOptions([
                 '10'  => '10 Rows',
                 '20'  => '20 Rows',
                 '25'  => '25 Rows',
                 '50'  => '50 Rows',
                 '100' => '100 Rows'
-            ))
+            ])
             ->setRequired(true);
 
         /* --------------------------------------------------------------
@@ -114,7 +114,7 @@ class Default_Form_Sitepreference extends Zend_Form
          * -------------------------------------------------------------- */
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('System Configuration Notes')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -133,7 +133,7 @@ class Default_Form_Sitepreference extends Zend_Form
          * -------------------------------------------------------------- */
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Update Preferences')
-            ->setAttribs(array('id' => 'submitbutton', 'class' => 'actbtn_btn'));
+            ->setAttribs(['id' => 'submitbutton', 'class' => 'actbtn_btn']);
 
         // SSOT v6.7 "Balanced Approach": 
         // Because this is a Singleton, on success we simply reload the current page.
@@ -144,7 +144,7 @@ class Default_Form_Sitepreference extends Zend_Form
         /* --------------------------------------------------------------
          * Build Form
          * -------------------------------------------------------------- */
-        $this->addElements(array(
+        $this->addElements([
             $idElement,
             $company_id,
             $nationality_id,
@@ -159,12 +159,12 @@ class Default_Form_Sitepreference extends Zend_Form
             $description,
             $isactive,
             $submit
-        ));
+        ]);
 
         // Strip default Zend Decorators per SSOT
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
-            $element->setDecorators(array('ViewHelper'));
+            $element->setDecorators(['ViewHelper']);
         }
     }
 }

@@ -44,7 +44,7 @@ class Default_Form_Holidaydate extends Zend_Form
             ->setAttrib('class', 'formDataElement')
             ->setRegisterInArrayValidator(false) // Populated in Controller
             ->setRequired(true)
-            ->addValidator('NotEmpty', false, array('messages' => 'Please select a parent holiday policy.'));
+            ->addValidator('NotEmpty', false, ['messages' => 'Please select a parent holiday policy.']);
 
         // Freeze master holiday ID on edit to protect relational consistency
         if ($idVal > 0) {
@@ -57,14 +57,14 @@ class Default_Form_Holidaydate extends Zend_Form
         $work_policy = new Zend_Form_Element_Select('work_policy');
         $work_policy->setLabel('Operational Policy')
             ->setAttrib('class', 'formDataElement')
-            ->addMultiOptions(array(
+            ->addMultiOptions([
                 'OFF_DAY'              => 'Off Day (Facility Closed)',
                 'OPTIONAL_WORK'        => 'Optional Work (Floating Holiday)',
                 'PREMIUM_WORK'         => 'Premium Work (Standard Operation + Premium Pay)',
                 'ESSENTIAL_STAFF_ONLY' => 'Essential Staff Only',
                 'REDUCED_HOURS'        => 'Reduced Hours Operation',
                 'HALF_DAY'             => 'Half Day Closure'
-            ))
+            ])
             ->setRequired(true)
             ->setValue('OFF_DAY');
 
@@ -72,13 +72,13 @@ class Default_Form_Holidaydate extends Zend_Form
         $weekend_policy = new Zend_Form_Element_Select('weekend_policy');
         $weekend_policy->setLabel('Weekend Collision Rule')
             ->setAttrib('class', 'formDataElement')
-            ->addMultiOptions(array(
+            ->addMultiOptions([
                 'FIXED_DATE'            => 'Fixed Date (No Shift)',
                 'NEXT_WORKING_DAY'      => 'Shift to Next Working Day',
                 'PREVIOUS_WORKING_DAY'  => 'Shift to Previous Working Day',
                 'NEXT_REST_DAY'         => 'Shift to Next Rest Day',
                 'NO_SUBSTITUTION'       => 'No Substitution / Forfeited'
-            ))
+            ])
             ->setRequired(true)
             ->setValue('FIXED_DATE');
 
@@ -88,23 +88,23 @@ class Default_Form_Holidaydate extends Zend_Form
 
         $start_date = new ZendX_JQuery_Form_Element_DatePicker('start_date');
         $start_date->setLabel('Start Date')
-            ->setAttribs(array(
+            ->setAttribs([
                 'class'    => 'brdr_none formDataElement',
                 'readonly' => 'true',
                 'onfocus'  => 'this.blur()'
-            ))
+            ])
             ->setRequired(true)
-            ->addValidator('NotEmpty', false, array('messages' => 'Please select a Start Date.'));
+            ->addValidator('NotEmpty', false, ['messages' => 'Please select a Start Date.']);
 
         $end_date = new ZendX_JQuery_Form_Element_DatePicker('end_date');
         $end_date->setLabel('End Date')
-            ->setAttribs(array(
+            ->setAttribs([
                 'class'    => 'brdr_none formDataElement',
                 'readonly' => 'true',
                 'onfocus'  => 'this.blur()'
-            ))
+            ])
             ->setRequired(true)
-            ->addValidator('NotEmpty', false, array('messages' => 'Please select an End Date.'));
+            ->addValidator('NotEmpty', false, ['messages' => 'Please select an End Date.']);
 
         /* --------------------------------------------------------------
          * 4. Text Elements (Temporal & Financial Snapshots)
@@ -113,27 +113,27 @@ class Default_Form_Holidaydate extends Zend_Form
         // Duration Days (DECIMAL 4,2)
         $duration_days = new Zend_Form_Element_Text('duration_days');
         $duration_days->setLabel('Duration (Days)')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '5', 'placeholder' => '1.00'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '5', 'placeholder' => '1.00'])
             ->setRequired(true)
             ->setValue('1.00')
             ->addFilter('StringTrim')
-            ->addValidator('NotEmpty', false, array('messages' => 'Please enter duration in days.'))
-            ->addValidator('Regex', true, array(
+            ->addValidator('NotEmpty', false, ['messages' => 'Please enter duration in days.'])
+            ->addValidator('Regex', true, [
                 'pattern' => '/^\d+(\.\d{1,2})?$/',
-                'messages' => array(Zend_Validate_Regex::NOT_MATCH => 'Please enter a valid duration (e.g., 1.00 or 0.50).')
-            ));
+                'messages' => [Zend_Validate_Regex::NOT_MATCH => 'Please enter a valid duration (e.g., 1.00 or 0.50).']
+            ]);
 
         // Start Time & End Time (TIME)
         $start_time = new Zend_Form_Element_Text('start_time');
         $start_time->setLabel('Shift Start Time')
-            ->setAttribs(array('class' => 'formDataElement timepicker', 'maxlength' => '8', 'placeholder' => '00:00:00'))
+            ->setAttribs(['class' => 'formDataElement timepicker', 'maxlength' => '8', 'placeholder' => '00:00:00'])
             ->setRequired(true)
             ->setValue('00:00:00')
             ->addFilter('StringTrim');
 
         $end_time = new Zend_Form_Element_Text('end_time');
         $end_time->setLabel('Shift End Time')
-            ->setAttribs(array('class' => 'formDataElement timepicker', 'maxlength' => '8', 'placeholder' => '23:59:59'))
+            ->setAttribs(['class' => 'formDataElement timepicker', 'maxlength' => '8', 'placeholder' => '23:59:59'])
             ->setRequired(true)
             ->setValue('23:59:59')
             ->addFilter('StringTrim');
@@ -141,31 +141,31 @@ class Default_Form_Holidaydate extends Zend_Form
         // Payroll Multiplier (DECIMAL 4,2)
         $payroll_multiplier = new Zend_Form_Element_Text('payroll_multiplier');
         $payroll_multiplier->setLabel('Payroll Multiplier')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '5', 'placeholder' => '1.00'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '5', 'placeholder' => '1.00'])
             ->setRequired(true)
             ->setValue('1.00')
             ->addFilter('StringTrim')
-            ->addValidator('NotEmpty', false, array('messages' => 'Please enter a payroll multiplier.'))
-            ->addValidator('Regex', true, array(
+            ->addValidator('NotEmpty', false, ['messages' => 'Please enter a payroll multiplier.'])
+            ->addValidator('Regex', true, [
                 'pattern' => '/^\d+(\.\d{1,2})?$/',
-                'messages' => array(Zend_Validate_Regex::NOT_MATCH => 'Please enter a valid multiplier (e.g., 1.50 or 2.00).')
-            ));
+                'messages' => [Zend_Validate_Regex::NOT_MATCH => 'Please enter a valid multiplier (e.g., 1.50 or 2.00).']
+            ]);
 
         // Priority (INT)
         $priority = new Zend_Form_Element_Text('priority');
         $priority->setLabel('Conflict Priority')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '5', 'placeholder' => '0'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '5', 'placeholder' => '0'])
             ->setRequired(true)
             ->setValue('0')
             ->addFilter('StringTrim')
-            ->addValidator('Digits', false, array('messages' => 'Priority must be a whole number.'));
+            ->addValidator('Digits', false, ['messages' => 'Priority must be a whole number.']);
 
         /* --------------------------------------------------------------
          * 5. Textarea Elements
          * -------------------------------------------------------------- */
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Instance Notes / Override Reason')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -195,7 +195,7 @@ class Default_Form_Holidaydate extends Zend_Form
          * -------------------------------------------------------------- */
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save Occurrence')
-               ->setAttribs(array('id' => 'submitbutton', 'class' => 'actbtn_btn'));
+               ->setAttribs(['id' => 'submitbutton', 'class' => 'actbtn_btn']);
 
         // SSOT v6.7.7: Strict String Quoting for standard AJAX saveDetails()
         $urlAction  = "'holidaydate/save/format/json'";
@@ -205,7 +205,7 @@ class Default_Form_Holidaydate extends Zend_Form
         /* --------------------------------------------------------------
          * Build Form
          * -------------------------------------------------------------- */
-        $this->addElements(array(
+        $this->addElements([
             $idElement,
             $holiday_id,
             $start_date,
@@ -222,15 +222,15 @@ class Default_Form_Holidaydate extends Zend_Form
             $description,
             $isactive,
             $submit
-        ));
+        ]);
 
         // SSOT v6.7.7: Strip default Zend Decorators
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
             if ($element instanceof ZendX_JQuery_Form_Element_DatePicker) {
-                $element->setDecorators(array('UiWidgetElement'));
+                $element->setDecorators(['UiWidgetElement']);
             } else {
-                $element->setDecorators(array('ViewHelper'));
+                $element->setDecorators(['ViewHelper']);
             }
         }
     }

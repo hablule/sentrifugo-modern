@@ -75,9 +75,9 @@ class Exit_ExitprocsettingsController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 		$context = $this->_getParam('context');
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';	
 		
 		/** check for refresh button event 
@@ -234,7 +234,7 @@ class Exit_ExitprocsettingsController extends Zend_Controller_Action
 		**/
 		$id = (int)$this->_request->getParam('id');
 		$this->view->id = $id;
-		$msgarray = array(); 
+		$msgarray = []; 
 		if($id)
 		{
 			$res = $this->epSettingsModel->getExitProcSettingsDetails($id);
@@ -309,7 +309,7 @@ class Exit_ExitprocsettingsController extends Zend_Controller_Action
 			}
 			
 			/** fill l2 manager on page load **/
-			$l2Options = $this->epSettingsModel->getEmployeesDataByRole(array(MANAGEMENT_GROUP,HR_GROUP,MANAGER_GROUP,SYSTEMADMIN_GROUP,EMPLOYEE_GROUP),$businessunit_id,$department_id,'multiple');
+			$l2Options = $this->epSettingsModel->getEmployeesDataByRole([MANAGEMENT_GROUP,HR_GROUP,MANAGER_GROUP,SYSTEMADMIN_GROUP,EMPLOYEE_GROUP],$businessunit_id,$department_id,'multiple');
 			if(count($l2Options) > 0)
 			{
 				foreach($l2Options as $l2m)
@@ -335,7 +335,7 @@ class Exit_ExitprocsettingsController extends Zend_Controller_Action
 			} */
 
 			/** fill general admin data **/
-			$generalAdminOptions = $this->epSettingsModel->getEmployeesDataByRole(array(MANAGER_GROUP,EMPLOYEE_GROUP),$businessunit_id, $department_id,'multiple');
+			$generalAdminOptions = $this->epSettingsModel->getEmployeesDataByRole([MANAGER_GROUP,EMPLOYEE_GROUP],$businessunit_id, $department_id,'multiple');
 			if(count($generalAdminOptions) > 0)
 			{
 				foreach($generalAdminOptions as $generalAdmin)
@@ -350,7 +350,7 @@ class Exit_ExitprocsettingsController extends Zend_Controller_Action
 			}	 */		
 
 			/** fill finance manager data **/
-			$financeManagerOptions = $this->epSettingsModel->getEmployeesDataByRole(array(HR_GROUP,MANAGER_GROUP,EMPLOYEE_GROUP),$businessunit_id, $department_id,'multiple');
+			$financeManagerOptions = $this->epSettingsModel->getEmployeesDataByRole([HR_GROUP,MANAGER_GROUP,EMPLOYEE_GROUP],$businessunit_id, $department_id,'multiple');
 			if(count($financeManagerOptions) > 0)
 			{
 				foreach($financeManagerOptions as $financeManager)
@@ -403,8 +403,8 @@ class Exit_ExitprocsettingsController extends Zend_Controller_Action
 		$department_id = $this->_request->getParam('department_id');
 		
 		//check duplicate employees
-		$employee_array = array('l2_manager'=>$this->_request->getParam('l2_manager'),'hr_manager'=>$this->_request->getParam('hr_manager'),'sys_admin'=>$this->_request->getParam('sys_admin'),'general_admin'=>$this->_request->getParam('general_admin'),'finance_manager'=>$this->_request->getParam('finance_manager'));
-		$duplicate_arr = $new_arr = array();
+		$employee_array = ['l2_manager'=>$this->_request->getParam('l2_manager'),'hr_manager'=>$this->_request->getParam('hr_manager'),'sys_admin'=>$this->_request->getParam('sys_admin'),'general_admin'=>$this->_request->getParam('general_admin'),'finance_manager'=>$this->_request->getParam('finance_manager')];
+		$duplicate_arr = $new_arr = [];
 		foreach ($employee_array as $role => $value) {
 			if($value!=''){
 			  if (!isset($new_arr[$value])) {
@@ -413,7 +413,7 @@ class Exit_ExitprocsettingsController extends Zend_Controller_Action
 				if (isset($duplicate_arr[$value])) {
 				   $duplicate_arr[$value][] = $role;
 				} else {
-				   $duplicate_arr[$value] = array($role);
+				   $duplicate_arr[$value] = [$role];
 				   // Comment out the previous line, and uncomment the following line to
 				   // include the initial key in the duplicate_arr.
 				   // $duplicate_arr[$val] = array($new_arr[$val], $key);
@@ -446,7 +446,7 @@ class Exit_ExitprocsettingsController extends Zend_Controller_Action
 			/** prepare data to insert into database **/
 			if($con == 'add')
 			{
-				$data = array(
+				$data = [
 							'businessunit_id' => $businessunit_id,
 							'department_id' => $department_id,
 							//'config_arr' => "",
@@ -461,14 +461,14 @@ class Exit_ExitprocsettingsController extends Zend_Controller_Action
 							'createdby'=> $this->loggedInUser,
 							'createddate'=> gmdate("Y-m-d H:i:s"),
 							'isactive' => 1
-				);
+				];
 				
 				$res = $this->epSettingsModel->saveExitProcSettings($data,'', $con);
 			}
 			
 			else if($con == 'edit')
 			{
-				$data = array(
+				$data = [
 							//'config_arr' => "",
 							'l2_manager' => $l2_manager,
 							'hr_manager' => $hr_manager,
@@ -478,9 +478,9 @@ class Exit_ExitprocsettingsController extends Zend_Controller_Action
 							'notice_period' =>$notice_period,
 							'modifiedby'=> $this->loggedInUser,
 							'modifieddate'=> gmdate("Y-m-d H:i:s")						
-				);
+				];
 				
-				$where = array( 'id =?' => $id);
+				$where = [ 'id =?' => $id];
 				$res = $this->epSettingsModel->saveExitProcSettings($data, $where, $con);
 			}
 			if($res)
@@ -499,13 +499,13 @@ class Exit_ExitprocsettingsController extends Zend_Controller_Action
 					
 					$msg = 'Exit procedure settings updated successfully.';
 				}
-				$this->_helper->getHelper('FlashMessenger')->addMessage(array('success' => $msg));
+				$this->_helper->getHelper('FlashMessenger')->addMessage(['success' => $msg]);
 			}
 			else
 			{	
 				if($con == 'add') $msg = 'Failed to add exit procedure settings. Please try again.';
 				else $msg = 'Failed to update exit procedure settings. Please try again.';
-				$this->_helper->getHelper('FlashMessenger')->addMessage(array('error' => $msg));
+				$this->_helper->getHelper('FlashMessenger')->addMessage(['error' => $msg]);
 			}	
 
 			$this->_redirect('exit/exitprocsettings');
@@ -549,7 +549,7 @@ class Exit_ExitprocsettingsController extends Zend_Controller_Action
 			}
 
 			/** fill l2 managers data **/
-			$l2Options = $this->epSettingsModel->getEmployeesDataByRole(array(MANAGEMENT_GROUP,HR_GROUP,MANAGER_GROUP,SYSTEMADMIN_GROUP,EMPLOYEE_GROUP),$businessunit_id,$department_id,'multiple');
+			$l2Options = $this->epSettingsModel->getEmployeesDataByRole([MANAGEMENT_GROUP,HR_GROUP,MANAGER_GROUP,SYSTEMADMIN_GROUP,EMPLOYEE_GROUP],$businessunit_id,$department_id,'multiple');
 			if(count($l2Options) > 0)
 			{
 				foreach($l2Options as $l2m)
@@ -569,7 +569,7 @@ class Exit_ExitprocsettingsController extends Zend_Controller_Action
 			}
 
 			/** fill general admin data **/
-			$generalAdminOptions = $this->epSettingsModel->getEmployeesDataByRole(array(MANAGER_GROUP,EMPLOYEE_GROUP),$businessunit_id, $department_id,'multiple');
+			$generalAdminOptions = $this->epSettingsModel->getEmployeesDataByRole([MANAGER_GROUP,EMPLOYEE_GROUP],$businessunit_id, $department_id,'multiple');
 			if(count($generalAdminOptions) > 0)
 			{
 				foreach($generalAdminOptions as $generalAdmin)
@@ -579,7 +579,7 @@ class Exit_ExitprocsettingsController extends Zend_Controller_Action
 			}			
 
 			/** fill finance manager data **/
-			$financeManagerOptions = $this->epSettingsModel->getEmployeesDataByRole(array(HR_GROUP,MANAGER_GROUP,EMPLOYEE_GROUP),$businessunit_id, $department_id,'multiple');
+			$financeManagerOptions = $this->epSettingsModel->getEmployeesDataByRole([HR_GROUP,MANAGER_GROUP,EMPLOYEE_GROUP],$businessunit_id, $department_id,'multiple');
 			if(count($financeManagerOptions) > 0)
 			{
 				foreach($financeManagerOptions as $financeManager)
@@ -592,7 +592,7 @@ class Exit_ExitprocsettingsController extends Zend_Controller_Action
 	
 	public function deleteAction()
 	{
-		$messages = array('message' => '','msgtype' => '');
+		$messages = ['message' => '','msgtype' => ''];
 
 		/**
 		** check for logged in user role for delete privileges
@@ -621,12 +621,12 @@ class Exit_ExitprocsettingsController extends Zend_Controller_Action
 			$result=$this->allExitProcsModel->getExitsettingsProcDetails($id);
 			if(count($result)==0)
 			{
-				$data = array(
+				$data = [
 						'isactive'=> 0,
 						'modifiedby'=> $this->loggedInUser,
 						'modifieddate'=> gmdate("Y-m-d H:i:s")
-				);
-				$where = array('id=?' => $id);
+				];
+				$where = ['id=?' => $id];
 				$res = $this->epSettingsModel->saveExitProcSettings($data,$where,'edit');
 
 				if($res)
@@ -658,11 +658,11 @@ class Exit_ExitprocsettingsController extends Zend_Controller_Action
 			{
 				if(	$messages['msgtype'] == 'error')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
 				}
 				if(	$messages['msgtype'] == 'success')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
 				}
 			}
 		$this->_helper->json($messages);
@@ -676,7 +676,7 @@ class Exit_ExitprocsettingsController extends Zend_Controller_Action
 		// get configured department ids from settings table
 		$departmentidsArr =  $this->epSettingsModel->getActiveDepartmentIds();
 		$depatrmentidstr = '';
-		$newarr = array();
+		$newarr = [];
 		
 			if(!empty($departmentidsArr))
 			{
@@ -733,20 +733,20 @@ class Exit_ExitprocsettingsController extends Zend_Controller_Action
 			}
 		
 		$dept_id='';
-		$l2Options = $this->getEmployees('L2 Manager',array(MANAGEMENT_GROUP,HR_GROUP,MANAGER_GROUP,SYSTEMADMIN_GROUP,EMPLOYEE_GROUP),$bunit_id,$dept_id,'multiple');
+		$l2Options = $this->getEmployees('L2 Manager',[MANAGEMENT_GROUP,HR_GROUP,MANAGER_GROUP,SYSTEMADMIN_GROUP,EMPLOYEE_GROUP],$bunit_id,$dept_id,'multiple');
 		$hrOptions = $this->getEmployees('HR Manager',HR_GROUP,$bunit_id,$dept_id);
 		$sysAdminOptions = $this->getEmployees('System Admin',SYSTEMADMIN_GROUP,$bunit_id,$dept_id);
-		$generalAdminOptions = $this->getEmployees('General Admin',array(MANAGER_GROUP,EMPLOYEE_GROUP),$bunit_id,$dept_id,'multiple');
-		$financeManagerOptions = $this->getEmployees('Finance Manager',array(HR_GROUP,MANAGER_GROUP,EMPLOYEE_GROUP),$bunit_id,$dept_id,'multiple');
+		$generalAdminOptions = $this->getEmployees('General Admin',[MANAGER_GROUP,EMPLOYEE_GROUP],$bunit_id,$dept_id,'multiple');
+		$financeManagerOptions = $this->getEmployees('Finance Manager',[HR_GROUP,MANAGER_GROUP,EMPLOYEE_GROUP],$bunit_id,$dept_id,'multiple');
 
-		$this->_helper->json(array(
+		$this->_helper->json([
 									'options' => $options,
 									'l2Options' => $l2Options,
 									'hrOptions' => $hrOptions,
 									'sysAdminOptions' => $sysAdminOptions,
 									'generalAdminOptions' => $generalAdminOptions,
 									'financeManagerOptions' => $financeManagerOptions
-								));
+								]);
 	}
 	
 	/**

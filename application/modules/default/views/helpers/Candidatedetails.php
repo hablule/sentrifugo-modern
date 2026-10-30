@@ -30,7 +30,7 @@ class Zend_View_Helper_Candidatedetails extends Zend_View_Helper_Abstract{
 
 	
 	// Below methods are for ADD view
-	public function checkViewResume($data=array(), $msgarray=array()){
+	public function checkViewResume($data=[], $msgarray=[]){
 		if((isset($data['selected_option']) && $data['selected_option']=='fill-up-form') || !empty($msgarray)){
 			echo <<<EOT
 style="display:none;"
@@ -38,7 +38,7 @@ EOT;
 		}
 	}
 
-	public function checkViewForm($data=array(), $msgarray=array()){
+	public function checkViewForm($data=[], $msgarray=[]){
 		if((empty($data['selected_option']) || $data['selected_option']=='upload-resume') && empty($msgarray)){
 			echo <<<EOT
 style="display:none;"
@@ -46,7 +46,7 @@ EOT;
 		}
 	}
 
-	public function viewResume($data=array(), $msgarray=array()){
+	public function viewResume($data=[], $msgarray=[]){
 		if((empty($data['selected_option']) && $data['selected_option']=='upload-resume') && empty($msgarray)){
 			echo <<<EOT
 class="act"
@@ -54,7 +54,7 @@ EOT;
 		}
 	}
 
-	public function viewForm($data=array(), $msgarray=array()){
+	public function viewForm($data=[], $msgarray=[]){
 		if((!empty($data['selected_option']) || $data['selected_option']=='fill-up-form') || !empty($msgarray)){
 			echo <<<EOT
 class="act"
@@ -66,14 +66,14 @@ EOT;
 	// Below methods are for EDIT view
 	
 	// To skip common elements in the form from validation (On both tab views - Upolad Resume && Update Candidate Details)
-	public function trimMessages($msgarray=array()){
+	public function trimMessages($msgarray=[]){
 		unset($msgarray['requisition_id']);
 		unset($msgarray['cand_status']);
 		unset($msgarray['candidate_name']);
 		return $msgarray;
 	}
 	
-	public function checkViewResumeEdit($data=array(), $msgarray=array()){
+	public function checkViewResumeEdit($data=[], $msgarray=[]){
 		
 		if(((empty($data['selected_option']) || $data['selected_option']=='fill-up-form') && empty($data['cand_resume'])) || !empty($msgarray)){
 			echo <<<EOT
@@ -83,7 +83,7 @@ EOT;
 		}
 	}
 
-	public function checkViewFormEdit($data=array(), $msgarray=array()){
+	public function checkViewFormEdit($data=[], $msgarray=[]){
 		if(((isset($data['selected_option']) && $data['selected_option']=='upload-resume') || !empty($data['cand_resume'])) && empty($msgarray)){
 			echo <<<EOT
 style="display:none;"
@@ -91,7 +91,7 @@ EOT;
 		}
 	}
 
-	public function viewResumeEdit($data=array(), $msgarray=array()){
+	public function viewResumeEdit($data=[], $msgarray=[]){
 		if(((isset($data['selected_option']) && $data['selected_option']=='upload-resume') || !empty($data['cand_resume'])) && empty($msgarray)){ 
 			echo <<<EOT
 class="act"
@@ -99,7 +99,7 @@ EOT;
 		}
 	}
 
-	public function viewFormEdit($data=array(), $msgarray=array()){
+	public function viewFormEdit($data=[], $msgarray=[]){
 		if(((empty($data['selected_option']) || $data['selected_option']=='fill-up-form') && empty($data['cand_resume']) || !empty($msgarray))){
 			echo <<<EOT
 class="act"
@@ -108,7 +108,7 @@ EOT;
 	}
 	
 	// To swap tabs - Upload Resume && Update Candidate Details
-	public function checkSelectedOption($data=array()){
+	public function checkSelectedOption($data=[]){
 		if((empty($data['selected_option']) || $data['selected_option']=='upload-resume')){
 			echo <<<EOT
 upload-resume
@@ -125,7 +125,7 @@ EOT;
 		}
 	}
 	
-	public function checkSelectedOptionEdit($data=array()){
+	public function checkSelectedOptionEdit($data=[]){
 	
 		if(((empty($data['selected_option']) && empty($data['cand_resume'])) || $data['selected_option']=='fill-up-form')){
 			echo <<<EOT
@@ -139,12 +139,12 @@ EOT;
 	}	
 	
     // To load Delete button HTML
-	public function loadDeleteButton($candidate_data=array()){
+	public function loadDeleteButton($candidate_data=[]){
 		$show = '';
 		$validation = true; 
 		
 		// To validate required fields in the form
-		$optional_inputs = array('requisition_id', 'cand_status', 'candidate_firstname','candidate_lastname', 'emailid', 'contact_number', 'qualification', 'experience', 'skillset', 'cand_location', 'country', 'state', 'city', 'pincode', 'cand_resume');
+		$optional_inputs = ['requisition_id', 'cand_status', 'candidate_firstname','candidate_lastname', 'emailid', 'contact_number', 'qualification', 'experience', 'skillset', 'cand_location', 'country', 'state', 'city', 'pincode', 'cand_resume'];
 		foreach($optional_inputs as $value){
 			if(empty($candidate_data[$value])){
 				$validation = false; 
@@ -159,7 +159,7 @@ EOT;
 EOT;
 	}
 
-	public function loadResumeName($data=array()){
+	public function loadResumeName($data=[]){
 		$domain = BASE_URL;
 		if(!empty($data['cand_resume'])){
 			echo <<<EOT

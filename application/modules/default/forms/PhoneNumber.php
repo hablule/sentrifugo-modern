@@ -37,32 +37,32 @@ class Default_Form_Phonenumber extends Zend_Form
          * 2. Text Elements
          * -------------------------------------------------------------- */
 
-        $ssotRegexValidator = array(
+        $ssotRegexValidator = [
             'Regex',
             true,
-            array(
+            [
                 'pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9 ]*)$/',
-                'messages' => array(
+                'messages' => [
                     Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space or contain special characters.'
-                )
-            )
-        );
+                ]
+            ]
+        ];
 
         // Phone Number
         $number = new Zend_Form_Element_Text('number');
         $number->setLabel('Phone Number')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '50', 'placeholder' => 'e.g., +1 (800) 555-1234'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '50', 'placeholder' => 'e.g., +1 (800) 555-1234'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', false, array('messages' => 'Please enter a phone number.'))
-            ->addValidator('StringLength', false, array('max' => 50));
+            ->addValidator('NotEmpty', false, ['messages' => 'Please enter a phone number.'])
+            ->addValidator('StringLength', false, ['max' => 50]);
 
-        $numberVal = new Zend_Validate_Db_NoRecordExists(array(
+        $numberVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_phone_number',
             'field'   => 'number',
-            'exclude' => ($idVal > 0) ? array('field' => 'id', 'value' => $idVal) : null
-        ));
+            'exclude' => ($idVal > 0) ? ['field' => 'id', 'value' => $idVal] : null
+        ]);
         $numberVal->setMessage('This exact phone number already exists in the directory.');
         $number->addValidator($numberVal);
 
@@ -75,14 +75,14 @@ class Default_Form_Phonenumber extends Zend_Form
             ->setAttrib('class', 'formDataElement')
             ->setRequired(true)
             ->setRegisterInArrayValidator(false) // Populated in Controller
-            ->addValidator('NotEmpty', false, array('messages' => 'Please select a Phone Type.'));
+            ->addValidator('NotEmpty', false, ['messages' => 'Please select a Phone Type.']);
 
         $category_id = new Zend_Form_Element_Select('category_id');
         $category_id->setLabel('Category')
             ->setAttrib('class', 'formDataElement')
             ->setRequired(true)
             ->setRegisterInArrayValidator(false) // Populated in Controller
-            ->addValidator('NotEmpty', false, array('messages' => 'Please select a Phone Category.'));
+            ->addValidator('NotEmpty', false, ['messages' => 'Please select a Phone Category.']);
 
         /* --------------------------------------------------------------
          * 4. Multi-Select Elements (Owner Mappings)
@@ -128,7 +128,7 @@ class Default_Form_Phonenumber extends Zend_Form
          * -------------------------------------------------------------- */
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Description')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -146,7 +146,7 @@ class Default_Form_Phonenumber extends Zend_Form
          * -------------------------------------------------------------- */
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save')
-            ->setAttribs(array('id' => 'submitbutton', 'class' => 'actbtn_btn'));
+            ->setAttribs(['id' => 'submitbutton', 'class' => 'actbtn_btn']);
 
         // This is a complex form with custom JS validation for mappings, so the onclick is handled
         // in the save.phtml script, NOT here.
@@ -154,7 +154,7 @@ class Default_Form_Phonenumber extends Zend_Form
         /* --------------------------------------------------------------
          * Build Form
          * -------------------------------------------------------------- */
-        $this->addElements(array(
+        $this->addElements([
             $idElement,
             $number,
             $type_id,
@@ -169,12 +169,12 @@ class Default_Form_Phonenumber extends Zend_Form
             $description,
             $isactive,
             $submit
-        ));
+        ]);
 
         // Strip default Zend Decorators per SSOT
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
-            $element->setDecorators(array('ViewHelper'));
+            $element->setDecorators(['ViewHelper']);
         }
     }
 }

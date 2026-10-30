@@ -66,25 +66,25 @@ class Default_Form_ethniccode extends Zend_Form
         // Ethnic Name (Code)
         $ethnicname = new Zend_Form_Element_Text('ethnicname');
         $ethnicname->setLabel('Ethnic Code')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '100'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '100'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', true, array('messages' => 'Please enter ethnic code.'))
-            ->addValidator('Regex', true, array(
+            ->addValidator('NotEmpty', true, ['messages' => 'Please enter ethnic code.'])
+            ->addValidator('Regex', true, [
                 'pattern'  => '/^[a-zA-Z][a-zA-Z\s]*$/i',
-                'messages' => array(
+                'messages' => [
                     Zend_Validate_Regex::NOT_MATCH => 'Please enter a valid ethnic code (Letters and spaces only).'
-                )
-            ));
+                ]
+            ]);
 
         // SSOT FIX: Check for duplicates among ALL non-deleted records (isactive != 5)
         $excludeClauseName = ($idVal > 0) ? "id != $idVal AND isactive != 5" : "isactive != 5";
-        $nameVal = new Zend_Validate_Db_NoRecordExists(array(
+        $nameVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_ethniccode',
             'field'   => 'ethnicname',
             'exclude' => $excludeClauseName
-        ));
+        ]);
         $nameVal->setMessage('This ethnic code already exists.');
         $ethnicname->addValidator($nameVal);
 
@@ -92,25 +92,25 @@ class Default_Form_ethniccode extends Zend_Form
         // Ethnic Short Code
         $ethniccode = new Zend_Form_Element_Text('ethniccode');
         $ethniccode->setLabel('Ethnic Short Code')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '20'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '20'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', true, array('messages' => 'Please enter ethnic short code.'))
-            ->addValidator('Regex', true, array(
+            ->addValidator('NotEmpty', true, ['messages' => 'Please enter ethnic short code.'])
+            ->addValidator('Regex', true, [
                 'pattern'  => '/^[a-zA-Z][a-zA-Z0-9\-\s]*$/i',
-                'messages' => array(
+                'messages' => [
                     Zend_Validate_Regex::NOT_MATCH => 'Please enter a valid ethnic short code (Starts with letter, alphanumeric/hyphens allowed).'
-                )
-            ));
+                ]
+            ]);
 
         // SSOT FIX: Check for duplicates among ALL non-deleted records (isactive != 5)
         $excludeClauseCode = ($idVal > 0) ? "id != $idVal AND isactive != 5" : "isactive != 5";
-        $codeVal = new Zend_Validate_Db_NoRecordExists(array(
+        $codeVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_ethniccode',
             'field'   => 'ethniccode',
             'exclude' => $excludeClauseCode
-        ));
+        ]);
         $codeVal->setMessage('This ethnic short code already exists.');
         $ethniccode->addValidator($codeVal);
 
@@ -119,7 +119,7 @@ class Default_Form_ethniccode extends Zend_Form
          * -------------------------------------------------------------- */
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Description')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -137,10 +137,10 @@ class Default_Form_ethniccode extends Zend_Form
          * -------------------------------------------------------------- */
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save')
-            ->setAttribs(array(
+            ->setAttribs([
                 'id'    => 'submitbutton',
                 'class' => 'actbtn_btn'
-            ));
+            ]);
 
         // SSOT AJAX Submission Pattern (Empty second parameter, double quotes)
         $urlAction  = "'ethniccode/save/format/json'";
@@ -150,14 +150,14 @@ class Default_Form_ethniccode extends Zend_Form
         /* --------------------------------------------------------------
          * Build Form & Apply Decorators (SSOT VI)
          * -------------------------------------------------------------- */
-        $this->addElements(array(
+        $this->addElements([
             $idElement, $ethnicname, $ethniccode, $description, $isactive, $submit
-        ));
+        ]);
 
         // Strip default Zend Decorators and enforce ViewHelper universally
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
-            $element->setDecorators(array('ViewHelper'));
+            $element->setDecorators(['ViewHelper']);
         }
     }
 }

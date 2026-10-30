@@ -36,31 +36,31 @@ class Default_CronjobController extends Zend_Controller_Action
     {
 	   $this->_helper->viewRenderer->setNoRender(true);
         $this->_helper->layout()->disableLayout();
-        
+
         $date = new Zend_Date();
-   
+
         $email_model = new Default_Model_EmailLogs();
         $cron_model = new Default_Model_Cronstatus();
         // appraisal notifications
        $this->checkperformanceduedate();
         // feed forward notifications        
        // $this->checkffduedate();
-        
+
         $cron_status = $cron_model->getActiveCron('General');
-        
+
         if($cron_status == 'yes')
         {
             try
             {
                 //updating cron status table to in-progress
-                $cron_data = array(
+                $cron_data = [
                     'cron_status' => 1,
                     'cron_type' => 'General',
                     'started_at' => gmdate("Y-m-d H:i:s"),
-                );
+                ];
 
                 $cron_id = $cron_model->SaveorUpdateCronStatusData($cron_data, '');
-               
+
                 if($cron_id != '')
                 {
                     $mail_data = $email_model->getNotSentMails();
@@ -68,7 +68,7 @@ class Default_CronjobController extends Zend_Controller_Action
                     {
                         foreach($mail_data as $mdata)
                         {
-                            $options = array();
+                            $options = [];
                             $options['header'] = $mdata['header'];
                             $options['message'] = $mdata['message'];
                             $options['subject'] = $mdata['emailsubject'];
@@ -79,12 +79,12 @@ class Default_CronjobController extends Zend_Controller_Action
                             if($mdata['bcc'] != '')
                                 $options['bcc'] = $mdata['bcc'];
                             // to send email
-                            
+
                             $mail_status = sapp_Mail::_email($options);
-                          
-                            $mail_where = array('id=?' => $mdata['id']);
+
+                            $mail_where = ['id=?' => $mdata['id']];
                             $new_maildata['modifieddate'] = gmdate("Y-m-d H:i:s");
-                          
+
                             if($mail_status === true)
                             {      
 								$new_maildata['is_sent'] = 1;                          
@@ -92,19 +92,19 @@ class Default_CronjobController extends Zend_Controller_Action
                                 $id = $email_model->SaveorUpdateEmailData($new_maildata,$mail_where);                                 
                             }                                               
                         }//end of for loop
-                        
+
                     }//end of mails count if
                     //updating cron status table to completed.                    
-                    $cron_data = array(
+                    $cron_data = [
                         'cron_status' => 0,                      
                         'completed_at' => gmdate("Y-m-d H:i:s"),
-                    );
+                    ];
                     $cron_id = $cron_model->SaveorUpdateCronStatusData($cron_data, "id = ".$cron_id);
                 }//end of cron status id if  
             }
             catch(Exception $e)
             {
-                
+
             }
         }//end of cron status if
        
@@ -117,25 +117,25 @@ class Default_CronjobController extends Zend_Controller_Action
      */
     public function empdocsexpiryAction()
     {
-        
+
         $this->_helper->viewRenderer->setNoRender(true);
         $this->_helper->layout()->disableLayout();
-        
+
         $email_model = new Default_Model_EmailLogs();
         $cron_model = new Default_Model_Cronstatus();
-        
+
         $cron_status = $cron_model->getActiveCron('Emp docs expiry');
-                
+
         if($cron_status == 'yes')
         {
             try
             {
                 //updating cron status table to in-progress
-                $cron_data = array(
+                $cron_data = [
                     'cron_status' => 1,
                     'cron_type' => 'Emp docs expiry',
                     'started_at' => gmdate("Y-m-d H:i:s"),
-                );
+                ];
 
                 $cron_id = $cron_model->SaveorUpdateCronStatusData($cron_data, '');
 
@@ -160,20 +160,20 @@ class Default_CronjobController extends Zend_Controller_Action
                             $options['toEmail'] = $mdata['email'];  
                             $options['toName'] = $mdata['name'];
                             $options['message'] = $text;                            
-                            
+
                             sapp_Global::_sendEmail($options);
                         }
                     }
-                    $cron_data = array(
+                    $cron_data = [
                             'cron_status' => 0,
                             'completed_at' => gmdate("Y-m-d H:i:s"),
-                        );
+                        ];
                     $cron_id = $cron_model->SaveorUpdateCronStatusData($cron_data, "id = ".$cron_id);
                 }//end of cron status id if  
             }
             catch(Exception $e)
             {
-                
+
             }
         }//end of cron status if
     }//end of emp expiry action
@@ -185,23 +185,23 @@ class Default_CronjobController extends Zend_Controller_Action
     {
         $this->_helper->viewRenderer->setNoRender(true);
         $this->_helper->layout()->disableLayout();
-        
+
         $email_model = new Default_Model_EmailLogs();
         $cron_model = new Default_Model_Cronstatus();
-        
+
         $cron_status = $cron_model->getActiveCron('Employee expiry');
-        
-        $earr = array('i94' => 'I94','visa' => 'Visa' ,'passport' => 'Passport');
+
+        $earr = ['i94' => 'I94','visa' => 'Visa' ,'passport' => 'Passport'];
         if($cron_status == 'yes')
         {
             try
             {
                 //updating cron status table to in-progress
-                $cron_data = array(
+                $cron_data = [
                     'cron_status' => 1,
                     'cron_type' => 'Employee expiry',
                     'started_at' => gmdate("Y-m-d H:i:s"),
-                );
+                ];
 
                 $cron_id = $cron_model->SaveorUpdateCronStatusData($cron_data, '');
 
@@ -228,20 +228,20 @@ class Default_CronjobController extends Zend_Controller_Action
                             $options['toName'] = $mdata['userfullname'];
                             $options['message'] = $text;
                             $options['cron'] = 'yes';
-                            
+
                             sapp_Global::_sendEmail($options);
                         }
                     }
-                    $cron_data = array(
+                    $cron_data = [
                             'cron_status' => 0,
                             'completed_at' => gmdate("Y-m-d H:i:s"),
-                        );
+                        ];
                     $cron_id = $cron_model->SaveorUpdateCronStatusData($cron_data, "id = ".$cron_id);
                 }//end of cron status id if  
             }
             catch(Exception $e)
             {
-                
+
             }
         }//end of cron status if
     }//end of emp expiry action
@@ -253,22 +253,22 @@ class Default_CronjobController extends Zend_Controller_Action
     {
         $this->_helper->viewRenderer->setNoRender(true);
         $this->_helper->layout()->disableLayout();
-        
+
         $email_model = new Default_Model_EmailLogs();
         $cron_model = new Default_Model_Cronstatus();
-        
+
         $cron_status = $cron_model->getActiveCron('Approve leave');
-                
+
         if($cron_status == 'yes')
         {
             try
             {
                 //updating cron status table to in-progress
-                $cron_data = array(
+                $cron_data = [
                     'cron_status' => 1,
                     'cron_type' => 'Approve leave',
                     'started_at' => gmdate("Y-m-d H:i:s"),
-                );
+                ];
 
                 $cron_id = $cron_model->SaveorUpdateCronStatusData($cron_data, '');
 
@@ -292,20 +292,20 @@ class Default_CronjobController extends Zend_Controller_Action
                             $options['toName'] = $mdata['mng_name'];
                             $options['message'] = $text;
                             $options['cron'] = 'yes';
-                           
+
                             sapp_Global::_sendEmail($options);
                         }
                     }
-                    $cron_data = array(
+                    $cron_data = [
                             'cron_status' => 0,
                             'completed_at' => gmdate("Y-m-d H:i:s"),
-                        );
+                        ];
                     $cron_id = $cron_model->SaveorUpdateCronStatusData($cron_data, "id = ".$cron_id);
                 }//end of cron status id if  
             }
             catch(Exception $e)
             {
-                
+
             }
         }//end of cron status if
     }//end of leave approve action
@@ -316,22 +316,22 @@ class Default_CronjobController extends Zend_Controller_Action
     {
         $this->_helper->viewRenderer->setNoRender(true);
         $this->_helper->layout()->disableLayout();
-        
+
         $email_model = new Default_Model_EmailLogs();
         $cron_model = new Default_Model_Cronstatus();
-        
+
         $cron_status = $cron_model->getActiveCron('Requisition expiry');
-                
+
         if($cron_status == 'yes')
         {
             try
             {
                 //updating cron status table to in-progress
-                $cron_data = array(
+                $cron_data = [
                     'cron_status' => 1,
                     'cron_type' => 'Requisition expiry',
                     'started_at' => gmdate("Y-m-d H:i:s"),
-                );
+                ];
 
                 $cron_id = $cron_model->SaveorUpdateCronStatusData($cron_data, '');
 
@@ -366,16 +366,16 @@ class Default_CronjobController extends Zend_Controller_Action
                             }
                         }
                     }
-                    $cron_data = array(
+                    $cron_data = [
                             'cron_status' => 0,
                             'completed_at' => gmdate("Y-m-d H:i:s"),
-                        );
+                        ];
                     $cron_id = $cron_model->SaveorUpdateCronStatusData($cron_data, "id = ".$cron_id);
                 }//end of cron status id if  
             }
             catch(Exception $e)
             {
-             
+
             }
         }//end of cron status if
     }//end of requisition action.
@@ -387,22 +387,22 @@ class Default_CronjobController extends Zend_Controller_Action
     {
         $this->_helper->viewRenderer->setNoRender(true);
         $this->_helper->layout()->disableLayout();
-        
+
         $email_model = new Default_Model_EmailLogs();
         $cron_model = new Default_Model_Cronstatus();
-        
+
         $cron_status = $cron_model->getActiveCron('Inactive users');
-                
+
         if($cron_status == 'yes')
         {
             try
             {
                 //updating cron status table to in-progress
-                $cron_data = array(
+                $cron_data = [
                     'cron_status' => 1,
                     'cron_type' => 'Inactive users',
                     'started_at' => gmdate("Y-m-d H:i:s"),
-                );
+                ];
 
                 $cron_id = $cron_model->SaveorUpdateCronStatusData($cron_data, '');
 
@@ -434,16 +434,16 @@ class Default_CronjobController extends Zend_Controller_Action
                             sapp_Global::_sendEmail($options);
                         }
                     }
-                    $cron_data = array(
+                    $cron_data = [
                             'cron_status' => 0,
                             'completed_at' => gmdate("Y-m-d H:i:s"),
-                        );
+                        ];
                     $cron_id = $cron_model->SaveorUpdateCronStatusData($cron_data, "id = ".$cron_id);
                 }//end of cron status id if  
             }
             catch(Exception $e)
             {
-                
+
             }
         }//end of cron status if
     }//end of inactiveusers action.
@@ -560,7 +560,7 @@ class Default_CronjobController extends Zend_Controller_Action
  							$interval->format('%d');
  							$interval=$interval->days;
 							
- 							$appIdArr = array();
+ 							$appIdArr = [];
  							$appIdList = '';
  							if($interval<=2)
  							{
@@ -571,7 +571,7 @@ class Default_CronjobController extends Zend_Controller_Action
 	         				$employeeidArr = $app_ratings_model->getEmployeeIds($appval['id'],'cron');
 	         				if(!empty($employeeidArr))
 	         				{
-	         					$empIdArr = array();
+	         					$empIdArr = [];
 	         					$empIdList = '';
 	         					foreach($employeeidArr as $empval)
 	         					{
@@ -584,14 +584,14 @@ class Default_CronjobController extends Zend_Controller_Action
 	         						
 	         					 if(!empty($employeeDetailsArr))
 										{
-											$empArr = array();
+											$empArr = [];
 											foreach($employeeDetailsArr as $emp)
 											{  
 												array_push($empArr,$emp['emailaddress']); //preparing Bcc array
 												
 											}
 										
-		 								$optionArr = array('subject'=>'Self Appraisal Submission Pending',
+		 								$optionArr = ['subject'=>'Self Appraisal Submission Pending',
 		 												  'header'=>'Performance Appraisal',
 		 												  'toemail'=>SUPERADMIN_EMAIL,	
 		 												  'toname'=>'Super Admin',
@@ -601,7 +601,7 @@ class Default_CronjobController extends Zend_Controller_Action
 														<div style='padding:20px 0 0 0;color:#3b3b3b;'>Self appraisal submission is pending.</div>
 														<div style='padding:20px 0 10px 0;'>Please <a href=".BASE_URL." target='_blank' style='color:#b3512f;'>click here</a> to login  to your <b>".APPLICATION_NAME."</b> account to check the details.</div>
 														</div> ",
-		 												  'cron'=>'yes');
+		 												  'cron'=>'yes'];
 		 								sapp_PerformanceHelper::saveCronMail($optionArr);
 									}
 	         					}	
@@ -614,12 +614,12 @@ class Default_CronjobController extends Zend_Controller_Action
          				$getLine1ManagerId = $appraisalPrivMainModel->getLine1ManagerIdMain($appval['id']); 
          				if(!empty($getLine1ManagerId))
 						{
-							$empArr = array();
+							$empArr = [];
 							foreach($getLine1ManagerId as $val)
 							{
 							  array_push($empArr,$val['emailaddress']); //preparing Bcc array
 							}
-										$optionArr = array('subject'=>'Manager Appraisal Submission Pending',
+										$optionArr = ['subject'=>'Manager Appraisal Submission Pending',
 		 												  'header'=>'Performance Appraisal',
 		 												  'toemail'=>SUPERADMIN_EMAIL,	
 		 												  'toname'=>'Super Admin',
@@ -629,7 +629,7 @@ class Default_CronjobController extends Zend_Controller_Action
 														<div style='padding:20px 0 0 0;color:#3b3b3b;'>Manager appraisal submission is pending.</div>
 														<div style='padding:20px 0 10px 0;'>Please <a href=".BASE_URL." target='_blank' style='color:#b3512f;'>click here</a> to login  to your <b>".APPLICATION_NAME."</b> account to check the details.</div>
 														</div> ",
-		 												  'cron'=>'yes');
+		 												  'cron'=>'yes'];
 		 								sapp_PerformanceHelper::saveCronMail($optionArr);
 		 								
 		 							
@@ -646,7 +646,7 @@ class Default_CronjobController extends Zend_Controller_Action
 		$ffEmpRatModel = new Default_Model_Feedforwardemployeeratings;
 		
         $ffDataArr = $ffinitModel->getFFbyBUDept('','yes');
-        $ffIdArr = array();
+        $ffIdArr = [];
         $ffIdList = '';
        	$current_day = new DateTime('now');
       	$current_day->sub(new DateInterval('P1D'));
@@ -680,12 +680,12 @@ class Default_CronjobController extends Zend_Controller_Action
     				$ffEmpsStatusData = $ffEmpRatModel->getEmpsFFStatus($ffIdList,'cron');
     				if(!empty($ffEmpsStatusData))
          				{
-         					$empIdArr = array();
+         					$empIdArr = [];
          					foreach($ffEmpsStatusData as $empval)
          					{
          						array_push($empIdArr,$empval['emailaddress']);
          					}
-         								$optionArr = array('subject'=>'Manager Feedforward submission pending',
+         								$optionArr = ['subject'=>'Manager Feedforward submission pending',
 		 												  'header'=>'Feedforward',
 		 												  'toemail'=>SUPERADMIN_EMAIL,	
 		 												  'toname'=>'Super Admin',
@@ -695,7 +695,7 @@ class Default_CronjobController extends Zend_Controller_Action
 														<div style='padding:20px 0 0 0;color:#3b3b3b;'>Mangaer feedforward is pending.</div>
 														<div style='padding:20px 0 10px 0;'>Please <a href=".BASE_URL." target='_blank' style='color:#b3512f;'>click here</a> to login  to your <b>".APPLICATION_NAME."</b> account to check the details.</div>
 														</div> ",
-		 												  'cron'=>'yes');
+		 												  'cron'=>'yes'];
 		 								sapp_PerformanceHelper::saveCronMail($optionArr);
 		 							
          						

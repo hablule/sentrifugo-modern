@@ -50,7 +50,7 @@ class Default_ProjectparticipantController extends Zend_Controller_Action
         $session = sapp_Global::_readSession();
         if (!isset($session)) {
             if ($this->getRequest()->isXmlHttpRequest()) {
-                echo Zend_Json::encode(array('login' => 'failed'));
+                echo Zend_Json::encode(['login' => 'failed']);
                 exit;
             } else {
                 $this->_redirect('');
@@ -100,7 +100,7 @@ class Default_ProjectparticipantController extends Zend_Controller_Action
 
             $dataTmp = $this->_model->getGrid($sort, $by, $perPage, $page, rtrim($searchData, ','), $call, $dashboardcall);
 
-            $this->view->dataArray = array($dataTmp);
+            $this->view->dataArray = [$dataTmp];
             $this->view->call      = $call;
 
             $this->view->messages  = $this->_helper->flashMessenger->getMessages();
@@ -224,7 +224,7 @@ class Default_ProjectparticipantController extends Zend_Controller_Action
             $db->beginTransaction();
 
             try {
-                $data = array(
+                $data = [
                     'project_id'    => (int)$projectId,
                     'employee_id'   => $pEmployee ?: null,
                     'company_id'    => $pCompany ?: null,
@@ -235,7 +235,7 @@ class Default_ProjectparticipantController extends Zend_Controller_Action
                     'team_id'       => $pTeam ?: null,
                     'description'   => trim((string) $request->getParam('description', '')),
                     'isactive'      => (int) $request->getParam('isactive', 1)
-                );
+                ];
 
                 $actionFlag = 2;
                 $saveMode   = 'updated';
@@ -254,22 +254,22 @@ class Default_ProjectparticipantController extends Zend_Controller_Action
                 $db->commit();
 
                 // FlashMessenger for standard redirect
-                $this->_helper->flashMessenger->addMessage(array('success' => "Project Participant {$saveMode} successfully."));
+                $this->_helper->flashMessenger->addMessage(['success' => "Project Participant {$saveMode} successfully."]);
 
                 // SSOT v6.5 Strict AJAX JSON Response (Success with Redirect)
-                $this->_helper->json(array(
+                $this->_helper->json([
                     'result'    => 'saved',
                     'nomessage' => 'yes'
-                ));
+                ]);
             } catch (\Throwable $e) {
                 $db->rollBack();
                 error_log("ProjectParticipant Save Error: " . $e->getMessage());
 
-                $this->_helper->json(array(
+                $this->_helper->json([
                     'result'  => 'exception',
                     'message' => 'System error occurred. Check logs.',
                     'msgtype' => 'error'
-                ));
+                ]);
             }
         } else {
             echo Zend_Json::encode($form->getMessages());
@@ -287,7 +287,7 @@ class Default_ProjectparticipantController extends Zend_Controller_Action
 
         if ($id) {
             if (sapp_Global::_checkprivileges(PROJECTCO, $this->_loginuserGroup, $this->_loginuserRole, 'delete') !== 'Yes') {
-                return $this->_helper->json(array('result' => 'error', 'message' => 'Permission Denied.'));
+                return $this->_helper->json(['result' => 'error', 'message' => 'Permission Denied.']);
             }
 
             try {
@@ -299,14 +299,14 @@ class Default_ProjectparticipantController extends Zend_Controller_Action
                 $this->_model->deleteRecord($id);
                 sapp_Global::logManager(PROJECTCO, 3, $this->_loginUserId, $record['project_id']);
 
-                return $this->_helper->json(array('result' => 'saved', 'nomessage' => 'no', 'message' => 'Record deleted successfully.', 'msgtype' => 'success'));
+                return $this->_helper->json(['result' => 'saved', 'nomessage' => 'no', 'message' => 'Record deleted successfully.', 'msgtype' => 'success']);
             } catch (\Throwable $e) {
                 error_log("ProjectParticipant Delete Error: " . $e->getMessage());
-                return $this->_helper->json(array('result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error'));
+                return $this->_helper->json(['result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error']);
             }
         }
 
-        return $this->_helper->json(array('result' => 'error', 'message' => 'Invalid request'));
+        return $this->_helper->json(['result' => 'error', 'message' => 'Invalid request']);
     }
 
     public function makeactiveinactiveAction()
@@ -319,10 +319,10 @@ class Default_ProjectparticipantController extends Zend_Controller_Action
             $this->_model->toggleStatus($id, $status);
             sapp_Global::logManager(PROJECTCO, 4, $this->_loginUserId, $record['project_id']);
 
-            $this->_helper->json(array('result' => 'saved', 'nomessage' => 'no', 'msgtype' => 'success', 'message' => 'Status updated successfully.'));
+            $this->_helper->json(['result' => 'saved', 'nomessage' => 'no', 'msgtype' => 'success', 'message' => 'Status updated successfully.']);
         } catch (\Throwable $e) {
             error_log("ProjectParticipant Toggle Error: " . $e->getMessage());
-            $this->_helper->json(array('result' => 'exception', 'msgtype' => 'error', 'message' => 'System error occurred.'));
+            $this->_helper->json(['result' => 'exception', 'msgtype' => 'error', 'message' => 'System error occurred.']);
         }
     }
 

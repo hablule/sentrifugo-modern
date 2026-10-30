@@ -34,10 +34,10 @@ class Default_Model_Trainingandcertificationdetails extends Zend_Db_Table_Abstra
 		
 		$expData = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('ec' => 'main_empcertification'), array('id'=>'ec.empcertification_id','trainingname'=>'ec.trainingname','offeredby'=>'ec.offeredby','summaryofcourse'=>'ec.summaryofcourse','description'=>'ec.description','emp_id' => 'ec.emp_id', 'issueddate'=> 'DATE_FORMAT(ec.issueddate,"'.DATEFORMAT_MYSQL.'")', 'expirydate'=> 'DATE_FORMAT(ec.expirydate,"'.DATEFORMAT_MYSQL.'")','isactive'=>'if(ec.isactive="N","No","Yes")'))
-		->joinLeft(array('mc' => 'main_certificate'), "ec.certificate_id =mc.certificate_id ", array('cert_name' => 'mc.name'))
-		->joinLeft(array('e' => 'main_employees'), "ec.emp_id = e.id ", array('userfullname' => 'e.userfullname'))
-		->joinLeft(array('cp' => 'main_certprovider'), "ec.certprovider_id = cp.certprovider_id ", array('provider' => 'cp.name'))
+		->from(['ec' => 'main_empcertification'], ['id'=>'ec.empcertification_id','trainingname'=>'ec.trainingname','offeredby'=>'ec.offeredby','summaryofcourse'=>'ec.summaryofcourse','description'=>'ec.description','emp_id' => 'ec.emp_id', 'issueddate'=> 'DATE_FORMAT(ec.issueddate,"'.DATEFORMAT_MYSQL.'")', 'expirydate'=> 'DATE_FORMAT(ec.expirydate,"'.DATEFORMAT_MYSQL.'")','isactive'=>'if(ec.isactive="N","No","Yes")'])
+		->joinLeft(['mc' => 'main_certificate'], "ec.certificate_id =mc.certificate_id ", ['cert_name' => 'mc.name'])
+		->joinLeft(['e' => 'main_employees'], "ec.emp_id = e.id ", ['userfullname' => 'e.userfullname'])
+		->joinLeft(['cp' => 'main_certprovider'], "ec.certprovider_id = cp.certprovider_id ", ['provider' => 'cp.name'])
 		->where($where)
 		->order("$by $sort")
 		->limitPage($pageNo, $perPage);		
@@ -51,7 +51,7 @@ class Default_Model_Trainingandcertificationdetails extends Zend_Db_Table_Abstra
 		{
 			$where = "empcertification_id =".$id;
 			$empdependencyDetails = $this->select()
-									->from(array('c'=>'main_empcertification'))
+									->from(['c'=>'main_empcertification'])
 									->where($where);
 		
 			$empdependencyDetailsArr = $this->fetchAll($empdependencyDetails)->toArray(); 
@@ -74,8 +74,8 @@ class Default_Model_Trainingandcertificationdetails extends Zend_Db_Table_Abstra
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$exParam1='',$exParam2='',$exParam3='',$exParam4='')
 	{		
         $searchQuery = '';$tablecontent = '';
-        $searchArray = array();$data = array();$id='';
-        $dataTmp = array();
+        $searchArray = [];$data = [];$id='';
+        $dataTmp = [];
 		if($searchData != '' && $searchData!='undefined')
 		{
 			$searchValues = json_decode($searchData);
@@ -89,19 +89,19 @@ class Default_Model_Trainingandcertificationdetails extends Zend_Db_Table_Abstra
 		/** search from grid - END **/
 		$objName = 'trainingandcertificationdetails';
 				
-		$tableFields = array('action'=>'Action','cert_name'=>'Certificate','trainingname'=>'Training','provider'=>'Provider','offeredby'=>'Offerd By','issueddate'=>'Isue Date','expirydate'=>'Expiry date');
+		$tableFields = ['action'=>'Action','cert_name'=>'Certificate','trainingname'=>'Training','provider'=>'Provider','offeredby'=>'Offerd By','issueddate'=>'Isue Date','expirydate'=>'Expiry date'];
 				
 						
 		$tablecontent = $this->getTandCdetailsData($sort, $by,$pageNo,$perPage,$searchQuery,$exParam1);     
 		
-		$dataTmp = array('userid'=>$exParam1,
+		$dataTmp = ['userid'=>$exParam1,
 						'sort' => $sort,
 						'by' => $by,
 						'pageNo' => $pageNo,
 						'perPage' => $perPage,				
 						'tablecontent' => $tablecontent,
 						'objectname' => $objName,
-						'extra' => array(),
+						'extra' => [],
 						'tableheader' => $tableFields,
 						'jsGridFnName' => 'getEmployeeAjaxgridData',
 						'jsFillFnName' => '',
@@ -116,7 +116,7 @@ class Default_Model_Trainingandcertificationdetails extends Zend_Db_Table_Abstra
 						'call'=>$call,
 						'context'=>$exParam2,
 								
-						);	
+						];	
 		return $dataTmp;
 	}
 	
@@ -124,10 +124,10 @@ class Default_Model_Trainingandcertificationdetails extends Zend_Db_Table_Abstra
 	{
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('ec' => 'main_empcertification'), array('id'=>'ec.empcertification_id','trainingname'=>'ec.trainingname','offeredby'=>'ec.offeredby','summaryofcourse'=>'ec.summaryofcourse','description'=>'ec.description','emp_id' => 'ec.emp_id', 'issueddate'=> 'DATE_FORMAT(ec.issueddate,"'.DATEFORMAT_MYSQL.'")', 'expirydate'=> 'DATE_FORMAT(ec.expirydate,"'.DATEFORMAT_MYSQL.'")','isactive'=>'if(ec.isactive="N","No","Yes")'))
-		->joinLeft(array('mc' => 'main_certificate'), "ec.certificate_id =mc.certificate_id ", array('cert_name' => 'mc.name'))
-		->joinLeft(array('e' => 'main_employees'), "ec.emp_id = e.id ", array('userfullname' => 'e.userfullname'))
-		->joinLeft(array('cp' => 'main_certprovider'), "ec.certprovider_id = cp.certprovider_id ", array('provider' => 'cp.name'))
+		->from(['ec' => 'main_empcertification'], ['id'=>'ec.empcertification_id','trainingname'=>'ec.trainingname','offeredby'=>'ec.offeredby','summaryofcourse'=>'ec.summaryofcourse','description'=>'ec.description','emp_id' => 'ec.emp_id', 'issueddate'=> 'DATE_FORMAT(ec.issueddate,"'.DATEFORMAT_MYSQL.'")', 'expirydate'=> 'DATE_FORMAT(ec.expirydate,"'.DATEFORMAT_MYSQL.'")','isactive'=>'if(ec.isactive="N","No","Yes")'])
+		->joinLeft(['mc' => 'main_certificate'], "ec.certificate_id =mc.certificate_id ", ['cert_name' => 'mc.name'])
+		->joinLeft(['e' => 'main_employees'], "ec.emp_id = e.id ", ['userfullname' => 'e.userfullname'])
+		->joinLeft(['cp' => 'main_certprovider'], "ec.certprovider_id = cp.certprovider_id ", ['provider' => 'cp.name'])
 		->where('ec.empcertification_id='.$id);
 		return $this->fetchAll($select)->toArray();
 	}

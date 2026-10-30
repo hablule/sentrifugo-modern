@@ -30,7 +30,7 @@ class Default_Form_empconfiguration extends Zend_Form
 
 		 
 
-		$empConfigureArray = array(
+		$empConfigureArray = [
 									'employeedocs' => 'Employee Documents',
 									'emp_leaves' => 'Employee Leaves',
 							   		'emp_holidays' => 'Employee Holidays',
@@ -68,15 +68,15 @@ class Default_Form_empconfiguration extends Zend_Form
 								   'emp_benifits' => 'Benefits',
 								   'assetdetails' => 'Asset Details',
 								   'emp_position' => 'Employee Position'
-								   );
+								   ];
 
 								   $checktype = new Zend_Form_Element_MultiCheckbox('checktype');
 								   foreach ($empConfigureArray as $key => $val){
 								   	$checktype->addMultiOption($key,$val);
 								   }
 								   $checktype->setRequired(true);
-								   $checktype->addValidator('NotEmpty', false, array('messages' => 'Please select atleast one employee configuration.'));
-								   $checktype->setOptions(array('class'=>'empconfigcheckbox'));
+								   $checktype->addValidator('NotEmpty', false, ['messages' => 'Please select atleast one employee configuration.']);
+								   $checktype->setOptions(['class'=>'empconfigcheckbox']);
 								   $checktype->setSeparator(PHP_EOL);
 								    
 								   $checkall = new Zend_Form_Element_Checkbox('checkall');
@@ -86,8 +86,8 @@ class Default_Form_empconfiguration extends Zend_Form
 								   $submit->setAttrib('id', 'submitbutton');
 								   $submit->setLabel('Save');
 
-								   $this->addElements(array($checktype,$checkall,$submit));
-								   $this->setElementDecorators(array('ViewHelper'));
+								   $this->addElements([$checktype,$checkall,$submit]);
+								   $this->setElementDecorators(['ViewHelper']);
 	}
 
 }

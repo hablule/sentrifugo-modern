@@ -29,10 +29,10 @@ class Default_CandidateeducationController extends Zend_Controller_Action
 
         $educationElements = $FormModel->getActiveElements('Education');
 
-        $educationElementNames = array();
-        $educationElementLabels = array();
-        $educationElementOptions = array();
-        $validators = array();
+        $educationElementNames = [];
+        $educationElementLabels = [];
+        $educationElementOptions = [];
+        $validators = [];
         foreach ($educationElements as $element) {
             $elementName = $element['elementNameOrID'];
             $educationForm->addElement($element['dataType'], $element['elementNameOrID']);
@@ -58,9 +58,9 @@ class Default_CandidateeducationController extends Zend_Controller_Action
             }
             if ($element['validator'] != '') {
                 $validatorKeys = $FormModel->getValidators($element['validator']);
-                $validator = array();
+                $validator = [];
                 foreach ($validatorKeys as $validats) {
-                    $tempArray = array();
+                    $tempArray = [];
                     $val = $validats['validate'];
                     $message = $validats['description'];
                     //$candidatedetails->$elementName->addValidator($val, false, array('messages' => $message));
@@ -85,14 +85,14 @@ class Default_CandidateeducationController extends Zend_Controller_Action
         $educationForm->start_date->setAttrib('maxLength', 10);
         $educationForm->start_date->setAttrib('readonly', 'readonly');
         $educationForm->start_date->setAttrib('onfocus', 'this.blur()');
-        $educationForm->start_date->addValidator('NotEmpty', false, array('messages' => 'Please select start date.'));
+        $educationForm->start_date->addValidator('NotEmpty', false, ['messages' => 'Please select start date.']);
         $educationForm->start_date->setRequired(true);
 
         $educationForm->end_date->setAttrib('title', 'Due Date.');
         $educationForm->end_date->setAttrib('maxLength', 10);
         $educationForm->end_date->setAttrib('readonly', 'readonly');
         $educationForm->end_date->setAttrib('onfocus', 'this.blur()');
-        $educationForm->end_date->addValidator('NotEmpty', false, array('messages' => 'Please select start date.'));
+        $educationForm->end_date->addValidator('NotEmpty', false, ['messages' => 'Please select start date.']);
         $educationForm->end_date->setRequired(true);
 
         $educationForm->education_level->addMultiOption('', 'Not Specified');
@@ -209,7 +209,7 @@ class Default_CandidateeducationController extends Zend_Controller_Action
     public function nextAction()
     {
        
-        $this->_forward('index', 'cvadd', 'default', array('candidate_id' => $this->_request->getParam('id')));
+        $this->_forward('index', 'cvadd', 'default', ['candidate_id' => $this->_request->getParam('id')]);
     }
     public function prevAction()
     {

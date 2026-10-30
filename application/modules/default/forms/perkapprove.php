@@ -32,25 +32,25 @@ class Default_Form_perkapprove extends Zend_Form
 		$managerstatus = new Zend_Form_Element_Select('managerstatus');
 		$managerstatus->setLabel("Action");
         $managerstatus->setRegisterInArrayValidator(false);
-        $managerstatus->setMultiOptions(array(
+        $managerstatus->setMultiOptions([
 			                 ''=>'Select...',				
 							'Y'=>'Approve' ,
 							'N'=>'Reject',
-							));
+							]);
 				
 							$approvedamount = new Zend_Form_Element_Text('approvedamount');
 							$approvedamount->setLabel("Comments");
 							$approvedamount->setAttrib('rows', 10);
 							$approvedamount->setAttrib('cols', 50);
 							$approvedamount ->setAttrib('maxlength', '50');
-							$managerstatus->addValidator('NotEmpty', false, array('messages' => 'Please select Action.')); 
+							$managerstatus->addValidator('NotEmpty', false, ['messages' => 'Please select Action.']); 
 							$managerstatus->setRequired(true);
 		$submit = new Zend_Form_Element_Submit('submit');
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 		$submit->setAttrib('action',BASE_URL.'perkapprove');
 
-		$this->addElements(array($id,$managerstatus,$approvedamount,$submit));
-        $this->setElementDecorators(array('ViewHelper'));
+		$this->addElements([$id,$managerstatus,$approvedamount,$submit]);
+        $this->setElementDecorators(['ViewHelper']);
 	}
 }

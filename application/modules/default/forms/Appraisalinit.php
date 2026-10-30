@@ -48,13 +48,13 @@ class Default_Form_Appraisalinit extends Zend_Form
             $businessunit_name->setLabel("Business Unit");
             $businessunit_name->setAttrib('readonly', 'true');
             $businessunit_name->setAttrib('onfocus', 'this.blur()');
-            $businessunit_name->setOptions(array('class' => 'brdr_none'));
+            $businessunit_name->setOptions(['class' => 'brdr_none']);
 
             $department_name = new Zend_Form_Element_Text('department_name');
             $department_name->setLabel("Department");
             $department_name->setAttrib('readonly', 'true');
             $department_name->setAttrib('onfocus', 'this.blur()');
-            $department_name->setOptions(array('class' => 'brdr_none'));
+            $department_name->setOptions(['class' => 'brdr_none']);
 			
         }
         else
@@ -63,18 +63,18 @@ class Default_Form_Appraisalinit extends Zend_Form
             $businessunit_id->setLabel("Business Unit");                        
             $businessunit_id->setRegisterInArrayValidator(false);
             $businessunit_id->setRequired(true);
-            $businessunit_id->addValidator('NotEmpty', false, array('messages' => 'Please select business unit'));
+            $businessunit_id->addValidator('NotEmpty', false, ['messages' => 'Please select business unit']);
             
             $department_id = new Zend_Form_Element_Select('department_id');
             $department_id->setLabel("Department");                        
             $department_id->setRegisterInArrayValidator(false);
-			$department_id->addMultiOptions(array('' => 'Select Department'));
+			$department_id->addMultiOptions(['' => 'Select Department']);
             
             $performance_app_flag = Zend_Controller_Front::getInstance()->getRequest()->getParam('performance_app_flag',null);
             if($performance_app_flag != '' && $performance_app_flag == 0)
             {
                 $department_id->setRequired(true);
-                $department_id->addValidator('NotEmpty', false, array('messages' => 'Please select department'));
+                $department_id->addValidator('NotEmpty', false, ['messages' => 'Please select department']);
             }
             
         }
@@ -88,21 +88,21 @@ class Default_Form_Appraisalinit extends Zend_Form
 		$appraisal_mode = new Zend_Form_Element_Select('appraisal_mode');
 		$appraisal_mode->setLabel("Appraisal Mode");
         $appraisal_mode->setAttrib('class', 'selectoption');
-        $appraisal_mode->addMultiOptions(array(''   => 'Select appraisal mode',
+        $appraisal_mode->addMultiOptions([''   => 'Select appraisal mode',
         										'Quarterly'  => 'Quarterly', 
         										'Half-yearly'	 => 'Half-yearly',
-        										'Yearly'	 =>	'Yearly'   ));
+        										'Yearly'	 =>	'Yearly'   ]);
 		$appraisal_mode->setRegisterInArrayValidator(false);
 		$appraisal_mode->setRequired(true);
-		$appraisal_mode->addValidator('NotEmpty', false, array('messages' => 'Please select appraisal mode'));		
+		$appraisal_mode->addValidator('NotEmpty', false, ['messages' => 'Please select appraisal mode']);		
 						
         $status = new Zend_Form_Element_Select('status');
         $status->setLabel("Appraisal Status");
         $status->setAttrib('class', 'selectoption');
-        $status->setMultiOptions(array('1'=>'Open'));
+        $status->setMultiOptions(['1'=>'Open']);
         $status->setRegisterInArrayValidator(false);
         $status->setRequired(true);
-        $status->addValidator('NotEmpty', false, array('messages' => 'Please select appraisal status.'));
+        $status->addValidator('NotEmpty', false, ['messages' => 'Please select appraisal status.']);
                 
         $from_year = new Zend_Form_Element_Select('from_year');        
         $from_year->setAttrib('class', 'selectoption');        
@@ -110,7 +110,7 @@ class Default_Form_Appraisalinit extends Zend_Form
         $from_year->setRequired(true);
         $from_year->setLabel("From Year");
         $from_year->addMultiOption("","From Year");
-        $from_year->addValidator('NotEmpty', false, array('messages' => 'Please select from year'));
+        $from_year->addValidator('NotEmpty', false, ['messages' => 'Please select from year']);
 		$current_date = date('Y-m-d');
 		$previous_year = date('Y',strtotime("$current_date -1 year"));
         for($i = $previous_year;$i<=($previous_year+5);$i++ )
@@ -124,7 +124,7 @@ class Default_Form_Appraisalinit extends Zend_Form
         $to_year->setRequired(true);
         $to_year->setLabel("To Year");
         $to_year->addMultiOption("","To Year");
-        $to_year->addValidator('NotEmpty', false, array('messages' => 'Please select to year'));
+        $to_year->addValidator('NotEmpty', false, ['messages' => 'Please select to year']);
         
         /* Limit 'To Year' field years 
          * upto following year of 'From Year'
@@ -141,14 +141,14 @@ class Default_Form_Appraisalinit extends Zend_Form
         $appraisal_period->setLabel("Period");
         $appraisal_period->setAttrib('readonly', 'readonly');
         $appraisal_period->setAttrib('onfocus', 'this.blur()');
-        $appraisal_period->setOptions(array('class' => 'brdr_none'));		
+        $appraisal_period->setOptions(['class' => 'brdr_none']);		
         // $appraisal_period->setRequired(true);	
         // $appraisal_period->addValidator('NotEmpty', false, array('messages' => 'Please enter period'));
 		
         $eligibility = new Zend_Form_Element_Multiselect('eligibility');
         $eligibility->setLabel("Eligibility");
         $eligibility->setAttrib('class', 'selectoption');
-        $eligibility->setMultiOptions(array(''=>'Select Eligibility'));
+        $eligibility->setMultiOptions([''=>'Select Eligibility']);
         /*$eligibility->setRegisterInArrayValidator(false);
         $eligibility->setRequired(true);
         $eligibility->addValidator('NotEmpty', false, array('messages' => 'Please select eligiblity'));*/
@@ -163,18 +163,18 @@ class Default_Form_Appraisalinit extends Zend_Form
         
         $category_id = new Zend_Form_Element_Multiselect('category_id');
         $category_id->setLabel("Parameters");        
-        $category_id->setMultiOptions(array(''=>'Select Parameters'));
+        $category_id->setMultiOptions([''=>'Select Parameters']);
         $category_id->setRegisterInArrayValidator(false);
         $category_id->setRequired(true);
-        $category_id->addValidator('NotEmpty', false, array('messages' => 'Please select parameters'));
+        $category_id->addValidator('NotEmpty', false, ['messages' => 'Please select parameters']);
     	
         $enable = new Zend_Form_Element_Select('enable_step');
         $enable->setLabel("Enable To");  
         $enable->setAttrib('onchange', 'changeduedatetext(this.value)');         
-        $enable->setMultiOptions(array('1'=>'Managers','2'=>'Employees'));
+        $enable->setMultiOptions(['1'=>'Managers','2'=>'Employees']);
         $enable->setRegisterInArrayValidator(false);
         $enable->setRequired(true);
-        $enable->addValidator('NotEmpty', false, array('messages' => 'Please select enable to'));
+        $enable->addValidator('NotEmpty', false, ['messages' => 'Please select enable to']);
 		
         $enable_to_val = Zend_Controller_Front::getInstance()->getRequest()->getParam('enable_step',null);
         
@@ -187,12 +187,12 @@ class Default_Form_Appraisalinit extends Zend_Form
         if($enable_to_val == '' || $enable_to_val == 1)
         {
             $mgr_due_date->setRequired(true);
-            $mgr_due_date->addValidator('NotEmpty', false, array('messages' => 'Please select managers due date'));
+            $mgr_due_date->addValidator('NotEmpty', false, ['messages' => 'Please select managers due date']);
         }
         else
         {
             $emp_due_date->setRequired(true);
-            $emp_due_date->addValidator('NotEmpty', false, array('messages' => 'Please select employees due date'));
+            $emp_due_date->addValidator('NotEmpty', false, ['messages' => 'Please select employees due date']);
         }
         $management_appraisal = new Zend_Form_Element_Checkbox('management_appraisal');
         $management_appraisal->setLabel("Consider management");  
@@ -205,12 +205,12 @@ class Default_Form_Appraisalinit extends Zend_Form
 		$appraisal_ratings = new Zend_Form_Element_Select('appraisal_ratings');
 		$appraisal_ratings->setLabel("Appraisal Ratings");
         $appraisal_ratings->setAttrib('class', 'selectoption');
-        $appraisal_ratings->addMultiOptions(array('' => 'Select ratings',
+        $appraisal_ratings->addMultiOptions(['' => 'Select ratings',
         										'1'=> '1-5',
-        										'2'=> '1-10'));
+        										'2'=> '1-10']);
 		$appraisal_ratings->setRegisterInArrayValidator(false);
 		$appraisal_ratings->setRequired(true);
-		$appraisal_ratings->addValidator('NotEmpty', false, array('messages' => 'Please select appraisal ratings'));		
+		$appraisal_ratings->addValidator('NotEmpty', false, ['messages' => 'Please select appraisal ratings']);		
 		
 
 		$app_period_hid = new Zend_Form_Element_Hidden('app_period_hid');
@@ -221,14 +221,14 @@ class Default_Form_Appraisalinit extends Zend_Form
         
         if($loginuserRole != SUPERADMINROLE && $loginuserGroup != MANAGEMENT_GROUP && $loginuserGroup != HR_GROUP)
         {                    
-            $this->addElements(array($appraisal_ratings,$management_appraisal,$id,$appraisal_period,$from_year,$to_year,$businessunit_id,$department_id,$businessunit_name,$department_name,
-                                    $appraisal_mode,$category_id,$status,$eligibility,$eligibility_hidden,$eligibility_value,$eligibilityflag,$enable,$mgr_due_date,$emp_due_date,$app_period_hid,$submit));
+            $this->addElements([$appraisal_ratings,$management_appraisal,$id,$appraisal_period,$from_year,$to_year,$businessunit_id,$department_id,$businessunit_name,$department_name,
+                                    $appraisal_mode,$category_id,$status,$eligibility,$eligibility_hidden,$eligibility_value,$eligibilityflag,$enable,$mgr_due_date,$emp_due_date,$app_period_hid,$submit]);
         }
         else
         {   
-            $this->addElements(array($appraisal_ratings,$management_appraisal,$id,$appraisal_period,$from_year,$to_year,$businessunit_id,$department_id,
-                                    $appraisal_mode,$category_id,$status,$eligibility,$eligibility_hidden,$eligibility_value,$eligibilityflag,$enable,$mgr_due_date,$emp_due_date,$app_period_hid,$submit));
+            $this->addElements([$appraisal_ratings,$management_appraisal,$id,$appraisal_period,$from_year,$to_year,$businessunit_id,$department_id,
+                                    $appraisal_mode,$category_id,$status,$eligibility,$eligibility_hidden,$eligibility_value,$eligibilityflag,$enable,$mgr_due_date,$emp_due_date,$app_period_hid,$submit]);
         }
-        $this->setElementDecorators(array('ViewHelper'));
+        $this->setElementDecorators(['ViewHelper']);
     }
 }

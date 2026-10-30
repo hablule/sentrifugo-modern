@@ -69,7 +69,7 @@ class Default_Form_emppersonaldetails extends Zend_Form
         $nationalityid->setRegisterInArrayValidator(false);
 
         $dob = new ZendX_JQuery_Form_Element_DatePicker('dob');
-		$dob->setOptions(array('class' => 'brdr_none'));	
+		$dob->setOptions(['class' => 'brdr_none']);	
 		$dob->setAttrib('readonly', 'true');
 		$dob->setAttrib('onfocus', 'this.blur()');
 		//DOB should not be current date....
@@ -82,8 +82,8 @@ class Default_Form_emppersonaldetails extends Zend_Form
 		*/
 		
         $bloodgroup = new Zend_Form_Element_Select('bloodgroup');
-    	$bloodgroup->addMultiOptions(array(''=>'Select Blood group'));
-		$bloodgroup->addMultiOptions(array('A+'=>'A+','B+'=>'B+','O+'=>'O+','A-'=>'A-','B-'=>'B-','O-'=>'O-'));
+    	$bloodgroup->addMultiOptions([''=>'Select Blood group']);
+		$bloodgroup->addMultiOptions(['A+'=>'A+','B+'=>'B+','O+'=>'O+','A-'=>'A-','B-'=>'B-','O-'=>'O-']);
 			
     	
 				
@@ -96,10 +96,10 @@ class Default_Form_emppersonaldetails extends Zend_Form
 		$submitadd->setAttrib('onclick', 'validatedocumentonsubmit(this)');
 		$submitadd->setLabel('Save');
 		
-		$this->addElements(array($id,$userid,$genderid,$religion,$maritalstatusid,$nationalityid,$ethniccodeid,$racecodeid,$languageid,$dob,$bloodgroup,$submitadd));
-        $this->setElementDecorators(array('ViewHelper')); 
- 		 $this->setElementDecorators(array(
+		$this->addElements([$id,$userid,$genderid,$religion,$maritalstatusid,$nationalityid,$ethniccodeid,$racecodeid,$languageid,$dob,$bloodgroup,$submitadd]);
+        $this->setElementDecorators(['ViewHelper']); 
+ 		 $this->setElementDecorators([
                     'UiWidgetElement',
-        ),array('dob')); 
+        ],['dob']); 
 	}
 }

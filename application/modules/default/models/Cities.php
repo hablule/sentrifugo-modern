@@ -38,9 +38,9 @@ class Default_Model_Cities extends Zend_Db_Table_Abstract
 		
 		$CitiesData = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('c'=>'main_cities'),array('c.*'))
-						   ->joinLeft(array('ct'=>'tbl_countries'), 'ct.id=c.countryid',array('country_name'=>'ct.country_name'))						   						   
-                           ->joinLeft(array('s'=>'tbl_states'), 's.id=c.state',array('state_name'=>'s.state_name'))						   						   
+                           ->from(['c'=>'main_cities'],['c.*'])
+						   ->joinLeft(['ct'=>'tbl_countries'], 'ct.id=c.countryid',['country_name'=>'ct.country_name'])						   						   
+                           ->joinLeft(['s'=>'tbl_states'], 's.id=c.state',['state_name'=>'s.state_name'])						   						   
 						   ->where($where)
     					   ->order("$by $sort") 
     					   ->limitPage($pageNo, $perPage);
@@ -51,8 +51,8 @@ class Default_Model_Cities extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{		
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		
 		if($searchData != '' && $searchData!='undefined')
 			{
@@ -66,25 +66,25 @@ class Default_Model_Cities extends Zend_Db_Table_Abstract
 			}
 		$objName = 'cities';
 		
-		$tableFields = array('action'=>'Action','country_name' =>'Country','state_name' =>'State','city' => 'City');
+		$tableFields = ['action'=>'Action','country_name' =>'Country','state_name' =>'State','city' => 'City'];
 		
 		$tablecontent = $this->getCitiesData($sort, $by, $pageNo, $perPage,$searchQuery);     
 		
-	    $dataTmp = array(
+	    $dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
 			'searchArray' => $searchArray,
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall
-		);	
+		];	
 		return $dataTmp;
 	}
 	
@@ -116,7 +116,7 @@ class Default_Model_Cities extends Zend_Db_Table_Abstract
 	{
 		 $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('c'=>'main_cities'),array('c.*'))
+						->from(['c'=>'main_cities'],['c.*'])
 					    ->where('c.isactive = 1 AND c.id='.$id.' ');
 		return $this->fetchAll($select)->toArray();
 	}
@@ -165,8 +165,8 @@ class Default_Model_Cities extends Zend_Db_Table_Abstract
 		{
 			$select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('c'=>'tbl_cities'),array('c.id','c.city_name'))
-						->joinLeft(array('m'=>'main_cities'), "m.city_org_id = c.id and m.isactive = 1",array())
+						->from(['c'=>'tbl_cities'],['c.id','c.city_name'])
+						->joinLeft(['m'=>'main_cities'], "m.city_org_id = c.id and m.isactive = 1",[])
 						->where('c.state_id='.$stateid.' AND c.is_active=1 AND m.city_org_id is null')
 						->order('c.city_name');
 		}
@@ -174,7 +174,7 @@ class Default_Model_Cities extends Zend_Db_Table_Abstract
 		{
 			$select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('c'=>'tbl_cities'),array('c.id','c.city_name'))
+						->from(['c'=>'tbl_cities'],['c.id','c.city_name'])
 						->where('c.state_id='.$stateid.' AND c.is_active=1 ')
 						->order('c.city_name');
 		}
@@ -201,7 +201,7 @@ class Default_Model_Cities extends Zend_Db_Table_Abstract
 	{
 	     $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('c'=>'tbl_cities'),array('cityname'=>'c.city_name','c.id'))
+						->from(['c'=>'tbl_cities'],['cityname'=>'c.city_name','c.id'])
 						->where('c.id='.$cityid.' AND c.is_active=1 ');
 						
 		
@@ -213,7 +213,7 @@ class Default_Model_Cities extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('c'=>'tbl_cities'),array('c.id','c.city_name'));
+						->from(['c'=>'tbl_cities'],['c.id','c.city_name']);
 					
 		return $this->fetchAll($select)->toArray();
 	
@@ -223,7 +223,7 @@ class Default_Model_Cities extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('c'=>'main_cities'),array('c.*'))
+						->from(['c'=>'main_cities'],['c.*'])
 						->where('c.state='.$stateid.' AND c.isactive=1 ')
 						->order('c.city');
 		
@@ -234,7 +234,7 @@ class Default_Model_Cities extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('c'=>'main_cities'),array('c.id','c.city_org_id','c.city'))
+						->from(['c'=>'main_cities'],['c.id','c.city_org_id','c.city'])
 						->where('c.city_org_id='.$city_org_id.' AND c.isactive=1 ');
 		
 		return $this->fetchAll($select)->toArray();
@@ -243,7 +243,7 @@ class Default_Model_Cities extends Zend_Db_Table_Abstract
 	public function getCityNamesByIds($cityIdArray)
 	{
 		$resultstring = implode(',', $cityIdArray);
-		$cityArray = array();
+		$cityArray = [];
 		if($resultstring)
 		{
 			try

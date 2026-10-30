@@ -45,9 +45,9 @@ class Default_AssignmententryreasoncodeController extends Zend_Controller_Action
 		$view = Zend_Layout::getMvcInstance()->getView();		
 		$objname = $this->_getParam('objname');
 		$refresh = $this->_getParam('refresh');
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 		
 		if($refresh == 'refresh')
@@ -77,24 +77,24 @@ class Default_AssignmententryreasoncodeController extends Zend_Controller_Action
 				
 		$objName = 'assignmententryreasoncode';
 		
-		$tableFields = array('action'=>'Action','assignmententryreasoncode' => 'Assignment Entry Reason Code','description' => 'Description');
+		$tableFields = ['action'=>'Action','assignmententryreasoncode' => 'Assignment Entry Reason Code','description' => 'Description'];
 		
 			
 		$tablecontent = $assignmententryreasoncodemodel->getAssignmentEntryReasonData($sort, $by, $pageNo, $perPage,$searchQuery);     
 		
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
 			'searchArray' => $searchArray
-		);			
+		];			
 		array_push($data,$dataTmp);
 		$this->view->dataArray = $data;
 		$this->view->call = $call ;
@@ -156,13 +156,13 @@ class Default_AssignmententryreasoncodeController extends Zend_Controller_Action
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = ''; 
-				   $data = array( 'assignmententryreasoncode'=>trim($assignmententryreasoncode),
+				   $data = [ 'assignmententryreasoncode'=>trim($assignmententryreasoncode),
 				      			 'description'=>trim($description),
 								  'modifiedby'=>$loginUserId,
 								  'modifieddate'=>$date->get('yyyy-MM-dd HH:mm:ss')
-						);
+						];
 					if($id!=''){
-						$where = array('id=?'=>$id);  
+						$where = ['id=?'=>$id];  
 						$actionflag = 2;
 					}
 					else
@@ -216,8 +216,8 @@ class Default_AssignmententryreasoncodeController extends Zend_Controller_Action
 		    if($id)
 			{
 			$assignmententryreasoncodemodel = new Default_Model_Assignmententryreasoncode();
-			  $data = array('isactive'=>0);
-			  $where = array('id=?'=>$id);
+			  $data = ['isactive'=>0];
+			  $where = ['id=?'=>$id];
 			  $Id = $assignmententryreasoncodemodel->SaveorUpdateAssignmentEntryData($data, $where);
 			    if($Id == 'update')
 				{

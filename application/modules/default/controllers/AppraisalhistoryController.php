@@ -52,13 +52,13 @@ class Default_AppraisalhistoryController extends Zend_Controller_Action
             $loginuserGroup = $auth->getStorage()->read()->group_id;
         }
 		$obj_appraisal_history = new Default_Model_Appraisalhistory();
-		$emp_appraisal_data = array();
+		$emp_appraisal_data = [];
 		$emp_appraisal_data = $obj_appraisal_history->getEmpAppraisalHistory($loginUserId);
 		//get the max rating value
 		$max = 0;
 		foreach( $emp_appraisal_data as $k => $v )
 		{
-			$max = max( array( $max, $v['consolidated_rating'] ) );
+			$max = max( [ $max, $v['consolidated_rating'] ] );
 		}
 		$this->view->max_rating = ($max>5)?10:5;
 		$this->view->emp_appraisal_data = $emp_appraisal_data;
@@ -75,16 +75,16 @@ class Default_AppraisalhistoryController extends Zend_Controller_Action
 			$empId = $this->_request->getParam('empId');
 			$period = $this->_request->getParam('period');
 			$empAppraisalData = "";$questionsData = "";$categoriesData = "";$empData = "";$ratingsData = "";
-			$empAppraisals = array();
+			$empAppraisals = [];
 			$ratingType = "";
-			$ratingText = array();
-			$ratingTextDisplay = array();
-			$ratingValues = array();			
+			$ratingText = [];
+			$ratingTextDisplay = [];
+			$ratingValues = [];			
 			if($appId && $empId && $period)
 			{
 				$empAppraisalModel = new Default_Model_Appraisalemployeeratings();
 				$empAppraisals = $empAppraisalModel->getSelectedAppraisalData($appId,$empId,$period);
-				$configId = isset($empAppraisals[0]['pa_configured_id'])?$empAppraisals[0]['pa_configured_id']:0;
+				$configId = $empAppraisals[0]['pa_configured_id'] ?? 0;
 				// get rating details using configuration id
 				$appEmpRatingsModel = new Default_Model_Appraisalemployeeratings();
 				$ratingsData = $appEmpRatingsModel->getAppRatingsDataByConfgId($configId,$appId);
@@ -107,7 +107,7 @@ class Default_AppraisalhistoryController extends Zend_Controller_Action
 						$questionsData = $empAppraisalModel->getQuestionsData($strQuestionIds);
 											
 						$tmpRatingIdsObject = array_values($empResponseArray);
-						$tmpRatingIdsArr = array();
+						$tmpRatingIdsArr = [];
 						foreach($tmpRatingIdsObject as $ratingArr)
 						{
 							$tmpRatings = get_object_vars($ratingArr);
@@ -147,9 +147,9 @@ class Default_AppraisalhistoryController extends Zend_Controller_Action
 				}
 			}
 			$appSkillsModel = new Default_Model_Appraisalskills();
-			$skills = array();
+			$skills = [];
 			$skills = $appSkillsModel->getAppraisalSkillsData();
-			$skills_arr = array();
+			$skills_arr = [];
 			foreach($skills as $skill)
 			{
 				$skills_arr[$skill['id']] = $skill; 

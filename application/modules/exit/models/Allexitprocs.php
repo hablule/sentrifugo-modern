@@ -22,7 +22,7 @@ class Exit_Model_Allexitprocs extends Zend_Db_Table_Abstract
 {
 	protected $_name = 'main_exit_process';
 	private $db;
-	private $searchArray = array();
+	private $searchArray = [];
 	private $loggedInUser = '';
 	private $loggedInUserGroup = '';
 	private $loggedInUserRole = '';
@@ -52,7 +52,7 @@ class Exit_Model_Allexitprocs extends Zend_Db_Table_Abstract
 		
 		$searchQuery = '';
        // $searchArray = array();
-        $data = array();
+        $data = [];
 
 		if($searchData != '' && $searchData!='undefined')
 			{
@@ -87,9 +87,9 @@ class Exit_Model_Allexitprocs extends Zend_Db_Table_Abstract
 		$objName = 'allexitproc';
 
 		if($this->loggedInUserRole != SUPERADMINROLE && $this->is_org_head!=1){
-			$tableFields = array('action'=>'Action','userfullname'=>'Employee','employeeId'=>'Employee ID','businessunit_name'=>'Business Unit','department_name'=>'Department','exit_type'=>'Exit Type','overall_status'=>'Overall Status','individual_status'=>'Individual Status','initiateddate' => 'Initiated Date');
+			$tableFields = ['action'=>'Action','userfullname'=>'Employee','employeeId'=>'Employee ID','businessunit_name'=>'Business Unit','department_name'=>'Department','exit_type'=>'Exit Type','overall_status'=>'Overall Status','individual_status'=>'Individual Status','initiateddate' => 'Initiated Date'];
 		}else{
-			$tableFields = array('action'=>'Action','userfullname'=>'Employee','employeeId'=>'Employee ID','businessunit_name'=>'Business Unit','department_name'=>'Department','exit_type'=>'Exit Type','overall_status'=>'Overall Status','initiateddate' => 'Initiated Date');
+			$tableFields = ['action'=>'Action','userfullname'=>'Employee','employeeId'=>'Employee ID','businessunit_name'=>'Business Unit','department_name'=>'Department','exit_type'=>'Exit Type','overall_status'=>'Overall Status','initiateddate' => 'Initiated Date'];
 		}
 		
 		$tablecontent = $this->getAllExitProcs('grid',$sort, $by, $pageNo, $perPage,$searchQuery,$a,$status);     
@@ -101,7 +101,7 @@ class Exit_Model_Allexitprocs extends Zend_Db_Table_Abstract
 		$l2mData = $this->getExitProcsByL2Manager('grid',$sort, $by, $pageNo, $perPage,$searchQuery,$a);
 
 		
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
@@ -109,7 +109,7 @@ class Exit_Model_Allexitprocs extends Zend_Db_Table_Abstract
 			'tablecontent' => $tablecontent,
 			'l2mData' => $l2mData,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -117,10 +117,10 @@ class Exit_Model_Allexitprocs extends Zend_Db_Table_Abstract
 			'add' =>'add',
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall,
-			'search_filters' => array(
-					'initiateddate' =>array('type'=>'datepicker')					
-				)
-		);
+			'search_filters' => [
+					'initiateddate' =>['type'=>'datepicker']					
+				]
+		];
 		return $dataTmp;
 	}
 	public function getAllExitProcs($con,$sort='', $by='', $pageNo='', $perPage='',$searchQuery='',$conText = '',$status = '')
@@ -171,24 +171,24 @@ class Exit_Model_Allexitprocs extends Zend_Db_Table_Abstract
 				$res = $this->select()
 				->setIntegrityCheck(false)
 
-				->from(array('e' => $this->_name),array('e.id',$columns,'date(e.createddate) as initiateddate','individual_status'=>new Zend_Db_Expr('case when emp.reporting_manager ='.$this->loggedInUser.' then e.l1_status
+				->from(['e' => $this->_name],['e.id',$columns,'date(e.createddate) as initiateddate','individual_status'=>new Zend_Db_Expr('case when emp.reporting_manager ='.$this->loggedInUser.' then e.l1_status
 							when econfig.l2_manager ='.$this->loggedInUser.' then e.l2_status
 							when econfig.hr_manager='.$this->loggedInUser.' then e.hr_manager_status
 							when econfig.sys_admin='.$this->loggedInUser.' then e.sys_admin_status
 							when econfig.finance_manager='.$this->loggedInUser.' then e.fin_admin_status
-							when econfig.general_admin='.$this->loggedInUser.' then e.gen_admin_status else "--" end')))
-				->joinInner(array('emp'=> 'main_employees'),'e.employee_id = emp.id',array('emp.*'))
-				->joinInner(array('et'=> 'main_exit_types'),'et.id = e.exit_type_id',array('et.exit_type'));
+							when econfig.general_admin='.$this->loggedInUser.' then e.gen_admin_status else "--" end')])
+				->joinInner(['emp'=> 'main_employees'],'e.employee_id = emp.id',['emp.*'])
+				->joinInner(['et'=> 'main_exit_types'],'et.id = e.exit_type_id',['et.exit_type']);
 			}else{
 				$res = $this->select()
 				->setIntegrityCheck(false)
-				->from(array('e' => $this->_name),array('e.id','date(e.createddate) as initiateddate',$columns))
-				->joinInner(array('emp'=> 'main_employees'),'e.employee_id = emp.id',array('emp.*'))
-				->joinInner(array('et'=> 'main_exit_types'),'et.id = e.exit_type_id',array('et.exit_type'));
+				->from(['e' => $this->_name],['e.id','date(e.createddate) as initiateddate',$columns])
+				->joinInner(['emp'=> 'main_employees'],'e.employee_id = emp.id',['emp.*'])
+				->joinInner(['et'=> 'main_exit_types'],'et.id = e.exit_type_id',['et.exit_type']);
 			}
 			
 			if(!empty($configWhere))
-				$res = $res->joinInner(array('econfig' => 'main_exit_settings'),'econfig.id = e.exit_settings_id',array('econfig.createddate as created_date','econfig.l2_manager','econfig.hr_manager','econfig.sys_admin','econfig.general_admin','econfig.finance_manager'));
+				$res = $res->joinInner(['econfig' => 'main_exit_settings'],'econfig.id = e.exit_settings_id',['econfig.createddate as created_date','econfig.l2_manager','econfig.hr_manager','econfig.sys_admin','econfig.general_admin','econfig.finance_manager']);
 			
 			//echo $res;exit;
 
@@ -254,10 +254,10 @@ class Exit_Model_Allexitprocs extends Zend_Db_Table_Abstract
 		{
 			$res = $this->select()
 				->setIntegrityCheck(false)
-				->from(array('ep' => $this->_name),'ep.*')
-				->joinInner(array('u' => 'main_employees'),'u.id = ep.employee_id',array('u.*'))
-				->joinInner(array('econfig' => 'main_exit_settings'),'econfig.businessunit_id = u.businessunit_id AND econfig.department_id = u.department_id',array('econfig.id as econfigId','econfig.businessunit_id','econfig.department_id','econfig.l2_manager','econfig.hr_manager','econfig.sys_admin','econfig.general_admin','econfig.finance_manager'))
-				->joinInner(array('etypes' => 'main_exit_types'),'etypes.id = ep.exit_type_id',array('etypes.exit_type'))
+				->from(['ep' => $this->_name],'ep.*')
+				->joinInner(['u' => 'main_employees'],'u.id = ep.employee_id',['u.*'])
+				->joinInner(['econfig' => 'main_exit_settings'],'econfig.businessunit_id = u.businessunit_id AND econfig.department_id = u.department_id',['econfig.id as econfigId','econfig.businessunit_id','econfig.department_id','econfig.l2_manager','econfig.hr_manager','econfig.sys_admin','econfig.general_admin','econfig.finance_manager'])
+				->joinInner(['etypes' => 'main_exit_types'],'etypes.id = ep.exit_type_id',['etypes.exit_type'])
 				->where('ep.id = '.$exitProcId);
 
 			return $this->fetchAll($res)->toArray();
@@ -290,7 +290,7 @@ class Exit_Model_Allexitprocs extends Zend_Db_Table_Abstract
 		}
 		 $select = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('ep'=>$this->_name),array('ep.*'))
+                           ->from(['ep'=>$this->_name],['ep.*'])
 						   ->where($where);	 				   				
 		return $this->fetchAll($select)->toArray(); 
 	}
@@ -300,7 +300,7 @@ class Exit_Model_Allexitprocs extends Zend_Db_Table_Abstract
 	{
 		$res = $this->select()
 				->setIntegrityCheck(false)
-				->from(array('ep' => $this->_name),'ep.*')
+				->from(['ep' => $this->_name],'ep.*')
 				->where('ep.id = '.$id);
 		return $this->fetchAll($res)->toArray();
 	}

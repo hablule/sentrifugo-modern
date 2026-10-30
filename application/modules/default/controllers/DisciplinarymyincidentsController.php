@@ -44,9 +44,9 @@ class Default_DisciplinarymyincidentsController extends Zend_Controller_Action {
         $refresh = $this->_getParam('refresh');
         $dashboardcall = $this->_getParam('dashboardcall');
 
-        $data = array();
+        $data = [];
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         $tablecontent = '';
 
         if ($refresh == 'refresh') {
@@ -173,7 +173,7 @@ public function saveemployeeappealAction()
 		$result = 'error';
 		$msg = 'Something went wrong.';
 		if(empty($id) || empty($employee_statement) || empty($employee_appeal)) {
-			$this->_helper->json(array('result' =>$result,'msg'=>$msg));
+			$this->_helper->json(['result' =>$result,'msg'=>$msg]);
 		}
 		$id= sapp_Global::_decrypt($id);
 		$disciplinaryIncidentModel = new Default_Model_Disciplinaryincident();
@@ -182,14 +182,14 @@ public function saveemployeeappealAction()
 			try
 			{
 				if(is_numeric($id) && $id>0) {
-					$data = array(
+					$data = [
 						'employee_appeal' => sapp_Global::_decrypt($employee_appeal),
 						'employee_statement' => trim($employee_statement),
 						'incident_status' => 'Appealed',
 						'modifiedby' => $loginUserId,
 						'modifieddate'=>gmdate("Y-m-d H:i:s"),
-					);
-                    $where = array('id=?'=>$id,'employee_id=?'=>$loginUserId);
+					];
+                    $where = ['id=?'=>$id,'employee_id=?'=>$loginUserId];
                     $Id = $disciplinaryIncidentModel->SaveorUpdateIncidentData($data, $where);
                     
                     // Mail code
@@ -232,13 +232,13 @@ public function saveemployeeappealAction()
 					if(!defined('sentrifugo_gilbert')) {
 	                	$disciplineHistoryModel = new Default_Model_Disciplineincidenthistory();
 	                	
-						$incident_data = array(
+						$incident_data = [
 						 'createdby' =>$loginUserId,
 						 'createddate' =>gmdate("Y-m-d H:i:s"),
 						 'incident_id'=>$id,
 						 'action_emp_id'=>$loginUserId,
 						 'description' => "Appeal statement has been provided by "
-						  );
+						  ];
 						$disciplineHistoryModel->saveOrUpdateDisciplineIncidentHistory($incident_data,'');
 	                }
 	                $db->commit();
@@ -252,7 +252,7 @@ public function saveemployeeappealAction()
 				$db->rollBack();								
 				$msg = $e->getFile();
 			}
-			$this->_helper->json(array('result' =>$result,'msg'=>$msg));
+			$this->_helper->json(['result' =>$result,'msg'=>$msg]);
 		
 	}
 
@@ -302,7 +302,7 @@ public function saveemployeeappealAction()
         $view = $this->getHelper('ViewRenderer')->view;
         $text = $view->render('disciplinaryincident/disciplinaryincidentpdf.phtml');
         //generating file name
-        $file_name_params_array = array('Disciplinary_Incident');
+        $file_name_params_array = ['Disciplinary_Incident'];
         $file_name = $this->_helper->PdfHelper->generateFileName($file_name_params_array);
         //mpdf
         require_once 'MPDF57/mpdf.php';

@@ -42,7 +42,7 @@ class Default_MyincidentController extends Zend_Controller_Action
     {
         $session = sapp_Global::_readSession();
         if (!isset($session)) {
-            if ($this->getRequest()->isXmlHttpRequest()) die(Zend_Json::encode(array('login' => 'failed')));
+            if ($this->getRequest()->isXmlHttpRequest()) die(Zend_Json::encode(['login' => 'failed']));
             else $this->_redirect('');
         }
 
@@ -78,7 +78,7 @@ class Default_MyincidentController extends Zend_Controller_Action
             // SECURITY: Employees cannot Delete or Add cases from this view. Override grid actions.
             $dataTmp['add'] = '';
 
-            $this->view->dataArray = array($dataTmp);
+            $this->view->dataArray = [$dataTmp];
             $this->view->call      = $call;
             $this->view->messages  = $this->_helper->flashMessenger->getMessages();
         } catch (\Throwable $e) {
@@ -102,7 +102,7 @@ class Default_MyincidentController extends Zend_Controller_Action
         // Security check: Is case closed? If so, block editing.
         $caseData = $this->_model->getRecordById($id);
         if ($caseData && $caseData['case_status'] === 'Closed') {
-            $this->_helper->flashMessenger->addMessage(array('error' => "This case is closed and cannot be modified."));
+            $this->_helper->flashMessenger->addMessage(['error' => "This case is closed and cannot be modified."]);
             $this->_redirect('myincident/index');
         }
 
@@ -125,10 +125,10 @@ class Default_MyincidentController extends Zend_Controller_Action
 
                 try {
                     $appealValue = (int)$request->getParam('employee_appeal');
-                    $data = array(
+                    $data = [
                         'employee_appeal'    => $appealValue,
                         'employee_statement' => trim($request->getParam('employee_statement'))
-                    );
+                    ];
 
                     // If they select "Yes" to appeal, automatically update case status
                     if ($appealValue === 1) {
@@ -146,15 +146,15 @@ class Default_MyincidentController extends Zend_Controller_Action
 
                     $db->commit();
 
-                    $this->_helper->flashMessenger->addMessage(array('success' => "Statement submitted successfully."));
-                    $this->_helper->json(array('result' => 'saved', 'nomessage' => 'yes'));
+                    $this->_helper->flashMessenger->addMessage(['success' => "Statement submitted successfully."]);
+                    $this->_helper->json(['result' => 'saved', 'nomessage' => 'yes']);
                 } catch (\Throwable $e) {
                     $db->rollBack();
                     error_log("MyIncident Save Error: " . $e->getMessage());
-                    $this->_helper->json(array('result' => 'exception', 'message' => 'System error occurred while submitting statement.'));
+                    $this->_helper->json(['result' => 'exception', 'message' => 'System error occurred while submitting statement.']);
                 }
             } else {
-                $msgarray = array();
+                $msgarray = [];
                 foreach ($form->getMessages() as $field => $errors) {
                     $msgarray[$field] = current($errors);
                 }

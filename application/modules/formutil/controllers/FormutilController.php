@@ -19,7 +19,7 @@ class Formutil_Controller extends Zend_Controller_Action
         $formname = $this->_request->getParam('controller_name');
 
         $form->setAction(BASE_URL . 'formutil/');
-        $form->noofele->addValidator('NotEmpty', false, array('messages' => 'must add not of elements'));
+        $form->noofele->addValidator('NotEmpty', false, ['messages' => 'must add not of elements']);
         $form->noofele->setRequired(true);
         if (!isset($_SESSION['module_name'])) {
             $_SESSION['module_name'] = $modulename;
@@ -39,7 +39,7 @@ class Formutil_Controller extends Zend_Controller_Action
                 unset($_SESSION['module_name']);
                 unset($_SESSION['formname']);
 
-                $this->_forward('add', 'formutil', 'formutil', array('noofele' => $this->_request->getParam('noofele'), 'module_name' => $modulename, 'controller_name' => $formname));
+                $this->_forward('add', 'formutil', 'formutil', ['noofele' => $this->_request->getParam('noofele'), 'module_name' => $modulename, 'controller_name' => $formname]);
             }
         }
         $this->view->form = $form;
@@ -88,7 +88,7 @@ class Formutil_Controller extends Zend_Controller_Action
             $allelements = substr($allelements, 0, strlen($allelements) - 1);
             $this->writefile(MODULE_PATH . '/' . $modulename . '/', $formname, '$this->addElements(array($id,' . $allelements . '));' . "\n");
             $this->writefile(MODULE_PATH . '/' . $modulename . '/', $formname, "} \n } \n ?>");
-            $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"MVC created successfully."));
+            $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"MVC created successfully."]);
             $this->_redirect('mvc/create');
 
         }

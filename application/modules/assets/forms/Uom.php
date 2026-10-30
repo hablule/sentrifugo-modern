@@ -41,23 +41,23 @@ class Assets_Form_Uom extends Zend_Form
         
         
         $Text0 = new Zend_Form_Element_Text("name");
-        $Text0->addValidator('NotEmpty',false,array('messages'=>'Name required'));
+        $Text0->addValidator('NotEmpty',false,['messages'=>'Name required']);
         $Text0->setRequired(true);
         $Text1 = new Zend_Form_Element_Text("code");
-        $Text1->addValidator('NotEmpty',false,array('messages'=>'Code required'));
+        $Text1->addValidator('NotEmpty',false,['messages'=>'Code required']);
         $Text1->setRequired(true);
         
         $Text2 = new Zend_Form_Element_Text("description");
         $Text2->setLabel('Description');
         $isactive = new Zend_Form_Element_Checkbox("isactive");
         $stdprecision = new Zend_Form_Element_Text("stdprecision");
-        $stdprecision->addValidator('NotEmpty', true, array('messages' => 'Please enter Precision.')); 
-		$stdprecision->addValidator("regex",true,array(                           
+        $stdprecision->addValidator('NotEmpty', true, ['messages' => 'Please enter Precision.']); 
+		$stdprecision->addValidator("regex",true,[                           
 						'pattern'=>'/^[0-9]+$/',
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Enter numbers only.'
-                           )
-        			));
+                           ]
+        			]);
 		$stdprecision->setRequired(TRUE);	
         $symbol = new Zend_Form_Element_Text("symbol");
         $stdprecision->setRequired(true);
@@ -67,10 +67,10 @@ class Assets_Form_Uom extends Zend_Form
 
         $Submit4 = new Zend_Form_Element_Submit("submit");
         $Text1->addValidator(new Zend_Validate_Db_NoRecordExists(
-            array('table'=>'main_uom',
+            ['table'=>'main_uom',
                       'field'=>'code',
                     'exclude'=>'uom_id!="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('id').'"',    
-               ) )  
+               ] )  
         );
         
         $Text1->getValidator('Db_NoRecordExists')->setMessage('Code already exists.');
@@ -78,8 +78,8 @@ class Assets_Form_Uom extends Zend_Form
         $symbol ->setAttrib('maxlength', '10');
 
         $Text0 ->setAttrib('maxlength', '60');
-        $this->addElements(array($id,$Text0,$Text1,$Text2,$isactive,$symbol,$stdprecision,$Submit4));
-        $this->setElementDecorators(array('ViewHelper')); 
+        $this->addElements([$id,$Text0,$Text1,$Text2,$isactive,$symbol,$stdprecision,$Submit4]);
+        $this->setElementDecorators(['ViewHelper']); 
         } 
          } 
          ?>

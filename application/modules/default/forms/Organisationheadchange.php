@@ -38,45 +38,45 @@ class Default_Form_Organisationheadchange extends Zend_Form
         $firstname_orghead = new Zend_Form_Element_Text('firstname_orghead');
         $firstname_orghead->setAttrib('maxLength', 50);
         $firstname_orghead->addFilter(new Zend_Filter_StringTrim());
-		$firstname_orghead->addValidator("regex",true,array(                           
+		$firstname_orghead->addValidator("regex",true,[                           
                            'pattern'=>'/^[a-zA-Z.\- ?]+$/',
-                           'messages'=>array(
+                           'messages'=>[
                                
 							   'regexNotMatch'=>'Please enter valid first name.'
-                           )
-        	));
+                           ]
+        	]);
 		$middlename_orghead = new Zend_Form_Element_Text('middlename_orghead');
 		$middlename_orghead->setAttrib('maxlength',50);
 		$middlename_orghead->addFilter(new Zend_Filter_StringTrim());
-		$middlename_orghead->addValidator('regex',true,array(
+		$middlename_orghead->addValidator('regex',true,[
 			'pattern'=>'/^[a-zA-Z.\-?]+$/',
-			'messages'=>array(
+			'messages'=>[
 				'regexNotMatch'=>'Please enter valid middle name.'
-			)
-		));
+			]
+		]);
         $lastname_orghead = new Zend_Form_Element_Text('lastname_orghead');
         $lastname_orghead->setAttrib('maxLength', 50);
         $lastname_orghead->addFilter(new Zend_Filter_StringTrim());
-		$lastname_orghead->addValidator("regex",true,array(                           
+		$lastname_orghead->addValidator("regex",true,[                           
                            'pattern'=>'/^[a-zA-Z.\- ?]+$/',
-                           'messages'=>array(
+                           'messages'=>[
                                
 							   'regexNotMatch'=>'Please enter valid last name.'
-                           )
-        	));
+                           ]
+        	]);
 			
 		$designation = new Zend_Form_Element_Text('designation');
         $designation->setAttrib('maxLength', 50);
         $designation->addFilter(new Zend_Filter_StringTrim());
         
         
-		$designation->addValidator("regex",true,array(                           
+		$designation->addValidator("regex",true,[                           
                            'pattern'=>'/^[a-zA-Z.\- ?]+$/',
-                           'messages'=>array(
+                           'messages'=>[
 
 							   'regexNotMatch'=>'Please enter valid designation.'
-                           )
-        	));
+                           ]
+        	]);
 		
 		$employeeId = new Zend_Form_Element_Text("employeeId");
         $employeeId->setRequired("true");
@@ -84,7 +84,7 @@ class Default_Form_Organisationheadchange extends Zend_Form
         $employeeId->setAttrib("class", "formDataElement");
         $employeeId->setAttrib("readonly", "readonly");
 		$employeeId->setAttrib('onfocus', 'this.blur()');
-		$employeeId->addValidator('NotEmpty', false, array('messages' => 'Identity codes are not configured yet.'));
+		$employeeId->addValidator('NotEmpty', false, ['messages' => 'Identity codes are not configured yet.']);
 
         //for emp id
         $employeeNumId = new Zend_Form_Element_Text("employeeNumId");
@@ -93,11 +93,11 @@ class Default_Form_Organisationheadchange extends Zend_Form
         $employeeNumId->setAttrib('maxLength', 5);       
         $employeeNumId->setAttrib("class", "formDataElement");
         //$employeeNumId->addValidator('NotEmpty', false, array('messages' => 'Please enter the Employee Id.'));
-        $employeeNumId->addValidator("regex",true,array(                          
+        $employeeNumId->addValidator("regex",true,[                          
                    'pattern'=>'/^[0-9]+$/',
-                   'messages'=>array(
+                   'messages'=>[
                        'regexNotMatch'=>'Please enter only numbers.'
-                   )));   
+                   ]]);   
 		
 		/*$employeeId = new Zend_Form_Element_Text("employeeId");
 		$employeeId->setLabel("Employee ID");        
@@ -117,20 +117,20 @@ class Default_Form_Organisationheadchange extends Zend_Form
 		
 		$emailaddress = new Zend_Form_Element_Text("emailaddress");
 		
-		$emailaddress->addValidator("regex",true,array(
+		$emailaddress->addValidator("regex",true,[
                            
 						    'pattern'=>'/^(?!.*\.{2})[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/',                            
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter valid email.'
-                           )
-        	));
+                           ]
+        	]);
 		$emailaddress->setLabel("Email");
 		$emailaddress->setAttrib("class", "formDataElement");              
 		$emailaddress->addValidator(new Zend_Validate_Db_NoRecordExists(
-															array('table' => 'main_users',
+															['table' => 'main_users',
 															'field' => 'emailaddress',
 															'exclude'=>'id!="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('user_id',0).'" and isactive!=0'
-															)));
+															]));
 		$emailaddress->getValidator('Db_NoRecordExists')->setMessage('Email already exists.');
 		
 		$jobtitle = new Zend_Form_Element_Select('jobtitle_id');
@@ -146,7 +146,7 @@ class Default_Form_Organisationheadchange extends Zend_Form
 		
 		$date_of_joining = new ZendX_JQuery_Form_Element_DatePicker('date_of_joining_head');
         $date_of_joining->setLabel("Date of Joining");
-		$date_of_joining->setOptions(array('class' => 'brdr_none'));	
+		$date_of_joining->setOptions(['class' => 'brdr_none']);	
 		$date_of_joining->setAttrib('readonly', 'true');
 		$date_of_joining->setAttrib('onfocus', 'this.blur()');
 		
@@ -154,11 +154,11 @@ class Default_Form_Organisationheadchange extends Zend_Form
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 		
-		 $this->addElements(array($id,$description,$lastname_orghead,$middlename_orghead,$firstname_orghead,$designation,$employeeId,$prefix_id,$emprole,$emailaddress,$jobtitle,$position,$date_of_joining,$submit,$employeeNumId));//$email,$secondaryemail,
+		 $this->addElements([$id,$description,$lastname_orghead,$middlename_orghead,$firstname_orghead,$designation,$employeeId,$prefix_id,$emprole,$emailaddress,$jobtitle,$position,$date_of_joining,$submit,$employeeNumId]);//$email,$secondaryemail,
 		 
-		 $this->setElementDecorators(array('ViewHelper')); 
-		 $this->setElementDecorators(array('File'),array('org_image'));
-		 $this->setElementDecorators(array('UiWidgetElement',),array('org_startdate','date_of_joining_head'));
+		 $this->setElementDecorators(['ViewHelper']); 
+		 $this->setElementDecorators(['File'],['org_image']);
+		 $this->setElementDecorators(['UiWidgetElement',],['org_startdate','date_of_joining_head']);
 		 
 	}
 }

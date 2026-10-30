@@ -34,10 +34,10 @@ class Assets_Model_Assetdetails extends Zend_Db_Table_Abstract
 
 		$empskillsData = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('ea' => 'main_assetassignment'),array('id'=>'ea.assetassignment_id','ea.*','returndate'=>'DATE_FORMAT(ea.returndate,"'.DATEFORMAT_MYSQL.'")','issueddate'=>'DATE_FORMAT(ea.issueddate,"'.DATEFORMAT_MYSQL.'")','isactive'=>'if(ea.isactive="Y","Yes","No")'))
-		->joinLeft(array('a'=>'main_asset'),'ea.asset_id=a.asset_id',array('asset_name'=>'a.name'))
-		->joinLeft(array('ai'=>'main_assetinstant'),'ea.assetinstant_id=ai.assetinstant_id',array('serial'=>'ai.serialidentification'))
-		->joinLeft(array('u'=>'main_uom'),'ea.uom_id=u.uom_id',array('uom_name'=>'u.name'))
+		->from(['ea' => 'main_assetassignment'],['id'=>'ea.assetassignment_id','ea.*','returndate'=>'DATE_FORMAT(ea.returndate,"'.DATEFORMAT_MYSQL.'")','issueddate'=>'DATE_FORMAT(ea.issueddate,"'.DATEFORMAT_MYSQL.'")','isactive'=>'if(ea.isactive="Y","Yes","No")'])
+		->joinLeft(['a'=>'main_asset'],'ea.asset_id=a.asset_id',['asset_name'=>'a.name'])
+		->joinLeft(['ai'=>'main_assetinstant'],'ea.assetinstant_id=ai.assetinstant_id',['serial'=>'ai.serialidentification'])
+		->joinLeft(['u'=>'main_uom'],'ea.uom_id=u.uom_id',['uom_name'=>'u.name'])
 		->where($where)
 		->order("$by $sort")
 		->limitPage($pageNo, $perPage);
@@ -52,10 +52,10 @@ class Assets_Model_Assetdetails extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('ea' => 'main_assetassignment'),array('id'=>'ea.assetassignment_id','ea.*','returndate'=>'DATE_FORMAT(ea.returndate,"'.DATEFORMAT_MYSQL.'")','issueddate'=>'DATE_FORMAT(ea.issueddate,"'.DATEFORMAT_MYSQL.'")','isactive'=>'if(ea.isactive="Y","Yes","No")'))
-		->joinLeft(array('a'=>'main_asset'),'ea.asset_id=a.asset_id',array('asset_name'=>'a.name'))
-		->joinLeft(array('ai'=>'main_assetinstant'),'ea.assetinstant_id=ai.assetinstant_id',array('serial'=>'ai.serialidentification'))
-		->joinLeft(array('u'=>'main_uom'),'ea.uom_id=u.uom_id',array('uom_name'=>'u.name'))
+		->from(['ea' => 'main_assetassignment'],['id'=>'ea.assetassignment_id','ea.*','returndate'=>'DATE_FORMAT(ea.returndate,"'.DATEFORMAT_MYSQL.'")','issueddate'=>'DATE_FORMAT(ea.issueddate,"'.DATEFORMAT_MYSQL.'")','isactive'=>'if(ea.isactive="Y","Yes","No")'])
+		->joinLeft(['a'=>'main_asset'],'ea.asset_id=a.asset_id',['asset_name'=>'a.name'])
+		->joinLeft(['ai'=>'main_assetinstant'],'ea.assetinstant_id=ai.assetinstant_id',['serial'=>'ai.serialidentification'])
+		->joinLeft(['u'=>'main_uom'],'ea.uom_id=u.uom_id',['uom_name'=>'u.name'])
 		->where($id)
 		->where('ea.assetassignment_id='.$id.' ');
 		return $this->fetchAll($select)->toArray();
@@ -64,7 +64,7 @@ class Assets_Model_Assetdetails extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('ea'=>'main_assetassignment'),array('ea.*'))
+		->from(['ea'=>'main_assetassignment'],['ea.*'])
 		->where('ea.assetassignment_id='.$id.'');
 		return $this->fetchAll($select)->toArray();
 	}
@@ -73,7 +73,7 @@ class Assets_Model_Assetdetails extends Zend_Db_Table_Abstract
 		
 		 $select = $this->select()
 		 ->setIntegrityCheck(false)
-		 ->from(array('ea'=>'main_assetassignment'),array('returndate'=>'CASE WHEN MAX(CASE WHEN returndate IS NULL THEN 1 ELSE 0 END) = 0 THEN MAX(returndate) END'))
+		 ->from(['ea'=>'main_assetassignment'],['returndate'=>'CASE WHEN MAX(CASE WHEN returndate IS NULL THEN 1 ELSE 0 END) = 0 THEN MAX(returndate) END'])
 		 ->where('ea.asset_id='.$id.' and ea.isactive="Y"')
 		 ->group('ea.asset_id');
 		return $this->fetchAll($select)->toArray();
@@ -82,10 +82,10 @@ class Assets_Model_Assetdetails extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('ea' => 'main_assetassignment'),array('id'=>'ea.assetassignment_id','ea.*','returndate'=>'DATE_FORMAT(ea.returndate,"'.DATEFORMAT_MYSQL.'")','issueddate'=>'DATE_FORMAT(ea.issueddate,"'.DATEFORMAT_MYSQL.'")','isactive'=>'if(ea.isactive="Y","Yes","No")'))
-		->joinLeft(array('a'=>'main_asset'),'ea.asset_id=a.asset_id',array('asset_name'=>'a.name'))
-		->joinLeft(array('ai'=>'main_assetinstant'),'ea.assetinstant_id=ai.assetinstant_id',array('assetinstant_id'=>'ai.assetinstant_id','serial'=>'ai.serialidentification'))
-		->joinLeft(array('u'=>'main_uom'),'ea.uom_id=u.uom_id',array('uom_name'=>'u.name'))
+		->from(['ea' => 'main_assetassignment'],['id'=>'ea.assetassignment_id','ea.*','returndate'=>'DATE_FORMAT(ea.returndate,"'.DATEFORMAT_MYSQL.'")','issueddate'=>'DATE_FORMAT(ea.issueddate,"'.DATEFORMAT_MYSQL.'")','isactive'=>'if(ea.isactive="Y","Yes","No")'])
+		->joinLeft(['a'=>'main_asset'],'ea.asset_id=a.asset_id',['asset_name'=>'a.name'])
+		->joinLeft(['ai'=>'main_assetinstant'],'ea.assetinstant_id=ai.assetinstant_id',['assetinstant_id'=>'ai.assetinstant_id','serial'=>'ai.serialidentification'])
+		->joinLeft(['u'=>'main_uom'],'ea.uom_id=u.uom_id',['uom_name'=>'u.name'])
 		->where($id)
 		->where('ea.assetassignment_id='.$id.' ');
 		return $this->fetchAll($select)->toArray();
@@ -108,7 +108,7 @@ class Assets_Model_Assetdetails extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$exPadam4='')
 	{
 		$searchQuery = '';$tablecontent = '';
-		$searchArray = array();$data = array(); $dataTmp = array();
+		$searchArray = [];$data = []; $dataTmp = [];
 		/** search from grid - START **/
 		if($searchData != '' && $searchData!='undefined')
 		{
@@ -160,7 +160,7 @@ class Assets_Model_Assetdetails extends Zend_Db_Table_Abstract
 		// }
 		$objName = 'assetdetails';
 
-		$tableFields = array('action'=>'Action',
+		$tableFields = ['action'=>'Action',
         'asset_name'=>'Asset',
 		'serial'=>'Asset Instance',
 		'uom_name'=>'UOM',
@@ -170,16 +170,16 @@ class Assets_Model_Assetdetails extends Zend_Db_Table_Abstract
 		'isactive'=>'Active',
         'description'=>'Description',
 
-	);
+	];
 			
 		$tablecontent = $this->getEmpSkillsData($sort,$by,$pageNo,$perPage,$searchQuery,$a);
-		$dataTmp = array( 'sort' => $sort,
+		$dataTmp = [ 'sort' => $sort,
 		'by' => $by,
 		'pageNo' => $pageNo,
 		'perPage' => $perPage,
 		'tablecontent' => $tablecontent,
 		'objectname' => $objName,
-		'extra' => array(),
+		'extra' => [],
 		'add' => 'add',
 		'tableheader' => $tableFields,
 		'jsGridFnName' => 'getEmployeeAjaxgridData',
@@ -193,16 +193,16 @@ class Assets_Model_Assetdetails extends Zend_Db_Table_Abstract
 		'searchArray' => $searchArray,
 		'call' => $call,
 		'dashboardcall' => $dashboardcall,
-						'search_filters' => array(
-							'isactive' => array(
+						'search_filters' => [
+							'isactive' => [
 								'type' => 'select',
-								'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No'),
-							),	
-						'issueddate'=>array('type'=>'datepicker'),
-                        'returndate'=>array('type'=>'datepicker')
+								'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No'],
+							],	
+						'issueddate'=>['type'=>'datepicker'],
+                        'returndate'=>['type'=>'datepicker']
 
-		)
-		);
+		]
+		];
 		return $dataTmp;
 	}
 

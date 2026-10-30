@@ -37,7 +37,7 @@ class Exit_Form_Exitquestions extends Zend_Form
         $exittypes->addMultiOption('','Select exit type');
         $exittypes->setRegisterInArrayValidator(false);
         $exittypes->setRequired(true);
-		$exittypes->addValidator('NotEmpty', false, array('messages' => 'Please select exit type.'));
+		$exittypes->addValidator('NotEmpty', false, ['messages' => 'Please select exit type.']);
 		
 		$postid = Zend_Controller_Front::getInstance()->getRequest()->getParam('id');
 		if($postid !='')
@@ -47,13 +47,13 @@ class Exit_Form_Exitquestions extends Zend_Form
 			$question->setAttrib('maxLength', 100);
 			$question->addFilter(new Zend_Filter_StringTrim());
 			$question->setRequired(true);
-	        $question->addValidator('NotEmpty', false, array('messages' => 'Please enter question.'));
-			$question->addValidator("regex",true,array(                           
+	        $question->addValidator('NotEmpty', false, ['messages' => 'Please enter question.']);
+			$question->addValidator("regex",true,[                           
 	                           'pattern'=>'/^[a-zA-Z0-9.\- ?\',\/#@$&*()!]+$/',
-	                           'messages'=>array(
+	                           'messages'=>[
 	                               'regexNotMatch'=>'Please enter valid question.'
-	                           )
-	        	));
+	                           ]
+	        	]);
 	       
 			$description = new Zend_Form_Element_Textarea('description');
 			$description->setLabel("Description");
@@ -72,9 +72,9 @@ class Exit_Form_Exitquestions extends Zend_Form
 		$submitadd->setLabel('Save');
 		
 		if($postid !='')
-			 $this->addElements(array($id,$exittypes,$question,$description,$submit));
+			 $this->addElements([$id,$exittypes,$question,$description,$submit]);
 	    else		 
-		 	$this->addElements(array($id,$exittypes,$submitadd));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 	$this->addElements([$id,$exittypes,$submitadd]);
+         $this->setElementDecorators(['ViewHelper']); 
 	}
 }

@@ -106,36 +106,36 @@ class Default_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
 
 
-		$leaverequestshiftroute = new Zend_Controller_Router_Route('leaverequest/getshift', array(
+		$leaverequestshiftroute = new Zend_Controller_Router_Route('leaverequest/getshift', [
 			'module' => 'default',
 			'controller' => 'leaverequest',
 			'action' => 'getshift'
-		));
-		$payrollindexroute = new Zend_Controller_Router_Route('payroll', array(
+		]);
+		$payrollindexroute = new Zend_Controller_Router_Route('payroll', [
 			'module' => 'default',
 			'controller' => 'payroll',
 			'action' => 'index'
-		));
-		$payrolladdroute = new Zend_Controller_Router_Route('payroll/add', array(
+		]);
+		$payrolladdroute = new Zend_Controller_Router_Route('payroll/add', [
 			'module' => 'default',
 			'controller' => 'payroll',
 			'action' => 'add'
-		));
-		$payrolleditpoproute = new Zend_Controller_Router_Route('payroll/editpopup/id/:id', array(
+		]);
+		$payrolleditpoproute = new Zend_Controller_Router_Route('payroll/editpopup/id/:id', [
 			'module' => 'default',
 			'controller' => 'payroll',
 			'action' => 'editpopup'
-		));
-		$payrolleditroute = new Zend_Controller_Router_Route('payroll/edit/id/:id', array(
+		]);
+		$payrolleditroute = new Zend_Controller_Router_Route('payroll/edit/id/:id', [
 			'module' => 'default',
 			'controller' => 'payroll',
 			'action' => 'edit'
-		));
-		$payrollcalculateroute = new Zend_Controller_Router_Route('payroll/calculate', array(
+		]);
+		$payrollcalculateroute = new Zend_Controller_Router_Route('payroll/calculate', [
 			'module' => 'default',
 			'controller' => 'payroll',
 			'action' => 'calculate'
-		));
+		]);
 
 		/* 
 		$empbenefitperktyperout = new Zend_Controller_Router_Route('empbenefits/getperktype', array(
@@ -149,7 +149,7 @@ class Default_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 			'controller' => 'empbenefits',
 			'action' => 'editempperk'
 		)); 
-		
+
 		$empbenfiteditempperkroute = new Zend_Controller_Router_Route('empdeductive/editempdeductive', array(
 			'module' => 'default',
 			'controller' => 'empdeductive',
@@ -167,7 +167,7 @@ class Default_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 			'controller' => 'empdeductive',
 			'action' => 'addpopup'
 		)); 
-		
+
 		$perkcateaddrout = new Zend_Controller_Router_Route('empbenefits/addcategory',array(
 			'module'=>'default',
 			'controller'=>'empbenefits',
@@ -271,11 +271,11 @@ class Default_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		));
 		*/
 
-		$adddeductiveindexroute = new Zend_Controller_Router_Route('adddeductive', array(
+		$adddeductiveindexroute = new Zend_Controller_Router_Route('adddeductive', [
 			'module' => 'default',
 			'controller' => 'adddeductive',
 			'action' => 'index'
-		));
+		]);
 
 		/* 
 
@@ -293,156 +293,156 @@ class Default_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
  		*/
 
-		$listcandroute = new Zend_Controller_Router_Route('listcandidates', array(
+		$listcandroute = new Zend_Controller_Router_Route('listcandidates', [
 			'module' => 'default',
 			'controller' => 'listcandidates',
 			'action' => 'index'
-		));
-		$candidatelistroute = new Zend_Controller_Router_Route('list/selected', array(
+		]);
+		$candidatelistroute = new Zend_Controller_Router_Route('list/selected', [
 			'module' => 'default',
 			'controller' => 'listcandidates',
 			'action' => 'getcandidates'
-		));
-		$route = new Zend_Controller_Router_Route('login', array(
+		]);
+		$route = new Zend_Controller_Router_Route('login', [
 			'module' => 'default',
 			'controller' => 'index',
 			'action' => 'login'
-		));
-		$signinroute = new Zend_Controller_Router_Route('signin', array(
+		]);
+		$signinroute = new Zend_Controller_Router_Route('signin', [
 			'module' => 'default',
 			'controller' => 'index',
 			'action' => 'signin'
-		));
+		]);
 
 
 
 
-		$welcomeroute = new Zend_Controller_Router_Route('welcome', array(
+		$welcomeroute = new Zend_Controller_Router_Route('welcome', [
 			'module' => 'default',
 			'controller' => 'index',
 			'action' => 'welcome'
-		));
+		]);
 
-		$candidateeducationroute = new Zend_Controller_Router_Route('education/index', array(
+		$candidateeducationroute = new Zend_Controller_Router_Route('education/index', [
 			'module' => 'default',
 			'controller' => 'candidateeducation',
 			'action' => 'index'
-		));
-		$candidateeducationadd = new Zend_Controller_Router_Route('education/add', array(
+		]);
+		$candidateeducationadd = new Zend_Controller_Router_Route('education/add', [
 			'module' => 'default',
 			'controller' => 'candidateeducation',
 			'action' => 'add'
-		));
-		$candidateeducationnext = new Zend_Controller_Router_Route('education/next', array(
+		]);
+		$candidateeducationnext = new Zend_Controller_Router_Route('education/next', [
 			'module' => 'default',
 			'controller' => 'candidateeducation',
 			'action' => 'next'
-		));
-		$formview = new Zend_Controller_Router_Route('formview', array(
+		]);
+		$formview = new Zend_Controller_Router_Route('formview', [
 			'module' => 'default',
 			'controller' => 'formview',
 			'action' => 'index'
-		));
-		$formaddelement = new Zend_Controller_Router_Route('formview/addelement', array(
+		]);
+		$formaddelement = new Zend_Controller_Router_Route('formview/addelement', [
 			'module' => 'default',
 			'controller' => 'formview',
 			'action' => 'addpopup'
-		));
-		$formupdateelement = new Zend_Controller_Router_Route('formview/updateelement', array(
+		]);
+		$formupdateelement = new Zend_Controller_Router_Route('formview/updateelement', [
 			'module' => 'default',
 			'controller' => 'formview',
 			'action' => 'update'
-		));
-		$candidateeducationprevroute = new Zend_Controller_Router_Route('education/prev', array(
+		]);
+		$candidateeducationprevroute = new Zend_Controller_Router_Route('education/prev', [
 			'module' => 'default',
 			'controller' => 'candidateeducation',
 			'action' => 'prev'
-		));
+		]);
 
 
-		$selfcandidateviewroute = new Zend_Controller_Router_Route('resume', array(
+		$selfcandidateviewroute = new Zend_Controller_Router_Route('resume', [
 			'module' => 'default',
 			'controller' => 'resume',
 			'action' => 'index'
-		));
+		]);
 
-		$thisisstupidroute = new Zend_Controller_Router_Route('selfcandidateadd/add', array(
+		$thisisstupidroute = new Zend_Controller_Router_Route('selfcandidateadd/add', [
 			'module' => 'default',
 			'controller' => 'resume',
 			'action' => 'addcandidate'
-		));
+		]);
 
-		$cvroute = new Zend_Controller_Router_Route('addcv', array(
+		$cvroute = new Zend_Controller_Router_Route('addcv', [
 			'module' => 'default',
 			'controller' => 'cvadd',
 			'action' => 'index'
-		));
+		]);
 
-		$addcvroute = new Zend_Controller_Router_Route('addcv/add', array(
+		$addcvroute = new Zend_Controller_Router_Route('addcv/add', [
 			'module' => 'default',
 			'controller' => 'cvadd',
 			'action' => 'uploadsave'
-		));
-		$savecvroute = new Zend_Controller_Router_Route('addcv/save', array(
+		]);
+		$savecvroute = new Zend_Controller_Router_Route('addcv/save', [
 			'module' => 'default',
 			'controller' => 'cvadd',
 			'action' => 'addcv'
-		));
-		$addcvroute1 = new Zend_Controller_Router_Route('gechcv', array(
+		]);
+		$addcvroute1 = new Zend_Controller_Router_Route('gechcv', [
 			'module' => 'default',
 			'controller' => 'gechcv',
 			'action' => 'index'
-		));
+		]);
 
-		$personaldetailroute = new Zend_Controller_Router_Route('resume/add', array(
+		$personaldetailroute = new Zend_Controller_Router_Route('resume/add', [
 			'module' => 'default',
 			'controller' => 'resume',
 			'action' => 'add',
-		));
+		]);
 
-		$personaldetailnextroute = new Zend_Controller_Router_Route('resume/next', array(
+		$personaldetailnextroute = new Zend_Controller_Router_Route('resume/next', [
 			'module' => 'default',
 			'controller' => 'resume',
 			'action' => 'next',
-		));
+		]);
 
-		$personaldetaillanguageroute = new Zend_Controller_Router_Route('resume/addlanguage', array(
+		$personaldetaillanguageroute = new Zend_Controller_Router_Route('resume/addlanguage', [
 			'module' => 'default',
 			'controller' => 'resume',
 			'action' => 'language'
-		));
-		$getTableColumns = new Zend_Controller_Router_Route('getTableColumns', array(
+		]);
+		$getTableColumns = new Zend_Controller_Router_Route('getTableColumns', [
 			'module' => 'default',
 			'controller' => 'formview',
 			'action' => 'getcolumns'
-		));
+		]);
 
-		$getFormElement = new Zend_Controller_Router_Route('getformelement', array(
+		$getFormElement = new Zend_Controller_Router_Route('getformelement', [
 			'module' => 'default',
 			'controller' => 'formview',
 			'action' => 'getformelement'
-		));
+		]);
 
-		$getParticualrData = new Zend_Controller_Router_Route('getparticulardataforall', array(
+		$getParticualrData = new Zend_Controller_Router_Route('getparticulardataforall', [
 			'module' => 'default',
 			'controller' => 'formview',
 			'action' => 'getparticulardataforall'
-		));
-		$workexproute = new Zend_Controller_Router_Route('workexp', array(
+		]);
+		$workexproute = new Zend_Controller_Router_Route('workexp', [
 			'module' => 'default',
 			'controller' => 'workexp',
 			'action' => 'index'
-		));
-		$addworkexproute = new Zend_Controller_Router_Route('workexp/add', array(
+		]);
+		$addworkexproute = new Zend_Controller_Router_Route('workexp/add', [
 			'module' => 'default',
 			'controller' => 'workexp',
 			'action' => 'add'
-		));
-		$workexpnextproute = new Zend_Controller_Router_Route('workexp/next', array(
+		]);
+		$workexpnextproute = new Zend_Controller_Router_Route('workexp/next', [
 			'module' => 'default',
 			'controller' => 'workexp',
 			'action' => 'next'
-		));
+		]);
 
 
 
@@ -455,113 +455,113 @@ class Default_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 			'action' => 'edit'
 		)); */
 
-		$empbankchild = new Zend_Controller_Router_Route('index\checkchildtable', array(
+		$empbankchild = new Zend_Controller_Router_Route('index\checkchildtable', [
 			'module' => 'default',
 			'controller' => 'index',
 			'action' => 'checkchildtable'
-		));
+		]);
 		/* $empbankaccountviewroute = new Zend_Controller_Router_Route('empbankaccount\view\userid\:id', array(
 			'module' => 'default',
 			'controller' => 'Empbankaccount',
 			'action' => 'view'
 		)); */
-		$viewprofileroute = new Zend_Controller_Router_Route('viewprofile', array(
+		$viewprofileroute = new Zend_Controller_Router_Route('viewprofile', [
 			'module' => 'default',
 			'controller' => 'dashboard',
 			'action' => 'viewprofile'
-		));
+		]);
 
-		$viewsettingsroute = new Zend_Controller_Router_Route('viewsettings/:tab', array(
+		$viewsettingsroute = new Zend_Controller_Router_Route('viewsettings/:tab', [
 			'module' => 'default',
 			'controller' => 'dashboard',
 			'action' => 'viewsettings',
-		));
+		]);
 
-		$changepasswordroute = new Zend_Controller_Router_Route('changepassword', array(
+		$changepasswordroute = new Zend_Controller_Router_Route('changepassword', [
 			'module' => 'default',
 			'controller' => 'dashboard',
 			'action' => 'changepassword'
-		));
+		]);
 
-		$empleavesummaryroute = new Zend_Controller_Router_Route('empleavesummary/:status', array(
+		$empleavesummaryroute = new Zend_Controller_Router_Route('empleavesummary/:status', [
 			'module' => 'default',
 			'controller' => 'empleavesummary',
 			'action' => 'index',
-		));
+		]);
 
-		$approvedrequisitionroute = new Zend_Controller_Router_Route('approvedrequisitions/:status', array(
+		$approvedrequisitionroute = new Zend_Controller_Router_Route('approvedrequisitions/:status', [
 			'module' => 'default',
 			'controller' => 'approvedrequisitions',
 			'action' => 'index',
-		));
+		]);
 
-		$shortlistedroute = new Zend_Controller_Router_Route('shortlistedcandidates/:status', array(
+		$shortlistedroute = new Zend_Controller_Router_Route('shortlistedcandidates/:status', [
 			'module' => 'default',
 			'controller' => 'shortlistedcandidates',
 			'action' => 'index',
-		));
+		]);
 
-		$empscreeningroute = new Zend_Controller_Router_Route('empscreening/con/:status', array(
+		$empscreeningroute = new Zend_Controller_Router_Route('empscreening/con/:status', [
 			'module' => 'default',
 			'controller' => 'empscreening',
 			'action' => 'index',
-		));
+		]);
 
-		$error_route = new Zend_Controller_Router_Route('error', array(
+		$error_route = new Zend_Controller_Router_Route('error', [
 			'module' => 'default',
 			'controller' => 'error',
 			'action' => 'error',
-		));
+		]);
 
 		/** route for policy documents **/
-		$polidydocs_route = new Zend_Controller_Router_Route('policydocuments/id/:id/*', array(
+		$polidydocs_route = new Zend_Controller_Router_Route('policydocuments/id/:id/*', [
 			'module' => 'default',
 			'controller' => 'policydocuments',
 			'action' => 'index',
-		));
+		]);
 
 		/** route for adding multiple policy documents **/
-		$multiplepolidydocs_route = new Zend_Controller_Router_Route('policydocuments/addmultiple/:id', array(
+		$multiplepolidydocs_route = new Zend_Controller_Router_Route('policydocuments/addmultiple/:id', [
 			'module' => 'default',
 			'controller' => 'policydocuments',
 			'action' => 'addmultiple',
-		));
+		]);
 
-		$myleavesroute = new Zend_Controller_Router_Route('pendingleaves/:flag', array(
+		$myleavesroute = new Zend_Controller_Router_Route('pendingleaves/:flag', [
 			'module' => 'default',
 			'controller' => 'pendingleaves',
 			'action' => 'index',
-		));
+		]);
 
 
-		$addundumindexroute = new Zend_Controller_Router_Route('addundum', array(
+		$addundumindexroute = new Zend_Controller_Router_Route('addundum', [
 			'module' => 'default',
 			'controller' => 'addundum',
 			'action' => 'index',
-		));
+		]);
 
 
-		$userdefinedclassroute = new Zend_Controller_Router_Route('userdefinedclass', array(
+		$userdefinedclassroute = new Zend_Controller_Router_Route('userdefinedclass', [
 			'module' => 'default',
 			'controller' => 'userdefinedclass',
 			'action' => 'index'
-		));
-		$userdefinedclassgetfieldroute = new Zend_Controller_Router_Route('userdefinedclass/getfields', array(
+		]);
+		$userdefinedclassgetfieldroute = new Zend_Controller_Router_Route('userdefinedclass/getfields', [
 			'module' => 'default',
 			'controller' => 'userdefinedclass',
 			'action' => 'getfields'
-		));
-		$userdefinedclasscreatefieldroute = new Zend_Controller_Router_Route('userdefinedclass/rundefinedfunction', array(
+		]);
+		$userdefinedclasscreatefieldroute = new Zend_Controller_Router_Route('userdefinedclass/rundefinedfunction', [
 			'module' => 'default',
 			'controller' => 'userdefinedclass',
 			'action' => 'rundefinedfunction'
-		));
+		]);
 
-		$empviewroute = new Zend_Controller_Router_Route('employee/index2', array(
+		$empviewroute = new Zend_Controller_Router_Route('employee/index2', [
 			'module' => 'default',
 			'controller' => 'employee',
 			'action' => 'index2'
-		));
+		]);
 
 		/* 
 		$userroleroute = new Zend_Controller_Router_Route('userrole/index', array(
@@ -578,13 +578,13 @@ class Default_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 			'controller' => 'manageremployeeovertime',
 			'action' => 'edit'
 		)); 
-		
+
 		$myovertimeseditpopuproute = new Zend_Controller_Router_Route('manageremployeeovertime/editpopup/id/:id', array(
 			'module' => 'default',
 			'controller' => 'manageremployeeovertime',
 			'action' => 'editpopup'
 		)); 
-		
+
 		$myovertimesviewroute = new Zend_Controller_Router_Route('manageremployeeovertime/view/id/:id', array(
 			'module' => 'default',
 			'controller' => 'manageremployeeovertime',
@@ -666,10 +666,10 @@ class Default_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		/* 
 
 		$router->addRoute('empbenefitperktyperout', $empbenefitperktyperout); 
-		 
+
 		$router->addRoute('empbenfiteditempperkroute', $empbenfiteditempperkroute);
 		$router->addRoute('empdeductiveperktyperout', $empdeductiveperktyperout); 
-		
+
 		$router->addRoute('empdeductiveeditempperkroute', $empdeductiveeditempperkroute); 
 
 		*/

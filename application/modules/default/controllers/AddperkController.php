@@ -79,7 +79,7 @@ class Default_AddperkController extends Zend_Controller_Action
         if($this->getRequest()->getPost()){
 			if($form->isValid($this->_request->getPost())){
 
-                $data = array(
+                $data = [
                     'code' => $this->getRequest()->getParam('code'),
                     'name' => $this->getRequest()->getParam('name'),
                     'category' => (int)$this->getRequest()->getParam('category'),
@@ -95,12 +95,12 @@ class Default_AddperkController extends Zend_Controller_Action
                     'createddate' => gmdate("Y-m-d H:i:s"),
                     'istaxable' => $util->getcheckboxvalue($this->_request->getParam('taxable')),
                     'auto_approved' => $util->getcheckboxvalue($this->_request->getParam('auto_approved'))
-                );
+                ];
         
                 $data['isactive'] = 'Y';
               // die(json_encode($data));
                 $tableid=$formModel->addData($data);
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Perk   added successfully."));
+                $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Perk   added successfully."]);
                 $this->view->messages = $this->_helper->flashMessenger->getMessages();
 
                 $result = sapp_Global::logManager(229,1,$loginUserId,$tableid);
@@ -152,12 +152,12 @@ class Default_AddperkController extends Zend_Controller_Action
 
             if ($form->isValid($this->getRequest()->getPost())) {
 
-                $data = array(
+                $data = [
                     'name' => $this->_request->getParam('name_cat'),
                     'description' => $this->_request->getParam('description_cat'),
                     'isactive' => 'Y',
 
-                );
+                ];
                 //  die(json_encode($data));
                 $tableid=$formModel->addCategory($data);
                 $result = sapp_Global::logManager(229,1,$loginUserId,$tableid);
@@ -277,8 +277,8 @@ class Default_AddperkController extends Zend_Controller_Action
             $tableid=$this->getRequest()->getParam('id');
             $result = sapp_Global::logManager(229,2,$loginUserId,$tableid);
             //die(json_encode($this->getRequest()->getPost()));
-            $where = array('perk_id=?' => $this->getRequest()->getParam('id'));
-            $data = array(
+            $where = ['perk_id=?' => $this->getRequest()->getParam('id')];
+            $data = [
                 'code' => $this->getRequest()->getParam('code'),
                 'name' => $this->getRequest()->getParam('name'),
                 'category' => (int)$this->getRequest()->getParam('category'),
@@ -295,10 +295,10 @@ class Default_AddperkController extends Zend_Controller_Action
                 'modifiedby' => $loginUserId,
                 'modifieddate' => gmdate("Y-m-d H:i:s"),
                 'isactive' => utlis::getcheckboxvalue($this->getRequest()->getParam('isactive'),'database'),
-            );
+            ];
             //$data['isactive'] = 'Yes';
             //die(json_encode($data));
-            $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Perk updated successfully."));
+            $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Perk updated successfully."]);
             $this->view->messages = $this->_helper->flashMessenger->getMessages();
 
             $formModel->editPerk($data, $where);
@@ -335,7 +335,7 @@ class Default_AddperkController extends Zend_Controller_Action
 			$model = new Default_Model_Perk();
 
 		
-			$where = array('perk_id=?' => $id);
+			$where = ['perk_id=?' => $id];
 			$Id = $model->DeleteData($where);
 			if ($Id == 'delete') {
 				$messages['message'] = 'Perk deleted successfully.';
@@ -350,10 +350,10 @@ class Default_AddperkController extends Zend_Controller_Action
 		}
 		if ($deleteflag == 1) {
 			if ($messages['msgtype'] == 'error') {
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("error" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["error" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag]);
 			}
 			if ($messages['msgtype'] == 'success') {
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag]);
 			}
 		}
 		$this->_helper->json($messages);
@@ -391,7 +391,7 @@ try {
     //code...
 
         $auth = Zend_Auth::getInstance();
-        $popConfigPermission = array();
+        $popConfigPermission = [];
         if($auth->hasIdentity()){
             $loginUserId = $auth->getStorage()->read()->id;
             $loginuserRole = $auth->getStorage()->read()->emprole;
@@ -413,7 +413,7 @@ try {
         $payrollmodel = new Default_Model_Addperk();
         $empmodel = new Default_Model_Emplist();
         $form = new Default_Form_addperk();
-        $inter_options = array();
+        $inter_options = [];
         $call = $this->_getParam('call');
         if ($call == 'ajaxcall')
             $this->_helper->layout->disableLayout();
@@ -435,13 +435,13 @@ try {
        $objname = $this->_getParam('objname');
        $refresh = $this->_getParam('refresh');
        $dashboardcall = $this->_getParam('dashboardcall');
-        $data = array();
-        $data2 = array();
+        $data = [];
+        $data2 = [];
         $searchQuery2 = '';
-        $searchArray2 = array();
+        $searchArray2 = [];
 
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         $tablecontent = '';
         $tablecontent2 = '';
 
@@ -466,8 +466,8 @@ try {
             $searchData2 = '';
             $searchQuery2 = '';
 
-            $searchArray = array();
-            $searchArray2 = array();
+            $searchArray = [];
+            $searchArray2 = [];
         } else {
             $sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
             $sort2 = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'ASC';
@@ -529,11 +529,11 @@ Zend_Debug::dump($th->getMessage());    }
         $temp_id = $_POST['emp_ids'];
         $temp_perks_id = $_POST['perk_ids'];
         $temp_perks_autos = $_POST['perk_autos'];
-        $datas = array();
+        $datas = [];
         foreach ($temp_id as $id) {
             foreach ($temp_perks_id as $perk_id) {
                 foreach ($temp_perks_autos as $perk_auto) {
-                    $data = array();
+                    $data = [];
                     $amounts=$payrollmodel->getperkamount((int)$perk_id);
                     $type=$payrollmodel->getperktype((int)$perk_id);
                     $type=$type[0];
@@ -576,7 +576,7 @@ if($type['type']=='Percentage'){
     }
         
         $payrollmodel->saveMultiEmpPerk($datas);
-        return $this->_helper->_json(array('sucess'=>'Perk Assigned Successfully'));
+        return $this->_helper->_json(['sucess'=>'Perk Assigned Successfully']);
     } catch (\Throwable $th) {
         Zend_Debug::dump($th->getMessage());
     }

@@ -53,51 +53,51 @@ class Default_Form_Reportcategory extends Zend_Form
         // Category Code
         $code = new Zend_Form_Element_Text('code');
         $code->setLabel('Category Code')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '60', 'placeholder' => 'e.g., COMPLIANCE'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '60', 'placeholder' => 'e.g., COMPLIANCE'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
             ->addFilter('StringToUpper')
-            ->addValidator('NotEmpty', true, array('messages' => 'Please enter a category code.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please enter a category code.']);
 
         // SSOT VI.4: Standard Regex Validator (No Spaces)
-        $code->addValidator('Regex', true, array(
+        $code->addValidator('Regex', true, [
             'pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9_]*)$/',
-            'messages' => array(Zend_Validate_Regex::NOT_MATCH => 'Code must contain letters and cannot start with a space. Only letters, numbers, and underscores allowed.')
-        ));
+            'messages' => [Zend_Validate_Regex::NOT_MATCH => 'Code must contain letters and cannot start with a space. Only letters, numbers, and underscores allowed.']
+        ]);
 
         // DB Unique Check
         $excludeClauseCode = ($idVal > 0) ? "id != $idVal AND isactive != 5" : "isactive != 5";
-        $codeVal = new Zend_Validate_Db_NoRecordExists(array(
+        $codeVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_report_category',
             'field'   => 'code',
             'exclude' => $excludeClauseCode
-        ));
+        ]);
         $codeVal->setMessage('This category code already exists.');
         $code->addValidator($codeVal);
 
         // Category Name
         $name = new Zend_Form_Element_Text('name');
         $name->setLabel('Category Name')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '100', 'placeholder' => 'e.g., Compliance & Tracking'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '100', 'placeholder' => 'e.g., Compliance & Tracking'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', true, array('messages' => 'Please enter a category name.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please enter a category name.']);
 
         // SSOT VI.4: Standard Regex Validator (Spaces allowed)
-        $name->addValidator('Regex', true, array(
+        $name->addValidator('Regex', true, [
             'pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9 &]*)$/', // Allowed & for category names
-            'messages' => array(Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space or contain special characters.')
-        ));
+            'messages' => [Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space or contain special characters.']
+        ]);
 
         // DB Unique Check
         $excludeClauseName = ($idVal > 0) ? "id != $idVal AND isactive != 5" : "isactive != 5";
-        $nameVal = new Zend_Validate_Db_NoRecordExists(array(
+        $nameVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_report_category',
             'field'   => 'name',
             'exclude' => $excludeClauseName
-        ));
+        ]);
         $nameVal->setMessage('This category name already exists.');
         $name->addValidator($nameVal);
 
@@ -107,7 +107,7 @@ class Default_Form_Reportcategory extends Zend_Form
 
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Description')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -127,7 +127,7 @@ class Default_Form_Reportcategory extends Zend_Form
 
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save')
-            ->setAttribs(array('id' => 'submitbutton', 'class' => 'actbtn_btn'));
+            ->setAttribs(['id' => 'submitbutton', 'class' => 'actbtn_btn']);
 
         // Strict JSON AJAX callback pattern
         $urlAction  = "'reportcategory/save/format/json'";
@@ -138,18 +138,18 @@ class Default_Form_Reportcategory extends Zend_Form
          * Build Form & Apply Decorators (SSOT VI.7)
          * -------------------------------------------------------------- */
 
-        $this->addElements(array(
+        $this->addElements([
             $idElement,
             $code,
             $name,
             $description,
             $isactive,
             $submit
-        ));
+        ]);
 
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
-            $element->setDecorators(array('ViewHelper'));
+            $element->setDecorators(['ViewHelper']);
         }
     }
 }

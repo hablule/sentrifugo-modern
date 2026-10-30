@@ -48,9 +48,9 @@ class Default_HolidaygroupsController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 
 		if($refresh == 'refresh')
@@ -97,19 +97,19 @@ class Default_HolidaygroupsController extends Zend_Controller_Action
 		$pageNo = 1;
 		$searchData = '';
 		$searchQuery = '';
-		$searchArray=array();
+		$searchArray=[];
 		$objName = 'holidaydates';
-		$tableFields = array('action'=>'Action','holidayname' => 'Holiday','holidaydate' => 'Date','description' => 'Description');
+		$tableFields = ['action'=>'Action','holidayname' => 'Holiday','holidaydate' => 'Date','description' => 'Description'];
 		$tablecontent = $holidaydatesmodel->getHolidayDatesData($sort, $by, $pageNo, $perPage,$searchQuery,$groupid);
-		$data = array();
-		$dataTmp = array(
+		$data = [];
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -117,10 +117,10 @@ class Default_HolidaygroupsController extends Zend_Controller_Action
 			'searchArray' => $searchArray,
 			'formgrid' => 'true',
 			'menuName'=>'Holiday Dates',
-                        'search_filters' => array(
-                            'holidaydate' => array('type' => 'datepicker'),
-		),
-		);
+                        'search_filters' => [
+                            'holidaydate' => ['type' => 'datepicker'],
+		],
+		];
 		array_push($data,$dataTmp);
 		return $data;
 	}
@@ -299,14 +299,14 @@ class Default_HolidaygroupsController extends Zend_Controller_Action
 			$holidaygroupsmodel = new Default_Model_Holidaygroups();
 			$actionflag = '';
 			$tableid  = '';
-			$data = array( 'name'=>$name,
+			$data = [ 'name'=>$name,
 				                  'description'=>trim($description),
 								  'modifiedby'=>$loginUserId,
 								  'modifieddate'=>gmdate("Y-m-d H:i:s")
-			);
+			];
 			if($id!=''){
 				$data['isactive'] = utlis::getcheckboxvalue($this->_request->getParam('isactive'));
-				$where = array('holidaycategory_id=?'=>$id);
+				$where = ['holidaycategory_id=?'=>$id];
 				$actionflag = 2;
 			}
 			else
@@ -321,12 +321,12 @@ class Default_HolidaygroupsController extends Zend_Controller_Action
 			if($Id == 'update')
 			{
 				$tableid = $id;
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Holiday Category updated successfully."));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Holiday Category updated successfully."]);
 			}
 			else
 			{
 				$tableid = $Id;
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Holiday Category added successfully."));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Holiday Category added successfully."]);
 			}
 			$menuID = HOLIDAYGROUPS;
 			$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
@@ -361,12 +361,12 @@ class Default_HolidaygroupsController extends Zend_Controller_Action
 		{
 			$holidaygroupsmodel = new Default_Model_Holidaygroups();
 			$holidayedatesmodel = new Default_Model_Holidaydates();
-			$data = array('isactive'=>'N','modifieddate'=>gmdate("Y-m-d H:i:s"));
-			$where = array('holidaycategory_id=?'=>$id);
+			$data = ['isactive'=>'N','modifieddate'=>gmdate("Y-m-d H:i:s")];
+			$where = ['holidaycategory_id=?'=>$id];
 			$Id = $holidaygroupsmodel->SaveorUpdateGroupData($data, $where);
 			/* deleteing dates of the group */
-			$childdata = array('isactive'=>'N');
-			$childwhere = array('holidaycategory_id=?'=>$id);
+			$childdata = ['isactive'=>'N'];
+			$childwhere = ['holidaycategory_id=?'=>$id];
 			$holidayedatesmodel->SaveorUpdateHolidayDates($childdata,$childwhere);
 			/* END */
 			if($Id == 'update')
@@ -392,11 +392,11 @@ class Default_HolidaygroupsController extends Zend_Controller_Action
 			{
 				if(	$messages['msgtype'] == 'error')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
 				}
 				if(	$messages['msgtype'] == 'success')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
 				}
 			}
 			$this->_helper->json($messages);
@@ -470,7 +470,7 @@ class Default_HolidaygroupsController extends Zend_Controller_Action
 		}
 		$id = $this->getRequest()->getParam('id');
 
-		$msgarray = array();
+		$msgarray = [];
 		$controllername = 'holidaygroups';
 		$holidaygroupsform = new Default_Form_holidaygroups();
 		$holidaygroupsform->setAction(BASE_URL.'holidaygroups/addpopup');
@@ -483,13 +483,13 @@ class Default_HolidaygroupsController extends Zend_Controller_Action
 				$holidaygroupsmodel = new Default_Model_Holidaygroups();
 				$actionflag = '';
 				$tableid  = '';
-				$data = array( 'name'=>$groupname,
+				$data = [ 'name'=>$groupname,
 				                  'description'=>trim($description),
 								  'modifiedby'=>$loginUserId,
 								  'modifieddate'=>gmdate("Y-m-d H:i:s")
-				);
+				];
 				if($id!=''){
-					$where = array('holidaycategory_id=?'=>$id);
+					$where = ['holidaycategory_id=?'=>$id];
 					$actionflag = 2;
 				}
 				else

@@ -33,8 +33,8 @@ class Default_Model_Servicedeskrequest extends Zend_Db_Table_Abstract
 		
 		$servicedeskRequestData = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('sdr'=>'main_sd_reqtypes'),array('sdr.*'))
-                           ->joinInner(array('d'=>'main_sd_depts'), 'sdr.service_desk_id=d.id', array('service_desk_name' => 'd.service_desk_name'))
+                           ->from(['sdr'=>'main_sd_reqtypes'],['sdr.*'])
+                           ->joinInner(['d'=>'main_sd_depts'], 'sdr.service_desk_id=d.id', ['service_desk_name' => 'd.service_desk_name'])
                            ->where($where)
     					   ->order("$by $sort") 
     					   ->limitPage($pageNo, $perPage);
@@ -44,8 +44,8 @@ class Default_Model_Servicedeskrequest extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{		
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		
 		if($searchData != '' && $searchData!='undefined')
 			{
@@ -64,18 +64,18 @@ class Default_Model_Servicedeskrequest extends Zend_Db_Table_Abstract
 			
 		$objName = 'servicedeskrequest';
 		
-		$tableFields = array('action'=>'Action','service_desk_name'=>'Category','service_request_name' => 'Request Type','description' => 'Description');
+		$tableFields = ['action'=>'Action','service_desk_name'=>'Category','service_request_name' => 'Request Type','description' => 'Description'];
 		
 		$tablecontent = $this->getServiceDeskRequestData($sort, $by, $pageNo, $perPage,$searchQuery);     
 		
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -83,7 +83,7 @@ class Default_Model_Servicedeskrequest extends Zend_Db_Table_Abstract
 			'add' =>'add',
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall,
-		);
+		];
 		return $dataTmp;
 	}
 	
@@ -91,7 +91,7 @@ class Default_Model_Servicedeskrequest extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('sdr'=>'main_sd_reqtypes'),array('sdr.*'))
+						->from(['sdr'=>'main_sd_reqtypes'],['sdr.*'])
 					    ->where('sdr.isactive = 1 AND sdr.id='.$id.' ');
 		return $this->fetchAll($select)->toArray();
 	

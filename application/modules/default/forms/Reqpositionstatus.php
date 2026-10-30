@@ -23,13 +23,13 @@ class Default_Form_Reqpositionstatus extends Zend_Form
         $status->setLabel('New Pipeline Status')
             ->setAttrib('class', 'formDataElement')
             ->setAttrib('onchange', 'toggleFilledEmployeeField();')
-            ->addMultiOptions(array(
+            ->addMultiOptions([
                 'In Process' => 'In Process (Active Interviews)',
                 'Filled'     => 'Filled (Candidate Hired)',
                 'On Hold'    => 'On Hold (Search Paused)',
                 'Cancelled'  => 'Cancelled (Seat Revoked)',
                 'Re-Opened'  => 'Re-Opened'
-            ))
+            ])
             ->setRequired(true);
 
         // Status Reason (From main_req_status_reason)
@@ -38,7 +38,7 @@ class Default_Form_Reqpositionstatus extends Zend_Form
             ->setAttrib('class', 'formDataElement')
             ->setRegisterInArrayValidator(false)
             ->setRequired(true)
-            ->addValidator('NotEmpty', false, array('messages' => 'Please select a reason for this status change.'));
+            ->addValidator('NotEmpty', false, ['messages' => 'Please select a reason for this status change.']);
 
         // Filled By Employee (Shown only when status = 'Filled')
         $filled_by_employee_id = new Zend_Form_Element_Select('filled_by_employee_id');
@@ -49,26 +49,26 @@ class Default_Form_Reqpositionstatus extends Zend_Form
         // Notes
         $notes = new Zend_Form_Element_Textarea('notes');
         $notes->setLabel('Audit Notes')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 3))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 3])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
         $submit = new Zend_Form_Element_Submit('btn_update_status');
         $submit->setLabel('Update Seat Status')
-            ->setAttribs(array('id' => 'btn_update_status', 'class' => 'actbtn_btn'));
+            ->setAttribs(['id' => 'btn_update_status', 'class' => 'actbtn_btn']);
 
-        $this->addElements(array(
+        $this->addElements([
             $map_req_pos_id,
             $status,
             $status_reason_id,
             $filled_by_employee_id,
             $notes,
             $submit
-        ));
+        ]);
 
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
-            $element->setDecorators(array('ViewHelper'));
+            $element->setDecorators(['ViewHelper']);
         }
     }
 }

@@ -33,9 +33,9 @@ class Default_Model_Businessunits extends Zend_Db_Table_Abstract
 		
 		$businessunitsdata = $this->select()
     					   ->setIntegrityCheck(false)	 
-						   ->from(array('b' => 'main_sbunit'),array('id'=>'b.sbunit_id','isactive'=>'if(b.isactive="Y","Yes","No")','code'=>'b.code','name'=>'b.name','description'=>'b.description','parentsbu_id  '=>'b.parentsbu_id'))
-						   ->joinLeft(array('c'=>'main_company'),'b.company_id=c.company_id',array('comp_name'=>'c.name'))
-						   ->joinLeft(array('e'=>'main_employees'),' b.representative_id = e.id',array('representative_id'=>'e.id','userfullname','e.userfullname'))
+						   ->from(['b' => 'main_sbunit'],['id'=>'b.sbunit_id','isactive'=>'if(b.isactive="Y","Yes","No")','code'=>'b.code','name'=>'b.name','description'=>'b.description','parentsbu_id  '=>'b.parentsbu_id'])
+						   ->joinLeft(['c'=>'main_company'],'b.company_id=c.company_id',['comp_name'=>'c.name'])
+						   ->joinLeft(['e'=>'main_employees'],' b.representative_id = e.id',['representative_id'=>'e.id','userfullname','e.userfullname'])
 						   ->where($where)
     					   ->order("$by $sort") 
     					   ->limitPage($pageNo, $perPage);
@@ -45,8 +45,8 @@ class Default_Model_Businessunits extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{		
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		
 		if($searchData != '' && $searchData!='undefined')
 		{		
@@ -77,17 +77,17 @@ class Default_Model_Businessunits extends Zend_Db_Table_Abstract
 			$searchQuery = rtrim($searchQuery," AND");					
 		}
 		$objName = 'businessunits';
-		$tableFields = array('action'=>'Action','name' =>'Name','code' => 'Code','isactive'=>'Active','description'=>'Description');
+		$tableFields = ['action'=>'Action','name' =>'Name','code' => 'Code','isactive'=>'Active','description'=>'Description'];
 		$tablecontent = $this->getBusinessUnitsData($sort, $by, $pageNo, $perPage,$searchQuery);     
 		
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -96,12 +96,12 @@ class Default_Model_Businessunits extends Zend_Db_Table_Abstract
 			'searchArray' => $searchArray,
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall,
-			'search_filters' => array( 
-				'isactive' => array(
+			'search_filters' => [ 
+				'isactive' => [
 					'type' => 'select',
-					'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-	)
-				);			
+					'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+	]
+				];			
 		return $dataTmp;
 	}
 	
@@ -153,14 +153,14 @@ class Default_Model_Businessunits extends Zend_Db_Table_Abstract
             $result = $db->query($query);
             $data = $result->fetchAll();
             
-            return array('rows' => $data,'page_cnt' => $page_cnt);            
+            return ['rows' => $data,'page_cnt' => $page_cnt];            
         }
 	public function getDeparmentList()
 	{
 	
 	  $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('b'=>'main_sbunit'),array('b.sbunit_id','b.name'))
+						->from(['b'=>'main_sbunit'],['b.sbunit_id','b.name'])
 					    ->where('b.isactive = "Y"')
 						->order('b.name');
 		return $this->fetchAll($select)->toArray();
@@ -181,7 +181,7 @@ class Default_Model_Businessunits extends Zend_Db_Table_Abstract
     {
         $year = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('b' => 'main_sbunit'))
+            ->from(['b' => 'main_sbunit'])
             ->where('b.isactive="Y"');
             // die($year);
         return $this->fetchAll($year)->toArray();
@@ -205,7 +205,7 @@ class Default_Model_Businessunits extends Zend_Db_Table_Abstract
 	{
 	  $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('b'=>'main_businessunits'),array('b.id','b.unitname'))
+						->from(['b'=>'main_businessunits'],['b.id','b.unitname'])
 					    ->where('b.id = '.$id.' AND b.isactive = 1');
 	
 		return $this->fetchAll($select)->toArray();	
@@ -214,7 +214,7 @@ class Default_Model_Businessunits extends Zend_Db_Table_Abstract
 	{
 	  $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('sb'=>'main_sbunit'),array('sb.sbunit_id','sb.name'))
+						->from(['sb'=>'main_sbunit'],['sb.sbunit_id','sb.name'])
 					    ->where('sb.isactive = "Y"');
 	
 		return $this->fetchAll($select)->toArray();	
@@ -230,7 +230,7 @@ class Default_Model_Businessunits extends Zend_Db_Table_Abstract
 	public function getBusinessunitNamesByIds($businessunitArray)
 	{
 		$resultstring = implode(',', $businessunitArray);
-		$BUArray = array();
+		$BUArray = [];
 		if($resultstring)
 		{
 			try
@@ -318,9 +318,9 @@ class Default_Model_Businessunits extends Zend_Db_Table_Abstract
         
 		$businessunitsdata = $this->select()
 		->setIntegrityCheck(false)	 
-		->from(array('b' => 'main_sbunit'),array('id'=>'b.sbunit_id','isactive'=>'b.isactive','code'=>'b.code','name'=>'b.name','description'=>'b.description','parentsbu_id  '=>'b.parentsbu_id'))
-		->joinLeft(array('c'=>'main_company'),'b.company_id=c.company_id',array('comp_name'=>'c.name','comp_id'=>'company_id'))
-		->joinLeft(array('e'=>'main_employees'),' b.representative_id = e.id',array('representative_id'=>'e.id','userfullname','e.userfullname'))
+		->from(['b' => 'main_sbunit'],['id'=>'b.sbunit_id','isactive'=>'b.isactive','code'=>'b.code','name'=>'b.name','description'=>'b.description','parentsbu_id  '=>'b.parentsbu_id'])
+		->joinLeft(['c'=>'main_company'],'b.company_id=c.company_id',['comp_name'=>'c.name','comp_id'=>'company_id'])
+		->joinLeft(['e'=>'main_employees'],' b.representative_id = e.id',['representative_id'=>'e.id','userfullname','e.userfullname'])
 		->where("b.sbunit_id=".$id);
          return $this->fetchRow($businessunitsdata)->toArray();
         }

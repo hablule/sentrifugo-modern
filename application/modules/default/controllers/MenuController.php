@@ -51,7 +51,7 @@ class Default_MenuController extends Zend_Controller_Action
         $session = sapp_Global::_readSession();
         if (!isset($session)) {
             if ($this->getRequest()->isXmlHttpRequest()) {
-                echo Zend_Json::encode(array('login' => 'failed'));
+                echo Zend_Json::encode(['login' => 'failed']);
                 die();
             } else {
                 $this->_redirect('');
@@ -97,17 +97,17 @@ class Default_MenuController extends Zend_Controller_Action
 
             $dataTmp = $this->_model->getGrid($sort, $by, $perPage, $page, rtrim($searchData, ','), $call, $dashboardcall);
 
-            $this->view->dataArray = array($dataTmp);
+            $this->view->dataArray = [$dataTmp];
             $this->view->call      = $call;
 
             $messages = $this->_helper->flashMessenger->getMessages();            
 
             if (isset($_SESSION['menu_msg'])) {
                 // Determine class (success/error)
-                $cls = isset($_SESSION['menu_cls']) ? $_SESSION['menu_cls'] : 'success';
+                $cls = $_SESSION['menu_cls'] ?? 'success';
                 
                 // Append to standard messages array format
-                $messages[] = array($cls => $_SESSION['menu_msg']);
+                $messages[] = [$cls => $_SESSION['menu_msg']];
                 
                 // Clear the session so it doesn't show again on manual refresh
                 unset($_SESSION['menu_msg']);
@@ -162,7 +162,7 @@ class Default_MenuController extends Zend_Controller_Action
     {
         $form = new Default_Form_Menu();
         $request = $this->getRequest();
-        $response = array('result' => 'error', 'message' => 'Invalid data');
+        $response = ['result' => 'error', 'message' => 'Invalid data'];
 
         if ($request->isPost()) {
             // Must populate dropdowns before validation so 'InArray' checks pass
@@ -179,13 +179,13 @@ class Default_MenuController extends Zend_Controller_Action
 
                     // Format URL safely (Ensure leading slash unless it's the # placeholder)
                     $urlRaw = trim($request->getParam('url'));
-                    $url = (!empty($urlRaw)) ? (strpos($urlRaw, '/') === 0 ? $urlRaw : '/' . $urlRaw) : '/#';
+                    $url = (!empty($urlRaw)) ? (str_starts_with($urlRaw, '/') ? $urlRaw : '/' . $urlRaw) : '/#';
 
                     $parentId = (int)$request->getParam('parent');
                     $menuOrder = (int)$request->getParam('menuOrder', 1);
 
                     // 1. Prepare Core Menu Data
-                    $menuData = array(
+                    $menuData = [
                         'menuName'     => trim($request->getParam('menuName')),
                         'description'  => trim($request->getParam('description')), 
                         'url'          => $url,
@@ -198,7 +198,7 @@ class Default_MenuController extends Zend_Controller_Action
                         'toolTip'      => trim($request->getParam('toolTip')),
                         'menuOrder'    => $menuOrder,
                         'segment_flag' => (int)$request->getParam('segment_flag', 2)
-                    );
+                    ];
 
                     if ($form->iconPath->isUploaded()) {
                         $form->iconPath->receive();
@@ -237,16 +237,16 @@ class Default_MenuController extends Zend_Controller_Action
                     // 3. Logging
                     $menuLogModel = new Default_Model_Menu();
                     $objidArr  = $menuLogModel->getMenuObjID('/menu');
-                    $objID     = isset($objidArr[0]['id']) ? $objidArr[0]['id'] : MAINMENU; 
+                    $objID     = $objidArr[0]['id'] ?? MAINMENU; 
 
                     sapp_Global::logManager($objID, $actionFlag, $this->_loginUserId, $menuId);
 
                     $db->commit();
 
-                    $response = array(
+                    $response = [
                         'result'    => 'saved',
                         'message'   => "Menu " . ($actionFlag == 1 ? "Added" : "Updated") . " successfully."
-                    );
+                    ];
 
                     $_SESSION['menu_msg'] = $response['message'];
                     $_SESSION['menu_cls'] = 'success';
@@ -254,7 +254,7 @@ class Default_MenuController extends Zend_Controller_Action
                     $db->rollBack();
                     error_log("Sentrifugo Menu Save Error: " . $e->getMessage() . "\nTrace: " . $e->getTraceAsString());
                     if (APPLICATION_ENV == 'development') Zend_Debug::dump($e->getMessage());
-                    $response = array('result' => 'exception', 'message' => 'Error saving menu.');
+                    $response = ['result' => 'exception', 'message' => 'Error saving menu.'];
                 }
             } else {
                 $response['message'] = $form->getMessages();
@@ -275,9 +275,9 @@ class Default_MenuController extends Zend_Controller_Action
             $this->_model->deleteRecord($id);
             // Log deletion
             sapp_Global::logManager(MAINMENU, 3, $this->_loginUserId, $id);
-            $this->_helper->json(array('msgtype' => 'success', 'message' => 'Menu deleted successfully.'));
+            $this->_helper->json(['msgtype' => 'success', 'message' => 'Menu deleted successfully.']);
         } else {
-            $this->_helper->json(array('msgtype' => 'error', 'message' => 'Invalid Request.'));
+            $this->_helper->json(['msgtype' => 'error', 'message' => 'Invalid Request.']);
         }
     }
 

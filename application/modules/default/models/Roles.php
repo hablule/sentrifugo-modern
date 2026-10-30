@@ -67,8 +67,8 @@ class Default_Model_Roles extends Zend_Db_Table_Abstract
 	public function deleteRole($id)
 	{
 		return $this->update(
-			array('isactive' => 'N'),
-			array('id = ?' => (int)$id)
+			['isactive' => 'N'],
+			['id = ?' => (int)$id]
 		);
 	}
 
@@ -94,7 +94,7 @@ class Default_Model_Roles extends Zend_Db_Table_Abstract
                   and ur.role_id = " . SUPERADMINROLE . " 
                   where u.isactive = 1  ";
 		$result = $db->query($query);
-		$emp_arr = array();
+		$emp_arr = [];
 		while ($row = $result->fetch()) {
 			$emp_arr[$row['id']]['userfullname'] = $row['userfullname'];
 			$emp_arr[$row['id']]['emailaddress'] = $row['emailaddress'];
@@ -107,7 +107,7 @@ class Default_Model_Roles extends Zend_Db_Table_Abstract
 	public function getEmpRoleNamesByIds($empRoleIdArray)
 	{
 		$resultstring = implode(',', $empRoleIdArray);
-		$empRoleArray = array();
+		$empRoleArray = [];
 		if ($resultstring) {
 			try {
 				$qry = "select ob." . ROLE_ARRAY['colid'] . ", ob." . ROLE_ARRAY['colname'] . " from " . ROLE_ARRAY['tablename'] . " ob
@@ -152,15 +152,15 @@ class Default_Model_Roles extends Zend_Db_Table_Abstract
 	public function getGroupDataById($id)
 	{
 		$select = $this->getAdapter()->select()
-			->from(array('g' => 'main_group'), array(
+			->from(['g' => 'main_group'], [
 				'id' => 'group_id',
 				'activename' => 'isactive',
 				'g.*'
-			))
+			])
 			->where('g.group_id = ?', (int)$id);
 
 		$row = $this->getAdapter()->fetchRow($select);
-		return ($row) ? $row : array();
+		return $row ?: [];
 	}
 
 
@@ -189,11 +189,11 @@ class Default_Model_Roles extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('r' => $this->_name), array('id' => 'id', 'r.*'))
+			->from(['r' => $this->_name], ['id' => 'id', 'r.*'])
 			->where('r.id = ?', (int)$id);
 
 		$row = $this->fetchRow($select);
-		return ($row) ? $row->toArray() : array();
+		return ($row) ? $row->toArray() : [];
 	}
 
 	/**
@@ -202,7 +202,7 @@ class Default_Model_Roles extends Zend_Db_Table_Abstract
 	public function getRolesDataByID($id)
 	{
 		$select = $this->select()
-			->from($this->_name, array('*'))
+			->from($this->_name, ['*'])
 			->where("isactive = 'Y'")
 			->where('id = ?', (int)$id);
 
@@ -215,7 +215,7 @@ class Default_Model_Roles extends Zend_Db_Table_Abstract
 	public function getRolesList($context = '', $asPairs = true, $excludeSA = false, $excludeGN = true)
 	{
 		$select = $this->select()
-			->from($this->_name, array('id', 'name', 'group_id'))
+			->from($this->_name, ['id', 'name', 'group_id'])
 			->where("isactive = 'Y'");
 
 		if ($excludeGN) {
@@ -241,7 +241,7 @@ class Default_Model_Roles extends Zend_Db_Table_Abstract
 
 		if (!$asPairs) return $results;
 
-		$role_arr = array();
+		$role_arr = [];
 		foreach ($results as $row) {
 			$key = $row['id'] . '_' . $row['group_id'];
 			$role_arr[$key] = utf8_encode($row['name']);
@@ -266,7 +266,7 @@ class Default_Model_Roles extends Zend_Db_Table_Abstract
 					  and p.role not in (select distinct role from main_privileges where object = " . EMPSCREENING . " and role is not null 
 					  and isactive = 'Y' and group_id = " . USERS_GROUP . ") group by r." . ROLE_ARRAY['colid'] . " order by r." . ROLE_ARRAY['colname'];
 		} else {
-			if (strpos($type, 'Background Agency') !== false) {
+			if (str_contains($type, 'Background Agency')) {
 
 				$query = "select r." . ROLE_ARRAY['colid'] . ",r." . ROLE_ARRAY['colname'] . " from main_privileges p
 							inner join " . ROLE_ARRAY['tablename'] . " r on r." . ROLE_ARRAY['colid'] . " = p.role
@@ -283,7 +283,7 @@ class Default_Model_Roles extends Zend_Db_Table_Abstract
 		}
 
 		$result = $db->query($query);
-		$role_arr = array();
+		$role_arr = [];
 		while ($row = $result->fetch()) {
 			$role_arr[$row[ROLE_ARRAY['colid']]] = $row[ROLE_ARRAY['colname']];
 		}
@@ -307,7 +307,7 @@ class Default_Model_Roles extends Zend_Db_Table_Abstract
 				  where r." . ROLE_ARRAY['colisactive'] . " = 'Y' and r." . ROLE_ARRAY['colgroupid'] . " is not null $role_str
 				  order by r." . ROLE_ARRAY['colname'] . " asc";  //#
 		$result = $db->query($query);
-		$role_arr = array();
+		$role_arr = [];
 		while ($row = $result->fetch()) {
 			$role_arr[ROLE_ARRAY['colid'] . '_' . $row[ROLE_ARRAY['colgroupid']]] = $row[ROLE_ARRAY['colname']];
 		}
@@ -327,7 +327,7 @@ class Default_Model_Roles extends Zend_Db_Table_Abstract
                       where r." . ROLE_ARRAY['colisactive'] . " = 'Y' and r." . ROLE_ARRAY['colgroupid'] . " is not null 
                       and r." . ROLE_ARRAY['colgroupid'] . " in (" . MANAGEMENT_GROUP . ") order by r." . ROLE_ARRAY['colname'] . " asc";
 		$result = $db->query($query);
-		$role_arr = array();
+		$role_arr = [];
 		while ($row = $result->fetch()) {
 			$role_arr[$row[ROLE_ARRAY['colid']]] = $row[ROLE_ARRAY['colname']];
 		}
@@ -347,7 +347,7 @@ class Default_Model_Roles extends Zend_Db_Table_Abstract
                   where r." . ROLE_ARRAY['colisactive'] . " = 'Y' and r." . ROLE_ARRAY['colgroupid'] . " is not null 
                   and r." . ROLE_ARRAY['colgroupid'] . " = " . $groupID . " order by r." . ROLE_ARRAY['colname'] . " asc";
 		$result = $db->query($query);
-		$role_arr = array();
+		$role_arr = [];
 		while ($row = $result->fetch()) {
 			$role_arr[ROLE_ARRAY['colid'] . '_' . $row[ROLE_ARRAY['colgroupid']]] = $row[ROLE_ARRAY['colname']];
 		}
@@ -365,7 +365,7 @@ class Default_Model_Roles extends Zend_Db_Table_Abstract
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$query = "select " . ROLE_ARRAY['colid'] . "," . ROLE_ARRAY['colname'] . " from " . ROLE_ARRAY['tablename'] . " where " . ROLE_ARRAY['colisactive'] . " ='Y' order by " . ROLE_ARRAY['colname'];
 		$result = $db->query($query);
-		$role_arr = array();
+		$role_arr = [];
 		while ($row = $result->fetch()) {
 			$role_arr[$row[ROLE_ARRAY['colid']]] = $row[ROLE_ARRAY['colname']];
 		}
@@ -381,12 +381,12 @@ class Default_Model_Roles extends Zend_Db_Table_Abstract
 	 */
 	public function getRolegroup($roleId)
 	{
-		$role_arr = array();
+		$role_arr = [];
 		$db = Zend_Db_Table::getDefaultAdapter();
 		if ($roleId != "") {
 			$query = "select " . ROLE_ARRAY['colid'] . "," . ROLE_ARRAY['colgroupid'] . " from " . ROLE_ARRAY['tablename'] . " where " . ROLE_ARRAY['colisactive'] . " = 'Y' and " . ROLE_ARRAY['colid'] . "=" . $roleId;
 			$result = $db->query($query);
-			$role_arr = array();
+			$role_arr = [];
 			while ($row = $result->fetch()) {
 				$role_arr[$row[ROLE_ARRAY['colid']]] = $row[ROLE_ARRAY['colgroupid']];
 			}
@@ -407,7 +407,7 @@ class Default_Model_Roles extends Zend_Db_Table_Abstract
                   where r." . ROLE_ARRAY['colisactive'] . " = 'Y' and r." . ROLE_ARRAY['colgroupid'] . " is not null 
                   and r." . ROLE_ARRAY['colgroupid'] . " not in (" . USERS_GROUP . ") order by r." . ROLE_ARRAY['colname'] . " asc";
 		$result = $db->query($query);
-		$role_arr = array();
+		$role_arr = [];
 		while ($row = $result->fetch()) {
 			$role_arr[$row[ROLE_ARRAY['colid']]] = $row[ROLE_ARRAY['colname']];
 		}
@@ -426,7 +426,7 @@ class Default_Model_Roles extends Zend_Db_Table_Abstract
 		$query = "select r." . ROLE_ARRAY['colid'] . ",r." . ROLE_ARRAY['colname'] . ",(select count(*) from main_userloginlog where emprole = r." . ROLE_ARRAY['colid'] . ") cnt
                from " . ROLE_ARRAY['tablename'] . " r where r." . ROLE_ARRAY['colisactive'] . " = 'Y'";
 		$result = $db->query($query);
-		$role_arr = array();
+		$role_arr = [];
 		while ($row = $result->fetch()) {
 			$role_arr[$row[ROLE_ARRAY['colid']]]['name'] = $row[ROLE_ARRAY['colname']];
 			$role_arr[$row[ROLE_ARRAY['colid']]]['cnt'] = $row['cnt'];
@@ -447,7 +447,7 @@ class Default_Model_Roles extends Zend_Db_Table_Abstract
 		$query = "select " . ROLE_ARRAY['colid'] . "," . ROLE_ARRAY['colcode'] . "," . ROLE_ARRAY['colgroupid'] . " from " . ROLE_ARRAY['tablename'] . " where " . ROLE_ARRAY['colid'] . " > 1 and " . ROLE_ARRAY['colisactive'] . " = 'Y'";
 		$result = $db->query($query);
 
-		$role_arr = array();
+		$role_arr = [];
 		while ($row = $result->fetch()) {
 			$role_arr[$row[ROLE_ARRAY['colid']]]['roletype'] = $row[ROLE_ARRAY['colcode']];
 			$role_arr[$row[ROLE_ARRAY['colid']]]['group_id'] = $row[ROLE_ARRAY['colgroupid']];
@@ -469,7 +469,7 @@ class Default_Model_Roles extends Zend_Db_Table_Abstract
 	public function getPairs($activeOnly = true)
 	{
 		$select = $this->select()
-			->from($this->_name, array('id', 'name'))
+			->from($this->_name, ['id', 'name'])
 			->order('name ASC');
 
 		if ($activeOnly) {
@@ -505,7 +505,7 @@ class Default_Model_Roles extends Zend_Db_Table_Abstract
 	public function saveRecord($data, $id = null)
 	{
 		if (!empty($id)) {
-			$this->update($data, array('id = ?' => (int)$id));
+			$this->update($data, ['id = ?' => (int)$id]);
 			return 'update';
 		} else {
 			$this->insert($data);
@@ -524,7 +524,7 @@ class Default_Model_Roles extends Zend_Db_Table_Abstract
 	{
 		$group_model = new Default_Model_Groups();
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 
 		if ($searchData != '' && $searchData != 'undefined') {
 			$searchValues = json_decode($searchData, true);
@@ -544,31 +544,31 @@ class Default_Model_Roles extends Zend_Db_Table_Abstract
 			}
 		}
 
-		$tableHeaders = array(
+		$tableHeaders = [
 			'action'      => 'Action',
 			'code'        => 'Code',
 			'name'        => 'Role Name',
 			'description' => 'Role Description',
 			'group_name'  => 'Group',
 			'status_text' => 'Status'
-		);
+		];
 
 		$tablecontent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 		$group_data = $group_model->getPairs(false);
-		$group_arr = array();
+		$group_arr = [];
 
 		foreach ($group_data as $gkey => $gdata) {
 			$group_arr[$gdata] = $gdata;
 		}
 
-		$dataTmp = array(
+		$dataTmp = [
 			'sort'           => $sort,
 			'by'             => $by,
 			'pageNo'         => $pageNo,
 			'perPage'        => $perPage,
 			'tablecontent'   => $tablecontent,
 			'objectname'     => 'roles',
-			'extra'          => array(),
+			'extra'          => [],
 			'tableheader'    => $tableHeaders,
 			'jsGridFnName'   => 'getAjaxgridData',
 			'jsFillFnName'   => '',
@@ -576,17 +576,17 @@ class Default_Model_Roles extends Zend_Db_Table_Abstract
 			'menuName'       => 'Roles',
 			'dashboardcall'  => $dashboardcall,
 			'call'           => $call,
-			'search_filters' => array(
-				'status_text' => array(
+			'search_filters' => [
+				'status_text' => [
 					'type'        => 'select',
-					'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive')
-				),
-				'group_name' => array(
+					'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']
+				],
+				'group_name' => [
 					'type'        => 'select',
-					'filter_data' => array('' => 'All') + $group_arr,
-				)
-			),
-		);
+					'filter_data' => ['' => 'All'] + $group_arr,
+				]
+			],
+		];
 
 		return $dataTmp;
 	}
@@ -604,20 +604,20 @@ class Default_Model_Roles extends Zend_Db_Table_Abstract
 		$select = $this->select()
 			->setIntegrityCheck(false)
 			->from(
-				array('r' => $this->_name),
-				array(
+				['r' => $this->_name],
+				[
 					'id'          => 'r.id',
 					'name'        => 'r.name',
 					'code'        => 'r.code',
 					'description' => 'r.description',
 					'isactive',
 					'status_text' => new Zend_Db_Expr("CASE WHEN r.isactive='Y' THEN 'Active' ELSE 'Inactive' END")
-				)
+				]
 			)
 			->joinInner(
-				array('g' => 'main_group'),
+				['g' => 'main_group'],
 				"g.id = r.group_id",
-				array('group_name' => 'g.name')
+				['group_name' => 'g.name']
 			)
 			->where($where)
 			->order("$by $sort")
@@ -638,20 +638,20 @@ class Default_Model_Roles extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('r' => $this->_name), array(
+			->from(['r' => $this->_name], [
 				'role_id'  => 'id',
 				'rolename' => 'name',
 				'group_id' => 'group_id'
-			))
+			])
 			->joinLeft(
-				array('u' => 'main_userrole'),
+				['u' => 'main_userrole'],
 				"u.role_id = r.id AND u.isactive = 'Y'",
-				array('user_cnt' => 'COUNT(u.user_id)')
+				['user_cnt' => 'COUNT(u.user_id)']
 			)
 			->joinInner(
-				array('g' => 'main_group'),
+				['g' => 'main_group'],
 				'g.id = r.group_id',
-				array('group_name' => 'name')
+				['group_name' => 'name']
 			)
 			->where("r.isactive = 'Y'")
 			->group('r.id')
@@ -667,15 +667,15 @@ class Default_Model_Roles extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('r' => $this->_name), array(
+			->from(['r' => $this->_name], [
 				'group_id',
 				'name',
 				'cnt' => 'COUNT(*)'
-			))
+			])
 			->joinInner(
-				array('g' => 'main_group'),
+				['g' => 'main_group'],
 				'r.group_id = g.id',
-				array()
+				[]
 			)
 			->where("r.isactive = 'Y'")
 			->group('g.id')
@@ -690,7 +690,7 @@ class Default_Model_Roles extends Zend_Db_Table_Abstract
 	public function getTotalRolecnt()
 	{
 		$select = $this->select()
-			->from($this->_name, array('cnt' => 'COUNT(id)'))
+			->from($this->_name, ['cnt' => 'COUNT(id)'])
 			->where("isactive = 'Y'")
 			->where('group_id IS NOT NULL');
 

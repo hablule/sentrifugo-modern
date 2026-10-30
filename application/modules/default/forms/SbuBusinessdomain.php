@@ -44,7 +44,7 @@ class Default_Form_SbuBusinessdomain extends Zend_Form
             ->setAttrib('class', 'formDataElement')
             ->setRegisterInArrayValidator(false) // Options populated in Controller
             ->setRequired(true)
-            ->addValidator('NotEmpty', false, array('messages' => 'Please select a Business Unit.'));
+            ->addValidator('NotEmpty', false, ['messages' => 'Please select a Business Unit.']);
 
         // If editing an existing mapping, we usually freeze the primary keys
         if (!empty($idVal)) {
@@ -59,7 +59,7 @@ class Default_Form_SbuBusinessdomain extends Zend_Form
             ->setAttrib('class', 'formDataElement')
             ->setRegisterInArrayValidator(false) // Options populated in Controller
             ->setRequired(true)
-            ->addValidator('NotEmpty', false, array('messages' => 'Please select a Business Domain.'));
+            ->addValidator('NotEmpty', false, ['messages' => 'Please select a Business Domain.']);
 
         // Freeze primary keys on edit
         if (!empty($idVal)) {
@@ -73,7 +73,7 @@ class Default_Form_SbuBusinessdomain extends Zend_Form
          * -------------------------------------------------------------- */
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Description')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -91,7 +91,7 @@ class Default_Form_SbuBusinessdomain extends Zend_Form
          * -------------------------------------------------------------- */
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save')
-            ->setAttribs(array('id' => 'submitbutton', 'class' => 'actbtn_btn'));
+            ->setAttribs(['id' => 'submitbutton', 'class' => 'actbtn_btn']);
 
         // SSOT v6.4 Strict Format for AJAX save binding
         $urlAction  = "'sbubusinessdomain/save/format/json'";
@@ -101,19 +101,19 @@ class Default_Form_SbuBusinessdomain extends Zend_Form
         /* --------------------------------------------------------------
          * Build Form
          * -------------------------------------------------------------- */
-        $this->addElements(array(
+        $this->addElements([
             $idElement,
             $sbunit_id,
             $businessdomain_id,
             $description,
             $isactive,
             $submit
-        ));
+        ]);
 
         // Strip default Zend Decorators per SSOT
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
-            $element->setDecorators(array('ViewHelper'));
+            $element->setDecorators(['ViewHelper']);
         }
     }
 }

@@ -82,9 +82,9 @@ class Assets_AssetcategoriesController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 
 		if($refresh == 'refresh')
@@ -139,7 +139,7 @@ class Assets_AssetcategoriesController extends Zend_Controller_Action
 		$assetscategoriesForm = new Assets_Form_AssetCategories();
 		$assetcategoriesModel = new Assets_Model_AssetCategories();
 					
-		$sub_cat_data = array();
+		$sub_cat_data = [];
 
 		try{
 			
@@ -196,15 +196,15 @@ class Assets_AssetcategoriesController extends Zend_Controller_Action
 				$subcatgory = $this->_request->getParam('subcat');
 				$date = gmdate("Y-m-d H:i:s");
 
-				$data = array(
+				$data = [
 							'name'  => $name ,
 							'parent'  => '',
-							);
+							];
 				if($id!=''){
 
 					$data['modified_by'] = $loginUserId;
 					$data['modified'] = $date;
-					$where = array('id=?'=>$id);
+					$where = ['id=?'=>$id];
 				}
 				else
 				{
@@ -225,8 +225,8 @@ class Assets_AssetcategoriesController extends Zend_Controller_Action
 					$subcatgory = $this->_request->getParam('subcat');
 					$id = $this->_request->getParam('id');
 					$subdata = $assetcategoriesModel->getAssetSubCategoriesDetailsById($id);
-					$sub_cat_data_array=array();
-					$table_sub_cat = array();
+					$sub_cat_data_array=[];
+					$table_sub_cat = [];
 				
 					if((count($subdata)>count($subCate_array))){
 						foreach($subdata as $sub_ids)
@@ -236,8 +236,8 @@ class Assets_AssetcategoriesController extends Zend_Controller_Action
 					
 						foreach($table_sub_cat as $subcatid){
 							if(!in_array($subcatid, $subCate_array)){
-								$deletesubcat = array('is_active'=>0,'modified'=>gmdate("Y-m-d H:i:s"),'modified_by'=>$loginUserId);
-								$deletewhere_cond = array('id=?'=>$subcatid);
+								$deletesubcat = ['is_active'=>0,'modified'=>gmdate("Y-m-d H:i:s"),'modified_by'=>$loginUserId];
+								$deletewhere_cond = ['id=?'=>$subcatid];
 								$sub_cat_del = $assetcategoriesModel->saveOrUpdateAssetCategoriesData($deletesubcat, $deletewhere_cond);
 					
 							}
@@ -253,17 +253,17 @@ class Assets_AssetcategoriesController extends Zend_Controller_Action
 						{
 							if(!empty($subCate_array[$key]))
 							{
-								$sub_cat_data_array = array(
+								$sub_cat_data_array = [
 										'name'=>$value,
 										'modified_by'=>$loginUserId,
 										'modified'=>$date
-								);
-								$sub_where = array('id=?'=>$subCate_array[$key]);
+								];
+								$sub_where = ['id=?'=>$subCate_array[$key]];
 							
 								$sub_cat_edit = $assetcategoriesModel->saveOrUpdateAssetCategoriesData($sub_cat_data_array, $sub_where);
 							}else
 							{
-								$sub_cat_data_array = array(
+								$sub_cat_data_array = [
 											
 										'name'  => $value ,
 										'parent'  => $id,
@@ -271,7 +271,7 @@ class Assets_AssetcategoriesController extends Zend_Controller_Action
 										'created'=>$date,
 										'is_active'=>1,
 											
-								);
+								];
 								$sub_where_add = '';
 								$sub_cat_edit = $assetcategoriesModel->saveOrUpdateAssetCategoriesData($sub_cat_data_array, $sub_where_add);
 							}
@@ -282,18 +282,18 @@ class Assets_AssetcategoriesController extends Zend_Controller_Action
 			}
 				else 
 				{
-					$subdata=array();
+					$subdata=[];
 					if(count($subcatgory)>0  ) {
 						foreach($subcatgory as $parentdata)
 						{
 					if(	$parentdata!=''){
-						$subdata = array(
+						$subdata = [
 								'name'  => $parentdata ,
 								'parent'  => $Id,
 								'created_by'=>$loginUserId,
 								'created'=>$date,
 								'is_active'=>1,
-						);
+						];
 						$where = '';
 						$subId = $assetcategoriesModel->saveOrUpdateAssetCategoriesData($subdata,$where);
 					}
@@ -304,11 +304,11 @@ class Assets_AssetcategoriesController extends Zend_Controller_Action
 				
 				if($Id == 'update')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Asset Category updated successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Asset Category updated successfully."]);
 				}
 				else
 				{
-			     $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Asset Category added successfully."));
+			     $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Asset Category added successfully."]);
 				}
 					
 				$this->_redirect('assets/assetcategories');
@@ -318,7 +318,7 @@ class Assets_AssetcategoriesController extends Zend_Controller_Action
 				$subCate_array = $this->_request->getParam('subcatid');
 				$subcatgory = $this->_request->getParam('subcat');
 				
-				$final_sub_array = array();
+				$final_sub_array = [];
 				
 				if(!empty($id) && $id>0)
 				{
@@ -433,9 +433,9 @@ class Assets_AssetcategoriesController extends Zend_Controller_Action
 		    	if($isexist==0 && $isexistforsetting ==0)
 		    	{
 		    		
-					$data = array('is_active'=>0,'modified'=>gmdate("Y-m-d H:i:s"));
+					$data = ['is_active'=>0,'modified'=>gmdate("Y-m-d H:i:s")];
 					$data['modified_by'] = $loginUserId;
-					$where = array('id=?'=>$id);
+					$where = ['id=?'=>$id];
 					$id = $assetscategoriesModel->saveOrUpdateAssetCategoriesData($data, $where);
 					if($id == 'update')
 					{
@@ -464,11 +464,11 @@ class Assets_AssetcategoriesController extends Zend_Controller_Action
 		{
 			if(	$messages['msgtype'] == 'error')
 			{
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
 			}
 			if(	$messages['msgtype'] == 'success')
 			{
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
 			}
 			
 		}
@@ -478,7 +478,7 @@ class Assets_AssetcategoriesController extends Zend_Controller_Action
 
 	public function addpopupAction()
 	{
-		$msgarray = array();
+		$msgarray = [];
 		$emptyFlag = '';
 		
 		Zend_Layout::getMvcInstance()->setLayoutPath(APPLICATION_PATH."/layouts/scripts/popup/");
@@ -494,7 +494,7 @@ class Assets_AssetcategoriesController extends Zend_Controller_Action
 		
 		$assetcategoriesModel = new Assets_Model_AssetCategories();
 		$assetcategoriesForm->setAction(BASE_URL.'assets/assetcategories/addpopup');
-		$sub_cat_data = array();
+		$sub_cat_data = [];
 		if($id)
 		{
 			if(is_numeric($id) && $id>0)
@@ -542,16 +542,16 @@ class Assets_AssetcategoriesController extends Zend_Controller_Action
 				$date = gmdate("Y-m-d H:i:s");
 				
 				
-				$data = array(
+				$data = [
 							'name'  => $name ,
 							'parent'  => '',
 							
-				);
+				];
 				
 				if($id!=''){
 					$data['modified_by'] = $loginUserId;
 					$data['modified'] = $date;
-					$where = array('id=?'=>$id);
+					$where = ['id=?'=>$id];
 				}
 				else
 				{
@@ -573,8 +573,8 @@ class Assets_AssetcategoriesController extends Zend_Controller_Action
 					$subcatgory = $this->_request->getParam('subcat');
 					$id = $this->_request->getParam('id');
 					$subdata = $assetcategoriesModel->getAssetSubCategoriesDetailsById($id);
-					$sub_cat_data_array=array();
-					$table_sub_cat = array();
+					$sub_cat_data_array=[];
+					$table_sub_cat = [];
 					if((count($subdata)>count($subCate_array))){
 						foreach($subdata as $sub_ids)
 						{
@@ -584,8 +584,8 @@ class Assets_AssetcategoriesController extends Zend_Controller_Action
 						foreach($table_sub_cat as $subcatid){
 							if(!in_array($subcatid, $subCate_array)){
 									
-								$deletesubcat = array('is_active'=>0,'modified'=>gmdate("Y-m-d H:i:s"),'modified_by'=>$loginUserId);
-								$deletewhere_cond = array('id=?'=>$subcatid);
+								$deletesubcat = ['is_active'=>0,'modified'=>gmdate("Y-m-d H:i:s"),'modified_by'=>$loginUserId];
+								$deletewhere_cond = ['id=?'=>$subcatid];
 								$sub_cat_del = $assetcategoriesModel->saveOrUpdateAssetCategoriesData($deletesubcat, $deletewhere_cond);
 				
 							}
@@ -602,23 +602,23 @@ class Assets_AssetcategoriesController extends Zend_Controller_Action
 							{
 							if(!empty($subCate_array[$key]))
 							{
-								$sub_cat_data_array = array('name'=>$value,
+								$sub_cat_data_array = ['name'=>$value,
 										'modified_by'=>$loginUserId,
 										'modified'=>$date
-								);
-								$sub_where = array('id=?'=>$subCate_array[$key]);
+								];
+								$sub_where = ['id=?'=>$subCate_array[$key]];
 								$sub_cat_edit = $assetcategoriesModel->saveOrUpdateAssetCategoriesData($sub_cat_data_array, $sub_where);
 							}else
 							{
 								
-								$sub_cat_data_array = array(
+								$sub_cat_data_array = [
 										'name'  => $value ,
 										'parent'  => $id,
 										'created_by'=>$loginUserId,
 										'created'=>$date,
 										'is_active'=>1,
 											
-								);
+								];
 								
 								$sub_where_add = '';
 								$sub_cat_edit = $assetcategoriesModel->saveOrUpdateAssetCategoriesData($sub_cat_data_array, $sub_where_add);
@@ -630,17 +630,17 @@ class Assets_AssetcategoriesController extends Zend_Controller_Action
 				}
 				else
 				{
-					$subdata=array();
+					$subdata=[];
 					if(count($subcatgory)>0){
 						foreach($subcatgory as $parentdata){
 							if(	$parentdata!=''){
-							$subdata = array(
+							$subdata = [
 									'name'  => $parentdata ,
 									'parent'  => $Id,
 									'created_by'=>$loginUserId,
 									'created'=>$date,
 									'is_active'=>1,
-							);
+							];
 							$where = '';
 							$subId = $assetcategoriesModel->saveOrUpdateAssetCategoriesData($subdata,$where);
 							}		
@@ -665,7 +665,7 @@ class Assets_AssetcategoriesController extends Zend_Controller_Action
 				$subCate_array = $this->_request->getParam('subcatid');
 				$subcatgory = $this->_request->getParam('subcat');
 				
-				$final_sub_array = array();
+				$final_sub_array = [];
 				if(!empty($id) && $id>0)
 				{
 					if(count($subcatgory)>0)
@@ -710,7 +710,7 @@ class Assets_AssetcategoriesController extends Zend_Controller_Action
 	public function addsubcatpopupAction()
 	{		
 
-		$msgarray = array();
+		$msgarray = [];
 		$emptyFlag = '';
 		Zend_Layout::getMvcInstance()->setLayoutPath(APPLICATION_PATH."/layouts/scripts/popup/");
 		$auth = Zend_Auth::getInstance();
@@ -722,7 +722,7 @@ class Assets_AssetcategoriesController extends Zend_Controller_Action
 		$assetcategoriesForm = new Assets_Form_AssetCategories();
 		$assetcategoriesModel = new Assets_Model_AssetCategories();
 		$assetcategoriesForm->setAction(BASE_URL.'assets/assetcategories/addsubcatpopup');
-		$sub_cat_data=array();
+		$sub_cat_data=[];
 	    if($id)
 			{	
 				if(is_numeric($id) && $id>0)
@@ -771,16 +771,16 @@ class Assets_AssetcategoriesController extends Zend_Controller_Action
 				$date = gmdate("Y-m-d H:i:s");
 	
 	
-				$data = array(
+				$data = [
 						'name'  => $name ,
 						'parent'  => '',
 							
-				);
+				];
 	
 				if($id!=''){
 					$data['modified_by'] = $loginUserId;
 					$data['modified'] = $date;
-					$where = array('id=?'=>$id);
+					$where = ['id=?'=>$id];
 					
 				}
 				else
@@ -804,8 +804,8 @@ class Assets_AssetcategoriesController extends Zend_Controller_Action
 					$subcatgory = $this->_request->getParam('subcat');
 					$id = $this->_request->getParam('id');
 					$subdata = $assetcategoriesModel->getAssetSubCategoriesDetailsById($id);
-					$sub_cat_data_array=array();
-					$table_sub_cat = array();
+					$sub_cat_data_array=[];
+					$table_sub_cat = [];
 					 if((count($subdata)>count($subCate_array))){
 					 	foreach($subdata as $sub_ids)
 					 	{
@@ -815,8 +815,8 @@ class Assets_AssetcategoriesController extends Zend_Controller_Action
 					 	foreach($table_sub_cat as $subcatid){
 					 		if(!in_array($subcatid, $subCate_array)){
 					 			
-					 			$deletesubcat = array('is_active'=>0,'modified'=>gmdate("Y-m-d H:i:s"),'modified_by'=>$loginUserId);
-					 			$deletewhere_cond = array('id=?'=>$subcatid);
+					 			$deletesubcat = ['is_active'=>0,'modified'=>gmdate("Y-m-d H:i:s"),'modified_by'=>$loginUserId];
+					 			$deletewhere_cond = ['id=?'=>$subcatid];
 					 			$sub_cat_del = $assetcategoriesModel->saveOrUpdateAssetCategoriesData($deletesubcat, $deletewhere_cond);
 					 
 					 		}
@@ -833,23 +833,23 @@ class Assets_AssetcategoriesController extends Zend_Controller_Action
 						{
 							  if(!empty($subCate_array[$key]))
 							  {
-							  	$sub_cat_data_array = array('name'=>$value,
+							  	$sub_cat_data_array = ['name'=>$value,
 							  			'modified_by'=>$loginUserId,
 							  			'modified'=>$date
-							  	);
-							  	$sub_where = array('id=?'=>$subCate_array[$key]);
+							  	];
+							  	$sub_where = ['id=?'=>$subCate_array[$key]];
 							  	$sub_cat_edit = $assetcategoriesModel->saveOrUpdateAssetCategoriesData($sub_cat_data_array, $sub_where);
 							  }else 
 							  {
 							  	
-							  	$sub_cat_data_array = array(
+							  	$sub_cat_data_array = [
 										'name'  => $value ,
 										'parent'  => $id,
 										'created_by'=>$loginUserId,
 										'created'=>$date,
 										'is_active'=>1,
 						
-								);
+								];
 							  	$sub_where_add = '';
 							  	$sub_cat_edit = $assetcategoriesModel->saveOrUpdateAssetCategoriesData($sub_cat_data_array, $sub_where_add);
 							  }
@@ -861,19 +861,19 @@ class Assets_AssetcategoriesController extends Zend_Controller_Action
 				else 
 				{
 					
-					$subdata=array();
+					$subdata=[];
 					
 					if(count($subcatgory)>0){
 						
 						foreach($subcatgory as $parentdata){
 							if(	$parentdata!=''){
-							$subdata = array(
+							$subdata = [
 									'name'  => $parentdata ,
 									'parent'  => $Id,
 									'created_by'=>$loginUserId,
 									'created'=>$date,
 									'is_active'=>1,
-							);
+							];
 							$where = '';
 							$subId = $assetcategoriesModel->saveOrUpdateAssetCategoriesData($subdata,$where);
 							}
@@ -915,7 +915,7 @@ class Assets_AssetcategoriesController extends Zend_Controller_Action
 				$subCate_array = $this->_request->getParam('subcatid');
 				$subcatgory = $this->_request->getParam('subcat');
 				
-				$final_sub_array = array();
+				$final_sub_array = [];
 				
 				if(!empty($id) && $id>0)
 				{

@@ -41,17 +41,17 @@ class Default_UsermanagementController extends Zend_Controller_Action
     public function indexAction()
     {
         try {
-           
+
         $user_model = new Default_Model_Usermanagement();	
         $call = $this->_getParam('call');
         if($call == 'ajaxcall')
             $this->_helper->layout->disableLayout();
-		
+
         $view = Zend_Layout::getMvcInstance()->getView();		
         $objname = $this->_getParam('objname');
         $refresh = $this->_getParam('refresh');
         $dashboardcall = $this->_getParam('dashboardcall');
-        $data = array();
+        $data = [];
 
         if($refresh == 'refresh')
         {
@@ -60,7 +60,7 @@ class Default_UsermanagementController extends Zend_Controller_Action
             else	
                 $perPage = PERPAGE;
             $sort = 'DESC';$by = 'u.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';
-            $searchArray = array();
+            $searchArray = [];
         }
         else 
         {
@@ -72,7 +72,7 @@ class Default_UsermanagementController extends Zend_Controller_Action
                 $perPage = $this->_getParam('per_page',PERPAGE);
             $pageNo = $this->_getParam('page', 1);            
             $searchQuery = '';
-            $searchArray = array();
+            $searchArray = [];
             $searchData = $this->_getParam('searchData');	         
         }
 
@@ -125,16 +125,16 @@ class Default_UsermanagementController extends Zend_Controller_Action
                     {
                         $role_data = $role_model->getRoleDataById($data['emprole']);
                         $roles_arr = $role_model->getRolesListForUsers($id);        
-                        $form->emprole->addMultiOptions(array(''=>'Select Role')+$roles_arr);
+                        $form->emprole->addMultiOptions([''=>'Select Role']+$roles_arr);
 
                         $data['emplockeddate'] = sapp_Global::change_date($data['emplockeddate'], 'view');
 
                         $form->populate($data);
-                        $identity_arr = array(
+                        $identity_arr = [
                                 $identity_codes['backgroundagency_code'] => "Background Agency (".$identity_codes['backgroundagency_code'].")",
                                 $identity_codes['users_code'] => "Users (".$identity_codes['users_code'].")",
                               
-                            );
+                            ];
                         //$id_arr = preg_split('/-/', $data['employeeId']);
                         $id_arr = preg_split('/(?=\d)/', $data['employeeId'], 2);
                         
@@ -186,12 +186,12 @@ class Default_UsermanagementController extends Zend_Controller_Action
      */
     public function editAction()
     {    
-        $popConfigPermission = array();
+        $popConfigPermission = [];
         $user_model = new Default_Model_Usermanagement();
         $role_model = new Default_Model_Roles();        
         $identity_code_model = new Default_Model_Identitycodes();
         $identity_codes = $identity_code_model->getIdentitycodesRecord();
-        $identity_codes = isset($identity_codes[0])?$identity_codes[0]:array();
+        $identity_codes = $identity_codes[0] ?? [];
         $id = $this->getRequest()->getParam('id',null);
         
         $auth = Zend_Auth::getInstance();
@@ -211,18 +211,18 @@ class Default_UsermanagementController extends Zend_Controller_Action
             $this->_helper->layout->disableLayout();
 
         $form = new Default_Form_Usermanagement();
-        $err_messages = array();                        
+        $err_messages = [];                        
         $roles_arr = $role_model->getRolesListForUsers('');        
       
-        $form->emprole->addMultiOptions(array(''=>'Select Role')+$roles_arr);
-        $emp_identity_code = isset($identity_codes['backgroundagency_code'])?$identity_codes['backgroundagency_code']:"";
+        $form->emprole->addMultiOptions([''=>'Select Role']+$roles_arr);
+        $emp_identity_code = $identity_codes['backgroundagency_code'] ?? "";
         
-        $identity_arr = array();
+        $identity_arr = [];
         if($emp_identity_code!='')
         {            
-            $identity_arr = array(               
+            $identity_arr = [               
                 $identity_codes['users_code'] => "Users(".$identity_codes['users_code'].")",
-            );
+            ];
         }
         else 
             $emp_id = '';
@@ -261,7 +261,7 @@ class Default_UsermanagementController extends Zend_Controller_Action
                 {
                     $form->emprole->clearMultiOptions();
                     $roles_arr = $role_model->getRolesListForUsers($id,$empIDSetVal);        
-                    $form->emprole->addMultiOptions(array(''=>'Select Role')+$roles_arr);
+                    $form->emprole->addMultiOptions([''=>'Select Role']+$roles_arr);
                 }
             }
             else 
@@ -340,7 +340,7 @@ class Default_UsermanagementController extends Zend_Controller_Action
                 $emppassword = sapp_Global::generatePassword();
                 
                
-                $data = array(
+                $data = [
                             'emprole' => $emprole,
                 			'firstname' => $firstname,
                 			'lastname' => $lastname,
@@ -351,7 +351,7 @@ class Default_UsermanagementController extends Zend_Controller_Action
                             'emppassword' => md5($emppassword),
                             'entrycomments' => $entrycomments,                            
                             'userstatus' => 'old',
-                        );
+                        ];
                         
                 if($emplockeddate == '')
                 {
@@ -393,7 +393,7 @@ class Default_UsermanagementController extends Zend_Controller_Action
 							}
 						}
                     }
-                    $where = array('id=?'=>$id);  
+                    $where = ['id=?'=>$id];  
                     unset($data['emppassword']);
                     $messages['message'] = 'User updated successfully.';
                     $_SESSION['usermanagement_msg'] = $messages['message'];                    
@@ -422,7 +422,7 @@ class Default_UsermanagementController extends Zend_Controller_Action
                     $employeeId = $employeeId.str_pad($Id, 4, '0', STR_PAD_LEFT);
                 
                    
-                    $user_model->SaveorUpdateUserData(array('employeeId'=>$employeeId), "id = ".$Id);
+                    $user_model->SaveorUpdateUserData(['employeeId'=>$employeeId], "id = ".$Id);
                     $tableid = $Id; 
                     $base_url = 'http://'.$this->getRequest()->getHttpHost() . $this->getRequest()->getBaseUrl();
                     $view = $this->getHelper('ViewRenderer')->view;
@@ -461,20 +461,20 @@ class Default_UsermanagementController extends Zend_Controller_Action
                 {
                     if($data['isactive'] == 1)
                     {
-                        $logarr = array('userid' => $loginUserId,
+                        $logarr = ['userid' => $loginUserId,
 											'recordid' =>$tableid,
 											'date' => gmdate("Y-m-d H:i:s"),
                                              'isactive' => 1
-						);
+						];
 						$jsonlogarr = json_encode($logarr);
                     }
                     else 
                     {
-                        $logarr = array('userid' => $loginUserId,
+                        $logarr = ['userid' => $loginUserId,
 											'recordid' =>$tableid,
 											'date' => gmdate("Y-m-d H:i:s"),
                                              'isactive' => 0
-						);
+						];
 						$jsonlogarr = json_encode($logarr);
                     }
                     $id = $logmanagermodel->addOrUpdateLogManager($objID,4,$jsonlogarr,$loginUserId,$tableid);
@@ -525,12 +525,12 @@ class Default_UsermanagementController extends Zend_Controller_Action
 					$agencyuser = 'yes';
 				}
 			}			
-			$data = array(
+			$data = [
 						'isactive' => 0,
 						'modifiedby' => $loginUserId,
 						'modifieddate' => gmdate("Y-m-d H:i:s"),
-				);
-			$where = array('id=?'=>$id);
+				];
+			$where = ['id=?'=>$id];
 			$Id = $user_model->SaveorUpdateUserData($data, $where);
 			
 			if($agencyuser == 'yes')
@@ -568,7 +568,7 @@ class Default_UsermanagementController extends Zend_Controller_Action
         $cand_model = new Default_Model_Candidatedetails();
         $cand_data = $cand_model->getCandidateById($cand_id);
         
-        $this->_helper->_json(array('email'=>$cand_data['emailid']));
+        $this->_helper->_json(['email'=>$cand_data['emailid']]);
     }
 	
 	

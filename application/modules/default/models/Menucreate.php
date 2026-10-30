@@ -14,7 +14,7 @@ class Default_Model_Menucreate extends Zend_Db_Table_Abstract
 
         $bank = $this->select()
         ->setIntegrityCheck(false)
-        ->from(array('mm' => 'main_menu'), array('id' => 'mm.id', 'menuName' => 'mm.menuName', 'url' => 'mm.url', 'modulename' => 'mm.modulename','isactive'=>'if(mm.isactive="0","No","Yes")'))
+        ->from(['mm' => 'main_menu'], ['id' => 'mm.id', 'menuName' => 'mm.menuName', 'url' => 'mm.url', 'modulename' => 'mm.modulename','isactive'=>'if(mm.isactive="0","No","Yes")'])
             ->order("$by $sort")
             ->where($where)
             ->limitPage($pageNo, $perPage);
@@ -24,7 +24,7 @@ class Default_Model_Menucreate extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $a = '', $b = '', $c = '', $d = '')
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
            
@@ -37,7 +37,7 @@ class Default_Model_Menucreate extends Zend_Db_Table_Abstract
             $searchQuery = rtrim($searchQuery, " AND");
         }
         $objName = 'menucreate';
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'menuName' => 'Menu name',
             'url' => 'URL',
@@ -45,17 +45,17 @@ class Default_Model_Menucreate extends Zend_Db_Table_Abstract
             'isactive' => 'Active',
 
            
-        );
+        ];
 
         $tablecontent = $this->getData($sort, $by, $pageNo, $perPage, $searchQuery);
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
             'perPage' => $perPage,
             'tablecontent' => $tablecontent,
             'objectname' => $objName,
-            'extra' => array(),
+            'extra' => [],
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
             'jsFillFnName' => '',
@@ -64,23 +64,23 @@ class Default_Model_Menucreate extends Zend_Db_Table_Abstract
             'add' =>'add',
 
             'dashboardcall' => $dashboardcall,
-            'search_filters'=>array(
-                'isactive'=>array(
+            'search_filters'=>[
+                'isactive'=>[
                     'type'=>'select',
-                    'filter_data'=>array(''=>'All',1=>'Yes',0=>'No')
-                )
-                ),
+                    'filter_data'=>[''=>'All',1=>'Yes',0=>'No']
+                ]
+                ],
            
-        );
+        ];
         return $dataTmp;
     }
 
     public function SaveorUpdateData($data, $where,$permission_data,$permission_where,$group_data,$group_where)
     {
-        $config = array(
+        $config = [
             'name' => 'main_privileges',
             'primary' => 'id'
-        );
+        ];
         $privileges_table = new Zend_Db_Table($config);
         if ($where != '' && $permission_where !='') {
             
@@ -124,7 +124,7 @@ class Default_Model_Menucreate extends Zend_Db_Table_Abstract
     {
         $query = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('mm' => 'main_menu'), array('mm.id', 'mm.menuName'))
+            ->from(['mm' => 'main_menu'], ['mm.id', 'mm.menuName'])
             ->where('isactive=1');
         return $this->fetchAll($query)->toArray();
 
@@ -133,7 +133,7 @@ class Default_Model_Menucreate extends Zend_Db_Table_Abstract
     {
         $query = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('mr' => ROLE_ARRAY['tablename']), array('mr.'.ROLE_ARRAY['colid'], 'mr.'.ROLE_ARRAY['colname']))
+            ->from(['mr' => ROLE_ARRAY['tablename']], ['mr.'.ROLE_ARRAY['colid'], 'mr.'.ROLE_ARRAY['colname']])
             ->where('mr.'.ROLE_ARRAY['colisactive'].'="Y"');
         return $this->fetchAll($query)->toArray();
 

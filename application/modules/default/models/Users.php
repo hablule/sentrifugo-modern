@@ -52,7 +52,7 @@ class Default_Model_Users extends Zend_Db_Table_Abstract
 
 		$bank = $this->select()
 			->setIntegrityCheck(false)
-			->from('main_users', array('code as code', 'username as username', 'description as description', 'if(isactive=1,"Yes","No") as isactive', 'id as id', 'empid as empid'))
+			->from('main_users', ['code as code', 'username as username', 'description as description', 'if(isactive=1,"Yes","No") as isactive', 'id as id', 'empid as empid'])
 			->order("$by $sort")
 			->where($where)
 			->limitPage($pageNo, $perPage);
@@ -70,7 +70,7 @@ class Default_Model_Users extends Zend_Db_Table_Abstract
 			} else {
 				$objName = 'user';
 			}
-			$searchArray = array();
+			$searchArray = [];
 			if ($searchData != '' && $searchData != 'undefined') {
 				$searchValues = json_decode($searchData);
 				foreach ($searchValues as $key => $val) {
@@ -79,7 +79,7 @@ class Default_Model_Users extends Zend_Db_Table_Abstract
 				}
 				$searchQuery = rtrim($searchQuery, " AND");
 			}
-			$tableFields = array(
+			$tableFields = [
 				'action' => 'Action',
 				'code' => 'Code',
 				'username' => ' User Name',
@@ -87,17 +87,17 @@ class Default_Model_Users extends Zend_Db_Table_Abstract
 				'isactive' => 'Active',
 				// 'password' => 'Password',
 
-			);
+			];
 
 			$tablecontent = $this->getData($sort, $by, $pageNo, $perPage, $searchQuery, $a);
-			$dataTmp = array(
+			$dataTmp = [
 				'sort' => $sort,
 				'by' => $by,
 				'pageNo' => $pageNo,
 				'perPage' => $perPage,
 				'tablecontent' => $tablecontent,
 				'objectname' => $objName,
-				'extra' => array(),
+				'extra' => [],
 				'tableheader' => $tableFields,
 				'jsGridFnName' => 'getAjaxgridData',
 				'add' => 'add',
@@ -106,22 +106,22 @@ class Default_Model_Users extends Zend_Db_Table_Abstract
 				'searchArray' => $searchArray,
 				'call' => $call,
 				'dashboardcall' => $dashboardcall,
-				'search_filters' => array(
-					'isactive' => array(
+				'search_filters' => [
+					'isactive' => [
 						'type' => 'select',
-						'filter_data' => array('' => 'All', 'Y' => 'Yes', 'N' => 'No')
-					),
-				)
-			);
+						'filter_data' => ['' => 'All', 'Y' => 'Yes', 'N' => 'No']
+					],
+				]
+			];
 			if ($a != '') {
-				$dataTmp = array(
+				$dataTmp = [
 					'sort' => $sort,
 					'by' => $by,
 					'pageNo' => $pageNo,
 					'perPage' => $perPage,
 					'tablecontent' => $tablecontent,
 					'objectname' => $objName,
-					'extra' => array(),
+					'extra' => [],
 					'add' => 'add',
 					'tableheader' => $tableFields,
 					'jsGridFnName' => 'getEmployeeAjaxgridData',
@@ -134,13 +134,13 @@ class Default_Model_Users extends Zend_Db_Table_Abstract
 					'searchArray' => $searchArray,
 					'call' => $call,
 					'dashboardcall' => $dashboardcall,
-					'search_filters' => array(
-						'isactive' => array(
+					'search_filters' => [
+						'isactive' => [
 							'type' => 'select',
-							'filter_data' => array('' => 'All', 'Y' => 'Yes', 'N' => 'No')
-						),
-					)
-				);
+							'filter_data' => ['' => 'All', 'Y' => 'Yes', 'N' => 'No']
+						],
+					]
+				];
 			}
 			return $dataTmp;
 			//code...
@@ -209,8 +209,8 @@ class Default_Model_Users extends Zend_Db_Table_Abstract
 			$db = Zend_Db_Table::getDefaultAdapter();
 
 			$query = $db->select()
-				->from(array('u' => $this->_name))
-				->where("u.ldapUserName = ? AND u.isLdapuser = 'Y'", array($username));
+				->from(['u' => $this->_name])
+				->where("u.ldapUserName = ? AND u.isLdapuser = 'Y'", [$username]);
 
 			$result_one = $db->fetchAll($query);
 
@@ -238,8 +238,8 @@ class Default_Model_Users extends Zend_Db_Table_Abstract
 			$db = Zend_Db_Table::getDefaultAdapter();
 
 			$query = $db->select()
-				->from(array('u' => $this->_name))
-				->where("u.ldapUserName = ? AND u.isLdapuser = 'N'", array($username));
+				->from(['u' => $this->_name])
+				->where("u.ldapUserName = ? AND u.isLdapuser = 'N'", [$username]);
 
 			$result_one = $db->fetchAll($query);
 
@@ -264,12 +264,12 @@ class Default_Model_Users extends Zend_Db_Table_Abstract
 
 		$query = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('u' => $this->_name), array('u.*', 'emprole' => 'r.id', 'x_menu_id' => new Zend_Db_Expr(0)))
-			->joinInner(array('ur' => 'main_userrole'), 'ur.user_id=u.id', array('urid' => 'ur.userrole_id'))
-			->joinInner(array('r' => ROLE_ARRAY['tablename']), "ur.role_id = r." . ROLE_ARRAY['colid'] . " and r." . ROLE_ARRAY['colisactive'] . " = 'Y'", array('group_id' => ROLE_ARRAY['colgroupid']))
-			->joinLeft(array('e' => 'main_employees'), "e.id = u.empid", array('e.profileimg', 'e.id as empid', 'e.userfullname', 'is_orghead'))
+			->from(['u' => $this->_name], ['u.*', 'emprole' => 'r.id', 'x_menu_id' => new Zend_Db_Expr(0)])
+			->joinInner(['ur' => 'main_userrole'], 'ur.user_id=u.id', ['urid' => 'ur.userrole_id'])
+			->joinInner(['r' => ROLE_ARRAY['tablename']], "ur.role_id = r." . ROLE_ARRAY['colid'] . " and r." . ROLE_ARRAY['colisactive'] . " = 'Y'", ['group_id' => ROLE_ARRAY['colgroupid']])
+			->joinLeft(['e' => 'main_employees'], "e.id = u.empid", ['e.profileimg', 'e.id as empid', 'e.userfullname', 'is_orghead'])
 			//->where("(u.employeeId = '".$username."' OR u.emailaddress = '".$username."') and u.isactive = 1");
-			->where("u.isactive = 1 and (u.username = ? OR u.emailaddress = ? OR u.ldapUserName = ?)", array($username));
+			->where("u.isactive = 1 and (u.username = ? OR u.emailaddress = ? OR u.ldapUserName = ?)", [$username]);
 		//die($query);
 		$result_one = $this->fetchAll($query);
 
@@ -288,12 +288,12 @@ class Default_Model_Users extends Zend_Db_Table_Abstract
 
 			$query = $this->select()
 				->setIntegrityCheck(false)
-				->from(array('u' => $this->_name), array('u.*', 'emprole' => 'r.id', 'x_menu_id' => new Zend_Db_Expr(0)))
-				->joinInner(array('ur' => 'main_userrole'), 'ur.user_id=u.id')
-				->joinInner(array('r' => ROLE_ARRAY['tablename']), "ur.role_id = r." . ROLE_ARRAY['colid'] . " and r." . ROLE_ARRAY['colisactive'] . " = 'Y'", array('group_id' => ROLE_ARRAY['colgroupid']))
-				->joinLeft(array('e' => 'main_employees'), "e.id = u.empid", array('e.profileimg', 'e.id as empid', 'e.userfullname', 'is_orghead'))
+				->from(['u' => $this->_name], ['u.*', 'emprole' => 'r.id', 'x_menu_id' => new Zend_Db_Expr(0)])
+				->joinInner(['ur' => 'main_userrole'], 'ur.user_id=u.id')
+				->joinInner(['r' => ROLE_ARRAY['tablename']], "ur.role_id = r." . ROLE_ARRAY['colid'] . " and r." . ROLE_ARRAY['colisactive'] . " = 'Y'", ['group_id' => ROLE_ARRAY['colgroupid']])
+				->joinLeft(['e' => 'main_employees'], "e.id = u.empid", ['e.profileimg', 'e.id as empid', 'e.userfullname', 'is_orghead'])
 				//->where("(u.employeeId = '".$username."' OR u.emailaddress = '".$username."') and u.isactive = 1");
-				->where("u.isactive = 1 and (u.username = ? OR u.emailaddress = ? OR u.ldapUserName = ?)", array($username));
+				->where("u.isactive = 1 and (u.username = ? OR u.emailaddress = ? OR u.ldapUserName = ?)", [$username]);
 			// die($query);
 			$result_one = $this->fetchRow($query);
 			return $result_one;
@@ -334,13 +334,13 @@ class Default_Model_Users extends Zend_Db_Table_Abstract
 			$db = Zend_Db_Table::getDefaultAdapter();
 
 			$userData = $db->select()
-				->from(array('a' => 'main_users'), array('aid' => 'a.id'))
-				->joinInner(array('ur' => 'main_userrole'), 'ur.user_id=a.id')
-				->joinLeft(array('r' => ROLE_ARRAY['tablename']), 'r.' . ROLE_ARRAY['colid'] . '=ur.role_id', array("def_status" => "if(r." . ROLE_ARRAY['colgroupid'] . " in (1,5) and a.userstatus = 'new','old',a.userstatus)"))
-				->where("a.isactive = 1 AND r." . ROLE_ARRAY['colisactive'] . " = 'Y' AND a.emptemplock = 0 AND (a.username = ? OR a.emailaddress = ? OR a.ldapUserName = ?)", array($corpEmail));
+				->from(['a' => 'main_users'], ['aid' => 'a.id'])
+				->joinInner(['ur' => 'main_userrole'], 'ur.user_id=a.id')
+				->joinLeft(['r' => ROLE_ARRAY['tablename']], 'r.' . ROLE_ARRAY['colid'] . '=ur.role_id', ["def_status" => "if(r." . ROLE_ARRAY['colgroupid'] . " in (1,5) and a.userstatus = 'new','old',a.userstatus)"])
+				->where("a.isactive = 1 AND r." . ROLE_ARRAY['colisactive'] . " = 'Y' AND a.emptemplock = 0 AND (a.username = ? OR a.emailaddress = ? OR a.ldapUserName = ?)", [$corpEmail]);
 
 			$new_userdata = $db->select()
-				->from(array('ac' => $userData), array('count' => 'count(*)'))
+				->from(['ac' => $userData], ['count' => 'count(*)'])
 				->where("ac.def_status = 'old'");
 		} catch (Exception $e) {
 			// echo $e->getFile();
@@ -355,9 +355,9 @@ class Default_Model_Users extends Zend_Db_Table_Abstract
 		try {
 
 			$userData = $this->select()->setIntegrityCheck(false)
-				->from(array('u' => 'main_users'), array('status' => 'u.isactive', 'isaccountlock' => 'u.emptemplock'))
+				->from(['u' => 'main_users'], ['status' => 'u.isactive', 'isaccountlock' => 'u.emptemplock'])
 
-				->where("u.username = ? OR u.emailaddress = ? OR u.ldapUserName = ?", array($corpEmail));
+				->where("u.username = ? OR u.emailaddress = ? OR u.ldapUserName = ?", [$corpEmail]);
 		} catch (Exception $e) {
 			// Zend_Debug::dump($e->getFile());
 			Zend_Debug::dump($e->getFile());
@@ -369,9 +369,9 @@ class Default_Model_Users extends Zend_Db_Table_Abstract
 	{
 		try {
 			$userData = $this->select()->setIntegrityCheck(false)
-				->from(array('u' => 'main_users'), array())
-				->joinInner(array('e' => 'main_employees'), 'e.id=u.empid', array('date_of_joining', "doj" => "if(e.date_of_joining <= CURDATE(),1,0)"))
-				->where("u.username = ? OR u.emailaddress = ? OR u.ldapUserName = ?", array($corpEmail));
+				->from(['u' => 'main_users'], [])
+				->joinInner(['e' => 'main_employees'], 'e.id=u.empid', ['date_of_joining', "doj" => "if(e.date_of_joining <= CURDATE(),1,0)"])
+				->where("u.username = ? OR u.emailaddress = ? OR u.ldapUserName = ?", [$corpEmail]);
 		} catch (Exception $e) {
 			// Zend_Debug::dump($e->getFile());
 			Zend_Debug::dump($e->getFile());
@@ -392,12 +392,12 @@ class Default_Model_Users extends Zend_Db_Table_Abstract
 			if ($flag == 'all') {
 				$result =  $this->select()
 					->setIntegrityCheck(false)
-					->from(array('u' => 'main_users'), array('u.*'))
+					->from(['u' => 'main_users'], ['u.*'])
 					->where("u.id = " . $id);
 			} else {
 				$result =  $this->select()
 					->setIntegrityCheck(false)
-					->from(array('u' => 'main_users'), array('u.*'))
+					->from(['u' => 'main_users'], ['u.*'])
 					->where("u.isactive = 1 AND u.id = " . $id);
 			}
 			return $this->fetchAll($result)->toArray();
@@ -408,7 +408,7 @@ class Default_Model_Users extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('u' => 'main_employees'), array('u.*'))
+			->from(['u' => 'main_employees'], ['u.*'])
 			->where('u.id="' . $id . '" ');
 		// die($select);
 		return $this->fetchAll($select)->toArray();
@@ -417,8 +417,8 @@ class Default_Model_Users extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('e' => 'main_employees'), array('e.*'))
-			->joinInner(array('u' => 'main_users'), 'u.empid = e.id', array('user_id' => 'u.id'))
+			->from(['e' => 'main_employees'], ['e.*'])
+			->joinInner(['u' => 'main_users'], 'u.empid = e.id', ['user_id' => 'u.id'])
 
 			->where('u.id="' . $id . '" ');
 		return $this->fetchAll($select)->toArray();
@@ -439,7 +439,7 @@ class Default_Model_Users extends Zend_Db_Table_Abstract
 	{
 		$result =  $this->select()
 			->setIntegrityCheck(false)
-			->from(array('e' => 'main_employees'), array('e.*'))
+			->from(['e' => 'main_employees'], ['e.*'])
 			->where("e.isactive IN (1,2,3,4,0) AND  e.id = " . $id);
 		$db = Zend_Db_Table::getDefaultAdapter();
 		return $this->fetchAll($result)->toArray();
@@ -504,7 +504,7 @@ class Default_Model_Users extends Zend_Db_Table_Abstract
 	 * @param Integer $employee_group = group id of employee.
 	 * @return DataSet Consists of reporting managers of names and their id's.
 	 */
-	public function getReportingManagerList_employees($dept_id = '', $employee_id = '', $employee_group)
+	public function getReportingManagerList_employees($dept_id = '', $employee_id = '', $employee_group = null)
 	{
 		/*
                 When there are no managers for selected department.get management as reporting managers.
@@ -582,8 +582,8 @@ class Default_Model_Users extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('u' => 'main_users'), array('u.id', 'u.userfullname'))
-			->joinInner(array('r' => ROLE_ARRAY['tablename']), 'u.emprole = r.' . ROLE_ARRAY['colid'], array())
+			->from(['u' => 'main_users'], ['u.id', 'u.userfullname'])
+			->joinInner(['r' => ROLE_ARRAY['tablename']], 'u.emprole = r.' . ROLE_ARRAY['colid'], [])
 			->where('r.' . ROLE_ARRAY['colgroupid'] . '=' . MANAGER_GROUP . ' AND u.userstatus="old" AND u.isactive=1');
 
 		return $this->fetchAll($select)->toArray();
@@ -619,7 +619,7 @@ class Default_Model_Users extends Zend_Db_Table_Abstract
 		return $result;
 	}
 
-	public function editadminPassword($newpswd, $id = '', $email, $employeid = '')
+	public function editadminPassword($newpswd, $id = '', $email = null, $employeid = '')
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();
 		if ($id != '' && $employeid != '') {
@@ -633,7 +633,7 @@ class Default_Model_Users extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('u' => 'main_users'), array('emailcount' => 'count(u.emailaddress)', 'u.userfullname'))
+			->from(['u' => 'main_users'], ['emailcount' => 'count(u.emailaddress)', 'u.userfullname'])
 			->where('u.emailaddress="' . $email . '" AND u.isactive = 1 AND u.emptemplock = 0');
 
 		return $this->fetchAll($select)->toArray();
@@ -643,7 +643,7 @@ class Default_Model_Users extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('u' => 'main_users'), array('u.emppassword', 'u.userfullname', 'u.isactive', 'u.emptemplock'))
+			->from(['u' => 'main_users'], ['u.emppassword', 'u.userfullname', 'u.isactive', 'u.emptemplock'])
 			->where('u.emailaddress="' . $email . '" ');
 
 		return $this->fetchAll($select)->toArray();
@@ -665,9 +665,9 @@ class Default_Model_Users extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('u' => 'main_users'), array('u.backgroundchk_status', 'u.isactive'))
-			->joinInner(array('ur' => 'main_userrole'), 'u.id = ur.user_id', array())
-			->joinInner(array('r' => ROLE_ARRAY['tablename']), 'ur.role_id = r.' . ROLE_ARRAY['colid'], array('r.' . ROLE_ARRAY['colgroupid']))
+			->from(['u' => 'main_users'], ['u.backgroundchk_status', 'u.isactive'])
+			->joinInner(['ur' => 'main_userrole'], 'u.id = ur.user_id', [])
+			->joinInner(['r' => ROLE_ARRAY['tablename']], 'ur.role_id = r.' . ROLE_ARRAY['colid'], ['r.' . ROLE_ARRAY['colgroupid']])
 			->where('u.id=' . $userId . ' AND u.isactive=1');
 		$userBGstatus = $this->fetchAll($select)->toArray();
 
@@ -676,7 +676,7 @@ class Default_Model_Users extends Zend_Db_Table_Abstract
 
 	public function getDepartmentAddress($deptId)
 	{
-		$res = array();
+		$res = [];
 		if ($deptId) {
 			$db = Zend_Db_Table::getDefaultAdapter();
 			$deptAddRes = $db->query("select d.address1,c.country,s.state,ct.city
@@ -691,7 +691,7 @@ class Default_Model_Users extends Zend_Db_Table_Abstract
 
 	public function getOrganizationAddress()
 	{
-		$res = array();
+		$res = [];
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$deptAddRes = $db->query("select d.address1,c.country,s.state,ct.city
 									from main_organisationinfo d 
@@ -729,7 +729,7 @@ class Default_Model_Users extends Zend_Db_Table_Abstract
 		$query = "select g.id,g.username,(select count(*) from main_logmanager where is_active =1 and last_modifiedby = g.id) cnt
                    from main_users g where g.isactive = 1";
 		$result = $db->query($query);
-		$username_arr = array();
+		$username_arr = [];
 		while ($row = $result->fetch()) {
 			$username_arr[$row['id']]['userfullname'] = $row['userfullname'];
 			$username_arr[$row['id']]['cnt'] = $row['cnt'];
@@ -750,7 +750,7 @@ class Default_Model_Users extends Zend_Db_Table_Abstract
 		$query = "select g.id,g.username,(select count(*) from main_logmanager where is_active =1 and last_modifiedby = g.id) cnt
                    from main_users g where g.isactive = 1 and g.id !=" . $id;
 		$result = $db->query($query);
-		$username_arr = array();
+		$username_arr = [];
 		while ($row = $result->fetch()) {
 			$username_arr[$row['id']]['userfullname'] = $row['userfullname'];
 			$username_arr[$row['id']]['cnt'] = $row['cnt'];
@@ -787,7 +787,7 @@ class Default_Model_Users extends Zend_Db_Table_Abstract
 	{
 		$result =  $this->select()
 			->setIntegrityCheck(false)
-			->from(array('u' => 'main_users'), array('u.*'));
+			->from(['u' => 'main_users'], ['u.*']);
 
 		$db = Zend_Db_Table::getDefaultAdapter();
 		return $this->fetchAll($result)->toArray();
@@ -796,7 +796,7 @@ class Default_Model_Users extends Zend_Db_Table_Abstract
 	public function getUserImageByIds($userIdArray)
 	{
 		$resultstring = implode(',', $userIdArray);
-		$userArray = array();
+		$userArray = [];
 		if ($resultstring) {
 			try {
 				$qry = "select ob.id, ob.profileimg from main_users ob
@@ -821,7 +821,7 @@ class Default_Model_Users extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('m' => 'main_mail_settings'), array('m.*'));
+			->from(['m' => 'main_mail_settings'], ['m.*']);
 
 		return $this->fetchAll($select)->toArray();
 	}
@@ -854,13 +854,13 @@ class Default_Model_Users extends Zend_Db_Table_Abstract
 
 				$select = $this->select()
 					->setIntegrityCheck(false)
-					->from(array('u' => $this->_name), array('tm_role' => new Zend_Db_Expr("(CASE WHEN g." . GROUP_ARRAY['colname'] . " = 'Management' || g." . GROUP_ARRAY['colname'] . " = 'Manager'  THEN  'Manager'
+					->from(['u' => $this->_name], ['tm_role' => new Zend_Db_Expr("(CASE WHEN g." . GROUP_ARRAY['colname'] . " = 'Management' || g." . GROUP_ARRAY['colname'] . " = 'Manager'  THEN  'Manager'
  				ELSE CASE WHEN u.id IN (SELECT id FROM main_employees) THEN 'Manager'
-      				ELSE 'Employee' END END)")))
-					->joinInner(array('ur' => 'main_userrole'), "ur.user_id = u.id", array())
-					->joinInner(array('r' => ROLE_ARRAY['tablename']), "r." . ROLE_ARRAY['colid'] . " = ur.role_id", array())
-					->joinInner(array('g' => GROUP_ARRAY['tablename']), "g." . GROUP_ARRAY['colid'] . " = r." . ROLE_ARRAY['colgroupid'] . "", array())
-					->where(" u.id = ? ", array($userId));
+      				ELSE 'Employee' END END)")])
+					->joinInner(['ur' => 'main_userrole'], "ur.user_id = u.id", [])
+					->joinInner(['r' => ROLE_ARRAY['tablename']], "r." . ROLE_ARRAY['colid'] . " = ur.role_id", [])
+					->joinInner(['g' => GROUP_ARRAY['tablename']], "g." . GROUP_ARRAY['colid'] . " = r." . ROLE_ARRAY['colgroupid'] . "", [])
+					->where(" u.id = ? ", [$userId]);
 
 
 				$tmRole = $this->fetchAll($select);
@@ -886,7 +886,7 @@ class Default_Model_Users extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('u' => 'main_users'), 'u.id')
+			->from(['u' => 'main_users'], 'u.id')
 			->where('u.empid=' . $empId);
 
 		return $this->fetchAll($select)->toArray();
@@ -896,7 +896,7 @@ class Default_Model_Users extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('u' => 'main_users'), 'u.empid')
+			->from(['u' => 'main_users'], 'u.empid')
 			->where('u.id=' . $userid);
 		return $this->fetchAll($select)->toArray();
 	}

@@ -35,7 +35,7 @@ class Default_Form_Disabilitydetails extends Zend_Form
         
 	   $disability_id = new Zend_Form_Element_Select('disability_id');
 	   $disability_id->setRequired(true);
-	   $disability_id->addValidator('NotEmpty', false, array('messages' => 'Please fill the field.'));
+	   $disability_id->addValidator('NotEmpty', false, ['messages' => 'Please fill the field.']);
 		
 		// $disability_name->addValidators(array(
 		// 				 array(
@@ -51,7 +51,7 @@ class Default_Form_Disabilitydetails extends Zend_Form
 		// 			 )); 
 		$isactive = new Zend_Form_Element_Checkbox('isactive');
         $onsetdate = new ZendX_JQuery_Form_Element_DatePicker('onsetdate');
-		$onsetdate->setOptions(array('class' => 'brdr_none'));	
+		$onsetdate->setOptions(['class' => 'brdr_none']);	
 		$onsetdate->setAttrib('readonly', 'true');	
 		$onsetdate->setAttrib('onfocus', 'this.blur()');
 		// $onsetdate->setRequired(true);
@@ -62,13 +62,13 @@ class Default_Form_Disabilitydetails extends Zend_Form
 		$submit->setLabel('Save');
 		$description = new Zend_Form_Element_Textarea('description');
 		$description->setLabel("Description");
-		$this->addElements(array($id,$user_id,$disability_id,
+		$this->addElements([$id,$user_id,$disability_id,
 								$isactive,$onsetdate,$description,
-							$submit));
-       $this->setElementDecorators(array('ViewHelper')); 
-	   $this->setElementDecorators(array(
+							$submit]);
+       $this->setElementDecorators(['ViewHelper']); 
+	   $this->setElementDecorators([
 		'UiWidgetElement',
-),array('onsetdate')); 
+],['onsetdate']); 
 		
         
 	}

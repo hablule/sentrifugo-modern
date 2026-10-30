@@ -46,9 +46,9 @@ class Default_AppraisalgroupsController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 		
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 		
 		if($refresh == 'refresh')
@@ -97,7 +97,7 @@ class Default_AppraisalgroupsController extends Zend_Controller_Action
 		if($callval == 'ajaxcall')
 			$this->_helper->layout->disableLayout();
 		$appraisalGroupsForm = new Default_Form_Appraisalgroups();
-		$msgarray = array();
+		$msgarray = [];
 		$appraisalGroupsForm->setAttrib('action',BASE_URL.'appraisalgroups/add');
 		$this->view->form = $appraisalGroupsForm; 
 		$this->view->msgarray = $msgarray; 
@@ -232,7 +232,7 @@ class Default_AppraisalgroupsController extends Zend_Controller_Action
 					$loginuserGroup = $auth->getStorage()->read()->group_id;
 		} 
 	    $appraisalGroupsModel = new Default_Model_Appraisalgroups();
-		$msgarray = array();
+		$msgarray = [];
 	    
 		  if($appraisalGroupsForm->isValid($this->_request->getPost())){
             try{
@@ -242,15 +242,15 @@ class Default_AppraisalgroupsController extends Zend_Controller_Action
 			$menumodel = new Default_Model_Menu();
 			$actionflag = '';
 			$tableid  = ''; 
-			   $data = array('group_name'=>$appraisal_group_name, 
+			   $data = ['group_name'=>$appraisal_group_name, 
 							 'description'=>($description!=''?trim($description):NULL),
 							  'modifiedby'=>$loginUserId,
 							   'modifiedby_role'=>$loginuserRole,
 							   'modifiedby_group'=>$loginuserGroup,
 							  'modifieddate'=>gmdate("Y-m-d H:i:s")
-					);
+					];
 				if($id!=''){
-					$where = array('id=?'=>$id);  
+					$where = ['id=?'=>$id];  
 					$actionflag = 2;
 				}
 				else
@@ -268,12 +268,12 @@ class Default_AppraisalgroupsController extends Zend_Controller_Action
 				if($Id == 'update')
 				{
 				   $tableid = $id;
-				   $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Group updated successfully."));
+				   $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Group updated successfully."]);
 				}   
 				else
 				{
 				   $tableid = $Id; 	
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Group added successfully."));					   
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Group added successfully."]);					   
 				}   
 				$menuidArr = $menumodel->getMenuObjID('/appraisalgroups');
 				$menuID = $menuidArr[0]['id'];
@@ -323,9 +323,9 @@ class Default_AppraisalgroupsController extends Zend_Controller_Action
 			  
 			  if($appGroupsdata[0]['isused'] == 0)	
 			  {
-				  $data = array('isactive'=>0, 'modifiedby'=>$loginUserId, 'modifiedby_role'=>$loginuserRole,
-								   'modifiedby_group'=>$loginuserGroup, 'modifieddate'=>gmdate("Y-m-d H:i:s"));
-				  $where = array('id=?'=>$id);
+				  $data = ['isactive'=>0, 'modifiedby'=>$loginUserId, 'modifiedby_role'=>$loginuserRole,
+								   'modifiedby_group'=>$loginuserGroup, 'modifieddate'=>gmdate("Y-m-d H:i:s")];
+				  $where = ['id=?'=>$id];
 				  $Id = $appraisalGroupsModel->SaveorUpdateAppraisalGroupsData($data, $where);
 				    if($Id == 'update')
 					{

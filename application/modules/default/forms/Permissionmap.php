@@ -45,15 +45,15 @@ class Default_Form_Permissionmap extends Zend_Form
          * -------------------------------------------------------------- */
         $displayModule = new Zend_Form_Element_Text('display_module');
         $displayModule->setLabel('Module')
-            ->setAttribs(array('disabled' => 'disabled', 'class' => 'formDataElement'));
+            ->setAttribs(['disabled' => 'disabled', 'class' => 'formDataElement']);
 
         $displayController = new Zend_Form_Element_Text('display_controller');
         $displayController->setLabel('Controller')
-            ->setAttribs(array('disabled' => 'disabled', 'class' => 'formDataElement'));
+            ->setAttribs(['disabled' => 'disabled', 'class' => 'formDataElement']);
 
         $displayAction = new Zend_Form_Element_Text('display_action');
         $displayAction->setLabel('Action (Method)')
-            ->setAttribs(array('disabled' => 'disabled', 'class' => 'formDataElement'));
+            ->setAttribs(['disabled' => 'disabled', 'class' => 'formDataElement']);
 
         /* --------------------------------------------------------------
          * 3. Select Elements
@@ -61,23 +61,23 @@ class Default_Form_Permissionmap extends Zend_Form
         $permission = new Zend_Form_Element_Select('permission');
         $permission->setLabel('Required Privilege')
             ->setAttrib('class', 'formDataElement')
-            ->addMultiOptions(array(
+            ->addMultiOptions([
                 'view'       => 'View',
                 'add'        => 'Add',
                 'edit'       => 'Edit',
                 'delete'     => 'Delete',
                 'upload'     => 'Upload',
                 'viewupload' => 'View Upload'
-            ))
+            ])
             ->setRequired(true)
-            ->addValidator('NotEmpty', true, array('messages' => 'Please select a required privilege.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please select a required privilege.']);
 
         /* --------------------------------------------------------------
          * 4. Textarea Elements
          * -------------------------------------------------------------- */
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Description')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -95,10 +95,10 @@ class Default_Form_Permissionmap extends Zend_Form
          * -------------------------------------------------------------- */
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save')
-            ->setAttribs(array(
+            ->setAttribs([
                 'id'      => 'submitbutton',
                 'class'   => 'actbtn_btn'
-            ));
+            ]);
 
         // Define Sentrifugo Standard AJAX Callback
         $urlAction  = "'permissionmap/save/format/json'";
@@ -108,7 +108,7 @@ class Default_Form_Permissionmap extends Zend_Form
         /* --------------------------------------------------------------
          * Build Form & Apply Decorators (SSOT VI)
          * -------------------------------------------------------------- */
-        $this->addElements(array(
+        $this->addElements([
             $idElement,
             $displayModule,
             $displayController,
@@ -117,12 +117,12 @@ class Default_Form_Permissionmap extends Zend_Form
             $description,
             $isactive,
             $submit
-        ));
+        ]);
 
         // Strip default Zend Decorators and enforce ViewHelper universally
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
-            $element->setDecorators(array('ViewHelper'));
+            $element->setDecorators(['ViewHelper']);
         }
     }
 }

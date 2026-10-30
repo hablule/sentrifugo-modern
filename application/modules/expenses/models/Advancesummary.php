@@ -55,7 +55,7 @@ class Expenses_Model_Advancesummary extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('c'=>$this->_name),array('c.*'))						
+						->from(['c'=>$this->_name],['c.*'])						
 						->where('c.isactive = 1 AND c.employee_id='.$emp_id.' ');
 						
 		return $this->fetchAll($select)->toArray();

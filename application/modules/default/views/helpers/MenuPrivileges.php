@@ -13,14 +13,14 @@ class Zend_View_Helper_MenuPrivileges extends Zend_View_Helper_Abstract
     /**
      * Map DB columns to UI Labels and Input Names
      */
-    protected $_permMap = array(
-        'add'    => array('col' => 'canadd',        'input' => 'rd_addpermission',      'disabled' => 'adddisabled'),
-        'edit'   => array('col' => 'canedit',       'input' => 'rd_editpermission',     'disabled' => 'editdisabled'),
-        'delete' => array('col' => 'candelete',     'input' => 'rd_deletepermission',   'disabled' => 'deletedisabled'),
-        'view'   => array('col' => 'canview',       'input' => 'rd_viewpermission',     'disabled' => 'viewdisabled'),
-        'upload' => array('col' => 'canupload',     'input' => 'rd_uploadattachments',  'disabled' => 'uploaddisabled'),
-        'viewup' => array('col' => 'canviewupload', 'input' => 'rd_viewattachments',    'disabled' => 'viewupdisabled')
-    );
+    protected $_permMap = [
+        'add'    => ['col' => 'canadd',        'input' => 'rd_addpermission',      'disabled' => 'adddisabled'],
+        'edit'   => ['col' => 'canedit',       'input' => 'rd_editpermission',     'disabled' => 'editdisabled'],
+        'delete' => ['col' => 'candelete',     'input' => 'rd_deletepermission',   'disabled' => 'deletedisabled'],
+        'view'   => ['col' => 'canview',       'input' => 'rd_viewpermission',     'disabled' => 'viewdisabled'],
+        'upload' => ['col' => 'canupload',     'input' => 'rd_uploadattachments',  'disabled' => 'uploaddisabled'],
+        'viewup' => ['col' => 'canviewupload', 'input' => 'rd_viewattachments',    'disabled' => 'viewupdisabled']
+    ];
 
     protected $_disabled = false;
 
@@ -33,7 +33,7 @@ class Zend_View_Helper_MenuPrivileges extends Zend_View_Helper_Abstract
         $this->_disabled = $disabled;
 
         return '<div id="menu_accordion" class="ui-accordion ui-widget ui-helper-reset" role="tablist">'
-            . $this->_buildBranch($treeData, 0, array())
+            . $this->_buildBranch($treeData, 0, [])
             . '</div>';
     }
 

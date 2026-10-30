@@ -33,7 +33,7 @@ class Default_Model_Disciplinaryviolation extends Zend_Db_Table_Abstract
 		
 		$disciplinaryViolationTypesData = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('sd'=>'main_disciplinary_violation_types'),array('sd.*'))
+                           ->from(['sd'=>'main_disciplinary_violation_types'],['sd.*'])
                            ->where($where)
     					   ->order("$by $sort") 
     					   ->limitPage($pageNo, $perPage);
@@ -45,8 +45,8 @@ class Default_Model_Disciplinaryviolation extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{		
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		
 		if($searchData != '' && $searchData!='undefined')
 			{
@@ -61,18 +61,18 @@ class Default_Model_Disciplinaryviolation extends Zend_Db_Table_Abstract
 			
 		$objName = 'disciplinaryviolation';
 		
-		$tableFields = array('action'=>'Action','violationname' => 'Violation Type','description' => 'Description');
+		$tableFields = ['action'=>'Action','violationname' => 'Violation Type','description' => 'Description'];
 		
 		$tablecontent = $this->getDisciplinaryViolationTypesData($sort, $by, $pageNo, $perPage,$searchQuery);     
 		
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -80,7 +80,7 @@ class Default_Model_Disciplinaryviolation extends Zend_Db_Table_Abstract
 			'add' =>'add',
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall,
-		);
+		];
 		return $dataTmp;
 	}
 	
@@ -88,7 +88,7 @@ class Default_Model_Disciplinaryviolation extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('sd'=>'main_disciplinary_violation_types'),array('sd.*'))
+						->from(['sd'=>'main_disciplinary_violation_types'],['sd.*'])
 					    ->where('sd.isactive = 1 AND sd.id='.$id.' ');
 					   
 		return $this->fetchAll($select)->toArray();
@@ -98,7 +98,7 @@ public function getallDisciplinaryViolationTypesData()
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('sd'=>'main_disciplinary_violation_types'),array('sd.*'))
+						->from(['sd'=>'main_disciplinary_violation_types'],['sd.*'])
 					    ->where('sd.isactive = 1');
 		return $this->fetchAll($select)->toArray();
 	

@@ -68,7 +68,7 @@ class Default_GroupsController extends Zend_Controller_Action
         $session = sapp_Global::_readSession();
         if (!isset($session)) {
             if ($this->getRequest()->isXmlHttpRequest()) {
-                echo Zend_Json::encode(array('login' => 'failed'));
+                echo Zend_Json::encode(['login' => 'failed']);
                 die();
             } else {
                 $this->_redirect('');
@@ -119,7 +119,7 @@ class Default_GroupsController extends Zend_Controller_Action
             // Fetch Grid Data
             $dataTmp = $this->_model->getGrid($sort, $by, $perPage, $page, rtrim($searchData, ','), $call, $dashboardcall);
 
-            $this->view->dataArray = array($dataTmp);
+            $this->view->dataArray = [$dataTmp];
             $this->view->call      = $call;
             $this->view->messages  = $this->_helper->flashMessenger->getMessages();
         } catch (Exception $e) {
@@ -207,7 +207,7 @@ class Default_GroupsController extends Zend_Controller_Action
     {
         $form = new Default_Form_Groups();
         $request = $this->getRequest(); // Keep this as the Request Object
-        $response = array('result' => 'error', 'message' => 'Invalid data');
+        $response = ['result' => 'error', 'message' => 'Invalid data'];
 
         if ($request->isPost()) {
 
@@ -215,7 +215,7 @@ class Default_GroupsController extends Zend_Controller_Action
             $postData = $request->getPost();
 
             // 2. Extract and Decode Permissions
-            $jsonRaw = isset($postData['permissions_json']) ? $postData['permissions_json'] : '';
+            $jsonRaw = $postData['permissions_json'] ?? '';
             $permissions = json_decode($jsonRaw, true);
 
             // Remove from validation check (it's handled manually)
@@ -233,7 +233,7 @@ class Default_GroupsController extends Zend_Controller_Action
                     $util = new utlis();
 
                     // Prepare Group Data using $postData or $request params
-                    $data = array(
+                    $data = [
                         'name'         => trim($request->getParam('name')),
                         'code'         => trim($request->getParam('code')),
                         'description'  => trim($request->getParam('description')),
@@ -241,7 +241,7 @@ class Default_GroupsController extends Zend_Controller_Action
                         'isactive'     => $request->getParam('isactive'), 
                         'modifiedby'   => $this->_loginUserId,
                         'modified'     => gmdate("Y-m-d H:i:s"),
-                    );
+                    ];
 
                     $actionFlag = 2; // Edit
                     $saveMode   = 'Updated';
@@ -256,7 +256,7 @@ class Default_GroupsController extends Zend_Controller_Action
                     // Save Group
                     $savedId = $this->_model->saveRecord($data, $id);
 
-                    $groupId = ($id) ? $id : $savedId;
+                    $groupId = $id ?: $savedId;
 
                     // 5. CRITICAL FIX: Pass the decoded $permissions array, not the POST request
                     $this->_savePrivileges($groupId, $permissions);
@@ -264,17 +264,17 @@ class Default_GroupsController extends Zend_Controller_Action
                     // Logging
                     $menuModel = new Default_Model_Menu();
                     $objidArr  = $menuModel->getMenuObjID('/groups');
-                    $objID     = isset($objidArr[0]['id']) ? $objidArr[0]['id'] : 302;
+                    $objID     = $objidArr[0]['id'] ?? 302;
 
                     sapp_Global::logManager($objID, $actionFlag, $this->_loginUserId, $groupId);
 
                     $db->commit();
 
-                    $response = array(
+                    $response = [
                         'result'    => 'saved',
                         'nomessage' => 'no',
                         'message'   => "Group $saveMode successfully."
-                    );
+                    ];
 
                     $_SESSION['role_msg'] = $response['message'];
                     $_SESSION['role_cls'] = 'success';
@@ -319,27 +319,27 @@ class Default_GroupsController extends Zend_Controller_Action
         foreach ($permissions as $menuId => $perms) {
             
             // Prepare DB Payload
-            $data = array(
+            $data = [
                 'group_id'          => $groupId,
                 'object'            => $menuId,
                 'isactive'          => 1,
                 'modifiedby'        => $this->_loginUserId,
                 'modifieddate'      => $currentDate,
                 // Default to 'No' if key missing in JSON
-                'addpermission'     => isset($perms['add']) ? $perms['add'] : 'No',
-                'editpermission'    => isset($perms['edit']) ? $perms['edit'] : 'No',
-                'deletepermission'  => isset($perms['delete']) ? $perms['delete'] : 'No',
-                'viewpermission'    => isset($perms['view']) ? $perms['view'] : 'No',
-                'uploadattachments' => isset($perms['upload']) ? $perms['upload'] : 'No',
-                'viewattachments'   => isset($perms['viewup']) ? $perms['viewup'] : 'No'
-            );
+                'addpermission'     => $perms['add'] ?? 'No',
+                'editpermission'    => $perms['edit'] ?? 'No',
+                'deletepermission'  => $perms['delete'] ?? 'No',
+                'viewpermission'    => $perms['view'] ?? 'No',
+                'uploadattachments' => $perms['upload'] ?? 'No',
+                'viewattachments'   => $perms['viewup'] ?? 'No'
+            ];
 
             if (isset($existingMap[$menuId])) {
                 // --- UPDATE ---
                 $privId = $existingMap[$menuId];
                 
                 // Use Model's generic save method or standard update
-                $privilegeModel->SaveorUpdatePrivilegesData($data, array('id = ?' => $privId));
+                $privilegeModel->SaveorUpdatePrivilegesData($data, ['id = ?' => $privId]);
 
                 // CASCADE UPDATE: Enforce restrictions on Roles
                 $privilegeModel->enforceGroupLimitsOnRoles($groupId, $menuId, $data);

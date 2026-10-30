@@ -65,9 +65,9 @@ class Services_IndexController extends Zend_Rest_Controller
 	{
 		//HTTP code 500 might not good choice here.
 		$paramsarray = $this->getRequest ()->getParams();
-		
+
 		$this->getResponse ()->setHttpResponseCode ( 500 );
-		$testString = array('status'=>'0','message'=>'No list/index allowed.','result'=>'');
+		$testString = ['status'=>'0','message'=>'No list/index allowed.','result'=>''];
 		$this->_handleStruct($testString);//$this->_helper->json($testString);
 	}	
 	
@@ -159,7 +159,7 @@ class Services_IndexController extends Zend_Rest_Controller
 	}
         public function deptroleOnchange($params_arr)
         {
-            $result = array();$status = 0;$message = "Invalid value.";
+            $result = [];$status = 0;$message = "Invalid value.";
             if(isset($params_arr['role_id']) && $params_arr['role_id'] != '' && 
                 isset($params_arr['group_id']) && $params_arr['group_id'] != '' &&
                 isset($params_arr['selected_group']) && $params_arr['selected_group'] != '' &&
@@ -202,7 +202,7 @@ class Services_IndexController extends Zend_Rest_Controller
                     }
                 }
             }
-            return array('status' => $status,'message' => $message,'result' => $result);
+            return ['status' => $status,'message' => $message,'result' => $result];
             
         }
         /**
@@ -212,7 +212,7 @@ class Services_IndexController extends Zend_Rest_Controller
          */
         public function modeempOnchange($params_arr)
         {
-            $result = array();$status = 0;$message = "Invalid mode of employment.";
+            $result = [];$status = 0;$message = "Invalid mode of employment.";
             if(isset($params_arr['role_id']) && $params_arr['role_id'] != '' && 
                 isset($params_arr['group_id']) && $params_arr['group_id'] != '' &&
                 isset($params_arr['modeofentry']) && $params_arr['modeofentry'] != '' &&
@@ -279,7 +279,7 @@ class Services_IndexController extends Zend_Rest_Controller
                     }
                 }
             }
-            return array('status' => $status,'message' => $message,'result' => $result);
+            return ['status' => $status,'message' => $message,'result' => $result];
         }
         /**
          * This function acts as a service for onchange of job title to get positions.
@@ -288,7 +288,7 @@ class Services_IndexController extends Zend_Rest_Controller
          */
         public function jobtitleOnchange($params_arr)
         {
-            $result = array();$status = 0;$message = "Invalid job title.";
+            $result = [];$status = 0;$message = "Invalid job title.";
             if(isset($params_arr['role_id']) && $params_arr['role_id'] != '' && 
                 isset($params_arr['group_id']) && $params_arr['group_id'] != '' &&
                 isset($params_arr['jobtitle_id']) && $params_arr['jobtitle_id'] != '' &&
@@ -308,7 +308,7 @@ class Services_IndexController extends Zend_Rest_Controller
                         $status = 1;
                         $message = "success";
                         $positionsmodel = new Default_Model_Positions();
-                        $positionlistArr = $positionsmodel->getPositionList($jobtitle_id);
+                        $positionlistArr = $positionsmodel->getPositionList();
                         $positions_str = sapp_Global::selectOptionBuilder("", "Select Position");
                         //echo "<pre>";print_r($positionlistArr);echo "</pre>";
                         if(!empty($positionlistArr))
@@ -327,7 +327,7 @@ class Services_IndexController extends Zend_Rest_Controller
                     }
                 }
             }
-            return array('status' => $status,'message' => $message,'result' => $result);
+            return ['status' => $status,'message' => $message,'result' => $result];
         }
         /**
          * This function acts as a service for onchange of business unit to get departments.
@@ -336,7 +336,7 @@ class Services_IndexController extends Zend_Rest_Controller
          */
         public function bunitOnchange($params_arr)
         {
-            $result = array();$status = 0;$message = "Invalid business unit.";
+            $result = [];$status = 0;$message = "Invalid business unit.";
             if(isset($params_arr['role_id']) && $params_arr['role_id'] != '' && 
                 isset($params_arr['group_id']) && $params_arr['group_id'] != '' &&
                 isset($params_arr['businessunit_id']) && $params_arr['businessunit_id'] != '' &&
@@ -375,7 +375,7 @@ class Services_IndexController extends Zend_Rest_Controller
                     }
                 }
             }
-            return array('status' => $status,'message' => $message,'result' => $result);
+            return ['status' => $status,'message' => $message,'result' => $result];
         }
         /**
          * This function acts as a service for onchange of state to get cities(ex: in interviews).
@@ -384,7 +384,7 @@ class Services_IndexController extends Zend_Rest_Controller
          */
         public function stateOnchange($params_arr)
         {
-            $result = array();$status = 0;$message = "Invalid state.";
+            $result = [];$status = 0;$message = "Invalid state.";
             if(isset($params_arr['state']) && $params_arr['state'] != '')
             {
                 $state_id = $params_arr['state'];
@@ -407,7 +407,7 @@ class Services_IndexController extends Zend_Rest_Controller
                     $message = "Cities are not configured yet.";
                 }
             }
-            return array('status' => $status,'message' => $message,'result' => $result);
+            return ['status' => $status,'message' => $message,'result' => $result];
         }
         /**
          * This function acts as a service for onchange of country to get states(ex: in interviews).
@@ -416,7 +416,7 @@ class Services_IndexController extends Zend_Rest_Controller
          */
         public function countryOnchange($params_arr)
         {
-            $result = array();$status = 0;$message = "Invalid country.";
+            $result = [];$status = 0;$message = "Invalid country.";
             if(isset($params_arr['country']) && $params_arr['country'] != '')
             {
                 $country_id = $params_arr['country'];
@@ -438,10 +438,10 @@ class Services_IndexController extends Zend_Rest_Controller
                     $status = 0;
                     $message = "States are not configured yet.";
                 }
-                
+
                 //echo "<pre>";print_r($states_data);echo "</pre>";
             }
-            return array('status' => $status,'message' => $message,'result' => $result);
+            return ['status' => $status,'message' => $message,'result' => $result];
         }
         /**
          * This function acts as a service for onchange of requisition code in interviews.
@@ -450,7 +450,7 @@ class Services_IndexController extends Zend_Rest_Controller
          */
         public function requisitionOnchange($params_arr)
         {
-            $result = array();$status = 0;$message = "Invalid requisition code.";
+            $result = [];$status = 0;$message = "Invalid requisition code.";
             if(isset($params_arr['role_id']) && $params_arr['role_id'] != '' && 
                 isset($params_arr['group_id']) && $params_arr['group_id'] != '' &&
                 isset($params_arr['req_id']) && $params_arr['req_id'] != '' &&
@@ -489,7 +489,7 @@ class Services_IndexController extends Zend_Rest_Controller
                     }
                 }
             }
-            return array('status' => $status,'message' => $message,'result' => $result);
+            return ['status' => $status,'message' => $message,'result' => $result];
         }
         /**
          * This function acts as a service for adding a interview.
@@ -498,7 +498,7 @@ class Services_IndexController extends Zend_Rest_Controller
          */
         public function addinterview($params_arr)
         {
-            $result = array();$status = 0;$message = "No access to add interview.";
+            $result = [];$status = 0;$message = "No access to add interview.";
             if(isset($params_arr['role_id']) && $params_arr['role_id'] != '' && 
                 isset($params_arr['group_id']) && $params_arr['group_id'] != '' &&
                 isset($params_arr['userid']) && $params_arr['userid'] != ''
@@ -519,13 +519,13 @@ class Services_IndexController extends Zend_Rest_Controller
                         $countryModal = new Default_Model_Countries();
                         
                         $req_data = $req_model->getReqForInterviews();
-                        $req_options = $requisition_options = array();$countries_options = $cntry_options = array();
+                        $req_options = $requisition_options = [];$countries_options = $cntry_options = [];
                         foreach($req_data as $req)
                         {
                             $req_options[$req['id']] = $req['requisition_code'].' - '.$req['jobtitlename'];
                         }
                         
-                        $requisition_options = array(''=>'Select Requisition ID') + $req_options;
+                        $requisition_options = [''=>'Select Requisition ID'] + $req_options;
                         
                         $countriesData = $countryModal->fetchAll('isactive=1','country');
                         
@@ -533,12 +533,12 @@ class Services_IndexController extends Zend_Rest_Controller
                         {
                             $cntry_options[trim($data['country_id_org'])] = $data['country'];
                         }
-                        $countries_options = array('' => 'Select country') + $cntry_options;
+                        $countries_options = ['' => 'Select country'] + $cntry_options;
                         
-                        $interview_type_options = array('' => 'Select Interview Type',
+                        $interview_type_options = ['' => 'Select Interview Type',
                                                'In person' => 'In person',
                                                'Phone' => 'Phone',
-                                               'Video conference' => 'Video conference');
+                                               'Video conference' => 'Video conference'];
                         if(empty($req_options) && count($req_options) == 0)
                         {
                             $status = 0;
@@ -559,7 +559,7 @@ class Services_IndexController extends Zend_Rest_Controller
                     }
                 }
             }
-            return array('status' => $status,'message' => $message,'result' => $result);
+            return ['status' => $status,'message' => $message,'result' => $result];
         }
         /**
          * This function acts as a service to get interview list.
@@ -568,7 +568,7 @@ class Services_IndexController extends Zend_Rest_Controller
          */
 	public function getiroundslist($params_arr)
         {
-            $result = array();$status = 0;$message = "No data found.";
+            $result = [];$status = 0;$message = "No data found.";
             $add_flag = 'No';$page_cnt = 1;
             if(isset($params_arr['role_id']) && $params_arr['role_id'] != '' && 
                 isset($params_arr['group_id']) && $params_arr['group_id'] != '' &&
@@ -603,7 +603,7 @@ class Services_IndexController extends Zend_Rest_Controller
                     }
                 }
             }
-            return array('status' => $status,'message' => $message,'page_cnt' => $page_cnt,'result' => $result,'add_flag' => $add_flag);
+            return ['status' => $status,'message' => $message,'page_cnt' => $page_cnt,'result' => $result,'add_flag' => $add_flag];
         }
         
         /**
@@ -613,7 +613,7 @@ class Services_IndexController extends Zend_Rest_Controller
          */
         public function getemplist($params_arr)
         {
-            $result = array();$status = 0;$message = "No data found.";
+            $result = [];$status = 0;$message = "No data found.";
             $add_flag = 'No';$page_cnt = 1;
             if(isset($params_arr['role_id']) && $params_arr['role_id'] != '' && isset($params_arr['group_id']) && $params_arr['group_id'] != '')
             {
@@ -648,7 +648,7 @@ class Services_IndexController extends Zend_Rest_Controller
                     $add_flag = sapp_Global::_checkprivileges(EMPLOYEE,$group_id,$role_id,"add");
                 }
             }
-            return array('status' => $status,'message' => $message,'page_cnt' => $page_cnt,'result' => $result,'add_flag' => $add_flag);
+            return ['status' => $status,'message' => $message,'page_cnt' => $page_cnt,'result' => $result,'add_flag' => $add_flag];
         }
         /**
          * This function acts as a service to get business units list.
@@ -657,7 +657,7 @@ class Services_IndexController extends Zend_Rest_Controller
          */
         public function bunitslist($params_arr)
         {
-            $result = array();$status = 0;$message = "No data found.";$page_cnt = 1;
+            $result = [];$status = 0;$message = "No data found.";$page_cnt = 1;
             if(isset($params_arr['role_id']) && $params_arr['role_id'] != '' && isset($params_arr['group_id']) && $params_arr['group_id'] != '')
             {
                 $role_id = $params_arr['role_id'];
@@ -684,7 +684,7 @@ class Services_IndexController extends Zend_Rest_Controller
                         $page_cnt = $total_data['page_cnt'];
                         foreach($bunit_data as $bdata)
                         {                            
-                            $add_arr = array();
+                            $add_arr = [];
                             if($bdata['address1'] != '')
                                 $add_arr[] = $bdata['address1'];
                             if($bdata['city'] != '')
@@ -693,20 +693,20 @@ class Services_IndexController extends Zend_Rest_Controller
                                 $add_arr[] = $bdata['state'];
                             if($bdata['country'] != '')
                                 $add_arr[] = $bdata['country'];
-                            
+
                             $address = '';
                             if(count($add_arr) > 0)
                             {
                                 $address = implode(",", $add_arr);
                             }
-                            $result[] = array('id' => $bdata['id'],'unitname' => $bdata['unitname'],
-                                            'unitcode' => $bdata['unitcode'],'address' => $address);
+                            $result[] = ['id' => $bdata['id'],'unitname' => $bdata['unitname'],
+                                            'unitcode' => $bdata['unitcode'],'address' => $address];
                         }
                         //echo "<pre>";print_r($result);echo "</pre>";
                     }
                 }
             }
-            return array('status' => $status,'message' => $message,'page_cnt' => $page_cnt,'result' => $result);
+            return ['status' => $status,'message' => $message,'page_cnt' => $page_cnt,'result' => $result];
         }
         /**
          * This function acts as a service to get menu of a particular employee.
@@ -715,7 +715,7 @@ class Services_IndexController extends Zend_Rest_Controller
          */
         public function getmenu($params_arr)
         {
-            $result = array();$status = 0;$message = "No data found.";
+            $result = [];$status = 0;$message = "No data found.";
                                     
             if(isset($params_arr['role_id']) && $params_arr['role_id'] != '' && isset($params_arr['group_id']) && $params_arr['group_id'] != '')
             {
@@ -723,7 +723,7 @@ class Services_IndexController extends Zend_Rest_Controller
                 $group_id = $params_arr['group_id'];
                 $menu_model = new Default_Model_Menu();
                 $group_menu = $menu_model->getgroupmenu_service($group_id, $role_id);
-                
+
                 if(count($group_menu) >0)
                 {
                     $result = $group_menu;
@@ -732,7 +732,7 @@ class Services_IndexController extends Zend_Rest_Controller
                 }
                 //echo "<pre>";print_r($new_gmenu);echo "</pre>";
             }
-            return array('status' => $status,'message' => $message,'result' => $result);
+            return ['status' => $status,'message' => $message,'result' => $result];
         }
         /**
          * This function act as a service to get employee details.
@@ -741,7 +741,7 @@ class Services_IndexController extends Zend_Rest_Controller
          */
 	public function getempdetails($params_arr)
         {
-            $status = 0;$message = "No data found.";$result = array();
+            $status = 0;$message = "No data found.";$result = [];
             if(isset($params_arr['userid']) && $params_arr['userid'] != '')
             {
                 $userid = trim($params_arr['userid']);
@@ -758,7 +758,7 @@ class Services_IndexController extends Zend_Rest_Controller
                     $message = "success";
                 }
             }
-            return array('status' => $status,'message' => $message,'result' => $result);
+            return ['status' => $status,'message' => $message,'result' => $result];
         }
 	/*
 		* This function returns the employee details based on employee Id and password
@@ -792,7 +792,7 @@ class Services_IndexController extends Zend_Rest_Controller
 			}
 			 else
 			{
-			     $result = array('status'=>'0','message'=>'No data found.','result' => '');
+			     $result = ['status'=>'0','message'=>'No data found.','result' => ''];
 			}	
 		   
 		    return $result;
@@ -826,12 +826,12 @@ class Services_IndexController extends Zend_Rest_Controller
 			   $orgInfoModel = new Default_Model_Organisationinfo();
 			   $result = $orgInfoModel->getSelecteOrgRecords();
 			   if(!empty($result))
-				 $data = array('status'=>'1','message'=>'Success.','result' => $result);
+				 $data = ['status'=>'1','message'=>'Success.','result' => $result];
 				else
-				 $data = array('status'=>'0','message'=>'Organization is not added yet.','result' => '');	
+				 $data = ['status'=>'0','message'=>'Organization is not added yet.','result' => ''];	
             } else
 			{
-			     $data = array('status'=>'0','message'=>'No data found.','result' => '');
+			     $data = ['status'=>'0','message'=>'No data found.','result' => ''];
 			}	
 		   //echo"<pre>";print_r($getorgData[0]);exit;
 		    return $data;
@@ -847,7 +847,7 @@ class Services_IndexController extends Zend_Rest_Controller
 	 */
 	public function getempscreeninglist($params_arr)
 	{
-		$result = array();$status = 0;$message = "No data found.";
+		$result = [];$status = 0;$message = "No data found.";
 		$add_flag = 'No';$page_cnt = 1;
 		if(isset($params_arr['role_id']) && $params_arr['role_id'] != '' && isset($params_arr['group_id']) && $params_arr['group_id'] == $this->usergroup && isset($params_arr['userid']))
 		{
@@ -886,12 +886,12 @@ class Services_IndexController extends Zend_Rest_Controller
 				$edit_flag = sapp_Global::_checkprivileges(EMPSCREENING,$group_id,$role_id,"edit");
 			}
 		}
-		return array('status' => $status,'message' => $message,'page_cnt' => $page_cnt,'result' => $result,'edit_flag' => $edit_flag);
+		return ['status' => $status,'message' => $message,'page_cnt' => $page_cnt,'result' => $result,'edit_flag' => $edit_flag];
 	}
 
 	public function myteam($params_arr)
         {
-            $result = array();$status = 0;$message = "No data found.";
+            $result = [];$status = 0;$message = "No data found.";
             $add_flag = 'No';$page_cnt = 1;
             if(isset($params_arr['role_id']) && $params_arr['role_id'] != '' && isset($params_arr['group_id']) && $params_arr['group_id'] != '')
             {
@@ -927,12 +927,12 @@ class Services_IndexController extends Zend_Rest_Controller
                 }
             }
 			//echo "<pre>";print_r($result);exit;
-            return array('status' => $status,'message' => $message,'page_cnt' => $page_cnt,'result' => $result);
+            return ['status' => $status,'message' => $message,'page_cnt' => $page_cnt,'result' => $result];
         }
 		
 	public function viewleavedetails($params_arr)
         {
-            $result = array();
+            $result = [];
 			$status = 0;
 			$message = "No data found.";
             $add_flag = 'No';
@@ -996,15 +996,15 @@ class Services_IndexController extends Zend_Rest_Controller
                 }
             }
 			//echo "<pre>";print_r($result);exit;
-            return array('status' => $status,'message' => $message,'page_cnt' => $page_cnt,'result' => $result,'role' =>$role,'add_flag' => $add_flag,'edit_flag' => $edit_flag);
+            return ['status' => $status,'message' => $message,'page_cnt' => $page_cnt,'result' => $result,'role' =>$role,'add_flag' => $add_flag,'edit_flag' => $edit_flag];
         }
 
 		public function leaverequest($params_arr)
         {
-            $result = array();
+            $result = [];
 			$status = 0;
 			$message = "No data found.";
-			$messagearray = array();
+			$messagearray = [];
 			
             if(isset($params_arr['role_id']) && $params_arr['role_id'] != '' && isset($params_arr['group_id']) && $params_arr['group_id'] != '')
             {
@@ -1047,17 +1047,17 @@ class Services_IndexController extends Zend_Rest_Controller
                 }
             }
 			//echo "<pre>";print_r($result);exit;
-            return array('status' => $status,'message' => $message,'result' => $result);
+            return ['status' => $status,'message' => $message,'result' => $result];
         }
 
 		public function saveleaverequest($params_arr)
         {
-            $result = array();
+            $result = [];
 			$status = 0;
 			$message = "No data found.";
-			$messagearray = array();
+			$messagearray = [];
 			$leavetypeid = '';
-			$leaverequestdata = array();
+			$leaverequestdata = [];
 			
             if(isset($params_arr['role_id']) && $params_arr['role_id'] != '' && isset($params_arr['group_id']) && $params_arr['group_id'] != '')
             {
@@ -1087,12 +1087,12 @@ class Services_IndexController extends Zend_Rest_Controller
                 }
             }
 			//echo "<pre>";print_r($result);exit;
-            return array('status' => $status,'message' => $message,'result' => $result);
+            return ['status' => $status,'message' => $message,'result' => $result];
         }
 
 		public function manageemployeeleaves($params_arr)
         {
-            $result = array();
+            $result = [];
 			$status = 0;
 			$message = "No data found.";
             $add_flag = 'No';
@@ -1151,13 +1151,13 @@ class Services_IndexController extends Zend_Rest_Controller
             }
 			
 			//echo "<pre>";print_r($result);exit;
-            return array('status' => $status,'message' => $message,'page_cnt' => $page_cnt,'result' => $result,'edit_flag' => $edit_flag);
+            return ['status' => $status,'message' => $message,'page_cnt' => $page_cnt,'result' => $result,'edit_flag' => $edit_flag];
         }	
 		
 		
 		public function manageindividualempleave($params_arr)
         {
-            $result = array();
+            $result = [];
 			$status = 0;
 			$message = "No data found.";
 			$edit_flag = 'No';
@@ -1201,12 +1201,12 @@ class Services_IndexController extends Zend_Rest_Controller
             }
 			
 			//echo "<pre>";print_r($result);exit;
-            return array('status' => $status,'message' => $message,'result' => $result,'edit_flag' => $edit_flag);
+            return ['status' => $status,'message' => $message,'result' => $result,'edit_flag' => $edit_flag];
         }
 		
 		public function viewindividualleave($params_arr)
         {
-            $result = array();
+            $result = [];
 			$status = 0;
 			$message = "No data found.";
 			$cancel_flag = 'No';
@@ -1265,16 +1265,16 @@ class Services_IndexController extends Zend_Rest_Controller
             }
 			
 			//echo "<pre>";print_r($result);exit;
-            return array('status' => $status,'message' => $message,'result' => $result,'cancel_flag' => $cancel_flag);
+            return ['status' => $status,'message' => $message,'result' => $result,'cancel_flag' => $cancel_flag];
         }
 		
 		public function approveempleave($params_arr)
         {
-            $result = array();
+            $result = [];
 			$status = 0;
 			$message = "No data found.";
 			$actionstatus = ''; 
-			$total_data = array();
+			$total_data = [];
             if(isset($params_arr['role_id']) && $params_arr['role_id'] != '' && isset($params_arr['group_id']) && $params_arr['group_id'] != '')
             {
                 $role_id = $params_arr['role_id'];
@@ -1318,15 +1318,15 @@ class Services_IndexController extends Zend_Rest_Controller
             }
 			
 			//echo "<pre>";print_r($result);exit;
-            return array('status' => $status,'message' => $message,'result' => $result);
+            return ['status' => $status,'message' => $message,'result' => $result];
         }
 		
 		public function cancelleave($params_arr)
         {
-            $result = array();
+            $result = [];
 			$status = 0;
 			$message = "No data found.";
-			$total_data = array();
+			$total_data = [];
             if(isset($params_arr['role_id']) && $params_arr['role_id'] != '' && isset($params_arr['group_id']) && $params_arr['group_id'] != '')
             {
                 $role_id = $params_arr['role_id'];
@@ -1362,23 +1362,23 @@ class Services_IndexController extends Zend_Rest_Controller
             }
 			
 			//echo "<pre>";print_r($result);exit;
-            return array('status' => $status,'message' => $message,'result' => $result);
+            return ['status' => $status,'message' => $message,'result' => $result];
         }
 		
 		
 		public function calculatedays($params_arr)
         {
-            $result = array();
+            $result = [];
 			$status = 0;
 			$message = "No data found.";
-			$messagearray = array();
+			$messagearray = [];
 			$leavetypeid = '';
-			$daysdata = array();
+			$daysdata = [];
 			$selectorid = 1;
 			
             if(isset($params_arr['role_id']) && $params_arr['role_id'] != '' && isset($params_arr['group_id']) && $params_arr['group_id'] != '')
             {
-			    $leavedayArr = array(1,2);
+			    $leavedayArr = [1,2];
                 $role_id = $params_arr['role_id'];
                 $group_id = $params_arr['group_id'];
 				$userid = $params_arr['userid'];
@@ -1386,7 +1386,7 @@ class Services_IndexController extends Zend_Rest_Controller
 				$leaveday = $params_arr['leaveday'];
 				$from_date = $params_arr['from_date'];
                 $to_date = $params_arr['to_date'];
-				$selectorid = isset($params_arr['selectorid'])?$params_arr['selectorid']:1;
+				$selectorid = $params_arr['selectorid'] ?? 1;
                 $privilege_flag = sapp_Global::_check_menu_access(LEAVEREQUEST,$group_id,$role_id);
                 if($privilege_flag == 'Yes')
                 {
@@ -1402,7 +1402,7 @@ class Services_IndexController extends Zend_Rest_Controller
 							    $leavetypetext = $leavetypedata['leavetype'];
 								$leavetypelimit = $leavetypedata['numberofdays'];
 							    $daysdata = $leavesmodel->calculatedays($userid,$leavetypetext,$leavetypelimit,$leaveday,$from_date,$to_date,$selectorid);
-								
+
 								$result = $daysdata['noOfDays'];
 								$message = $daysdata['message'];;
 								$status = $daysdata['status'];
@@ -1428,7 +1428,7 @@ class Services_IndexController extends Zend_Rest_Controller
                 }
             }
 			//echo "<pre>";print_r($result);exit;
-            return array('status' => $status,'message' => $message,'result' => $result);
+            return ['status' => $status,'message' => $message,'result' => $result];
         }
 		
 	/**
@@ -1439,7 +1439,7 @@ class Services_IndexController extends Zend_Rest_Controller
 	*/		
 	public function individualempscreeningdata($params_arr)
 	{
-		$result = array();$specimenDataArr = Array();
+		$result = [];$specimenDataArr = [];
 		$status = 0;
 		$message = "No data found.";
 		$edit_flag = 'No';
@@ -1477,7 +1477,7 @@ class Services_IndexController extends Zend_Rest_Controller
 						$specimenDataArr['addressData'] = $addressData;
 						if(!empty($companyData) && count($companyData) > 0)
 						$specimenDataArr['companyData'] = $companyData;
-						else $specimenDataArr['companyData'] = array();
+						else $specimenDataArr['companyData'] = [];
 						$specimenDataArr['processesData'] = $processesData;
 						$message = "Success.";
 					}
@@ -1495,7 +1495,7 @@ class Services_IndexController extends Zend_Rest_Controller
 		}
 		$result = $specimenDataArr;
 		//echo "<pre>";print_r($result);exit;
-		return array('status' => $status,'message' => $message,'result' => $result,'edit_flag' => $edit_flag);
+		return ['status' => $status,'message' => $message,'result' => $result,'edit_flag' => $edit_flag];
 	}
 	
 	/**
@@ -1506,7 +1506,7 @@ class Services_IndexController extends Zend_Rest_Controller
 	*/
 	public function displayeachscreeningdetail($params_arr)
 	{
-		$result = array();$commentsData = Array();
+		$result = [];$commentsData = [];
 		$status = 0;
 		$message = "No data found.";
 		$edit_flag = 'No';
@@ -1543,7 +1543,7 @@ class Services_IndexController extends Zend_Rest_Controller
 		}
 		
 		$result = $commentsData;
-		return array('status' => $status,'message' => $message,'result' => $result,'edit_flag' => $edit_flag);
+		return ['status' => $status,'message' => $message,'result' => $result,'edit_flag' => $edit_flag];
 	}
 	
 	
@@ -1555,7 +1555,7 @@ class Services_IndexController extends Zend_Rest_Controller
 	*/
 	public function saveagencycomment($params_arr)
 	{
-		$result = array();
+		$result = [];
 		$status = 0;
 		$message = "Message cannot be saved.";
 		$edit_flag = 'No';		
@@ -1586,7 +1586,7 @@ class Services_IndexController extends Zend_Rest_Controller
 				$message = "you are not authorized to access this page";
 			}
 		}		
-		return array('status' => $status,'message' => $message,'result' => $result,'edit_flag' => $edit_flag);
+		return ['status' => $status,'message' => $message,'result' => $result,'edit_flag' => $edit_flag];
 	}
 }
 

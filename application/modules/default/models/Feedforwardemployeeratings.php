@@ -41,13 +41,13 @@ class Default_Model_Feedforwardemployeeratings extends Zend_Db_Table_Abstract
 		$where = "aer.isactive = 1 AND ai.status = 1 AND aer.employee_id = ".$employeeId;
 		$select = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('aer'=>'main_pa_ff_employee_ratings'),array('aer.id','aer.ff_initialization_id','aer.additional_comments',
+                           ->from(['aer'=>'main_pa_ff_employee_ratings'],['aer.id','aer.ff_initialization_id','aer.additional_comments',
                            		'aer.manager_id','aer.employee_id','aer.employee_response','aer.ff_status','es.profileimg',
                            		'es.userfullname','es.id','es.jobtitle_name','ai.status','ai.pa_configured_id','ai.appraisal_id',
                            		'ai.ff_mode','ai.ff_period','ai.ff_from_year','ai.ff_to_year','ai.ff_due_date','ai.questions','ai.qs_privileges',
-                           		))
-                           ->joinInner(array('es'=>'employees_summary'), 'es.id = aer.manager_id AND es.isactive = 1', array())
-                           ->joinInner(array('ai'=>'main_pa_ff_initialization'), 'ai.id = aer.ff_initialization_id AND ai.isactive = 1', array())
+                           		])
+                           ->joinInner(['es'=>'employees_summary'], 'es.id = aer.manager_id AND es.isactive = 1', [])
+                           ->joinInner(['ai'=>'main_pa_ff_initialization'], 'ai.id = aer.ff_initialization_id AND ai.isactive = 1', [])
                            ->where($where);
                            
 		return $this->fetchAll($select)->toArray();       		
@@ -57,7 +57,7 @@ class Default_Model_Feedforwardemployeeratings extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('aq'=>'main_pa_questions'),array('aq.id','aq.pa_category_id','aq.question','aq.description'))
+                           ->from(['aq'=>'main_pa_questions'],['aq.id','aq.pa_category_id','aq.question','aq.description'])
                            ->where("aq.isactive = 1 AND aq.module_flag = 2 AND aq.id in (".$ques_ids.")");
                            
 		return $this->fetchAll($select)->toArray();       		
@@ -67,7 +67,7 @@ class Default_Model_Feedforwardemployeeratings extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('ar'=>'main_pa_ratings'),array('ar.id','ar.rating_type','ar.rating_value','ar.rating_text'))
+                           ->from(['ar'=>'main_pa_ratings'],['ar.id','ar.rating_type','ar.rating_value','ar.rating_text'])
                            ->where("ar.isactive = 1 AND ar.pa_initialization_id = ".$config_id);
 		                           
 		return $this->fetchAll($select)->toArray();       		
@@ -80,9 +80,9 @@ class Default_Model_Feedforwardemployeeratings extends Zend_Db_Table_Abstract
 			$where = ' AND fe.ff_status = 1 ';
             $select = $this->select()
                             ->setIntegrityCheck(false)
-                            ->from(array('fe'=>'main_pa_ff_employee_ratings'),array('fe.ff_status'))
-                            ->joinInner(array('es'=>'employees_summary'), 'es.id = fe.employee_id AND es.isactive = 1', 
-                            	array('es.id','es.userfullname', 'es.id', 'es.jobtitle_name', 'es.reporting_manager_name', 'es.profileimg','es.emailaddress'))
+                            ->from(['fe'=>'main_pa_ff_employee_ratings'],['fe.ff_status'])
+                            ->joinInner(['es'=>'employees_summary'], 'es.id = fe.employee_id AND es.isactive = 1', 
+                            	['es.id','es.userfullname', 'es.id', 'es.jobtitle_name', 'es.reporting_manager_name', 'es.profileimg','es.emailaddress'])
                             ->where('fe.isactive = 1 AND fe.ff_initialization_id in( '.$ffId.')'.$where)
                             ->order("fe.ff_status");
             return $this->fetchAll($select)->toArray();		
@@ -96,9 +96,9 @@ class Default_Model_Feedforwardemployeeratings extends Zend_Db_Table_Abstract
 			
             $select = $this->select()
                             ->setIntegrityCheck(false)
-                            ->from(array('fe'=>'main_pa_ff_employee_ratings'),array('fe.ff_status'))
-                            ->joinInner(array('es'=>'employees_summary'), 'es.id = fe.employee_id AND es.isactive = 1', 
-                            	array('es.id','es.userfullname', 'es.id', 'es.jobtitle_name', 'es.reporting_manager_name', 'es.businessunit_name', 'es.profileimg','es.emailaddress'))
+                            ->from(['fe'=>'main_pa_ff_employee_ratings'],['fe.ff_status'])
+                            ->joinInner(['es'=>'employees_summary'], 'es.id = fe.employee_id AND es.isactive = 1', 
+                            	['es.id','es.userfullname', 'es.id', 'es.jobtitle_name', 'es.reporting_manager_name', 'es.businessunit_name', 'es.profileimg','es.emailaddress'])
                             ->where('fe.isactive = 1 AND fe.ff_initialization_id = '.$ffId.$where)
                             ->order("fe.ff_status");
             return $this->fetchAll($select)->toArray();		

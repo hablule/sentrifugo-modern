@@ -33,7 +33,7 @@ class Default_EmpconfigurationController extends Zend_Controller_Action
 	public function init()
 	{
 		$this->_options= $this->getInvokeArg('bootstrap')->getOptions();
-		$this->empConfigureArray = array(		
+		$this->empConfigureArray = [		
 								   'employeedocs' => 'Employee Documents',
 									'emp_leaves' => 'Employee Leaves',
 									'emp_leaves' => 'Employee Leaves',
@@ -71,14 +71,14 @@ class Default_EmpconfigurationController extends Zend_Controller_Action
 								   'emp_security' => 'Security Credentials',
 								   'assetdetails' => 'Asset Details',
 								   'emp_position' =>'Employee Position'
-								   );
+								   ];
 
 	}
 
 
 	public function indexAction()
 	{
-		$dataArray = array();
+		$dataArray = [];
 		if(defined('EMPTABCONFIGS'))
 		{
 			$empOrganizationTabs = explode(",",EMPTABCONFIGS);
@@ -138,7 +138,7 @@ class Default_EmpconfigurationController extends Zend_Controller_Action
 
 			if(!$this->_request->getPost()){
 				if(!empty($empOrganizationTabs)){
-					$empconfigurationform->setDefaults(array('checktype'=>$empOrganizationTabs));
+					$empconfigurationform->setDefaults(['checktype'=>$empOrganizationTabs]);
 
 					$keysempConfigArray = array_keys($this->empConfigureArray);
 					if(count($keysempConfigArray) == count($empOrganizationTabs)){
@@ -164,7 +164,7 @@ class Default_EmpconfigurationController extends Zend_Controller_Action
 			$checkTypeArray = array_keys($this->empConfigureArray);
 		}
 		if(!empty($checkTypeArray)){
-			$empconfigurationform->setDefaults(array('checktype'=>$checkTypeArray));
+			$empconfigurationform->setDefaults(['checktype'=>$checkTypeArray]);
 			$empconfigurationform->setDefault('checkall',1);
 		}
 		$this->view->form = $empconfigurationform;

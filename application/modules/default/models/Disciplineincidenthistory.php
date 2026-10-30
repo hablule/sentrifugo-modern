@@ -51,14 +51,14 @@ class Default_Model_Disciplineincidenthistory extends Zend_Db_Table_Abstract
 	}	//end 
     public function getDisciplineIncidentHistory($id)
     {
-        $history = array();
+        $history = [];
   		$db = Zend_Db_Table::getDefaultAdapter();
 		$where = " e.incident_id = ".$id." ";
 		$by=" e.createddate desc ";
 	    $history = $this->select()
 					->setIntegrityCheck(false)
-					->from(array('e' => 'main_disciplinary_history'),array('history'=>"concat(e.description,c.userfullname)",'hdate'=>"date(e.createddate)",'htime'=>"time(e.createddate)"))
-				    ->joinLeft(array('c'=>'main_employees'), 'c.id=e.action_emp_id',array('emp_profile_img'=>'c.profileimg','emp_name'=>'c.userfullname'))	
+					->from(['e' => 'main_disciplinary_history'],['history'=>"concat(e.description,c.userfullname)",'hdate'=>"date(e.createddate)",'htime'=>"time(e.createddate)"])
+				    ->joinLeft(['c'=>'main_employees'], 'c.id=e.action_emp_id',['emp_profile_img'=>'c.profileimg','emp_name'=>'c.userfullname'])	
 					->where($where)
 					->order($by);
     	return  $this->fetchAll($history)->toArray();

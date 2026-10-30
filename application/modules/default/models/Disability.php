@@ -13,9 +13,9 @@ class Default_Model_Disability extends Zend_Db_Table_Abstract{
 
         $bank = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('md'=>'main_disability'),array('md.name as name', 'md.code as code', 'md.description as description', 'if(md.isactive="Y","Yes","No") as isactive', 'md.disability_id as id'))
-            ->joinLeft(array('mdt'=>'main_disabilitytype'),"md.disabilitytype_id = mdt.disabilitytype_id",array('type'=>'mdt.name'))
-            ->joinLeft(array('mdc'=>'main_disabilitycategory'),"md.disabilitycategory_id = mdc.disabilitycategory_id",array('category'=>'mdc.name'))
+            ->from(['md'=>'main_disability'],['md.name as name', 'md.code as code', 'md.description as description', 'if(md.isactive="Y","Yes","No") as isactive', 'md.disability_id as id'])
+            ->joinLeft(['mdt'=>'main_disabilitytype'],"md.disabilitytype_id = mdt.disabilitytype_id",['type'=>'mdt.name'])
+            ->joinLeft(['mdc'=>'main_disabilitycategory'],"md.disabilitycategory_id = mdc.disabilitycategory_id",['category'=>'mdc.name'])
 
             ->order("$by $sort")
             ->where($where)
@@ -25,7 +25,7 @@ class Default_Model_Disability extends Zend_Db_Table_Abstract{
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $a = '', $b = '', $c = '', $d = '')
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
             foreach ($searchValues as $key => $val) {
@@ -44,7 +44,7 @@ class Default_Model_Disability extends Zend_Db_Table_Abstract{
             $searchQuery = rtrim($searchQuery, " AND");
         }
         $objName = 'disability';
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'code' => 'Code',
             'name' => 'Name',
@@ -52,17 +52,17 @@ class Default_Model_Disability extends Zend_Db_Table_Abstract{
             'category'=>'Category ',
             'description' => 'Description',
             'isactive' => 'Active',
-        );
+        ];
 
         $tablecontent = $this->getData($sort, $by, $pageNo, $perPage, $searchQuery);
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
             'perPage' => $perPage,
             'tablecontent' => $tablecontent,
             'objectname' => $objName,
-            'extra' => array(),
+            'extra' => [],
             // 'add'=>'add',
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
@@ -70,12 +70,12 @@ class Default_Model_Disability extends Zend_Db_Table_Abstract{
             'searchArray' => $searchArray,
             'call' => $call,
             'dashboardcall' => $dashboardcall,
-            'search_filters' => array(
-                'isactive' => array(
+            'search_filters' => [
+                'isactive' => [
                     'type' => 'select',
-                    'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-            )
-        );
+                    'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+            ]
+        ];
         return $dataTmp;
     }
 

@@ -49,48 +49,48 @@ class Default_Form_Digitalmediatype extends Zend_Form
     // Type Code
     $code = new Zend_Form_Element_Text('code');
     $code->setLabel('Type Code')
-      ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '60', 'placeholder' => 'e.g., SKYPE'))
+      ->setAttribs(['class' => 'formDataElement', 'maxlength' => '60', 'placeholder' => 'e.g., SKYPE'])
       ->setRequired(true)
       ->addFilter('StringTrim')
       ->addFilter('StripTags')
-      ->addValidator('NotEmpty', true, array('messages' => 'Please enter a type code.'));
+      ->addValidator('NotEmpty', true, ['messages' => 'Please enter a type code.']);
 
     // SSOT VI.4: Standard Regex Validator
-    $code->addValidator('Regex', true, array(
+    $code->addValidator('Regex', true, [
       'pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9_]*)$/',
-      'messages' => array(Zend_Validate_Regex::NOT_MATCH => 'Code must contain letters and cannot start with a space. Only letters, numbers, and underscores allowed.')
-    ));
+      'messages' => [Zend_Validate_Regex::NOT_MATCH => 'Code must contain letters and cannot start with a space. Only letters, numbers, and underscores allowed.']
+    ]);
 
     $excludeClauseCode = ($idVal > 0) ? "id != $idVal AND isactive != 5" : "isactive != 5";
-    $codeVal = new Zend_Validate_Db_NoRecordExists(array(
+    $codeVal = new Zend_Validate_Db_NoRecordExists([
       'table'   => 'main_digitalmediatype',
       'field'   => 'code',
       'exclude' => $excludeClauseCode
-    ));
+    ]);
     $codeVal->setMessage('This type code already exists.');
     $code->addValidator($codeVal);
 
     // Type Name
     $name = new Zend_Form_Element_Text('name');
     $name->setLabel('Type Name')
-      ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '100', 'placeholder' => 'e.g., Skype'))
+      ->setAttribs(['class' => 'formDataElement', 'maxlength' => '100', 'placeholder' => 'e.g., Skype'])
       ->setRequired(true)
       ->addFilter('StringTrim')
       ->addFilter('StripTags')
-      ->addValidator('NotEmpty', true, array('messages' => 'Please enter a type name.'));
+      ->addValidator('NotEmpty', true, ['messages' => 'Please enter a type name.']);
 
     // SSOT VI.4: Standard Regex Validator
-    $name->addValidator('Regex', true, array(
+    $name->addValidator('Regex', true, [
       'pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9 ]*)$/',
-      'messages' => array(Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space or contain special characters.')
-    ));
+      'messages' => [Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space or contain special characters.']
+    ]);
 
     $excludeClauseName = ($idVal > 0) ? "id != $idVal AND isactive != 5" : "isactive != 5";
-    $nameVal = new Zend_Validate_Db_NoRecordExists(array(
+    $nameVal = new Zend_Validate_Db_NoRecordExists([
       'table'   => 'main_digitalmediatype',
       'field'   => 'name',
       'exclude' => $excludeClauseName
-    ));
+    ]);
     $nameVal->setMessage('This type name already exists.');
     $name->addValidator($nameVal);
 
@@ -101,7 +101,7 @@ class Default_Form_Digitalmediatype extends Zend_Form
     // Description
     $description = new Zend_Form_Element_Textarea('description');
     $description->setLabel('Description')
-      ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+      ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
       ->addFilter('StringTrim')
       ->addFilter('StripTags');
 
@@ -122,7 +122,7 @@ class Default_Form_Digitalmediatype extends Zend_Form
 
     $submit = new Zend_Form_Element_Submit('submit');
     $submit->setLabel('Save')
-      ->setAttribs(array('id' => 'submitbutton', 'class' => 'actbtn_btn'));
+      ->setAttribs(['id' => 'submitbutton', 'class' => 'actbtn_btn']);
 
     // Strict JSON AJAX callback pattern
     $urlAction  = "'digitalmediatype/save/format/json'";
@@ -133,18 +133,18 @@ class Default_Form_Digitalmediatype extends Zend_Form
          * Build Form & Apply Decorators (SSOT VI.7)
          * -------------------------------------------------------------- */
 
-    $this->addElements(array(
+    $this->addElements([
       $idElement,
       $code,
       $name,
       $description,
       $isactive,
       $submit
-    ));
+    ]);
 
     $this->clearDecorators();
     foreach ($this->getElements() as $element) {
-      $element->setDecorators(array('ViewHelper'));
+      $element->setDecorators(['ViewHelper']);
     }
   }
 }

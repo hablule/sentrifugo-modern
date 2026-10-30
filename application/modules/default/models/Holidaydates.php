@@ -35,8 +35,8 @@ class Default_Model_Holidaydates extends Zend_Db_Table_Abstract
 		
 		$groupData = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('h'=>'main_holidaydates'),array('h.*','id'=>'h.holiday_id','start_date'=>'DATE_FORMAT(start_date,"'.DATEFORMAT_MYSQL.'")','end_date'=>'DATE_FORMAT(end_date,"'.DATEFORMAT_MYSQL.'")'))
-						   ->joinLeft(array('hg'=>'main_holidaycategory'), 'hg.holidaycategory_id=h.holidaycategory_id',array('groupname'=>'hg.name'))						   
+                           ->from(['h'=>'main_holidaydates'],['h.*','id'=>'h.holiday_id','start_date'=>'DATE_FORMAT(start_date,"'.DATEFORMAT_MYSQL.'")','end_date'=>'DATE_FORMAT(end_date,"'.DATEFORMAT_MYSQL.'")'])
+						   ->joinLeft(['hg'=>'main_holidaycategory'], 'hg.holidaycategory_id=h.holidaycategory_id',['groupname'=>'hg.name'])						   
 						   ->where($where)
     					   ->order("$by $sort") 
     					   ->limitPage($pageNo, $perPage);
@@ -54,9 +54,9 @@ class Default_Model_Holidaydates extends Zend_Db_Table_Abstract
 		
 		$groupData = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('h'=>'main_holidaydates'),array('h.*','id'=>'h.holiday_id','start_date'=>'DATE_FORMAT(start_date,"'.DATEFORMAT_MYSQL.'")','end_date'=>'DATE_FORMAT(end_date,"'.DATEFORMAT_MYSQL.'")'))
-						   ->joinLeft(array('hg'=>'main_holidaycategory'), 'hg.holidaycategory_id=h.holidaycategory_id',array('groupname'=>'hg.name'))		
-						   ->joinLeft(array('eh'=>'main_empholiday'), 'eh.holiday_id=h.holiday_id',array('ehid'=>'eh.empholiday_id'))						   
+                           ->from(['h'=>'main_holidaydates'],['h.*','id'=>'h.holiday_id','start_date'=>'DATE_FORMAT(start_date,"'.DATEFORMAT_MYSQL.'")','end_date'=>'DATE_FORMAT(end_date,"'.DATEFORMAT_MYSQL.'")'])
+						   ->joinLeft(['hg'=>'main_holidaycategory'], 'hg.holidaycategory_id=h.holidaycategory_id',['groupname'=>'hg.name'])		
+						   ->joinLeft(['eh'=>'main_empholiday'], 'eh.holiday_id=h.holiday_id',['ehid'=>'eh.empholiday_id'])						   
 				   
 						   ->where($where)
     					   ->order("$by $sort") 
@@ -77,9 +77,9 @@ class Default_Model_Holidaydates extends Zend_Db_Table_Abstract
 					$loginUserId = $auth->getStorage()->read()->id;
 		}  	
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
-		$dataTmp = array();
+        $searchArray = [];
+        $data = [];
+		$dataTmp = [];
 		
 		if($objName == 'holidaydates')
 		{
@@ -101,21 +101,21 @@ class Default_Model_Holidaydates extends Zend_Db_Table_Abstract
 						$searchQuery = rtrim($searchQuery," AND");					
 					}
 				
-				$tableFields = array('action'=>'Action','name' => 'Holiday','groupname' => 'Holiday Group','start_date' => 'Start Date' ,'end_date' => 'End Date','description' => 'Description');
+				$tableFields = ['action'=>'Action','name' => 'Holiday','groupname' => 'Holiday Group','start_date' => 'Start Date' ,'end_date' => 'End Date','description' => 'Description'];
 				$tablecontent = $this->getHolidayDatesData($sort, $by, $pageNo, $perPage,$searchQuery,$unitId);     
 				
 				if(isset($unitId) && $unitId != '') 
 					$formgrid = 'true'; 
 				else 
 				   $formgrid = '';
-				$dataTmp = array(
+				$dataTmp = [
 					'sort' => $sort,
 					'by' => $by,
 					'pageNo' => $pageNo,
 					'perPage' => $perPage,				
 					'tablecontent' => $tablecontent,
 					'objectname' => $objName,
-					'extra' => array(),
+					'extra' => [],
 					'tableheader' => $tableFields,
 					'jsGridFnName' => 'getAjaxgridData',
 					'jsFillFnName' => '',
@@ -126,12 +126,12 @@ class Default_Model_Holidaydates extends Zend_Db_Table_Abstract
 					'menuName'=>'Manage Holidays',
 					'call'=>$call,
 					'dashboardcall'=>$dashboardcall,
-								'search_filters' => array(
-									'start_date' => array('type' => 'datepicker'),
-									'end_date' => array('type' => 'datepicker'),
+								'search_filters' => [
+									'start_date' => ['type' => 'datepicker'],
+									'end_date' => ['type' => 'datepicker'],
 
-								),
-				);
+								],
+				];
         }	
         else if($objName == 'myholidaycalendar')
 		{
@@ -165,17 +165,17 @@ class Default_Model_Holidaydates extends Zend_Db_Table_Abstract
 					
 									
 				
-				$tableFields = array('name' => 'Holiday','start_date' => 'Start Date' ,'end_date' => 'End Date','description' => 'Description');
+				$tableFields = ['name' => 'Holiday','start_date' => 'Start Date' ,'end_date' => 'End Date','description' => 'Description'];
 				$tablecontent = $this->getHolidayDatesDataformy($sort, $by, $pageNo, $perPage,$searchQuery,$loginUserId);     
 				
-				$dataTmp = array(
+				$dataTmp = [
 					'sort' => $sort,
 					'by' => $by,
 					'pageNo' => $pageNo,
 					'perPage' => $perPage,				
 					'tablecontent' => $tablecontent,
 					'objectname' => $objName,
-					'extra' => array(),
+					'extra' => [],
 					'tableheader' => $tableFields,
 					'jsGridFnName' => 'getAjaxgridData',
 					'jsFillFnName' => '',
@@ -184,12 +184,12 @@ class Default_Model_Holidaydates extends Zend_Db_Table_Abstract
 					'add' =>'add',
 					'call'=>$call,
 					'dashboardcall'=>$dashboardcall,
-					'search_filters' => array(
-									'start_date' => array('type' => 'datepicker'),
-									'end_date' => array('type' => 'datepicker'),
+					'search_filters' => [
+									'start_date' => ['type' => 'datepicker'],
+									'end_date' => ['type' => 'datepicker'],
 
-								),
-				);
+								],
+				];
         }else if($objName == 'empholidays')
         {
 		    $groupname = '';
@@ -211,7 +211,7 @@ class Default_Model_Holidaydates extends Zend_Db_Table_Abstract
 					}
 		
 			
-			$tableFields = array('action'=>'Action','groupname' =>'Holiday Group','holidayname' => 'Holiday','start_date' => 'Start Date' ,'end_date' => 'End Date' ,'description' => 'Description');
+			$tableFields = ['action'=>'Action','groupname' =>'Holiday Group','holidayname' => 'Holiday','start_date' => 'Start Date' ,'end_date' => 'End Date' ,'description' => 'Description'];
 			$tablecontent = $this->getHolidayDatesData($sort, $by, $pageNo, $perPage,$searchQuery,$unitId);	
 			
             $holidaygroupModel = new Default_Model_Holidaygroups(); 
@@ -221,14 +221,14 @@ class Default_Model_Holidaydates extends Zend_Db_Table_Abstract
 			else
               $groupname = 'Holidays'; 			
             
-			$dataTmp = array('userid'=>$userid, 
+			$dataTmp = ['userid'=>$userid, 
 							'sort' => $sort,
 							'by' => $by,
 							'pageNo' => $pageNo,
 							'perPage' => $perPage,				
 							'tablecontent' => $tablecontent,
 							'objectname' => $objName,
-							'extra' => array(),
+							'extra' => [],
 							'tableheader' => $tableFields,
 							'jsGridFnName' => 'getEmployeeAjaxgridData',
 							'jsFillFnName' => '',
@@ -241,15 +241,15 @@ class Default_Model_Holidaydates extends Zend_Db_Table_Abstract
 							'dashboardcall'=>$dashboardcall,
 							'call'=>$call,
 							'context'=>$conText,
-							'search_filters' => array(
-								'isactive' => array(
+							'search_filters' => [
+								'isactive' => [
 									'type' => 'select',
-									'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No'),
-								),	
-							'startdate' => array('type' => 'datepicker'),
-							'enddate' => array('type' => 'datepicker')
-							)
-					);
+									'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No'],
+								],	
+							'startdate' => ['type' => 'datepicker'],
+							'enddate' => ['type' => 'datepicker']
+							]
+					];
 
         }   		
 		return $dataTmp;
@@ -282,8 +282,8 @@ class Default_Model_Holidaydates extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('h'=>'main_holidaydates'),array('h.*','holidayname'=>'h.name'))
-						->joinLeft(array('hg'=>'main_holidaycategory'), 'hg.holidaycategory_id=h.holidaycategory_id',array('groupname'=>'hg.name'))						   
+						->from(['h'=>'main_holidaydates'],['h.*','holidayname'=>'h.name'])
+						->joinLeft(['hg'=>'main_holidaycategory'], 'hg.holidaycategory_id=h.holidaycategory_id',['groupname'=>'hg.name'])						   
 					    ->where('h.holiday_id='.$id.' ');
 		return $this->fetchAll($select)->toArray();
 	
@@ -294,7 +294,7 @@ class Default_Model_Holidaydates extends Zend_Db_Table_Abstract
 	    $select = $this->select()
 	                   
 						->setIntegrityCheck(false)
-						->from(array('d'=>'main_holidaydates'),array('count'=>'count(*)'))
+						->from(['d'=>'main_holidaydates'],['count'=>'count(*)'])
 					    ->where('d.holidaycategory_id = '.$id.' AND d.holidayyear = year(now()) AND d.isactive ="Y" '); //AND d.holidayyear = year(now())
 						//die($select);
 		return $this->fetchAll($select)->toArray();
@@ -305,7 +305,7 @@ class Default_Model_Holidaydates extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('h'=>'main_holidaydates'),array('h.start_date'))
+						->from(['h'=>'main_holidaydates'],['h.start_date'])
 					    ->where('h.isactive = "Y"');
 	                 
 		$holidayDates = $this->fetchAll($select)->toArray();
@@ -317,7 +317,7 @@ class Default_Model_Holidaydates extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('h'=>'main_holidaydates'),array('h.holiday_id as id','h.name'))
+						->from(['h'=>'main_holidaydates'],['h.holiday_id as id','h.name'])
 					    ->where("h.isactive = 'Y'")
 						->order("h.name");
 		return $this->fetchAll($select)->toArray();
@@ -327,7 +327,7 @@ class Default_Model_Holidaydates extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('h'=>'main_holidaydates'),array('h.start_date as holidaydate','h.name'))
+						->from(['h'=>'main_holidaydates'],['h.start_date as holidaydate','h.name'])
 					    ->where('h.holidaycategory_id = '.$groupid.' AND h.isactive = "Y"');
 		$holidayDates = $this->fetchAll($select)->toArray();
 		return $holidayDates;
@@ -354,7 +354,7 @@ class Default_Model_Holidaydates extends Zend_Db_Table_Abstract
 	{
 		$result =  $this->select()
     				->setIntegrityCheck(false) 	
-    				->from(array('l'=>'empholiday_summary'),array('l.*'))
+    				->from(['l'=>'empholiday_summary'],['l.*'])
  	  				->where(" l.emp_id = ".$id);
     	return $this->fetchAll($result)->toArray();
 	}
@@ -362,7 +362,7 @@ class Default_Model_Holidaydates extends Zend_Db_Table_Abstract
 	{
 		$result =  $this->select()
     				->setIntegrityCheck(false) 	
-					->from(array('eh'=>'main_empholiday'),array('eh.*'))
+					->from(['eh'=>'main_empholiday'],['eh.*'])
 					->where("eh.emp_id = ".$id);
 
     	return $this->fetchAll($result)->toArray();
@@ -371,8 +371,8 @@ class Default_Model_Holidaydates extends Zend_Db_Table_Abstract
 	{
 		$result =  $this->select()
     				->setIntegrityCheck(false) 
-					->from(array('h'=>'main_holidaydates'),array('h.*'))	
-					->joinInner(array('hg'=>'main_holidaycategory'), 'hg.holidaycategory_id=h.holidaycategory_id',array('categoryname'=>'hg.name'))		
+					->from(['h'=>'main_holidaydates'],['h.*'])	
+					->joinInner(['hg'=>'main_holidaycategory'], 'hg.holidaycategory_id=h.holidaycategory_id',['categoryname'=>'hg.name'])		
 					->where("hg.holidaycategory_id in (".$id.")");
     	return $this->fetchAll($result)->toArray();
 	}
@@ -380,9 +380,9 @@ class Default_Model_Holidaydates extends Zend_Db_Table_Abstract
 	{
 		$result =  $this->select()
     				->setIntegrityCheck(false) 	
-					->from(array('h'=>'main_holidaydates'),array('h.*','id'=>'h.holiday_id','start_date'=>'DATE_FORMAT(start_date,"'.DATEFORMAT_MYSQL.'")','end_date'=>'DATE_FORMAT(end_date,"'.DATEFORMAT_MYSQL.'")'))
-					->joinLeft(array('hg'=>'main_holidaycategory'), 'hg.holidaycategory_id=h.holidaycategory_id',array('categoryname'=>'hg.name'))		
-					->joinLeft(array('eh'=>'main_empholiday'), 'eh.holiday_id=h.holiday_id',array('ehid'=>'eh.empholiday_id'))						   
+					->from(['h'=>'main_holidaydates'],['h.*','id'=>'h.holiday_id','start_date'=>'DATE_FORMAT(start_date,"'.DATEFORMAT_MYSQL.'")','end_date'=>'DATE_FORMAT(end_date,"'.DATEFORMAT_MYSQL.'")'])
+					->joinLeft(['hg'=>'main_holidaycategory'], 'hg.holidaycategory_id=h.holidaycategory_id',['categoryname'=>'hg.name'])		
+					->joinLeft(['eh'=>'main_empholiday'], 'eh.holiday_id=h.holiday_id',['ehid'=>'eh.empholiday_id'])						   
  	  				->where(" h.holiday_id  not in (".$holiday_id.")");
     	return $this->fetchAll($result)->toArray();
 	}

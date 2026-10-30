@@ -10,7 +10,7 @@ class Default_TabgroupsController extends Zend_Controller_Action
         $session = sapp_Global::_readSession();
         if (!isset($session)) {
             if ($this->getRequest()->isXmlHttpRequest()) {
-                echo Zend_Json::encode(array('login' => 'failed'));
+                echo Zend_Json::encode(['login' => 'failed']);
                 die();
             } else {
                 $this->_redirect('');
@@ -38,7 +38,7 @@ class Default_TabgroupsController extends Zend_Controller_Action
             $refresh = $this->_getParam('refresh');
             $dashboradcall = $this->_getParam('dashboradcall');
 
-            $data = array();
+            $data = [];
 
             if ($refresh == 'refresh') {
                 if ($dashboradcall == 'Yes') {
@@ -131,7 +131,7 @@ class Default_TabgroupsController extends Zend_Controller_Action
                 $this->_helper->layout->disableLayout();
 
             $form = new Default_Form_Tabgroups();
-            $data = array();
+            $data = [];
 
             if ($id && is_numeric($id) && $id > 1) {
 
@@ -255,7 +255,7 @@ class Default_TabgroupsController extends Zend_Controller_Action
                 $this->_helper->layout->disableLayout();
 
             $form = new Default_Form_Tabgroups();
-            $data = array();
+            $data = [];
 
             if ($id && is_numeric($id) && $id > 1) {
 
@@ -352,11 +352,11 @@ class Default_TabgroupsController extends Zend_Controller_Action
                                 $update_arr =  array_diff($chk_menu_val, $add_arr);
                                 foreach ($del_arr as $key => $value) {
 
-                                    $delete_prev_data = array(
+                                    $delete_prev_data = [
                                         'modifiedby' => $loginUserId,
                                         'modifieddate' => gmdate("Y-m-d H:i:s"),
                                         'isactive' => 'N',
-                                    );
+                                    ];
                                     $where_delete = "pagetabprivilage_id = " . $key;
 
                                     $previlege_model->SaveorUpdatePrivilegesData($delete_prev_data, $where_delete);
@@ -364,11 +364,11 @@ class Default_TabgroupsController extends Zend_Controller_Action
 if($chk_menu_val==NULL  && $menu_data_post!=NULL){
 
     foreach ($menu_data_post as $key => $value) {
-        $menu_data_data = array(
+        $menu_data_data = [
             'modifiedby' => $loginUserId,
             'modifieddate' => gmdate("Y-m-d H:i:s"),
             'isactive' => 'N',
-        );
+        ];
         $where_data = "pagetabprivilage_id = " . $key;
         $previlege_model->SaveorUpdatePrivilegesData($menu_data_data, $where_data);
     }
@@ -378,7 +378,7 @@ if($chk_menu_val!=NULL  && $menu_data_post==NULL){
 
     foreach ($chk_menu_val as $key => $value) {
       
-        $prev_data = array(
+        $prev_data = [
             'createdby' => $loginUserId,
             'modifiedby' => $loginUserId,
             'createddate' => gmdate("Y-m-d H:i:s"),
@@ -389,7 +389,7 @@ if($chk_menu_val!=NULL  && $menu_data_post==NULL){
             'candelete' => utlis::getYesno($this->_request->getParam('rd_deletepermission' . $value)),
             'canview' => utlis::getYesno($this->_request->getParam('rd_viewpermission' . $value)),
 
-        );
+        ];
         $update_where = "pagetabprivilage_id=".$value."";
         $previlege_model->SaveorUpdatePrivilegesData($prev_data,$update_where);
     }
@@ -399,20 +399,20 @@ if($chk_menu_val!=NULL  && $menu_data_post==NULL){
 
                                 foreach ($update_arr as $key => $value) {
 
-                                    $prev_update_data = array(
+                                    $prev_update_data = [
                                         'modifiedby' => $loginUserId,
                                         'modifieddate' => gmdate("Y-m-d H:i:s"),
                                         'canadd' => utlis::getYesno($this->_request->getParam('rd_addpermission' . $value)),
                                         'canedit' =>utlis::getYesno($this->_request->getParam('rd_editpermission' . $value)),
                                         'candelete' => utlis::getYesno($this->_request->getParam('rd_deletepermission' . $value)),
                                         'canview' => utlis::getYesno($this->_request->getParam('rd_viewpermission' . $value)),
-                                    );
+                                    ];
                                     $update_where = "isactive ='Y' and pagetab_id = " . $value . " and  group_id= ".$id."";
 
                                      $previlege_model->SaveorUpdatePrivilegesData($prev_update_data, $update_where);
                                 }
                                 foreach ($add_arr as $key => $value) {
-                                    $prev_data = array(
+                                    $prev_data = [
                                         'createdby' => $loginUserId,
                                         'modifiedby' => $loginUserId,
                                         'createddate' => gmdate("Y-m-d H:i:s"),
@@ -425,7 +425,7 @@ if($chk_menu_val!=NULL  && $menu_data_post==NULL){
                                         'candelete' => utlis::getYesno($this->_request->getParam('rd_deletepermission' . $value)),
                                         'canview' => utlis::getYesno($this->_request->getParam('rd_viewpermission' . $value)),
 
-                                    );
+                                    ];
 
                                     $previlege_model->SaveorUpdatePrivilegesData($prev_data, '');
                                 }
@@ -442,7 +442,7 @@ if($chk_menu_val!=NULL  && $menu_data_post==NULL){
                         // $result = sapp_Global::logManager($objID, $actionflag, $loginUserId, $tableid);
                         $messages['result'] = 'saved';
                         $messages['nomessage'] = 'no';
-                        if ($actionflag == 1)
+                        if (0 == 1)
                             $messages['message'] = ' Group[ added successfully.';
                         else
                             $messages['message'] = 'Group updated successfully.';
@@ -488,7 +488,7 @@ if($chk_menu_val!=NULL  && $menu_data_post==NULL){
         $menu_data = $menu_model->getgroupmenuforgroup($id, $role_id, '');
         // die(json_encode($menu_data['permission_data']));
         $active_menus = $menu_model->getisactivemenus();
-        $act_menus = array();
+        $act_menus = [];
         if (!empty($active_menus)) {
             foreach ($active_menus as $act) {
                 $act_menus[$act['pagetab_id']] = $act;

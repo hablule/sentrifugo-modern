@@ -82,7 +82,7 @@ class Default_ManagemenusController extends Zend_Controller_Action
             $topLevelMenus = $groupModel->getTopLevelMenus();
             
             // 3. Determine which ones are currently 'Active' to light them up
-            $activeIds = array();
+            $activeIds = [];
             foreach ($topLevelMenus as $menu) {
                 // If the group is returned by getTopLevelMenus, it is active (isactive=1)
                 // If your system allows "disabling" a module globally by setting group isactive=0,
@@ -120,7 +120,7 @@ class Default_ManagemenusController extends Zend_Controller_Action
 
                 // Get user selection (comma separated string -> array)
                 $chk_menu_raw = trim($request->getParam('chk_menu', ''), ',');
-                $chk_menu = !empty($chk_menu_raw) ? explode(',', $chk_menu_raw) : array();
+                $chk_menu = !empty($chk_menu_raw) ? explode(',', $chk_menu_raw) : [];
 
                 // Determine what to activate and deactivate
                 $disable_menus = array_diff($defined_menus, $chk_menu);
@@ -139,12 +139,12 @@ class Default_ManagemenusController extends Zend_Controller_Action
                 if (!empty($chk_menu)) {
                     $menuNames = $this->_model->getMenusNamesByIds($chk_menu_raw);
 
-                    $logarr = array(
+                    $logarr = [
                         'userid' => $this->_loginUserId,
                         'recordid' => $chk_menu_raw,
                         'childrecordid' => $menuNames,
                         'date' => gmdate('Y-m-d H:i:s')
-                    );
+                    ];
 
                     // Uses existing log manager function (assumed to be in Model or Global)
                     $this->_model->addOrUpdateMenuLogManager(
@@ -160,11 +160,11 @@ class Default_ManagemenusController extends Zend_Controller_Action
                 sapp_Global::generateAccessControl();
 
                 $db->commit();
-                $this->_helper->flashMessenger->addMessage(array("success" => "Modules updated successfully."));
+                $this->_helper->flashMessenger->addMessage(["success" => "Modules updated successfully."]);
             } catch (Exception $e) {
                 $db->rollBack();
                 if (APPLICATION_ENV == 'development') Zend_Debug::dump($e->getMessage());
-                $this->_helper->flashMessenger->addMessage(array("error" => "Error updating modules."));
+                $this->_helper->flashMessenger->addMessage(["error" => "Error updating modules."]);
             }
 
             $this->_redirect('managemenus');
@@ -182,15 +182,15 @@ class Default_ManagemenusController extends Zend_Controller_Action
         if (!empty($menuIds)) {
             // Update main_menu
             $this->_model->update(
-                array('isactive' => $isActive),
-                array('id IN (?)' => $menuIds)
+                ['isactive' => $isActive],
+                ['id IN (?)' => $menuIds]
             );
 
             // Update main_privileges
             $privModel = new Default_Model_Privileges();
             $privModel->update(
-                array('isactive' => $isActive),
-                array('object IN (?)' => $menuIds)
+                ['isactive' => $isActive],
+                ['object IN (?)' => $menuIds]
             );
         }
     }

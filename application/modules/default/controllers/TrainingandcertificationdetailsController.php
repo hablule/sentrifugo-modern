@@ -37,7 +37,7 @@ class Default_TrainingandcertificationdetailsController extends Zend_Controller_
 	public function indexAction()
 	{
 		
-		 	$userID='';$empdata=array(); $conText = "";$objName = 'trainingandcertificationdetails';
+		 	$userID='';$empdata=[]; $conText = "";$objName = 'trainingandcertificationdetails';
 		 	$auth = Zend_Auth::getInstance();
 		 	if($auth->hasIdentity()){
 		 		$loginUserId = $auth->getStorage()->read()->id;
@@ -53,7 +53,7 @@ class Default_TrainingandcertificationdetailsController extends Zend_Controller_
 		 		$conText = ($this->_getParam('context') !='')? $this->_getParam('context'):$this->getRequest()->getParam('context');
 		 	}
 		 	if($userid == '') $userid =$userID;
-		 	$Uid = ($userid)?$userid:$userID;
+		 	$Uid = $userid ?: $userID;
 		 	$employeeModal = new Default_Model_Employee();
 		 	try
 		 	{
@@ -78,7 +78,7 @@ class Default_TrainingandcertificationdetailsController extends Zend_Controller_
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
 							$dashboardcall = $this->_getParam('dashboardcall',null);
-							$data = array();	$searchQuery = '';	$searchArray = array();		$tablecontent = '';
+							$data = [];	$searchQuery = '';	$searchArray = [];		$tablecontent = '';
 
 							if($refresh == 'refresh')
 							{
@@ -87,7 +87,7 @@ class Default_TrainingandcertificationdetailsController extends Zend_Controller_
 								else
 								$perPage = PERPAGE;
 
-								$sort = 'DESC';$by = 'modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = array();
+								$sort = 'DESC';$by = 'modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = [];
 							}
 							else
 							{
@@ -132,7 +132,7 @@ class Default_TrainingandcertificationdetailsController extends Zend_Controller_
 			//code...
 	
 		
-		 	$userID='';$empdata=array(); $conText = "";$objName = 'trainingandcertificationdetails';
+		 	$userID='';$empdata=[]; $conText = "";$objName = 'trainingandcertificationdetails';
 		 	$auth = Zend_Auth::getInstance();
 		 	if($auth->hasIdentity()){
 		 		$loginUserId = $auth->getStorage()->read()->id;
@@ -148,7 +148,7 @@ class Default_TrainingandcertificationdetailsController extends Zend_Controller_
 		 		$conText = ($this->_getParam('context') !='')? $this->_getParam('context'):$this->getRequest()->getParam('context');
 		 	}
 		 	if($userid == '') $userid =$userID;
-		 	$Uid = ($userid)?$userid:$userID;
+		 	$Uid = $userid ?: $userID;
 		 	$employeeModal = new Default_Model_Employee();
 		 	try
 		 	{
@@ -174,7 +174,7 @@ class Default_TrainingandcertificationdetailsController extends Zend_Controller_
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
 							$dashboardcall = $this->_getParam('dashboardcall',null);
-							$data = array();	$searchQuery = '';	$searchArray = array();		$tablecontent = '';
+							$data = [];	$searchQuery = '';	$searchArray = [];		$tablecontent = '';
 
 							if($refresh == 'refresh')
 							{
@@ -183,7 +183,7 @@ class Default_TrainingandcertificationdetailsController extends Zend_Controller_
 								else
 								$perPage = PERPAGE;
 
-								$sort = 'DESC';$by = 'ec.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = array();
+								$sort = 'DESC';$by = 'ec.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = [];
 							}
 							else
 							{
@@ -230,7 +230,7 @@ Zend_Debug::dump($th->getMessage());	}
 			//code...
 	
 	
-		 	$userID='';$empdata=array(); $conText = "";$objName = 'trainingandcertificationdetails';
+		 	$userID='';$empdata=[]; $conText = "";$objName = 'trainingandcertificationdetails';
 		 	$auth = Zend_Auth::getInstance();
 		 	if($auth->hasIdentity()){
 		 		$loginUserId = $auth->getStorage()->read()->id;
@@ -246,7 +246,7 @@ Zend_Debug::dump($th->getMessage());	}
 		 		$conText = ($this->_getParam('context') !='')? $this->_getParam('context'):$this->getRequest()->getParam('context');
 		 	}
 		 	if($userid == '') $userid =$userID;
-		 	$Uid = ($userid)?$userid:$userID;
+		 	$Uid = $userid ?: $userID;
 		 	$employeeModal = new Default_Model_Employee();
 		 	try
 		 	{
@@ -272,7 +272,7 @@ Zend_Debug::dump($th->getMessage());	}
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
 							$dashboardcall = $this->_getParam('dashboardcall',null);
-							$data = array();	$searchQuery = '';	$searchArray = array();		$tablecontent = '';
+							$data = [];	$searchQuery = '';	$searchArray = [];		$tablecontent = '';
 
 							if($refresh == 'refresh')
 							{
@@ -281,7 +281,7 @@ Zend_Debug::dump($th->getMessage());	}
 								else
 								$perPage = PERPAGE;
 
-								$sort = 'DESC';$by = 'ec.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = array();
+								$sort = 'DESC';$by = 'ec.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = [];
 							}
 							else
 							{
@@ -344,7 +344,7 @@ Zend_Debug::dump($th->getMessage());	}
 
 		// Allowed image types
 		//$allowtype = array('gif', 'jpg', 'jpeg', 'png');
-		$allowtype = array('gif', 'jpg', 'jpeg', 'png', 'GIF', 'JPG', 'JPEG', 'PNG');
+		$allowtype = ['gif', 'jpg', 'jpeg', 'png', 'GIF', 'JPG', 'JPEG', 'PNG'];
 
 		/** Uploading the image **/
 
@@ -375,7 +375,7 @@ Zend_Debug::dump($th->getMessage());	}
 							$rezultat = $filename;
 							$setWidth = 265;
 							$setHeight = 40;
-							list($imgwidth, $imgheight) = getimagesize($newfilename);
+							[$imgwidth, $imgheight] = getimagesize($newfilename);
 							if ($imgwidth < 265) {
 								$setWidth = $imgwidth;
 							}
@@ -406,11 +406,11 @@ Zend_Debug::dump($th->getMessage());	}
 			$result_msg = 'Please upload only .gif, .jpg, .jpeg, .png images.';
 		}
 
-		$result = array(
+		$result = [
 			'result' => $result_status,
 			'img' => $rezultat,
 			'msg' => $result_msg
-		);
+		];
 		return $result;
 	}
 	public function addpopupAction()
@@ -418,7 +418,7 @@ Zend_Debug::dump($th->getMessage());	}
 		try {
 			//code...
 	
-		$msgarray = array();
+		$msgarray = [];
 		$auth = Zend_Auth::getInstance();
 		if($auth->hasIdentity())
 		{
@@ -442,8 +442,8 @@ Zend_Debug::dump($th->getMessage());	}
 		$modelb = new Default_Model_Certprovider();
 //---------------
 $level1Arr = $modela->getallcertificate();
-$msgarray = array();
-$optionClass=array();
+$msgarray = [];
+$optionClass=[];
 $TandCDetailsform->certificate_id->addMultiOption('', 'Select certificate');
 if (!empty($level1Arr)) {
 
@@ -463,7 +463,7 @@ if (!empty($level1Arr)) {
 //-------------------------------------//
 //---------------
 $level2Arr = $modelb->getallcategory();
-$msgarray = array();
+$msgarray = [];
 $TandCDetailsform->certprovider_id->addMultiOption('', 'Select Provider');
 if (!empty($level2Arr)) {
 
@@ -500,7 +500,7 @@ Zend_Debug::dump($th->getMessage());	}
 		try {
 			//code...
 	
-		$msgarray = array();
+		$msgarray = [];
 		$auth = Zend_Auth::getInstance();
 		if($auth->hasIdentity())
 		{
@@ -524,7 +524,7 @@ Zend_Debug::dump($th->getMessage());	}
 		$modelb = new Default_Model_Certprovider();
 //---------------
 $level1Arr = $modela->getallcertificate();
-$msgarray = array();
+$msgarray = [];
 $TandCDetailsform->certificate_id->addMultiOption('', 'Select certificate');
 if (!empty($level1Arr)) {
 
@@ -540,7 +540,7 @@ if (!empty($level1Arr)) {
 //-------------------------------------//
 //---------------
 $level2Arr = $modelb->getallcategory();
-$msgarray = array();
+$msgarray = [];
 $TandCDetailsform->certprovider_id->addMultiOption('', 'Select Provider');
 if (!empty($level2Arr)) {
 
@@ -652,7 +652,7 @@ Zend_Debug::dump($th->getMessage());	}
 				if (sizeof($imageArr) > 1) {
 					$imagename = $imageArr[0];
 					$imageext = $imageArr[1];
-					$extArr = array('gif', 'jpg', 'jpeg', 'png');
+					$extArr = ['gif', 'jpg', 'jpeg', 'png'];
 					if (!in_array($imageext, $extArr)) {
 						$msgarray['attestation_image_value'] = 'Please upload an appropriate image file.';
 						$flag = 'false';
@@ -726,7 +726,7 @@ Zend_Debug::dump($th->getMessage());	}
 								}
 							}
 						}
-						$data = array('certificate_id'=>$certificate_id,
+						$data = ['certificate_id'=>$certificate_id,
 														'description'=>$description,
 														'trainingname'=>$tainingname,
 														'certprovider_id'=>$certprovider_id,
@@ -738,7 +738,7 @@ Zend_Debug::dump($th->getMessage());	}
 														'attestation' => $imagepath,
 														'modifiedby'=>$loginUserId,
 									                    'modifieddate'=>gmdate("Y-m-d H:i:s")
-									);
+									];
 						if ($id != '') {
 
 							$where = 'empcertification_id= ' . $id;
@@ -999,8 +999,8 @@ public function viewpopupAction()
 		if($id)
 		{
 			$TandCdetailsModel = new Default_Model_Trainingandcertificationdetails();
-			$data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-			$where = array('id=?'=>$id);
+			$data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+			$where = ['id=?'=>$id];
 			$Id = $TandCdetailsModel->SaveorUpdateEmployeeTandCData($data,$where);
 			if($Id == 'update')
 			{

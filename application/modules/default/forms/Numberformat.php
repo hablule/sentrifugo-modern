@@ -70,47 +70,47 @@ class Default_Form_Numberformat extends Zend_Form
 		// Format Code (Internal API/DB Identifier)
 		$code = new Zend_Form_Element_Text('code');
 		$code->setLabel('Format Code')
-			->setAttribs(array('class' => 'formDataElement', 'maxlength' => '60', 'placeholder' => 'e.g., US_STD, EU_STD'))
+			->setAttribs(['class' => 'formDataElement', 'maxlength' => '60', 'placeholder' => 'e.g., US_STD, EU_STD'])
 			->setRequired(true)
 			->addFilter('StringTrim')
 			->addFilter('StripTags')
 			->addFilter('StringToUpper') // Standardize codes to uppercase
-			->addValidator('NotEmpty', true, array('messages' => 'Please enter a format code.'))
+			->addValidator('NotEmpty', true, ['messages' => 'Please enter a format code.'])
 			// SSOT VI: Mandatory Regex for primary string descriptors
-			->addValidator('Regex', true, array(
+			->addValidator('Regex', true, [
 				'pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9 _\-]*)$/', // Allowing _ and - for code constants
-				'messages' => array(Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space.')
-			));
+				'messages' => [Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space.']
+			]);
 
 		$excludeClauseCode = ($idVal > 0) ? "id != $idVal AND isactive != 5" : "isactive != 5";
-		$codeVal = new Zend_Validate_Db_NoRecordExists(array(
+		$codeVal = new Zend_Validate_Db_NoRecordExists([
 			'table'   => 'main_numberformat',
 			'field'   => 'code',
 			'exclude' => $excludeClauseCode
-		));
+		]);
 		$codeVal->setMessage('This format code already exists.');
 		$code->addValidator($codeVal);
 
 		// Format Name/Display (e.g., 1,234,567.89)
 		$name = new Zend_Form_Element_Text('name');
 		$name->setLabel('Format Display (Example)')
-			->setAttribs(array('class' => 'formDataElement', 'maxlength' => '255', 'placeholder' => 'e.g., 1,234,567.89'))
+			->setAttribs(['class' => 'formDataElement', 'maxlength' => '255', 'placeholder' => 'e.g., 1,234,567.89'])
 			->setRequired(true)
 			->addFilter('StringTrim')
 			->addFilter('StripTags')
-			->addValidator('NotEmpty', true, array('messages' => 'Please enter the display format example.'))
+			->addValidator('NotEmpty', true, ['messages' => 'Please enter the display format example.'])
 			// Exception to SSOT Regex: This field is literally numbers and symbols!
-			->addValidator('Regex', true, array(
+			->addValidator('Regex', true, [
 				'pattern'  => '/^[\d\,\.\s]+$/', // Allows only digits, commas, periods, and spaces
-				'messages' => array(Zend_Validate_Regex::NOT_MATCH => 'Format display must only contain numbers, commas, periods, or spaces.')
-			));
+				'messages' => [Zend_Validate_Regex::NOT_MATCH => 'Format display must only contain numbers, commas, periods, or spaces.']
+			]);
 
 		$excludeClauseName = ($idVal > 0) ? "id != $idVal AND isactive != 5" : "isactive != 5";
-		$nameVal = new Zend_Validate_Db_NoRecordExists(array(
+		$nameVal = new Zend_Validate_Db_NoRecordExists([
 			'table'   => 'main_numberformat',
 			'field'   => 'name',
 			'exclude' => $excludeClauseName
-		));
+		]);
 		$nameVal->setMessage('This format display already exists.');
 		$name->addValidator($nameVal);
 
@@ -121,7 +121,7 @@ class Default_Form_Numberformat extends Zend_Form
 		// Description (Optional)
 		$description = new Zend_Form_Element_Textarea('description');
 		$description->setLabel('Description')
-			->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+			->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
 			->addFilter('StringTrim')
 			->addFilter('StripTags');
 
@@ -142,7 +142,7 @@ class Default_Form_Numberformat extends Zend_Form
 
 		$submit = new Zend_Form_Element_Submit('submit');
 		$submit->setLabel('Save')
-			->setAttribs(array('id' => 'submitbutton', 'class' => 'actbtn_btn'));
+			->setAttribs(['id' => 'submitbutton', 'class' => 'actbtn_btn']);
 
 		// SSOT AJAX Submission Pattern (Strict Quoting)
 		// Note: Preserving the legacy 'numberformats' plural controller name 
@@ -156,19 +156,19 @@ class Default_Form_Numberformat extends Zend_Form
          * -------------------------------------------------------------- */
 
 		// Render in logical UI order
-		$this->addElements(array(
+		$this->addElements([
 			$idElement,
 			$code,
 			$name,
 			$description,
 			$isactive,
 			$submit
-		));
+		]);
 
 		// Strip default Zend Decorators and enforce ViewHelper universally
 		$this->clearDecorators();
 		foreach ($this->getElements() as $element) {
-			$element->setDecorators(array('ViewHelper'));
+			$element->setDecorators(['ViewHelper']);
 		}
 	}
 }

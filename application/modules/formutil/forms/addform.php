@@ -12,15 +12,15 @@ class Formutil_Form_Addform extends Zend_Form
         $formname = new Zend_Form_Element_Text('formname');
         $noofele = new Zend_Form_Element_Text('noofele');
         $submit = new Zend_Form_Element_Submit('submit');
-        $this->addElements(array($id,$modules,$formname,$noofele,$submit));
-        $this->setElementDecorators(array('ViewHelper'));
+        $this->addElements([$id,$modules,$formname,$noofele,$submit]);
+        $this->setElementDecorators(['ViewHelper']);
 
     }
 
     public function moreelements($noofele,$form)
     {
-      $ele = array();
-      $eletype = array();
+      $ele = [];
+      $eletype = [];
       
       
             /* $elename = new Zend_Form_Element_Text('elementname'.$noofele); */
@@ -28,12 +28,12 @@ class Formutil_Form_Addform extends Zend_Form
                 {
                     $select = new Zend_Form_Element_Select('elementtype'.$i);
                     $select->setLabel('element type');
-                    $select->addValidator('NotEmpty',false,array('please fill data'));
+                    $select->addValidator('NotEmpty',false,['please fill data']);
                     $select->setRequired(true);
                     $select = $this->populateselectoption($select);
                     $ele['type'.$i] = $select;
                     $name = new Zend_Form_Element_Text('elename'.$i);
-                    $name->addValidator('NotEmpty',false,array('please fill data'));
+                    $name->addValidator('NotEmpty',false,['please fill data']);
                     $name->setRequired(true);
                     $name->setLabel('element name');
                     $ele['name'.$i] = $name;
@@ -48,7 +48,7 @@ class Formutil_Form_Addform extends Zend_Form
         $data = $formmodel->geteletype();
         
         foreach ($data as $value) {
-            $select->addMultiOptions(array($value['dataType']=>$value['description']));
+            $select->addMultiOptions([$value['dataType']=>$value['description']]);
         }
         return $select;
     }

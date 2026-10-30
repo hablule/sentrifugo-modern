@@ -45,8 +45,8 @@ class Default_EmpcommunicationdetailsController extends Zend_Controller_Action
 		{
 			$empOrganizationTabs = explode(",",EMPTABCONFIGS);
 			if(in_array('empcommunicationdetails',$empOrganizationTabs)){
-				$auth = Zend_Auth::getInstance();$msgarray = array();$empDept = '';
-				$employeeData=array();$empDeptdata =array();
+				$auth = Zend_Auth::getInstance();$msgarray = [];$empDept = '';
+				$employeeData=[];$empDeptdata =[];
 
 				if($auth->hasIdentity()){
 					$loginUserId = $auth->getStorage()->read()->id;
@@ -346,13 +346,13 @@ class Default_EmpcommunicationdetailsController extends Zend_Controller_Action
 
         if(defined('EMPTABCONFIGS'))
         {
-            $popConfigPermission = array();
+            $popConfigPermission = [];
            
             $empOrganizationTabs = explode(",",EMPTABCONFIGS);
             if(in_array('empcommunicationdetails',$empOrganizationTabs))
             {
 					
-                $empDeptdata=array();$employeeData =array();
+                $empDeptdata=[];$employeeData =[];
                 $auth = Zend_Auth::getInstance();
                 if($auth->hasIdentity()){
                      $loginUserId = $auth->getStorage()->read()->id;
@@ -382,7 +382,7 @@ class Default_EmpcommunicationdetailsController extends Zend_Controller_Action
 		 		$myEmployees_model = new Default_Model_Myemployees();
 			 	$getMyTeamIds = $myEmployees_model->getTeamIds($loginUserId);
 
-			 	$teamIdArr = array();
+			 	$teamIdArr = [];
 			 	if(!empty($getMyTeamIds))
 			 	{
 				 	foreach($getMyTeamIds as $teamId)
@@ -426,7 +426,7 @@ class Default_EmpcommunicationdetailsController extends Zend_Controller_Action
                                 $statesmodel = new Default_Model_States();
                                 $citiesmodel = new Default_Model_Cities();
                                 $orgInfoModel = new Default_Model_Organisationinfo();
-                                $msgarray = array();
+                                $msgarray = [];
 								$orgid = 1;
 								$countryId = '';
 								$stateId = '';
@@ -689,7 +689,7 @@ Zend_Debug::dump($th->getMessage())	;}
 			$date = new Zend_Date();
 			$actionflag = '';
 			$tableid  = '';
-			$data = array('user_id'=>$user_id,
+			$data = ['user_id'=>$user_id,
 				                 'personalemail'=>$personalemail,
 								 'perm_streetaddress'=>$perm_streetaddress, 								 
 				      			 'perm_country'=>($perm_country!=''?$perm_country:NULL),
@@ -706,9 +706,9 @@ Zend_Debug::dump($th->getMessage())	;}
 								 'emergency_email'=>($emergency_email!=''?$emergency_email:NULL),
 								 'modifiedby'=>$loginUserId,
 			                     'modifieddate'=>gmdate("Y-m-d H:i:s")			
-			);
+			];
 			if($id!=''){
-				$where = array('user_id=?'=>$user_id);
+				$where = ['user_id=?'=>$user_id];
 				$actionflag = 2;
 			}
 			else
@@ -725,19 +725,19 @@ Zend_Debug::dump($th->getMessage())	;}
 			if($Id == 'update')
 			{
 				$tableid = $id;
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Employee contact details updated successfully."));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Employee contact details updated successfully."]);
 			}
 			else
 			{
 				$tableid = $Id;
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Employee contact details added successfully."));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Employee contact details added successfully."]);
 			}
 			$menuID = EMPLOYEE;
 			$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$user_id);
            }
 			else
            {
-           		$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>FIELDMSG));
+           		$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>FIELDMSG]);
            }	
 			$this->_redirect('empcommunicationdetails/edit/userid/'.$userid);
 		}else

@@ -39,9 +39,9 @@ class Default_DisciplinaryincidentController extends Zend_Controller_Action
         $refresh = $this->_getParam('refresh');
         $dashboardcall = $this->_getParam('dashboardcall');
 
-        $data = array();
+        $data = [];
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         $tablecontent = '';
 
         if ($refresh == 'refresh') {
@@ -128,9 +128,9 @@ class Default_DisciplinaryincidentController extends Zend_Controller_Action
     
 public function editAction()
 	{
-	    $popConfigPermission = array();
+	    $popConfigPermission = [];
 		$auth = Zend_Auth::getInstance();
-		$report_opt = array();$role_datap=array();$empGroup="";
+		$report_opt = [];$role_datap=[];$empGroup="";
 		if($auth->hasIdentity()){
 			$loginUserId = $auth->getStorage()->read()->id;
 			$loginuserRole = $auth->getStorage()->read()->emprole;
@@ -231,7 +231,7 @@ public function editAction()
         $auth = Zend_Auth::getInstance();
         $logged_in_user_id = 0;
         $logged_in_user_name = '';
-        $popConfigPermission = array();
+        $popConfigPermission = [];
         //getting logged in user details
         if($auth->hasIdentity())
         {
@@ -327,7 +327,7 @@ Zend_Debug::dump($th->getMessage());    }
                 $employee_statement = $this->_request->getParam('employee_statement');
                 $cao_verdict = $this->_request->getParam('cao_verdict');
 
-                $data = array(
+                $data = [
                     'incident_raised_by' => $incident_raised_by,
                     'employee_bu_id' => $employee_bu_id,
                     'employee_dept_id' => $employee_dept_id,
@@ -345,7 +345,7 @@ Zend_Debug::dump($th->getMessage());    }
                     'corrective_action_text' => ($corrective_action == 'Other')?$corrective_action_text:$corrective_action,
                     'modifieddate' => gmdate("Y-m-d H:i:s"),
                     'modifiedby' => $logged_in_user_id,
-                );
+                ];
                 
                 if(!defined('sentrifugo_gilbert')) {
                 	$data['violation_expiry'] = date('Y-m-d',strtotime($violation_expiry));
@@ -354,7 +354,7 @@ Zend_Debug::dump($th->getMessage());    }
                 if($id!=''){
                 	if(!defined('sentrifugo_gilbert'))
                 		$data['incident_status'] = 'Closed';
-                    $where = array('id=?'=>$id);  
+                    $where = ['id=?'=>$id];  
                     $actionflag = 2;
                 }
                 else
@@ -369,12 +369,12 @@ Zend_Debug::dump($th->getMessage());    }
                 if($Id == 'update')
                 {
                    $tableid = $id;
-                   $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Incident updated successfully."));
+                   $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Incident updated successfully."]);
                 }   
                 else
                 {
                    $tableid = $Id;  
-                    $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Incident raised successfully."));                     
+                    $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Incident raised successfully."]);                     
                 }  
 
                 $menuID = RAISE_INCIDENT;
@@ -389,13 +389,13 @@ Zend_Debug::dump($th->getMessage());    }
                 	}else{
                 		$desc_msg = "Disciplinary incident verdict has been provided by ";
                 	}
-					$incident_data = array(
+					$incident_data = [
 					 'createdby' =>$logged_in_user_id,
 					 'createddate' =>gmdate("Y-m-d H:i:s"),
 					 'incident_id'=>$tableid,
 					 'action_emp_id'=>$logged_in_user_id,
 					 'description' => $desc_msg
-					  );
+					  ];
 					$disciplineHistoryModel->saveOrUpdateDisciplineIncidentHistory($incident_data,'');
                 }
                 $this->_redirect('disciplinaryincident');                  
@@ -487,12 +487,12 @@ Zend_Debug::dump($th->getMessage());    }
 				}
 			}
 			if($flag=='true') {
-				$data = array('isactive'=>0,
+				$data = ['isactive'=>0,
 								'modifieddate' => gmdate("Y-m-d H:i:s"),
 	                    		'modifiedby' => $loginUserId
-								);
+								];
 				
-				$where = array('id=?'=>$id);	
+				$where = ['id=?'=>$id];	
 				$Id = $disciplinary_object->SaveorUpdateIncidentData($data, $where);
 					
 				if($Id == 'update')
@@ -524,11 +524,11 @@ Zend_Debug::dump($th->getMessage());    }
 		{
 			if(	$messages['msgtype'] == 'error')
 			{
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
 			}
 			if(	$messages['msgtype'] == 'success')
 			{
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
 			}
 				
 		} 

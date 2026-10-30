@@ -86,9 +86,9 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 		$dashboardcall = $this->_getParam('dashboardcall');
 		
 		
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 
 		if($refresh == 'refresh')
@@ -167,7 +167,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 		//End
 		
 		
-		$popConfigPermission = array();
+		$popConfigPermission = [];
 		array_push($popConfigPermission,'client');
 		array_push($popConfigPermission,'currency');
 		$this->view->popConfigPermission = $popConfigPermission;
@@ -260,7 +260,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 		
 		
 		//if receipt selected from computer validation
-		$file_orginal_name_array = array();
+		$file_orginal_name_array = [];
 		$file_original_names = $this->getRequest()->getParam('file_original_names');
 		
 		if($file_original_names!='')
@@ -274,8 +274,8 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 		//if receipt selected from already existing reciipts validation 
 		$post_receipt_ids = $this->getRequest()->getParam('post_receipt_ids');
 		
-		$post_receipt_array = array();
-		$existing_recipt_array = array();
+		$post_receipt_array = [];
+		$existing_recipt_array = [];
 		if($post_receipt_ids!='')
 		{
 			$post_receipt_array = explode(',',$post_receipt_ids);
@@ -307,8 +307,8 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 		$this->view->currencyid=(!empty($configData[0]['currencyid']))?$configData[0]['currencyid']:"";
 		
 		
-		$receiptIdsArray = array();
-		$expense_exist_data = array();
+		$receiptIdsArray = [];
+		$expense_exist_data = [];
 		try{
 			if($id)
 			{	
@@ -457,7 +457,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 				
 				$date = gmdate("Y-m-d H:i:s");
 
-				$data = array(
+				$data = [
 							'expense_amount'  => $expense_amount,
 							'expense_name'  => $expense_name,							
 							'expense_date'  =>	$expense_date,
@@ -474,7 +474,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 							'is_from_advance' => $is_from_advance,
 							'description' => $description,
 							'manager_id' => $manager_id,
-				);
+				];
 				
 				// if project is selected update client id in expenses
 				if($project_id!='' && $project_id>0)
@@ -486,7 +486,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 				if($id!=''){
 					$data['modifiedby'] = $loginUserId;
 					$data['modifieddate'] = $date;
-					$where = array('id=?'=>$id);
+					$where = ['id=?'=>$id];
 				}
 				else
 				{
@@ -510,33 +510,33 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 						//$this->view->msgarray = $msgarray;
 						$change_utilized_amt = $advanceData[0]['utilized'] + $advanceData[0]['balance'];							
 						$change_balance_amt = 0;
-						$adva_summary_array = array(
+						$adva_summary_array = [
 								'utilized'  => $change_utilized_amt,
 								'balance'  => $change_balance_amt,							
 								'modifiedby'  => $loginUserId,
 								'modifieddate' => $date,									
-							);	
+							];	
 					}
 					else{
 						if(count($expense_exist_data)>0){
-							$adva_summary_array = array(
+							$adva_summary_array = [
 									'utilized'  => $advanceData[0]['utilized'],
 									'balance'  => $advanceData[0]['balance'],							
 									'modifiedby'  => $loginUserId,
 									'modifieddate' => $date,									
-								);
+								];
 							//if expense old amount is greater than now given amount 
 							if($expense_exist_data[0]['application_amount'] > $application_amount){
 								$change_utilized_amt = $advanceData[0]['utilized'] - ($expense_exist_data[0]['application_amount'] - $application_amount);
 								
 								$change_balance_amt = $advanceData[0]['balance'] + ($expense_exist_data[0]['application_amount'] - $application_amount);
 								
-								$adva_summary_array = array(
+								$adva_summary_array = [
 									'utilized'  => $change_utilized_amt,
 									'balance'  => $change_balance_amt,							
 									'modifiedby'  => $loginUserId,
 									'modifieddate' => $date,									
-								);
+								];
 							}
 							else if($expense_exist_data[0]['application_amount'] < $application_amount){//if expense old amount is less than now given amount 
 							
@@ -544,29 +544,29 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 								
 								$change_balance_amt = $advanceData[0]['balance'] - ($application_amount - $expense_exist_data[0]['application_amount']);
 								
-								$adva_summary_array = array(
+								$adva_summary_array = [
 									'utilized'  => $change_utilized_amt,
 									'balance'  => $change_balance_amt,							
 									'modifiedby'  => $loginUserId,
 									'modifieddate' => $date,									
-								);
+								];
 							}
 							
 						}
 						else{
 							$change_utilized_amt = $advanceData[0]['utilized'] + $application_amount;							
 							$change_balance_amt = $advanceData[0]['balance'] - $application_amount;
-							$adva_summary_array = array(
+							$adva_summary_array = [
 								'utilized'  => $change_utilized_amt,
 								'balance'  => $change_balance_amt,							
 								'modifiedby'  => $loginUserId,
 								'modifieddate' => $date,									
-							);							
+							];							
 						}
 						
 						
 					}
-					$adva_summary_where = array('id=?'=>$advanceData[0]['id']);
+					$adva_summary_where = ['id=?'=>$advanceData[0]['id']];
 					$adv_summary_id = $advancesummaryModel->SaveAdvanceData($adva_summary_array, $adva_summary_where);
 				} 				
 				//End
@@ -591,8 +591,8 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 						{
 							$advance_amount = $advanceData[0]['balance'];
 						}
-						$advance_amount_array = array('advance_amount'=>$advance_amount);
-						$adva_amount_where = array('id=?'=>$expenseId);
+						$advance_amount_array = ['advance_amount'=>$advance_amount];
+						$adva_amount_where = ['id=?'=>$expenseId];
 						$expensesModel->saveOrUpdateExpensesData($advance_amount_array, $adva_amount_where);
 					}
 					
@@ -604,7 +604,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 					//if receipt is already exist
 					
 					$post_receipt_ids = $this->getRequest()->getParam('post_receipt_ids');
-					$receiptIdArray=array();
+					$receiptIdArray=[];
 					if($post_receipt_ids!='')
 					{
 						$receiptIdArray = explode(',',$post_receipt_ids);
@@ -614,7 +614,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 							$receipt_data['expense_id'] = $expenseId;
 							$receipt_data['modifieddate'] = $date;
 							$receipt_data['modifiedby'] = $loginUserId;
-							$receipt_where = array('id=?'=>$receipt_id);
+							$receipt_where = ['id=?'=>$receipt_id];
 							
 							$receiptsModel->updateReceiptsData($receipt_data,$receipt_where);
 						}
@@ -630,7 +630,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 							$receipt_delete_data['modifieddate'] = $date;
 							$receipt_delete_data['modifiedby'] = $loginUserId;
 							$receipt_delete_data['isactive'] = 0;
-							$receipt_where_delete = array('id=?'=>$rID);
+							$receipt_where_delete = ['id=?'=>$rID];
 							$receiptsModel->updateReceiptsData($receipt_delete_data,$receipt_where_delete);
 						}
 						
@@ -654,14 +654,14 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 								$file_type_array = explode('.',$n);
 								$file_type = $file_type_array[1];
 								
-								$file_data = array(
+								$file_data = [
 										'receipt_name' => $org_names[$key],
 										'receipt_filename' => $n,
 										'expense_id' => $expenseId,
 										'receipt_file_type' => $file_type,
 										'createdby' => $loginUserId,
 										'createddate'=>gmdate("Y-m-d H:i:s")
-								);
+								];
 								
 								$receiptId = $receiptsModel->saveReceipts($file_data, '');
 								
@@ -695,17 +695,17 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 						//$format = 'Associated with Trip %s';
 						//$history = sprintf($format, '"Trip to Boston"');
 						
-						$history_data = array(											
+						$history_data = [											
 											'trip_id' => $trip_id,
 											'expense_id' => $expenseId,
 											'history' => $history,
 											'createdby' => $loginUserId,
 											'createddate'=> $date
-										);
+										];
 						$history_where = '';
 						$historyId = $expenseHistoryModel->saveOrUpdateExpenseHistory($history_data,$history_where); 
 					//End	
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Expense ".$msg." successfully."));	
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Expense ".$msg." successfully."]);	
 					$this->_redirect('expenses/expenses');
 				}
 				else{
@@ -786,7 +786,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 		//End
 		
 		
-		$popConfigPermission = array();
+		$popConfigPermission = [];
 		array_push($popConfigPermission,'client');
 		array_push($popConfigPermission,'currency');
 		$this->view->popConfigPermission = $popConfigPermission;
@@ -874,7 +874,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 		
 		
 		//if receipt selected from computer validation
-		$file_orginal_name_array = array();
+		$file_orginal_name_array = [];
 		$file_original_names = $this->getRequest()->getParam('file_original_names');
 		
 		if($file_original_names!='')
@@ -888,8 +888,8 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 		//if receipt selected from already existing reciipts validation 
 		$post_receipt_ids = $this->getRequest()->getParam('post_receipt_ids');
 		
-		$post_receipt_array = array();
-		$existing_recipt_array = array();
+		$post_receipt_array = [];
+		$existing_recipt_array = [];
 		if($post_receipt_ids!='')
 		{
 			$post_receipt_array = explode(',',$post_receipt_ids);
@@ -922,7 +922,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 		$this->view->currency=$currency;
 		$this->view->currencyid=(!empty($configData[0]['currencyid']))?$configData[0]['currencyid']:"";		
 		//End
-		$receiptIdsArray = array();
+		$receiptIdsArray = [];
 		try{
 			if($id)
 			{	//Edit Record...
@@ -947,7 +947,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 						
 						$receiptsModel = new Expenses_Model_Receipts();
 						//$getReceiptData = $receiptsModel->getExpenseReceipts($id);
-						$getReceiptData = array();
+						$getReceiptData = [];
 						$this->view->getReceiptData = $getReceiptData;
 						$this->view->data = $data;
 						if(count($getReceiptData)>0)
@@ -1022,7 +1022,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 				
 				$date = gmdate("Y-m-d H:i:s");
 
-				$data = array(
+				$data = [
 							'expense_amount'  => $expense_amount,
 							'expense_name'  => $expense_name,							
 							'expense_date'  =>	$expense_date,
@@ -1035,11 +1035,11 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 							'expense_payment_ref_no' => $expense_payment_ref_no,
 							'is_from_advance' => $is_from_advance,
 							'description' => $description,
-				);
+				];
 				if($id!=''){
 					$data['modifiedby'] = $loginUserId;
 					$data['modifieddate'] = $date;
-					$where = array('id=?'=>$id);
+					$where = ['id=?'=>$id];
 					
 				}
 				else
@@ -1070,7 +1070,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 				//if receipt is already exist
 				
 				$post_receipt_ids = $this->getRequest()->getParam('post_receipt_ids');
-				$receiptIdArray=array();
+				$receiptIdArray=[];
 				if($post_receipt_ids!='')
 				{
 					$receiptIdArray = explode(',',$post_receipt_ids);
@@ -1080,7 +1080,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 						$receipt_data['expense_id'] = $expenseId;
 						$receipt_data['modifieddate'] = $date;
 						$receipt_data['modifiedby'] = $loginUserId;
-						$receipt_where = array('id=?'=>$receipt_id);
+						$receipt_where = ['id=?'=>$receipt_id];
 						
 						$receiptsModel->updateReceiptsData($receipt_data,$receipt_where);
 					}
@@ -1096,7 +1096,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 						$receipt_delete_data['modifieddate'] = $date;
 						$receipt_delete_data['modifiedby'] = $loginUserId;
 						$receipt_delete_data['isactive'] = 0;
-						$receipt_where_delete = array('id=?'=>$rID);
+						$receipt_where_delete = ['id=?'=>$rID];
 						$receiptsModel->updateReceiptsData($receipt_delete_data,$receipt_where_delete);
 					}
 					
@@ -1120,14 +1120,14 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 							$file_type_array = explode('.',$n);
 							$file_type = $file_type_array[1];
 							
-							$file_data = array(
+							$file_data = [
 									'receipt_name' => $org_names[$key],
 									'receipt_filename' => $n,
 									'expense_id' => $expenseId,
 									'receipt_file_type' => $file_type,
 									'createdby' => $loginUserId,
 									'createddate'=>gmdate("Y-m-d H:i:s")
-							);
+							];
 							
 							$receiptId = $receiptsModel->saveReceipts($file_data, '');
 							
@@ -1147,11 +1147,11 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 				
 				if($Id == 'update')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Expense updated successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Expense updated successfully."]);
 				}
 				else
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Expense added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Expense added successfully."]);
 				}
 					
 				$this->_redirect('expenses/expenses');
@@ -1294,9 +1294,9 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 			$checkExpenses = $expensesModel->checkExpensesAndTrips($id);
 			//echo "here";exit;
 			if($checkExpenses == 0){
-				$data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
+				$data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
 				$data['modifiedby'] = $loginUserId;
-				$where = array('id=?'=>$id);
+				$where = ['id=?'=>$id];
 				$idstatus = $expensesModel->saveOrUpdateExpensesData($data, $where);
 				if($idstatus == 'update')
 				{
@@ -1305,10 +1305,10 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 					$receiptData = $receipts_model->getExpenseReceipts($id);
 					
 					//delete already expense receipts
-					$updatereceits_data = array('isactive'=>0,
+					$updatereceits_data = ['isactive'=>0,
 												'modifiedby'=>$loginUserId,
-												'modifieddate'=>gmdate("Y-m-d H:i:s"));
-					$updatereceipts_where = array('expense_id=?'=>$id)	;							
+												'modifieddate'=>gmdate("Y-m-d H:i:s")];
+					$updatereceipts_where = ['expense_id=?'=>$id]	;							
 					
 					$receipts_model->saveReceipts($updatereceits_data, $updatereceipts_where);
 					
@@ -1317,13 +1317,13 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 						foreach($receiptData as $receipt_data)
 						{
 							//create receipts again
-							$receits_data = array(
+							$receits_data = [
 									'receipt_name' => $receipt_data['receipt_name'],
 									'receipt_filename' => $receipt_data['receipt_filename'],
 									'receipt_file_type' => $receipt_data['receipt_file_type'],
 									'createdby' => $loginUserId,
 									'createddate'=>gmdate("Y-m-d H:i:s")
-							);
+							];
 							$receipts_where='';
 							$receiptId = $receipts_model->saveReceipts($receits_data, $receipts_where);
 						}
@@ -1351,11 +1351,11 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 		{
 			if(	$messages['msgtype'] == 'error')
 			{
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
 			}
 			if(	$messages['msgtype'] == 'success')
 			{
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
 			}
 			
 		}
@@ -1366,7 +1366,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 	public function addpopupAction()
 	{
 		$objName = 'expenses';
-		$msgarray = array();
+		$msgarray = [];
 		$emptyFlag = '';
 		Zend_Layout::getMvcInstance()->setLayoutPath(APPLICATION_PATH."/layouts/scripts/popup/");
 		$auth = Zend_Auth::getInstance();
@@ -1399,7 +1399,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 		//End
 		
 		
-		$popConfigPermission = array();
+		$popConfigPermission = [];
 		array_push($popConfigPermission,'client');
 		array_push($popConfigPermission,'currency');
 		$this->view->popConfigPermission = $popConfigPermission;
@@ -1522,7 +1522,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 		$expense_Id = $this->_request->getParam('expenseId');
 		
 		
-				$receiptIdsArray = array();
+				$receiptIdsArray = [];
 		try{
 			if($id)
 			{	//Edit Record...
@@ -1589,7 +1589,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 				
 				$cal_amount = $this->_request->getParam('cal_amount');
 				$app_amount="";
-				$expense_exist_data = array();
+				$expense_exist_data = [];
 				if(!empty($id))
 				{
 				$expense_exist_data = $expensesModel->getExpenseDetailsById($id);
@@ -1648,7 +1648,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 				
 				$date = gmdate("Y-m-d H:i:s");
 
-				$data = array(
+				$data = [
 							'expense_amount'  => $expense_amount,
 							'expense_name'  => $expense_name,							
 							'expense_date'  =>	$expense_date,
@@ -1665,7 +1665,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 							'is_from_advance' => $is_from_advance,
 							'description' => $description,
 							'manager_id' => $manager_id,
-				);
+				];
 				// if project is selected update client id in expenses
 				if($project_id!='' && $project_id>0)
 				{
@@ -1675,7 +1675,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 				if($id!=''){
 					$data['modifiedby'] = $loginUserId;
 					$data['modifieddate'] = $date;
-					$where = array('id=?'=>$id);
+					$where = ['id=?'=>$id];
 					
 				}
 				else
@@ -1697,33 +1697,33 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 						//$this->view->msgarray = $msgarray;
 						$change_utilized_amt = $advanceData[0]['utilized'] + $advanceData[0]['balance'];							
 						$change_balance_amt = 0;
-						$adva_summary_array = array(
+						$adva_summary_array = [
 								'utilized'  => $change_utilized_amt,
 								'balance'  => $change_balance_amt,							
 								'modifiedby'  => $loginUserId,
 								'modifieddate' => $date,									
-							);	
+							];	
 					}
 					else{
 						if(count($expense_exist_data)>0){
-							$adva_summary_array = array(
+							$adva_summary_array = [
 									'utilized'  => $advanceData[0]['utilized'],
 									'balance'  => $advanceData[0]['balance'],							
 									'modifiedby'  => $loginUserId,
 									'modifieddate' => $date,									
-								);
+								];
 							//if expense old amount is greater than now given amount 
 							if($expense_exist_data[0]['application_amount'] > $application_amount){
 								$change_utilized_amt = $advanceData[0]['utilized'] - ($expense_exist_data[0]['application_amount'] - $application_amount);
 								
 								$change_balance_amt = $advanceData[0]['balance'] + ($expense_exist_data[0]['application_amount'] - $application_amount);
 								
-								$adva_summary_array = array(
+								$adva_summary_array = [
 									'utilized'  => $change_utilized_amt,
 									'balance'  => $change_balance_amt,							
 									'modifiedby'  => $loginUserId,
 									'modifieddate' => $date,									
-								);
+								];
 							}
 							else if($expense_exist_data[0]['application_amount'] < $application_amount){//if expense old amount is less than now given amount 
 							
@@ -1731,29 +1731,29 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 								
 								$change_balance_amt = $advanceData[0]['balance'] - ($application_amount - $expense_exist_data[0]['application_amount']);
 								
-								$adva_summary_array = array(
+								$adva_summary_array = [
 									'utilized'  => $change_utilized_amt,
 									'balance'  => $change_balance_amt,							
 									'modifiedby'  => $loginUserId,
 									'modifieddate' => $date,									
-								);
+								];
 							}
 							
 						}
 						else{
 							$change_utilized_amt = $advanceData[0]['utilized'] + $application_amount;							
 							$change_balance_amt = $advanceData[0]['balance'] - $application_amount;
-							$adva_summary_array = array(
+							$adva_summary_array = [
 								'utilized'  => $change_utilized_amt,
 								'balance'  => $change_balance_amt,							
 								'modifiedby'  => $loginUserId,
 								'modifieddate' => $date,									
-							);							
+							];							
 						}
 						
 						
 					}
-					$adva_summary_where = array('id=?'=>$advanceData[0]['id']);
+					$adva_summary_where = ['id=?'=>$advanceData[0]['id']];
 					$adv_summary_id = $advancesummaryModel->SaveAdvanceData($adva_summary_array, $adva_summary_where);
 				} 				
 				//End
@@ -1773,8 +1773,8 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 						{
 							$advance_amount = $advanceData[0]['balance'];
 						}
-						$advance_amount_array = array('advance_amount'=>$advance_amount);
-						$adva_amount_where = array('id=?'=>$expenseId);
+						$advance_amount_array = ['advance_amount'=>$advance_amount];
+						$adva_amount_where = ['id=?'=>$expenseId];
 						$expensesModel->saveOrUpdateExpensesData($advance_amount_array, $adva_amount_where);
 					}
 					if($Id == 'update')
@@ -1793,13 +1793,13 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 						//$format = 'Associated with Trip %s';
 						//$history = sprintf($format, '"Trip to Boston"');
 						
-						$history_data = array(											
+						$history_data = [											
 											'trip_id' => $trip_id,
 											'expense_id' => $expenseId,
 											'history' => $history,
 											'createdby' => $loginUserId,
 											'createddate'=> $date
-										);
+										];
 						$history_where = '';
 						$historyId = $expenseHistoryModel->saveOrUpdateExpenseHistory($history_data,$history_where); 
 					//End	
@@ -1817,7 +1817,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 					$receipt_data['expense_id'] = $expenseId;
 					$receipt_data['modifieddate'] = $date;
 					$receipt_data['modifiedby'] = $loginUserId;
-					$receipt_where = array('id=?'=>$receiptId);
+					$receipt_where = ['id=?'=>$receiptId];
 					
 					$receiptsModel->updateReceiptsData($receipt_data,$receipt_where);
 				}
@@ -1864,11 +1864,11 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 	public function uploadsaveAction()
 	{
 		$user_id = sapp_Global::_readSession('id');
-        $filedata = array();
+        $filedata = [];
         
     	// Validate file with size greater than default(Upload Max Filesize)limit
         if ($_FILES["myfile"]["size"] == 0 || $_FILES["myfile"]["size"] > (2*1024*1024)) {
-            $this->_helper->json(array('error' => 'filesize'));
+            $this->_helper->json(['error' => 'filesize']);
         } else if(isset($_FILES["myfile"])) {
             $fileName = $_FILES["myfile"]["name"];
             $fileName = preg_replace('/[^a-zA-Z0-9.\']/', '_', $fileName);			  	
@@ -1883,7 +1883,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
         		move_uploaded_file($_FILES["myfile"]["tmp_name"],EXPENSES_RECEIPTS_TEMP_UPLOAD_PATH.$newName);
         	}
             
-            $this->_helper->json(array('filedata' => $filedata));
+            $this->_helper->json(['filedata' => $filedata]);
         }
 		
 		
@@ -1901,16 +1901,16 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 	                unlink($filePath);
 	            }
 	            
-	            $this->_helper->json(array());
+	            $this->_helper->json([]);
         }
     }
 	public function displayreceiptsAction()
 	{
-		$param=$this->_getParam('param')?$this->_getParam('param'):'';
+		$param=$this->_getParam('param') ?: '';
 		// $receipt_ids_str = '"'. implode('","', explode(',', $receipt_ids)) .'"';
 		
-		$limit = $this->_getParam('limit')?$this->_getParam('limit'):8;
-		$offset = $this->_getParam('offset')?$this->_getParam('offset'):0;
+		$limit = $this->_getParam('limit') ?: 8;
+		$offset = $this->_getParam('offset') ?: 0;
 		
 		$receiptsModel = new Expenses_Model_Receipts();
 		$dataReceipts = $receiptsModel->getReceipts($param,$limit,$offset);
@@ -1932,7 +1932,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 	}
 	public function addtrippopupAction()
 	{
-		$msgarray = array();
+		$msgarray = [];
 		$emptyFlag = '';
 		Zend_Layout::getMvcInstance()->setLayoutPath(APPLICATION_PATH."/layouts/scripts/popup/");
 		$auth = Zend_Auth::getInstance();
@@ -1966,12 +1966,12 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 				
 				$date = gmdate("Y-m-d H:i:s");
 
-				$data = array(
+				$data = [
 							'description'  => $description,
 							'trip_name'  => $trip_name,							
 							'from_date'  =>	$from_date,
 							'to_date'  => $to_date,							
-				);
+				];
 			
 				$data['createdby'] = $loginUserId;
 				$data['createddate'] = $date;
@@ -1987,12 +1987,12 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 						//$format = 'Associated with Trip %s';
 						//$history = sprintf($format, '"Trip to Boston"');
 						$history = 'Created';
-						$history_data = array(											
+						$history_data = [											
 											'trip_id' => $Id,
 											'history' => $history,
 											'createdby' => $loginUserId,
 											'createddate'=> $date
-										);
+										];
 						$history_where = '';
 						$historyId = $tripHistoryModel->saveOrUpdateTripHistory($history_data,$history_where); 
 					//End
@@ -2043,10 +2043,10 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 	public function addreceiptimageAction()
 	{
 		$receipt_ids = $this->_request->getParam('receipt_ids');
-		$isFromBulk = ($this->_request->getParam('isFromBulk'))?$this->_request->getParam('isFromBulk'):'';
-		$key_val = ($this->_request->getParam('key_val'))?$this->_request->getParam('key_val'):'';
+		$isFromBulk = $this->_request->getParam('isFromBulk') ?: '';
+		$key_val = $this->_request->getParam('key_val') ?: '';
 		$receiptsModel = new Expenses_Model_Receipts();
-		$getReceiptData = array();
+		$getReceiptData = [];
 		if($receipt_ids!='')
 			$getReceiptData = $receiptsModel->getReceiptData($receipt_ids);
 		$this->view->getReceiptData = $getReceiptData;
@@ -2064,8 +2064,8 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 		$status = $this->_request->getParam('status');
 		$expense_id = $this->_request->getParam('expense_id');
 		$trip_id = $this->_request->getParam('trip_id');
-		$where = array('id=?'=>$expense_id);		
-		$data = array('status'=>$status,'modifiedby'=>$loginUserId,'modifieddate'=>$date);
+		$where = ['id=?'=>$expense_id];		
+		$data = ['status'=>$status,'modifiedby'=>$loginUserId,'modifieddate'=>$date];
 		
 		$emp_summary_model = new Default_Model_Employee();
 		$expense_details = $expensesModel->getExpenseDetailsById($expense_id);
@@ -2121,26 +2121,26 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 			$format = 'Associated with Trip %s';
 			//$history = sprintf($format, '"Trip to Boston"');
 			$history = $status;
-			$history_data = array(											
+			$history_data = [											
 								'expense_id' => $expense_id,
 								'history' => $history,
 								'createdby' => $loginUserId,
 								'createddate'=> $date
-							);
+							];
 			$history_where = '';
 			$historyId = $expenseHistoryModel->saveOrUpdateExpenseHistory($history_data,$history_where); 
 		//End	
 		
 		sapp_ExpensesHelper::tripstatus($trip_id);
-		$this->_helper->json(array('message'=>'success','status'=> 'Expense '.$status.' successfully.'));
+		$this->_helper->json(['message'=>'success','status'=> 'Expense '.$status.' successfully.']);
 	}
 	public function listreportingmangersAction()
 	{
 		$limit = 4;
 		$offset = 0;
-		$expense_id = $this->_getParam('expense_id')?$this->_getParam('expense_id'):'';		
-		$managerId = $this->_getParam('managerId')?$this->_getParam('managerId'):0;				
-		$expenseCreatedBy = $this->_getParam('expenseCreatedBy')?$this->_getParam('expenseCreatedBy'):0;				
+		$expense_id = $this->_getParam('expense_id') ?: '';		
+		$managerId = $this->_getParam('managerId') ?: 0;				
+		$expenseCreatedBy = $this->_getParam('expenseCreatedBy') ?: 0;				
 		$empModel = new Default_Model_Employees();
 		$managerslist = $empModel->getReportingManagers($limit,$offset,$managerId,$expenseCreatedBy);	
 		//echo "<pre>";print_r($managerslist);exit;
@@ -2158,11 +2158,11 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 	
 	public function viewmoremanagersAction()
 	{
-		$limit = $this->_getParam('limit')?$this->_getParam('limit'):8;
-		$offset = $this->_getParam('offset')?$this->_getParam('offset'):0;
-		$expense_id = $this->_getParam('expense_id')?$this->_getParam('expense_id'):0;
-		$managerId = $this->_getParam('managerId')?$this->_getParam('managerId'):0;
-		$expenseCreatedBy = $this->_getParam('expenseCreatedBy')?$this->_getParam('expenseCreatedBy'):0;
+		$limit = $this->_getParam('limit') ?: 8;
+		$offset = $this->_getParam('offset') ?: 0;
+		$expense_id = $this->_getParam('expense_id') ?: 0;
+		$managerId = $this->_getParam('managerId') ?: 0;
+		$expenseCreatedBy = $this->_getParam('expenseCreatedBy') ?: 0;
 		
 		$empModel = new Default_Model_Employees();
 		$managerslist = $empModel->getReportingManagers($limit,$offset,$managerId,$expenseCreatedBy);	
@@ -2181,14 +2181,14 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 		if($auth->hasIdentity()){
 			$loginUserId = $auth->getStorage()->read()->id;
 		}
-		$managerId = $this->_getParam('managerId')?$this->_getParam('managerId'):0;
-		$expense_id = $this->_getParam('expense_id')?$this->_getParam('expense_id'):0;
+		$managerId = $this->_getParam('managerId') ?: 0;
+		$expense_id = $this->_getParam('expense_id') ?: 0;
 		
 		$date = gmdate("Y-m-d H:i:s");
 		$data['manager_id'] = $managerId;
 		$data['modifieddate'] = $date;
 		$data['modifiedby'] = $loginUserId;
-		$where = array('id=?'=>$expense_id);
+		$where = ['id=?'=>$expense_id];
 		$ExpensesModel = new Expenses_Model_Expenses();
 		
 		$updated = $ExpensesModel->saveOrUpdateExpensesData($data,$where);		
@@ -2245,7 +2245,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 		}
 		
 		
-		$this->_helper->json(array('message'=>'success','status'=> 'Expense forwarded successfully.'));
+		$this->_helper->json(['message'=>'success','status'=> 'Expense forwarded successfully.']);
 	}
 	
 	//for downloading pdf
@@ -2383,7 +2383,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 			$total_count = $this->_request->getParam('count');
 			for($i=1;$i<=$total_count;$i++)
 			{
-				$expense_name = ($this->_request->getParam('expense_name_'.$i))?$this->_request->getParam('expense_name_'.$i):'';
+				$expense_name = $this->_request->getParam('expense_name_'.$i) ?: '';
 				
 				$payment_mode = $this->_request->getParam('paymentmode_'.$i);
 				$payment_refe = $this->_request->getParam('payment_ref_'.$i);
@@ -2411,7 +2411,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 				$manager_id = $emp_det['reporting_manager'];
 				
 				$date = gmdate("Y-m-d H:i:s");
-				$data = array('expense_name'=>$expense_name,
+				$data = ['expense_name'=>$expense_name,
 							'category_id'=>$exp_category,
 							'project_id'=>$exp_project,
 							'expense_date'=>$exp_date,
@@ -2428,7 +2428,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 							'expense_payment_id'=>$payment_mode,
 							'expense_payment_ref_no'=>$payment_refe,
 							'manager_id'=>$manager_id
-				);
+				];
 				$where = '';
 				$expensesModel = new Expenses_Model_Expenses();		
 				$expense_Id = $expensesModel->saveOrUpdateExpensesData($data, $where);
@@ -2441,12 +2441,12 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 						//$format = 'Associated with Trip %s';
 						//$history = sprintf($format, '"Trip to Boston"');
 						$history='Created';
-						$history_data = array(
+						$history_data = [
 											'expense_id' => $expense_Id,
 											'history' => $history,
 											'createdby' => $loginUserId,
 											'createddate'=> $date
-										);
+										];
 						$history_where = '';
 						$historyId = $expenseHistoryModel->saveOrUpdateExpenseHistory($history_data,$history_where); 
 					//End	
@@ -2460,7 +2460,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 					//if receipt is already exist
 					
 					$post_receipt_ids = $this->getRequest()->getParam('receipts_ids_'.$i);
-					$receiptIdArray=array();
+					$receiptIdArray=[];
 					if($post_receipt_ids!='')
 					{
 						$receiptIdArray = explode(',',$post_receipt_ids);
@@ -2470,7 +2470,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 							$receipt_data['expense_id'] = $expense_Id;
 							$receipt_data['modifieddate'] = $date;
 							$receipt_data['modifiedby'] = $loginUserId;
-							$receipt_where = array('id=?'=>$receipt_id);
+							$receipt_where = ['id=?'=>$receipt_id];
 							
 							$receiptsModel->updateReceiptsData($receipt_data,$receipt_where);
 						}
@@ -2496,14 +2496,14 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 								$file_type_array = explode('.',$n);
 								$file_type = $file_type_array[1];
 								
-								$file_data = array(
+								$file_data = [
 										'receipt_name' => $org_names[$key],
 										'receipt_filename' => $n,
 										'expense_id' => $expense_Id,
 										'receipt_file_type' => $file_type,
 										'createdby' => $loginUserId,
 										'createddate'=>gmdate("Y-m-d H:i:s")
-								);
+								];
 								
 								$receiptId = $receiptsModel->saveReceipts($file_data, '');
 								
@@ -2521,7 +2521,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 				
 				
 			}
-			$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Expense added successfully."));
+			$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Expense added successfully."]);
 						
 			$this->_redirect('expenses/expenses');
 		}
@@ -2559,7 +2559,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 		}
 		
 		
-		$this->_helper->json(array('options'=>utf8_encode($opt)));
+		$this->_helper->json(['options'=>utf8_encode($opt)]);
 	}
 	public function getprojectsAction()
 	{
@@ -2577,7 +2577,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 		}
 		
 		
-		$this->_helper->json(array('options'=>utf8_encode($opt)));
+		$this->_helper->json(['options'=>utf8_encode($opt)]);
 	}
 	public function getcurrencyAction()
 	{
@@ -2602,7 +2602,7 @@ class Expenses_ExpensesController extends Zend_Controller_Action
 			}
 		}
 		
-		$this->_helper->json(array('options'=>utf8_encode($opt)));
+		$this->_helper->json(['options'=>utf8_encode($opt)]);
 	}
 	public function uploadedfilesAction()
 	{

@@ -33,7 +33,7 @@ class Schedule_Form_Schedulecycle extends Zend_Form
             $msgarray['schedule_id'] = 'Schedule   is not configured yet.';
         } else {
             foreach ($addc as $addcs) {
-                $schedule_id->addMultiOptions(array($addcs['schedule_id'] => $addcs['name']));
+                $schedule_id->addMultiOptions([$addcs['schedule_id'] => $addcs['name']]);
             }
         }
         $schedule_id->setRegisterInArrayValidator(false);
@@ -41,14 +41,14 @@ class Schedule_Form_Schedulecycle extends Zend_Form
         $daily = new Zend_Form_Element_Select('daily');
         // $cycle->addValidator('NotEmpty',false,array('messages'=>'Cycle Required'));
         // $cycle->setRequired(true);
-        $daily->addMultiOptions(array(
+        $daily->addMultiOptions([
             '' => 'Select..',
             'ANYDAY' => 'ANYDAY',
-        ));
+        ]);
         //$daily->addValidator('NotEmpty', false, array('messages' => 'Please Select'));
 
         $dayofweek = new Zend_Form_Element_Select('dayofweek');
-        $dayofweek->addMultiOptions(array(
+        $dayofweek->addMultiOptions([
             ' ' => 'Select..',
             'Monday' => 'Monday',
             'Tuesday' => 'Tuesday',
@@ -57,7 +57,7 @@ class Schedule_Form_Schedulecycle extends Zend_Form
             'Friday' => 'Friday',
             'Saturday' => 'Saturday',
             'Sunday' => 'Sunday',
-        ));
+        ]);
         //$dayofweek->addValidator('NotEmpty', false, array('messages' => 'Please Select'));
 
         $dayofweek->setRegisterInArrayValidator(false);
@@ -67,7 +67,7 @@ class Schedule_Form_Schedulecycle extends Zend_Form
         //$dayofmonth->addValidator('NotEmpty', false, array('messages' => 'Please Select'));
         $dayofmonth->setRequired(false);
         for ($i = 1; $i <= 31; $i++) {
-            $dayofmonth->addMultiOptions(array($i => $i));
+            $dayofmonth->addMultiOptions([$i => $i]);
         }
         $dayofmonth->setRegisterInArrayValidator(false);
 
@@ -80,12 +80,12 @@ class Schedule_Form_Schedulecycle extends Zend_Form
         $submit->setLabel('save');
         $back->setLabel('Cancel');
         // $back->setAttrib('onClick', "parent.location='" . Zend_Controller_Front::getInstance()->getBaseUrl() .'/schedule' ."'");
-        $this->addElements(array(
+        $this->addElements([
             $id, $schedule_id, $back, $daily, $dayofmonth, $dayofweek, $submit,
             $isactive, $description
-        ));
+        ]);
 
-        $this->setElementDecorators(array('ViewHelper'));
+        $this->setElementDecorators(['ViewHelper']);
     }
    
 }

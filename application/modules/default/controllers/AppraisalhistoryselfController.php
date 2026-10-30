@@ -23,10 +23,10 @@
 class Default_AppraisalhistoryselfController extends Zend_Controller_Action {
 
     private $options;
-    public $app_history_disc_array = array(1 => APP_TXT_EMP_SUBMIT, 2 => APP_TXT_L1_SUBMIT, 3 => APP_TXT_L2_SUBMIT, 4 => APP_TXT_L3_SUBMIT,
-        5 => APP_TXT_L4_SUBMIT, 6 => APP_TXT_L5_SUBMIT, 7 => APP_TXT_COMPLETED);
-    public $app_status_array = array(1 => APP_PENDING_EMP, 2 => APP_PENDING_L1, 3 => APP_PENDING_L2, 4 => APP_PENDING_L3,
-        5 => APP_PENDING_L4, 6 => APP_PENDING_L5, 7 => APP_COMPLETED);
+    public $app_history_disc_array = [1 => APP_TXT_EMP_SUBMIT, 2 => APP_TXT_L1_SUBMIT, 3 => APP_TXT_L2_SUBMIT, 4 => APP_TXT_L3_SUBMIT,
+        5 => APP_TXT_L4_SUBMIT, 6 => APP_TXT_L5_SUBMIT, 7 => APP_TXT_COMPLETED];
+    public $app_status_array = [1 => APP_PENDING_EMP, 2 => APP_PENDING_L1, 3 => APP_PENDING_L2, 4 => APP_PENDING_L3,
+        5 => APP_PENDING_L4, 6 => APP_PENDING_L5, 7 => APP_COMPLETED];
 
     public function preDispatch() {
         
@@ -47,9 +47,9 @@ class Default_AppraisalhistoryselfController extends Zend_Controller_Action {
         $refresh = $this->_getParam('refresh');
         $dashboardcall = $this->_getParam('dashboardcall');
 
-        $data = array();
+        $data = [];
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         $tablecontent = '';
 
         if ($refresh == 'refresh') {
@@ -128,8 +128,8 @@ class Default_AppraisalhistoryselfController extends Zend_Controller_Action {
                             $questions_data = $appEmpRatingsModel->getAppQuesDataByIDs($ques_csv);
 
                             // Employee and Manager response
-                            $emp_response = array();
-                            $mgr_response = array();
+                            $emp_response = [];
+                            $mgr_response = [];
                             if ($appEmpRatingsData[0]['employee_response'])
                                 $emp_response = json_decode($appEmpRatingsData[0]['employee_response'], true);
 
@@ -142,9 +142,9 @@ class Default_AppraisalhistoryselfController extends Zend_Controller_Action {
                             if (!empty($ratingsData))
                                 $ratingType = $ratingsData[0]['rating_type'];
 
-                            $ratingText = array();
-                            $ratingTextDisplay = array();
-                            $ratingValues = array();
+                            $ratingText = [];
+                            $ratingTextDisplay = [];
+                            $ratingValues = [];
                             foreach ($ratingsData as $rd) {
                                 $ratingText[] = $rd['rating_text'];
                                 $ratingTextDisplay[$rd['id']] = $rd['rating_text'];
@@ -152,15 +152,15 @@ class Default_AppraisalhistoryselfController extends Zend_Controller_Action {
                             }
 
                             // building managers names from Emp-Ques-Privileges data
-                            $managerIDs = array();
-                            $managerNames = array();
-                            $line_unique_arr = array_filter(array_unique(array(1 => $appEmpQuesPrivData[0]['line_manager_1'], 2 => $appEmpQuesPrivData[0]['line_manager_2'], 3 => $appEmpQuesPrivData[0]['line_manager_3'], 4 => $appEmpQuesPrivData[0]['line_manager_4'], 5 => $appEmpQuesPrivData[0]['line_manager_5'])), 'strlen');
+                            $managerIDs = [];
+                            $managerNames = [];
+                            $line_unique_arr = array_filter(array_unique([1 => $appEmpQuesPrivData[0]['line_manager_1'], 2 => $appEmpQuesPrivData[0]['line_manager_2'], 3 => $appEmpQuesPrivData[0]['line_manager_3'], 4 => $appEmpQuesPrivData[0]['line_manager_4'], 5 => $appEmpQuesPrivData[0]['line_manager_5']]), 'strlen');
                             if (!empty($line_unique_arr)) {
                                 for ($i = 1; $i <= count($line_unique_arr); $i++) {
                                     $managerIDs[] = $line_unique_arr[$i];
                                 }
 
-                                $usersData = $appEmpRatingsModel->getUserNamesByIDs(implode($managerIDs, ','));
+                                $usersData = $appEmpRatingsModel->getUserNamesByIDs(implode(',', $managerIDs));
 
                                 foreach ($managerIDs as $mi) {
                                     foreach ($usersData as $ud) {
@@ -172,13 +172,13 @@ class Default_AppraisalhistoryselfController extends Zend_Controller_Action {
                             }
 
                             // Skill response data
-                            $skill_response = array();
+                            $skill_response = [];
                             if ($appEmpRatingsData[0]['skill_response']) {
                                 $skill_response = json_decode($appEmpRatingsData[0]['skill_response'], true);
                                 $skill_ids = array_keys($skill_response);
-                                $skData = $appEmpRatingsModel->getSkillNamesByIDs(implode($skill_ids, ','));
+                                $skData = $appEmpRatingsModel->getSkillNamesByIDs(implode(',', $skill_ids));
 
-                                $skillData = array();
+                                $skillData = [];
                                 foreach ($skData as $s)
                                     $skillData[$s['id']] = $s['skill_name'];
 

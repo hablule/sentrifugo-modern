@@ -60,13 +60,13 @@ class Default_Form_Reportcatalog extends Zend_Form
         $menugroup_id->setLabel('Visual Dashboard (Menu Group)')
             ->setAttrib('class', 'formDataElement')
             ->setRequired(true)
-            ->addValidator('NotEmpty', true, array('messages' => 'Please select a visual dashboard group.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please select a visual dashboard group.']);
 
         $category_id = new Zend_Form_Element_Select('category_id');
         $category_id->setLabel('Report Category')
             ->setAttrib('class', 'formDataElement')
             ->setRequired(true)
-            ->addValidator('NotEmpty', true, array('messages' => 'Please select a report category.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please select a report category.']);
         // Options populated in Controller
 
         /* --------------------------------------------------------------
@@ -75,27 +75,27 @@ class Default_Form_Reportcatalog extends Zend_Form
 
         $code = new Zend_Form_Element_Text('code');
         $code->setLabel('Report Code')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '60', 'placeholder' => 'e.g., CAMP_SUMMARY'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '60', 'placeholder' => 'e.g., CAMP_SUMMARY'])
             ->setRequired(true)
             ->addFilter('StringTrim')->addFilter('StripTags')->addFilter('StringToUpper')
-            ->addValidator('NotEmpty', true, array('messages' => 'Please enter a report code.'))
-            ->addValidator('Regex', true, array('pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9_]*)$/', 'messages' => array(Zend_Validate_Regex::NOT_MATCH => 'Code must contain letters and cannot start with a space. Only letters, numbers, and underscores allowed.')));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please enter a report code.'])
+            ->addValidator('Regex', true, ['pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9_]*)$/', 'messages' => [Zend_Validate_Regex::NOT_MATCH => 'Code must contain letters and cannot start with a space. Only letters, numbers, and underscores allowed.']]);
 
         $excludeClauseCode = ($idVal > 0) ? "id != $idVal AND isactive != 5" : "isactive != 5";
-        $code->addValidator('Db_NoRecordExists', true, array(
+        $code->addValidator('Db_NoRecordExists', true, [
             'table' => 'main_report_catalog',
             'field' => 'code',
             'exclude' => $excludeClauseCode,
-            'messages' => array(Zend_Validate_Db_NoRecordExists::ERROR_RECORD_FOUND => 'This report code already exists.')
-        ));
+            'messages' => [Zend_Validate_Db_NoRecordExists::ERROR_RECORD_FOUND => 'This report code already exists.']
+        ]);
 
         $name = new Zend_Form_Element_Text('name');
         $name->setLabel('Report Name')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '100', 'placeholder' => 'e.g., Campaign Summary Dashboard'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '100', 'placeholder' => 'e.g., Campaign Summary Dashboard'])
             ->setRequired(true)
             ->addFilter('StringTrim')->addFilter('StripTags')
-            ->addValidator('NotEmpty', true, array('messages' => 'Please enter a report name.'))
-            ->addValidator('Regex', true, array('pattern'  => '/^(?=.*[a-zA-Z])[A-Za-z0-9](.*[A-Za-z0-9])?$/', 'messages' => array(Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space or contain special characters.')));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please enter a report name.'])
+            ->addValidator('Regex', true, ['pattern'  => '/^(?=.*[a-zA-Z])[A-Za-z0-9](.*[A-Za-z0-9])?$/', 'messages' => [Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space or contain special characters.']]);
 
         /* --------------------------------------------------------------
          * 5. Textarea Elements
@@ -103,7 +103,7 @@ class Default_Form_Reportcatalog extends Zend_Form
 
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Description / Purpose')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')->addFilter('StripTags');
 
         /* --------------------------------------------------------------
@@ -121,13 +121,13 @@ class Default_Form_Reportcatalog extends Zend_Form
         // Use Button type to bypass default saveDetails() for complex FormData payload
         $submit = new Zend_Form_Element_Submit('submit_btn');
         $submit->setLabel('Save')
-            ->setAttribs(array('id' => 'submitbutton', 'class' => 'actbtn_btn'));
+            ->setAttribs(['id' => 'submitbutton', 'class' => 'actbtn_btn']);
 
         /* --------------------------------------------------------------
          * Build Form & Apply Decorators (SSOT VI.7)
          * -------------------------------------------------------------- */
 
-        $this->addElements(array(
+        $this->addElements([
             $idElement,
             $groupsPayload,
             $rolesPayload,
@@ -139,11 +139,11 @@ class Default_Form_Reportcatalog extends Zend_Form
             $description,
             $isactive,
             $submit
-        ));
+        ]);
 
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
-            $element->setDecorators(array('ViewHelper'));
+            $element->setDecorators(['ViewHelper']);
         }
     }
 }

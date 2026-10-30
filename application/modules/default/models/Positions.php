@@ -34,7 +34,7 @@ class Default_Model_Positions extends Zend_Db_Table_Abstract
 		
 		$positionData = $this->select()
     					   ->setIntegrityCheck(false)	
-						   ->from(array('p' => 'main_position'),array('position_id'=>'p.id','code'=>'p.code','name'=>'p.name','isactive'=>'if(p.isactive="Y","Yes","No")','description'=>'p.description'))
+						   ->from(['p' => 'main_position'],['position_id'=>'p.id','code'=>'p.code','name'=>'p.name','isactive'=>'if(p.isactive="Y","Yes","No")','description'=>'p.description'])
 						   ->where($where)
     					   ->order("$by $sort") 
     					   ->limitPage($pageNo, $perPage);
@@ -80,7 +80,7 @@ class Default_Model_Positions extends Zend_Db_Table_Abstract
            
                 $select = $this->select()
                             ->setIntegrityCheck(false)
-                            ->from(array('p'=>'main_position'),array('p.id','p.name'))
+                            ->from(['p'=>'main_position'],['p.id','p.name'])
                             ->order('p.name')
 							->where('p.isactive="Y"');
 							return $this->fetchAll($select)->toArray();
@@ -91,7 +91,7 @@ class Default_Model_Positions extends Zend_Db_Table_Abstract
 	{
 	   $select = $this->select()
 					->setIntegrityCheck(false)
-					->from(array('p'=>'main_position'),array('p.id','p.name'))
+					->from(['p'=>'main_position'],['p.id','p.name'])
 					->where('p.isactive = "Y"')
 					->order('p.name');
 	   return $this->fetchAll($select)->toArray();
@@ -99,8 +99,8 @@ class Default_Model_Positions extends Zend_Db_Table_Abstract
 	}
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$exParam1='',$exParam2='',$exParam3='',$exParam4='')
 	{		
-        $searchQuery = '';$tablecontent = '';  $searchArray = array();$data = array();$id='';
-        $dataTmp = array();
+        $searchQuery = '';$tablecontent = '';  $searchArray = [];$data = [];$id='';
+        $dataTmp = [];
 		if($searchData != '' && $searchData!='undefined')
 		{
 			$searchValues = json_decode($searchData);
@@ -114,28 +114,28 @@ class Default_Model_Positions extends Zend_Db_Table_Abstract
 		/** search from grid - END **/
 		$objName = 'positions';
 		
-		$tableFields = array('action'=>'Action','name' => 'Position','code' => 'Code','description' => 'Description','isactive'=>'Active');
+		$tableFields = ['action'=>'Action','name' => 'Position','code' => 'Code','description' => 'Description','isactive'=>'Active'];
 		$tablecontent = $this->getPositionData($sort, $by, $pageNo, $perPage,$searchQuery);     
 		
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
 			'searchArray' => $searchArray,
 			'add' =>'add','call'=>$call,'dashboardcall'=>$dashboardcall,
-			'search_filters' => array(
-				'isactive' => array(
+			'search_filters' => [
+				'isactive' => [
 					'type' => 'select',
-					'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-		),
-		);			
+					'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+		],
+		];			
 		return $dataTmp;
 	}
 	       

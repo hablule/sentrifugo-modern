@@ -37,9 +37,9 @@ $dialogMsg = "''";
 $toggleDivId = "''";
 $jsFunction = "'redirecttocontroller(\'tabgroups\');'";;
        
-$submit->setOptions(array('onclick' => "saveDetails($url,$dialogMsg,$toggleDivId,$jsFunction);"
-                ));$this->addElements(array($id,$Text0,$Text1,$CheckBox3,$submit,$prev_cnt));
-$this->setElementDecorators(array('ViewHelper')); 
+$submit->setOptions(['onclick' => "saveDetails($url,$dialogMsg,$toggleDivId,$jsFunction);"
+                ]);$this->addElements([$id,$Text0,$Text1,$CheckBox3,$submit,$prev_cnt]);
+$this->setElementDecorators(['ViewHelper']); 
 } 
  } 
  ?>

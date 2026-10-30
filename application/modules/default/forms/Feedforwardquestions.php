@@ -47,19 +47,19 @@ class Default_Form_Feedforwardquestions extends Zend_Form
 			$question->setAttrib('maxLength', 100);
 			$question->addFilter(new Zend_Filter_StringTrim());
 			$question->setRequired(true);
-	        $question->addValidator('NotEmpty', false, array('messages' => 'Please enter question.'));
-			$question->addValidator("regex",true,array(                           
+	        $question->addValidator('NotEmpty', false, ['messages' => 'Please enter question.']);
+			$question->addValidator("regex",true,[                           
 	                           'pattern'=>"/^[a-zA-Z0-9\- ?'.,\/#@$&*()!]+$/",
-	                           'messages'=>array(
+	                           'messages'=>[
 	                               'regexNotMatch'=>'Please enter valid question.'
-	                           )
-	        	));
+	                           ]
+	        	]);
 	        $question->addValidator(new Zend_Validate_Db_NoRecordExists(
-		                                            array(  'table'=>'main_pa_questions',
+		                                            [  'table'=>'main_pa_questions',
 		                                                     'field'=>'question',
 		                                                     'exclude'=>'id!="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('id').'" AND pa_category_id="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('pa_category_id').'" AND isactive=1',    
 		
-		                                                      ) ) );
+		                                                      ] ) );
 			$question->getValidator('Db_NoRecordExists')->setMessage('Question already exists for the category.');	
 	   	
 			$description = new Zend_Form_Element_Textarea('description');
@@ -73,9 +73,9 @@ class Default_Form_Feedforwardquestions extends Zend_Form
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 		if($postid !='')
-			 $this->addElements(array($id,$question,$description,$submit));
+			 $this->addElements([$id,$question,$description,$submit]);
 	    else		 
-		 	$this->addElements(array($id,$submit));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 	$this->addElements([$id,$submit]);
+         $this->setElementDecorators(['ViewHelper']); 
 	}
 }

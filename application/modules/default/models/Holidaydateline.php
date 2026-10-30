@@ -42,8 +42,8 @@ class Default_Model_Holidaydateline extends Zend_Db_Table_Abstract
     public function softDeleteLinesByHeaderId(int $headerId, int $userId, string $currentDate): int
     {
         return $this->update(
-            array('isactive' => 5, 'modifieddate' => $currentDate),
-            array('holiday_date_id = ?' => $headerId)
+            ['isactive' => 5, 'modifieddate' => $currentDate],
+            ['holiday_date_id = ?' => $headerId]
         );
     }
 
@@ -55,6 +55,6 @@ class Default_Model_Holidaydateline extends Zend_Db_Table_Abstract
      */
     public function hardDeleteLinesByHeaderId(int $headerId): int
     {
-        return $this->delete(array('holiday_date_id = ?' => $headerId));
+        return $this->delete(['holiday_date_id = ?' => $headerId]);
     }
 }

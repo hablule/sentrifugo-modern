@@ -31,8 +31,8 @@ class Default_Model_Agencylist extends Zend_Db_Table_Abstract
 			$where .= " AND ".$searchQuery;		
 		$agencylistdata = $this->select()
     					   ->setIntegrityCheck(false)	
-						   ->from(array('b' => 'main_bgagencylist'))
-						   ->joinInner(array('u'=>'main_users'), "u.id = b.user_id and u.isactive = 1",array('userid'=>'u.id','employeeId'=>'empId'))
+						   ->from(['b' => 'main_bgagencylist'])
+						   ->joinInner(['u'=>'main_users'], "u.id = b.user_id and u.isactive = 1",['userid'=>'u.id','employeeId'=>'empId'])
 							->where($where)
     					   ->order("$by $sort") 
     					   ->limitPage($pageNo, $perPage);
@@ -43,8 +43,8 @@ class Default_Model_Agencylist extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{	
 		$searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		if($searchData != '' && $searchData!='undefined')
 		{
 			$searchValues = json_decode($searchData);
@@ -56,17 +56,17 @@ class Default_Model_Agencylist extends Zend_Db_Table_Abstract
 			$searchQuery = rtrim($searchQuery," AND");					
 		}
 		$objName = 'agencylist';		
-		$tableFields = array('action'=>'Action','agencyname' => 'Agency Name','primaryphone' => 'Phone','address' => 'Address','website_url' => 'Website URL','employeeId'=>'User ID');
+		$tableFields = ['action'=>'Action','agencyname' => 'Agency Name','primaryphone' => 'Phone','address' => 'Address','website_url' => 'Website URL','employeeId'=>'User ID'];
 
 		$tablecontent = $this->getagencylistData($sort, $by, $pageNo, $perPage,$searchQuery);     
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -74,7 +74,7 @@ class Default_Model_Agencylist extends Zend_Db_Table_Abstract
 			'add' =>'add',
 			'call' => $call,
 			'dashboardcall'=>$dashboardcall,
-		);		
+		];		
 		return $dataTmp;
 	}
 	
@@ -157,7 +157,7 @@ class Default_Model_Agencylist extends Zend_Db_Table_Abstract
 									main_bgagencylist where id = ".$id." AND isactive = 0);");
 		$pocIds = $db->query("select id from main_bgpocdetails where bg_agencyid = ".$id.";");
 		$result= $pocIds->fetchAll();
-		$ids = array_map(function($item) { return $item['id']; }, $result);
+		$ids = array_map(fn($item) => $item['id'], $result);
 		$output = implode(',', $ids);		
 		return $output;
 	}
@@ -174,11 +174,11 @@ class Default_Model_Agencylist extends Zend_Db_Table_Abstract
 	public function deleteBGcheckdetails($agencyid,$userid)
 	{
 		$screeningmodel = new Default_Model_Empscreening();
-		$data = array(
+		$data = [
 			'isactive' => 2,
 			'modifieddate' => gmdate("Y-m-d H:i:s"),
 			'modifiedby' => $userid
-		);
+		];
 		$where = "isactive = 1 and bgagency_id = ".$agencyid;
 		$screeningmodel->SaveorUpdateDetails($data,$where);
 	}

@@ -57,7 +57,7 @@ class Default_EmpjobhistoryController extends Zend_Controller_Action
 		 		$conText = ($this->_getParam('context') !='')? $this->_getParam('context'):$this->getRequest()->getParam('context');
 		 	}
 		 	if($id == '')		$id = $userID;
-		 	$Uid = ($id)?$id:$userID;
+		 	$Uid = $id ?: $userID;
 		 	 
 		 	$employeeModal = new Default_Model_Employee();
 		 	try
@@ -82,7 +82,7 @@ class Default_EmpjobhistoryController extends Zend_Controller_Action
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
 							$dashboardcall = $this->_getParam('dashboardcall',null);
-							$data = array();	$searchQuery = '';	$searchArray = array();		$tablecontent = '';
+							$data = [];	$searchQuery = '';	$searchArray = [];		$tablecontent = '';
 							if($refresh == 'refresh')
 							{
 								if($dashboardcall == 'Yes')
@@ -90,7 +90,7 @@ class Default_EmpjobhistoryController extends Zend_Controller_Action
 								else
 								$perPage = PERPAGE;
 
-								$sort = 'DESC';$by = 'e.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = array();
+								$sort = 'DESC';$by = 'e.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = [];
 							}
 							else
 							{
@@ -158,7 +158,7 @@ class Default_EmpjobhistoryController extends Zend_Controller_Action
 		 		$conText = ($this->_getParam('context') !='')? $this->_getParam('context'):$this->getRequest()->getParam('context');
 		 	}
 		 	if($id == '')		$id = $userID;
-		 	$Uid = ($id)?$id:$userID;
+		 	$Uid = $id ?: $userID;
 		 	 
 		 	$employeeModal = new Default_Model_Employee();
 		 	try
@@ -183,7 +183,7 @@ class Default_EmpjobhistoryController extends Zend_Controller_Action
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
 							$dashboardcall = $this->_getParam('dashboardcall',null);
-							$data = array();	$searchQuery = '';	$searchArray = array();		$tablecontent = '';
+							$data = [];	$searchQuery = '';	$searchArray = [];		$tablecontent = '';
 							if($refresh == 'refresh')
 							{
 								if($dashboardcall == 'Yes')
@@ -191,7 +191,7 @@ class Default_EmpjobhistoryController extends Zend_Controller_Action
 								else
 								$perPage = PERPAGE;
 
-								$sort = 'DESC';$by = 'e.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = array();
+								$sort = 'DESC';$by = 'e.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = [];
 							}
 							else
 							{
@@ -262,7 +262,7 @@ class Default_EmpjobhistoryController extends Zend_Controller_Action
 		 		$conText = ($this->_getParam('context') !='')? $this->_getParam('context'):$this->getRequest()->getParam('context');
 		 	}
 		 	if($id == '')		$id = $userID;
-		 	$Uid = ($id)?$id:$userID;
+		 	$Uid = $id ?: $userID;
 		 	 
 		 	$employeeModal = new Default_Model_Employee();
 		 	try
@@ -287,7 +287,7 @@ class Default_EmpjobhistoryController extends Zend_Controller_Action
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
 							$dashboardcall = $this->_getParam('dashboardcall',null);
-							$data = array();	$searchQuery = '';	$searchArray = array();		$tablecontent = '';
+							$data = [];	$searchQuery = '';	$searchArray = [];		$tablecontent = '';
 							if($refresh == 'refresh')
 							{
 								if($dashboardcall == 'Yes')
@@ -295,7 +295,7 @@ class Default_EmpjobhistoryController extends Zend_Controller_Action
 								else
 								$perPage = PERPAGE;
 
-								$sort = 'DESC';$by = 'e.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = array();
+								$sort = 'DESC';$by = 'e.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = [];
 							}
 							else
 							{
@@ -344,7 +344,7 @@ Zend_Debug::dump($th->getMessage());	}
 	{
 		Zend_Layout::getMvcInstance()->setLayoutPath(APPLICATION_PATH."/layouts/scripts/popup/");
 		$auth = Zend_Auth::getInstance();
-                $popConfigPermission = array();
+                $popConfigPermission = [];
 		if($auth->hasIdentity())
 		{
 			$loginUserId = $auth->getStorage()->read()->id;
@@ -364,7 +364,7 @@ Zend_Debug::dump($th->getMessage());	}
 		// For open the form in popup...
 		$empjobhistoryform = new Default_Form_empjobhistory();
 		$emptyFlag=0;
-		$msgarray = array();
+		$msgarray = [];
 		$employeeModel = new Default_Model_Employee();
 		$positionModel = new Default_Model_Positions();
 		$departmentModel = new Default_Model_Departments();
@@ -515,7 +515,7 @@ Zend_Debug::dump($th->getMessage());	}
 				else{
 					$data[0]['positionheld']="";
 				}
-				$departmentArr = array();
+				$departmentArr = [];
 				if(is_numeric($data[0]['department']))
 				{
 					$departmentArr = $departmentModel->getSingleDepartmentData($data[0]['department']);
@@ -544,7 +544,7 @@ Zend_Debug::dump($th->getMessage());	}
 						$data[0]['jobtitleid']="";
 					}
 				}
-				$clientsArr = array();
+				$clientsArr = [];
 				if(is_numeric($data[0]['client_id']))
 				{				
 					$clientsArr = $clientsModel->getClientDetailsById($data[0]['client_id']);
@@ -720,7 +720,7 @@ Zend_Debug::dump($th->getMessage());	}
 			$actionflag = '';
 			$tableid  = '';
 
-			$data = array('user_id'=>$user_id,
+			$data = ['user_id'=>$user_id,
 								 'positionheld'=>$positionheld,
 								 'department'=>$department,
 								 'jobtitleid'=>$jobtitleid,
@@ -733,9 +733,9 @@ Zend_Debug::dump($th->getMessage());	}
 								 'paid_amount'=>(is_numeric($paying_amt)?$paying_amt:NUll),
 								 'modifiedby'=>$loginUserId,
 								 'modifieddate'=>gmdate("Y-m-d H:i:s")			
-			);
+			];
 			if($id!=''){
-				$where = array('id=?'=>$id);
+				$where = ['id=?'=>$id];
 				$actionflag = 2;
 			}
 			else
@@ -791,8 +791,8 @@ Zend_Debug::dump($th->getMessage());	}
 		if($id)
 		{
 			$empjobhistoryModel = new Default_Model_Empjobhistory();
-			$data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-			$where = array('id=?'=>$id);
+			$data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+			$where = ['id=?'=>$id];
 			$Id = $empjobhistoryModel->SaveorUpdateEmpJobHistory($data, $where);
 			if($Id == 'update')
 			{

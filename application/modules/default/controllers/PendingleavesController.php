@@ -42,7 +42,7 @@ class Default_PendingleavesController extends Zend_Controller_Action
 			//code...
 	
 			$auth = Zend_Auth::getInstance();
-			$popConfigPermission = array();
+			$popConfigPermission = [];
 			if($auth->hasIdentity()){
 				$loginUserId = $auth->getStorage()->read()->id;
 				$loginuserRole = $auth->getStorage()->read()->emprole;
@@ -66,9 +66,9 @@ class Default_PendingleavesController extends Zend_Controller_Action
 			$this->deleteAction();
 		}else 
 		{
-			$data = array();
+			$data = [];
 			$searchQuery = '';
-			$searchArray = array();
+			$searchArray = [];
 			$tablecontent='';		
 			
 			if($refresh == 'refresh')
@@ -94,7 +94,7 @@ class Default_PendingleavesController extends Zend_Controller_Action
 				$searchData = rtrim($searchData,',');
 				// search from grid - END 
 			}
-			$leavesArray = array('pendingleaves','cancelleaves','approvedleaves','rejectedleaves');
+			$leavesArray = ['pendingleaves','cancelleaves','approvedleaves','rejectedleaves'];
 			$objName = 'pendingleaves';
 			$queryflag = 'pending';
 			if(!empty($flag)){
@@ -260,8 +260,8 @@ Zend_Debug::dump($th->getMessage());}
 			}
 			
 			
-			  $dataarr = array('status'=>'Cancelled','modifieddate'=>gmdate("Y-m-d H:i:s"),'modifiedby'=>$loginUserId);
-			  $where = array('leaverequest_id=?'=>$id);
+			  $dataarr = ['status'=>'Cancelled','modifieddate'=>gmdate("Y-m-d H:i:s"),'modifiedby'=>$loginUserId];
+			  $where = ['leaverequest_id=?'=>$id];
 			  //die(json_encode($data));
 
 			  $Id = $leaverequestmodel->SaveorUpdateLeaveRequest($dataarr, $where);

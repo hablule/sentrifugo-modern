@@ -70,7 +70,7 @@ class Default_Model_Addresstype extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if (!empty($searchData) && $searchData !== 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -89,23 +89,23 @@ class Default_Model_Addresstype extends Zend_Db_Table_Abstract
         }
 
         // SSOT Mandatory: 'action' => 'Action' must be the first element
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'      => 'Action',
             'name'        => 'Type Name',
             'description' => 'Description',
             'status_text' => 'Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
             'perPage'        => $perPage,
             'tablecontent'   => $tableContent,
             'objectname'     => 'addresstype',
-            'extra'          => array(),
+            'extra'          => [],
             'tableheader'    => $tableHeaders,
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
@@ -113,10 +113,10 @@ class Default_Model_Addresstype extends Zend_Db_Table_Abstract
             'menuName'       => 'Address Types',
             'call'           => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => array(
-                'status_text' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive'))
-            )
-        );
+            'search_filters' => [
+                'status_text' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']]
+            ]
+        ];
     }
 
     /**
@@ -138,13 +138,13 @@ class Default_Model_Addresstype extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from(
-                array('at' => $this->_name),
-                array(
+                ['at' => $this->_name],
+                [
                     'id' => 'at.id',
                     'name',
                     'description',
                     'status_text' => new Zend_Db_Expr("CASE WHEN at.isactive = 1 THEN 'Active' ELSE 'Inactive' END")
-                )
+                ]
             )
             ->where('at.isactive != ?', 5);
 
@@ -165,7 +165,7 @@ class Default_Model_Addresstype extends Zend_Db_Table_Abstract
      */
     public function getPairs($activeOnly = true)
     {
-        $select = $this->select()->from($this->_name, array('id', 'name'))->order('name ASC');
+        $select = $this->select()->from($this->_name, ['id', 'name'])->order('name ASC');
         if ($activeOnly) {
             $select->where('isactive = ?', 1);
         }
@@ -209,7 +209,7 @@ class Default_Model_Addresstype extends Zend_Db_Table_Abstract
         if (!empty($id)) {
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = $currentDate;
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return 'update';
         }
 
@@ -234,13 +234,13 @@ class Default_Model_Addresstype extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => 5,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
+        ];
 
-        return $this->update($data, array('id = ?' => (int)$id));
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /**
@@ -255,13 +255,13 @@ class Default_Model_Addresstype extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => (int)$status,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
+        ];
 
-        return $this->update($data, array('id = ?' => (int)$id));
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* =================================================================================
@@ -301,7 +301,7 @@ class Default_Model_Addresstype extends Zend_Db_Table_Abstract
         $db = $this->getAdapter();
 
         $select = $db->select()
-            ->from('main_address', array('id'))
+            ->from('main_address', ['id'])
             ->where('address_type_id = ?', (int)$id)
             ->where('isactive != ?', 5);
 

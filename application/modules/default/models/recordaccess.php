@@ -13,8 +13,8 @@ class Default_Model_recordaccess extends Zend_Db_Table_Abstract{
 
         $bank = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('ra'=>'main_emprecordaccess'),array('ra.emprecordaccess_id as id','ra.*','if(ra.isactive="Y","Yes","No") as isactive','if(ra.readwrite="Y","Yes","No") as readwrite'))
-            ->joinLeft(array('u'=>'main_users'),'ra.user_id = id','u.username')
+            ->from(['ra'=>'main_emprecordaccess'],['ra.emprecordaccess_id as id','ra.*','if(ra.isactive="Y","Yes","No") as isactive','if(ra.readwrite="Y","Yes","No") as readwrite'])
+            ->joinLeft(['u'=>'main_users'],'ra.user_id = id','u.username')
             ->order("$by $sort")
             ->limitPage($pageNo, $perPage);
        
@@ -23,7 +23,7 @@ class Default_Model_recordaccess extends Zend_Db_Table_Abstract{
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $a = '', $b = '', $c = '', $d = '')
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
             foreach ($searchValues as $key => $val) {
@@ -33,31 +33,31 @@ class Default_Model_recordaccess extends Zend_Db_Table_Abstract{
             $searchQuery = rtrim($searchQuery, " AND");
         }
         $objName = 'recordaccess';
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'username' => 'User',
             'accesslevel' => 'Access Level',
             'description' => 'Description',
             'readwrite' => 'Read Write Mode',
             'isactive' => 'Active'
-        );
+        ];
 
         $tablecontent = $this->getData($sort, $by, $pageNo, $perPage, $searchQuery);
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
             'perPage' => $perPage,
             'tablecontent' => $tablecontent,
             'objectname' => $objName,
-            'extra' => array(),
+            'extra' => [],
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
             'jsFillFnName' => '',
             'searchArray' => $searchArray,
             'call' => $call,
             'dashboardcall' => $dashboardcall
-        );
+        ];
         return $dataTmp;
     }
 
@@ -77,7 +77,7 @@ class Default_Model_recordaccess extends Zend_Db_Table_Abstract{
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('ra'=>'main_emprecordaccess'),array('id'=>'ra.emprecordaccess_id','name'=>'ra.description'))
+						->from(['ra'=>'main_emprecordaccess'],['id'=>'ra.emprecordaccess_id','name'=>'ra.description'])
 					    ->where("ra.isactive = 'Y'")
 						 ->order('ra.emprecordaccess_id');
 		return $this->fetchAll($select)->toArray();
@@ -87,7 +87,7 @@ class Default_Model_recordaccess extends Zend_Db_Table_Abstract{
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('ra'=>'main_emprecordaccess'),array('id'=>'ra.emprecordaccess_id','name'=>'ra.description'))
+						->from(['ra'=>'main_emprecordaccess'],['id'=>'ra.emprecordaccess_id','name'=>'ra.description'])
 					    ->where("ra.accesslevel = 'INDIVIDUAL'")
 						 ->order('ra.emprecordaccess_id');
 		return $this->fetchAll($select)->toArray();

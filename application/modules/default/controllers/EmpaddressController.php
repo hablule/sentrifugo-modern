@@ -31,7 +31,7 @@ class Default_EmpaddressController extends Zend_Controller_Action
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 
 				$employeeModal = new Default_Model_Employee();
 				try {
@@ -50,9 +50,9 @@ class Default_EmpaddressController extends Zend_Controller_Action
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall', null);
-								$data = array();
+								$data = [];
 								$searchQuery = '';
-								$searchArray = array();
+								$searchArray = [];
 								$tablecontent = '';
 								if ($refresh == 'refresh') {
 									if ($dashboardcall == 'Yes')
@@ -65,7 +65,7 @@ class Default_EmpaddressController extends Zend_Controller_Action
 									$pageNo = 1;
 									$searchData = '';
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 								} else {
 									$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 									$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'a.modifieddate';
@@ -126,7 +126,7 @@ class Default_EmpaddressController extends Zend_Controller_Action
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 
 				$employeeModal = new Default_Model_Employee();
 				try {
@@ -145,9 +145,9 @@ class Default_EmpaddressController extends Zend_Controller_Action
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall', null);
-								$data = array();
+								$data = [];
 								$searchQuery = '';
-								$searchArray = array();
+								$searchArray = [];
 								$tablecontent = '';
 								if ($refresh == 'refresh') {
 									if ($dashboardcall == 'Yes')
@@ -160,7 +160,7 @@ class Default_EmpaddressController extends Zend_Controller_Action
 									$pageNo = 1;
 									$searchData = '';
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 								} else {
 									$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 									$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'a.modifieddate';
@@ -225,21 +225,21 @@ $this->view->typepermission = $typepermission;
 
 			$empaddressform = new Default_Form_Empaddress();
 
-			$empaddressform->name->addValidator('NotEmpty', false, array('messages'=>'name is required!'));
+			$empaddressform->name->addValidator('NotEmpty', false, ['messages'=>'name is required!']);
 			$empaddressform->name->setRequired(true);
 			$empaddressform->name->addValidator(new Zend_Validate_Db_NoRecordExists(
-				array(
+				[
 					'table'=>'main_address',
 					'field'=>'name'
-				)
+				]
 				));
 		  $empaddressform->name->getValidator('Db_NoRecordExists')->setMessage('Name already exists.');
-		  $empaddressform->name->addValidator("regex",true,array(
+		  $empaddressform->name->addValidator("regex",true,[
 			  'pattern'=>'/^[a-zA-Z.\-?]+$/',
-			  'messages'=>array(
+			  'messages'=>[
 				  'regexNotMatch'=>'Name is not valid'
-			  )
-			  ));	
+			  ]
+			  ]);	
 			// $empbankaccountForm->id->setValue($userid);
 			$msgarray = [];
 
@@ -351,8 +351,8 @@ Zend_Debug::dump($th->getMessage());	}
 		$id = $this->getRequest()->getParam('id');
 		$empbaddress_model = new Default_Model_Empaddress();
 		if ($empaddressform->isValid($this->getRequest()->getPost())) {
-			$data = array(
-				'location_id' => isset($_SESSION['location'])?$_SESSION['location']:115,
+			$data = [
+				'location_id' => $_SESSION['location'] ?? 115,
 				'ispermanet'=>$util::getcheckboxvalue($this->_getParam('permanent'),'database'),
 				'address_type_id' => $this->_request->getParam('address_type_id'),
 				'name' =>$this->_request->getParam('name'),
@@ -362,7 +362,7 @@ Zend_Debug::dump($th->getMessage());	}
 				'emp_id'=> $user_id = $this->getRequest()->getParam('unitId'),
 				'postal'=>$this->_request->getParam('postal'),
 				'isactive'=>$util::getcheckboxvalue($this->_getParam('isactive'),'database')
-			);
+			];
            // $iscuurent=$this->getRequest()->getParam('iscurrent');
 //$data['iscurrent'] =$util::getcheckboxvalue($iscuurent);
 
@@ -370,7 +370,7 @@ Zend_Debug::dump($th->getMessage());	}
 
 			$actionflag = '';
 			if ($id != '') {
-				$where = array('address_id=?' => $id);
+				$where = ['address_id=?' => $id];
 				$actionflag = 2;
 				$data['modifiedby'] = $loginUserId;
 				$data['modifieddate'] = gmdate("Y-m-d H:i:s");
@@ -580,7 +580,7 @@ $this->view->typepermission = $typepermission;
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 
 				$employeeModal = new Default_Model_Employee();
 				try {
@@ -599,9 +599,9 @@ $this->view->typepermission = $typepermission;
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall', null);
-								$data = array();
+								$data = [];
 								$searchQuery = '';
-								$searchArray = array();
+								$searchArray = [];
 								$tablecontent = '';
 								if ($refresh == 'refresh') {
 									if ($dashboardcall == 'Yes')
@@ -614,7 +614,7 @@ $this->view->typepermission = $typepermission;
 									$pageNo = 1;
 									$searchData = '';
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 								} else {
 									$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 									$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'a.modifieddate';
@@ -667,7 +667,7 @@ $this->view->typepermission = $typepermission;
 			$model = new Default_Model_Empaddress();
 
 		
-			$where = array('address_id=?' => $id);
+			$where = ['address_id=?' => $id];
 			$Id = $model->DeleteData($where);
 			if ($Id == 'delete') {
 				$messages['message'] = 'Address  deleted successfully.';
@@ -682,10 +682,10 @@ $this->view->typepermission = $typepermission;
 		}
 		if ($deleteflag == 1) {
 			if ($messages['msgtype'] == 'error') {
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("error" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["error" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag]);
 			}
 			if ($messages['msgtype'] == 'success') {
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag]);
 			}
 		}
 		$this->_helper->json($messages);

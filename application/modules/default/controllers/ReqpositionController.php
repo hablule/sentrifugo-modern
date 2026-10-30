@@ -38,7 +38,7 @@ class Default_ReqpositionController extends Zend_Controller_Action
         $session = sapp_Global::_readSession();
         if (!isset($session)) {
             if ($this->getRequest()->isXmlHttpRequest()) {
-                echo Zend_Json::encode(array('login' => 'failed'));
+                echo Zend_Json::encode(['login' => 'failed']);
                 exit;
             } else {
                 $this->_redirect('');
@@ -56,7 +56,7 @@ class Default_ReqpositionController extends Zend_Controller_Action
     {
         $request = $this->getRequest();
         if (!$request->isPost()) {
-            return $this->_helper->json(array('result' => 'error', 'message' => 'Invalid request method.'));
+            return $this->_helper->json(['result' => 'error', 'message' => 'Invalid request method.']);
         }
 
         $form = new Default_Form_Reqpositionstatus();
@@ -83,16 +83,16 @@ class Default_ReqpositionController extends Zend_Controller_Action
 
                 // Update Seat Status on map_requisition_position
                 $this->_model->update(
-                    array(
+                    [
                         'status'       => $newStatus,
                         'modifiedby'   => $this->_loginUserId,
                         'modifieddate' => gmdate("Y-m-d H:i:s")
-                    ),
-                    array('id = ?' => $mapId)
+                    ],
+                    ['id = ?' => $mapId]
                 );
 
                 // Write to Immutable Event Ledger
-                $db->insert('log_requisition_position_status', array(
+                $db->insert('log_requisition_position_status', [
                     'map_req_pos_id'        => $mapId,
                     'status'                => $newStatus,
                     'status_reason_id'      => $reasonId,
@@ -100,17 +100,17 @@ class Default_ReqpositionController extends Zend_Controller_Action
                     'notes'                 => !empty($notes) ? $notes : null,
                     'createdby'             => $this->_loginUserId,
                     'createddate'           => gmdate("Y-m-d H:i:s")
-                ));
+                ]);
 
                 $db->commit();
-                $this->_helper->json(array('result' => 'saved', 'message' => 'Pipeline status updated successfully.'));
+                $this->_helper->json(['result' => 'saved', 'message' => 'Pipeline status updated successfully.']);
             } catch (\Throwable $e) {
                 $db->rollBack();
                 error_log("Status Transition Error: " . $e->getMessage());
-                $this->_helper->json(array('result' => 'exception', 'message' => $e->getMessage()));
+                $this->_helper->json(['result' => 'exception', 'message' => $e->getMessage()]);
             }
         } else {
-            $this->_helper->json(array('result' => 'error', 'message' => 'Please provide a valid status and reason.'));
+            $this->_helper->json(['result' => 'error', 'message' => 'Please provide a valid status and reason.']);
         }
     }
 }

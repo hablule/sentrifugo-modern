@@ -10,18 +10,18 @@ class Default_Model_Perk extends Zend_Db_Table_Abstract{
         return $this->getAdapter()->lastInsertId();
     }
     public function adddatas($data){
-        $config = array(
+        $config = [
             'name' => 'main_perkcategory',
             'primary' => 'perkcategory_id'
-        );
+        ];
         $this->table = new Zend_Db_Table($config);
         $this->table->insert($data);
     }
     public function addCategory($data){
-        $config = array(
+        $config = [
             'name' => 'main_perkcategory',
             'primary' => 'perkcategory_id'
-        );
+        ];
         $this->table = new Zend_Db_Table($config);
         $this->table->insert($data);
     }
@@ -30,49 +30,49 @@ class Default_Model_Perk extends Zend_Db_Table_Abstract{
     }
     public function deleteperk($id)
     {
-        $config = array(
+        $config = [
             'name' => 'main_perk',
             'primary' => 'perk_id'
-        );
+        ];
         $OT_schedule_table = new Zend_Db_Table($config);
-        $data = array(
+        $data = [
             'isactive' => 'N'
-        );
+        ];
         $this->update($data, 'perk_id = ' . $id);
     }
     public function getCategory(){
         $query = $this->select()
                 ->setIntegrityCheck(false)
-                ->from(array('pc'=>'main_perkcategory'))
+                ->from(['pc'=>'main_perkcategory'])
                 ->where('isactive="Y"');
         return $this->fetchAll($query)->toArray();
     }
      public function getPerk(){
          $query = $this->select()
                     ->setIntegrityCheck(false)
-                    ->from(array('p'=>'main_perk'))
+                    ->from(['p'=>'main_perk'])
                     ->where('isactive="Y"');
         return $this->fetchAll($query)->toArray();
      }
      public function getIndividualPerk(){
         $query = $this->select()
                    ->setIntegrityCheck(false)
-                   ->from(array('p'=>'main_perk'))
+                   ->from(['p'=>'main_perk'])
                    ->where('p.isactive="Y" and p.type="Individual" and p.auto_approved="N"');
        return $this->fetchAll($query)->toArray();
     }
      public function getSinglePerk($id){
          $query = $this->select()
                         ->setIntegrityCheck(false)
-                        ->from(array('p'=>'main_perk'))
+                        ->from(['p'=>'main_perk'])
                         ->where('perk_id='.$id);
         return $this->fetchAll($query)->toArray();
      }
      public function getPerkDetail($id){
         $result = $this->select()
                         ->setIntegrityCheck(false)
-                        ->from(array('p'=>'main_perk'),array('perk_id'=>'p.perk_id','code'=>'p.code','name'=>'p.name','description'=>'p.description','start'=>'p.start','end'=>'p.end','type'=>'p.type','amount'=>'p.amount','active'=>'p.isactive','classPath'=>'p.classPath','classfun'=>'p.method','parameters'=>'p.parameters'))
-                        ->joinInner(array('pc'=>'main_perkcategory'),'pc.perkcategory_id=p.category',array('cname'=>'pc.name'))
+                        ->from(['p'=>'main_perk'],['perk_id'=>'p.perk_id','code'=>'p.code','name'=>'p.name','description'=>'p.description','start'=>'p.start','end'=>'p.end','type'=>'p.type','amount'=>'p.amount','active'=>'p.isactive','classPath'=>'p.classPath','classfun'=>'p.method','parameters'=>'p.parameters'])
+                        ->joinInner(['pc'=>'main_perkcategory'],'pc.perkcategory_id=p.category',['cname'=>'pc.name'])
                         ->where("p.perk_id=".$id);
         //die($result);
         return $this->fetchAll($result)->toArray();
@@ -80,8 +80,8 @@ class Default_Model_Perk extends Zend_Db_Table_Abstract{
     public function getPerkDetailview($id){
         $result = $this->select()
                         ->setIntegrityCheck(false)
-                        ->from(array('p'=>'main_perk'),array('perk_id'=>'p.perk_id','code'=>'p.code','name'=>'p.name','description'=>'p.description','start'=>'p.start','end'=>'p.end','type'=>'p.type','amount'=>'p.amount','active'=>'if(p.isactive="Y","Yes","No")','classPath'=>'p.classPath','classfun'=>'p.method','parameters'=>'p.parameters'))
-                        ->joinInner(array('pc'=>'main_perkcategory'),'pc.perkcategory_id=p.category',array('cname'=>'pc.name'))
+                        ->from(['p'=>'main_perk'],['perk_id'=>'p.perk_id','code'=>'p.code','name'=>'p.name','description'=>'p.description','start'=>'p.start','end'=>'p.end','type'=>'p.type','amount'=>'p.amount','active'=>'if(p.isactive="Y","Yes","No")','classPath'=>'p.classPath','classfun'=>'p.method','parameters'=>'p.parameters'])
+                        ->joinInner(['pc'=>'main_perkcategory'],'pc.perkcategory_id=p.category',['cname'=>'pc.name'])
                         ->where("p.perk_id=".$id);
         //die($result);
         return $this->fetchAll($result)->toArray();

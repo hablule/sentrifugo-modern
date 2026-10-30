@@ -53,7 +53,7 @@ class Default_Model_Paappraisal extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -74,18 +74,18 @@ class Default_Model_Paappraisal extends Zend_Db_Table_Abstract
         }
 
         // SSOT IV.3: Strict headers. Action must be first.
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'        => 'Action',
             'name'          => 'Campaign Name',
             'rulebook_name' => 'Rulebook Template',
             'period_name'   => 'Period',
             'status'        => 'Lifecycle Status',
             'status_text'   => 'Active Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
@@ -93,7 +93,7 @@ class Default_Model_Paappraisal extends Zend_Db_Table_Abstract
             'tablecontent'   => $tableContent,
             'objectname'     => 'paappraisal',
             'tableheader'    => $tableHeaders,
-            'extra'          => array(),
+            'extra'          => [],
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
             'searchArray'    => $searchArray,
@@ -101,11 +101,11 @@ class Default_Model_Paappraisal extends Zend_Db_Table_Abstract
             'menuName'       => 'Manage Campaigns',
             'call'           => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => array(
-                'status_text' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive')),
-                'status'      => array('type' => 'select', 'filter_data' => array('' => 'All', 'Draft' => 'Draft', 'Active' => 'Active', 'Closed' => 'Closed'))
-            )
-        );
+            'search_filters' => [
+                'status_text' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']],
+                'status'      => ['type' => 'select', 'filter_data' => ['' => 'All', 'Draft' => 'Draft', 'Active' => 'Active', 'Closed' => 'Closed']]
+            ]
+        ];
     }
 
     public function getGridData($sort, $by, $pageNo, $perPage, $searchQuery = '')
@@ -114,20 +114,20 @@ class Default_Model_Paappraisal extends Zend_Db_Table_Abstract
         if ($by == 'rulebook_name') $by = 'rb.name';
         if ($by == 'period_name') $by = 'p.name';
 
-        if (in_array($by, array('start_date', 'end_date', 'name', 'status'))) {
+        if (in_array($by, ['start_date', 'end_date', 'name', 'status'])) {
             $by = 'pa.' . $by;
         }
 
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('pa' => $this->_name), array(
+            ->from(['pa' => $this->_name], [
                 'id'          => 'pa.id', // SSOT IV.2: Mandatory Grid Aliasing
                 'name'        => 'pa.name',
                 'status'      => 'pa.status',
                 'status_text' => new Zend_Db_Expr("CASE WHEN pa.isactive = 1 THEN 'Active' ELSE 'Inactive' END")
-            ))
-            ->joinInner(array('rb' => 'main_pa_rulebook'), 'pa.rulebook_id = rb.id', array('rulebook_name' => 'rb.name'))
-            ->joinLeft(array('p' => 'main_period'), 'pa.period_id = p.id', array('period_name' => 'p.name'))
+            ])
+            ->joinInner(['rb' => 'main_pa_rulebook'], 'pa.rulebook_id = rb.id', ['rulebook_name' => 'rb.name'])
+            ->joinLeft(['p' => 'main_period'], 'pa.period_id = p.id', ['period_name' => 'p.name'])
             ->where('pa.isactive != 5');
 
         if (!empty($searchQuery)) {
@@ -140,7 +140,7 @@ class Default_Model_Paappraisal extends Zend_Db_Table_Abstract
 
     public function getPairs($activeOnly = true)
     {
-        $select = $this->select()->from($this->_name, array('id', 'name'))->order('name ASC');
+        $select = $this->select()->from($this->_name, ['id', 'name'])->order('name ASC');
         if ($activeOnly) $select->where("isactive = 1");
         return $this->getAdapter()->fetchPairs($select);
     }
@@ -150,7 +150,7 @@ class Default_Model_Paappraisal extends Zend_Db_Table_Abstract
      */
     public function getPairsByRulebook($rulebookId, $activeOnly = true)
     {
-        $select = $this->select()->from($this->_name, array('id', 'name'))->where('rulebook_id = ?', (int)$rulebookId)->order('name ASC');
+        $select = $this->select()->from($this->_name, ['id', 'name'])->where('rulebook_id = ?', (int)$rulebookId)->order('name ASC');
         if ($activeOnly) $select->where("isactive = 1");
         return $this->getAdapter()->fetchPairs($select);
     }
@@ -160,7 +160,7 @@ class Default_Model_Paappraisal extends Zend_Db_Table_Abstract
      */
     public function getPairsByPeriod($periodId, $activeOnly = true)
     {
-        $select = $this->select()->from($this->_name, array('id', 'name'))->where('period_id = ?', (int)$periodId)->order('name ASC');
+        $select = $this->select()->from($this->_name, ['id', 'name'])->where('period_id = ?', (int)$periodId)->order('name ASC');
         if ($activeOnly) $select->where("isactive = 1");
         return $this->getAdapter()->fetchPairs($select);
     }
@@ -183,7 +183,7 @@ class Default_Model_Paappraisal extends Zend_Db_Table_Abstract
         if (!empty($id)) {
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = gmdate("Y-m-d H:i:s");
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return (int)$id; // Returning ID to enable cascade logic in controller
         }
 
@@ -207,23 +207,23 @@ class Default_Model_Paappraisal extends Zend_Db_Table_Abstract
         }
 
         $userId = Zend_Auth::getInstance()->getStorage()->read()->id ?? 0;
-        $data = array(
+        $data = [
             'isactive'     => 5,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
-        return $this->update($data, array('id = ?' => (int)$id));
+        ];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     public function toggleStatus($id, $status)
     {
         $userId = Zend_Auth::getInstance()->getStorage()->read()->id ?? 0;
-        $data = array(
+        $data = [
             'isactive'     => (int)$status,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
-        return $this->update($data, array('id = ?' => (int)$id));
+        ];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* =================================================================================
@@ -298,10 +298,10 @@ class Default_Model_Paappraisal extends Zend_Db_Table_Abstract
         $date = gmdate("Y-m-d H:i:s");
 
         // 1. Resolve and Freeze the Audience
-        $selTargets = $db->select()->from('map_pa_rulebook_target', array('target_type', 'target_id'))->where('rulebook_id = ?', (int)$rulebookId);
+        $selTargets = $db->select()->from('map_pa_rulebook_target', ['target_type', 'target_id'])->where('rulebook_id = ?', (int)$rulebookId);
         $rulebookTargets = $db->fetchAll($selTargets);
 
-        $audienceIds = array();
+        $audienceIds = [];
 
         if (class_exists('Default_Model_Employee')) {
             $empModel = new Default_Model_Employee();
@@ -319,23 +319,23 @@ class Default_Model_Paappraisal extends Zend_Db_Table_Abstract
         // Bulk insert frozen audience
         foreach ($audienceIds as $empId) {
             if ((int)$empId > 0) {
-                $db->insert('map_pa_appraisal_audience', array(
+                $db->insert('map_pa_appraisal_audience', [
                     'appraisal_id' => (int)$appraisalId,
                     'employee_id'  => (int)$empId,
                     'isactive'     => 1,
                     'createdby'    => $userId,
                     'createddate'  => $date
-                ));
+                ]);
             }
         }
 
         // 2. Resolve and Freeze the Questions
-        $selQuestions = $db->select()->from('map_pa_rulebook_question', array('question_id', 'rating_id', 'weight'))->where('rulebook_id = ?', (int)$rulebookId);
+        $selQuestions = $db->select()->from('map_pa_rulebook_question', ['question_id', 'rating_id', 'weight'])->where('rulebook_id = ?', (int)$rulebookId);
         $rulebookQuestions = $db->fetchAll($selQuestions);
 
         foreach ($rulebookQuestions as $q) {
             if ((int)$q['question_id'] > 0) {
-                $db->insert('map_pa_appraisal_question', array(
+                $db->insert('map_pa_appraisal_question', [
                     'appraisal_id' => (int)$appraisalId,
                     'question_id'  => (int)$q['question_id'],
                     'rating_id'    => $q['rating_id'], // SNAPSHOT COPIED
@@ -343,7 +343,7 @@ class Default_Model_Paappraisal extends Zend_Db_Table_Abstract
                     'isactive'     => 1,
                     'createdby'    => $userId,
                     'createddate'  => $date
-                ));
+                ]);
             }
         }
     }
@@ -364,18 +364,18 @@ class Default_Model_Paappraisal extends Zend_Db_Table_Abstract
         $date = gmdate("Y-m-d H:i:s");
 
         // Atomic Resync (Hard Delete & Insert)
-        $db->delete('map_pa_appraisal_audience', array('appraisal_id = ?' => (int)$appraisalId));
-        $db->delete('map_pa_appraisal_question', array('appraisal_id = ?' => (int)$appraisalId));
+        $db->delete('map_pa_appraisal_audience', ['appraisal_id = ?' => (int)$appraisalId]);
+        $db->delete('map_pa_appraisal_question', ['appraisal_id = ?' => (int)$appraisalId]);
 
         foreach ($employeeIds as $empId) {
             if ((int)$empId > 0) {
-                $db->insert('map_pa_appraisal_audience', array(
+                $db->insert('map_pa_appraisal_audience', [
                     'appraisal_id' => (int)$appraisalId,
                     'employee_id' => (int)$empId,
                     'isactive' => 1,
                     'createdby' => $userId,
                     'createddate' => $date
-                ));
+                ]);
             }
         }
 
@@ -385,7 +385,7 @@ class Default_Model_Paappraisal extends Zend_Db_Table_Abstract
                 $ratingId = isset($q['rating_id']) && $q['rating_id'] !== '' ? (int)$q['rating_id'] : null;
                 $weight   = isset($q['weight']) && $q['weight'] !== '' ? (float)$q['weight'] : 1.00;
 
-                $db->insert('map_pa_appraisal_question', array(
+                $db->insert('map_pa_appraisal_question', [
                     'appraisal_id' => (int)$appraisalId,
                     'question_id'  => (int)$q['question_id'],
                     'rating_id'    => $ratingId,
@@ -393,7 +393,7 @@ class Default_Model_Paappraisal extends Zend_Db_Table_Abstract
                     'isactive'     => 1,
                     'createdby'    => $userId,
                     'createddate'  => $date
-                ));
+                ]);
             }
         }
     }
@@ -407,17 +407,17 @@ class Default_Model_Paappraisal extends Zend_Db_Table_Abstract
     public function getExistingMappings($appraisalId)
     {
         $db = $this->getAdapter();
-        $mappings = array('audience' => array(), 'questions' => array());
+        $mappings = ['audience' => [], 'questions' => []];
 
         $selA = $db->select()
-            ->from(array('aa' => 'map_pa_appraisal_audience'), array('employee_id'))
-            ->joinInner(array('em' => 'main_employee'), 'aa.employee_id = em.id', array('employee_name' => 'em.userfullname'))
+            ->from(['aa' => 'map_pa_appraisal_audience'], ['employee_id'])
+            ->joinInner(['em' => 'main_employee'], 'aa.employee_id = em.id', ['employee_name' => 'em.userfullname'])
             ->where('aa.appraisal_id = ?', (int)$appraisalId);
         $mappings['audience'] = $db->fetchAll($selA);
 
         $selQ = $db->select()
-            ->from(array('aq' => 'map_pa_appraisal_question'), array('question_id', 'rating_id', 'weight'))
-            ->joinInner(array('q' => 'main_pa_question'), 'aq.question_id = q.id', array('question_name' => 'name'))
+            ->from(['aq' => 'map_pa_appraisal_question'], ['question_id', 'rating_id', 'weight'])
+            ->joinInner(['q' => 'main_pa_question'], 'aq.question_id = q.id', ['question_name' => 'name'])
             ->where('aq.appraisal_id = ?', (int)$appraisalId);
         $mappings['questions'] = $db->fetchAll($selQ);
 
@@ -436,7 +436,7 @@ class Default_Model_Paappraisal extends Zend_Db_Table_Abstract
     {
         $db = $this->getAdapter();
         $select = $db->select()
-            ->from('map_pa_rulebook_evaluator', array('evaluator_type', 'evaluator_id'))
+            ->from('map_pa_rulebook_evaluator', ['evaluator_type', 'evaluator_id'])
             ->where('rulebook_id = ?', (int)$rulebookId)
             ->where('isactive = 1');
         return $db->fetchAll($select);
@@ -468,7 +468,7 @@ class Default_Model_Paappraisal extends Zend_Db_Table_Abstract
 
         // 2. Fetch Evaluator Rules (Including the is_mandatory flag)
         $selE = $db->select()
-            ->from('map_pa_rulebook_evaluator', array('evaluator_type', 'evaluator_id', 'is_mandatory'))
+            ->from('map_pa_rulebook_evaluator', ['evaluator_type', 'evaluator_id', 'is_mandatory'])
             ->where('rulebook_id = ?', (int)$rulebookId)
             ->where('isactive = 1');
         $evaluatorRules = $db->fetchAll($selE);
@@ -490,7 +490,7 @@ class Default_Model_Paappraisal extends Zend_Db_Table_Abstract
             $targetName = $target['employee_name'];
 
             foreach ($evaluatorRules as $rule) {
-                $evaluatorIds = array();
+                $evaluatorIds = [];
 
                 // ====================================================================
                 // FULL HIERARCHY RESOLUTION BRANCH
@@ -525,9 +525,9 @@ class Default_Model_Paappraisal extends Zend_Db_Table_Abstract
                     case 'HR':
                         // Assigns the review task to all active HR personnel in the system
                         $hrSelect = $db->select()
-                            ->from(array('u' => 'main_users'), array('empid'))
-                            ->joinInner(array('ur' => 'main_userrole'), 'u.id = ur.user_id', array())
-                            ->joinInner(array('r' => 'main_role'), 'ur.role_id = r.id', array())
+                            ->from(['u' => 'main_users'], ['empid'])
+                            ->joinInner(['ur' => 'main_userrole'], 'u.id = ur.user_id', [])
+                            ->joinInner(['r' => 'main_role'], 'ur.role_id = r.id', [])
                             ->where('r.group_id = ?', (int)$hrGroupId)
                             ->where('u.isactive = 1')
                             ->where('u.empid IS NOT NULL');
@@ -564,7 +564,7 @@ class Default_Model_Paappraisal extends Zend_Db_Table_Abstract
                 // ====================================================================
                 foreach ($evaluatorIds as $eId) {
                     try {
-                        $db->insert('main_pa_assessment', array(
+                        $db->insert('main_pa_assessment', [
                             'appraisal_id'   => $appraisalId,
                             'evaluator_id'   => (int)$eId,
                             'evaluatee_id'   => $targetId,
@@ -573,7 +573,7 @@ class Default_Model_Paappraisal extends Zend_Db_Table_Abstract
                             'isactive'       => 1,
                             'createdby'      => $currentUserId,
                             'createddate'    => $date
-                        ));
+                        ]);
                         $assessmentCount++;
                     } catch (Exception $dup) {
                         // Ignore duplicate key errors if an assessment envelope already exists

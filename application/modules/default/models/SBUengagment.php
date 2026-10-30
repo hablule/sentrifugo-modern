@@ -11,9 +11,9 @@ class Default_Model_sbuengagment extends Zend_Db_Table_Abstract{
 
         $adress = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('e' => 'main_sbuengagment'), array('id' => 'e.sbunit_id','bd_id'=>'e.businessdomain_id'))
-            ->joinInner(array('bd' => 'main_businessdomain'), "bd.businessdomain_id = e.businessdomain_id ", array('bd_name' => 'bd.name'))
-            ->joinInner(array('bu' => 'main_sbunit'), "e.sbunit_id = bu.sbunit_id ", array('bu_name' => 'bu.name'))
+            ->from(['e' => 'main_sbuengagment'], ['id' => 'e.sbunit_id','bd_id'=>'e.businessdomain_id'])
+            ->joinInner(['bd' => 'main_businessdomain'], "bd.businessdomain_id = e.businessdomain_id ", ['bd_name' => 'bd.name'])
+            ->joinInner(['bu' => 'main_sbunit'], "e.sbunit_id = bu.sbunit_id ", ['bu_name' => 'bu.name'])
             ->where($where)
             ->order("$by $sort")
             ->limitPage($pageNo, $perPage);
@@ -22,7 +22,7 @@ class Default_Model_sbuengagment extends Zend_Db_Table_Abstract{
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $a = '', $b = '', $c = '', $d = '')
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
             foreach ($searchValues as $key => $val) {
@@ -47,23 +47,23 @@ class Default_Model_sbuengagment extends Zend_Db_Table_Abstract{
             $searchQuery = rtrim($searchQuery, " AND");
         }
         $objName = 'sbuengagment';
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'bu_name' => 'Business Unit',
             'bd_name' => 'Business Domain',
 
            
-        );
+        ];
 
         $tablecontent = $this->getAddress($sort, $by, $pageNo, $perPage, $searchQuery);
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
             'perPage' => $perPage,
             'tablecontent' => $tablecontent,
             'objectname' => $objName,
-            'extra' => array(),
+            'extra' => [],
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
             'jsFillFnName' => '',
@@ -72,7 +72,7 @@ class Default_Model_sbuengagment extends Zend_Db_Table_Abstract{
             'call' => $call,
             'add'=>'add',
             'dashboardcall' => $dashboardcall
-        );
+        ];
         return $dataTmp;
     }
     public function SaveorUpdateData($data, $where)
@@ -92,9 +92,9 @@ class Default_Model_sbuengagment extends Zend_Db_Table_Abstract{
       
         $adress = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('e' => 'main_sbuengagment'), array('id' => 'e.sbunit_id','bd_id'=>'e.businessdomain_id'))
-            ->joinInner(array('bd' => 'main_businessdomain'), "bd.businessdomain_id = e.businessdomain_id ", array('bd_name' => 'bd.name','bd_id'=>'bd.businessdomain_id'))
-            ->joinInner(array('bu' => 'main_sbunit'), "e.sbunit_id = bu.sbunit_id ", array('bu_name' => 'bu.name'))
+            ->from(['e' => 'main_sbuengagment'], ['id' => 'e.sbunit_id','bd_id'=>'e.businessdomain_id'])
+            ->joinInner(['bd' => 'main_businessdomain'], "bd.businessdomain_id = e.businessdomain_id ", ['bd_name' => 'bd.name','bd_id'=>'bd.businessdomain_id'])
+            ->joinInner(['bu' => 'main_sbunit'], "e.sbunit_id = bu.sbunit_id ", ['bu_name' => 'bu.name'])
             ->where('e.sbunit_id= '.$buid. ' and e.businessdomain_id='.$bdid);
             return $this->fetchAll($adress)->toArray();    }
             public function getajaxdata($buid)
@@ -102,9 +102,9 @@ class Default_Model_sbuengagment extends Zend_Db_Table_Abstract{
               
                 $adress = $this->select()
                     ->setIntegrityCheck(false)
-                    ->from(array('e' => 'main_sbuengagment'), array('id' => 'e.sbunit_id','bd_id'=>'e.businessdomain_id'))
-                    ->joinLeft(array('bd' => 'main_businessdomain'), "bd.businessdomain_id = e.businessdomain_id ", array('name' => 'bd.name','businessdomain_id'=>'bd.businessdomain_id'))
-                    ->joinLeft(array('bu' => 'main_sbunit'), "e.sbunit_id = bu.sbunit_id ", array('bu_name' => 'bu.name'))
+                    ->from(['e' => 'main_sbuengagment'], ['id' => 'e.sbunit_id','bd_id'=>'e.businessdomain_id'])
+                    ->joinLeft(['bd' => 'main_businessdomain'], "bd.businessdomain_id = e.businessdomain_id ", ['name' => 'bd.name','businessdomain_id'=>'bd.businessdomain_id'])
+                    ->joinLeft(['bu' => 'main_sbunit'], "e.sbunit_id = bu.sbunit_id ", ['bu_name' => 'bu.name'])
                     ->where('e.sbunit_id= '.$buid);
                     return $this->fetchAll($adress)->toArray();
                 }
@@ -113,9 +113,9 @@ public function getdatabubu($buid)
   
     $adress = $this->select()
         ->setIntegrityCheck(false)
-        ->from(array('e' => 'main_sbuengagment'), array('id' => 'e.sbunit_id','bd_id'=>'e.businessdomain_id'))
-        ->joinInner(array('bd' => 'main_businessdomain'), "bd.businessdomain_id = e.businessdomain_id ", array('bd_name' => 'bd.name'))
-        ->joinInner(array('bu' => 'main_sbunit'), "e.sbunit_id = bu.sbunit_id ", array('bu_name' => 'bu.name'))
+        ->from(['e' => 'main_sbuengagment'], ['id' => 'e.sbunit_id','bd_id'=>'e.businessdomain_id'])
+        ->joinInner(['bd' => 'main_businessdomain'], "bd.businessdomain_id = e.businessdomain_id ", ['bd_name' => 'bd.name'])
+        ->joinInner(['bu' => 'main_sbunit'], "e.sbunit_id = bu.sbunit_id ", ['bu_name' => 'bu.name'])
         ->where('e.sbunit_id= '.$buid);
         return $this->fetchAll($adress)->toArray();    }
 }

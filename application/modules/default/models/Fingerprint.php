@@ -8,7 +8,7 @@ class Default_Model_Fingerprint extends Zend_Db_Table_Abstract{
         $where = "id = ".$id;
         $fingerPrint = $this->select()
                     ->setIntegrityCheck(false)
-                    ->from(array('mft'=>'main_fingerprint_template'))
+                    ->from(['mft'=>'main_fingerprint_template'])
                     ->where($where);
         $res = $this->fetchRow($fingerPrint)->toArray();
        return $res;
@@ -19,7 +19,7 @@ class Default_Model_Fingerprint extends Zend_Db_Table_Abstract{
         $where = "empid = ".$empId ;
         $fingerPrintTemplates = $this->select()
                     ->setIntegrityCheck(false)
-                    ->from(array('mft'=>'main_fingerprint_template'))
+                    ->from(['mft'=>'main_fingerprint_template'])
                     ->where($where);
         
         $res = $this->fetchAll($fingerPrintTemplates)->toArray();
@@ -29,7 +29,7 @@ class Default_Model_Fingerprint extends Zend_Db_Table_Abstract{
     public function getFingerPrintTemplateData($where){
         $fingerPrintTemplates = $this->select()
                     ->setIntegrityCheck(false)
-                    ->from(array('mft'=>'main_fingerprint_template'))
+                    ->from(['mft'=>'main_fingerprint_template'])
                     ->where($where);
         
         $res = $this->fetchAll($fingerPrintTemplates)->toArray();
@@ -40,7 +40,7 @@ class Default_Model_Fingerprint extends Zend_Db_Table_Abstract{
         $where = "empid = ".$empId." and inuse = 1";
         $fingerPrintTemplates = $this->select()
                     ->setIntegrityCheck(false)
-                    ->from(array('mft'=>'main_fingerprint_template'))
+                    ->from(['mft'=>'main_fingerprint_template'])
                     ->where($where);
         
         $res = $this->fetchAll($fingerPrintTemplates)->toArray();

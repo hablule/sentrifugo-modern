@@ -36,7 +36,7 @@ class Default_Model_Pafeedforward extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $employeeID = 0)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -54,18 +54,18 @@ class Default_Model_Pafeedforward extends Zend_Db_Table_Abstract
         }
 
         // Action column allows the user to click back into the assessment to view/edit it
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'         => 'Action',
             'createddate'    => 'Date Initiated',
             'evaluatee_name' => 'Feedback For',
             'rulebook_name'  => 'Template Used',
             'evaluator_type' => 'Your Relationship',
             'status'         => 'Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery, $employeeID);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
@@ -73,7 +73,7 @@ class Default_Model_Pafeedforward extends Zend_Db_Table_Abstract
             'tablecontent'   => $tableContent,
             'objectname'     => 'pafeedforward',
             'tableheader'    => $tableHeaders,
-            'extra'          => array(),
+            'extra'          => [],
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
             'searchArray'    => $searchArray,
@@ -81,13 +81,13 @@ class Default_Model_Pafeedforward extends Zend_Db_Table_Abstract
             'menuName'       => 'Continuous Feedback',
             'call'           => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => array(
-                'status' => array(
+            'search_filters' => [
+                'status' => [
                         'type' => 'select', 
-                        'filter_data' => array('' => 'All', 'In Progress' => 'In Progress', 'Submitted' => 'Submitted', 'Completed' => 'Completed')
-                    )
-            )
-        );
+                        'filter_data' => ['' => 'All', 'In Progress' => 'In Progress', 'Submitted' => 'Submitted', 'Completed' => 'Completed']
+                    ]
+            ]
+        ];
     }
 
     /**
@@ -100,19 +100,19 @@ class Default_Model_Pafeedforward extends Zend_Db_Table_Abstract
         if ($by == 'evaluatee_name') $by = 'ee.userfullname';
         if ($by == 'rulebook_name')  $by = 'rb.name';
         if ($by == 'createddate')    $by = 'ass.createddate';
-        if (in_array($by, array('evaluator_type', 'status'))) $by = 'ass.' . $by;        
+        if (in_array($by, ['evaluator_type', 'status'])) $by = 'ass.' . $by;        
 
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('ass' => $this->_name), array(
+            ->from(['ass' => $this->_name], [
                 'id'             => 'ass.id', // SSOT IV.2: Mandatory Grid Aliasing
                 'createddate'    => new Zend_Db_Expr("DATE_FORMAT(ass.createddate, '" . DATEFORMAT_MYSQL . "')"),
                 'evaluator_type' => 'ass.evaluator_type',
                 'status'         => 'ass.status'
-            ))
-            ->joinInner(array('appr' => 'main_pa_appraisal'), 'ass.appraisal_id = appr.id', array())
-            ->joinInner(array('rb' => 'main_pa_rulebook'), 'appr.rulebook_id = rb.id', array('rulebook_name' => 'rb.name'))
-            ->joinInner(array('ee' => 'main_employee'), 'ass.evaluatee_id = ee.id', array('evaluatee_name' => 'ee.userfullname'))
+            ])
+            ->joinInner(['appr' => 'main_pa_appraisal'], 'ass.appraisal_id = appr.id', [])
+            ->joinInner(['rb' => 'main_pa_rulebook'], 'appr.rulebook_id = rb.id', ['rulebook_name' => 'rb.name'])
+            ->joinInner(['ee' => 'main_employee'], 'ass.evaluatee_id = ee.id', ['evaluatee_name' => 'ee.userfullname'])
             ->where('ass.isactive != 5')
             // SECURITY: Only show feedback initiated by this user
             ->where('ass.evaluator_id = ?', (int)$employeeID)
@@ -166,13 +166,13 @@ class Default_Model_Pafeedforward extends Zend_Db_Table_Abstract
         $appraisalId = $this->_createAdHocAppraisal($db, $rulebookId, $evaluatorId, $targetName, $rbName, $date);
 
         // 4. Freeze Audience & Questions (The Template Snapshot)
-        $db->insert('map_pa_appraisal_audience', array(
+        $db->insert('map_pa_appraisal_audience', [
             'appraisal_id' => $appraisalId,
             'employee_id'  => (int)$evaluateeId,
             'isactive'     => 1,
             'createdby'    => $evaluatorId,
             'createddate'  => $date
-        ));
+        ]);
 
         // Ensure the selected template actually has questions
         $questions = $db->fetchCol($db->select()->from('map_pa_rulebook_question', 'question_id')->where('rulebook_id = ?', (int)$rulebookId));
@@ -181,20 +181,20 @@ class Default_Model_Pafeedforward extends Zend_Db_Table_Abstract
         }
 
         foreach ($questions as $qId) {
-            $db->insert('map_pa_appraisal_question', array(
+            $db->insert('map_pa_appraisal_question', [
                 'appraisal_id' => $appraisalId,
                 'question_id'  => $qId,
                 'isactive'     => 1,
                 'createdby'    => $evaluatorId,
                 'createddate'  => $date
-            ));
+            ]);
         }
 
         // 5. Determine the Relationship (Evaluator Type) dynamically
         $relationship = $this->_determineRelationship($evaluatorId, $evaluateeId);
 
         // 6. Create the actual Assessment Envelope
-        $db->insert('main_pa_assessment', array(
+        $db->insert('main_pa_assessment', [
             'appraisal_id'   => $appraisalId,
             'evaluator_id'   => $evaluatorId,
             'evaluatee_id'   => $evaluateeId,
@@ -204,7 +204,7 @@ class Default_Model_Pafeedforward extends Zend_Db_Table_Abstract
             'isactive'       => 1,
             'createdby'      => $evaluatorId,
             'createddate'    => $date
-        ));
+        ]);
 
         // Return the Assessment ID so the Controller can instantly redirect the user to it
         return (int)$db->lastInsertId('main_pa_assessment');
@@ -216,7 +216,7 @@ class Default_Model_Pafeedforward extends Zend_Db_Table_Abstract
     private function _createAdHocAppraisal($db, $rulebookId, $userId, $targetName, $rbName, $date)
     {
         $campaignName = "Ad-Hoc: $targetName - $rbName (" . date('M j, Y') . ")";
-        $db->insert('main_pa_appraisal', array(
+        $db->insert('main_pa_appraisal', [
             'rulebook_id' => (int)$rulebookId,
             'period_id'   => null, // Ad-hoc bypasses strict periods, allowing infinite duplicates
             'name'        => substr($campaignName, 0, 255), // Prevent column overflow
@@ -226,7 +226,7 @@ class Default_Model_Pafeedforward extends Zend_Db_Table_Abstract
             'isactive'    => 1,
             'createdby'   => $userId,
             'createddate' => $date
-        ));
+        ]);
         return (int)$db->lastInsertId('main_pa_appraisal');
     }
 

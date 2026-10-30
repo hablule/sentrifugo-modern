@@ -45,9 +45,9 @@ class Default_Model_Digitalmedia extends Zend_Db_Table_Abstract
     {
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('dm' => $this->_name))
-            ->joinInner(array('dmc' => 'main_digitalmediacategory'), 'dm.digitalmediacategory_id = dmc.id', array('category_name' => 'dmc.name'))
-            ->joinInner(array('dmt' => 'main_digitalmediatype'), 'dm.digitalmediatype_id = dmt.id', array('type_name' => 'dmt.name'))
+            ->from(['dm' => $this->_name])
+            ->joinInner(['dmc' => 'main_digitalmediacategory'], 'dm.digitalmediacategory_id = dmc.id', ['category_name' => 'dmc.name'])
+            ->joinInner(['dmt' => 'main_digitalmediatype'], 'dm.digitalmediatype_id = dmt.id', ['type_name' => 'dmt.name'])
             ->where('dm.isactive != 5');
 
         if ($activeStatus !== null) {
@@ -82,7 +82,7 @@ class Default_Model_Digitalmedia extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -103,18 +103,18 @@ class Default_Model_Digitalmedia extends Zend_Db_Table_Abstract
         }
 
         // Must match exact column aliases defined in getGridData()
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'        => 'Action',
             'code'          => 'Media Code',
             'name'          => 'Media Name',
             'category_name' => 'Category',
             'type_name'     => 'Type',
             'status_text'   => 'Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
@@ -122,7 +122,7 @@ class Default_Model_Digitalmedia extends Zend_Db_Table_Abstract
             'tablecontent'   => $tableContent,
             'objectname'     => 'digitalmedia',
             'tableheader'    => $tableHeaders,
-            'extra'          => array(),
+            'extra'          => [],
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
             'searchArray'    => $searchArray,
@@ -130,10 +130,10 @@ class Default_Model_Digitalmedia extends Zend_Db_Table_Abstract
             'menuName'       => 'Digital Media',
             'call'           => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => array(
-                'status_text' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive'))
-            )
-        );
+            'search_filters' => [
+                'status_text' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']]
+            ]
+        ];
     }
 
     /**
@@ -152,18 +152,18 @@ class Default_Model_Digitalmedia extends Zend_Db_Table_Abstract
         if ($by == 'status_text') $by = 'dm.isactive';
         if ($by == 'category_name') $by = 'dmc.name';
         if ($by == 'type_name') $by = 'dmt.name';
-        if (in_array($by, array('code', 'name'))) $by = 'dm.' . $by;
+        if (in_array($by, ['code', 'name'])) $by = 'dm.' . $by;
 
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('dm' => $this->_name), array(
+            ->from(['dm' => $this->_name], [
                 'id'          => 'dm.id', // SSOT IV.2: Mandatory Grid Aliasing
                 'code'        => 'dm.code',
                 'name'        => 'dm.name',
                 'status_text' => new Zend_Db_Expr("CASE WHEN dm.isactive = 1 THEN 'Active' ELSE 'Inactive' END")
-            ))
-            ->joinInner(array('dmc' => 'main_digitalmediacategory'), 'dm.digitalmediacategory_id = dmc.id', array('category_name' => 'dmc.name'))
-            ->joinInner(array('dmt' => 'main_digitalmediatype'), 'dm.digitalmediatype_id = dmt.id', array('type_name' => 'dmt.name'))
+            ])
+            ->joinInner(['dmc' => 'main_digitalmediacategory'], 'dm.digitalmediacategory_id = dmc.id', ['category_name' => 'dmc.name'])
+            ->joinInner(['dmt' => 'main_digitalmediatype'], 'dm.digitalmediatype_id = dmt.id', ['type_name' => 'dmt.name'])
             ->where('dm.isactive != 5');
 
         if (!empty($searchQuery)) {
@@ -184,7 +184,7 @@ class Default_Model_Digitalmedia extends Zend_Db_Table_Abstract
     public function getPairs($activeOnly = true)
     {
         $select = $this->select()
-            ->from($this->_name, array('id', 'name'))
+            ->from($this->_name, ['id', 'name'])
             ->order('name ASC');
 
         if ($activeOnly) {
@@ -226,7 +226,7 @@ class Default_Model_Digitalmedia extends Zend_Db_Table_Abstract
         if (!empty($id)) {
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = gmdate("Y-m-d H:i:s");
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return 'update';
         }
 
@@ -256,12 +256,12 @@ class Default_Model_Digitalmedia extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => 5,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
-        return $this->update($data, array('id = ?' => (int)$id));
+        ];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     public function toggleStatus($id, $status)
@@ -269,12 +269,12 @@ class Default_Model_Digitalmedia extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => (int)$status,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
-        return $this->update($data, array('id = ?' => (int)$id));
+        ];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* =================================================================================

@@ -68,7 +68,7 @@ class Default_UserController extends Zend_Controller_Action
 			if ($request->getParam('view_type')) {
 				$session->view_type = $request->getParam('view_type');
 			}
-			$viewType = isset($session->view_type) ? $session->view_type : 'card';
+			$viewType = $session->view_type ?? 'card';
 			$this->view->viewType = $viewType;
 
 			// 2. Setup Context
@@ -100,14 +100,14 @@ class Default_UserController extends Zend_Controller_Action
 			}
 
 			// 4. Permissions (For Add Button)
-			$popConfigPermission = array();
+			$popConfigPermission = [];
 			if (sapp_Global::_checkprivileges(USERMANAGEMENT, $this->_loginuserGroup, $this->_loginuserRole, 'add') == 'Yes') {
 				$popConfigPermission[] = 'user';
 			}
 			$this->view->popConfigPermission = $popConfigPermission;
 
 			// 5. Fetch Grid Data (Always needed for Grid Helper)
-			$data = array();
+			$data = [];
 			$dataTmp = $this->_model->getGrid($sort, $by, $perPage, $pageNo, rtrim($searchData, ','), $call, $dashboardcall);
 			array_push($data, $dataTmp);
 
@@ -194,9 +194,9 @@ class Default_UserController extends Zend_Controller_Action
 		if ($id) {
 			$this->_model->deleteRecord($id);
 			sapp_Global::logManager(USERMANAGEMENT, 3, $this->_loginUserId, $id);
-			$this->_helper->json(array('msgtype' => 'success', 'message' => 'User deleted successfully.'));
+			$this->_helper->json(['msgtype' => 'success', 'message' => 'User deleted successfully.']);
 		}
-		$this->_helper->json(array('msgtype' => 'error', 'message' => 'Invalid Request.'));
+		$this->_helper->json(['msgtype' => 'error', 'message' => 'Invalid Request.']);
 	}
 
 	public function saveAction()
@@ -207,7 +207,7 @@ class Default_UserController extends Zend_Controller_Action
 
 		$form = new Default_Form_User();
 		$request = $this->getRequest();
-		$response = array('result' => 'error', 'message' => 'Invalid data');
+		$response = ['result' => 'error', 'message' => 'Invalid data'];
 
 		if ($form->isValid($request->getPost())) {
 
@@ -225,7 +225,7 @@ class Default_UserController extends Zend_Controller_Action
 					$id = (int)$request->getParam('id');
 					$util = new utlis();
 
-					$data = array(
+					$data = [
 						'code'         => $request->getParam('code'),
 						'username'     => $request->getParam('username'),
 						'emailaddress' => $request->getParam('emailaddress'),
@@ -235,7 +235,7 @@ class Default_UserController extends Zend_Controller_Action
 						'isactive'     => (int)$request->getParam('isactive'),
 						'modifiedby'   => $this->_loginUserId,
 						'modifieddate' => gmdate("Y-m-d H:i:s")
-					);
+					];
 
 					if (!empty($pwd)) {
 						$data['emppassword'] = password_hash($pwd, PASSWORD_DEFAULT);
@@ -253,7 +253,7 @@ class Default_UserController extends Zend_Controller_Action
 					}
 
 					$savedId = $this->_model->saveRecord($data, $id);
-					$userId  = ($id) ? $id : $savedId;
+					$userId  = $id ?: $savedId;
 
 					sapp_Global::logManager(USERMANAGEMENT, $actionFlag, $this->_loginUserId, $userId);
 
@@ -264,7 +264,7 @@ class Default_UserController extends Zend_Controller_Action
 
 					$db->commit();
 
-					$this->_helper->flashMessenger->addMessage(array('success' => "User $saveMode successfully."));
+					$this->_helper->flashMessenger->addMessage(['success' => "User $saveMode successfully."]);
 					return $this->_redirect('user/index');
 					
 				} catch (Exception $e) {
@@ -275,7 +275,7 @@ class Default_UserController extends Zend_Controller_Action
 			}
 		} else {
 			$messages = $form->getMessages();
-			$msgarray = array();
+			$msgarray = [];
 
 			// Flatten the nested array into simple strings
 			foreach ($messages as $field => $errors) {
@@ -383,13 +383,13 @@ class Default_UserController extends Zend_Controller_Action
 
 			$text = $view->render('mailtemplates/newpassword.phtml');
 
-			$options = array(
+			$options = [
 				'subject' => APPLICATION_NAME . ': Login Credentials',
 				'header'  => 'Greetings from Sentrifugo',
 				'toEmail' => $email,
 				'toName'  => $username,
 				'message' => $text
-			);
+			];
 
 			sapp_Global::_sendEmail($options);
 		} catch (Exception $e) {

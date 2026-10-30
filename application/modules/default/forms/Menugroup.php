@@ -64,34 +64,34 @@ class Default_Form_Menugroup extends Zend_Form
         // Group Name
         $name = new Zend_Form_Element_Text('name');
         $name->setLabel('Group Name')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '100'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '100'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', true, array('messages' => 'Group Name is required.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Group Name is required.']);
 
-        $nameVal = new Zend_Validate_Db_NoRecordExists(array(
+        $nameVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_menugroup',
             'field'   => 'name',
-            'exclude' => ($idVal > 0) ? array('field' => 'id', 'value' => $idVal) : null
-        ));
+            'exclude' => ($idVal > 0) ? ['field' => 'id', 'value' => $idVal] : null
+        ]);
         $nameVal->setMessage('This Group Name already exists.');
         $name->addValidator($nameVal);
 
         // Group Code
         $code = new Zend_Form_Element_Text('code');
         $code->setLabel('Group Code')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '60'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '60'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', true, array('messages' => 'Group Code is required.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Group Code is required.']);
 
-        $codeVal = new Zend_Validate_Db_NoRecordExists(array(
+        $codeVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_menugroup',
             'field'   => 'code',
-            'exclude' => ($idVal > 0) ? array('field' => 'id', 'value' => $idVal) : null
-        ));
+            'exclude' => ($idVal > 0) ? ['field' => 'id', 'value' => $idVal] : null
+        ]);
         $codeVal->setMessage('This Group Code already exists.');
         $code->addValidator($codeVal);
 
@@ -99,11 +99,11 @@ class Default_Form_Menugroup extends Zend_Form
         $color = new Zend_Form_Element_Text('backgroundcolor');
         $color->setLabel('Theme Color')
             ->setAttrib('title', 'Choose a color to represent this menu group. This will be used for visual grouping in the UI.')
-            ->setAttribs(array(
+            ->setAttribs([
                 'class' => 'formDataElement',
                 'id'    => 'color_picker_input', // Added specific ID
                 'style' => 'height: 35px; padding: 0 5px; width: 60px; cursor: pointer;'
-            ))
+            ])
             ->setValue('#26a69a') // Default color
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
@@ -117,7 +117,7 @@ class Default_Form_Menugroup extends Zend_Form
         $icon->setLabel('Icon Image')
             ->setAttrib('title', 'Upload a small square image (e.g., 50x50px). Recommended formats: PNG or SVG with a transparent background.')
             // Allow images only
-            ->addValidator('Extension', false, array('jpg', 'png', 'gif', 'jpeg', 'svg'))
+            ->addValidator('Extension', false, ['jpg', 'png', 'gif', 'jpeg', 'svg'])
             // Restrict to 2MB to prevent abuse
             ->addValidator('Size', false, 2048000);
 
@@ -149,7 +149,7 @@ class Default_Form_Menugroup extends Zend_Form
         // Description
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Description')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -166,7 +166,7 @@ class Default_Form_Menugroup extends Zend_Form
 
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save')
-            ->setAttribs(array('id' => 'submitbutton', 'class' => 'actbtn_btn'));
+            ->setAttribs(['id' => 'submitbutton', 'class' => 'actbtn_btn']);
 
         // SSOT AJAX Submission pattern
         // $url        = "'menugroup/save/format/json'";
@@ -179,7 +179,7 @@ class Default_Form_Menugroup extends Zend_Form
          * Build Form
          * -------------------------------------------------------------- */
 
-        $this->addElements(array(
+        $this->addElements([
             $idElement,
             $name,
             $code,
@@ -188,7 +188,7 @@ class Default_Form_Menugroup extends Zend_Form
             $description,
             $isactive,
             $submit
-        ));
+        ]);
 
         // 1. Clear default decorators for all elements first
         $this->clearDecorators();
@@ -196,14 +196,14 @@ class Default_Form_Menugroup extends Zend_Form
         // 2. Set standard 'ViewHelper' for all elements EXCEPT the File upload
         foreach ($this->getElements() as $element) {
             if (!$element instanceof Zend_Form_Element_File) {
-                $element->setDecorators(array('ViewHelper'));
+                $element->setDecorators(['ViewHelper']);
             }
         }
 
         // 3. Set the specific 'File' decorator for the icon upload
-        $icon->setDecorators(array(
+        $icon->setDecorators([
             'File'
-        ));
+        ]);
 
         // Note: The form tags themselves (like <dt>, <dd>, <label>) are handled 
         // by the custom HTML structure in save.phtml, so we only need the base 

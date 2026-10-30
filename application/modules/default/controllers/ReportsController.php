@@ -24,7 +24,7 @@ class Default_ReportsController extends Zend_Controller_Action
 
 	private $options;
 	private $userlog_model;
-	private $printable_interview_arr = array('interview_mode','interview_round_number','interview_round_name','created_by_name','interview_feedback','interview_comments','round_status');
+	private $printable_interview_arr = ['interview_mode','interview_round_number','interview_round_name','created_by_name','interview_feedback','interview_comments','round_status'];
 	public function preDispatch()
 	{
 
@@ -119,12 +119,12 @@ class Default_ReportsController extends Zend_Controller_Action
             }
             else 
             {
-                $this->view->column_arr = array(
+                $this->view->column_arr = [
                     'userfullname' => 'User',
                     'employeeId' => 'User ID',
                     'emailaddress' => 'Email',
                     'rolename_p' => 'Role',
-                );
+                ];
             }
             $this->view->group_id = $group_id;
             $this->view->role_id = $role_id;
@@ -138,7 +138,7 @@ class Default_ReportsController extends Zend_Controller_Action
 	{
 		try{
 			$form = new Default_Form_performancereport();
-			$norec_arr = array();
+			$norec_arr = [];
 			$dept_model = new Default_Model_Departments();
 			$dept_data = $dept_model->getdepts_interview_report();
 			$appraisalRatings_model = new Default_Model_Appraisalemployeeratings();
@@ -149,31 +149,31 @@ class Default_ReportsController extends Zend_Controller_Action
 			$toyear = $this->_request->getParam('toyear');
 			$employeeid = $this->_request->getParam('hiddenemployeename');
 			$nofilters = 0;
-			$appraisalData = array();
+			$appraisalData = [];
 			$curdate = date('Y-m-d');
 			//if all the filters are empty
 			if($department == '' && $reportingmanager == '' && ($businessunit == '' || $businessunit == 0) && $fromyear == '' && $toyear == '' && $employeeid == '')
 			{
 				$fromyear = date('Y');
 				$toyear = date('Y',strtotime("$curdate +1 year"));
-				$appraisalData = $appraisalRatings_model->getappraisalidsforperformance($fromyear,$toyear,$department,$reportingmanager,$businessunit,$employeeid);
+				$appraisalData = $appraisalRatings_model->getappraisalidsforperformance($fromyear,$toyear,$department,$reportingmanager,$businessunit);
 				//when no filters are there and if there is no data for current year, checking for previous year
 				if(empty($appraisalData))
 				{
 					$fromyear = $fromyear-1;
 					$toyear = $toyear-1;
-					$appraisalData = $appraisalRatings_model->getappraisalidsforperformance($fromyear,$toyear,$department,$reportingmanager,$businessunit,$employeeid);
+					$appraisalData = $appraisalRatings_model->getappraisalidsforperformance($fromyear,$toyear,$department,$reportingmanager,$businessunit);
 				}
 			}
 			else
 			{
-				$appraisalData = $appraisalRatings_model->getappraisalidsforperformance($fromyear,$toyear,$department,$reportingmanager,$businessunit,$employeeid);
+				$appraisalData = $appraisalRatings_model->getappraisalidsforperformance($fromyear,$toyear,$department,$reportingmanager,$businessunit);
 			}
 			//getting the employees count with consolidated rating group by consolidated rating
 			$emp_count_data = $appraisalRatings_model->getEmpCountWithConsolidatedRatings($fromyear,$toyear,$department,$reportingmanager,$businessunit,$appraisalData,$employeeid);
 			$maxrating = 0;
 			$noofboxes = 0;
-			$ratingsarray = array();
+			$ratingsarray = [];
 			if(isset($emp_count_data) && !empty($emp_count_data))
 			{
 				//making the array with rating as key
@@ -197,12 +197,12 @@ class Default_ReportsController extends Zend_Controller_Action
 			}		
 			//getting the employees data
 			$emp_data = $appraisalRatings_model->getEmpRatings($fromyear,$toyear,$department,$reportingmanager,$businessunit,$appraisalData,$employeeid);
-			$emp_grouped_data = array();
+			$emp_grouped_data = [];
 			if($noofboxes > 0)
 			{
 				for($i=1;$i<=$noofboxes;$i++)
 				{
-					$emp_inner_data = array();
+					$emp_inner_data = [];
 					foreach($emp_data as $emp)
 					{
 						if($emp['consolidated_floor_rating']==$i)
@@ -299,7 +299,7 @@ class Default_ReportsController extends Zend_Controller_Action
 			{
 				$empAppraisalModel = new Default_Model_Appraisalemployeeratings();
 				$empAppraisals = $empAppraisalModel->getSelectedAppraisalData($appId,$empId,$period);
-				$configId = isset($empAppraisals[0]['pa_configured_id'])?$empAppraisals[0]['pa_configured_id']:0;
+				$configId = $empAppraisals[0]['pa_configured_id'] ?? 0;
 				// get rating details using configuration id
 				$appEmpRatingsModel = new Default_Model_Appraisalemployeeratings();
 				$ratingsData = $appEmpRatingsModel->getAppRatingsDataByConfgId($configId,$appId);
@@ -307,9 +307,9 @@ class Default_ReportsController extends Zend_Controller_Action
 				if(!empty($ratingsData))
 					$ratingType = $ratingsData[0]['rating_type'];
 				
-				$ratingText = array();
-				$ratingTextDisplay = array();
-				$ratingValues = array();
+				$ratingText = [];
+				$ratingTextDisplay = [];
+				$ratingValues = [];
 				foreach ($ratingsData as $rd){
 					$ratingText[] = $rd['rating_text'];
 					$ratingTextDisplay[$rd['id']] = $rd['rating_text'];
@@ -326,7 +326,7 @@ class Default_ReportsController extends Zend_Controller_Action
 						$questionsData = $empAppraisalModel->getQuestionsData($strQuestionIds);
 											
 						$tmpRatingIdsObject = array_values($empResponseArray);
-						$tmpRatingIdsArr = array();
+						$tmpRatingIdsArr = [];
 						foreach($tmpRatingIdsObject as $ratingArr)
 						{
 							$tmpRatings = get_object_vars($ratingArr);
@@ -403,9 +403,9 @@ class Default_ReportsController extends Zend_Controller_Action
 				}
 			}
 			$appSkillsModel = new Default_Model_Appraisalskills();
-			$skills = array();
+			$skills = [];
 			$skills = $appSkillsModel->getAppraisalSkillsData();
-			$skills_arr = array();
+			$skills_arr = [];
 			foreach($skills as $skill)
 			{
 				$skills_arr[$skill['id']] = $skill; 
@@ -431,7 +431,7 @@ class Default_ReportsController extends Zend_Controller_Action
 
 	public function getinterviewroundsdataAction()
 	{
-		$param_arr = array();
+		$param_arr = [];
 		$param_arr['interview_date'] = $this->_getParam('interview_date',null);
 		$param_arr['requisition_id'] = $this->_getParam('req_id',null);
 		$param_arr['interviewer_id'] = $this->_getParam('interviewer_id',null);
@@ -441,7 +441,7 @@ class Default_ReportsController extends Zend_Controller_Action
 		$per_page = $this->_getParam('per_page',PERPAGE);
 		$sort_name = $this->_getParam('sort_name',null);
 		$sort_type = $this->_getParam('sort_type',null);
-		$cols_param_arr = $this->_getParam('cols_arr',array());
+		$cols_param_arr = $this->_getParam('cols_arr',[]);
 
 		$req_model = new Default_Model_Requisition();
 		$req_data = $req_model->getdata_for_interviewrpt($param_arr, $sort_name, $sort_type, $page_no, $per_page);
@@ -449,7 +449,7 @@ class Default_ReportsController extends Zend_Controller_Action
 		$req_arr = $req_data['rows'];
 
 
-		$all_columns_arr = array(
+		$all_columns_arr = [
                         'candidate_name' => 'Candidate',
                         'requisition_code' => 'Requisition Code',                        
                         'position_name' => 'Position',
@@ -473,11 +473,11 @@ class Default_ReportsController extends Zend_Controller_Action
                         'interview_feedback' => 'Interview Feedback',
                         'interview_comments' => 'Interview Comments',
                         'round_status' => 'Round Status',
-		);
+		];
 
 		if(count($cols_param_arr) == 0)
 		{
-			$cols_param_arr = array(
+			$cols_param_arr = [
                         'candidate_name' => 'Candidate',
                         'requisition_code' => 'Requisition Code',                                                                        
                         'businessunit_name' => 'Business Unit',                                                                        
@@ -494,7 +494,7 @@ class Default_ReportsController extends Zend_Controller_Action
                         'interview_feedback' => 'Interview Feedback',
                         'interview_comments' => 'Interview Comments',
                         'round_status' => 'Round Status',
-			);
+			];
 		}
 		$this->view->req_arr = $req_arr;
 		$this->view->per_page = $per_page;
@@ -509,7 +509,7 @@ class Default_ReportsController extends Zend_Controller_Action
 	{
 		try {
 			
-		$norec_arr = array();
+		$norec_arr = [];
 		$form = new Default_Form_Interviewroundrpt();
 		$req_model = new Default_Model_Requisition();
 		$dept_model = new Default_Model_Departments();
@@ -518,12 +518,12 @@ class Default_ReportsController extends Zend_Controller_Action
 
 		if(count($dept_data) >0)
 		{
-			$dept_opt = array();
+			$dept_opt = [];
 			foreach($dept_data as $dept)
 			{
 				$dept_opt[$dept['dept_id']] = $dept['dept_name'];
 			}
-			$form->department_id->addMultiOptions(array('' => 'Select Department') + $dept_opt);
+			$form->department_id->addMultiOptions(['' => 'Select Department'] + $dept_opt);
 		}
 		else
 		{
@@ -531,12 +531,12 @@ class Default_ReportsController extends Zend_Controller_Action
 		}
 		if(count($req_data) >0)
 		{
-			$req_opt = array();
+			$req_opt = [];
 			foreach($req_data as $req)
 			{
 				$req_opt[$req['req_id']] = $req['req_name'];
 			}
-			$form->req_id->addMultiOptions(array('' => 'Select Requisition Code') + $req_opt);
+			$form->req_id->addMultiOptions(['' => 'Select Requisition Code'] + $req_opt);
 		}
 		else
 		{
@@ -563,11 +563,11 @@ class Default_ReportsController extends Zend_Controller_Action
 		
 		$sort_name = $this->_getParam('sort_name',null);
 		$sort_type = $this->_getParam('sort_type',null);
-		$cols_param_arr = array('group_name' => 'Group','rolename' => 'Role','user_cnt' => 'Users count');
+		$cols_param_arr = ['group_name' => 'Group','rolename' => 'Role','user_cnt' => 'Users count'];
 		$roles_model = new Default_Model_Roles();
 		$emproles_data = $roles_model->getdata_emprolesgroup_rpt($sort_name,$sort_type);
 
-		$emproles_arr = array();
+		$emproles_arr = [];
 		if(count($emproles_data) > 0)
 		{
 			foreach($emproles_data as $emp)
@@ -595,12 +595,12 @@ class Default_ReportsController extends Zend_Controller_Action
 			$objPHPExcel->getActiveSheet()->SetCellValue($cell_name, $names);
 			// Make bold cells
 			$objPHPExcel->getActiveSheet()->getStyle($cell_name)->getFont()->setBold(true);
-			$objPHPExcel->getActiveSheet()->getStyle($cell_name)->applyFromArray( array(
-									        'fill' => array(
+			$objPHPExcel->getActiveSheet()->getStyle($cell_name)->applyFromArray( [
+									        'fill' => [
 									            'type' => PHPExcel_Style_Fill::FILL_SOLID,
-									            'color' => array('rgb' => '82CAFF')
-			)
-			)
+									            'color' => ['rgb' => '82CAFF']
+			]
+			]
 			);
 			$objPHPExcel->getActiveSheet()->getColumnDimension($letters[$count])->setAutoSize(true);
 			$i++;
@@ -669,7 +669,7 @@ class Default_ReportsController extends Zend_Controller_Action
 		$sort_name = $this->_getParam('sort_name',null);
 		$sort_type = $this->_getParam('sort_type',null);
 		$roles_data = $roles_model->getdata_for_rolesgroup_rpt($sort_name,$sort_type);
-		$cols_param_arr = array('group_name' => 'Group','cnt' => 'No.Of Roles');
+		$cols_param_arr = ['group_name' => 'Group','cnt' => 'No.Of Roles'];
 		sapp_Global::export_to_excel($roles_data,$cols_param_arr,"GroupRoles.xlsx");
 
 		exit;
@@ -681,7 +681,7 @@ class Default_ReportsController extends Zend_Controller_Action
 	public function exportinterviewrptAction()
 	{
 		$this->_helper->layout->disableLayout();
-		$param_arr = array();
+		$param_arr = [];
 		$param_arr['interview_date'] = $this->_getParam('interview_date',null);
 		$param_arr['requisition_id'] = $this->_getParam('req_id',null);
 		$param_arr['interviewer_id'] = $this->_getParam('interviewer_id',null);
@@ -691,7 +691,7 @@ class Default_ReportsController extends Zend_Controller_Action
 		$per_page = $this->_getParam('per_page',PERPAGE);
 		$sort_name = $this->_getParam('sort_name',null);
 		$sort_type = $this->_getParam('sort_type',null);
-		$cols_param_arr = $this->_getParam('cols_arr',array());
+		$cols_param_arr = $this->_getParam('cols_arr',[]);
 		foreach($cols_param_arr as $col_key => $col_val) {
 			if(in_array($col_key,$this->printable_interview_arr)) {
 				unset($cols_param_arr[$col_key]);
@@ -712,7 +712,7 @@ class Default_ReportsController extends Zend_Controller_Action
 	public function exportactiveuserrptAction()
 	{
 		$this->_helper->layout->disableLayout();
-		$search_arr = array();
+		$search_arr = [];
 		$search_arr['createddate'] = $this->_getParam('createddate',null);
 		$search_arr['u.emprole'] = $this->_getParam('emprole',null);
 		$search_arr['u.isactive'] = $this->_getParam('isactive',null);
@@ -724,14 +724,14 @@ class Default_ReportsController extends Zend_Controller_Action
 		$sort_name = $this->_getParam('sort_name',null);
 		$sort_type = $this->_getParam('sort_type',null);
 
-		$cols_param_arr = $this->_getParam('cols_arr',array());
+		$cols_param_arr = $this->_getParam('cols_arr',[]);
 		$user_model = new Default_Model_Usermanagement();
 
 		$user_data_org = $user_model->getdata_user_report($search_arr,$per_page,$page_no,$sort_name,$sort_type);
 
 		$page_cnt = $user_data_org['page_cnt'];
 		$user_data = $user_data_org['rows'];
-		$mod_user_data = array();
+		$mod_user_data = [];
 		foreach($user_data as $userd)
 		{
 			$userd['lastlog'] = sapp_Global::change_date($userd['lastlog'], 'view');
@@ -752,10 +752,10 @@ class Default_ReportsController extends Zend_Controller_Action
 		$param_arr = $this->_getAllParams();
 		
 
-		$cols_param_arr = $this->_getParam('cols_arr',array());
+		$cols_param_arr = $this->_getParam('cols_arr',[]);
 		if(isset($param_arr['cols_arr']))	unset($param_arr['cols_arr']);
-		$page_no = isset($param_arr['page_no'])?$param_arr['page_no']:1;
-		$per_page = isset($param_arr['per_page'])?$param_arr['per_page']:PERPAGE;
+		$page_no = $param_arr['page_no'] ?? 1;
+		$per_page = $param_arr['per_page'] ?? PERPAGE;
 		$sort_name = $param_arr['sort_name'];
 		$sort_type = $param_arr['sort_type'];
 		if(isset($param_arr['page_no']))unset($param_arr['page_no']);
@@ -790,12 +790,12 @@ class Default_ReportsController extends Zend_Controller_Action
 			$objPHPExcel->getActiveSheet()->SetCellValue($cell_name, $names);
 			// Make bold cells
 			$objPHPExcel->getActiveSheet()->getStyle($cell_name)->getFont()->setBold(true);
-			$objPHPExcel->getActiveSheet()->getStyle($cell_name)->applyFromArray( array(
-									        'fill' => array(
+			$objPHPExcel->getActiveSheet()->getStyle($cell_name)->applyFromArray( [
+									        'fill' => [
 									            'type' => PHPExcel_Style_Fill::FILL_SOLID,
-									            'color' => array('rgb' => '82CAFF')
-			)
-			)
+									            'color' => ['rgb' => '82CAFF']
+			]
+			]
 			);
 			$objPHPExcel->getActiveSheet()->getColumnDimension($letters[$count])->setAutoSize(true);
 			$i++;
@@ -823,7 +823,7 @@ class Default_ReportsController extends Zend_Controller_Action
 				}
 				else
 				{
-					$value = isset($emp_data[$column_key])?$emp_data[$column_key]:"";
+					$value = $emp_data[$column_key] ?? "";
 				}
 				$value = html_entity_decode($value,ENT_QUOTES,'UTF-8');
 				
@@ -854,31 +854,31 @@ class Default_ReportsController extends Zend_Controller_Action
 		$sort_name = $this->_getParam('sort_name',null);
 		$sort_type = $this->_getParam('sort_type',null);
 		$roles_data = $roles_model->getdata_for_rolesgroup_rpt($sort_name,$sort_type);
-		$cols_param_arr = array('group_name' => 'Group','cnt' => 'No.Of Roles');
+		$cols_param_arr = ['group_name' => 'Group','cnt' => 'No.Of Roles'];
 
-		$field_names = array();
-		$field_widths = array();
-		$data['field_name_align'] = array();
+		$field_names = [];
+		$field_widths = [];
+		$data['field_name_align'] = [];
 
 		foreach($cols_param_arr as $column_key => $column_name)
 		{
-			$field_names[] = array(
+			$field_names[] = [
                                         'field_name'=>$column_key,
                                         'field_label'=>$column_name
-			);
+			];
 			$field_widths[] = 25;
 			$data['field_name_align'][] = 'C';
 		}
 
-		$data = array('grid_no'=>1, 'project_name'=>'', 'object_name'=>'Groups & Roles Report', 'grid_count'=>1,'file_name'=>'Groups&Roles.pdf');
+		$data = ['grid_no'=>1, 'project_name'=>'', 'object_name'=>'Groups & Roles Report', 'grid_count'=>1,'file_name'=>'Groups&Roles.pdf'];
 
 		$pdf = $this->_helper->PdfHelper->generateReport($field_names, $roles_data, $field_widths, $data);
-		$this->_helper->json(array('file_name'=>$data['file_name']));
+		$this->_helper->json(['file_name'=>$data['file_name']]);
 	}
 	public function activeuserrptpdfAction()
 	{
 		$this->_helper->layout->disableLayout();
-		$search_arr = array();
+		$search_arr = [];
 		$search_arr['createddate'] = $this->_getParam('createddate',null);
 		$search_arr['u.emprole'] = $this->_getParam('emprole',null);
 		$search_arr['u.isactive'] = $this->_getParam('isactive',null);
@@ -890,14 +890,14 @@ class Default_ReportsController extends Zend_Controller_Action
 		$sort_name = $this->_getParam('sort_name',null);
 		$sort_type = $this->_getParam('sort_type',null);
 
-		$cols_param_arr = $this->_getParam('cols_arr',array());
+		$cols_param_arr = $this->_getParam('cols_arr',[]);
 		$user_model = new Default_Model_Usermanagement();
 
 		$user_data_org = $user_model->getdata_user_report($search_arr,$per_page,$page_no,$sort_name,$sort_type);
 
 		$page_cnt = $user_data_org['page_cnt'];
 		$user_data = $user_data_org['rows'];
-		$mod_user_data = array();
+		$mod_user_data = [];
 		foreach($user_data as $userd)
 		{
 			$userd['lastlog'] = sapp_Global::change_date($userd['lastlog'], 'view');
@@ -905,16 +905,16 @@ class Default_ReportsController extends Zend_Controller_Action
 			$userd['isactive'] = $userd['isactive'] == 1?"Active":"Inactive";
 			$mod_user_data[] = $userd;
 		}
-		$field_names = array();
-		$field_widths = array();
-		$data['field_name_align'] = array();
+		$field_names = [];
+		$field_widths = [];
+		$data['field_name_align'] = [];
 
 		foreach($cols_param_arr as $column_key => $column_name)
 		{
-			$field_names[] = array(
+			$field_names[] = [
                                         'field_name'=>$column_key,
                                         'field_label'=>$column_name
-			);
+			];
 			$field_widths[] = 25;
 			$data['field_name_align'][] = 'C';
 		}
@@ -926,12 +926,12 @@ class Default_ReportsController extends Zend_Controller_Action
 				$field_widths[$key] = ($width*180)/$totalPresentFieldWidth;
 			}
 		}
-		$data = array('grid_no'=>1, 'project_name'=>'', 'object_name'=>'Users & Employees Report', 'grid_count'=>1,'file_name'=>'Users&Employees.pdf');
+		$data = ['grid_no'=>1, 'project_name'=>'', 'object_name'=>'Users & Employees Report', 'grid_count'=>1,'file_name'=>'Users&Employees.pdf'];
 
 		$pdf = $this->_helper->PdfHelper->generateReport($field_names, $mod_user_data, $field_widths, $data);
 
 		
-		$this->_helper->json(array('file_name'=>$data['file_name']));
+		$this->_helper->json(['file_name'=>$data['file_name']]);
 	}
 	/**
 	 * This is used to export employee report in pdf.
@@ -941,10 +941,10 @@ class Default_ReportsController extends Zend_Controller_Action
 		$this->_helper->layout->disableLayout();
 		$param_arr = $this->_getAllParams();
 
-		$cols_param_arr = $this->_getParam('cols_arr',array());
+		$cols_param_arr = $this->_getParam('cols_arr',[]);
 		if(isset($param_arr['cols_arr']))	unset($param_arr['cols_arr']);
-		$page_no = isset($param_arr['page_no'])?$param_arr['page_no']:1;
-		$per_page = isset($param_arr['per_page'])?$param_arr['per_page']:PERPAGE;
+		$page_no = $param_arr['page_no'] ?? 1;
+		$per_page = $param_arr['per_page'] ?? PERPAGE;
 		$sort_name = $param_arr['sort_name'];
 		$sort_type = $param_arr['sort_type'];
 		if(isset($param_arr['page_no']))unset($param_arr['page_no']);
@@ -957,16 +957,16 @@ class Default_ReportsController extends Zend_Controller_Action
 		$employee_model = new Default_Model_Employee();
 		$emp_data_org = $employee_model->getdata_emp_report($param_arr,$per_page,$page_no,$sort_name,$sort_type);
 		$emp_arr = $emp_data_org['rows'];
-		$field_names = array();
-		$field_widths = array();
-		$data['field_name_align'] = array();
+		$field_names = [];
+		$field_widths = [];
+		$data['field_name_align'] = [];
 
 		foreach($cols_param_arr as $column_key => $column_name)
 		{
-			$field_names[] = array(
+			$field_names[] = [
                                         'field_name'=>$column_key,
                                         'field_label'=>$column_name
-			);
+			];
 			$field_widths[] = 25;
 			$data['field_name_align'][] = 'C';
 		}
@@ -978,12 +978,12 @@ class Default_ReportsController extends Zend_Controller_Action
 				$field_widths[$key] = ($width*180)/$totalPresentFieldWidth;
 			}
 		}
-		$data = array('grid_no'=>1, 'project_name'=>'', 'object_name'=>'Employee Report', 'grid_count'=>1,'file_name'=>'EmployeeRpt.pdf');
+		$data = ['grid_no'=>1, 'project_name'=>'', 'object_name'=>'Employee Report', 'grid_count'=>1,'file_name'=>'EmployeeRpt.pdf'];
 
 		$pdf = $this->_helper->PdfHelper->generateReport($field_names, $emp_arr, $field_widths, $data);
 
 		
-		$this->_helper->json(array('file_name'=>$data['file_name']));
+		$this->_helper->json(['file_name'=>$data['file_name']]);
 	}
 	/**
 	 * This is used to export schedule report in pdf.
@@ -991,7 +991,7 @@ class Default_ReportsController extends Zend_Controller_Action
 	public function interviewrptpdfAction()
 	{
 		$this->_helper->layout->disableLayout();
-		$param_arr = array();
+		$param_arr = [];
 		$param_arr['interview_date'] = $this->_getParam('interview_date',null);
 		$param_arr['requisition_id'] = $this->_getParam('req_id',null);
 		$param_arr['interviewer_id'] = $this->_getParam('interviewer_id',null);
@@ -1001,7 +1001,7 @@ class Default_ReportsController extends Zend_Controller_Action
 		$per_page = $this->_getParam('per_page',PERPAGE);
 		$sort_name = $this->_getParam('sort_name',null);
 		$sort_type = $this->_getParam('sort_type',null);
-		$cols_param_arr = $this->_getParam('cols_arr',array());
+		$cols_param_arr = $this->_getParam('cols_arr',[]);
 		foreach($cols_param_arr as $col_key => $col_val) {
 			if(in_array($col_key,$this->printable_interview_arr)) {
 				unset($cols_param_arr[$col_key]);
@@ -1012,16 +1012,16 @@ class Default_ReportsController extends Zend_Controller_Action
 		$req_data = $req_model->getdata_for_interviewrpt($param_arr, $sort_name, $sort_type, $page_no, $per_page);
 		$page_cnt = $req_data['page_cnt'];
 		$req_arr = $req_data['rows'];
-		$field_names = array();
-		$field_widths = array();
-		$data['field_name_align'] = array();
+		$field_names = [];
+		$field_widths = [];
+		$data['field_name_align'] = [];
 
 		foreach($cols_param_arr as $column_key => $column_name)
 		{
-			$field_names[] = array(
+			$field_names[] = [
                                     'field_name'=>$column_key,
                                     'field_label'=>$column_name
-			);
+			];
 			$field_widths[] = 25;
 			$data['field_name_align'][] = 'C';
 		}
@@ -1033,11 +1033,11 @@ class Default_ReportsController extends Zend_Controller_Action
 				$field_widths[$key] = ($width*180)/$totalPresentFieldWidth;
 			}
 		}
-		$data = array('grid_no'=>1, 'project_name'=>'', 'object_name'=>'Scheduled Interviews', 'grid_count'=>1,'file_name'=>'Scheduled_interviews.pdf');
+		$data = ['grid_no'=>1, 'project_name'=>'', 'object_name'=>'Scheduled Interviews', 'grid_count'=>1,'file_name'=>'Scheduled_interviews.pdf'];
 
 		$pdf = $this->_helper->PdfHelper->generateReport($field_names, $req_arr, $field_widths, $data);
 
-		$this->_helper->json(array('file_name'=>$data['file_name']));
+		$this->_helper->json(['file_name'=>$data['file_name']]);
 	}
 
 	public function rolesgroupdataAction()
@@ -1071,7 +1071,7 @@ class Default_ReportsController extends Zend_Controller_Action
             $sort_type = $this->_getParam('sort_type',null);
 			
             $emproles_data = $roles_model->getdata_emprolesgroup_rpt($sort_name,$sort_type);
-            $emproles_arr = array();
+            $emproles_arr = [];
 			
             if(count($emproles_data) > 0)
             {
@@ -1082,12 +1082,12 @@ class Default_ReportsController extends Zend_Controller_Action
                         $emproles_arr[$emp['group_id']]['emp_cnt'] += $emp['user_cnt'];
                     else 
                         $emproles_arr[$emp['group_id']]['emp_cnt'] = $emp['user_cnt'];
-                    $emproles_arr[$emp['group_id']]['childs'][] = array('rolename' => $emp['rolename'],
+                    $emproles_arr[$emp['group_id']]['childs'][] = ['rolename' => $emp['rolename'],
                                                                          'user_cnt' => $emp['user_cnt'],
-                                                                         'role_id' => $emp['role_id']);                    
+                                                                         'role_id' => $emp['role_id']];                    
                 }
             }
-            $cols_param_arr = array('group_name' => 'Group','name' => 'Role','user_cnt' => 'Users count');
+            $cols_param_arr = ['group_name' => 'Group','name' => 'Role','user_cnt' => 'Users count'];
             $this->view->emproles_arr = $emproles_arr;
             $this->view->sort_name = $sort_name;
             $this->view->sort_type = $sort_type;
@@ -1100,13 +1100,13 @@ class Default_ReportsController extends Zend_Controller_Action
 	public function activeuserAction()
 	{
 		
-		$norec_arr = array();
+		$norec_arr = [];
 		$form = new Default_Form_Activeuserreport();
 		$roles_model = new Default_Model_Roles();
 		$roles_data = $roles_model->getRolesList();
 		if(count($roles_data) > 0)
 		{
-			$form->emprole->addMultiOptions(array(''=>'Select Role')+$roles_data);
+			$form->emprole->addMultiOptions([''=>'Select Role']+$roles_data);
 		}
 		else
 		{
@@ -1121,7 +1121,7 @@ class Default_ReportsController extends Zend_Controller_Action
 	{
 		try {
 			
-		$search_arr = array();
+		$search_arr = [];
 		$search_arr['createddate'] = $this->_getParam('createddate',null);
 		$search_arr['ur.role_id'] = $this->_getParam('emprole',null);
 		$search_arr['u.isactive'] = $this->_getParam('isactive',null);
@@ -1133,7 +1133,7 @@ class Default_ReportsController extends Zend_Controller_Action
 		$sort_name = $this->_getParam('sort_name',null);
 		$sort_type = $this->_getParam('sort_type',null);
 
-		$cols_param_arr = $this->_getParam('cols_arr',array());
+		$cols_param_arr = $this->_getParam('cols_arr',[]);
 		$user_model = new Default_Model_Usermanagement();
 
 		$user_data_org = $user_model->getdata_user_report($search_arr,$per_page,$page_no,$sort_name,$sort_type);
@@ -1141,7 +1141,7 @@ class Default_ReportsController extends Zend_Controller_Action
 		$page_cnt = $user_data_org['page_cnt'];
 		$user_data = $user_data_org['rows'];
 
-		$columns_arr = array(
+		$columns_arr = [
                 'userfullname' => 'Employee',
                 'emailaddress' => 'Email',
                 'user' => 'User',
@@ -1149,7 +1149,7 @@ class Default_ReportsController extends Zend_Controller_Action
                 'isactive' => 'Status',
                 'createdate' => 'Created On',
 
-		);
+		];
 		if(count($cols_param_arr) == 0)
 		$cols_param_arr = $columns_arr;
 
@@ -1171,11 +1171,11 @@ class Default_ReportsController extends Zend_Controller_Action
 		try {
 			//code...
 		$param_arr = $this->_getAllParams();
-		$cols_param_arr = $this->_getParam('cols_arr',array());
+		$cols_param_arr = $this->_getParam('cols_arr',[]);
 		if(isset($param_arr['cols_arr']))
                     unset($param_arr['cols_arr']);
-		$page_no = isset($param_arr['page_no'])?$param_arr['page_no']:1;
-		$per_page = isset($param_arr['per_page'])?$param_arr['per_page']:PERPAGE;
+		$page_no = $param_arr['page_no'] ?? 1;
+		$per_page = $param_arr['per_page'] ?? PERPAGE;
 		$sort_name = $param_arr['sort_name'];
 		$sort_type = $param_arr['sort_type'];
 		if(isset($param_arr['page_no']))unset($param_arr['page_no']);
@@ -1209,7 +1209,7 @@ Zend_Debug::dump($th->getMessage());	}
 	}
 	public function empreport_heplper1($type)
 	{
-		$columns_array = array(
+		$columns_array = [
                         // 'employeeId' => 'Employee ID',
                         'userfullname' => 'Employee',
                         'emailaddress' => 'Email',
@@ -1236,8 +1236,8 @@ Zend_Debug::dump($th->getMessage());	}
                         // 'freqtype' => 'Pay Frequency',
                         // 'salary' => 'Salary',
 
-		);
-		$mandatory_array = array(
+		];
+		$mandatory_array = [
                         // 'employeeId' => 'Employee ID',
                         'userfullname' => 'Employee',
                         'emailaddress' => 'Email',
@@ -1251,7 +1251,7 @@ Zend_Debug::dump($th->getMessage());	}
 						 // 'department_name' => 'Department',
 						'employemnt_status' => 'Employment Status',
                         'date_of_joining' => 'Date of Joining'                                
-		);
+		];
 		/* if($type == 'all')
 		return $columns_array;
 		else */
@@ -1260,17 +1260,17 @@ Zend_Debug::dump($th->getMessage());	}
 	public function empautoAction()
 	{
 		$term = $this->_getParam('term',null);
-		$output = array(array('id' => '','value' => 'No records','label' => 'No records'));
+		$output = [['id' => '','value' => 'No records','label' => 'No records']];
 		$emp_model = new Default_Model_Employee();
 		if($term != '')
 		{
 			$emp_arr = $emp_model->getAutoReportEmp($term);
 			if(count($emp_arr)>0)
 			{
-				$output = array();
+				$output = [];
 				foreach($emp_arr as $emp)
 				{
-					$output[] = array('id' => $emp['id'],'value' => $emp['emp_name'],'label' => $emp['emp_name'],'profile_img' => $emp['profileimg']);
+					$output[] = ['id' => $emp['id'],'value' => $emp['emp_name'],'label' => $emp['emp_name'],'profile_img' => $emp['profileimg']];
 				}
 			}
 		}
@@ -1279,7 +1279,7 @@ Zend_Debug::dump($th->getMessage());	}
 	
 	public function servicedeskreportAction()
 	{
-		$norec_arr = array();		
+		$norec_arr = [];		
 		$form = new Default_Form_Servicedeskreport();		
 		$servicedeskdepartmentmodel = new Default_Model_Servicedeskdepartment();
 		$assetcategorymodel = new Assets_Model_AssetCategories();		
@@ -1306,11 +1306,11 @@ Zend_Debug::dump($th->getMessage());	}
 	public function getsddataAction()
 	{
 		$param_arr = $this->_getAllParams();
-		$cols_param_arr = $this->_getParam('cols_arr',array());
+		$cols_param_arr = $this->_getParam('cols_arr',[]);
 		if(isset($param_arr['cols_arr']))
 		unset($param_arr['cols_arr']);
-		$page_no = isset($param_arr['page_no'])?$param_arr['page_no']:1;
-		$per_page = isset($param_arr['per_page'])?$param_arr['per_page']:PERPAGE;
+		$page_no = $param_arr['page_no'] ?? 1;
+		$per_page = $param_arr['per_page'] ?? PERPAGE;
 		$sort_name = $param_arr['sort_name'];
 		$sort_type = $param_arr['sort_type'];
 		if(isset($param_arr['page_no']))unset($param_arr['page_no']);
@@ -1350,7 +1350,7 @@ Zend_Debug::dump($th->getMessage());	}
 	
 	public function sdreportcolumns($type)
 	{
-		$columns_array = array(
+		$columns_array = [
 						'ticket_number' => 'Ticket#',
 						'raised_by_name' => 'Raised by',
 						'createddate' => 'Raised On',
@@ -1369,8 +1369,8 @@ Zend_Debug::dump($th->getMessage());	}
                         'approver_status_2' => 'Approver 2 Status',
 						'approver_3_name' => 'Approver 3',
                         'approver_status_3' => 'Approver 3 Status',
-		);
-		$mandatory_array = array(
+		];
+		$mandatory_array = [
 						'ticket_number' => 'Ticket#',
 						'raised_by_name' => 'Raised by',
 						'createddate' => 'Raised On',
@@ -1379,7 +1379,7 @@ Zend_Debug::dump($th->getMessage());	}
                         'priority' => 'Priority',
                         'description' => 'Description',
                         'status' => 'Status',
-		);
+		];
 		if($type == 'all')
 			return $columns_array;
 		else
@@ -1391,10 +1391,10 @@ Zend_Debug::dump($th->getMessage());	}
 		$this->_helper->layout->disableLayout();
 		$param_arr = $this->_getAllParams();
 
-		$cols_param_arr = $this->_getParam('cols_arr',array());
+		$cols_param_arr = $this->_getParam('cols_arr',[]);
 		if(isset($param_arr['cols_arr']))	unset($param_arr['cols_arr']);
-		$page_no = isset($param_arr['page_no'])?$param_arr['page_no']:1;
-		$per_page = isset($param_arr['per_page'])?$param_arr['per_page']:PERPAGE;
+		$page_no = $param_arr['page_no'] ?? 1;
+		$per_page = $param_arr['per_page'] ?? PERPAGE;
 		$sort_name = $param_arr['sort_name'];
 		$sort_type = $param_arr['sort_type'];
 		if(isset($param_arr['page_no']))unset($param_arr['page_no']);
@@ -1430,16 +1430,16 @@ Zend_Debug::dump($th->getMessage());	}
 			}
 		}
 		
-		$field_names = array();
-		$field_widths = array();
-		$data['field_name_align'] = array();
+		$field_names = [];
+		$field_widths = [];
+		$data['field_name_align'] = [];
 
 		foreach($cols_param_arr as $column_key => $column_name)
 		{
-			$field_names[] = array(
+			$field_names[] = [
 									'field_name'=>$column_key,
                                     'field_label'=>$column_name
-			);
+			];
 			$field_widths[] = 25;
 			$data['field_name_align'][] = 'C';
 		}
@@ -1451,11 +1451,11 @@ Zend_Debug::dump($th->getMessage());	}
 				$field_widths[$key] = ($width*180)/$totalPresentFieldWidth;
 			}
 		}
-		$data = array('grid_no'=>1, 'project_name'=>'', 'object_name'=>'Service Request Management Report', 'grid_count'=>1,'file_name'=>'ServiceDeskReport.pdf');
+		$data = ['grid_no'=>1, 'project_name'=>'', 'object_name'=>'Service Request Management Report', 'grid_count'=>1,'file_name'=>'ServiceDeskReport.pdf'];
 
 		$pdf = $this->_helper->PdfHelper->generateReport($field_names, $sd_arr, $field_widths, $data);
 
-		$this->_helper->json(array('file_name'=>$data['file_name']));
+		$this->_helper->json(['file_name'=>$data['file_name']]);
 	}
 	
 	public function servicedeskexcelAction()
@@ -1463,10 +1463,10 @@ Zend_Debug::dump($th->getMessage());	}
 		$this->_helper->layout->disableLayout();
 		$param_arr = $this->_getAllParams();
 
-		$cols_param_arr = $this->_getParam('cols_arr',array());
+		$cols_param_arr = $this->_getParam('cols_arr',[]);
 		if(isset($param_arr['cols_arr']))	unset($param_arr['cols_arr']);
-		$page_no = isset($param_arr['page_no'])?$param_arr['page_no']:1;
-		$per_page = isset($param_arr['per_page'])?$param_arr['per_page']:PERPAGE;
+		$page_no = $param_arr['page_no'] ?? 1;
+		$per_page = $param_arr['per_page'] ?? PERPAGE;
 		$sort_name = $param_arr['sort_name'];
 		$sort_type = $param_arr['sort_type'];
 		if(isset($param_arr['page_no']))unset($param_arr['page_no']);
@@ -1508,12 +1508,12 @@ Zend_Debug::dump($th->getMessage());	}
 			$objPHPExcel->getActiveSheet()->SetCellValue($cell_name, $names);
 			// Make bold cells
 			$objPHPExcel->getActiveSheet()->getStyle($cell_name)->getFont()->setBold(true);
-			$objPHPExcel->getActiveSheet()->getStyle($cell_name)->applyFromArray( array(
-									        'fill' => array(
+			$objPHPExcel->getActiveSheet()->getStyle($cell_name)->applyFromArray( [
+									        'fill' => [
 									            'type' => PHPExcel_Style_Fill::FILL_SOLID,
-									            'color' => array('rgb' => '82CAFF')
-			)
-			)
+									            'color' => ['rgb' => '82CAFF']
+			]
+			]
 			);
 			$objPHPExcel->getActiveSheet()->getColumnDimension($letters[$count])->setAutoSize(true);
 			$i++;
@@ -1544,7 +1544,7 @@ Zend_Debug::dump($th->getMessage());	}
 				}
 				else
 				{
-					$value = isset($sd_data[$column_key])?$sd_data[$column_key]:"";
+					$value = $sd_data[$column_key] ?? "";
 				}
 				$value = html_entity_decode($value,ENT_QUOTES,'UTF-8');
 				$objPHPExcel->getActiveSheet()->SetCellValue($cell_name, $value);
@@ -1568,7 +1568,7 @@ Zend_Debug::dump($th->getMessage());	}
 	public function employeereportAction()
 	{
 		
-            $norec_arr = array();
+            $norec_arr = [];
             $form = new Default_Form_Employeereport();
             $requi_model = new Default_Model_Requisition();
             $employmentstatusModel = new Default_Model_Employmentstatus();
@@ -1590,7 +1590,7 @@ Zend_Debug::dump($th->getMessage());	}
             {
                 $norec_arr['emp_status_id'] = "Employment status is not configured yet.";
             }
-            $form->jobtitle_id->addMultiOptions(array(''=>'Select Job Title')+$job_data);
+            $form->jobtitle_id->addMultiOptions([''=>'Select Job Title']+$job_data);
             if(count($employmentStatusData) > 0)
             {
 				$form->emp_status_id->addMultiOption('','Select Employment Status');
@@ -1646,7 +1646,7 @@ Zend_Debug::dump($th->getMessage());	}
                     }
                 }
             }
-            $this->_helper->json(array('options' => $options));
+            $this->_helper->json(['options' => $options]);
         }
 	/**
 	 * @name indexAction
@@ -1774,7 +1774,7 @@ Zend_Debug::dump($th->getMessage());	}
 		/** Emp by department **/
 		$empDeptRes = $repModel->getEmpByDepartment();
 
-		$empDeptStr = array();
+		$empDeptStr = [];
 		if($empDeptRes)
 		{
 			for($i =0; $i < sizeof($empDeptRes); $i++)
@@ -1786,7 +1786,7 @@ Zend_Debug::dump($th->getMessage());	}
 			/** Emp by sbunit **/
 			$empsbunitRes = $repModel->getEmpBysbunit();
 
-			$empsbunitStr = array();
+			$empsbunitStr = [];
 			if($empsbunitRes)
 			{
 				for($i =0; $i < sizeof($empsbunitRes); $i++)
@@ -1800,7 +1800,7 @@ Zend_Debug::dump($th->getMessage());	}
 				$empsdivRes = $repModel->getEmpBydivision();
 				//die(json_encode($empsdivRes));
 
-				$empsdivStr = array();
+				$empsdivStr = [];
 				if($empsdivRes)
 				{
 					for($i =0; $i < sizeof($empsdivRes); $i++)
@@ -1815,7 +1815,7 @@ Zend_Debug::dump($th->getMessage());	}
 					$empssecRes = $repModel->getEmpBysection();
 					//die(json_encode($empsdivRes));
 	
-					$empssectionStr = array();
+					$empssectionStr = [];
 					if($empssecRes)
 					{
 						for($i =0; $i < sizeof($empssecRes); $i++)
@@ -1949,36 +1949,36 @@ Zend_Debug::dump($th->getMessage());	}
 			
 		$reportsmodel = new Default_Model_Reports();
 
-		$cols_param = array('groupname','dates','employee');
+		$cols_param = ['groupname','dates','employee'];
 		$selectColumns = $cols_param;
 			
 		$getHolidayAndEmpResult = $reportsmodel->getEmpHolidayResult($sort_name,$sort_type,$page_no,$per_page);
-		$field_names = array();
-		$field_widths = array();
+		$field_names = [];
+		$field_widths = [];
 		$fieldwidth = '';
-		$data['field_name_align'] = array();
+		$data['field_name_align'] = [];
 			
 		foreach($selectColumns as $col){
 			switch($col){
 				case 'groupname':
-					$field_names[] = array(
+					$field_names[] = [
 											'field_name'=>'groupname',
 											'field_label'=>'Holiday Group'
-											);
+											];
 											$field_widths[] = 60;
 											$data['field_name_align'][] = 'C';
 											break;
-				case 'dates' : $field_names[] = array(
+				case 'dates' : $field_names[] = [
 											'field_name'=>'datecount',
 											'field_label'=>'Holiday Count'
-											);
+											];
 											$field_widths[] = 60;
 											$data['field_name_align'][] = 'C';
 											break;
-				case 'employee' : $field_names[] = array(
+				case 'employee' : $field_names[] = [
 										'field_name'=>'empcount',
 										'field_label'=>'Employee Count'
-										);
+										];
 										$field_widths[] = 60;
 										$data['field_name_align'][] = 'C';
 										break;
@@ -1993,9 +1993,9 @@ Zend_Debug::dump($th->getMessage());	}
 				$field_widths[$key] = ($width*180)/$totalPresentFieldWidth;
 			}
 		}
-		$data = array('grid_no'=>1, 'project_name'=>'', 'object_name'=>'Holiday Report', 'grid_count'=>1,'file_name'=>'holidayreport.pdf');
+		$data = ['grid_no'=>1, 'project_name'=>'', 'object_name'=>'Holiday Report', 'grid_count'=>1,'file_name'=>'holidayreport.pdf'];
 		$pdf = $this->_helper->PdfHelper->generateReport($field_names, $getHolidayAndEmpResult, $field_widths, $data);
-		return $this->_helper->json(array('file_name'=>$data['file_name']));
+		return $this->_helper->json(['file_name'=>$data['file_name']]);
 	}
 
 	public function getexcelreportholidayAction()
@@ -2020,9 +2020,9 @@ Zend_Debug::dump($th->getMessage());	}
 
 		$reportsmodel = new Default_Model_Reports();
 
-		$cols_param_arr = array('groupname'=>'Holiday Group',
+		$cols_param_arr = ['groupname'=>'Holiday Group',
 	                         'dates'=>'Holiday Count',
-							 'employee'=>'Employee Count');
+							 'employee'=>'Employee Count'];
 
 		$getHolidayAndEmpResult = $reportsmodel->getEmpHolidayResult($sort_name,$sort_type,$page_no,$per_page);
 		$emp_arr = $getHolidayAndEmpResult;
@@ -2045,12 +2045,12 @@ Zend_Debug::dump($th->getMessage());	}
 			$objPHPExcel->getActiveSheet()->SetCellValue($cell_name, $names);
 			// Make bold cells
 			$objPHPExcel->getActiveSheet()->getStyle($cell_name)->getFont()->setBold(true);
-			$objPHPExcel->getActiveSheet()->getStyle($cell_name)->applyFromArray( array(
-									        'fill' => array(
+			$objPHPExcel->getActiveSheet()->getStyle($cell_name)->applyFromArray( [
+									        'fill' => [
 									            'type' => PHPExcel_Style_Fill::FILL_SOLID,
-									            'color' => array('rgb' => '82CAFF')
-			)
-			)
+									            'color' => ['rgb' => '82CAFF']
+			]
+			]
 			);
 			$objPHPExcel->getActiveSheet()->getColumnDimension($letters[$count])->setAutoSize(true);
 			$i++;
@@ -2072,15 +2072,15 @@ Zend_Debug::dump($th->getMessage());	}
 
 					if($column_key == 'dates')
 					{
-						$value = isset($emp_data['datecount'])?$emp_data['datecount']:"";
+						$value = $emp_data['datecount'] ?? "";
 					}
 					else if($column_key == 'employee')
 					{
-						$value = isset($emp_data['empcount'])?$emp_data['empcount']:"";
+						$value = $emp_data['empcount'] ?? "";
 					}
 					else
 					{
-						$value = isset($emp_data[$column_key])?$emp_data[$column_key]:"";
+						$value = $emp_data[$column_key] ?? "";
 					}
 					$value = html_entity_decode($value,ENT_QUOTES,'UTF-8');
 					$objPHPExcel->getActiveSheet()->SetCellValue($cell_name, $value);
@@ -2111,8 +2111,8 @@ Zend_Debug::dump($th->getMessage());	}
 		$reportsmodel = new Default_Model_Reports();
 		$leavesmodel = new Default_Model_Leave();
 		$leavestatusform = new Default_Form_leavereport();
-		$msgarray = array();
-		$selectColumns =array();
+		$msgarray = [];
+		$selectColumns =[];
 		$searchQuery = '';
 			
 		$employeename = $this->_request->getParam('employeename');
@@ -2187,8 +2187,8 @@ Zend_Debug::dump($th->getMessage());	}
 			$lastpage = '';
 		}
 
-		$selectColumnLabels = array();
-		$leavesheaderarr = array('userfullname'=>'Leave Applied By',
+		$selectColumnLabels = [];
+		$leavesheaderarr = ['userfullname'=>'Leave Applied By',
 		                        'leave'=>'Leave',
 	                         'leavecategory'=>'Leave Type',
 							 'status'=>'Leave Status',
@@ -2196,12 +2196,12 @@ Zend_Debug::dump($th->getMessage());	}
 							 'leaveto'=>'To Date',
 							 'remark'=>'Remark',
 							 'approvedby'=>'Approver',
-							 'requested'=>'Applied On');		
+							 'requested'=>'Applied On'];		
 			
 		if(empty($selectColumns))
 		{
-			$selectColumns = array('userfullname','leave','leavecategory','status','leavefrom',
-				'leaveto','Remark','approvedby','requested');		
+			$selectColumns = ['userfullname','leave','leavecategory','status','leavefrom',
+				'leaveto','Remark','approvedby','requested'];		
 			$selectColumnLabels = $leavesheaderarr;
 		}
 		else
@@ -2254,13 +2254,13 @@ Zend_Debug::dump($th->getMessage());	}
 		$leavestatus = $param_arr['status'];
 		$from_date = $param_arr['leavefrom'];
 		$headersize = $param_arr['headersize'];
-		$cols_param = array();
+		$cols_param = [];
 		$searchQuery = '';
 		$reportsmodel = new Default_Model_Reports();
 
 		$cols_param = explode(',',$param_arr['checkedheaders']);
 		$selectColumns = $cols_param;
-		$leavesheaderarr = array('userfullname'=>'Leave Applied By',
+		$leavesheaderarr = ['userfullname'=>'Leave Applied By',
 		'leave'=>'Leave',
 
 		'leavecategory'=>'Leave Type',
@@ -2269,8 +2269,8 @@ Zend_Debug::dump($th->getMessage());	}
 		'leaveto'=>'To Date',
 		'remark'=>'Remark',
 		'approvedby'=>'Approver',
-		'requested'=>'Applied On');
-		$cols_param_arr = array();
+		'requested'=>'Applied On'];
+		$cols_param_arr = [];
 		foreach($leavesheaderarr as $key=>$val)
 		{
 			foreach( $cols_param  as $col)
@@ -2299,73 +2299,73 @@ Zend_Debug::dump($th->getMessage());	}
 
 	public function generateLeaveHistoryPDF($finalArray,$selectColumns,$headersize)
 	{
-		$field_names = array();
-		$field_widths = array();
+		$field_names = [];
+		$field_widths = [];
 		$fieldwidth = '';
-		$data['field_name_align'] = array();
+		$data['field_name_align'] = [];
 			
 		foreach($selectColumns as $col){
 			switch($col){
 				case 'userfullname':
-					$field_names[] = array(
+					$field_names[] = [
 										'field_name'=>'userfullname',
 										'field_label'=>'Leave Applied By'
-										);
+										];
 										$field_widths[] = 25;
 										$data['field_name_align'][] = 'C';
 										break;
 			   case 'leave':
-										$field_names[] = array(
+										$field_names[] = [
 																'field_name'=>'leave',
 																'field_label'=>'Leave'
-																);
+																];
 																$field_widths[] = 20;
 																$data['field_name_align'][] = 'C';
 																break;
-				case 'leavecategory' : $field_names[] = array(
+				case 'leavecategory' : $field_names[] = [
 										'field_name'=>'leavecategory',
 										'field_label'=>'Leave Type'
-										);
+										];
 										$field_widths[] = 20;
 										$data['field_name_align'][] = 'C';
 										break;
 			
-				case 'status': $field_names[] = array(
+				case 'status': $field_names[] = [
 									'field_name'=>'status',
 									'field_label'=>'Leave Status'
-									);
+									];
 									$field_widths[] = 15;
 									$data['field_name_align'][] = 'C';
 									break;
 			
 				case 'leavefrom':
-					$field_names[] = array(
+					$field_names[] = [
 										'field_name'=>'leavefrom',
 										'field_label'=>'From Date'
-										);
+										];
 										$field_widths[] = 25;
 										$data['field_name_align'][] = 'C';
 										break;
-				case 'leaveto': $field_names[] = array(
+				case 'leaveto': $field_names[] = [
 										'field_name'=>'leaveto',
 										'field_label'=>'To Date'
-										);
+										];
 										$field_widths[] = 25;
 										$data['field_name_align'][] = 'C';
 										break;
-				case 'remark': $field_names[] = array(
+				case 'remark': $field_names[] = [
 										'field_name'=>'remark',
 										'field_label'=>'Remark'
-										);
+										];
 										$field_widths[] = 30;
 										$data['field_name_align'][] = 'C';
 										break;
 				
 			
-				case 'requested': $field_names[] = array(
+				case 'requested': $field_names[] = [
 										'field_name'=>'requested',
 										'field_label'=>'Applied On'
-										);
+										];
 										$field_widths[] = 25;
 										$data['field_name_align'][] = 'C';
 										break;
@@ -2379,11 +2379,11 @@ Zend_Debug::dump($th->getMessage());	}
 			}
 		}
 			
-		$data = array('grid_no'=>1, 'project_name'=>'', 'object_name'=>'Leaves Report', 'grid_count'=>1,'file_name'=>'leavesreport.pdf');
+		$data = ['grid_no'=>1, 'project_name'=>'', 'object_name'=>'Leaves Report', 'grid_count'=>1,'file_name'=>'leavesreport.pdf'];
 			
 			
 		$pdf = $this->_helper->PdfHelper->generateReport($field_names, $finalArray, $field_widths, $data);
-		return $this->_helper->json(array('file_name'=>$data['file_name']));
+		return $this->_helper->json(['file_name'=>$data['file_name']]);
 
 	}
 
@@ -2407,7 +2407,7 @@ Zend_Debug::dump($th->getMessage());	}
 		$reportsmodel = new Default_Model_Reports();
 
 		$cols_param = explode(',',$param_arr['checkedheaders']);
-		$leavesheaderarr = array('userfullname'=>'Leave Applied By',
+		$leavesheaderarr = ['userfullname'=>'Leave Applied By',
 		'leave'=>'Leave',
 		'leavecategory'=>'Leave Type',
 		'status'=>'Leave Status',
@@ -2415,8 +2415,8 @@ Zend_Debug::dump($th->getMessage());	}
 		'leaveto'=>'To Date',
 		'remark'=>'Remark',
 		'approvedby'=>'Approver',
-		'requested'=>'Applied On');
-		$cols_param_arr = array();
+		'requested'=>'Applied On'];
+		$cols_param_arr = [];
 		foreach($leavesheaderarr as $key=>$val)
 		{
 			foreach( $cols_param  as $col)
@@ -2459,12 +2459,12 @@ Zend_Debug::dump($th->getMessage());	}
 			$objPHPExcel->getActiveSheet()->SetCellValue($cell_name, $names);
 			// Make bold cells
 			$objPHPExcel->getActiveSheet()->getStyle($cell_name)->getFont()->setBold(true);
-			$objPHPExcel->getActiveSheet()->getStyle($cell_name)->applyFromArray( array(
-									        'fill' => array(
+			$objPHPExcel->getActiveSheet()->getStyle($cell_name)->applyFromArray( [
+									        'fill' => [
 									            'type' => PHPExcel_Style_Fill::FILL_SOLID,
-									            'color' => array('rgb' => '82CAFF')
-			)
-			)
+									            'color' => ['rgb' => '82CAFF']
+			]
+			]
 			);
 			$objPHPExcel->getActiveSheet()->getColumnDimension($letters[$count])->setAutoSize(true);
 			$i++;
@@ -2484,11 +2484,11 @@ Zend_Debug::dump($th->getMessage());	}
 
 				if($column_key == 'employeename')
 				{
-					$value = isset($emp_data['user_name'])?$emp_data['user_name']:"";
+					$value = $emp_data['user_name'] ?? "";
 				}
 				else if($column_key == 'leavetype')
 				{
-					$value = isset($emp_data['leavetype_name'])?$emp_data['leavetype_name']:"";
+					$value = $emp_data['leavetype_name'] ?? "";
 				}
 				else if($column_key == 'deptname')
 				{
@@ -2496,11 +2496,11 @@ Zend_Debug::dump($th->getMessage());	}
 				}
 				else if($column_key == 'reportingmanagername')
 				{
-					$value = isset($emp_data['rep_manager_name'])?$emp_data['rep_manager_name']:"";
+					$value = $emp_data['rep_manager_name'] ?? "";
 				}
 				else
 				{
-					$value = isset($emp_data[$column_key])?$emp_data[$column_key]:"";
+					$value = $emp_data[$column_key] ?? "";
 				}
 				$value = html_entity_decode($value,ENT_QUOTES,'UTF-8');
 				$objPHPExcel->getActiveSheet()->SetCellValue($cell_name, $value);
@@ -2538,7 +2538,7 @@ Zend_Debug::dump($th->getMessage());	}
 
 			if($conf ==	'businessunits')
 			{
-				$businessunitsArr = array( 'unitname','unitcode','startdate','deptcount','address','ccity','sstate','ccountry','status');
+				$businessunitsArr = [ 'unitname','unitcode','startdate','deptcount','address','ccity','sstate','ccountry','status'];
 				if($checkedheaders !='')
 				{
 					$checkedheadersarray = explode(',',$checkedheaders);
@@ -2546,7 +2546,7 @@ Zend_Debug::dump($th->getMessage());	}
 					if(!empty($businessunits_session->businessunitsObject) && isset($businessunits_session->businessunitsObject))
 					{
 						unset($businessunits_session->businessunitsObject);
-						$businessunits_session->businessunitsObject = array();
+						$businessunits_session->businessunitsObject = [];
 						for($i=0;$i<sizeof($checkedheadersarray);$i++)
 						{
 							array_push($businessunits_session->businessunitsObject,$checkedheadersarray[$i]);
@@ -2557,7 +2557,7 @@ Zend_Debug::dump($th->getMessage());	}
 			}
 			else if($conf == 'leavesreport')
 			{
-				$leavesheaderArray = array('Leave Applied By','Leave Type','Leave Duration','Leave Status','Department','From Date','To Date','Reason','Reporting Manager','Leave Count','Applied On');
+				$leavesheaderArray = ['Leave Applied By','Leave Type','Leave Duration','Leave Status','Department','From Date','To Date','Reason','Reporting Manager','Leave Count','Applied On'];
 				if($checkedheaders !='')
 				{
 					$checkedheadersarray = explode(',',$checkedheaders);
@@ -2565,7 +2565,7 @@ Zend_Debug::dump($th->getMessage());	}
 					if(!empty($leavesReportsession->leavesReportObject) && isset($leavesReportsession->leavesReportObject))
 					{
 						unset($leavesReportsession->leavesReportObject);
-						$leavesReportsession->leavesReportObject = array();
+						$leavesReportsession->leavesReportObject = [];
 						for($i=0;$i<sizeof($checkedheadersarray);$i++)
 						{
 							array_push($leavesReportsession->leavesReportObject,$checkedheadersarray[$i]);
@@ -2575,7 +2575,7 @@ Zend_Debug::dump($th->getMessage());	}
 				}
 			}
 		}
-		$this->_helper->json(array('result'=>$result));
+		$this->_helper->json(['result'=>$result]);
 	}
 
 
@@ -2586,8 +2586,8 @@ Zend_Debug::dump($th->getMessage());	}
 		$monthslistmodel = new Default_Model_Monthslist();
 		$weekdaysmodel = new Default_Model_Weekdays();
 		$leavemanagementform = new Default_Form_leavemanagementreport();
-		$msgarray = array();
-		$selectColumns =array();
+		$msgarray = [];
+		$selectColumns =[];
 		$searchQuery = '';
 			
 		$department = $this->_request->getParam('department_id');
@@ -2672,8 +2672,8 @@ Zend_Debug::dump($th->getMessage());	}
 			$lastpage = '';
 		}
 
-		$selectColumnLabels = array();
-		$leavesheaderarr = array('cal_startmonthname'=>'Start Month',
+		$selectColumnLabels = [];
+		$leavesheaderarr = ['cal_startmonthname'=>'Start Month',
 	                         'weekend_startday'=>'Week-end 1',
 							 'weekend_endday'=>'Week-end 2',
 							 'department_name'=>'Department',
@@ -2681,13 +2681,13 @@ Zend_Debug::dump($th->getMessage());	}
 							 'is_halfday'=>'Halfday',
 							 'is_leavetransfer'=>'Leave Transferable',
 							 'is_skipholidays'=>'Skip Holidays',
-		);
+		];
 			
 		if(empty($selectColumns))
 		{
-			$selectColumns = array('cal_startmonthname','weekend_startday','weekend_endday',
+			$selectColumns = ['cal_startmonthname','weekend_startday','weekend_endday',
 			                       'department_name','hours_day','is_halfday','is_leavetransfer',
-								   'is_skipholidays');		
+								   'is_skipholidays'];		
 			$selectColumnLabels = $leavesheaderarr;
 		}
 		else
@@ -2736,13 +2736,13 @@ Zend_Debug::dump($th->getMessage());	}
 		$weekend_startday = $param_arr['weekend_startday'];
 		$weekend_endday = $param_arr['weekend_endday'];
 		$headersize = $param_arr['headersize'];
-		$cols_param = array();
+		$cols_param = [];
 		$searchQuery = '';
 		$reportsmodel = new Default_Model_Reports();
 
 		$cols_param = explode(',',$param_arr['checkedheaders']);
 		$selectColumns = $cols_param;
-		$leavesheaderarr = array('cal_startmonthname'=>'Start Month',
+		$leavesheaderarr = ['cal_startmonthname'=>'Start Month',
 	                         'weekend_startday'=>'Week-end 1',
 							 'weekend_endday'=>'Week-end 2',
 							 'department_name'=>'Department',
@@ -2750,8 +2750,8 @@ Zend_Debug::dump($th->getMessage());	}
 							 'is_halfday'=>'Halfday',
 							 'is_leavetransfer'=>'Leave Transferable',
 							 'is_skipholidays'=>'Skip Holidays',
-		);
-		$cols_param_arr = array();
+		];
+		$cols_param_arr = [];
 		foreach($leavesheaderarr as $key=>$val)
 		{
 			foreach( $cols_param  as $col)
@@ -2779,68 +2779,68 @@ Zend_Debug::dump($th->getMessage());	}
 
 	public function generateLeaveManagementHistoryPDF($finalArray,$selectColumns,$headersize)
 	{
-		$field_names = array();
-		$field_widths = array();
+		$field_names = [];
+		$field_widths = [];
 		$fieldwidth = '';
-		$data['field_name_align'] = array();
+		$data['field_name_align'] = [];
 			
 		foreach($selectColumns as $col){
 			switch($col){
 				case 'cal_startmonthname':
-					$field_names[] = array(
+					$field_names[] = [
 										'field_name'=>'cal_startmonthname',
 										'field_label'=>'Start Month'
-										);
+										];
 										$field_widths[] = 20;
 										$data['field_name_align'][] = 'C';
 										break;
-				case 'weekend_startday' : $field_names[] = array(
+				case 'weekend_startday' : $field_names[] = [
 										'field_name'=>'weekend_startdayname',
 										'field_label'=>'Week-end 1'
-										);
+										];
 										$field_widths[] = 20;
 										$data['field_name_align'][] = 'C';
 										break;
-				case 'weekend_endday' : $field_names[] = array(
+				case 'weekend_endday' : $field_names[] = [
 									'field_name'=>'weekend_enddayname',
 									'field_label'=>'Week-end 2'
-									);
+									];
 									$field_widths[] = 20;
 									$data['field_name_align'][] = 'C';
 									break;
-				case 'department_name': $field_names[] = array(
+				case 'department_name': $field_names[] = [
 									'field_name'=>'department_name',
 									'field_label'=>'Department'
-									);
+									];
 									$field_widths[] = 40;
 									$data['field_name_align'][] = 'C';
 									break;
-				case 'hours_day': $field_names[] = array(
+				case 'hours_day': $field_names[] = [
 										'field_name'=>'hours_day',
 										'field_label'=>'Hours'
-										);
+										];
 										$field_widths[] = 14;
 										$data['field_name_align'][] = 'C';
 										break;
 				case 'is_halfday':
-					$field_names[] = array(
+					$field_names[] = [
 										'field_name'=>'halfday',
 										'field_label'=>'Half Day'
-										);
+										];
 										$field_widths[] = 16;
 										$data['field_name_align'][] = 'C';
 										break;
-				case 'is_leavetransfer': $field_names[] = array(
+				case 'is_leavetransfer': $field_names[] = [
 										'field_name'=>'leavetransfer',
 										'field_label'=>'Leave transferable'
-										);
+										];
 										$field_widths[] = 25;
 										$data['field_name_align'][] = 'C';
 										break;
-				case 'is_skipholidays': $field_names[] = array(
+				case 'is_skipholidays': $field_names[] = [
 										'field_name'=>'skipholidays',
 										'field_label'=>'Skip Holidays'
-										);
+										];
 										$field_widths[] = 25;
 										$data['field_name_align'][] = 'C';
 										break;
@@ -2855,11 +2855,11 @@ Zend_Debug::dump($th->getMessage());	}
 			}
 		}
 			
-		$data = array('grid_no'=>1, 'project_name'=>'', 'object_name'=>'Leave Management Report', 'grid_count'=>1,'file_name'=>'leavemanagementreport.pdf');
+		$data = ['grid_no'=>1, 'project_name'=>'', 'object_name'=>'Leave Management Report', 'grid_count'=>1,'file_name'=>'leavemanagementreport.pdf'];
 			
 			
 		$pdf = $this->_helper->PdfHelper->generateReport($field_names, $finalArray, $field_widths, $data);
-		return $this->_helper->json(array('file_name'=>$data['file_name']));
+		return $this->_helper->json(['file_name'=>$data['file_name']]);
 
 	}
 
@@ -2884,7 +2884,7 @@ Zend_Debug::dump($th->getMessage());	}
 		$reportsmodel = new Default_Model_Reports();
 
 		$cols_param = explode(',',$param_arr['checkedheaders']);
-		$leavesheaderarr = array('cal_startmonthname'=>'Start Month',
+		$leavesheaderarr = ['cal_startmonthname'=>'Start Month',
 	                         'weekend_startday'=>'Week-end 1',
 							 'weekend_endday'=>'Week-end 2',
 							 'department_name'=>'Department',
@@ -2892,9 +2892,9 @@ Zend_Debug::dump($th->getMessage());	}
 							 'is_halfday'=>'Halfday',
 							 'is_leavetransfer'=>'Leave Transferable',
 							 'is_skipholidays'=>'Skip Holidays',
-		);
+		];
 
-		$cols_param_arr = array();
+		$cols_param_arr = [];
 		foreach($leavesheaderarr as $key=>$val)
 		{
 			foreach( $cols_param  as $col)
@@ -2937,12 +2937,12 @@ Zend_Debug::dump($th->getMessage());	}
 			$objPHPExcel->getActiveSheet()->SetCellValue($cell_name, $names);
 			// Make bold cells
 			$objPHPExcel->getActiveSheet()->getStyle($cell_name)->getFont()->setBold(true);
-			$objPHPExcel->getActiveSheet()->getStyle($cell_name)->applyFromArray( array(
-									        'fill' => array(
+			$objPHPExcel->getActiveSheet()->getStyle($cell_name)->applyFromArray( [
+									        'fill' => [
 									            'type' => PHPExcel_Style_Fill::FILL_SOLID,
-									            'color' => array('rgb' => '82CAFF')
-			)
-			)
+									            'color' => ['rgb' => '82CAFF']
+			]
+			]
 			);
 			$objPHPExcel->getActiveSheet()->getColumnDimension($letters[$count])->setAutoSize(true);
 			$i++;
@@ -2962,11 +2962,11 @@ Zend_Debug::dump($th->getMessage());	}
 
 				if($column_key == 'weekend_startday')
 				{
-					$value = isset($emp_data['weekend_startdayname'])?$emp_data['weekend_startdayname']:"";
+					$value = $emp_data['weekend_startdayname'] ?? "";
 				}
 				else if($column_key == 'weekend_endday')
 				{
-					$value = isset($emp_data['weekend_enddayname'])?$emp_data['weekend_enddayname']:"";
+					$value = $emp_data['weekend_enddayname'] ?? "";
 				}
 				else if($column_key == 'department_name')
 				{
@@ -2974,19 +2974,19 @@ Zend_Debug::dump($th->getMessage());	}
 				}
 				else if($column_key == 'is_halfday')
 				{
-					$value = isset($emp_data['halfday'])?$emp_data['halfday']:"";
+					$value = $emp_data['halfday'] ?? "";
 				}
 				else if($column_key == 'is_leavetransfer')
 				{
-					$value = isset($emp_data['leavetransfer'])?$emp_data['leavetransfer']:"";
+					$value = $emp_data['leavetransfer'] ?? "";
 				}
 				else if($column_key == 'is_skipholidays')
 				{
-					$value = isset($emp_data['skipholidays'])?$emp_data['skipholidays']:"";
+					$value = $emp_data['skipholidays'] ?? "";
 				}
 				else
 				{
-					$value = isset($emp_data[$column_key])?$emp_data[$column_key]:"";
+					$value = $emp_data[$column_key] ?? "";
 				}
 				$value = html_entity_decode($value,ENT_QUOTES,'UTF-8');
 				$objPHPExcel->getActiveSheet()->SetCellValue($cell_name, $value);
@@ -3013,7 +3013,7 @@ Zend_Debug::dump($th->getMessage());	}
 	{
 		$flagterm = $this->_getParam('flag',null);
 		$term = $this->_getParam('term',null);
-		$output = array(array('id' => '','value' => 'No records','label' => 'No records'));
+		$output = [['id' => '','value' => 'No records','label' => 'No records']];
 		$reportsmodel = new Default_Model_Reports();
 		if($term != '')
 		{
@@ -3022,13 +3022,13 @@ Zend_Debug::dump($th->getMessage());	}
 				$DArr = $reportsmodel->getAutoReportDept($term);
 				if(count($DArr)>0)
 				{
-					$output = array();
+					$output = [];
 					foreach($DArr as $dept)
 					{
 						if($dept['unitcode'] != '000')
 							$deptt =  $dept['unitcode'].'-'.$dept['deptname'].'('.$dept['deptcode'].')';
 						else $deptt = $dept['deptname'].'('.$dept['deptcode'].')';
-						$output[] = array('id' => $dept['did'],'value' => $deptt,'label' => $deptt);
+						$output[] = ['id' => $dept['did'],'value' => $deptt,'label' => $deptt];
 					}
 				}
 			}
@@ -3037,13 +3037,13 @@ Zend_Debug::dump($th->getMessage());	}
 				$buArr = $reportsmodel->getAutoReportBunit($term,$flagterm);
 				if(count($buArr)>0)
 				{
-					$output = array();
+					$output = [];
 					foreach($buArr as $unit)
 					{
 						if($unit['code'] != '000')
 							$unitData =  $unit['name'].'-'.$unit['code'];
 						else $unitData =  $unit['name'];
-						$output[] = array('id' => $unit['bid'],'value' => $unitData,'label' => $unitData);
+						$output[] = ['id' => $unit['bid'],'value' => $unitData,'label' => $unitData];
 					}
 				}
 			}
@@ -3057,7 +3057,7 @@ Zend_Debug::dump($th->getMessage());	}
 		
 		$term = $this->_getParam('term',null);
 		$flagterm = $this->_getParam('flag',null);
-		$output = array(array('id' => '','value' => 'No records','label' => 'No records'));
+		$output = [['id' => '','value' => 'No records','label' => 'No records']];
 		$reportsmodel = new Default_Model_Reports();
 		if($term != '')
 		{
@@ -3066,10 +3066,10 @@ Zend_Debug::dump($th->getMessage());	}
 				$deArr = $reportsmodel->getAutoReportDeptcode($term);
 				if(count($deArr)>0)
 				{
-					$output = array();
+					$output = [];
 					foreach($deArr as $dept)
 					{
-						$output[] = array('id' => $dept['deptcode'],'value' => $dept['deptcode'],'label' => $dept['deptcode']);
+						$output[] = ['id' => $dept['deptcode'],'value' => $dept['deptcode'],'label' => $dept['deptcode']];
 					}
 				}
 			}
@@ -3081,10 +3081,10 @@ Zend_Debug::dump($th->getMessage());	}
 				
 				if(count($buArr)>0)
 				{
-					$output = array();
+					$output = [];
 					foreach($buArr as $unit)
 					{
-						$output[] = array('id' => $unit['bid'],'value' => $unit['code'],'label' => $unit['code']);
+						$output[] = ['id' => $unit['bid'],'value' => $unit['code'],'label' => $unit['code']];
 					}
 				}
 			}
@@ -3141,8 +3141,8 @@ Zend_Debug::dump($th->getMessage());	}
 			
 		$cols_param = explode(',',$param_arr['checkedheaders']);
 			
-		$businessunitLabelsArr = array('unitname'=>'Business Unit','unitcode'=>'Code','noofemp'=>'#Emp','startdate'=>'Started On','status'=>'Status');
-		$cols_param_arr = array();
+		$businessunitLabelsArr = ['unitname'=>'Business Unit','unitcode'=>'Code','noofemp'=>'#Emp','startdate'=>'Started On','status'=>'Status'];
+		$cols_param_arr = [];
 		foreach($businessunitLabelsArr as $key=>$val)
 		{
 			foreach( $cols_param  as $col)
@@ -3229,9 +3229,9 @@ try {
 		$cols_param = explode(',',$param_arr['checkedheaders']);
 			
 
-		$businessunitLabelsArr = array('unitname'=>'Business Unit','unitcode'=>'Code','startdate'=>'Started on','noofemp'=>'#Emp','address'=>'Address','ccity'=>'City','sstate'=>'State','ccountry'=>'Country','status'=>'Status');
+		$businessunitLabelsArr = ['unitname'=>'Business Unit','unitcode'=>'Code','startdate'=>'Started on','noofemp'=>'#Emp','address'=>'Address','ccity'=>'City','sstate'=>'State','ccountry'=>'Country','status'=>'Status'];
 
-		$cols_param_arr = array();
+		$cols_param_arr = [];
 		foreach($businessunitLabelsArr as $key=>$val)
 		{
 			foreach( $cols_param  as $col)
@@ -3266,82 +3266,82 @@ Zend_Debug::dump($th->getMessage());
 
 	public function generateBusinessunitsPDF($finalArray,$selectColumns)
 	{
-		$field_names = array();
-		$field_widths = array();
+		$field_names = [];
+		$field_widths = [];
 		$fieldwidth = '';
-		$data['field_name_align'] = array();
+		$data['field_name_align'] = [];
 
 		foreach($selectColumns as $col){
 			switch($col){
-				case 'unitname': $field_names[] = array(
+				case 'unitname': $field_names[] = [
 										'field_name'=>'unitname',
 										'field_label'=>'Business Unit'
-										);
+										];
 										$field_widths[] = 25;
 										$data['field_name_align'][] = 'C';
 										break;
-				case 'unitcode' : $field_names[] = array(
+				case 'unitcode' : $field_names[] = [
 										'field_name'=>'unitcode',
 										'field_label'=>'Code'
-										);
+										];
 										$field_widths[] = 12;
 										$data['field_name_align'][] = 'C';
 										break;
-				case 'noofemp' : $field_names[] = array(
+				case 'noofemp' : $field_names[] = [
 											'field_name'=>'noofemp',
 											'field_label'=>'#Emp'
-											);
+											];
 											$field_widths[] = 12;
 											$data['field_name_align'][] = 'C';
 											break;
-				case 'startdate' : $field_names[] = array(
+				case 'startdate' : $field_names[] = [
 									'field_name'=>'startdate',
 									'field_label'=>'Started On'
-									);
+									];
 									$field_widths[] = 25;
 									$data['field_name_align'][] = 'C';
 									break;
-				case 'deptcount': $field_names[] = array(
+				case 'deptcount': $field_names[] = [
 									'field_name'=>'deptcount',
 
 									'field_label'=>'# Dept'
 
-									);
+									];
 									$field_widths[] = 15;
 									$data['field_name_align'][] = 'C';
 									break;
-				case 'address': $field_names[] = array(
+				case 'address': $field_names[] = [
 										'field_name'=>'address1',
 										'field_label'=>'Address'
-										);
+										];
 										$field_widths[] = 25;
 										$data['field_name_align'][] = 'C';
 										break;
-				case 'ccity': $field_names[] = array(
+				case 'ccity': $field_names[] = [
 										'field_name'=>'ccity',
 										'field_label'=>'City'
-										);
+										];
 										$field_widths[] = 25;
 										$data['field_name_align'][] = 'C';
 										break;
-				case 'sstate': $field_names[] = array(
+				case 'sstate': $field_names[] = [
 										'field_name'=>'sstate',
 										'field_label'=>'State'
-										);
+										];
 										$field_widths[] = 20;
 										$data['field_name_align'][] = 'C';
 										break;
-				case 'ccountry': $field_names[] = array(
+				case 'ccountry': $field_names[] = [
 										'field_name'=>'ccountry',
 										'field_label'=>'Country'
-										);
+										];
 										$field_widths[] = 20;
 										$data['field_name_align'][] = 'C';
 										break;
-				case 'status': $field_names[] = array(
+				case 'status': $field_names[] = [
 										'field_name'=>'status',
 										'field_label'=>'Status'
-										);
+										];
 										$field_widths[] = 20;
 										$data['field_name_align'][] = 'C';
 										break;
@@ -3355,10 +3355,10 @@ Zend_Debug::dump($th->getMessage());
 			}
 		}
 
-		$data = array('grid_no'=>1, 'project_name'=>'', 'object_name'=>'Business Unit Report', 'grid_count'=>1,'file_name'=>'businessunitreport.pdf');
+		$data = ['grid_no'=>1, 'project_name'=>'', 'object_name'=>'Business Unit Report', 'grid_count'=>1,'file_name'=>'businessunitreport.pdf'];
 
 		$pdf = $this->_helper->PdfHelper->generateReport($field_names, $finalArray, $field_widths, $data);
-		return $this->_helper->json(array('file_name'=>$data['file_name']));
+		return $this->_helper->json(['file_name'=>$data['file_name']]);
 	}
 
 	public function businessunitsAction()
@@ -3368,8 +3368,8 @@ Zend_Debug::dump($th->getMessage());
 		try
 		{
 			$reportsmodel = new Default_Model_Reports();
-			$msgarray = array();
-			$selectColumns = array();
+			$msgarray = [];
+			$selectColumns = [];
 			$searchQuery = '';
 
 			$bunitname = $this->_request->getParam('bunitname');
@@ -3407,9 +3407,9 @@ Zend_Debug::dump($th->getMessage());
 			} */
 			$searchQuery = rtrim($searchQuery," AND");
 			Zend_Debug::dump($searchQuery);
-			$selectColumnLabels = array();
+			$selectColumnLabels = [];
 
-			$businessunitLabelsArr = array('unitname'=>'Business Unit','unitcode'=>'Code','noofemp'=>'#Emp','startdate'=>'Started on','status'=>'Status');
+			$businessunitLabelsArr = ['unitname'=>'Business Unit','unitcode'=>'Code','noofemp'=>'#Emp','startdate'=>'Started on','status'=>'Status'];
 			
             $countryModal = new Default_Model_Countries();
 	    	$countriesData = $countryModal->fetchAll('isactive=1','country')->toArray();
@@ -3428,8 +3428,8 @@ Zend_Debug::dump($th->getMessage());
 
 			if(empty($selectColumns))
 			{
-				$selectColumns = array('unitname','unitcode','startdate','noofemp','deptcount','address','ccity','sstate'
-				,'ccountry','status');
+				$selectColumns = ['unitname','unitcode','startdate','noofemp','deptcount','address','ccity','sstate'
+				,'ccountry','status'];
 				$selectColumnLabels = $businessunitLabelsArr;
 			}
 			else
@@ -3500,10 +3500,10 @@ Zend_Debug::dump($th->getMessage());
 
 	public function createLeaveHistoryReportFinalArray($dataArray,$columnArray)
 	{
-		$empleavetypesArray = array();
-		$usersArray = array();
-		$repmanagerArray = array();
-		$departmentArray = array();
+		$empleavetypesArray = [];
+		$usersArray = [];
+		$repmanagerArray = [];
+		$departmentArray = [];
 
 		$reportsModel = new Default_Model_Reports();
 		$departmentsmodel = new Default_Model_Departments();
@@ -3551,22 +3551,22 @@ Zend_Debug::dump($th->getMessage());
 			$departmentnamesArr = $departmentsmodel->getDepartmentNameFromDeptString($departmentArray);
 		}
 
-		$finalArray = array();
+		$finalArray = [];
 		if(!empty($dataArray))
 		{
 			foreach($dataArray as $key => $curr)
 			{
 				if(array_search('employeename',$columnArray) !== false){
-					$finalArray[$key]['employeename'] = isset($userNameArray[$curr['user_id']])?$userNameArray[$curr['user_id']]:'';
+					$finalArray[$key]['employeename'] = $userNameArray[$curr['user_id']] ?? '';
 				}
 				if(array_search("reportingmanagername", $columnArray) !== false){
-					$finalArray[$key]['reportingmanagername'] = isset($repManagerNameArray[$curr['rep_mang_id']])?$repManagerNameArray[$curr['rep_mang_id']]:'';
+					$finalArray[$key]['reportingmanagername'] = $repManagerNameArray[$curr['rep_mang_id']] ?? '';
 				}
 				if(array_search("leavetype", $columnArray) !== false){
-					$finalArray[$key]['leavetype'] = isset($empleavetypesArray[$curr['leavetypeid']])?$empleavetypesArray[$curr['leavetypeid']]:'';
+					$finalArray[$key]['leavetype'] = $empleavetypesArray[$curr['leavetypeid']] ?? '';
 				}
 				if(array_search("deptname", $columnArray) !== false){
-					$finalArray[$key]['deptname'] = isset($departmentnamesArr[$curr['departmentid']])?$departmentnamesArr[$curr['departmentid']]:'';
+					$finalArray[$key]['deptname'] = $departmentnamesArr[$curr['departmentid']] ?? '';
 				}
 				if(array_search("leaveday", $columnArray) !== false){
 					$finalArray[$key]['leaveday'] = $curr['leaveday'];
@@ -3597,10 +3597,10 @@ Zend_Debug::dump($th->getMessage());
 
 	public 	function createBusinessunitsReportFinalArray($dataArray,$columnArray)
 	{
-		$cityArray = array();
-		$stateArray = array();
-		$countryArray = array();
-		$timezoneArray = array();
+		$cityArray = [];
+		$stateArray = [];
+		$countryArray = [];
+		$timezoneArray = [];
 		if(!empty($dataArray))
 		{
 			foreach($dataArray as $key => $curr)
@@ -3636,7 +3636,7 @@ Zend_Debug::dump($th->getMessage());
 			$countryModel = new Default_Model_Countries();
 			$countryNameArray = $countryModel->getCountryNamesByIds($countryArray);
 		}
-		$finalArray = array();
+		$finalArray = [];
 		if(!empty($dataArray))
 		{
 			foreach($dataArray as $key => $curr)
@@ -3659,13 +3659,13 @@ Zend_Debug::dump($th->getMessage());
 				}
 
 				if(in_array("ccity", $columnArray)){
-					$finalArray[$key]['ccity'] = isset($cityNameArray[$curr['city']])?$cityNameArray[$curr['city']]:'';
+					$finalArray[$key]['ccity'] = $cityNameArray[$curr['city']] ?? '';
 				}
 				if(in_array("sstate", $columnArray)){
-					$finalArray[$key]['sstate'] = isset($stateNameArray[$curr['state']])?$stateNameArray[$curr['state']]:'';
+					$finalArray[$key]['sstate'] = $stateNameArray[$curr['state']] ?? '';
 				}
 				if(in_array("ccountry", $columnArray)){
-					$finalArray[$key]['ccountry'] = isset($countryNameArray[$curr['country']])?$countryNameArray[$curr['country']]:'';
+					$finalArray[$key]['ccountry'] = $countryNameArray[$curr['country']] ?? '';
 				}
 				if(in_array("status", $columnArray)){
 					$finalArray[$key]['status'] = $curr['status'];
@@ -3696,9 +3696,9 @@ Zend_Debug::dump($th->getMessage());
 			$perPage = DASHBOARD_PERPAGE;
 			else
 			$perPage = PERPAGE;
-			$msgarray = array();
+			$msgarray = [];
 
-			$selectFields = array('userfullname'=>'User','employeeId'=>'Employee ID','group_id'=>'Group','emprole'=>'Role','emailaddress'=>'Email','empipaddress'=>'Ip Address');
+			$selectFields = ['userfullname'=>'User','employeeId'=>'Employee ID','group_id'=>'Group','emprole'=>'Role','emailaddress'=>'Email','empipaddress'=>'Ip Address'];
 			$selectColumns = array_keys($selectFields);
 			
 				if (($this->_request->getParam('fields') != '')){
@@ -3791,7 +3791,7 @@ Zend_Debug::dump($th->getMessage());
 				$perPage = 20;
 			
 				$searchData = '';
-				$selectColumns = array( 'userfullname','group_id','emprole','emailaddress','empipaddress','logindatetime');
+				$selectColumns = [ 'userfullname','group_id','emprole','emailaddress','empipaddress','logindatetime'];
 				
 				$userLogData = $this->userlog_model->getUserWiseLogData($sortby,$order,$pageNo, $perPage, $searchData,$selectColumns);
 
@@ -3812,61 +3812,61 @@ Zend_Debug::dump($th->getMessage());
 						$selectColumns = explode(',',$this->_request->getParam('fields')); 
 						array_push($selectColumns,'logindatetime');
 					}
-					$field_names = array();
-					$field_widths = array();
+					$field_names = [];
+					$field_widths = [];
 					$fieldwidth = '';
-					$data['field_name_align'] = array();
+					$data['field_name_align'] = [];
 
-					$data = array('grid_no'=>1, 'project_name'=>'', 'object_name'=>'UserLog Report', 'grid_count'=>1,'file_name'=>'userlogreport.pdf');
+					$data = ['grid_no'=>1, 'project_name'=>'', 'object_name'=>'UserLog Report', 'grid_count'=>1,'file_name'=>'userlogreport.pdf'];
 					$selectColumns = array_unique($selectColumns);
 					foreach($selectColumns as $col){
 						switch($col){
-							case 'userfullname': $field_names[] = array(
+							case 'userfullname': $field_names[] = [
 										'field_name'=>'userfullname',
 										'field_label'=>'User'
-										);
+										];
 										$field_widths[] = 25;
 										$data['field_name_align'][] = 'C';
 										break;
-							case 'employeeId' : $field_names[] = array(
+							case 'employeeId' : $field_names[] = [
 										'field_name'=>'employeeId',
 										'field_label'=>'Employee ID'
-										);
+										];
 										$field_widths[] = 20;
 										$data['field_name_align'][] = 'C';
 										break;
-							case 'group_id' : $field_names[] = array(
+							case 'group_id' : $field_names[] = [
 									'field_name'=>'group_id',
 									'field_label'=>'Group'
-									);
+									];
 									$field_widths[] = 15;
 									$data['field_name_align'][] = 'C';
 									break;
-							case 'emprole': $field_names[] = array(
+							case 'emprole': $field_names[] = [
 									'field_name'=>'emprole',
 									'field_label'=>'Role'
-									);
+									];
 									$field_widths[] = 20;
 									$data['field_name_align'][] = 'C';
 									break;
-							case 'emailaddress': $field_names[] = array(
+							case 'emailaddress': $field_names[] = [
 										'field_name'=>'emailaddress',
 										'field_label'=>'Email'
-										);
+										];
 										$field_widths[] = 40;
 										$data['field_name_align'][] = 'C';
 										break;
-							case 'logindatetime': $field_names[] = array(
+							case 'logindatetime': $field_names[] = [
 										'field_name'=>'logindatetime',
 										'field_label'=>'Login Time'
-										);
+										];
 										$field_widths[] = 40;
 										$data['field_name_align'][] = 'C';
 										break;
-							case 'empipaddress': $field_names[] = array(
+							case 'empipaddress': $field_names[] = [
 										'field_name'=>'empipaddress',
 										'field_label'=>'Ip Address'
-										);
+										];
 										$field_widths[] = 30;
 										$data['field_name_align'][] = 'C';
 										break;
@@ -3881,7 +3881,7 @@ Zend_Debug::dump($th->getMessage());
 					}
 
 					$message = $this->_helper->PdfHelper->generateReport($field_names, $finalArray, $field_widths, $data);
-					$this->_helper->json(array('file_name'=>$data['file_name']));
+					$this->_helper->json(['file_name'=>$data['file_name']]);
 
 				}
 
@@ -3927,9 +3927,9 @@ Zend_Debug::dump($th->getMessage());
 
 	public function createreportuserlogfinalArray($userLogData,$selectColumns){
 
-		$userArray = array();
-		$empRoleArray = array();
-		$groupArray = array();
+		$userArray = [];
+		$empRoleArray = [];
+		$groupArray = [];
 
 		if(!empty($userLogData))
 		{
@@ -3966,7 +3966,7 @@ Zend_Debug::dump($th->getMessage());
 			$groupNameArray = $groupModel->getGroupNamesByIds($groupArray);
 		}
 
-		$finalArray = array();
+		$finalArray = [];
 		if(!empty($userLogData))
 		{
 			foreach($userLogData as $key => $curr)
@@ -3978,10 +3978,10 @@ Zend_Debug::dump($th->getMessage());
 					$finalArray[$key]['employeeId'] = $curr['employeeId'];
 				}
 				if(in_array("group_id", $selectColumns)){
-					$finalArray[$key]['group_id'] = isset($groupNameArray[$curr['group_id']])?$groupNameArray[$curr['group_id']]:'';
+					$finalArray[$key]['group_id'] = $groupNameArray[$curr['group_id']] ?? '';
 				}
 				if(in_array("emprole", $selectColumns)){
-					$finalArray[$key]['emprole'] = isset($roleNameArray[$curr['emprole']])?$roleNameArray[$curr['emprole']]:'';
+					$finalArray[$key]['emprole'] = $roleNameArray[$curr['emprole']] ?? '';
 				}
 				if(in_array("emailaddress", $selectColumns)){
 					$finalArray[$key]['emailaddress'] = $curr['emailaddress'];
@@ -4009,8 +4009,8 @@ Zend_Debug::dump($th->getMessage());
 		
 
 		$reportsmodel = new Default_Model_Reports();
-		$msgarray = array();
-		$selectColumns = array();
+		$msgarray = [];
+		$selectColumns = [];
 		$searchQuery = '';
 
 		$deptname = intval($this->_request->getParam('deptname'));
@@ -4040,7 +4040,7 @@ Zend_Debug::dump($th->getMessage());
 		if($columnsortby !='')
 		$sortby = $columnsortby;
 
-		if($deptname !=''){
+		if($deptname !=0){
 			$searchQuery .= 'd.department_id = "'.$deptname.'" AND ';
 		}
 	
@@ -4050,9 +4050,9 @@ Zend_Debug::dump($th->getMessage());
 		}
 	
 		$searchQuery = rtrim($searchQuery," AND"); 
-		$selectColumnLabels = array();
+		$selectColumnLabels = [];
 
-		$DepartmentLabelsArr = array('deptname'=>'Department','deptcode'=>'Code','empcount'=>'# Emp','status'=>'Status');
+		$DepartmentLabelsArr = ['deptname'=>'Department','deptcode'=>'Code','empcount'=>'# Emp','status'=>'Status'];
 		
 		$countryModal = new Default_Model_Countries();
 	    	$countriesData = $countryModal->fetchAll('isactive=1','country')->toArray();
@@ -4072,7 +4072,7 @@ Zend_Debug::dump($th->getMessage());
 
 		if(empty($selectColumns))
 		{
-			$selectColumns = array('deptname','deptcode','empcount','status');
+			$selectColumns = ['deptname','deptcode','empcount','status'];
 			$selectColumnLabels = $DepartmentLabelsArr;
 		}
 		else
@@ -4182,8 +4182,8 @@ Zend_Debug::dump($th->getMessage());	}
 			
 		$cols_param = explode(',',$param_arr['checkedheaders']);
 
-		$DepartmentLabelsArr = array('deptname'=>'Department','deptcode'=>'Code','unitname'=>'Business Unit','startdate'=>'Started on','empcount'=>'# Emp','address'=>'Address','ccity'=>'City','sstate'=>'State','ccountry'=>'Country','status'=>'Status');
-		$cols_param_arr = array();
+		$DepartmentLabelsArr = ['deptname'=>'Department','deptcode'=>'Code','unitname'=>'Business Unit','startdate'=>'Started on','empcount'=>'# Emp','address'=>'Address','ccity'=>'City','sstate'=>'State','ccountry'=>'Country','status'=>'Status'];
+		$cols_param_arr = [];
 		foreach($DepartmentLabelsArr as $key=>$val)
 		{
 			foreach( $cols_param  as $col)
@@ -4221,82 +4221,82 @@ Zend_Debug::dump($th->getMessage());	}
 
 	public function generateDepartmentsPdf($finalArray,$selectColumns)
 	{
-		$field_names = array();
-		$field_widths = array();
+		$field_names = [];
+		$field_widths = [];
 		$fieldwidth = '';
-		$data['field_name_align'] = array();
+		$data['field_name_align'] = [];
 			
 		foreach($selectColumns as $col){
 			switch($col){
-				case 'deptname': $field_names[] = array(
+				case 'deptname': $field_names[] = [
 									'field_name'=>'deptname',
 									'field_label'=>'Department'
-									);
+									];
 									$field_widths[] = 30;
 									$data['field_name_align'][] = 'C';
 									break;
-				case 'deptcode' : $field_names[] = array(
+				case 'deptcode' : $field_names[] = [
 									'field_name'=>'deptcode',
 									'field_label'=>'Code'
-									);
+									];
 									$field_widths[] = 15;
 									$data['field_name_align'][] = 'C';
 									break;
-				case 'unitname' : $field_names[] = array(
+				case 'unitname' : $field_names[] = [
 								'field_name'=>'unitname',
 								'field_label'=>'Business Unit'
-								);
+								];
 								$field_widths[] = 30;
 								$data['field_name_align'][] = 'C';
 								break;
-				case 'startdate' : $field_names[] = array(
+				case 'startdate' : $field_names[] = [
 								'field_name'=>'startdate',
 								'field_label'=>'Started On'
-								);
+								];
 								$field_widths[] = 28;
 								$data['field_name_align'][] = 'C';
 								break;
-				case 'empcount': $field_names[] = array(
+				case 'empcount': $field_names[] = [
 								'field_name'=>'empcount',
 
 								'field_label'=>'# Emp'
 
-								);
+								];
 								$field_widths[] = 14;
 								$data['field_name_align'][] = 'C';
 								break;
-				case 'address': $field_names[] = array(
+				case 'address': $field_names[] = [
 									'field_name'=>'address1',
 									'field_label'=>'Address'
-									);
+									];
 									$field_widths[] = 25;
 									$data['field_name_align'][] = 'C';
 									break;
-				case 'ccity': $field_names[] = array(
+				case 'ccity': $field_names[] = [
 									'field_name'=>'ccity',
 									'field_label'=>'City'
-									);
+									];
 									$field_widths[] = 20;
 									$data['field_name_align'][] = 'C';
 									break;
-				case 'sstate': $field_names[] = array(
+				case 'sstate': $field_names[] = [
 									'field_name'=>'sstate',
 									'field_label'=>'State'
-									);
+									];
 									$field_widths[] = 18;
 									$data['field_name_align'][] = 'C';
 									break;
-				case 'ccountry': $field_names[] = array(
+				case 'ccountry': $field_names[] = [
 									'field_name'=>'ccountry',
 									'field_label'=>'Country'
-									);
+									];
 									$field_widths[] = 22;
 									$data['field_name_align'][] = 'C';
 									break;
-				case 'status': $field_names[] = array(
+				case 'status': $field_names[] = [
 									'field_name'=>'status',
 									'field_label'=>'Status'
-									);
+									];
 									$field_widths[] = 20;
 									$data['field_name_align'][] = 'C';
 									break;
@@ -4310,10 +4310,10 @@ Zend_Debug::dump($th->getMessage());	}
 			}
 		}
 			
-		$data = array('grid_no'=>1, 'project_name'=>'', 'object_name'=>'Departments', 'grid_count'=>1,'file_name'=>'departmentreport.pdf');
+		$data = ['grid_no'=>1, 'project_name'=>'', 'object_name'=>'Departments', 'grid_count'=>1,'file_name'=>'departmentreport.pdf'];
 
 		$pdf = $this->_helper->PdfHelper->generateReport($field_names, $finalArray, $field_widths, $data);
-		return $this->_helper->json(array('file_name'=>$data['file_name']));
+		return $this->_helper->json(['file_name'=>$data['file_name']]);
 	}
 
 	public function getexcelreportdepartmentAction()
@@ -4370,9 +4370,9 @@ Zend_Debug::dump($th->getMessage());	}
 		$cols_param = explode(',',$param_arr['checkedheaders']);
 			
 
-		$DepartmentLabelsArr = array('deptname'=>'Department','deptcode'=>'Code','empcount'=>'# Emp','status'=>'Status');
+		$DepartmentLabelsArr = ['deptname'=>'Department','deptcode'=>'Code','empcount'=>'# Emp','status'=>'Status'];
 
-		$cols_param_arr = array();
+		$cols_param_arr = [];
 		foreach($DepartmentLabelsArr as $key=>$val)
 		{
 			foreach( $cols_param  as $col)
@@ -4429,7 +4429,7 @@ Zend_Debug::dump($th->getMessage());	}
 		$this->_helper->layout->disableLayout();
 		$param_arr = $this->_getAllParams();
 		            
-		$default_fields = array(
+		$default_fields = [
 	            'requisition_code' => 'Requisition Code',
 				'jobtitle_name' => 'Job Title',
 				'candidate_name' => 'Candidate',
@@ -4437,12 +4437,12 @@ Zend_Debug::dump($th->getMessage());	}
 	        	'cand_status' => 'Status',
 	        	'contact_number' => 'Mobile',
 	        	'skillset' => 'Skill Set'
-	        	);
+	        	];
 		$cols_param_arr = $this->_getParam('cols_arr', $default_fields);
 			            		
 		if(isset($param_arr['cols_arr']))	unset($param_arr['cols_arr']);
-		$page_no = isset($param_arr['page_no'])?$param_arr['page_no']:1;
-		$per_page = isset($param_arr['per_page'])?$param_arr['per_page']:PERPAGE;
+		$page_no = $param_arr['page_no'] ?? 1;
+		$per_page = $param_arr['per_page'] ?? PERPAGE;
 		$sort_name = $param_arr['sort_name'];
 		$sort_type = $param_arr['sort_type'];
 		if(isset($param_arr['page_no']))unset($param_arr['page_no']);
@@ -4475,12 +4475,12 @@ Zend_Debug::dump($th->getMessage());	}
 			$objPHPExcel->getActiveSheet()->SetCellValue($cell_name, $names);
 			// Make bold cells
 			$objPHPExcel->getActiveSheet()->getStyle($cell_name)->getFont()->setBold(true);
-			$objPHPExcel->getActiveSheet()->getStyle($cell_name)->applyFromArray( array(
-									        'fill' => array(
+			$objPHPExcel->getActiveSheet()->getStyle($cell_name)->applyFromArray( [
+									        'fill' => [
 									            'type' => PHPExcel_Style_Fill::FILL_SOLID,
-									            'color' => array('rgb' => '82CAFF')
-			)
-			)
+									            'color' => ['rgb' => '82CAFF']
+			]
+			]
 			);
 			$objPHPExcel->getActiveSheet()->getColumnDimension($letters[$count])->setAutoSize(true);
 			$i++;
@@ -4508,7 +4508,7 @@ Zend_Debug::dump($th->getMessage());	}
 				}
 				else
 				{
-					$value = isset($candidate[$column_key])?$candidate[$column_key]:"";
+					$value = $candidate[$column_key] ?? "";
 				}
 				$value = html_entity_decode($value,ENT_QUOTES,'UTF-8');
 				$objPHPExcel->getActiveSheet()->SetCellValue($cell_name, $value);
@@ -4537,7 +4537,7 @@ Zend_Debug::dump($th->getMessage());	}
 		$this->_helper->layout->disableLayout();
 		$param_arr = $this->_getAllParams();
 
-		$defaultu_fields = array(
+		$defaultu_fields = [
             'requisition_code' => 'Requisition Code',
 			'jobtitle_name' => 'Job Title',
             'candidate_name' => 'Candidate',
@@ -4545,7 +4545,7 @@ Zend_Debug::dump($th->getMessage());	}
 			'cand_status' => 'Status',
             'contact_number' => 'Mobile',
             'skillset' => 'Skill Set'  
-            );
+            ];
             $cols_param_arr = $this->_getParam('cols_arr', $defaultu_fields);
             $total_grid_columns = $this->_getParam('total_grid_columns', NULL);
             $page_no = $this->_getParam('page_no', 1);
@@ -4565,18 +4565,18 @@ Zend_Debug::dump($th->getMessage());	}
             $candidates_data = $candidatedetails_model->getReportData($param_arr,$per_page,$page_no,$sort_name,$sort_type);
             $candidates_data = $candidates_data['rows'];
 
-            $field_names = array();
-            $field_widths = array();
-            $data['field_name_align'] = array();
+            $field_names = [];
+            $field_widths = [];
+            $data['field_name_align'] = [];
 
 
             if(!empty($cols_param_arr)){
             	foreach($cols_param_arr as $column_key => $column_name)
             	{
-            		$field_names[] = array(
+            		$field_names[] = [
                                         'field_name'=>$column_key,
                                         'field_label'=>$column_name
-            		);
+            		];
 
             		switch($column_key){
             			case 'requisition_code':
@@ -4623,20 +4623,20 @@ Zend_Debug::dump($th->getMessage());	}
             	}
             }
 
-            $data = array('grid_no'=>1, 'project_name'=>'', 'object_name'=>'Candidates Report', 'grid_count'=>1,'file_name'=>'Candidates_report.pdf');
+            $data = ['grid_no'=>1, 'project_name'=>'', 'object_name'=>'Candidates Report', 'grid_count'=>1,'file_name'=>'Candidates_report.pdf'];
             $pdf = $this->_helper->PdfHelper->generateReport($field_names, $candidates_data, $field_widths, $data);
-            $this->_helper->json(array('file_name'=>$data['file_name']));
+            $this->_helper->json(['file_name'=>$data['file_name']]);
 	}
 
 	public function getcandidatesreportdataAction(){
 
 		$this->_helper->layout->disableLayout();
 		$param_arr = $this->_getAllParams();
-		$cols_param_arr = $this->_getParam('cols_arr',array());
+		$cols_param_arr = $this->_getParam('cols_arr',[]);
 		if(isset($param_arr['cols_arr']))
 		unset($param_arr['cols_arr']);
-		$page_no = isset($param_arr['page_no'])?$param_arr['page_no']:1;
-		$per_page = isset($param_arr['per_page'])?$param_arr['per_page']:PERPAGE;
+		$page_no = $param_arr['page_no'] ?? 1;
+		$per_page = $param_arr['per_page'] ?? PERPAGE;
 		$sort_name = $param_arr['sort_name'];
 		$sort_type = $param_arr['sort_type'];
 		if(isset($param_arr['page_no']))unset($param_arr['page_no']);
@@ -4652,7 +4652,7 @@ Zend_Debug::dump($th->getMessage());	}
 		$page_cnt = $candidates_data['page_cnt'];
 		$candidates_data = $candidates_data['rows'];
 
-		$columns_array = array(
+		$columns_array = [
             'requisition_code' => 'Requisition Code',
 			'jobtitle_name' => 'Job Title',
             'candidate_name' => 'Candidate',
@@ -4660,9 +4660,9 @@ Zend_Debug::dump($th->getMessage());	}
 			'cand_status' => 'Status',
             'contact_number' => 'Mobile',
             'skillset' => 'Skill Set'  
-            );
+            ];
 
-            $mandatory_array = array(
+            $mandatory_array = [
             'requisition_code' => 'Requisition Code',
 			'jobtitle_name' => 'Job Title',
             'candidate_name' => 'Candidate',
@@ -4670,7 +4670,7 @@ Zend_Debug::dump($th->getMessage());	}
 			'cand_status' => 'Status',
             'contact_number' => 'Mobile',
             'skillset' => 'Skill Set'  
-            );
+            ];
             if(count($cols_param_arr) == 0)
             $cols_param_arr = $mandatory_array;
             $mandatory_array = array_keys($mandatory_array);
@@ -4690,11 +4690,11 @@ Zend_Debug::dump($th->getMessage());	}
 	public function candidatesreportAction(){
 		try
 		{
-			$norec_arr = array();
+			$norec_arr = [];
 			$form = new Default_Form_Candidatesreport();
 			$candidate_model = new Default_Model_Candidatedetails();
 
-			$columns_array = array(
+			$columns_array = [
 	            'requisition_code' => 'Requisition Code',
 				'jobtitle_name' => 'Job Title',
 				'candidate_name' => 'Candidate',
@@ -4702,9 +4702,9 @@ Zend_Debug::dump($th->getMessage());	}
 	        	'cand_status' => 'Status',
 	        	'contact_number' => 'Mobile',
 	        	'skillset' => 'Skill Set'
-	        	);
+	        	];
 
-	        	$mandatory_array = array(
+	        	$mandatory_array = [
 	            'requisition_code' => 'Requisition Code',
 				'jobtitle_name' => 'Job Title',
 	        	'candidate_name' => 'Candidate',
@@ -4712,7 +4712,7 @@ Zend_Debug::dump($th->getMessage());	}
 	        	'cand_status' => 'Status',
 	        	'contact_number' => 'Mobile',
 	        	'skillset' => 'Skill Set'
-	        	);
+	        	];
 	        	 
 	        	$mandatory_array = array_keys($mandatory_array);
 	        	$this->view->columns_array = $columns_array;
@@ -4728,17 +4728,17 @@ Zend_Debug::dump($th->getMessage());	}
 	public function requisitionautoAction()
 	{
 		$term = $this->_getParam('term',null);
-		$output = array(array('id' => '','value' => 'No records','label' => 'No records'));
+		$output = [['id' => '','value' => 'No records','label' => 'No records']];
 		$requisition_model = new Default_Model_Requisition();
 		if($term != '')
 		{
 			$requisition_arr = $requisition_model->getAutoReportRequisition($term);
 			if(count($requisition_arr)>0)
 			{
-				$output = array();
+				$output = [];
 				foreach($requisition_arr as $requisition)
 				{
-					$output[] = array('id' => $requisition['id'],'value' => $requisition['requisition_code'],'label' => $requisition['requisition_code']);
+					$output[] = ['id' => $requisition['id'],'value' => $requisition['requisition_code'],'label' => $requisition['requisition_code']];
 				}
 			}
 		}
@@ -4753,7 +4753,7 @@ Zend_Debug::dump($th->getMessage());	}
 		$this->_helper->layout->disableLayout();
 		$param_arr = $this->_getAllParams();
 
-		$default_fields = array(
+		$default_fields = [
 			            'requisition_code' => 'Requisition Code',
 			            'job_title' => 'Job title',
 			            'req_status' => 'Requisition Status',
@@ -4765,11 +4765,11 @@ Zend_Debug::dump($th->getMessage());	}
 			        	'selected_members' => 'Filled positions',
 			            'created_on' => 'Raised On',
 			            'onboard_date' => 'Due Date'
-			            );
+			            ];
 			            $cols_param_arr = $this->_getParam('cols_arr', $default_fields);
 			            if(isset($param_arr['cols_arr']))	unset($param_arr['cols_arr']);
-			            $page_no = isset($param_arr['page_no'])?$param_arr['page_no']:1;
-			            $per_page = isset($param_arr['per_page'])?$param_arr['per_page']:PERPAGE;
+			            $page_no = $param_arr['page_no'] ?? 1;
+			            $per_page = $param_arr['per_page'] ?? PERPAGE;
 			            $sort_name = $param_arr['sort_name'];
 			            $sort_type = $param_arr['sort_type'];
 			            if(isset($param_arr['page_no']))unset($param_arr['page_no']);
@@ -4810,12 +4810,12 @@ Zend_Debug::dump($th->getMessage());	}
 			            	$objPHPExcel->getActiveSheet()->SetCellValue($cell_name, $names);
 			            	// Make bold cells
 			            	$objPHPExcel->getActiveSheet()->getStyle($cell_name)->getFont()->setBold(true);
-			            	$objPHPExcel->getActiveSheet()->getStyle($cell_name)->applyFromArray( array(
-									        'fill' => array(
+			            	$objPHPExcel->getActiveSheet()->getStyle($cell_name)->applyFromArray( [
+									        'fill' => [
 									            'type' => PHPExcel_Style_Fill::FILL_SOLID,
-									            'color' => array('rgb' => '82CAFF')
-			            	)
-			            	)
+									            'color' => ['rgb' => '82CAFF']
+			            	]
+			            	]
 			            	);
 			            	$objPHPExcel->getActiveSheet()->getColumnDimension($letters[$count])->setAutoSize(true);
 			            	$i++;
@@ -4843,7 +4843,7 @@ Zend_Debug::dump($th->getMessage());	}
 			            		}
 			            		else
 			            		{
-			            			$value = isset($requisition_data[$column_key])?$requisition_data[$column_key]:"";
+			            			$value = $requisition_data[$column_key] ?? "";
 			            		}
 			            		$value = html_entity_decode($value,ENT_QUOTES,'UTF-8');
 			            		$objPHPExcel->getActiveSheet()->SetCellValue($cell_name, $value);
@@ -4872,7 +4872,7 @@ Zend_Debug::dump($th->getMessage());	}
 		$this->_helper->layout->disableLayout();
 		$param_arr = $this->_getAllParams();
 
-		$default_fields = array(
+		$default_fields = [
 			            'requisition_code' => 'Requisition Code',
 			            'job_title' => 'Job title',
 			            'req_status' => 'Requisition Status',
@@ -4884,10 +4884,10 @@ Zend_Debug::dump($th->getMessage());	}
 			        	'selected_members' => 'Filled positions',
 			            'created_on' => 'Raised On',
 			            'onboard_date' => 'Due Date'
-			            );
+			            ];
 			            $cols_param_arr = $this->_getParam('cols_arr', $default_fields);
 			            $page_no = $this->_getParam('page_no', 1);
-			            $per_page = $this->_getParam('per_page', PERPAGE);isset($param_arr['per_page'])?$param_arr['per_page']:PERPAGE;
+			            $per_page = $this->_getParam('per_page', PERPAGE);$param_arr['per_page'] ?? PERPAGE;
 			            $sort_name = $this->_getParam('sort_name', NULL);
 			            $sort_type = $this->_getParam('sort_type', NULL);
 			            $total_grid_columns = $this->_getParam('total_grid_columns', NULL);
@@ -4913,17 +4913,17 @@ Zend_Debug::dump($th->getMessage());	}
 			            $requisition_data = $requisition_model->getReportData($param_arr,$per_page,$page_no,$sort_name,$sort_type, $loginUserId, $loginuserGroup, 1);
 			            $requisition_data = $requisition_data['rows'];
 
-			            $field_names = array();
-			            $field_widths = array();
-			            $data['field_name_align'] = array();
+			            $field_names = [];
+			            $field_widths = [];
+			            $data['field_name_align'] = [];
 
 			            if(!empty($cols_param_arr)){
 			            	foreach($cols_param_arr as $column_key => $column_name)
 			            	{
-			            		$field_names[] = array(
+			            		$field_names[] = [
 	                                        'field_name'=>$column_key,
 	                                        'field_label'=>$column_name
-			            		);
+			            		];
 
 			            		switch($column_key){
 			            			case 'requisition_code':
@@ -4984,9 +4984,9 @@ Zend_Debug::dump($th->getMessage());	}
 			            		$field_widths[$key] = ($width*180)/$totalPresentFieldWidth;
 			            	}
 			            }
-			            $data = array('grid_no'=>1, 'project_name'=>'', 'object_name'=>'Requisition Report', 'grid_count'=>1,'file_name'=>'Requisition_report.pdf');
+			            $data = ['grid_no'=>1, 'project_name'=>'', 'object_name'=>'Requisition Report', 'grid_count'=>1,'file_name'=>'Requisition_report.pdf'];
 			            $pdf = $this->_helper->PdfHelper->generateReport($field_names, $requisition_data, $field_widths, $data);
-			            $this->_helper->json(array('file_name'=>$data['file_name']));
+			            $this->_helper->json(['file_name'=>$data['file_name']]);
 	}
 
 	public function getrequisitionsstatusreportdataAction(){
@@ -4994,13 +4994,13 @@ Zend_Debug::dump($th->getMessage());	}
 		try{
 			$this->_helper->layout->disableLayout();
 			$param_arr = $this->_getAllParams();
-			$cols_param_arr = $this->_getParam('cols_arr',array());
+			$cols_param_arr = $this->_getParam('cols_arr',[]);
 			
 			if(isset($param_arr['cols_arr']))
 				unset($param_arr['cols_arr']);
 			
-			$page_no = isset($param_arr['page_no'])?$param_arr['page_no']:1;
-			$per_page = isset($param_arr['per_page'])?$param_arr['per_page']:PERPAGE;
+			$page_no = $param_arr['page_no'] ?? 1;
+			$per_page = $param_arr['per_page'] ?? PERPAGE;
 			$sort_name = $this->_getParam('sort_name', NULL);
 			$sort_type = $this->_getParam('sort_type', NULL);
 			$total_grid_columns = $this->_getParam('total_grid_columns', NULL);
@@ -5023,7 +5023,7 @@ Zend_Debug::dump($th->getMessage());	}
 			$page_cnt = $requisition_data['page_cnt'];
 			$requisition_data = $requisition_data['rows'];
 			
-			$columns_array = array(
+			$columns_array = [
 	            'requisition_code' => 'Requisition Code',
 	            'job_title' => 'Job Title',
 	            'req_status' => 'Requisition Status',
@@ -5035,9 +5035,9 @@ Zend_Debug::dump($th->getMessage());	}
 	        	'selected_members' => 'Filled positions',
 	            'created_on' => 'Raised On',
 		        'onboard_date' => 'Due Date'
-	        );
+	        ];
 	
-	        $mandatory_array = array(
+	        $mandatory_array = [
 	            'requisition_code' => 'Requisition Code',
 	            'job_title' => 'Job title',
 	            'req_status' => 'Requisition Status',
@@ -5049,7 +5049,7 @@ Zend_Debug::dump($th->getMessage());	}
 		        'selected_members' => 'Filled positions',
 	            'created_on' => 'Raised On',
 	            'onboard_date' => 'Due Date'
-	        );
+	        ];
 	
 	        if(count($cols_param_arr) == 0)
 	            $cols_param_arr = $mandatory_array;
@@ -5073,7 +5073,7 @@ Zend_Debug::dump($th->getMessage());	}
 	public function requisitionstatusreportAction(){
 		try
 		{
-			$norec_arr = array();
+			$norec_arr = [];
 			$form = new Default_Form_Requisitionsstatusreport();
 			$requi_model = new Default_Model_Requisition();
 			$employmentstatusModel = new Default_Model_Employmentstatus();
@@ -5084,15 +5084,15 @@ Zend_Debug::dump($th->getMessage());	}
 				$norec_arr['jobtitle'] = "Job titles are not configured yet.";
 			}
 
-			$form->jobtitle->addMultiOptions(array(''=>'Select Job Title')+$job_data);
+			$form->jobtitle->addMultiOptions([''=>'Select Job Title']+$job_data);
 			
 			// Requisiton's Raised in limit from  past 10 years to next two years 
 			$raised_in_years1 = range(date('Y', strtotime('-10 years')), date('Y', strtotime('+2 years')));
 			$raised_in_years2 = array_combine($raised_in_years1, $raised_in_years1);
-			$form->createdon->addMultiOptions(array('' => 'Select Requisition Year'));
+			$form->createdon->addMultiOptions(['' => 'Select Requisition Year']);
 			$form->createdon->addMultiOptions($raised_in_years2);
 
-			$columns_array = array(
+			$columns_array = [
 	            'requisition_code' => 'Requisition Code',
 	            'job_title' => 'Job title',
 	            'req_status' => 'Requisition Status',
@@ -5104,9 +5104,9 @@ Zend_Debug::dump($th->getMessage());	}
 	        	'selected_members' => 'Filled positions',
 	            'created_on' => 'Raised On',
 	            'onboard_date' => 'Due Date'
-		    );
+		    ];
 
-            $mandatory_array = array(
+            $mandatory_array = [
 	            'requisition_code' => 'Requisition Code',
 	            'job_title' => 'Job title',
 	            'req_status' => 'Requisition Status',
@@ -5118,7 +5118,7 @@ Zend_Debug::dump($th->getMessage());	}
 	        	'selected_members' => 'Filled positions',
 	            'created_on' => 'Raised On',                                 
 	            'onboard_date' => 'Due Date'
-            );
+            ];
             
             $this->view->columns_array = $columns_array;
             $this->view->form = $form;
@@ -5131,10 +5131,10 @@ Zend_Debug::dump($th->getMessage());	}
 
 	public function createDepartmentsReportFinalArray($dataArray,$columnArray)
 	{
-		$businessunitArray = array();
-		$cityArray = array();
-		$stateArray = array();
-		$countryArray = array();
+		$businessunitArray = [];
+		$cityArray = [];
+		$stateArray = [];
+		$countryArray = [];
 
 		if(!empty($dataArray))
 		{
@@ -5172,11 +5172,11 @@ Zend_Debug::dump($th->getMessage());	}
 			else
 			$perPage = PERPAGE;
 
-			$selectFields = array('menuname'=>'Menu','username'=>'User Name','empId'=>'Employee ID','useraction'=>'Action','modifieddate'=>'Modified Date');
+			$selectFields = ['menuname'=>'Menu','username'=>'User Name','empId'=>'Employee ID','useraction'=>'Action','modifieddate'=>'Modified Date'];
 			$selectColumns = array_keys($selectFields);
 
-			$action = array('1'=>'Add','2' => 'Edit', '3' => 'Delete','5' =>'Cancel');
-			$activityLogData = array();$splitArray = array();
+			$action = ['1'=>'Add','2' => 'Edit', '3' => 'Delete','5' =>'Cancel'];
+			$activityLogData = [];$splitArray = [];
 
 			$pageNo = 1;
 			$order = $funorder = 'Desc';
@@ -5196,7 +5196,7 @@ Zend_Debug::dump($th->getMessage());	}
 				if (($this->_request->getParam('fields') != '')){
 					$selectColumns = explode(',',$this->_request->getParam('fields')); 
 				}
-				$finalArray = array();
+				$finalArray = [];
 				//POST with empty search fields
 				if($this->_request->getParam('hiddenusername') == '' && $this->_request->getParam('menu') == '' && $this->_request->getParam('useraction') == '' && $this->_request->getParam('modifieddate') == ''){
 
@@ -5230,10 +5230,10 @@ Zend_Debug::dump($th->getMessage());	}
 							}
 						}
 					}
-					$activityLogData = $logmanager_model->getLogManagerDataReport($by,$funorder,$pageNo, $perPage, $searchData,array('*'));
+					$activityLogData = $logmanager_model->getLogManagerDataReport($by,$funorder,$pageNo, $perPage, $searchData,['*']);
 					$activityLogCount = $activitylog_model->getLogManagerCount();
-$menuArray = array();
-						$userArray = array();
+$menuArray = [];
+						$userArray = [];
 
 					if(count($activityLogData) > 0){
 						$lastpage =  ceil($activityLogCount/$perPage);
@@ -5298,13 +5298,13 @@ $menuArray = array();
 						$searchQuery = rtrim($searchQuery," AND");
 					}
 
-					$activityLogData = $logmanager_model->getLogManagerDataReport('last_modifieddate','Desc','', '', $searchQuery,array('*'));
+					$activityLogData = $logmanager_model->getLogManagerDataReport('last_modifieddate','Desc','', '', $searchQuery,['*']);
 
 					/*looping jsonlogs */
 					if(count($activityLogData) > 0){
-						$userArray = array();
-						$menuArray = array();
-						$logJsonArray = array();
+						$userArray = [];
+						$menuArray = [];
+						$logJsonArray = [];
 						$jsonCount = 0;
 						$index = 0;
 						foreach($activityLogData as $activitylog){ 
@@ -5327,7 +5327,7 @@ $menuArray = array();
 									$flag = false;
 									if($this->_request->getParam('modifieddate') != ''){
 										$currArrayTemp = sapp_Global::getGMTformatdate($currArray['date']);
-										$pos = strpos($currArrayTemp, $date);
+										$pos = strpos($currArrayTemp, (string) $date);
 										$flag = ($pos !== false)?false:true;
 									}
 
@@ -5395,7 +5395,7 @@ $menuArray = array();
 									}
 
 								}else{
-									$totalArray = array();
+									$totalArray = [];
 									foreach($logJsonArray as $key => $logjson){
 										if(in_array('menuname',$selectColumns))
 										$totalArray[$key]['menuname'] = isset($menuNameArray[(string)$logjson['menu']])?$menuNameArray[(string)$logjson['menu']]['name']:'';
@@ -5475,47 +5475,47 @@ $menuArray = array();
 
 	/*activity log pdf*/
 	public function generateActivityLogPdf($finalArray,$selectColumns){
-		$field_names = array();
-		$field_widths = array();
+		$field_names = [];
+		$field_widths = [];
 		$fieldwidth = '';
-		$data['field_name_align'] = array();
+		$data['field_name_align'] = [];
 
-		$data = array('grid_no'=>1, 'project_name'=>'', 'object_name'=>'Activitylog Report', 'grid_count'=>1,'file_name'=>'activitylogreport.pdf');
+		$data = ['grid_no'=>1, 'project_name'=>'', 'object_name'=>'Activitylog Report', 'grid_count'=>1,'file_name'=>'activitylogreport.pdf'];
 
 		foreach($selectColumns as $col){
 			switch($col){
-				case 'menuname': $field_names[] = array(
+				case 'menuname': $field_names[] = [
 										'field_name'=>'menuname',
 										'field_label'=>'Menu'
-										);
+										];
 										$field_widths[] = 40;
 										$data['field_name_align'][] = 'C';
 										break;
-				case 'username' : $field_names[] = array(
+				case 'username' : $field_names[] = [
 										'field_name'=>'username',
 										'field_label'=>'User'
-										);
+										];
 										$field_widths[] = 30;
 										$data['field_name_align'][] = 'C';
 										break;
-				case 'empId' : $field_names[] = array(
+				case 'empId' : $field_names[] = [
 									'field_name'=>'empId',
 									'field_label'=>'Employee ID'
-									);
+									];
 									$field_widths[] = 30;
 									$data['field_name_align'][] = 'C';
 									break;
-				case 'useraction': $field_names[] = array(
+				case 'useraction': $field_names[] = [
 									'field_name'=>'useraction',
 									'field_label'=>'Action'
-									);
+									];
 									$field_widths[] = 15;
 									$data['field_name_align'][] = 'C';
 									break;
-				case 'modifieddate': $field_names[] = array(
+				case 'modifieddate': $field_names[] = [
 										'field_name'=>'modifieddate',
 										'field_label'=>'Modified Date'
-										);
+										];
 										$field_widths[] = 55;
 										$data['field_name_align'][] = 'C';
 										break;
@@ -5529,7 +5529,7 @@ $menuArray = array();
 			}
 		}
 		$message = $this->_helper->PdfHelper->generateReport($field_names, $finalArray, $field_widths, $data);
-		$this->_helper->json(array('file_name'=>$data['file_name']));
+		$this->_helper->json(['file_name'=>$data['file_name']]);
 	}
 
 	// To download pdf
@@ -5546,7 +5546,7 @@ $menuArray = array();
 	{
 		try{
 			$reportsmodel = new Default_Model_Reports();
-			$msgarray = array();
+			$msgarray = [];
 
 			$dashboardcall = $this->_getParam('dashboardcall');
 			if($dashboardcall == 'Yes')
@@ -5555,7 +5555,7 @@ $menuArray = array();
 			$perPage = PERPAGE;
 			$bgchecksort = false;
 
-			$selectFields = array('agencyname'=>'Agency','website_url'=>'Website Url ID','primaryphone'=>'Primary Phone','secondaryphone'=>'Secondary Phone','address'=>'Address','bg_checktype'=>'Screening Type');
+			$selectFields = ['agencyname'=>'Agency','website_url'=>'Website Url ID','primaryphone'=>'Primary Phone','secondaryphone'=>'Secondary Phone','address'=>'Address','bg_checktype'=>'Screening Type'];
 			$selectColumns = array_keys($selectFields);
 
 			$checktypeModal = new Default_Model_Bgscreeningtype();
@@ -5656,7 +5656,7 @@ $menuArray = array();
 				$perPage = 20;
 					
 				$searchData = '';
-				$selectColumns = array( 'agencyname','website_url','primaryphone','secondaryphone','address','bg_checktype');
+				$selectColumns = [ 'agencyname','website_url','primaryphone','secondaryphone','address','bg_checktype'];
 				$agencylistData = $reportsmodel->getAgencyListReportData($sortby,$order,$pageNo, $perPage, $searchData,$selectColumns);
 				$agencylistCount = $reportsmodel->getAgencyListReportCount();
 			}
@@ -5716,10 +5716,10 @@ $menuArray = array();
 	public function createagencylistreportfinalArray($agencylistData,$selectColumns,$bgchecksortOrder = ''){
 
 		$reportsmodel = new Default_Model_Reports();
-		$finalArray = array();
-		$bgcheckArray = array();
+		$finalArray = [];
+		$bgcheckArray = [];
 		if(count($agencylistData) > 0){
-			$bg_checktypeSortArray = array();
+			$bg_checktypeSortArray = [];
 			foreach($agencylistData as $agencylist){
 				if(isset($agencylist['bg_checktype'])){
 					$aglistbgcheck = explode(',',$agencylist['bg_checktype']);
@@ -5779,54 +5779,54 @@ $menuArray = array();
 
 	/*agency list pdf*/
 	public function generateAgencyListPdf($finalArray,$selectColumns){
-		$field_names = array();
-		$field_widths = array();
+		$field_names = [];
+		$field_widths = [];
 		$fieldwidth = '';
-		$data['field_name_align'] = array();
+		$data['field_name_align'] = [];
 
-		$data = array('grid_no'=>1, 'project_name'=>'', 'object_name'=>'Agency list Report', 'grid_count'=>1,'file_name'=>'agencylistreport.pdf');
+		$data = ['grid_no'=>1, 'project_name'=>'', 'object_name'=>'Agency list Report', 'grid_count'=>1,'file_name'=>'agencylistreport.pdf'];
 
 		foreach($selectColumns as $col){
 			switch($col){
-				case 'agencyname': $field_names[] = array(
+				case 'agencyname': $field_names[] = [
 										'field_name'=>'agencyname',
 										'field_label'=>'Agency'
-										);
+										];
 										$field_widths[] = 30;
 										$data['field_name_align'][] = 'C';
 										break;
-				case 'website_url' : $field_names[] = array(
+				case 'website_url' : $field_names[] = [
 										'field_name'=>'website_url',
 										'field_label'=>'Website Url'
-										);
+										];
 										$field_widths[] = 25;
 										$data['field_name_align'][] = 'C';
 										break;
-				case 'primaryphone' : $field_names[] = array(
+				case 'primaryphone' : $field_names[] = [
 									'field_name'=>'primaryphone',
 									'field_label'=>'Primary Phone'
-									);
+									];
 									$field_widths[] = 20;
 									$data['field_name_align'][] = 'C';
 									break;
-				case 'secondaryphone': $field_names[] = array(
+				case 'secondaryphone': $field_names[] = [
 									'field_name'=>'secondaryphone',
 									'field_label'=>'Secondary Phone'
-									);
+									];
 									$field_widths[] = 20;
 									$data['field_name_align'][] = 'C';
 									break;
-				case 'address': $field_names[] = array(
+				case 'address': $field_names[] = [
 									'field_name'=>'address',
 									'field_label'=>'Address'
-									);
+									];
 									$field_widths[] = 30;
 									$data['field_name_align'][] = 'C';
 									break;
-				case 'bg_checktype': $field_names[] = array(
+				case 'bg_checktype': $field_names[] = [
 										'field_name'=>'bg_checktype',
 										'field_label'=>'Screening Types'
-										);
+										];
 										$field_widths[] = 45;
 										$data['field_name_align'][] = 'C';
 										break;
@@ -5840,13 +5840,13 @@ $menuArray = array();
 			}
 		}
 		$message = $this->_helper->PdfHelper->generateReport($field_names, $finalArray, $field_widths, $data);
-		$this->_helper->json(array('file_name'=>$data['file_name']));
+		$this->_helper->json(['file_name'=>$data['file_name']]);
 	}
 
 	public function agencynameautoAction(){
 		$reportsmodel = new Default_Model_Reports();
 		$term = $this->_getParam('term',null);
-		$output = array(array('id' => '','value' => 'No records','label' => 'No records'));
+		$output = [['id' => '','value' => 'No records','label' => 'No records']];
 			
 		if($term != '')
 		{
@@ -5854,10 +5854,10 @@ $menuArray = array();
 
 			if(count($emp_arr)>0)
 			{
-				$output = array();
+				$output = [];
 				foreach($emp_arr as $emp)
 				{
-					$output[] = array('id' => $emp['agencyname'],'value' => $emp['agencyname'],'label' => $emp['agencyname']);
+					$output[] = ['id' => $emp['agencyname'],'value' => $emp['agencyname'],'label' => $emp['agencyname']];
 				}
 			}
 		}
@@ -5867,7 +5867,7 @@ $menuArray = array();
 	public function agencysebsiteautoAction(){
 		$reportsmodel = new Default_Model_Reports();
 		$term = $this->_getParam('term',null);
-		$output = array(array('id' => '','value' => 'No records','label' => 'No records'));
+		$output = [['id' => '','value' => 'No records','label' => 'No records']];
 			
 		if($term != '')
 		{
@@ -5875,10 +5875,10 @@ $menuArray = array();
 
 			if(count($emp_arr)>0)
 			{
-				$output = array();
+				$output = [];
 				foreach($emp_arr as $emp)
 				{
-					$output[] = array('id' => $emp['website_url'],'value' => $emp['website_url'],'label' => $emp['website_url']);
+					$output[] = ['id' => $emp['website_url'],'value' => $emp['website_url'],'label' => $emp['website_url']];
 				}
 			}
 		}
@@ -5888,7 +5888,7 @@ $menuArray = array();
 	public function empscreeningAction()
 	{
 		$form = new Default_Form_empscreeningreport();
-		$msgarray = array();
+		$msgarray = [];
 		$reportsmodel = new Default_Model_Reports();
 		$checktypeModal = new Default_Model_Bgscreeningtype();
 
@@ -5952,12 +5952,12 @@ $menuArray = array();
 		$searchQuery .= 'year_year = "'.$year.'" AND ';
 
 		$searchQuery = rtrim($searchQuery," AND ");
-		$selectColumnLabels = array();
-		$empscreeningLabelsArr = array('specimen_name'=>'Specimen','specimen_flag_name'=>'Specimen type','agencyname'=>'Agency','screeningtype_name'=>'Screening type','process_status'=>'Process Status','createdname'=>'Sent by','createddate'=>'Sent on','isactive_text'=>'Status');
+		$selectColumnLabels = [];
+		$empscreeningLabelsArr = ['specimen_name'=>'Specimen','specimen_flag_name'=>'Specimen type','agencyname'=>'Agency','screeningtype_name'=>'Screening type','process_status'=>'Process Status','createdname'=>'Sent by','createddate'=>'Sent on','isactive_text'=>'Status'];
 
 		if(empty($selectColumns))
 		{
-			$selectColumns = array('specimen_name','specimen_flag_name','agencyname','screeningtype_name','process_status','createdname','createddate','isactive_text');
+			$selectColumns = ['specimen_name','specimen_flag_name','agencyname','screeningtype_name','process_status','createdname','createddate','isactive_text'];
 			$selectColumnLabels = $empscreeningLabelsArr;
 		}
 		else
@@ -6003,7 +6003,7 @@ $menuArray = array();
 
 	public function createEmpscreeningReportFinalArray($dataArray,$columnArray)
 	{
-		$finalArray = array();
+		$finalArray = [];
 		if(!empty($dataArray))
 		{
 			foreach($dataArray as $key => $curr)
@@ -6044,17 +6044,17 @@ $menuArray = array();
 	{
 		$flagterm = $this->_getParam('flag',null);
 		$term = $this->_getParam('term',null);
-		$output = array(array('id' => '','value' => 'No records','label' => 'No records'));
+		$output = [['id' => '','value' => 'No records','label' => 'No records']];
 		$reportsmodel = new Default_Model_Reports();
 		if($term != '')
 		{
 			$buArr = $reportsmodel->getspecimenNames($term);
 			if(count($buArr)>0)
 			{
-				$output = array();
+				$output = [];
 				foreach($buArr as $unit)
 				{
-					$output[] = array('id' => $unit['id'],'value' => $unit['specimen_name'],'label' => $unit['specimen_name']);
+					$output[] = ['id' => $unit['id'],'value' => $unit['specimen_name'],'label' => $unit['specimen_name']];
 				}
 			}
 		}
@@ -6065,17 +6065,17 @@ $menuArray = array();
 	{
 		$flagterm = $this->_getParam('flag',null);
 		$term = $this->_getParam('term',null);
-		$output = array(array('id' => '','value' => 'No records','label' => 'No records'));
+		$output = [['id' => '','value' => 'No records','label' => 'No records']];
 		$reportsmodel = new Default_Model_Reports();
 		if($term != '')
 		{
 			$buArr = $reportsmodel->getagencyNames($term);
 			if(count($buArr)>0)
 			{
-				$output = array();
+				$output = [];
 				foreach($buArr as $unit)
 				{
-					$output[] = array('id' => $unit['id'],'value' => $unit['agencyname'],'label' => $unit['agencyname']);
+					$output[] = ['id' => $unit['id'],'value' => $unit['agencyname'],'label' => $unit['agencyname']];
 				}
 			}
 		}
@@ -6113,8 +6113,8 @@ $menuArray = array();
 			
 		$cols_param = explode(',',$param_arr['checkedheaders']);
 			
-		$empscreeningLabelsArr = array('specimen_name'=>'Specimen','specimen_flag_name'=>'Specimen type','agencyname'=>'Agency','screeningtype_name'=>'Screening type','process_status'=>'Process Status','createdname'=>'Sent by','createddate'=>'Sent on','isactive_text'=>'Status');
-		$cols_param_arr = array();
+		$empscreeningLabelsArr = ['specimen_name'=>'Specimen','specimen_flag_name'=>'Specimen type','agencyname'=>'Agency','screeningtype_name'=>'Screening type','process_status'=>'Process Status','createdname'=>'Sent by','createddate'=>'Sent on','isactive_text'=>'Status'];
+		$cols_param_arr = [];
 		foreach($empscreeningLabelsArr as $key=>$val)
 		{
 			foreach( $cols_param  as $col)
@@ -6129,7 +6129,7 @@ $menuArray = array();
 		$empname = $param_arr['empname'];
 		$agencyname = $param_arr['agencyname'];
 
-		$screeningtype = isset($param_arr['screeningtype']) ? $param_arr['screeningtype'] : array();
+		$screeningtype = $param_arr['screeningtype'] ?? [];
 		
 		$process_status = $param_arr['process_status'];
 		$month = $param_arr['month'];
@@ -6169,7 +6169,7 @@ $menuArray = array();
 			
 		$empscreeningArr = $reportsmodel->getEmpscreeningInfo($sort_name,$sort_type,$page_no,$per_page,$searchQuery);
 		$finalArray = $this->createEmpscreeningReportFinalArray($empscreeningArr,$cols_param);
-		return array('finalar'=>$finalArray,'cols'=>$cols_param,'cols_arr'=>$cols_param_arr);
+		return ['finalar'=>$finalArray,'cols'=>$cols_param,'cols_arr'=>$cols_param_arr];
 	}
 
 	public function getempscreeningpdfAction()
@@ -6181,69 +6181,69 @@ $menuArray = array();
 	}
 	public function generateEmpscreeningPDF($finalArray,$selectColumns)
 	{
-		$empscreeningLabelsArr = array('specimen_name'=>'Specimen','specimen_flag_name'=>'Specimen type','agencyname'=>'Agency','screeningtype_name'=>'Screening type','process_status'=>'Process Status','createdname'=>'Sent by','createddate'=>'Sent on','isactive_text'=>'Status');
-		$field_names = array();
-		$field_widths = array();
+		$empscreeningLabelsArr = ['specimen_name'=>'Specimen','specimen_flag_name'=>'Specimen type','agencyname'=>'Agency','screeningtype_name'=>'Screening type','process_status'=>'Process Status','createdname'=>'Sent by','createddate'=>'Sent on','isactive_text'=>'Status'];
+		$field_names = [];
+		$field_widths = [];
 		$fieldwidth = '';
-		$data['field_name_align'] = array();
+		$data['field_name_align'] = [];
 
 		foreach($selectColumns as $col){
 			switch($col){
-				case 'specimen_name': $field_names[] = array(
+				case 'specimen_name': $field_names[] = [
 										'field_name'=>'specimen_name',
 										'field_label'=>'Specimen'
-										);
+										];
 										$field_widths[] = 25;
 										$data['field_name_align'][] = 'C';
 										break;
-				case 'specimen_flag_name' : $field_names[] = array(
+				case 'specimen_flag_name' : $field_names[] = [
 										'field_name'=>'specimen_flag_name',
 										'field_label'=>'Specimen type'
-										);
+										];
 										$field_widths[] = 20;
 										$data['field_name_align'][] = 'C';
 										break;
-				case 'agencyname' : $field_names[] = array(
+				case 'agencyname' : $field_names[] = [
 									'field_name'=>'agencyname',
 									'field_label'=>'Agency'
-									);
+									];
 									$field_widths[] = 25;
 									$data['field_name_align'][] = 'C';
 									break;
-				case 'screeningtype_name': $field_names[] = array(
+				case 'screeningtype_name': $field_names[] = [
 									'field_name'=>'screeningtype_name',
 
 									'field_label'=>'Screening type'
 
-									);
+									];
 									$field_widths[] = 20;
 									$data['field_name_align'][] = 'C';
 									break;
-				case 'process_status': $field_names[] = array(
+				case 'process_status': $field_names[] = [
 										'field_name'=>'process_status',
 										'field_label'=>'Process Status'
-										);
+										];
 										$field_widths[] = 20;
 										$data['field_name_align'][] = 'C';
 										break;
-				case 'createdname': $field_names[] = array(
+				case 'createdname': $field_names[] = [
 										'field_name'=>'createdname',
 										'field_label'=>'Sent by'
-										);
+										];
 										$field_widths[] = 25;
 										$data['field_name_align'][] = 'C';
 										break;
-				case 'createddate': $field_names[] = array(
+				case 'createddate': $field_names[] = [
 										'field_name'=>'createddate',
 										'field_label'=>'Sent on'
-										);
+										];
 										$field_widths[] = 22;
 										$data['field_name_align'][] = 'C';
 										break;
-				case 'isactive_text': $field_names[] = array(
+				case 'isactive_text': $field_names[] = [
 										'field_name'=>'isactive_text',
 										'field_label'=>'status'
-										);
+										];
 										$field_widths[] = 20;
 										$data['field_name_align'][] = 'C';
 										break;
@@ -6257,10 +6257,10 @@ $menuArray = array();
 			}
 		}
 
-		$data = array('grid_no'=>1, 'project_name'=>'', 'object_name'=>'Employee/Candidate Screening Report', 'grid_count'=>1,'file_name'=>'empscreening.pdf');
+		$data = ['grid_no'=>1, 'project_name'=>'', 'object_name'=>'Employee/Candidate Screening Report', 'grid_count'=>1,'file_name'=>'empscreening.pdf'];
 
 		$pdf = $this->_helper->PdfHelper->generateReport($field_names, $finalArray, $field_widths, $data);
-		return $this->_helper->json(array('file_name'=>$data['file_name']));
+		return $this->_helper->json(['file_name'=>$data['file_name']]);
 	}
 
 	

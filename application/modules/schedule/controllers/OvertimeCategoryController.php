@@ -23,9 +23,9 @@ class Schedule_OvertimeCategoryController extends Zend_Controller_Action
         $view = Zend_Layout::getMvcInstance()->getView();
         $objname = $this->_getParam('objname');
         $refresh = $this->_getParam('refresh');
-        $data = array();
+        $data = [];
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         $tablecontent = '';
         $dashboardcall = $this->_getParam('dashboardcall');
 
@@ -39,7 +39,7 @@ class Schedule_OvertimeCategoryController extends Zend_Controller_Action
             $pageNo = 1;
             $searchData = '';
             $searchQuery = '';
-            $searchArray = array();
+            $searchArray = [];
         } else {
             $sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
             $by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'modifiedby';
@@ -77,17 +77,17 @@ class Schedule_OvertimeCategoryController extends Zend_Controller_Action
       
             if ($otcategory->isValid($this->getRequest()->getPost())) {
 
-                $data = array(
+                $data = [
                     'name' => $this->_request->getParam('name_cat'),
                     'description' => $this->_request->getParam('description_cat'),   
                     'isActive' => 'Y',   
 
-                );
+                ];
                  $actionflag = 1;
                  $menuID = OVERTIMECATEGORY;
                  $objId=$otcategorymodel->saveORupdateCategory($data, '');
                  sapp_Global::logManager($menuID,$actionflag,$login,$objId);
-                 $this->_helper->getHelper('FlashMessenger')->addMessage(array('messages'=>'Added Successfully'));
+                 $this->_helper->getHelper('FlashMessenger')->addMessage(['messages'=>'Added Successfully']);
                  $this->_redirect('schedule/overtimecategory');
                 
     }
@@ -124,19 +124,19 @@ $this->view->form = $otcategory;
 
             if ($timecategoryForm->isValid($this->getRequest()->getPost())) {
                 
-                $data = array(
+                $data = [
                     'name' => $this->_request->getParam('name_cat'),
                     'description' => $this->_request->getParam('description_cat'),
                     'isactive' => utlis::getcheckboxvalue($this->_request->getParam('isactive'))      
 
-                );
+                ];
   
                 $where = 'OT_category_id = '.$this->_request->getParam('id');
                 $actionflag = 2;
                 $menuID = OVERTIMECATEGORY;
                  $timecategorymodel->saveORupdateCategory($data, $where);
                  sapp_Global::logManager($menuID,$actionflag,$login,$this->_request->getParam('id'));
-                 $this->_helper->getHelper('FlashMessenger')->addMessage(array('messages'=>'Updated Successfully'));
+                 $this->_helper->getHelper('FlashMessenger')->addMessage(['messages'=>'Updated Successfully']);
                  $this->_redirect('schedule/overtimecategory');
         
     }
@@ -166,9 +166,9 @@ $this->view->form = $otcategory;
 		$id = $this->_request->getParam('objid');
  
 		$where = 'OT_category_id =' . (int)$id;
-		$data = array(
+		$data = [
 			'isactive' => 'N'
-		);
+		];
 		//die(json_encode($where));
         $actionflag = 3;
         $menuID = OVERTIMECATEGORY;
@@ -176,7 +176,7 @@ $this->view->form = $otcategory;
         sapp_Global::logManager($menuID,$actionflag,$login,$id);
 		//$res = $OTcategorymodel->saveORupdateCategory($data, $where);
 		if ($res > 0)
-			return $this->_helper->json(array('flagtype' => 'process', 'message' => 'Deleted'));
+			return $this->_helper->json(['flagtype' => 'process', 'message' => 'Deleted']);
 		die();
     }
 }

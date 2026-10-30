@@ -33,7 +33,7 @@ class Default_Model_Experiencedetails extends Zend_Db_Table_Abstract
 		$db = Zend_Db_Table::getDefaultAdapter();		
 		
 		$expData = $this->select()
-					->from(array('ex'=>'main_empexperiancedetails'),array('id'=>'id','comp_name'=>'comp_name','comp_website'=>'comp_website','designation'=>'designation','from_date'=>'DATE_FORMAT(from_date,"'.DATEFORMAT_MYSQL.'")','to_date'=>'DATE_FORMAT(to_date,"'.DATEFORMAT_MYSQL.'")','reason_for_leaving'=>'reason_for_leaving','responsibility'=>'responsibility'))
+					->from(['ex'=>'main_empexperiancedetails'],['id'=>'id','comp_name'=>'comp_name','comp_website'=>'comp_website','designation'=>'designation','from_date'=>'DATE_FORMAT(from_date,"'.DATEFORMAT_MYSQL.'")','to_date'=>'DATE_FORMAT(to_date,"'.DATEFORMAT_MYSQL.'")','reason_for_leaving'=>'reason_for_leaving','responsibility'=>'responsibility'])
     					   ->where($where)
     					   ->order("$by $sort") 
     					   ->limitPage($pageNo,$perPage);
@@ -48,7 +48,7 @@ class Default_Model_Experiencedetails extends Zend_Db_Table_Abstract
 		{
 			$where = "id =".$id;
 			$empdependencyDetails = $this->select()
-									->from(array('e'=>'main_empexperiancedetails'))
+									->from(['e'=>'main_empexperiancedetails'])
 									->where($where);
 		
 			
@@ -73,8 +73,8 @@ class Default_Model_Experiencedetails extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$pageNo,$perPage,$searchData,$call,$dashboardcall,$exParam1='',$exParam2='',$exParam3='',$exParam4='')
 	{		
         $searchQuery = '';$tablecontent = '';
-        $searchArray = array();$data = array();$id='';
-        $dataTmp = array();
+        $searchArray = [];$data = [];$id='';
+        $dataTmp = [];
         
 		if($searchData != '' && $searchData!='undefined')
 		{
@@ -93,18 +93,18 @@ class Default_Model_Experiencedetails extends Zend_Db_Table_Abstract
 		}
 		/** search from grid - END **/
 		$objName = 'experiencedetails';
-		$tableFields = array('action'=>'Action','comp_name'=>'Company Name','comp_website'=>'Company Website','designation'=>'Designation','from_date'=>'From','to_date'=>'To');
+		$tableFields = ['action'=>'Action','comp_name'=>'Company Name','comp_website'=>'Company Website','designation'=>'Designation','from_date'=>'From','to_date'=>'To'];
 					
 		$tablecontent = $this->getexperiencedetailsData($sort, $by, $pageNo, $perPage,$searchQuery,$exParam1);     
 		
-		$dataTmp = array('userid'=>$exParam1,
+		$dataTmp = ['userid'=>$exParam1,
 						'sort' => $sort,
 						'by' => $by,
 						'pageNo' => $pageNo,
 						'perPage' => $perPage,				
 						'tablecontent' => $tablecontent,
 						'objectname' => $objName,
-						'extra' => array(),
+						'extra' => [],
 						'tableheader' => $tableFields,
 						'jsGridFnName' => 'getEmployeeAjaxgridData',
 						'jsFillFnName' => '',
@@ -118,11 +118,11 @@ class Default_Model_Experiencedetails extends Zend_Db_Table_Abstract
 						'unitId'=>$exParam1,
 						'call'=>$call,
 						'context'=>$exParam2,
-						'search_filters' => array(
-						'from_date' =>array('type'=>'datepicker'),
-						'to_date' =>array('type'=>'datepicker')											
-									)									
-						);	
+						'search_filters' => [
+						'from_date' =>['type'=>'datepicker'],
+						'to_date' =>['type'=>'datepicker']											
+									]									
+						];	
 		return $dataTmp;
 	}
 	

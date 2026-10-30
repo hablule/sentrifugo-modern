@@ -81,7 +81,7 @@ class Default_RolesController extends Zend_Controller_Action
         $session = sapp_Global::_readSession();
         if (!isset($session)) {
             if ($this->getRequest()->isXmlHttpRequest()) {
-                die(Zend_Json::encode(array('login' => 'failed')));
+                die(Zend_Json::encode(['login' => 'failed']));
             } else {
                 $this->_redirect('');
             }
@@ -131,7 +131,7 @@ class Default_RolesController extends Zend_Controller_Action
             // Fetch Grid Data
             $dataTmp = $this->_model->getGrid($sort, $by, $perPage, $page, rtrim($searchData, ','), $call, $dashboardcall);
 
-            $this->view->dataArray = array($dataTmp);
+            $this->view->dataArray = [$dataTmp];
             $this->view->call      = $call;
             $this->view->messages  = $this->_helper->flashMessenger->getMessages();
         } catch (Exception $e) {
@@ -183,15 +183,15 @@ class Default_RolesController extends Zend_Controller_Action
         $form = new Default_Form_Roles();
         $rolesModel = new Default_Model_Roles();
         $groupsModel = new Default_Model_Groups();
-        $msgarray = array();
+        $msgarray = [];
 
         // Populate groups
-        $form->group_id->addMultiOptions(array('' => 'Select Group') + $groupsModel->getActiveGroupsForSelect());
+        $form->group_id->addMultiOptions(['' => 'Select Group'] + $groupsModel->getActiveGroupsForSelect());
 
         if ($this->getRequest()->isPost()) {
             if ($form->isValid($this->_request->getPost())) {
                 try {
-                    $data = array(
+                    $data = [
                         'name'         => $this->_getParam('name'),
                         'code'         => trim($this->_getParam('code')),
                         'description'  => trim($this->_getParam('description')),
@@ -200,7 +200,7 @@ class Default_RolesController extends Zend_Controller_Action
                         'createdby'    => $loginUserId,
                         'createddate'  => gmdate("Y-m-d H:i:s"),
                         'isactive'     => 'Y'
-                    );
+                    ];
 
                     $newId = $rolesModel->SaveorUpdateRolesData($data);
 
@@ -295,7 +295,7 @@ class Default_RolesController extends Zend_Controller_Action
     {
         $form = new Default_Form_Roles();
         $request = $this->getRequest(); // Keep this as the Request Object
-        $response = array('result' => 'error', 'message' => 'Invalid data');
+        $response = ['result' => 'error', 'message' => 'Invalid data'];
 
         if ($request->isPost()) {
 
@@ -303,7 +303,7 @@ class Default_RolesController extends Zend_Controller_Action
             $postData = $request->getPost();
 
             // 2. Extract and Decode Permissions
-            $jsonRaw = isset($postData['permissions_json']) ? $postData['permissions_json'] : '';
+            $jsonRaw = $postData['permissions_json'] ?? '';
             $permissions = json_decode($jsonRaw, true);
 
             // Remove from validation check (it's handled manually)
@@ -321,7 +321,7 @@ class Default_RolesController extends Zend_Controller_Action
                     $util = new utlis();
 
                     // Prepare Group Data using $postData or $request params
-                    $data = array(
+                    $data = [
                         'name'         => trim($request->getParam('name')),
                         'code'         => trim($request->getParam('code')),
                         'levelid'      => $request->getParam('levelid'),
@@ -330,7 +330,7 @@ class Default_RolesController extends Zend_Controller_Action
                         'isactive'     => $request->getParam('isactive'),
                         'modifiedby'   => $this->_loginUserId,
                         'modifieddate' => gmdate("Y-m-d H:i:s")
-                    );
+                    ];
 
                     $actionFlag = 2; // Edit
                     $saveMode   = 'Updated';
@@ -345,7 +345,7 @@ class Default_RolesController extends Zend_Controller_Action
                     // Save Group
                     $savedId = $this->_model->saveRecord($data, $id);
 
-                    $roleId = ($id) ? $id : $savedId;
+                    $roleId = $id ?: $savedId;
 
                     // 5. CRITICAL FIX: Pass the decoded $permissions array, not the POST request
                     $this->_savePrivileges($roleId, $permissions);
@@ -353,17 +353,17 @@ class Default_RolesController extends Zend_Controller_Action
                     // Logging
                     $menuModel = new Default_Model_Menu();
                     $objidArr  = $menuModel->getMenuObjID('/roles');
-                    $objID     = isset($objidArr[0]['id']) ? $objidArr[0]['id'] : 20;
+                    $objID     = $objidArr[0]['id'] ?? 20;
 
                     sapp_Global::logManager($objID, $actionFlag, $this->_loginUserId, $roleId);
 
                     $db->commit();
 
-                    $response = array(
+                    $response = [
                         'result'    => 'saved',
                         'nomessage' => 'no',
                         'message'   => "Role $saveMode successfully."
-                    );
+                    ];
 
                     $_SESSION['role_msg'] = $response['message'];
                     $_SESSION['role_cls'] = 'success';
@@ -399,7 +399,7 @@ class Default_RolesController extends Zend_Controller_Action
 
         $id = $this->_getParam('objid');
         $deleteflag = $this->_getParam('deleteflag');
-        $messages = array('message' => '', 'msgtype' => 'error');
+        $messages = ['message' => '', 'msgtype' => 'error'];
 
         if ($id) {
             $rolesModel = new Default_Model_Roles();
@@ -409,18 +409,18 @@ class Default_RolesController extends Zend_Controller_Action
                 $privilegesModel = new Default_Model_Privileges();
                 $menuModel = new Default_Model_Menu();
 
-                $data = array(
+                $data = [
                     'isactive'     => 'N',
                     'modifiedby'   => $loginUserId,
                     'modifieddate' => gmdate("Y-m-d H:i:s"),
-                );
+                ];
 
-                if ($rolesModel->SaveorUpdateRolesData($data, array('id=?' => $id)) == 'update') {
-                    $privData = array(
+                if ($rolesModel->SaveorUpdateRolesData($data, ['id=?' => $id]) == 'update') {
+                    $privData = [
                         'isactive'     => 0,
                         'modifiedby'   => $loginUserId,
                         'modifieddate' => gmdate("Y-m-d H:i:s"),
-                    );
+                    ];
                     $privilegesModel->SaveorUpdatePrivilegesData($privData, "role = " . $id);
                     sapp_Global::generateAccessControl();
 
@@ -436,7 +436,7 @@ class Default_RolesController extends Zend_Controller_Action
         }
 
         if ($deleteflag == 1) {
-            $this->_helper->getHelper("FlashMessenger")->addMessage(array($messages['msgtype'] => $messages['message']));
+            $this->_helper->getHelper("FlashMessenger")->addMessage([$messages['msgtype'] => $messages['message']]);
         }
         $this->_helper->json($messages);
     }
@@ -460,7 +460,7 @@ class Default_RolesController extends Zend_Controller_Action
         $menu_data = $menuModel->getgroupmenu($group_id, $id, $pri_val);
         $active_menus = $menuModel->getisactivemenus();
 
-        $act_menus = array();
+        $act_menus = [];
         foreach ($active_menus as $act) {
             $act_menus[$act['id']] = $act;
         }
@@ -486,9 +486,9 @@ class Default_RolesController extends Zend_Controller_Action
         $rolesModel = new Default_Model_Roles();
         $roles = $rolesModel->getRolesList('dept');
 
-        $result = array();
+        $result = [];
         foreach ($roles as $id => $name) {
-            $result[] = array('id' => $id, 'rolename' => $name);
+            $result[] = ['id' => $id, 'rolename' => $name];
         }
 
         echo json_encode($result);
@@ -523,14 +523,14 @@ class Default_RolesController extends Zend_Controller_Action
             $this->view->created_by = $sess_values->userfullname;
             $this->view->role_name = $role_name;
 
-            $options = array(
+            $options = [
                 'subject' => APPLICATION_NAME . ': Role is ' . $headerText,
                 'header'  => 'Role is ' . $headerText,
                 'toEmail' => $empdata['emailaddress'],
                 'toName'  => $empdata['userfullname'],
                 'message' => $view->render('mailtemplates/role.phtml'),
                 'cron'    => 'yes'
-            );
+            ];
             sapp_Global::_sendEmail($options);
         }
     }
@@ -559,27 +559,27 @@ class Default_RolesController extends Zend_Controller_Action
         foreach ($permissions as $menuId => $perms) {
 
             // Prepare DB Payload
-            $data = array(
+            $data = [
                 'role'              => $roleId,
                 'object'            => $menuId,
                 'isactive'          => 1,
                 'modifiedby'        => $this->_loginUserId,
                 'modifieddate'      => $currentDate,
                 // Default to 'No' if key missing in JSON
-                'addpermission'     => isset($perms['add']) ? $perms['add'] : 'No',
-                'editpermission'    => isset($perms['edit']) ? $perms['edit'] : 'No',
-                'deletepermission'  => isset($perms['delete']) ? $perms['delete'] : 'No',
-                'viewpermission'    => isset($perms['view']) ? $perms['view'] : 'No',
-                'uploadattachments' => isset($perms['upload']) ? $perms['upload'] : 'No',
-                'viewattachments'   => isset($perms['viewup']) ? $perms['viewup'] : 'No'
-            );
+                'addpermission'     => $perms['add'] ?? 'No',
+                'editpermission'    => $perms['edit'] ?? 'No',
+                'deletepermission'  => $perms['delete'] ?? 'No',
+                'viewpermission'    => $perms['view'] ?? 'No',
+                'uploadattachments' => $perms['upload'] ?? 'No',
+                'viewattachments'   => $perms['viewup'] ?? 'No'
+            ];
 
             if (isset($existingMap[$menuId])) {
                 // --- UPDATE ---
                 $privId = $existingMap[$menuId];
 
                 // Use Model's generic save method or standard update
-                $privilegeModel->SaveorUpdatePrivilegesData($data, array('id = ?' => $privId));
+                $privilegeModel->SaveorUpdatePrivilegesData($data, ['id = ?' => $privId]);
 
                 // Remove from map so we know it's handled (remaining items will be deleted)
                 unset($existingMap[$menuId]);
@@ -614,7 +614,7 @@ class Default_RolesController extends Zend_Controller_Action
         $groupsModel = new Default_Model_Groups();
         $util = new utlis();
 
-        $data = array();
+        $data = [];
 
         $isExistingRecord = ($id && is_numeric($id) && $id > 0);
 

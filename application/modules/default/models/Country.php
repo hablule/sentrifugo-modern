@@ -74,7 +74,7 @@ class Default_Model_Country extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -95,18 +95,18 @@ class Default_Model_Country extends Zend_Db_Table_Abstract
         }
 
         // Must match exact column aliases defined in getGridData()
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'      => 'Action',
             'name'        => 'Country',
             'iso_alpha2'  => 'ISO Alpha-2',
             'iso_alpha3'  => 'ISO Alpha-3',
             'phone_code'  => 'Dialing Code',
             'status_text' => 'Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
@@ -114,7 +114,7 @@ class Default_Model_Country extends Zend_Db_Table_Abstract
             'tablecontent'   => $tableContent,
             'objectname'     => 'country',
             'tableheader'    => $tableHeaders,
-            'extra'          => array(),
+            'extra'          => [],
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
             'searchArray'    => $searchArray,
@@ -122,10 +122,10 @@ class Default_Model_Country extends Zend_Db_Table_Abstract
             'menuName'       => 'Countries',
             'call'           => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => array(
-                'status_text' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive'))
-            )
-        );
+            'search_filters' => [
+                'status_text' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']]
+            ]
+        ];
     }
 
     /**
@@ -146,12 +146,12 @@ class Default_Model_Country extends Zend_Db_Table_Abstract
 
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('c' => $this->_name), array(
+            ->from(['c' => $this->_name], [
                 'id' => 'c.id',
                 '*',
                 // Alias status text so the grid helper displays words instead of 1/0
                 'status_text' => new Zend_Db_Expr("CASE WHEN c.isactive = 1 THEN 'Active' ELSE 'Inactive' END")
-            ))
+            ])
             ->where('c.isactive != 5');
 
         if (!empty($searchQuery)) {
@@ -171,7 +171,7 @@ class Default_Model_Country extends Zend_Db_Table_Abstract
      */
     public function getPairs($activeOnly = true)
     {
-        $select = $this->select()->from($this->_name, array('id', 'name'))->order('name ASC');
+        $select = $this->select()->from($this->_name, ['id', 'name'])->order('name ASC');
         if ($activeOnly) {
             $select->where("isactive = 1");
         }
@@ -210,7 +210,7 @@ class Default_Model_Country extends Zend_Db_Table_Abstract
         if (!empty($id)) {
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = gmdate("Y-m-d H:i:s");
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return 'update';
         }
 
@@ -240,12 +240,12 @@ class Default_Model_Country extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => 5,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
-        return $this->update($data, array('id = ?' => (int)$id));
+        ];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /**
@@ -260,12 +260,12 @@ class Default_Model_Country extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => (int)$status,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
-        return $this->update($data, array('id = ?' => (int)$id));
+        ];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* =================================================================================
@@ -342,7 +342,7 @@ class Default_Model_Country extends Zend_Db_Table_Abstract
     public function getMappedNationalityIds($countryId)
     {
         if (empty($countryId)) {
-            return array();
+            return [];
         }
 
         $db = $this->getAdapter();
@@ -381,10 +381,10 @@ class Default_Model_Country extends Zend_Db_Table_Abstract
 
         // 3. Remove unselected mappings (Hard delete for junction tables)
         if (!empty($toRemove)) {
-            $db->delete('map_country_nationality', array(
+            $db->delete('map_country_nationality', [
                 'country_id = ?'      => (int)$countryId,
                 'nationality_id IN (?)' => $toRemove
-            ));
+            ]);
         }
 
         // 4. Insert new mappings
@@ -393,14 +393,14 @@ class Default_Model_Country extends Zend_Db_Table_Abstract
                 // The very first item in the submitted array becomes the default
                 $isDefault = ($index === 0) ? 1 : 0;
 
-                $db->insert('map_country_nationality', array(
+                $db->insert('map_country_nationality', [
                     'country_id'     => (int)$countryId,
                     'nationality_id' => (int)$nId,
                     'is_default'     => $isDefault,
                     'isactive'       => 1,
                     'createdby'      => $userId,
                     'createddate'    => $currentDate
-                ));
+                ]);
             }
         }
 
@@ -412,15 +412,15 @@ class Default_Model_Country extends Zend_Db_Table_Abstract
             // Strip default from all mappings for this country
             $db->update(
                 'map_country_nationality',
-                array('is_default' => 0, 'modifiedby' => $userId, 'modifieddate' => $currentDate),
-                array('country_id = ?' => (int)$countryId)
+                ['is_default' => 0, 'modifiedby' => $userId, 'modifieddate' => $currentDate],
+                ['country_id = ?' => (int)$countryId]
             );
 
             // Apply default to the chosen first nationality
             $db->update(
                 'map_country_nationality',
-                array('is_default' => 1, 'modifiedby' => $userId, 'modifieddate' => $currentDate),
-                array('country_id = ?' => (int)$countryId, 'nationality_id = ?' => (int)$firstNatId)
+                ['is_default' => 1, 'modifiedby' => $userId, 'modifieddate' => $currentDate],
+                ['country_id = ?' => (int)$countryId, 'nationality_id = ?' => (int)$firstNatId]
             );
         }
     }
@@ -437,7 +437,7 @@ class Default_Model_Country extends Zend_Db_Table_Abstract
      */
     public function getMappedGeographyGroupIds($countryId)
     {
-        if (empty($countryId)) return array();
+        if (empty($countryId)) return [];
 
         $db = $this->getAdapter();
         $select = $db->select()
@@ -472,24 +472,24 @@ class Default_Model_Country extends Zend_Db_Table_Abstract
 
         // 3. Remove unselected mappings
         if (!empty($toRemove)) {
-            $db->delete('map_geographygroup_entity', array(
+            $db->delete('map_geographygroup_entity', [
                 'entity_type = ?' => 'Country',
                 'entity_id = ?'   => (int)$countryId,
                 'geographygroup_id IN (?)' => $toRemove
-            ));
+            ]);
         }
 
         // 4. Insert new mappings
         if (!empty($toAdd)) {
             foreach ($toAdd as $gId) {
-                $db->insert('map_geographygroup_entity', array(
+                $db->insert('map_geographygroup_entity', [
                     'geographygroup_id' => (int)$gId,
                     'entity_type'       => 'Country',
                     'entity_id'         => (int)$countryId,
                     'isactive'          => 1,
                     'createdby'         => $userId,
                     'createddate'       => $currentDate
-                ));
+                ]);
             }
         }
     }

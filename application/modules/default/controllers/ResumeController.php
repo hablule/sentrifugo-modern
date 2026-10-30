@@ -47,7 +47,7 @@ class Default_ResumeController extends Zend_Controller_Action
                
                 $elements = $formModel->getAllElements('Personal Detail');
                 $storeto = $elements[0]['storeTo'];
-                $data = array();
+                $data = [];
                 $firsttime = true;
                 foreach ($elements as $key => $value) {
                     if ($storeto!='main_candlang') {
@@ -71,11 +71,11 @@ class Default_ResumeController extends Zend_Controller_Action
                         }
                         
                         $storeto = $value['storeTo'];
-                        $data = array();
+                        $data = [];
                         
                         $data['candidate_id']=$candidateid;
                         $data[$value['elementNameOrID']]=$this->getRequest()->getPost()[$value['elementNameOrID']];
-                        $this->_forward('index','workexp','default',array('candidate_id'=>$Id));
+                        $this->_forward('index','workexp','default',['candidate_id'=>$Id]);
                     }
                 }
             }
@@ -104,17 +104,17 @@ class Default_ResumeController extends Zend_Controller_Action
         $candidatedetails = new Default_Form_Resume();
         $candidatedetails->setAction(BASE_URL.'resume');
         $elements = $FormModel->getActiveElements('Personal Detail');
-        $elementLabels = array();
-        $elementNames = array();
-        $elementOptions = array();
-        $validators = array();
+        $elementLabels = [];
+        $elementNames = [];
+        $elementOptions = [];
+        $validators = [];
         foreach ($elements as $element) {
-            $elementOption = array();
+            $elementOption = [];
             $elementName = $element['elementNameOrID'];
             if ($element['occupyWholeLine']) {
-                $elementOption = array('OccupyLine' => 'OccupyLine');
+                $elementOption = ['OccupyLine' => 'OccupyLine'];
             } else if ($element['startNewLine']) {
-                $elementOption = array('NewLine' => 'NewLine');
+                $elementOption = ['NewLine' => 'NewLine'];
             }
 
             $candidatedetails->addElement($element['dataType'], $element['elementNameOrID']);
@@ -147,7 +147,7 @@ class Default_ResumeController extends Zend_Controller_Action
 
             if ($element['validator'] != '') {
                 $validatorKeys = $FormModel->getValidators($element['validator']);
-                $validator = array();
+                $validator = [];
               
                 try {
                     //code...
@@ -164,17 +164,17 @@ class Default_ResumeController extends Zend_Controller_Action
                             
                         }
                         
-                        $candidatedetails->$elementName->addValidator('regex',true,array(
+                        $candidatedetails->$elementName->addValidator('regex',true,[
                             'pattern'=>$pattern,
-                            'messages'=>array(
+                            'messages'=>[
                                     'regexNotMatch'=>$value['description']
-                            )
-                        )
+                            ]
+                        ]
                             );
                   
 
                     }else{
-                        $candidatedetails->$elementName->addValidator($value['validate'],false,array('messages'=>$value['description']));
+                        $candidatedetails->$elementName->addValidator($value['validate'],false,['messages'=>$value['description']]);
                     }
                     
                 }
@@ -186,7 +186,7 @@ class Default_ResumeController extends Zend_Controller_Action
                
                 $candidatedetails->$elementName->setRequired(true);
                 foreach ($validatorKeys as $validats) {
-                    $tempArray = array();
+                    $tempArray = [];
                     $val = $validats['validate'];
                     $message = $validats['description'];
                     //$candidatedetails->$elementName->addValidator($val, false, array('messages' => $message));
@@ -254,7 +254,7 @@ Zend_Debug::dump($th->getMessage());    }
         $firstTime = true;
         $candidateID = '456';
         foreach ($formArray as $key => $values) {
-            $data = array();
+            $data = [];
             foreach ($values as $value) {
                 //$data[$value] = $this->_request->getParam($value);
                 $data[$value] = $temp_data[$value];
@@ -307,7 +307,7 @@ Zend_Debug::dump($th->getMessage());    }
         $candidateID = $this->getRequest()->getParam('id');
         Zend_Debug::dump('he');
         die();
-        $this->_forward('index','workexp','default',array('candidate_id'=>$candidateID));
+        $this->_forward('index','workexp','default',['candidate_id'=>$candidateID]);
     }
     public function resumeAction()
     {
@@ -319,7 +319,7 @@ Zend_Debug::dump($th->getMessage());    }
         $validator = $this->view->validator;
         //Zend_Debug::dump($validator['first_name']);
         //die();
-        $data = array();
+        $data = [];
         $id = 0;
         //$elements = $formmodel->getActiveElements('Personal Detail');
         $elements = $formmodel->getAllElements('Personal Detail');
@@ -390,7 +390,7 @@ Zend_Debug::dump($th->getMessage());    }
                 Zend_Debug::dump($validator['first_name']);
                 //$this->_redirect(BASE_URL.'addpersonaldetail',array('data'=>$_POST));
                 //$this->_forward('index','selfcandidateadd',null, array('data'=>'dfa'));
-                $this->_redirect('resume', array('iddddd' => 'good'));
+                $this->_redirect('resume', ['iddddd' => 'good']);
 
                 //die('invalid');
             } else {

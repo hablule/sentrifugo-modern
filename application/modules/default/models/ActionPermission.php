@@ -59,10 +59,10 @@ class Default_Model_ActionPermission extends Zend_Db_Table_Abstract
     {
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('ap' => $this->_name), array('ap.*'))
-            ->joinLeft(array('a' => 'main_action'), 'ap.action_id = a.id', array('action_name' => 'a.name'))
-            ->joinLeft(array('c' => 'main_controller'), 'a.controller_id = c.id', array('controller' => 'c.controller'))
-            ->joinLeft(array('m' => 'main_module'), 'c.module_id = m.id', array('module_name' => 'm.name'))
+            ->from(['ap' => $this->_name], ['ap.*'])
+            ->joinLeft(['a' => 'main_action'], 'ap.action_id = a.id', ['action_name' => 'a.name'])
+            ->joinLeft(['c' => 'main_controller'], 'a.controller_id = c.id', ['controller' => 'c.controller'])
+            ->joinLeft(['m' => 'main_module'], 'c.module_id = m.id', ['module_name' => 'm.name'])
             ->where('ap.id = ?', (int)$id)
             ->where('ap.isactive != 5');
 
@@ -92,18 +92,18 @@ class Default_Model_ActionPermission extends Zend_Db_Table_Abstract
         }
 
         // FIX: Re-added the 'action' key so Sentrifugo renders the Edit/View icons
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'      => 'Action',
             'module_name' => 'Module',
             'controller'  => 'Controller',
             'action_name' => 'Method Name',
             'permission'  => 'Required Privilege',
             'status_text' => 'Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
@@ -111,17 +111,17 @@ class Default_Model_ActionPermission extends Zend_Db_Table_Abstract
             'tablecontent' => $tableContent,
             'objectname' => 'permissionmap',
             'tableheader' => $tableHeaders,
-            'extra' => array(),
+            'extra' => [],
             'jsGridFnName' => 'getAjaxgridData',
             'jsFillFnName' => '',
-            'searchArray' => array(),
+            'searchArray' => [],
             'menuName' => 'Permission Maps',
             'call' => $call,
             'dashboardcall' => $dashboardcall,
-            'search_filters' => array(
-                'status_text' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive'))
-            )
-        );
+            'search_filters' => [
+                'status_text' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']]
+            ]
+        ];
     }
 
     /**
@@ -136,19 +136,19 @@ class Default_Model_ActionPermission extends Zend_Db_Table_Abstract
         if ($by == 'status_text') $by = 'ap.isactive';
 
         // Ensure default sort prefix if generic 'id' or 'permission'
-        if (in_array($by, array('id', 'permission'))) $by = 'ap.' . $by;
+        if (in_array($by, ['id', 'permission'])) $by = 'ap.' . $by;
 
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('ap' => $this->_name), array(
+            ->from(['ap' => $this->_name], [
                 'id',
                 'permission',
                 'isactive',
                 'status_text' => new Zend_Db_Expr("CASE WHEN ap.isactive = 1 THEN 'Active' ELSE 'Inactive' END")
-            ))
-            ->joinLeft(array('a' => 'main_action'), 'ap.action_id = a.id', array('action_name' => 'a.name'))
-            ->joinLeft(array('c' => 'main_controller'), 'a.controller_id = c.id', array('controller' => 'c.controller'))
-            ->joinLeft(array('m' => 'main_module'), 'c.module_id = m.id', array('module_name' => 'm.name'))
+            ])
+            ->joinLeft(['a' => 'main_action'], 'ap.action_id = a.id', ['action_name' => 'a.name'])
+            ->joinLeft(['c' => 'main_controller'], 'a.controller_id = c.id', ['controller' => 'c.controller'])
+            ->joinLeft(['m' => 'main_module'], 'c.module_id = m.id', ['module_name' => 'm.name'])
             ->where('ap.isactive != 5');
 
         if (!empty($searchQuery)) {
@@ -164,7 +164,7 @@ class Default_Model_ActionPermission extends Zend_Db_Table_Abstract
      */
     public function getPairs($activeOnly = true)
     {
-        $select = $this->select()->from($this->_name, array('id', 'permission'))->order('permission ASC');
+        $select = $this->select()->from($this->_name, ['id', 'permission'])->order('permission ASC');
         if ($activeOnly) {
             $select->where("isactive = 1");
         }
@@ -211,18 +211,18 @@ class Default_Model_ActionPermission extends Zend_Db_Table_Abstract
 
         // 1. Build the Query using strict Zend_Db_Select
         $select = $db->select()
-            ->from(array('r' => 'main_role'), array('role_id' => 'r.id'))
-            ->joinInner(array('p' => 'main_privileges'), 'r.id = p.role', array())
-            ->joinInner(array('menu' => 'main_menu'), 'p.object = menu.id', array())
+            ->from(['r' => 'main_role'], ['role_id' => 'r.id'])
+            ->joinInner(['p' => 'main_privileges'], 'r.id = p.role', [])
+            ->joinInner(['menu' => 'main_menu'], 'p.object = menu.id', [])
             // Link menu to controller safely using Zend_Db_Expr
             ->joinInner(
-                array('c' => 'main_controller'),
+                ['c' => 'main_controller'],
                 new Zend_Db_Expr("(menu.url LIKE CONCAT('%/', c.controller, '%') OR menu.url = c.controller OR menu.url LIKE CONCAT('%', c.controller))"),
-                array('controller' => 'c.controller')
+                ['controller' => 'c.controller']
             )
-            ->joinInner(array('a' => 'main_action'), 'c.id = a.controller_id', array('action_name' => 'a.name'))
-            ->joinInner(array('ap' => 'main_action_permission'), 'a.id = ap.action_id', array())
-            ->joinInner(array('m' => 'main_module'), 'c.module_id = m.id', array('module_name' => 'm.name'))
+            ->joinInner(['a' => 'main_action'], 'c.id = a.controller_id', ['action_name' => 'a.name'])
+            ->joinInner(['ap' => 'main_action_permission'], 'a.id = ap.action_id', [])
+            ->joinInner(['m' => 'main_module'], 'c.module_id = m.id', ['module_name' => 'm.name'])
 
             // Apply Active Status Filters
             ->where('r.isactive = ?', 'Y')
@@ -248,7 +248,7 @@ class Default_Model_ActionPermission extends Zend_Db_Table_Abstract
         $results = $db->fetchAll($select);
 
         // 2. Build the Multi-dimensional Array (Strictly Explicit)
-        $aclTree = array();
+        $aclTree = [];
 
         foreach ($results as $row) {
             $roleId     = (int)$row['role_id'];
@@ -256,15 +256,9 @@ class Default_Model_ActionPermission extends Zend_Db_Table_Abstract
             $controller = strtolower($row['controller']);
             $action     = strtolower($row['action_name']);
 
-            if (!isset($aclTree[$roleId])) {
-                $aclTree[$roleId] = array();
-            }
-            if (!isset($aclTree[$roleId][$module])) {
-                $aclTree[$roleId][$module] = array();
-            }
-            if (!isset($aclTree[$roleId][$module][$controller])) {
-                $aclTree[$roleId][$module][$controller] = array();
-            }
+            $aclTree[$roleId] ??= [];
+            $aclTree[$roleId][$module] ??= [];
+            $aclTree[$roleId][$module][$controller] ??= [];
 
             // Set to true (Allowed)
             $aclTree[$roleId][$module][$controller][$action] = true;
@@ -310,7 +304,7 @@ class Default_Model_ActionPermission extends Zend_Db_Table_Abstract
         if ($id) {
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = gmdate("Y-m-d H:i:s");
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return 'update';
         }
 
@@ -338,12 +332,12 @@ class Default_Model_ActionPermission extends Zend_Db_Table_Abstract
         }
 
         $userId = Zend_Auth::getInstance()->getStorage()->read()->id ?? 0;
-        $data = array(
+        $data = [
             'isactive'     => 5,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
-        return $this->update($data, array('id = ?' => (int)$id));
+        ];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /**
@@ -352,7 +346,7 @@ class Default_Model_ActionPermission extends Zend_Db_Table_Abstract
      */
     public function purgePermissionsByActionId($actionId)
     {
-        return $this->delete(array('action_id = ?' => (int)$actionId));
+        return $this->delete(['action_id = ?' => (int)$actionId]);
     }
 
     /**
@@ -361,12 +355,12 @@ class Default_Model_ActionPermission extends Zend_Db_Table_Abstract
     public function toggleStatus($id, $status)
     {
         $userId = Zend_Auth::getInstance()->getStorage()->read()->id ?? 0;
-        $data = array(
+        $data = [
             'isactive'     => (int)$status,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
-        return $this->update($data, array('id = ?' => (int)$id));
+        ];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* =================================================================================

@@ -19,7 +19,7 @@ class Schedule_LogreportController extends Zend_Controller_Action
         $refresh = $this->_getParam('refresh');
         $dashboardcall = $this->_getParam('dashboardcall');
 
-        $data = array();
+        $data = [];
 
         if ($refresh == 'refresh') {
             if ($dashboardcall == 'Yes')

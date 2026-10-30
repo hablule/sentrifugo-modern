@@ -33,17 +33,17 @@ class Exit_Form_Exittypes extends Zend_Form
 		$exitType->setAttrib('maxlength','30');
 		$exitType->addFilter(new Zend_Filter_StringTrim());
 		$exitType->setRequired(true);
-		$exitType->addValidator('NotEmpty',false,array("messages"=>'Please enter exit type.'));
-		$exitType->addValidator('regex',true,array(
+		$exitType->addValidator('NotEmpty',false,["messages"=>'Please enter exit type.']);
+		$exitType->addValidator('regex',true,[
 			'pattern'=>'/^[a-zA-Z0-9.\- ?\',\/#@$&*()!+]+$/', 
-			'messages'=>array('regexNotMatch'=>'Please enter valid exit type.')
-		));
+			'messages'=>['regexNotMatch'=>'Please enter valid exit type.']
+		]);
 		$exitType->addValidator(new Zend_Validate_Db_NoRecordExists(
-			array(
+			[
 				'table' => 'main_exit_types',
 				'field' => 'exit_type',
 				'exclude' => 'id!="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('id').'" and isactive = 1'
-			)	
+			]	
 		));
 		$exitType->getValidator('Db_NoRecordExists')->setMessage('Exit type already exists.');
 
@@ -56,8 +56,8 @@ class Exit_Form_Exittypes extends Zend_Form
 		$submitBtn->setAttrib('id','submitBtn');
 		$submitBtn->setLabel('Save');
 
-		$this->addElements(array($exitType,$submitBtn,$description));
-		$this->setElementDecorators(array('ViewHelper'));
+		$this->addElements([$exitType,$submitBtn,$description]);
+		$this->setElementDecorators(['ViewHelper']);
 	}
 }
 ?>

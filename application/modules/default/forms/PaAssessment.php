@@ -57,13 +57,13 @@ class Default_Form_Paassessment extends Zend_Form
         $status->setLabel('Assessment Status')
             ->setAttrib('class', 'formDataElement')
             ->setRequired(true)
-            ->addMultiOptions(array(
+            ->addMultiOptions([
                 'In Progress'  => 'Save as Draft (In Progress)',
                 'Submitted'    => 'Submit as Final',
                 'Completed'    => 'Mark as Completed (Manager Only)',
                 'Acknowledged' => 'Acknowledge (Employee Final Sign-off)'
-            ))
-            ->addValidator('NotEmpty', true, array('messages' => 'Please select a status.'));
+            ])
+            ->addValidator('NotEmpty', true, ['messages' => 'Please select a status.']);
 
         /* --------------------------------------------------------------
          * 4. Text Elements
@@ -73,13 +73,13 @@ class Default_Form_Paassessment extends Zend_Form
         // This field is auto-calculated in the backend and should be read-only in the form.
         $consolidated_score = new Zend_Form_Element_Text('consolidated_score');
         $consolidated_score->setLabel('Consolidated Final Score')
-            ->setAttribs(array(
+            ->setAttribs([
                 'class' => 'formDataElement', 
                 'maxlength' => '6', 
                 'placeholder' => 'Auto-calculated...',
                 'readonly' => 'readonly', // FIXED: Enforces read-only at the form level
                 'style' => 'background-color: #f4f4f4;' // Visual cue that it's locked
-            ))
+            ])
             ->setRequired(false)
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
@@ -91,7 +91,7 @@ class Default_Form_Paassessment extends Zend_Form
         // Description / Closing Remarks
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Final Remarks / Closing Notes')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -114,13 +114,13 @@ class Default_Form_Paassessment extends Zend_Form
         // The dynamic form requires custom JS payload packaging in the view.
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save')
-            ->setAttribs(array('id' => 'submitbutton', 'class' => 'actbtn_btn'));
+            ->setAttribs(['id' => 'submitbutton', 'class' => 'actbtn_btn']);
 
         /* --------------------------------------------------------------
          * Build Form & Apply Decorators (SSOT VI.7)
          * -------------------------------------------------------------- */
 
-        $this->addElements(array(
+        $this->addElements([
             $idElement,
             $contextPayload,
             $status,
@@ -128,11 +128,11 @@ class Default_Form_Paassessment extends Zend_Form
             $description,
             $isactive,
             $submit
-        ));
+        ]);
 
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
-            $element->setDecorators(array('ViewHelper'));
+            $element->setDecorators(['ViewHelper']);
         }
     }
 }

@@ -33,7 +33,7 @@ class Default_Model_Workeligibilitydetails extends Zend_Db_Table_Abstract
 		{
 			$where = "user_id =".$id;
 			$WorkEligibilityData = $this->select()
-									->from(array('w'=>'main_empworkeligibility'))
+									->from(['w'=>'main_empworkeligibility'])
 									->where($where);
 		
 			

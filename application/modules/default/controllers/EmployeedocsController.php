@@ -180,12 +180,12 @@ class Default_EmployeedocsController extends Zend_Controller_Action
 		{
 			$org_names = explode(',', $file_original_names);
 			$new_names = explode(',', $file_new_names);
-	        $attachment_array = array();
+	        $attachment_array = [];
 	
 			for ($i=0; $i < count($org_names); $i++)
 	        {
 	        	if($new_names[$i] != '')
-	            	$attachment_array[] = array("original_name" => $org_names[$i], "new_name" => $new_names[$i]);
+	            	$attachment_array[] = ["original_name" => $org_names[$i], "new_name" => $new_names[$i]];
 			}
 			
 			$empDocuments = $empDocuModel->checkDocNameByUserIdAndDocId($userid, $doc_name);
@@ -213,7 +213,7 @@ class Default_EmployeedocsController extends Zend_Controller_Action
 			
 			if($exception == 'no' && $count_emp_docs==0)
 			{
-				$data = array(
+				$data = [
 								'user_id' => $userid,
 								'name' => $doc_name,
 								'description'=>$description,
@@ -221,9 +221,9 @@ class Default_EmployeedocsController extends Zend_Controller_Action
 		                        'attachments' => count($attachment_array) > 0?json_encode($attachment_array):null,
 		                        'modifiedby' => $loginUserId,
 		                        'modifieddate'=>gmdate("Y-m-d H:i:s")
-						);
+						];
 				if($id!=''){
-					$where = array('id=?'=>$id);  
+					$where = ['id=?'=>$id];  
 					$actionflag = 2;
 				}
 				else
@@ -237,15 +237,15 @@ class Default_EmployeedocsController extends Zend_Controller_Action
 				$menuID = EMPLOYEE;
 				$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$userid);
 				
-				$this->_helper->json(array('result' => 'success'));
+				$this->_helper->json(['result' => 'success']);
 			} else {
 				if($count_emp_docs>0)
-					$this->_helper->json(array('result' => 'exists'));
+					$this->_helper->json(['result' => 'exists']);
 				else
-					$this->_helper->json(array('result' => 'error'));
+					$this->_helper->json(['result' => 'error']);
 			}
 		}else
-			$this->_helper->json(array('result' => 'max'));
+			$this->_helper->json(['result' => 'max']);
 	}
 	
 	public function deleteAction()
@@ -262,11 +262,11 @@ class Default_EmployeedocsController extends Zend_Controller_Action
 		if($id)
 		{
 			$empDocuModel = new Default_Model_Employeedocs();
-			$data = array('isactive'=>0,	
+			$data = ['isactive'=>0,	
 							'modifiedby'=>$loginUserId,
 							'modifieddate'=>gmdate("Y-m-d H:i:s")
-					);
-			$where = array('id=?'=>$id);
+					];
+			$where = ['id=?'=>$id];
 			$record_id = $empDocuModel->SaveorUpdateEmpDocuments($data, $where);
 			if($record_id == 'update')
 			{
@@ -338,21 +338,21 @@ class Default_EmployeedocsController extends Zend_Controller_Action
 		$file_new_names = $this->getRequest()->getParam('file_new_names');
 		$org_names = explode(',', $file_original_names);
 		$new_names = explode(',', $file_new_names);
-        $attachment_array = array();
+        $attachment_array = [];
 		$doctype = $this->getRequest()->getParam('doctype');;
 		for ($i=0; $i < count($org_names); $i++)
         {
         	if($new_names[$i] != '')
-            	$attachment_array[] = array("original_name" => $org_names[$i], "new_name" => $new_names[$i]);
+            	$attachment_array[] = ["original_name" => $org_names[$i], "new_name" => $new_names[$i]];
 		}
-		$data = array(
+		$data = [
 						'name' => $name,
 						'doctype_id'=>$doctype,
 						'description'=>$description,
 						'attachments' => count($attachment_array) > 0?json_encode($attachment_array):null,
                         'modifiedby' => $loginUserId,
                         'modifieddate'=>gmdate("Y-m-d H:i:s")
-				);
+				];
 				//die(json_decode($data));		
 
 		// Validate duplicate document name
@@ -361,19 +361,19 @@ class Default_EmployeedocsController extends Zend_Controller_Action
 		$count_emp_docs = count($empDocuments);
 		if($count_emp_docs==0) {
 		
-			$where = array('id=?'=>$id);  
+			$where = ['id=?'=>$id];  
 			$actionflag = 2;
 			
 			$recordId = $empDocuModel->SaveorUpdateEmpDocuments($data, $where);
 			$menuID = EMPLOYEE;
 			$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$userid);
 			
-			$this->_helper->json(array('result' => 'success'));
+			$this->_helper->json(['result' => 'success']);
 		} else {
 			if($count_emp_docs>0)
-						$this->_helper->json(array('result' => 'exists'));
+						$this->_helper->json(['result' => 'exists']);
 					else
-						$this->_helper->json(array('result' => 'error'));
+						$this->_helper->json(['result' => 'error']);
 			
 		}
 	}
@@ -381,11 +381,11 @@ class Default_EmployeedocsController extends Zend_Controller_Action
 	public function uploadsaveAction() 
     {		
         $user_id = sapp_Global::_readSession('id');
-        $filedata = array();
+        $filedata = [];
         
     	// Validate file with size greater than default(Upload Max Filesize)limit
         if ($_FILES["myfile"]["size"] == 0 || $_FILES["myfile"]["size"] > (2*1024*1024)) {
-            $this->_helper->json(array('error' => 'filesize'));
+            $this->_helper->json(['error' => 'filesize']);
         } else if(isset($_FILES["myfile"])) {
             $fileName = $_FILES["myfile"]["name"];
             $fileName = preg_replace('/[^a-zA-Z0-9.\']/', '_', $fileName);			  	
@@ -400,7 +400,7 @@ class Default_EmployeedocsController extends Zend_Controller_Action
         		move_uploaded_file($_FILES["myfile"]["tmp_name"],EMP_DOC_TEMP_UPLOAD_PATH.$newName);
         	}
           
-            $this->_helper->json(array('filedata' => $filedata));
+            $this->_helper->json(['filedata' => $filedata]);
         }       
     }
 
@@ -424,8 +424,8 @@ class Default_EmployeedocsController extends Zend_Controller_Action
 						}
 					}
 					
-					$data = array('attachments'=>(count($attData)>0)?json_encode($attData):null);
-					$where = array('id=?'=>$_POST["doc_id"]);
+					$data = ['attachments'=>(count($attData)>0)?json_encode($attData):null];
+					$where = ['id=?'=>$_POST["doc_id"]];
 					$empDocuModel->SaveorUpdateEmpDocuments($data, $where);
 				}
 				
@@ -449,17 +449,17 @@ class Default_EmployeedocsController extends Zend_Controller_Action
 	                unlink($filePath);
 	            }
 	            
-	            $this->_helper->json(array());
+	            $this->_helper->json([]);
         	}
         }
     }
     
-	function downloadfilesAction()
+	public function downloadfilesAction()
 	{
 		if($_POST){
 			
 			$doc_id = $_POST['doc_id'];
-			$file_name = isset($_POST['file_name'])? $_POST['file_name'] : '';
+			$file_name = $_POST['file_name'] ?? '';
 			$empDocuModel = new Default_Model_Employeedocs();
 			$empDocuments = $empDocuModel->getEmpDocumentsByFieldOrAll('id',$doc_id);
 			if (!empty($empDocuments)) {
@@ -467,7 +467,7 @@ class Default_EmployeedocsController extends Zend_Controller_Action
 					$attachments = json_decode($empDocuments[0]['attachments'],true);
 					//Downloading single file
 					if($file_name)
-					{	$new = array();$ori = array();
+					{	$new = [];$ori = [];
 
 							foreach ($attachments as $k => $v){
 							 if($file_name == $v["new_name"])
@@ -480,7 +480,7 @@ class Default_EmployeedocsController extends Zend_Controller_Action
 					else 
 					{
 					  if(count($attachments)>0){
-				    	$new = array();$ori = array();
+				    	$new = [];$ori = [];
 				        foreach ($attachments as $k => $v){
 							$new[] = $v["new_name"];
 							$ori[] = $v["original_name"];
@@ -532,7 +532,7 @@ class Default_EmployeedocsController extends Zend_Controller_Action
 				exit;
 				
 			} else {
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>'This document was deleted by other user just now.'));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>'This document was deleted by other user just now.']);
 				$auth = Zend_Auth::getInstance();
 				$loginUserId = $auth->getStorage()->read()->id;
 				if (!empty($_POST['user_id'])) {

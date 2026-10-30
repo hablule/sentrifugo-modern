@@ -68,7 +68,7 @@ class Default_Form_Roles extends Zend_Form
             ? 'Please select privileges other than time management.'
             : 'Please select privileges.';
 
-        $prev_cnt->addValidator('NotEmpty', false, array('messages' => $privMsg));
+        $prev_cnt->addValidator('NotEmpty', false, ['messages' => $privMsg]);
 
 
         /* --------------------------------------------------------------
@@ -81,18 +81,18 @@ class Default_Form_Roles extends Zend_Form
             ->setAttrib('class', 'formDataElement')
             ->setRegisterInArrayValidator(false)
             ->setRequired(true)
-            ->addValidator('NotEmpty', true, array('messages' => 'Group is required.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Group is required.']);
 
         // Level Selection.
         $levelid = new Zend_Form_Element_Select('levelid');
         $levelid->setLabel('Hierarchy Level')
-            ->setAttribs(array('class' => 'formDataElement', 'placeholder' => 'e.g. 1'))
+            ->setAttribs(['class' => 'formDataElement', 'placeholder' => 'e.g. 1'])
             ->setRequired(true)
-            ->addValidator('Digits', true, array('messages' => 'Level must be a whole number.'))
-            ->addValidator('NotEmpty', true, array('messages' => 'Level is required.'));
+            ->addValidator('Digits', true, ['messages' => 'Level must be a whole number.'])
+            ->addValidator('NotEmpty', true, ['messages' => 'Level is required.']);
 
         // Populate options 1 to 100
-        $orderOptions = array();
+        $orderOptions = [];
         for ($i = 1; $i <= 100; $i++) {
             $orderOptions[$i] = $i;
         }
@@ -105,32 +105,32 @@ class Default_Form_Roles extends Zend_Form
         // Role Code
         $code = new Zend_Form_Element_Text('code');
         $code->setLabel('Role Code')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '60'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '60'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', true, array('messages' => 'Code is required.'))
-            ->addValidator('Db_NoRecordExists', true, array(
+            ->addValidator('NotEmpty', true, ['messages' => 'Code is required.'])
+            ->addValidator('Db_NoRecordExists', true, [
                 'messages' => 'This code already exists.',
                 'table' => 'main_role',
                 'field' => 'code',
                 'exclude' => ($id_val > 0) ? "id != $id_val" : null
-            ));       
+            ]);       
 
         // Role Name
         $name = new Zend_Form_Element_Text('name');
         $name->setLabel('Role Name')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '100'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '100'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', true, array('messages' => 'Name is required.'))
-            ->addValidator('Db_NoRecordExists', true, array(
+            ->addValidator('NotEmpty', true, ['messages' => 'Name is required.'])
+            ->addValidator('Db_NoRecordExists', true, [
                 'messages' => 'This name already exists.',
                 'table' => 'main_role',
                 'field' => 'name',
                 'exclude' => ($id_val > 0) ? "id != $id_val" : null
-            ));
+            ]);
 
          /* --------------------------------------------------------------
          * 4. Textarea Elements
@@ -138,10 +138,10 @@ class Default_Form_Roles extends Zend_Form
         
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Description')
-            ->setAttribs(array(
+            ->setAttribs([
                 'class' => 'formDataElement fck_editor_height',
                 'rows'  => '4'
-            ))
+            ])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -178,7 +178,7 @@ class Default_Form_Roles extends Zend_Form
          * Build Form
          * -------------------------------------------------------------- */
 
-        $this->addElements(array(
+        $this->addElements([
             $idElement,
             $prev_cnt,
             $group_id,
@@ -188,9 +188,9 @@ class Default_Form_Roles extends Zend_Form
             $description,
             $isactive,
             $submit
-        ));
+        ]);
         
         // Set Standard Decorators
-        $this->setElementDecorators(array('ViewHelper'));
+        $this->setElementDecorators(['ViewHelper']);
     }
 }

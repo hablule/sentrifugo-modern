@@ -47,7 +47,7 @@ class Default_PositionsController extends Zend_Controller_Action
 		$objname = $this->_getParam('objname');
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall',null);
-		$data = array();		$searchQuery = '';		$searchArray = array();		$tablecontent='';
+		$data = [];		$searchQuery = '';		$searchArray = [];		$tablecontent='';
 
 		if($refresh == 'refresh')
 		{
@@ -57,7 +57,7 @@ class Default_PositionsController extends Zend_Controller_Action
 			$perPage = PERPAGE;
 
 			$sort = 'DESC';$by = 'p.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';
-			$searchArray = array();
+			$searchArray = [];
 		}
 		else
 		{
@@ -85,7 +85,7 @@ try {
 	//code...
 
 		$emptyFlag=0;
-		$msgarray = array();
+		$msgarray = [];
 		$auth = Zend_Auth::getInstance();
 		if($auth->hasIdentity()){
 			$loginUserId = $auth->getStorage()->read()->id;
@@ -173,7 +173,7 @@ Zend_Debug::dump($th->getMessage());	}
 	{
 		$util= new utlis();
 		$emptyFlag=0;
-		$msgarray = array();
+		$msgarray = [];
 		$auth = Zend_Auth::getInstance();
 		if($auth->hasIdentity()){
 			$loginUserId = $auth->getStorage()->read()->id;
@@ -229,7 +229,7 @@ Zend_Debug::dump($th->getMessage());	}
 
 	public function addpopupAction()
 	{
-		$msgarray = array();
+		$msgarray = [];
 		$emptyFlag = '';
 		Zend_Layout::getMvcInstance()->setLayoutPath(APPLICATION_PATH."/layouts/scripts/popup/");
 		$auth = Zend_Auth::getInstance();
@@ -249,7 +249,7 @@ $controllername='positions';
 		$form = new Default_Form_positions();
 		$model = new Default_Model_Positions();
 
-		$msgarray = array();
+		$msgarray = [];
 		$this->view->form = $form;
 
 		$this->view->msgarray = $msgarray;
@@ -265,15 +265,15 @@ $controllername='positions';
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = '';
-				$data = array('code'=>trim($code),
+				$data = ['code'=>trim($code),
 				           'name'=>trim($name),
 						  'description'=>trim($description),
 						  'isactive'=>trim($isactive),
 						  'modifiedby'=>$loginUserId,
 						  'modifieddate'=>gmdate("Y-m-d H:i:s")
-				);
+				];
 				if($id!=''){
-					$where = array('id=?'=>$id);
+					$where = ['id=?'=>$id];
 					$actionflag = 2;
 				}
 				else
@@ -338,7 +338,7 @@ $controllername='positions';
 			$date = new Zend_Date();
 			$actionflag = '';
 			$tableid  = '';
-			$data = array(
+			$data = [
 				                 'name'=>trim($name),
 								 'code'=>$code,
 				      			 'description'=>trim($description),
@@ -346,9 +346,9 @@ $controllername='positions';
 								 'modifieddate'=>gmdate("Y-m-d H:i:s"),
 								 'isactive' => $isactive
 
-			);
+			];
 			if($id!=''){
-				$where = array('position_id=?'=>$id);
+				$where = ['position_id=?'=>$id];
 
 				$actionflag = 2;
 			}
@@ -364,12 +364,12 @@ $controllername='positions';
 			if($Id == 'update')
 			{
 				$tableid = $id;
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Position updated successfully."));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Position updated successfully."]);
 			}
 			else
 			{
 				$tableid = $Id;
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Position added successfully."));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Position added successfully."]);
 			}
 			$menuID = POSITIONS;
 			$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
@@ -404,8 +404,8 @@ $controllername='positions';
 		if($id)
 		{
 			$positionsmodel = new Default_Model_Positions();
-			$data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-			$where = array('id=?'=>$id);
+			$data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+			$where = ['id=?'=>$id];
 			$position_data = $positionsmodel->getsinglePositionData($id);
 			$Id = $positionsmodel->SaveorUpdatePositionData($data, $where);
 			if($Id == 'update')
@@ -431,11 +431,11 @@ $controllername='positions';
 			{
 				if(	$messages['msgtype'] == 'error')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
 				}
 				if(	$messages['msgtype'] == 'success')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
 				}
 			}
 		$this->_helper->json($messages);

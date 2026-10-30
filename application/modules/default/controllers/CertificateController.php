@@ -23,7 +23,7 @@ class Default_CertificateController extends Zend_Controller_Action
       $refresh = $this->_getParam('refresh');
       $dashboradcall = $this->_getParam('dashboradcall');
 
-      $data = array();
+      $data = [];
 
       if ($refresh == 'refresh') {
           if ($dashboradcall == 'Yes') {
@@ -125,7 +125,7 @@ class Default_CertificateController extends Zend_Controller_Action
                         $id = $this->_request->getParam('id');
                         $date = gmdate("Y-m-d H:i:s");
         
-                        $data = array(
+                        $data = [
                             'name'=>$this->_request->getParam('name'),
                              'code'=>$this->_request->getParam('code'),
                             'certificatecategory_id'=>$this->_request->getParam('certificatecategory_id'),
@@ -135,12 +135,12 @@ class Default_CertificateController extends Zend_Controller_Action
                              'createddate'=>gmdate('Y-m-d H:i:s'),
                             'isactive'=>utlis::getcheckboxvalue($this->_request->getParam('isactive')),
         
-                                    );
+                                    ];
                         if($id!=''){
         
                             $data['modifiedby'] = $loginUserId;
                             $data['modifieddate'] = $date;
-                            $where = array('certificate_id=?'=>$id);
+                            $where = ['certificate_id=?'=>$id];
                         }
                         else
                         {
@@ -153,11 +153,11 @@ class Default_CertificateController extends Zend_Controller_Action
                         
                         if($Id == 'update')
                         {
-                            $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Certificate  updated successfully."));
+                            $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Certificate  updated successfully."]);
                         }
                         else
                         {
-                         $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Certificate  added successfully."));
+                         $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Certificate  added successfully."]);
                         }
                             
                         $this->_redirect('certificate');
@@ -204,7 +204,7 @@ try {
                 if ($auth->hasIdentity()) {
                     $loginUserId = $auth->getStorage()->read()->id;
                 }
-                $data = array(
+                $data = [
                     'name'=>$this->_request->getParam('name'),
                     'code'=>$this->_request->getParam('code'),
                     'certificatecategory_id'=>$this->_request->getParam('certificatecategory_id'),
@@ -212,7 +212,7 @@ try {
                     'description'=>$this->_request->getParam('description'),
                     'createdby'=>$loginUserId,
                     'createddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
 
                 $tableid=$dmtmodel->SaveorUpdateData($data, '');
                 sapp_Global::logManager(315,1,$loginUserId,$tableid);

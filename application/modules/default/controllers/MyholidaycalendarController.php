@@ -38,7 +38,7 @@ class Default_MyholidaycalendarController extends Zend_Controller_Action
     public function indexAction()
     {
 		try {
-		
+
 	    $auth = Zend_Auth::getInstance();
      	if($auth->hasIdentity()){
 					$loginUserId = $auth->getStorage()->read()->id;
@@ -46,22 +46,21 @@ class Default_MyholidaycalendarController extends Zend_Controller_Action
 		$call = $this->_getParam('call');
 		if($call == 'ajaxcall')
 				$this->_helper->layout->disableLayout();
-				
+
 		$employeesModel = new Default_Model_Employees();
-      
-				
+
+
 				$view = Zend_Layout::getMvcInstance()->getView();		
 				$objname = $this->_getParam('objname');
 				$refresh = $this->_getParam('refresh');
 				$dashboardcall = $this->_getParam('dashboardcall');
 				$unitId = intval($this->_getParam('unitId'));
-		  if(!isset($unitId))
-		   $unitId = '';
-				$data = array();
+		  $unitId ??= '';
+				$data = [];
 				$searchQuery = '';
-				$searchArray = array();
+				$searchArray = [];
 				$tablecontent='';
-				
+
 				if($refresh == 'refresh')
 				{
 				     if($dashboardcall == 'Yes')
@@ -78,7 +77,7 @@ class Default_MyholidaycalendarController extends Zend_Controller_Action
 						$perPage = $this->_getParam('per_page',DASHBOARD_PERPAGE);
 					else 
 						$perPage = $this->_getParam('per_page',PERPAGE);
-						
+
 					$pageNo = $this->_getParam('page', 1);
 					/** search from grid - START **/
 					$searchData = $this->_getParam('searchData');	
@@ -87,14 +86,14 @@ class Default_MyholidaycalendarController extends Zend_Controller_Action
 				}
 				$holidaydatesmodel = new Default_Model_Holidaydates();		
 				$objName = 'myholidaycalendar';
-								    
+
 				$dataTmp = $holidaydatesmodel->getGrid($sort, $by, $perPage, $pageNo, $searchData,$call,$dashboardcall,$objName,$unitId);				
-							
+
 				array_push($data,$dataTmp);
 				$this->view->dataArray = $data;
 				$this->view->call = $call ;
-		
-       
+
+
         $this->view->controllergrid = 'myholidaycalendar'; 		
 		$this->view->messages = $this->_helper->flashMessenger->getMessages();
 			//code...
@@ -203,13 +202,13 @@ class Default_MyholidaycalendarController extends Zend_Controller_Action
 				$holidaygroupsmodel = new Default_Model_Holidaygroups(); 
 				$actionflag = '';
 				$tableid  = ''; 
-				   $data = array( 'groupname'=>$groupname,
+				   $data = [ 'groupname'=>$groupname,
 				                  'description'=>trim($description),
 								  'modifiedby'=>$loginUserId,
 								  'modifieddate'=>$date->get('yyyy-MM-dd HH:mm:ss')
-						);
+						];
 					if($id!=''){
-						$where = array('id=?'=>$id);  
+						$where = ['id=?'=>$id];  
 						$actionflag = 2;
 					}
 					else
@@ -236,7 +235,7 @@ class Default_MyholidaycalendarController extends Zend_Controller_Action
     			    $this->_redirect('holidaygroups');		
 			}else
 			{
-     			$messages = $$holidaygroupsform->getMessages();
+     			$messages = ${$holidaygroupsform}->getMessages();
 				foreach ($messages as $key => $val)
 					{
 						foreach($val as $key2 => $val2)
@@ -261,8 +260,8 @@ class Default_MyholidaycalendarController extends Zend_Controller_Action
 		    if($id)
 			{
 			$holidaygroupsmodel = new Default_Model_Holidaygroups(); 
-			  $data = array('isactive'=>0);
-			  $where = array('id=?'=>$id);
+			  $data = ['isactive'=>0];
+			  $where = ['id=?'=>$id];
 			  $Id = $holidaygroupsmodel->SaveorUpdateGroupData($data, $where);
 			    if($Id == 'update')
 				{

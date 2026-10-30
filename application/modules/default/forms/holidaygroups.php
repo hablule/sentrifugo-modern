@@ -35,19 +35,19 @@ class Default_Form_holidaygroups extends Zend_Form
         $groupname->setAttrib('maxLength', 60);
         $groupname->addFilter(new Zend_Filter_StringTrim());
         $groupname->setRequired(true);
-        $groupname->addValidator('NotEmpty', false, array('messages' => 'Please enter group name.'));  
-        $groupname->addValidator("regex",true,array(                           
+        $groupname->addValidator('NotEmpty', false, ['messages' => 'Please enter group name.']);  
+        $groupname->addValidator("regex",true,[                           
                            'pattern'=>'/^[a-zA-Z0-9.\- ?]+$/',
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter valid group name.'
-                           )
-        	));
+                           ]
+        	]);
 		$groupname->addValidator(new Zend_Validate_Db_NoRecordExists(
-	                                            array(  'table'=>'main_holidaycategory',
+	                                            [  'table'=>'main_holidaycategory',
 	                                                     'field'=>'name',
 	                                                     'exclude'=>'holidaycategory_id!="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('id').'" and isactive="Y"',    
 	
-	                                                      ) ) );
+	                                                      ] ) );
 
         $groupname->getValidator('Db_NoRecordExists')->setMessage('Category name already exists.'); 
 		
@@ -62,7 +62,7 @@ class Default_Form_holidaygroups extends Zend_Form
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 
-		 $this->addElements(array($id,$groupname,$description,$isactive,$submit));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 $this->addElements([$id,$groupname,$description,$isactive,$submit]);
+         $this->setElementDecorators(['ViewHelper']); 
 	}
 }

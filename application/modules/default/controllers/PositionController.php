@@ -72,7 +72,7 @@ class Default_PositionController extends Zend_Controller_Action
         $session = sapp_Global::_readSession();
         if (!isset($session)) {
             if ($this->getRequest()->isXmlHttpRequest()) {
-                echo Zend_Json::encode(array('login' => 'failed'));
+                echo Zend_Json::encode(['login' => 'failed']);
                 exit;
             } else {
                 $this->_redirect('');
@@ -121,7 +121,7 @@ class Default_PositionController extends Zend_Controller_Action
 
             $dataTmp = $this->_model->getGrid($sort, $by, $perPage, $page, rtrim($searchData, ','), $call, $dashboardcall);
 
-            $this->view->dataArray = array($dataTmp);
+            $this->view->dataArray = [$dataTmp];
             $this->view->call      = $call;
             $this->view->messages  = $this->_helper->flashMessenger->getMessages();
         } catch (\Throwable $e) {
@@ -195,12 +195,12 @@ class Default_PositionController extends Zend_Controller_Action
             try {
                 // ENFORCE THE SINGLE ORG OWNER RULE AT APPLICATION LEVEL:
                 $orgType = trim((string) $request->getParam('org_type', ''));
-                $orgFields = array('company_id', 'businessunit_id', 'division_id', 'department_id', 'section_id', 'team_id');
+                $orgFields = ['company_id', 'businessunit_id', 'division_id', 'department_id', 'section_id', 'team_id'];
 
                 $rawName = trim((string) $request->getParam('name', ''));
                 $reportsTo = $request->getParam('reports_to_position_id');
 
-                $data = array(
+                $data = [
                     'code'            => trim((string) $request->getParam('code', '')),
                     'name'            => ($rawName === '') ? null : $rawName,
                     'jobtitle_id'     => (int) $request->getParam('jobtitle_id'),
@@ -215,17 +215,17 @@ class Default_PositionController extends Zend_Controller_Action
                     'team_id'         => null,
                     'description'     => trim((string) $request->getParam('description', '')),
                     'isactive'        => (int) $request->getParam('isactive', 1)
-                );
+                ];
 
                 // Assign exclusively the selected target level to satisfy the DB CHECK constraint
-                $targetMap = array(
+                $targetMap = [
                     'Company'      => 'company_id',
                     'BusinessUnit' => 'businessunit_id',
                     'Division'     => 'division_id',
                     'Department'   => 'department_id',
                     'Section'      => 'section_id',
                     'Team'         => 'team_id'
-                );
+                ];
 
                 if (!isset($targetMap[$orgType])) {
                     throw new Exception("Please select a valid organizational owner level.");
@@ -258,20 +258,20 @@ class Default_PositionController extends Zend_Controller_Action
 
                 $db->commit();
 
-                $this->_helper->flashMessenger->addMessage(array('success' => "Position {$saveMode} successfully."));
-                $this->_helper->json(array('result' => 'saved', 'nomessage' => 'yes'));
+                $this->_helper->flashMessenger->addMessage(['success' => "Position {$saveMode} successfully."]);
+                $this->_helper->json(['result' => 'saved', 'nomessage' => 'yes']);
             } catch (\Throwable $e) {
                 $db->rollBack();
                 error_log("Position Save Error: " . $e->getMessage());
 
-                $this->_helper->json(array(
+                $this->_helper->json([
                     'result'  => 'exception',
                     'message' => $e->getMessage(),
                     'msgtype' => 'error'
-                ));
+                ]);
             }
         } else {
-            $msgarray = array();
+            $msgarray = [];
             foreach ($form->getMessages() as $field => $errors) {
                 $msgarray[$field] = current($errors);
             }
@@ -289,7 +289,7 @@ class Default_PositionController extends Zend_Controller_Action
 
         if ($id) {
             if (defined('POSITION_MENU_ID') && sapp_Global::_checkprivileges(POSITION_MENU_ID, $this->_loginuserGroup, $this->_loginuserRole, 'delete') !== 'Yes') {
-                return $this->_helper->json(array('result' => 'error', 'message' => 'Permission Denied.'));
+                return $this->_helper->json(['result' => 'error', 'message' => 'Permission Denied.']);
             }
 
             try {
@@ -303,14 +303,14 @@ class Default_PositionController extends Zend_Controller_Action
                     sapp_Global::logManager(POSITION_MENU_ID, 3, $this->_loginUserId, $id);
                 }
 
-                return $this->_helper->json(array('result' => 'saved', 'nomessage' => 'no', 'message' => 'Record deleted successfully.', 'msgtype' => 'success'));
+                return $this->_helper->json(['result' => 'saved', 'nomessage' => 'no', 'message' => 'Record deleted successfully.', 'msgtype' => 'success']);
             } catch (\Throwable $e) {
                 error_log("Position Delete Error: " . $e->getMessage());
-                return $this->_helper->json(array('result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error'));
+                return $this->_helper->json(['result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error']);
             }
         }
 
-        return $this->_helper->json(array('result' => 'error', 'message' => 'Invalid request'));
+        return $this->_helper->json(['result' => 'error', 'message' => 'Invalid request']);
     }
 
     public function makeactiveinactiveAction()
@@ -324,10 +324,10 @@ class Default_PositionController extends Zend_Controller_Action
                 sapp_Global::logManager(POSITION_MENU_ID, 4, $this->_loginUserId, $id);
             }
 
-            $this->_helper->json(array('result' => 'saved', 'nomessage' => 'no', 'msgtype' => 'success', 'message' => 'Status updated successfully.'));
+            $this->_helper->json(['result' => 'saved', 'nomessage' => 'no', 'msgtype' => 'success', 'message' => 'Status updated successfully.']);
         } catch (\Throwable $e) {
             error_log("Position Toggle Error: " . $e->getMessage());
-            $this->_helper->json(array('result' => 'exception', 'msgtype' => 'error', 'message' => 'System error occurred.'));
+            $this->_helper->json(['result' => 'exception', 'msgtype' => 'error', 'message' => 'System error occurred.']);
         }
     }
 

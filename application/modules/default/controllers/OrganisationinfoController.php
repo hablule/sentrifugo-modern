@@ -76,8 +76,8 @@ class Default_OrganisationinfoController extends Zend_Controller_Action
 			$id = $getorgData[0]['company_id'];
                         $data = $getorgData[0];
                         $head_data = $orgInfoModel->getorghead_details();
-                        $data['orghead'] = isset($head_data['head_name'])?$head_data['head_name']:"";
-                        $data['jobtitle'] = isset($head_data['jobtitle_name'])?$head_data['jobtitle_name']:"";
+                        $data['orghead'] = $head_data['head_name'] ?? "";
+                        $data['jobtitle'] = $head_data['jobtitle_name'] ?? "";
 			$countryId = $data['country'];$stateId = $data['state'];$cityId = $data['city'];
 			$countriesmodel = new Default_Model_Countries();
 			$statesmodel = new Default_Model_States();
@@ -166,7 +166,7 @@ public function editAction()
             $loginuserRole = $auth->getStorage()->read()->emprole;
             $loginuserGroup = $auth->getStorage()->read()->group_id;
         }
-        $popConfigPermission = array();
+        $popConfigPermission = [];
         $new_stateId ='';
 		if(sapp_Global::_checkprivileges(COUNTRIES,$loginuserGroup,$loginuserRole,'add') == 'Yes'){
                 array_push($popConfigPermission,'country');
@@ -177,7 +177,7 @@ public function editAction()
 		if(sapp_Global::_checkprivileges(CITIES,$loginuserGroup,$loginuserRole,'add') == 'Yes'){
                 array_push($popConfigPermission,'city');
         }
-        $msgarray = array();
+        $msgarray = [];
         $new_stateId = '';
         $new_cityId = '';
         $id = $this->getRequest()->getParam('id');
@@ -227,7 +227,7 @@ public function editAction()
 				$data['organisationname'] = $data['name'];	
                 $form->populate($data);
 				
-				$dataarray=array();
+				$dataarray=[];
 				foreach ($ddata as $value) {
 					array_push($dataarray,$value['businessdomain_id']);
 			
@@ -241,9 +241,9 @@ public function editAction()
                 $actionpage = 'edit';                
                 if(count($_POST) > 0)
                 {
-                    $countryId = isset($_POST['country'])?$_POST['country']:"";
-                    $stateId = isset($_POST['state'])?$_POST['state']:"";
-                    $cityId = isset($_POST['city'])?$_POST['city']:"";                                    
+                    $countryId = $_POST['country'] ?? "";
+                    $stateId = $_POST['state'] ?? "";
+                    $cityId = $_POST['city'] ?? "";                                    
                 }
                 if($countryId != '')
                 {
@@ -332,7 +332,7 @@ public function editAction()
                 if(sizeof($imageArr) > 1)
                 {
                     $imagename = $imageArr[0]; $imageext = $imageArr[1];
-                    $extArr = array('gif', 'jpg', 'jpeg', 'png');
+                    $extArr = ['gif', 'jpg', 'jpeg', 'png'];
                     if(!in_array($imageext, $extArr))
                     {
                         $msgarray['org_image_value'] = 'Please upload an appropriate image file.';
@@ -368,7 +368,7 @@ public function editAction()
 				}
 				
 				$date = new Zend_Date();
-				$data = array(
+				$data = [
 							'name'=> trim($this->_request->getParam('organisationname')),
 							'website' => trim($this->_request->getParam('website')),
 							'org_image'=> $imagepath,
@@ -381,7 +381,7 @@ public function editAction()
 							'designation' => trim($this->_request->getParam('jobtitle_id',null)),
 							'modifiedby' =>	$loginUserId,
 							'modifieddate' => gmdate("Y-m-d H:i:s")
-						);
+						];
 				
 				$db = Zend_Db_Table::getDefaultAdapter();	
 				$db->beginTransaction();
@@ -409,14 +409,14 @@ public function editAction()
 							}
 						}
 					}
-					$where = array('company_id=?'=>$id);
+					$where = ['company_id=?'=>$id];
 					if($imagepath == '')
 						unset($data['org_image']);
 					else if($filecopy == 'error')
 						unset($data['org_image']);
 					if($id!='')
 					{
-						$where = array('company_id=?'=>$id);
+						$where = ['company_id=?'=>$id];
 						$actionflag = 2;
 					}
 					else
@@ -429,12 +429,12 @@ public function editAction()
 					}
 					$Id = $orgInfoModel->SaveorUpdateData($data, $where);
 					
-					$location_data = array('country' => trim((int)$this->_request->getParam('country')),
+					$location_data = ['country' => trim((int)$this->_request->getParam('country')),
 											'state' => trim(intval($this->_request->getParam('state'))),
 											'city' => trim(intval($this->_request->getParam('city'))),
                  							'modifiedby'=>$loginUserId,
 								  	       'modifieddate'=>gmdate("Y-m-d H:i:s"),
-					);
+					];
 					
 					$LocationId = $wizard_model->SaveorUpdateWizardData($location_data, '');
 									
@@ -494,9 +494,9 @@ public function editAction()
     	$cityId = '';
     		if(count($_POST) > 0)
                 {
-                    $countryId = isset($_POST['country'])?$_POST['country']:"";
-                    $stateId = isset($_POST['state'])?$_POST['state']:"";
-                    $cityId = isset($_POST['city'])?$_POST['city']:"";                                    
+                    $countryId = $_POST['country'] ?? "";
+                    $stateId = $_POST['state'] ?? "";
+                    $cityId = $_POST['city'] ?? "";                                    
                 }
                 if($countryId != '')
                 {
@@ -534,9 +534,9 @@ public function editAction()
             $loginuserRole = $auth->getStorage()->read()->emprole;
             $loginuserGroup = $auth->getStorage()->read()->group_id;
         }
-        $popConfigPermission = array();
+        $popConfigPermission = [];
         $empid = '';
-        $orgheadsData = array();
+        $orgheadsData = [];
         $oldOrgHead = '';
         $new_stateId ='';
         $actionpage = '';
@@ -564,7 +564,7 @@ public function editAction()
 		if(sapp_Global::_checkprivileges(EMPLOYEE,$loginuserGroup,$loginuserRole,'edit') == 'Yes'){
             array_push($popConfigPermission,'employee');
         }
-        $msgarray = array();$new_stateId = '';$new_cityId = '';
+        $msgarray = [];$new_stateId = '';$new_cityId = '';
         $id = $this->getRequest()->getParam('id');
         $form = new Default_Form_Organisationinfo();
         $user_model = new Default_Model_Usermanagement();
@@ -599,7 +599,7 @@ public function editAction()
         }	
 		
         $form->employeeId->setValue($emp_id);
-        $form->emprole->addMultiOptions(array('' => 'Select Role')+$role_data);
+        $form->emprole->addMultiOptions(['' => 'Select Role']+$role_data);
         if(empty($allCountriesData))
         {
                 $msgarray['country'] = 'Countries are not configured yet.';
@@ -669,9 +669,9 @@ public function editAction()
                 $actionpage = 'edit';                
                 if(count($_POST) > 0)
                 {
-                    $countryId = isset($_POST['country'])?$_POST['country']:"";
-                    $stateId = isset($_POST['state'])?$_POST['state']:"";
-                    $cityId = isset($_POST['city'])?$_POST['city']:"";                                    
+                    $countryId = $_POST['country'] ?? "";
+                    $stateId = $_POST['state'] ?? "";
+                    $cityId = $_POST['city'] ?? "";                                    
                 }
                 if($countryId != '')
                 {
@@ -719,7 +719,7 @@ public function editAction()
 						$form->position_id->addMultiOption('','Select a Position');
 						if($jobtitle_id != '')
 						{
-							$positionlistArr = $positionsmodel->getPositionList($jobtitle_id);
+							$positionlistArr = $positionsmodel->getPositionList();
 							if(sizeof($positionlistArr) > 0)
 							{                        
 								foreach ($positionlistArr as $positionlistres)
@@ -769,15 +769,15 @@ public function editAction()
                     $statesData = $statesmodel->getBasicStatesList($country);
                     foreach($statesData as $res)
                         $form->state->addMultiOption($res['state_id_org'].'!@#'.utf8_encode($res['state']),utf8_encode($res['state']));
-                    if(isset($state) && $state != 0 && $state != '')
+                    if(isset($state) && $state != 0 && $state != 0)
                         $form->setDefault('state',$state);
                 }
-                if(isset($state) && $state != 0 && $state != '')
+                if(isset($state) && $state != 0 && $state != 0)
                 {
                     $citiesData = $citiesmodel->getBasicCitiesList($state);
                     foreach($citiesData as $res)
                         $form->city->addMultiOption($res['city_org_id'].'!@#'.utf8_encode($res['city']),utf8_encode($res['city']));
-                    if(isset($city) && $city != 0 && $city != '')
+                    if(isset($city) && $city != 0 && $city != 0)
                         $form->setDefault('city',$city);
                 }
                 $this->view->ermsg = '';
@@ -790,7 +790,7 @@ public function editAction()
             if(isset($_POST['jobtitle_id']) && $_POST['jobtitle_id'] != '')
             {
                 $jobtitle_id =  $_POST['jobtitle_id'];
-                $positionlistArr = $positionsmodel->getPositionList($jobtitle_id);
+                $positionlistArr = $positionsmodel->getPositionList();
                 
                 if(sizeof($positionlistArr) > 0)
                 {                        
@@ -820,7 +820,7 @@ public function editAction()
 					$form->position_id->addMultiOption('','Select a Position');
 					if($jobtitle_id != '')
 					{
-						$positionlistArr = $positionsmodel->getPositionList($jobtitle_id);
+						$positionlistArr = $positionsmodel->getPositionList();
 						if(sizeof($positionlistArr) > 0)
 						{                        
 							foreach ($positionlistArr as $positionlistres)
@@ -880,7 +880,7 @@ public function editAction()
                 if(sizeof($imageArr) > 1)
                 {
                     $imagename = $imageArr[0]; $imageext = $imageArr[1];
-                    $extArr = array('gif', 'jpg', 'jpeg', 'png');
+                    $extArr = ['gif', 'jpg', 'jpeg', 'png'];
                     if(!in_array($imageext, $extArr))
                     {
                         $msgarray['org_image_value'] = 'Please upload an appropriate image file.';
@@ -921,7 +921,7 @@ public function editAction()
 				}else{
 					$headfullname = '';
 				}
-				$data = array(
+				$data = [
 							'organisationname'=> trim($this->_request->getParam('organisationname')),
 							'domain' =>trim($domain),
 							'website' => trim($this->_request->getParam('website')),
@@ -943,7 +943,7 @@ public function editAction()
 							'designation' => trim($this->_request->getParam('jobtitle_id',null)),
 							'modifiedby' =>	$loginUserId,
 							'modifieddate' => gmdate("Y-m-d H:i:s")
-						);
+						];
 				
 				$db = Zend_Db_Table::getDefaultAdapter();	
 				$db->beginTransaction();
@@ -975,14 +975,14 @@ public function editAction()
 							}
 						}
 					}
-					$where = array('id=?'=>$id);
+					$where = ['id=?'=>$id];
 					if($imagepath == '')
 						unset($data['org_image']);
 					else if($filecopy == 'error')
 						unset($data['org_image']);
 					if($id!='')
 					{
-						$where = array('id=?'=>$id);
+						$where = ['id=?'=>$id];
 						$actionflag = 2;
 					}
 					else
@@ -1009,7 +1009,7 @@ public function editAction()
 					$prefix_id = $this->_getParam('prefix_id',null);
 					$user_id = $this->_getParam('user_id',null);
 					
-					$user_data = array(
+					$user_data = [
 								'emprole' => $emprole,
 								'firstname' => $first_name,
 								'lastname' => $last_name,                                
@@ -1023,8 +1023,8 @@ public function editAction()
 								'selecteddate' => $date_of_joining,                                    
 								'userstatus' => 'old',       
 								'modeofentry' => 'Direct'
-							);
-					$emp_data = array(  
+							];
+					$emp_data = [  
 									'user_id'=>$newOrgHead,                                        
 									'jobtitle_id'=>$jobtitle_id, 
 									'position_id'=>$position_id, 
@@ -1033,7 +1033,7 @@ public function editAction()
 									'date_of_joining'=>$date_of_joining,                                    
 									'modifiedby'=>$loginUserId,				
 									'modifieddate'=>gmdate("Y-m-d H:i:s")
-									);
+									];
 									
 					if($Id == 'update')
 					{
@@ -1186,7 +1186,7 @@ public function editAction()
 			{
 
 				$org_startdate =  sapp_Global::change_date($this->_request->getParam('org_startdate'), 'database');
-				$data = array(
+				$data = [
 							'organisationname'		=>	trim($this->_request->getParam('organisationname')),
 							'domain'				=>	trim($domain),
 							'website'				=>	trim($this->_request->getParam('website')),
@@ -1201,8 +1201,8 @@ public function editAction()
 							'managementdetails'		=>	trim($this->_request->getParam('managementdetails')),
 							'modifiedby'			=>	$loginUserId,
 							'modifieddate'=>gmdate("Y-m-d H:i:s")
-				);
-				$where = array('id=?'=>$id);
+				];
+				$where = ['id=?'=>$id];
 				$Id = $orgInfoModel->SaveorUpdateData($data, $where);
 				$actionflag = 2;
 				$menuID=ORGANISATIONINFO;		
@@ -1243,7 +1243,7 @@ public function editAction()
 
 		// Allowed image types
 		//$allowtype = array('gif', 'jpg', 'jpeg', 'png');
-		$allowtype = array('gif', 'jpg', 'jpeg', 'png','GIF','JPG','JPEG','PNG');
+		$allowtype = ['gif', 'jpg', 'jpeg', 'png','GIF','JPG','JPEG','PNG'];
 
 		/** Uploading the image **/
 
@@ -1275,7 +1275,7 @@ public function editAction()
 							$rezultat = $filename;
 							$setWidth = 265;
 							$setHeight = 40;
-							list($imgwidth, $imgheight) = getimagesize($newfilename);
+							[$imgwidth, $imgheight] = getimagesize($newfilename);
 							if($imgwidth < 265){
 							   $setWidth = $imgwidth;
 							}  
@@ -1314,11 +1314,11 @@ public function editAction()
 
 		}
 
-		$result = array(
+		$result = [
 				'result'=>$result_status,
 				'img'=>$rezultat,
 				'msg'=>$result_msg
-		);
+		];
 		return $result;
 	}
 	
@@ -1364,7 +1364,7 @@ public function editAction()
 	     $result = 'error';
 	   else
          $result = 'success';  	   
-	   $this->_helper->_json(array('result'=>$result));
+	   $this->_helper->_json(['result'=>$result]);
 	   
 	   	//code...
 		} catch (\Throwable $th) {
@@ -1383,14 +1383,14 @@ public function editAction()
 		$employeeModal = new Default_Model_Employee();		
 		$positionsmodel = new Default_Model_Positions();
 		$orgheadsData = $employeeModal->getEmployeesForOrgHead($userid);
-		$result['result'] = array();$options_data = '';
+		$result['result'] = [];$options_data = '';
 		
 		$emp_data = $employeeModal->getsingleEmployeeData($userid);
 		if(!empty($emp_data))
 		{
 			$result['result'] = $emp_data[0];			
 			$result['result']['date_of_joining']	= 	sapp_Global::change_date($emp_data[0]['date_of_joining'],'');								
-			$positionlistArr = $positionsmodel->getPositionList($emp_data[0]['jobtitle_id']);			
+			$positionlistArr = $positionsmodel->getPositionList();			
 			foreach($positionlistArr as $opt)
 			{
 				$options_data .= sapp_Global::selectOptionBuilder($opt['id'],ucwords(utf8_encode($opt['positionname'])));
@@ -1412,7 +1412,7 @@ public function editAction()
             $loginuserGroup = $auth->getStorage()->read()->group_id;
 		}
 		$org_id = $this->_request->getParam('orgid',null);
-		$msgarray = array();$prevorgheadId = '';$posted_prevorghead_rm = '';
+		$msgarray = [];$prevorgheadId = '';$posted_prevorghead_rm = '';
 		try
 		{
 			$user_model = new Default_Model_Usermanagement();
@@ -1447,7 +1447,7 @@ public function editAction()
 			}			
 			$form->employeeId->setValue($emp_id);
 			
-			$form->emprole->addMultiOptions(array('' => 'Select Role')+$role_data);
+			$form->emprole->addMultiOptions(['' => 'Select Role']+$role_data);
 			if(empty($role_data))
 			{
 					$msgarray['emprole'] = 'Roles are not added yet.';
@@ -1486,7 +1486,7 @@ public function editAction()
             if(isset($_POST['jobtitle_id']) && $_POST['jobtitle_id'] != '')
             {
                 $jobtitle_id =  $_POST['jobtitle_id'];
-                $positionlistArr = $positionsmodel->getPositionList($jobtitle_id);
+                $positionlistArr = $positionsmodel->getPositionList();
                 
                 if(sizeof($positionlistArr) > 0)
                 {                        
@@ -1538,7 +1538,7 @@ public function editAction()
 					$prevorghead_rm = $this->_request->getParam('prevorghead_rm',null);
 					$prevheadid = $this->_request->getParam('prevheadid',null);
 				
-					$user_data = array(
+					$user_data = [
 						'emprole' => $emprole,
 					    'firstname' => $first_name,
 						'lastname' => $last_name,					                                     
@@ -1555,8 +1555,8 @@ public function editAction()
 						'modifiedby'=> $loginUserId,
 						'modifieddate'=> gmdate("Y-m-d H:i:s"),     
 						'isactive' => 1,
-					);
-					$emp_data = array(  						                                
+					];
+					$emp_data = [  						                                
 						'jobtitle_id'=>$jobtitle_id, 
 						'position_id'=>$position_id, 
 						'prefix_id'=>$prefix_id,    
@@ -1568,12 +1568,12 @@ public function editAction()
 						'modifieddate'=>gmdate("Y-m-d H:i:s"),
 						'isactive' => 1,
 						'is_orghead' => 1,
-					);
+					];
 					
-					$org_data = array(
+					$org_data = [
 						'modifiedby'=>$loginUserId,				
 						'modifieddate'=>gmdate("Y-m-d H:i:s"),
-					);
+					];
 					
 					if($emp_identity_code!='')
 						$emp_id = $emp_identity_code.str_pad($user_model->getMaxEmpId($emp_identity_code), 4, '0', STR_PAD_LEFT);
@@ -1595,7 +1595,7 @@ public function editAction()
 						if(isset($prevheadid) && $prevheadid != '')
 						{
 							$org_data['orghead'] = $user_id;		
-							$orgwhere = array('id=?'=>$org_id);
+							$orgwhere = ['id=?'=>$org_id];
 							$orgInfoModel->SaveorUpdateData($org_data, $orgwhere);
 							
 							$orgInfoModel->changeOrgHead($prevheadid,$user_id,$prevorghead_rm);

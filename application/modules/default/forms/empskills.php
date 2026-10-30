@@ -52,23 +52,23 @@ class Default_Form_empskills extends Zend_Form
 	
 
         $acquiredsince = new ZendX_JQuery_Form_Element_DatePicker('acquiredsince');
-		$acquiredsince->setOptions(array('class' => 'brdr_none'));	
+		$acquiredsince->setOptions(['class' => 'brdr_none']);	
 		$acquiredsince->setAttrib('readonly', 'true');	
 		$acquiredsince->setAttrib('onfocus', 'this.blur()');
 		$acquiredsince->setRequired(true);
-        $acquiredsince->addValidator('NotEmpty', false, array('messages' => 'Please fill the date.'));
+        $acquiredsince->addValidator('NotEmpty', false, ['messages' => 'Please fill the date.']);
         
 		$submit = new Zend_Form_Element_Submit('submit');
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 		$description = new Zend_Form_Element_Textarea('description');
 		$description->setLabel("Description");
-		$this->addElements(array($id,$emp_id,$skillname,$skill_id,$description,$isactive,$skillsource_id,$measurementindex_id,$measurementvalue,$attestation_image_value,$imgerr,$imgerrmsg,$acquiredsince,$submit));
-        $this->setElementDecorators(array('ViewHelper'));
-		$this->setElementDecorators(array('File'),array('org_image'));
+		$this->addElements([$id,$emp_id,$skillname,$skill_id,$description,$isactive,$skillsource_id,$measurementindex_id,$measurementvalue,$attestation_image_value,$imgerr,$imgerrmsg,$acquiredsince,$submit]);
+        $this->setElementDecorators(['ViewHelper']);
+		$this->setElementDecorators(['File'],['org_image']);
 
-         $this->setElementDecorators(array(
+         $this->setElementDecorators([
                     'UiWidgetElement',
-        ),array('acquiredsince')); 		
+        ],['acquiredsince']); 		
 	}
 }

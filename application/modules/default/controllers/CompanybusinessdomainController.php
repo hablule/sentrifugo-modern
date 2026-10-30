@@ -50,7 +50,7 @@ class Default_CompanybusinessdomainController extends Zend_Controller_Action
         $session = sapp_Global::_readSession();
         if (!isset($session)) {
             if ($this->getRequest()->isXmlHttpRequest()) {
-                echo Zend_Json::encode(array('login' => 'failed'));
+                echo Zend_Json::encode(['login' => 'failed']);
                 exit;
             } else {
                 $this->_redirect('');
@@ -100,7 +100,7 @@ class Default_CompanybusinessdomainController extends Zend_Controller_Action
 
             $dataTmp = $this->_model->getGrid($sort, $by, $perPage, $page, rtrim($searchData, ','), $call, $dashboardcall);
 
-            $this->view->dataArray = array($dataTmp);
+            $this->view->dataArray = [$dataTmp];
             $this->view->call      = $call;
 
             $this->view->messages  = $this->_helper->flashMessenger->getMessages();
@@ -181,20 +181,20 @@ class Default_CompanybusinessdomainController extends Zend_Controller_Action
                     throw new Exception("Invalid Company or Domain mapping specified.");
                 }
 
-                $data = array(
+                $data = [
                     'company_id'        => $companyId,
                     'businessdomain_id' => $domainId,
                     'description'       => trim((string) $request->getParam('description', '')),
                     'isactive'          => (int) $request->getParam('isactive', 1)
-                );
+                ];
 
                 // Custom Composite Uniqueness Check
                 $existing = $this->_model->checkMappingExists($companyId, $domainId, $id);
                 if ($existing) {
                     // Send explicit validation error back to UI matching input fields
-                    echo Zend_Json::encode(array(
+                    echo Zend_Json::encode([
                         'businessdomain_id' => 'This Business Domain is already mapped to this Company.'
-                    ));
+                    ]);
                     $db->rollBack();
                     exit;
                 }
@@ -217,23 +217,23 @@ class Default_CompanybusinessdomainController extends Zend_Controller_Action
                 $db->commit();
 
                 // Set FlashMessenger for the redirect page
-                $this->_helper->flashMessenger->addMessage(array('success' => "Company Engagement {$saveMode} successfully."));
+                $this->_helper->flashMessenger->addMessage(['success' => "Company Engagement {$saveMode} successfully."]);
 
                 // SSOT v6.4 Strict AJAX JSON Response (Success with Redirect)
-                $this->_helper->json(array(
+                $this->_helper->json([
                     'result'    => 'saved',
                     'nomessage' => 'yes'
-                ));
+                ]);
             } catch (\Throwable $e) {
                 $db->rollBack();
                 error_log("CompanyBusinessDomain Save Error: " . $e->getMessage());
 
                 // SSOT v6.4 Strict AJAX JSON Response (Exception)
-                $this->_helper->json(array(
+                $this->_helper->json([
                     'result'  => 'exception',
                     'message' => 'System error occurred.',
                     'msgtype' => 'error'
-                ));
+                ]);
             }
         } else {
             // SSOT v6.4 Strict AJAX JSON Response (Validation Error - Raw Array)
@@ -252,7 +252,7 @@ class Default_CompanybusinessdomainController extends Zend_Controller_Action
 
         if (!empty($id)) {
             if (sapp_Global::_checkprivileges(COMPANYENGAGEMENT_MENU_ID, $this->_loginuserGroup, $this->_loginuserRole, 'delete') !== 'Yes') {
-                return $this->_helper->json(array('result' => 'error', 'message' => 'Permission Denied.'));
+                return $this->_helper->json(['result' => 'error', 'message' => 'Permission Denied.']);
             }
 
             try {
@@ -266,14 +266,14 @@ class Default_CompanybusinessdomainController extends Zend_Controller_Action
                 $companyId = (int) explode('_', $id)[0];
                 sapp_Global::logManager(COMPANYENGAGEMENT_MENU_ID, 3, $this->_loginUserId, $companyId);
 
-                return $this->_helper->json(array('result' => 'saved', 'nomessage' => 'no', 'message' => 'Mapping deleted successfully.', 'msgtype' => 'success'));
+                return $this->_helper->json(['result' => 'saved', 'nomessage' => 'no', 'message' => 'Mapping deleted successfully.', 'msgtype' => 'success']);
             } catch (\Throwable $e) {
                 error_log("CompanyBusinessDomain Delete Error: " . $e->getMessage());
-                return $this->_helper->json(array('result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error'));
+                return $this->_helper->json(['result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error']);
             }
         }
 
-        return $this->_helper->json(array('result' => 'error', 'message' => 'Invalid request'));
+        return $this->_helper->json(['result' => 'error', 'message' => 'Invalid request']);
     }
 
     public function makeactiveinactiveAction()
@@ -287,10 +287,10 @@ class Default_CompanybusinessdomainController extends Zend_Controller_Action
             $companyId = (int) explode('_', $id)[0];
             sapp_Global::logManager(COMPANYENGAGEMENT_MENU_ID, 4, $this->_loginUserId, $companyId);
 
-            $this->_helper->json(array('result' => 'saved', 'nomessage' => 'no', 'msgtype' => 'success', 'message' => 'Status updated successfully.'));
+            $this->_helper->json(['result' => 'saved', 'nomessage' => 'no', 'msgtype' => 'success', 'message' => 'Status updated successfully.']);
         } catch (\Throwable $e) {
             error_log("CompanyBusinessDomain Toggle Error: " . $e->getMessage());
-            $this->_helper->json(array('result' => 'exception', 'msgtype' => 'error', 'message' => 'System error occurred.'));
+            $this->_helper->json(['result' => 'exception', 'msgtype' => 'error', 'message' => 'System error occurred.']);
         }
     }
 

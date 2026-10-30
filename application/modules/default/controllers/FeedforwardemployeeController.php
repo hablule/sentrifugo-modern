@@ -63,16 +63,16 @@ class Default_FeedforwardemployeeController extends Zend_Controller_Action
 					$questions_data = $ffEmpRatingsModel->getFFQuesDataByIDs($ques_csv);
 					
 					// Employee response
-					$emp_response = array();
+					$emp_response = [];
 					if($ffEmpRatingsData[0]['employee_response'])
 						$emp_response = json_decode($ffEmpRatingsData[0]['employee_response'],true);
 						
 					// get rating details using configuration id
 					$ratingsData = $ffEmpRatingsModel->getAppRatingsDataByConfgId($ffEmpRatingsData[0]['appraisal_id']);
 					$ratingType = $ratingsData[0]['rating_type'];
-					$ratingText = array();
-					$ratingTextDisplay = array();
-					$ratingValues = array();
+					$ratingText = [];
+					$ratingTextDisplay = [];
+					$ratingValues = [];
 					foreach ($ratingsData as $rd)
 					{
 						$ratingText[] = $rd['rating_text'];
@@ -115,7 +115,7 @@ class Default_FeedforwardemployeeController extends Zend_Controller_Action
 	    	{
 	    		if($flags == 'draft')
 	    		{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>'Employee response drafted successfully'));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>'Employee response drafted successfully']);
 					$this->_redirect('feedforwardemployee/edit');
 	    		}
 	    	}
@@ -130,20 +130,20 @@ class Default_FeedforwardemployeeController extends Zend_Controller_Action
 				// get all questions data based on above question ids
 				$questions_data = $ffEmpRatingsModel->getFFQuesDataByIDs($ques_csv);
 				// Employee response
-				$emp_response = array();
+				$emp_response = [];
 				if($ffEmpRatingsData[0]['employee_response'])
 					$emp_response = json_decode($ffEmpRatingsData[0]['employee_response'],true);
 
-				$question_previs = array();
+				$question_previs = [];
 				if($ffEmpRatingsData[0]['qs_privileges'])
 					$question_previs = json_decode($ffEmpRatingsData[0]['qs_privileges'],true);
 				
 				// get rating details using configuration id
 				$ratingsData = $ffEmpRatingsModel->getAppRatingsDataByConfgId($ffEmpRatingsData[0]['appraisal_id']);
 				$ratingType = $ratingsData[0]['rating_type'];
-				$ratingText = array();
-				$ratingTextDisplay = array();
-				$ratingValues = array();
+				$ratingText = [];
+				$ratingTextDisplay = [];
+				$ratingValues = [];
 				foreach ($ratingsData as $rd){
 					$ratingText[] = $rd['rating_text'];
 					$ratingTextDisplay[$rd['id']] = $rd['rating_text'];
@@ -184,29 +184,29 @@ class Default_FeedforwardemployeeController extends Zend_Controller_Action
     	try
     	{
     		$ffEmpRatingsModel = new Default_Model_Feedforwardemployeeratings();
-    		
+
 			$id = $this->_request->getParam('id');
     		$employee_id = $this->_request->getParam('employee_id');
     		$initialization_id = $this->_request->getParam('initialization_id');
     		$config_id = $this->_request->getParam('config_id');
     		$flag = $this->_request->getParam('flag');
-    		
+
             $ratingsData = $ffEmpRatingsModel->getAppRatingsDataByConfgId($config_id);
-    		$ratingValues = array();
+    		$ratingValues = [];
 			foreach ($ratingsData as $rd)
 				$ratingValues[$rd['id']] = $rd['rating_value']; 
-            
-            $appData = array(
+
+            $appData = [
             				'additional_comments'=>trim($this->_request->getParam('additional_comments')),	
 							'modifiedby'=>$loginUserId,
 							'modifiedby_role'=>$loginuserRole,
 							'modifiedby_group'=>$loginuserGroup,
 							'modifieddate'=>gmdate("Y-m-d H:i:s"),
-					);
-			
+					];
+
             	$emp_rating_arr = $this->_request->getParam('emp_rating');
             	$emp_comment_arr = $this->_request->getParam('emp_comment');
-            	$emp_response = array();
+            	$emp_response = [];
             	$rating_sum = 0;
             	$ratings_given = 0;
 	            if(sizeof($emp_rating_arr)>0 || sizeof($emp_comment_arr)>0){
@@ -218,21 +218,21 @@ class Default_FeedforwardemployeeController extends Zend_Controller_Action
 	            		}
 	            		else
 	            			$rating_id = '';
-	            		$emp_response[$qid] = array('comment'=>$emp_comment_arr[$qid],'rating_id'=>$rating_id);
+	            		$emp_response[$qid] = ['comment'=>$emp_comment_arr[$qid],'rating_id'=>$rating_id];
 	            	}
 	            }
-	            
+
 	            $appData['employee_response'] = json_encode($emp_response,true);
-            
+
 			if($flag == 'submit'){
             	$appData['ff_status'] = 2;
             	$appData['consolidated_rating'] = $rating_sum/$ratings_given;
 			}
-			
-			$appWhere = array('id=?'=>$id);
+
+			$appWhere = ['id=?'=>$id];
 			$result1 = $ffEmpRatingsModel->SaveorUpdateFFEmpRatingsData($appData, $appWhere);
-			
-			
+
+
 			if($result1)
 			{
 				$msg = 'saved';
@@ -245,10 +245,10 @@ class Default_FeedforwardemployeeController extends Zend_Controller_Action
 					$actionflag = 1;
 					$menuID = APPRAISE_YOUR_MANAGER;
 					$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
-			
+
 					$this->_redirect('feedforwardemployee');
 				}
-				
+
 			}
 			else {
 				$msg = 'err';

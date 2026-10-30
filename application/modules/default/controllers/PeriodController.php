@@ -50,7 +50,7 @@ class Default_PeriodController extends Zend_Controller_Action
         $session = sapp_Global::_readSession();
         if (!isset($session)) {
             if ($this->getRequest()->isXmlHttpRequest()) {
-                echo Zend_Json::encode(array('login' => 'failed'));
+                echo Zend_Json::encode(['login' => 'failed']);
                 exit;
             } else {
                 $this->_redirect('');
@@ -104,7 +104,7 @@ class Default_PeriodController extends Zend_Controller_Action
             // Pass the fiscal year filter into the grid generator
             $dataTmp = $this->_model->getGrid($sort, $by, $perPage, $page, rtrim($searchData, ','), $call, $dashboardcall, $fiscalyearFilterId);
 
-            $this->view->dataArray = array($dataTmp);
+            $this->view->dataArray = [$dataTmp];
             $this->view->call      = $call;
 
             $this->view->messages  = $this->_helper->flashMessenger->getMessages();
@@ -190,13 +190,13 @@ class Default_PeriodController extends Zend_Controller_Action
                 // If editing, extract the frozen parent key
                 $fiscalyearId = (int) $request->getParam('fiscalyear_id_hidden', $request->getParam('fiscalyear_id', 0));
 
-                $data = array(
+                $data = [
                     'name'          => trim((string) $request->getParam('name', '')),
                     'fiscalyear_id' => $fiscalyearId,
                     'start_date'    => sapp_Global::change_date($request->getParam('start_date'), 'database'),
                     'end_date'      => sapp_Global::change_date($request->getParam('end_date'), 'database'),
                     'isactive'      => (int) $request->getParam('isactive', 1)
-                );
+                ];
 
                 $actionFlag = 2;
                 $saveMode   = 'updated';
@@ -225,22 +225,22 @@ class Default_PeriodController extends Zend_Controller_Action
                 $db->commit();
 
                 // FlashMessenger for standard redirect
-                $this->_helper->flashMessenger->addMessage(array('success' => "Period {$saveMode} successfully."));
+                $this->_helper->flashMessenger->addMessage(['success' => "Period {$saveMode} successfully."]);
 
                 // SSOT Strict AJAX JSON Response (Success with Redirect)
-                $this->_helper->json(array(
+                $this->_helper->json([
                     'result'    => 'saved',
                     'nomessage' => 'yes'
-                ));
+                ]);
             } catch (\Throwable $e) {
                 $db->rollBack();
                 error_log("Period Save Error: " . $e->getMessage());
 
-                $this->_helper->json(array(
+                $this->_helper->json([
                     'result'  => 'exception',
                     'message' => 'System error occurred. Check logs.',
                     'msgtype' => 'error'
-                ));
+                ]);
             }
         } else {
             // Validation Error - Raw Array output directly
@@ -259,7 +259,7 @@ class Default_PeriodController extends Zend_Controller_Action
 
         if ($id) {
             if (sapp_Global::_checkprivileges(PERIOD, $this->_loginuserGroup, $this->_loginuserRole, 'delete') !== 'Yes') {
-                return $this->_helper->json(array('result' => 'error', 'message' => 'Permission Denied.'));
+                return $this->_helper->json(['result' => 'error', 'message' => 'Permission Denied.']);
             }
 
             try {
@@ -271,14 +271,14 @@ class Default_PeriodController extends Zend_Controller_Action
                 $this->_model->deleteRecord($id);
                 sapp_Global::logManager(PERIOD, 3, $this->_loginUserId, $id);
 
-                return $this->_helper->json(array('result' => 'saved', 'nomessage' => 'no', 'message' => 'Record deleted successfully.', 'msgtype' => 'success'));
+                return $this->_helper->json(['result' => 'saved', 'nomessage' => 'no', 'message' => 'Record deleted successfully.', 'msgtype' => 'success']);
             } catch (\Throwable $e) {
                 error_log("Period Delete Error: " . $e->getMessage());
-                return $this->_helper->json(array('result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error'));
+                return $this->_helper->json(['result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error']);
             }
         }
 
-        return $this->_helper->json(array('result' => 'error', 'message' => 'Invalid request'));
+        return $this->_helper->json(['result' => 'error', 'message' => 'Invalid request']);
     }
 
     public function makeactiveinactiveAction()
@@ -290,10 +290,10 @@ class Default_PeriodController extends Zend_Controller_Action
             $this->_model->toggleStatus($id, $status);
             sapp_Global::logManager(PERIOD, 4, $this->_loginUserId, $id);
 
-            $this->_helper->json(array('result' => 'saved', 'nomessage' => 'no', 'msgtype' => 'success', 'message' => 'Status updated successfully.'));
+            $this->_helper->json(['result' => 'saved', 'nomessage' => 'no', 'msgtype' => 'success', 'message' => 'Status updated successfully.']);
         } catch (\Throwable $e) {
             error_log("Period Toggle Error: " . $e->getMessage());
-            $this->_helper->json(array('result' => 'exception', 'msgtype' => 'error', 'message' => 'System error occurred.'));
+            $this->_helper->json(['result' => 'exception', 'msgtype' => 'error', 'message' => 'System error occurred.']);
         }
     }
 
@@ -328,16 +328,16 @@ class Default_PeriodController extends Zend_Controller_Action
         // Fetch the matrix from the model (returns all active business processes)
         $matrix = $this->_model->getPeriodControlMatrix($id);
         // Format for the JS Grid
-        $existingControls = array();
+        $existingControls = [];
         foreach ($matrix as $procId => $procData) {
             if ($procData['map_id'] > 0) { // Only send actually saved mappings to the grid initially
-                $existingControls[] = array(
+                $existingControls[] = [
                     'id'           => $procData['map_id'],
                     'process_id'   => $procId,
                     'process_name' => $procData['name'],
                     'status'       => $procData['status'],
                     'action'       => 'update'
-                );
+                ];
             }
         }
         $this->view->existingControls = json_encode($existingControls);

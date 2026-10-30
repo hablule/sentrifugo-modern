@@ -36,9 +36,9 @@ class Default_Model_Empsalarydetails extends Zend_Db_Table_Abstract
 
 		$empsalarydetailData = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('e' => 'main_empsalarydetails'), array('id'=>'e.empsalary_id', 'e.amount', 'e.amount_frequency', 'from_date'=>'DATE_FORMAT(e.from_date,"'.DATEFORMAT_MYSQL.'")', 'end_date'=>'DATE_FORMAT(e.end_date,"'.DATEFORMAT_MYSQL.'")', 'e.description'))
-			->joinLeft(array('c'=>'main_currency'),'c.id=e.currency_id','c.currencyname')
-			->joinLeft(array('b'=>'main_empbankaccount'),'b.empbankaccount_id=e.empbankaccount_id','b.accountno')
+			->from(['e' => 'main_empsalarydetails'], ['id'=>'e.empsalary_id', 'e.amount', 'e.amount_frequency', 'from_date'=>'DATE_FORMAT(e.from_date,"'.DATEFORMAT_MYSQL.'")', 'end_date'=>'DATE_FORMAT(e.end_date,"'.DATEFORMAT_MYSQL.'")', 'e.description'])
+			->joinLeft(['c'=>'main_currency'],'c.id=e.currency_id','c.currencyname')
+			->joinLeft(['b'=>'main_empbankaccount'],'b.empbankaccount_id=e.empbankaccount_id','b.accountno')
 			->where($where)
 			->order("$by $sort")
 			->limitPage($pageNo, $perPage);
@@ -48,8 +48,8 @@ class Default_Model_Empsalarydetails extends Zend_Db_Table_Abstract
 	public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $exParam1 = '', $exParam2 = '', $exParam3 = '', $exParam4 = '')
 	{
 		$searchQuery = '';
-		$searchArray = array();
-		$data = array();
+		$searchArray = [];
+		$data = [];
 		if ($searchData != '' && $searchData != 'undefined') {
 			$searchValues = json_decode($searchData);
 			foreach ($searchValues as $key => $val) {
@@ -66,7 +66,7 @@ class Default_Model_Empsalarydetails extends Zend_Db_Table_Abstract
 		}
 		$objName = 'empsalarydetails';
 
-		$tableFields = array(
+		$tableFields = [
 			'action' => 'Action',
 			'currencyname' => 'Currency',
 			'amount' => 'Amount',
@@ -75,12 +75,12 @@ class Default_Model_Empsalarydetails extends Zend_Db_Table_Abstract
 			'description' => 'Description',
 			'from_date' => 'Start Date',
 			'end_date' => 'End Date',
-		);
+		];
 
 		$tablecontent = $this->getEmpSalaryData($sort, $by, $pageNo, $perPage, $searchQuery, $exParam1);
 
-		$bool_arr = array('' => 'All', 1 => 'Yes', 2 => 'No');
-		$dataTmp = array(
+		$bool_arr = ['' => 'All', 1 => 'Yes', 2 => 'No'];
+		$dataTmp = [
 			'userid' => $exParam1,
 			'sort' => $sort,
 			'by' => $by,
@@ -88,7 +88,7 @@ class Default_Model_Empsalarydetails extends Zend_Db_Table_Abstract
 			'perPage' => $perPage,
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getEmployeeAjaxgridData',
 			'jsFillFnName' => '',
@@ -100,24 +100,24 @@ class Default_Model_Empsalarydetails extends Zend_Db_Table_Abstract
 			'userAction' => $exParam3,	
 			'call' => $call,
 			'context' => $exParam2,
-			'search_filters' => array(
-				'active_company' => array(
+			'search_filters' => [
+				'active_company' => [
 					'type' => 'select',
 					'filter_data' => $bool_arr,
-				),
-			'from_date' => array('type' => 'datepicker'),
-			'end_date' => array('type' => 'datepicker')
-			)
-		);
+				],
+			'from_date' => ['type' => 'datepicker'],
+			'end_date' => ['type' => 'datepicker']
+			]
+		];
 		return $dataTmp;
 	}
 	public function getsingleEmpSalaryDetailsData($id)
 	{
 		$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('s' => 'main_empsalarydetails'), array('s.*'))
-			->joinLeft(array('c'=>'main_currency'),'c.id=s.currency_id','c.currencyname')
-			->joinLeft(array('b'=>'main_empbankaccount'),'b.empbankaccount_id=s.empbankaccount_id','b.accountno')
+			->from(['s' => 'main_empsalarydetails'], ['s.*'])
+			->joinLeft(['c'=>'main_currency'],'c.id=s.currency_id','c.currencyname')
+			->joinLeft(['b'=>'main_empbankaccount'],'b.empbankaccount_id=s.empbankaccount_id','b.accountno')
 			->where('s.emp_id=' . $id . ' AND s.isactive = 1');
 
 		return $this->fetchAll($select)->toArray();
@@ -127,9 +127,9 @@ class Default_Model_Empsalarydetails extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('s' => 'main_empsalarydetails'), array('s.*'))
-			->joinLeft(array('c'=>'main_currency'),'c.id=s.currency_id','c.currencyname')
-			->joinLeft(array('b'=>'main_empbankaccount'),'b.empbankaccount_id=s.empbankaccount_id','b.accountno')
+			->from(['s' => 'main_empsalarydetails'], ['s.*'])
+			->joinLeft(['c'=>'main_currency'],'c.id=s.currency_id','c.currencyname')
+			->joinLeft(['b'=>'main_empbankaccount'],'b.empbankaccount_id=s.empbankaccount_id','b.accountno')
 			->where('s.empsalary_id=' . $id);
 
 		return $this->fetchAll($select)->toArray();

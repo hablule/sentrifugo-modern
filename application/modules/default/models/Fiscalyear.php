@@ -56,7 +56,7 @@ class Default_Model_Fiscalyear extends Zend_Db_Table_Abstract
 
     public function getPairs($activeOnly = true, $calendarId = null)
     {
-        $select = $this->select()->from($this->_name, array('id', 'name'))->order('start_date DESC');
+        $select = $this->select()->from($this->_name, ['id', 'name'])->order('start_date DESC');
         if ($activeOnly) {
             $select->where('isactive = ?', 1);
         }
@@ -69,7 +69,7 @@ class Default_Model_Fiscalyear extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if (!empty($searchData) && $searchData !== 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -91,25 +91,25 @@ class Default_Model_Fiscalyear extends Zend_Db_Table_Abstract
             }
         }
 
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'        => 'Action',
             'name'          => 'Fiscal Year',
             'calendar_name' => 'Calendar',
             'start_date'    => 'Start Date',
             'end_date'      => 'End Date',
             'status_text'   => 'Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
             'perPage'        => $perPage,
             'tablecontent'   => $tableContent,
             'objectname'     => 'fiscalyear',
-            'extra'          => array(),
+            'extra'          => [],
             'tableheader'    => $tableHeaders,
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
@@ -117,12 +117,12 @@ class Default_Model_Fiscalyear extends Zend_Db_Table_Abstract
             'menuName'       => 'Fiscal Years',
             'call'           => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => array(
-                'status_text' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive')),
-                'start_date'  => array('type' => 'datepicker'),
-                'end_date'    => array('type' => 'datepicker')
-            )
-        );
+            'search_filters' => [
+                'status_text' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']],
+                'start_date'  => ['type' => 'datepicker'],
+                'end_date'    => ['type' => 'datepicker']
+            ]
+        ];
     }
 
     public function getGridData($sort, $by, $pageNo, $perPage, $searchQuery = '')
@@ -136,19 +136,19 @@ class Default_Model_Fiscalyear extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from(
-                array('y' => $this->_name),
-                array(
+                ['y' => $this->_name],
+                [
                     'id' => 'y.id',
                     'name',
                     'start_date'  => new Zend_Db_Expr("DATE_FORMAT(y.start_date, '" . DATEFORMAT_MYSQL . "')"),
                     'end_date'    => new Zend_Db_Expr("DATE_FORMAT(y.end_date, '" . DATEFORMAT_MYSQL . "')"),
                     'status_text' => new Zend_Db_Expr("CASE WHEN y.isactive = 1 THEN 'Active' ELSE 'Inactive' END")
-                )
+                ]
             )
             ->joinInner(
-                array('c' => 'main_calendar'),
+                ['c' => 'main_calendar'],
                 'y.calendar_id = c.id',
-                array('calendar_name' => 'c.name')
+                ['calendar_name' => 'c.name']
             )
             ->where('y.isactive != ?', 5);
 
@@ -183,7 +183,7 @@ class Default_Model_Fiscalyear extends Zend_Db_Table_Abstract
         if (!empty($id)) {
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = $currentDate;
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return 'update';
         }
 
@@ -202,13 +202,13 @@ class Default_Model_Fiscalyear extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => 5,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
+        ];
 
-        return $this->update($data, array('id = ?' => (int)$id));
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     public function toggleStatus($id, $status)
@@ -216,13 +216,13 @@ class Default_Model_Fiscalyear extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => (int)$status,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
+        ];
 
-        return $this->update($data, array('id = ?' => (int)$id));
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* =================================================================================
@@ -248,7 +248,7 @@ class Default_Model_Fiscalyear extends Zend_Db_Table_Abstract
 
         // Check if the Fiscal Year has any active child Periods
         $periodSelect = $db->select()
-            ->from('main_period', array('id'))
+            ->from('main_period', ['id'])
             ->where('fiscalyear_id = ?', (int)$id)
             ->where('isactive != ?', 5);
 

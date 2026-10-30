@@ -32,9 +32,9 @@ class Default_UserController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent = '';
 
 		if ($refresh == 'refresh') {
@@ -88,76 +88,76 @@ class Default_UserController extends Zend_Controller_Action
 			if (!empty($sitepreferenceArr)) {
 				if ($sitepreferenceArr[0]['passwordid'] == 1) {
 
-					$form->password->addValidator("regex", true, array(
+					$form->password->addValidator("regex", true, [
 						'pattern' => '/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/',
-						'messages' => array(
+						'messages' => [
 							'regexNotMatch' => 'Please enter only alphanumeric characters.'
-						)
-					));
+						]
+					]);
 
-					$form->confirmpassword->addValidator("regex", true, array(
+					$form->confirmpassword->addValidator("regex", true, [
 						'pattern' => '/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/',
-						'messages' => array(
+						'messages' => [
 							'regexNotMatch' => 'Please enter only alphanumeric characters.'
-						)
-					));
+						]
+					]);
 				} else if ($sitepreferenceArr[0]['passwordid'] == 2) {
-					$form->password->addValidator("regex", true, array(
+					$form->password->addValidator("regex", true, [
 						'pattern' => '/^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[.\-#$@&\_*])([a-zA-Z0-9.\-#$@&\_*]+)$/',
-						'messages' => array(
+						'messages' => [
 							'regexNotMatch' => 'Please enter only characters,numbers and special characters.'
-						)
-					));
+						]
+					]);
 
-					$form->confirmpassword->addValidator("regex", true, array(
+					$form->confirmpassword->addValidator("regex", true, [
 						'pattern' => '/^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[.\-#$@&\_*])([a-zA-Z0-9.\-#$@&\_*]+)$/',
-						'messages' => array(
+						'messages' => [
 							'regexNotMatch' => 'Please enter only characters,numbers and special characters.'
-						)
-					));
+						]
+					]);
 				} else if ($sitepreferenceArr[0]['passwordid'] == 3) {
-					$form->password->addValidator("regex", true, array(
+					$form->password->addValidator("regex", true, [
 						'pattern' => '/^[0-9]+$/',
-						'messages' => array(
+						'messages' => [
 							'regexNotMatch' => 'Please enter numbers only.'
-						)
-					));
+						]
+					]);
 
-					$form->confirmpassword->addValidator("regex", true, array(
+					$form->confirmpassword->addValidator("regex", true, [
 						'pattern' => '/^[0-9]+$/',
-						'messages' => array(
+						'messages' => [
 							'regexNotMatch' => 'Please enter numbers only.'
-						)
-					));
+						]
+					]);
 				} else {
-					$form->password->addValidator("regex", true, array(
+					$form->password->addValidator("regex", true, [
 						'pattern' => '/^(?=.*[0-9])(?=.*[.\-#$@&\_*])([0-9.\-#$@&\_*]+)$/',
-						'messages' => array(
+						'messages' => [
 							'regexNotMatch' => 'Please enter only numbers and special characters.'
-						)
-					));
+						]
+					]);
 
-					$form->confirmpassword->addValidator("regex", true, array(
+					$form->confirmpassword->addValidator("regex", true, [
 						'pattern' => '/^(?=.*[0-9])(?=.*[.\-#$@&\_*])([0-9.\-#$@&\_*]+)$/',
-						'messages' => array(
+						'messages' => [
 							'regexNotMatch' => 'Please enter only numbers and special characters.'
-						)
-					));
+						]
+					]);
 				}
 			} else {
-				$form->password->addValidator("regex", true, array(
+				$form->password->addValidator("regex", true, [
 					'pattern' => '/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/',
-					'messages' => array(
+					'messages' => [
 						'regexNotMatch' => 'Please enter only alphanumeric characters.'
-					)
-				));
+					]
+				]);
 
-				$form->confirmpassword->addValidator("regex", true, array(
+				$form->confirmpassword->addValidator("regex", true, [
 					'pattern' => '/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/',
-					'messages' => array(
+					'messages' => [
 						'regexNotMatch' => 'Please enter only alphanumeric characters.'
-					)
-				));
+					]
+				]);
 			}
 
 
@@ -174,7 +174,7 @@ class Default_UserController extends Zend_Controller_Action
 						$hashpassword = password_hash($this->_request->getParam('password'), PASSWORD_DEFAULT);
 
 						$emailaddress = $this->_request->getParam('emailaddress');
-						$data = array(
+						$data = [
 							'username' => $this->_request->getParam('username'),
 							'emailaddress' => $this->_request->getParam('emailaddress'),
 							'code' => $this->_request->getParam('code'),
@@ -184,7 +184,7 @@ class Default_UserController extends Zend_Controller_Action
 
 							'createdby' => $loginUserId,
 							'createddate' => gmdate('Y-m-d H:i:s')
-						);
+						];
 						$model->SaveorUpdateData($data, '');
 						//die(json_encode($data));
 						$base_url = 'http://' . $this->getRequest()->getHttpHost() . $this->getRequest()->getBaseUrl();
@@ -202,7 +202,7 @@ class Default_UserController extends Zend_Controller_Action
 						$result = sapp_Global::_sendEmail($options);
 
 						//end of mailing
-						$this->_helper->getHelper("FlashMessenger")->addMessage(array('success' => 'User Added Successful'));
+						$this->_helper->getHelper("FlashMessenger")->addMessage(['success' => 'User Added Successful']);
 						$this->_redirect('user');
 					}
 				}

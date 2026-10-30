@@ -50,7 +50,7 @@ class Default_DistributionListController extends Zend_Controller_Action
         $session = sapp_Global::_readSession();
         if (!isset($session)) {
             if ($this->getRequest()->isXmlHttpRequest()) {
-                echo Zend_Json::encode(array('login' => 'failed'));
+                echo Zend_Json::encode(['login' => 'failed']);
                 exit;
             } else {
                 $this->_redirect('');
@@ -100,7 +100,7 @@ class Default_DistributionListController extends Zend_Controller_Action
 
             $dataTmp = $this->_model->getGrid($sort, $by, $perPage, $page, rtrim($searchData, ','), $call, $dashboardcall);
 
-            $this->view->dataArray = array($dataTmp);
+            $this->view->dataArray = [$dataTmp];
             $this->view->call      = $call;
 
             $this->view->messages  = $this->_helper->flashMessenger->getMessages();
@@ -173,7 +173,7 @@ class Default_DistributionListController extends Zend_Controller_Action
 
             try {
                 // Ensure empty string selects convert to NULL for foreign keys
-                $data = array(
+                $data = [
                     'name'             => trim((string) $request->getParam('name', '')),
                     'email_address'    => trim((string) $request->getParam('email_address', '')),
                     'group_id'         => $request->getParam('group_id') ?: null,
@@ -185,7 +185,7 @@ class Default_DistributionListController extends Zend_Controller_Action
                     'project_id'       => $request->getParam('project_id') ?: null,
                     'description'      => trim((string) $request->getParam('description', '')),
                     'isactive'         => (int) $request->getParam('isactive', 1)
-                );
+                ];
 
                 // Custom composite validation: Prevent a list from mapping to multiple operational units 
                 // to prevent routing conflicts (SSOT Data Integrity check)
@@ -216,18 +216,18 @@ class Default_DistributionListController extends Zend_Controller_Action
                 $db->commit();
 
                 // SSOT v6.3 Strict AJAX JSON Response (Success with Redirect)
-                $this->_helper->flashMessenger->addMessage(array('success' => "Distribution List {$saveMode} successfully."));
-                $this->_helper->json(array('result' => 'saved', 'nomessage' => 'yes'));
+                $this->_helper->flashMessenger->addMessage(['success' => "Distribution List {$saveMode} successfully."]);
+                $this->_helper->json(['result' => 'saved', 'nomessage' => 'yes']);
             } catch (\Throwable $e) {
                 $db->rollBack();
                 error_log("DistributionList Save Error: " . $e->getMessage());
 
                 // SSOT v6.2 Strict AJAX JSON Response (Exception)
-                $this->_helper->json(array(
+                $this->_helper->json([
                     'result'  => 'exception',
                     'message' => $e->getMessage(),
                     'msgtype' => 'error'
-                ));
+                ]);
             }
         } else {
             // SSOT v6.3 Strict AJAX JSON Response (Validation Error - Raw Array)
@@ -246,7 +246,7 @@ class Default_DistributionListController extends Zend_Controller_Action
 
         if ($id) {
             if (sapp_Global::_checkprivileges(EMAILCONTACTS, $this->_loginuserGroup, $this->_loginuserRole, 'delete') !== 'Yes') {
-                return $this->_helper->json(array('result' => 'error', 'message' => 'Permission Denied.'));
+                return $this->_helper->json(['result' => 'error', 'message' => 'Permission Denied.']);
             }
 
             try {
@@ -258,14 +258,14 @@ class Default_DistributionListController extends Zend_Controller_Action
                 sapp_Global::logManager(EMAILCONTACTS, 3, $this->_loginUserId, $id);
 
                 // Standard Success Response
-                return $this->_helper->json(array('result' => 'saved', 'nomessage' => 'no', 'message' => 'Record deleted successfully.', 'msgtype' => 'success'));
+                return $this->_helper->json(['result' => 'saved', 'nomessage' => 'no', 'message' => 'Record deleted successfully.', 'msgtype' => 'success']);
             } catch (\Throwable $e) {
                 error_log("DistributionList Delete Error: " . $e->getMessage());
-                return $this->_helper->json(array('result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error'));
+                return $this->_helper->json(['result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error']);
             }
         }
 
-        return $this->_helper->json(array('result' => 'error', 'message' => 'Invalid request'));
+        return $this->_helper->json(['result' => 'error', 'message' => 'Invalid request']);
     }
 
     public function makeactiveinactiveAction()
@@ -277,10 +277,10 @@ class Default_DistributionListController extends Zend_Controller_Action
             $this->_model->toggleStatus($id, $status);
             sapp_Global::logManager(EMAILCONTACTS, 4, $this->_loginUserId, $id);
 
-            $this->_helper->json(array('result' => 'saved', 'nomessage' => 'no', 'msgtype' => 'success', 'message' => 'Status updated successfully.'));
+            $this->_helper->json(['result' => 'saved', 'nomessage' => 'no', 'msgtype' => 'success', 'message' => 'Status updated successfully.']);
         } catch (\Throwable $e) {
             error_log("DistributionList Toggle Error: " . $e->getMessage());
-            $this->_helper->json(array('result' => 'exception', 'msgtype' => 'error', 'message' => 'System error occurred.'));
+            $this->_helper->json(['result' => 'exception', 'msgtype' => 'error', 'message' => 'System error occurred.']);
         }
     }
 

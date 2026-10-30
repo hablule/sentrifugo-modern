@@ -39,7 +39,7 @@ class Default_Form_Projectparticipant extends Zend_Form
             ->setAttrib('class', 'formDataElement')
             ->setRequired(true)
             ->setRegisterInArrayValidator(false) // Populated in Controller
-            ->addValidator('NotEmpty', false, array('messages' => 'Please select a Project.'));
+            ->addValidator('NotEmpty', false, ['messages' => 'Please select a Project.']);
 
         // Freeze primary project ID on edit
         if ($idVal > 0) {
@@ -92,7 +92,7 @@ class Default_Form_Projectparticipant extends Zend_Form
          * -------------------------------------------------------------- */
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Description / Role in Project')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -110,12 +110,12 @@ class Default_Form_Projectparticipant extends Zend_Form
          * -------------------------------------------------------------- */
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save Mapping')
-            ->setAttribs(array('id' => 'submitbutton', 'class' => 'actbtn_btn'));
+            ->setAttribs(['id' => 'submitbutton', 'class' => 'actbtn_btn']);
 
         /* --------------------------------------------------------------
          * Build Form
          * -------------------------------------------------------------- */
-        $this->addElements(array(
+        $this->addElements([
             $idElement,
             $project_id,
             $employee_id,
@@ -128,12 +128,12 @@ class Default_Form_Projectparticipant extends Zend_Form
             $description,
             $isactive,
             $submit
-        ));
+        ]);
 
         // Strip default Zend Decorators per SSOT
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
-            $element->setDecorators(array('ViewHelper'));
+            $element->setDecorators(['ViewHelper']);
         }
     }
 }

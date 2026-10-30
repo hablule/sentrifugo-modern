@@ -13,8 +13,8 @@ class Default_Model_Cardprovider extends Zend_Db_Table_Abstract{
 
         $bank = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('cp'=>'main_cardprovider'),array('cp.name as name', 'cp.code as code', 'cp.description as description', 'if(cp.isactive="Y","Yes","No") as isactive', 'if(cp.isbank="Y","Yes","No") as isbank', 'cp.cardprovider_id as id'))
-            ->joinLeft(array('mb'=>'main_bank'),"cp.bank_id = mb.bank_id",array('bank'=>'mb.name'))
+            ->from(['cp'=>'main_cardprovider'],['cp.name as name', 'cp.code as code', 'cp.description as description', 'if(cp.isactive="Y","Yes","No") as isactive', 'if(cp.isbank="Y","Yes","No") as isbank', 'cp.cardprovider_id as id'])
+            ->joinLeft(['mb'=>'main_bank'],"cp.bank_id = mb.bank_id",['bank'=>'mb.name'])
             ->order("$by $sort")
             ->where($where)
             ->limitPage($pageNo, $perPage);
@@ -23,7 +23,7 @@ class Default_Model_Cardprovider extends Zend_Db_Table_Abstract{
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $a = '', $b = '', $c = '', $d = '')
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
             foreach ($searchValues as $key => $val) {
@@ -39,7 +39,7 @@ class Default_Model_Cardprovider extends Zend_Db_Table_Abstract{
             $searchQuery = rtrim($searchQuery, " AND");
         }
         $objName = 'cardprovider';
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'code' => 'Code',
             'name' => 'Name',
@@ -48,17 +48,17 @@ class Default_Model_Cardprovider extends Zend_Db_Table_Abstract{
             'bank'=>'Bank name',
             'description' => 'Description',
 
-        );
+        ];
 
         $tablecontent = $this->getData($sort, $by, $pageNo, $perPage, $searchQuery);
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
             'perPage' => $perPage,
             'tablecontent' => $tablecontent,
             'objectname' => $objName,
-            'extra' => array(),
+            'extra' => [],
             'add'=>'add',
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
@@ -66,15 +66,15 @@ class Default_Model_Cardprovider extends Zend_Db_Table_Abstract{
             'searchArray' => $searchArray,
             'call' => $call,
             'dashboardcall' => $dashboardcall,
-            'search_filters' => array(
-                'isactive' => array(
+            'search_filters' => [
+                'isactive' => [
                     'type' => 'select',
-                    'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-                    'isbank' => array(
+                    'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+                    'isbank' => [
                         'type' => 'select',
-                        'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-            )
-        );
+                        'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+            ]
+        ];
         return $dataTmp;
     }
 

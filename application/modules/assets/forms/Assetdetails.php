@@ -57,7 +57,7 @@ class Assets_Form_Assetdetails extends Zend_Form
 		$assetinstant_id->setLabel('Type');
 		$assetinstant_id->setRequired(TRUE);
 		$assetinstant_id->addMultiOption('','Select Asset Instant');
-		$assetinstant_id->addValidator('NotEmpty', true, array('messages' => 'Please select Asset type.')); 
+		$assetinstant_id->addValidator('NotEmpty', true, ['messages' => 'Please select Asset type.']); 
 		// $AssetCategoriesModel2 = new Assets_Model_Assetinstant();	
 		// $catData2 = $AssetCategoriesModel2->fetchAll('isactive="Y" ','serialidentification');
 		// foreach ($catData2 as $cat2){
@@ -70,7 +70,7 @@ class Assets_Form_Assetdetails extends Zend_Form
 		$uom_id->setAttrib('readonly', 'true');	
 
 		$uom_id->addMultiOption('','Select Uom');
-		$uom_id->addValidator('NotEmpty', true, array('messages' => 'Please select Uom.')); 
+		$uom_id->addValidator('NotEmpty', true, ['messages' => 'Please select Uom.']); 
 		$AssetCategoriesModel3 = new Assets_Model_Uom();	
 		$catData3 = $AssetCategoriesModel3->fetchAll('isactive="Y" ','name');
 		foreach ($catData3 as $cat3){
@@ -78,15 +78,15 @@ class Assets_Form_Assetdetails extends Zend_Form
 	    }
 		$uom_id->setRegisterInArrayValidator(false);
         $returndate = new ZendX_JQuery_Form_Element_DatePicker('returndate');
-		$returndate->setOptions(array('class' => 'brdr_none'));	
+		$returndate->setOptions(['class' => 'brdr_none']);	
 		$returndate->setAttrib('readonly', 'true');	
 		$returndate->setAttrib('onfocus', 'this.blur()');
         $issueddate = new ZendX_JQuery_Form_Element_DatePicker('issueddate');
-		$issueddate->setOptions(array('class' => 'brdr_none'));	
+		$issueddate->setOptions(['class' => 'brdr_none']);	
 		$issueddate->setAttrib('readonly', 'true');	
 		$issueddate->setAttrib('onfocus', 'this.blur()');
 		$issueddate->setRequired(true);
-        $issueddate->addValidator('NotEmpty', false, array('messages' => 'Please fill the date.'));
+        $issueddate->addValidator('NotEmpty', false, ['messages' => 'Please fill the date.']);
         $Text2 = new Zend_Form_Element_Text("description");
         $Text2->setLabel('Description');
         $isactive = new Zend_Form_Element_Checkbox("isactive");
@@ -95,13 +95,13 @@ class Assets_Form_Assetdetails extends Zend_Form
 
         $isactive->setRequired(true);
 		$quantity = new Zend_Form_Element_Text("quantity");
-        $quantity->addValidator('NotEmpty', true, array('messages' => 'Please enter Precision.')); 
-		$quantity->addValidator("regex",true,array(                           
+        $quantity->addValidator('NotEmpty', true, ['messages' => 'Please enter Precision.']); 
+		$quantity->addValidator("regex",true,[                           
 						'pattern'=>'/^[0-9]+$/',
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Enter numbers only.'
-                           )
-        			));
+                           ]
+        			]);
 		$quantity->setRequired(TRUE);	
 		
 		$submit = new Zend_Form_Element_Submit('submit');
@@ -109,17 +109,17 @@ class Assets_Form_Assetdetails extends Zend_Form
 		$submit->setLabel('Save');
 
 		$this->addElements(
-						array
-								($isinstant,$uomid,
+						
+								[$isinstant,$uomid,
 								$id,$Text2, $asset_id,$assetinstant_id,$quantity,
 								$isactive,$uom_id,$issueddate,$returndate,$submit
-								)
+								]
 							);
-                            $this->setElementDecorators(array('ViewHelper'));
+                            $this->setElementDecorators(['ViewHelper']);
                     
-                             $this->setElementDecorators(array(
+                             $this->setElementDecorators([
                                         'UiWidgetElement',
-                            ),array('issueddate','returndate'));	
+                            ],['issueddate','returndate']);	
 	}
 	
 }

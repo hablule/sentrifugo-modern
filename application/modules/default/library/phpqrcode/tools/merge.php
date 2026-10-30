@@ -25,14 +25,14 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
  
-    $QR_BASEDIR = dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR;
-    $QR_TOOLSDIR = dirname(__FILE__).DIRECTORY_SEPARATOR;
+    $QR_BASEDIR = __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR;
+    $QR_TOOLSDIR = __DIR__.DIRECTORY_SEPARATOR;
     
     $outputFile = $QR_BASEDIR.'phpqrcode.php';
     
     // Required libs
     
-    $fileList = array(
+    $fileList = [
         $QR_BASEDIR.'qrconst.php',
         $QR_TOOLSDIR.'merged_config.php',
         $QR_BASEDIR.'qrtools.php',
@@ -44,7 +44,7 @@
         $QR_BASEDIR.'qrrscode.php',
         $QR_BASEDIR.'qrmask.php',
         $QR_BASEDIR.'qrencode.php'
-    );
+    ];
     
     $headerFile = $QR_TOOLSDIR.'merged_header.php';
     $versionFile = $QR_BASEDIR.'VERSION';

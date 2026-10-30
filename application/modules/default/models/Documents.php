@@ -68,8 +68,8 @@ class Default_Model_Documents extends Zend_Db_Table_Abstract
 				$where .= 'AND d.category_id = '.$categoryId;
 
 			$res = $this->select()
-					->from(array('d' => 'main_pd_documents'),'COUNT(d.id) as cnt')
-					->joinInner(array('c' => 'main_pd_categories'),'c.id = d.category_id',array('c.category'))
+					->from(['d' => 'main_pd_documents'],'COUNT(d.id) as cnt')
+					->joinInner(['c' => 'main_pd_categories'],'c.id = d.category_id',['c.category'])
 					->where($where)
 					->order('d.document_name');
 
@@ -93,8 +93,8 @@ class Default_Model_Documents extends Zend_Db_Table_Abstract
 		}
 		$res = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('d' => 'main_pd_documents'),$columns)
-			->joinInner(array('c' => 'main_pd_categories'),'c.id = d.category_id',array())
+			->from(['d' => 'main_pd_documents'],$columns)
+			->joinInner(['c' => 'main_pd_categories'],'c.id = d.category_id',[])
 			->where($where)
 			->order("$by $sort")
 			->limitPage($pageNo, $perPage);
@@ -105,8 +105,8 @@ class Default_Model_Documents extends Zend_Db_Table_Abstract
 	public function getDocumentsGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{
 		$searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 
 		if($searchData != '' && $searchData!='undefined')
 		{
@@ -126,18 +126,18 @@ class Default_Model_Documents extends Zend_Db_Table_Abstract
 		$columns = 'd.*';	
 		$objName = 'policydocuments';
 		
-		$tableFields = array('action'=>'Action','document_name'=>'Document','description' => 'Description','document_version' => 'Version','file_name' => 'Uploaded Document');
+		$tableFields = ['action'=>'Action','document_name'=>'Document','description' => 'Description','document_version' => 'Version','file_name' => 'Uploaded Document'];
 		
 		$tablecontent = $this->getDocumentsByCategory($columns,$sort, $by, $pageNo, $perPage,$searchQuery);     
 
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -145,7 +145,7 @@ class Default_Model_Documents extends Zend_Db_Table_Abstract
 			'add' =>'add',
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall,
-		);
+		];
 		return $dataTmp;
 	}
 
@@ -171,8 +171,8 @@ class Default_Model_Documents extends Zend_Db_Table_Abstract
 
 		$res = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('d' => 'main_pd_documents'),'d.*')
-			->joinInner(array('c' => 'main_pd_categories'),'c.id = d.category_id',array('c.category'))
+			->from(['d' => 'main_pd_documents'],'d.*')
+			->joinInner(['c' => 'main_pd_categories'],'c.id = d.category_id',['c.category'])
 			->where($where);
 		
 		$tmp = $this->fetchAll($res)->toArray();
@@ -188,7 +188,7 @@ class Default_Model_Documents extends Zend_Db_Table_Abstract
 			$where = 'c.id = '.$id.' AND c.isactive = 1';
 			$res = $this->select()
 					->setIntegrityCheck(false)
-					->from(array('c' => 'main_pd_categories'),array('c.id','c.isused','c.category','c.description'))
+					->from(['c' => 'main_pd_categories'],['c.id','c.isused','c.category','c.description'])
 					->where($where);
 
 			$tmp = $this->fetchAll($res)->toArray();
@@ -210,8 +210,8 @@ class Default_Model_Documents extends Zend_Db_Table_Abstract
 
 		$res = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('d' => 'main_pd_documents'),'')
-			->joinInner(array('c' => 'main_pd_categories'),'c.id = d.category_id',array('c.id','c.category'))
+			->from(['d' => 'main_pd_documents'],'')
+			->joinInner(['c' => 'main_pd_categories'],'c.id = d.category_id',['c.id','c.category'])
 			->where($where);
 		
 		$tmp = $this->fetchAll($res)->toArray();

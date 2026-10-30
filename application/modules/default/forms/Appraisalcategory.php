@@ -34,19 +34,19 @@ class Default_Form_Appraisalcategory extends Zend_Form
 		$appraisalcategory->setAttrib('maxLength', 30);
 		$appraisalcategory->addFilter(new Zend_Filter_StringTrim());
 		$appraisalcategory->setRequired(true);
-        $appraisalcategory->addValidator('NotEmpty', false, array('messages' => 'Please enter parameter.'));
-		$appraisalcategory->addValidator("regex",true,array(                           
+        $appraisalcategory->addValidator('NotEmpty', false, ['messages' => 'Please enter parameter.']);
+		$appraisalcategory->addValidator("regex",true,[                           
                            'pattern'=>'/^[a-zA-Z0-9.\- ?\',\/#@$&*()!+]+$/',
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter valid parameter.'
-                           )
-        	));
+                           ]
+        	]);
         $appraisalcategory->addValidator(new Zend_Validate_Db_NoRecordExists(
-	                                            array(  'table'=>'main_pa_category',
+	                                            [  'table'=>'main_pa_category',
 	                                                     'field'=>'category_name',
 	                                                     'exclude'=>'id!="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('id').'" AND isactive=1',    
 	
-	                                                      ) ) );
+	                                                      ] ) );
 		$appraisalcategory->getValidator('Db_NoRecordExists')->setMessage('Parameter name already exists.');	
 
 		$description = new Zend_Form_Element_Textarea('description');
@@ -59,7 +59,7 @@ class Default_Form_Appraisalcategory extends Zend_Form
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 
-		 $this->addElements(array($id,$appraisalcategory,$description,$submit));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 $this->addElements([$id,$appraisalcategory,$description,$submit]);
+         $this->setElementDecorators(['ViewHelper']); 
 	}
 }

@@ -44,8 +44,8 @@ class Default_Model_Userloginlog extends Zend_Db_Table_Abstract
 		$role_model = new Default_Model_Roles();
 		$user_model = new Default_Model_Users();
 		$searchQuery = '';
-		$searchArray = array();
-		$data = array();
+		$searchArray = [];
+		$data = [];
 
 		if($searchData != '' && $searchData!='undefined')
 		{
@@ -74,7 +74,7 @@ class Default_Model_Userloginlog extends Zend_Db_Table_Abstract
 		}
 		$objName = 'userloginlog';
 
-		$tableFields = array('action'=>'Action',
+		$tableFields = ['action'=>'Action',
                              'userfullname' => 'User',
 							 'username'=>'User Name',
 							 'group_name' => 'Group',
@@ -82,26 +82,26 @@ class Default_Model_Userloginlog extends Zend_Db_Table_Abstract
                              'emailaddress'=>'Email',		
                              'logindatetime' => 'Login Time',
 		                     'empipaddress' => 'Ip Address',
-		);
+		];
 
 		$tablecontent = $this->getUserLoginLogData($sort, $by, $pageNo, $perPage,$searchQuery);
 
 		$group_data = $group_model->getGroupsListForUserLoginLog();
-		$group_arr = array();
+		$group_arr = [];
 
 		foreach($group_data as $gkey => $gdata)
 		{
 			$group_arr[$gdata['group_name']] = $gdata['group_name'];
 		}
 		$role_data = $role_model->getRoleListForUserLoginLog();
-		$role_arr = array();
+		$role_arr = [];
 		foreach($role_data as $gkey => $gdata)
 		{
 			$role_arr[$gdata['rolename']] = $gdata['rolename'];
 		}
 
 
-		$dataTmp = array(
+		$dataTmp = [
                 'sort' => $sort,
                 'by' => $by,
                 'pageNo' => $pageNo,
@@ -109,26 +109,26 @@ class Default_Model_Userloginlog extends Zend_Db_Table_Abstract
                 'tablecontent' => $tablecontent,
                 'objectname' => $objName,
 		        'menuName'=>'User log',
-                'extra' => array(),
+                'extra' => [],
                 'tableheader' => $tableFields,
                 'jsGridFnName' => 'getAjaxgridData',
                 'jsFillFnName' => '',
                 'searchArray' => $searchArray,
                 'call'=>$call,
-                'search_filters' => array(
-                    'group_name' =>array(
+                'search_filters' => [
+                    'group_name' =>[
                         'type'=>'select',
-                        'filter_data' => array(''=>'All')+$group_arr,
-		),
-					'rolename' =>array(
+                        'filter_data' => [''=>'All']+$group_arr,
+		],
+					'rolename' =>[
 			                        'type'=>'select',
-			                        'filter_data' => array(''=>'All')+$role_arr,
+			                        'filter_data' => [''=>'All']+$role_arr,
 
-		),
-		             'logindatetime' =>array('type'=>'datepicker')	
+		],
+		             'logindatetime' =>['type'=>'datepicker']	
 			
-		),
-		);
+		],
+		];
 		
 		return $dataTmp;
 			//code...
@@ -157,10 +157,10 @@ class Default_Model_Userloginlog extends Zend_Db_Table_Abstract
 
 		$userLoginLogData = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('r'=>$this->_name),array('r.*',))
-		->joinLeft(array('g'=>GROUP_ARRAY['tablename']), "g.".GROUP_ARRAY['colid']." = r.".ROLE_ARRAY['colgroupid']." and g.".GROUP_ARRAY['colisactive']." = 'Y'",array('group_name'=>'g.'.GROUP_ARRAY['colname'].''))
-		->joinInner(array('ro'=>ROLE_ARRAY['tablename']), "ro.".ROLE_ARRAY['colid']." = r.emprole and ro.".ROLE_ARRAY['colisactive']." = 'Y'",array('rolename'=>'ro.'.ROLE_ARRAY['colname'].''))
-		->joinInner(array('u'=>'main_users'), "u.id = r.userid and u.isactive = 1")
+		->from(['r'=>$this->_name],['r.*',])
+		->joinLeft(['g'=>GROUP_ARRAY['tablename']], "g.".GROUP_ARRAY['colid']." = r.".ROLE_ARRAY['colgroupid']." and g.".GROUP_ARRAY['colisactive']." = 'Y'",['group_name'=>'g.'.GROUP_ARRAY['colname'].''])
+		->joinInner(['ro'=>ROLE_ARRAY['tablename']], "ro.".ROLE_ARRAY['colid']." = r.emprole and ro.".ROLE_ARRAY['colisactive']." = 'Y'",['rolename'=>'ro.'.ROLE_ARRAY['colname'].''])
+		->joinInner(['u'=>'main_users'], "u.id = r.userid and u.isactive = 1")
 		->where($where)
 		->order("$by $sort")
 		->limitPage($pageNo, $perPage);
@@ -179,7 +179,7 @@ class Default_Model_Userloginlog extends Zend_Db_Table_Abstract
 	 *
 	 * @return  ResultSet;
 	 */
-	public function getUserWiseLogData($by="logindatetime",$order="desc",$pageNo=1, $perPage=20,$searchQuery=1,$selectfield=array('*'))
+	public function getUserWiseLogData($by="logindatetime",$order="desc",$pageNo=1, $perPage=20,$searchQuery=1,$selectfield=['*'])
 	{
 		$where = "1";
 		$by = trim($by);
@@ -191,14 +191,14 @@ class Default_Model_Userloginlog extends Zend_Db_Table_Abstract
 
 			$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array($this->_name),$selectfield)
+			->from([$this->_name],$selectfield)
 			->where($where)
 			->order($order)
 			->limitPage($pageNo, $perPage);
 		}else{
 			$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array($this->_name),$selectfield)
+			->from([$this->_name],$selectfield)
 			->where($where)
 			->order("$by $order")
 			->limitPage($pageNo, $perPage);
@@ -249,7 +249,7 @@ class Default_Model_Userloginlog extends Zend_Db_Table_Abstract
 		$sqlRes = $db->query($qry);
 		$emprole = $sqlRes->fetchAll();
 
-		$roleorderidArray = array();
+		$roleorderidArray = [];
 		foreach($emprole as $key => $roleid){
 			$roleorderidArray[] = $roleid['id'];
 
@@ -273,7 +273,7 @@ class Default_Model_Userloginlog extends Zend_Db_Table_Abstract
 		$sqlRes = $db->query($qry);
 		$empgroup = $sqlRes->fetchAll();
 
-		$grouporderidArray = array();
+		$grouporderidArray = [];
 		foreach($empgroup as $key => $groupid){
 			$grouporderidArray[] = $groupid['id'];
 
@@ -303,7 +303,7 @@ class Default_Model_Userloginlog extends Zend_Db_Table_Abstract
                   order by emp desc
                   limit 0,10";
 		$result = $db->query($query);
-		$emp_arr = array();
+		$emp_arr = [];
 		$emp_arr = $result->fetchAll();
 		return $emp_arr;
 	}
@@ -329,7 +329,7 @@ class Default_Model_Userloginlog extends Zend_Db_Table_Abstract
                   order by emp desc
                   limit 0,10";
 		$result = $db->query($query);
-		$emp_arr = array();
+		$emp_arr = [];
 		$emp_arr = $result->fetchAll();
 		return $emp_arr;
 	}
@@ -355,7 +355,7 @@ class Default_Model_Userloginlog extends Zend_Db_Table_Abstract
                   order by emp desc
                   limit 0,10";
 		$result = $db->query($query);
-		$emp_arr = array();
+		$emp_arr = [];
 		$emp_arr = $result->fetchAll();
 		return $emp_arr;
 	}
@@ -381,7 +381,7 @@ class Default_Model_Userloginlog extends Zend_Db_Table_Abstract
                   order by emp desc
                   limit 0,10";
 		$result = $db->query($query);
-		$emp_arr = array();
+		$emp_arr = [];
 		$emp_arr = $result->fetchAll();
 		return $emp_arr;
 	}

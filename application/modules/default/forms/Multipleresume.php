@@ -43,7 +43,7 @@ class Default_Form_Multipleresume extends Zend_Form
         if($id_val == '')
         {
             $requisition_id->setRequired(true);
-            $requisition_id->addValidator('NotEmpty', false, array('messages' => 'Please select requisition id.')); 
+            $requisition_id->addValidator('NotEmpty', false, ['messages' => 'Please select requisition id.']); 
         }
                        
         $candidate_firstname = new Zend_Form_Element_Text('candidate_firstname');
@@ -53,12 +53,12 @@ class Default_Form_Multipleresume extends Zend_Form
         $candidate_firstname->setAttrib('class', 'candidate_firstname');
         $candidate_firstname->addFilter(new Zend_Filter_StringTrim());
         $candidate_firstname->setRequired(true);
-        $candidate_firstname->addValidator("regex",true,array(                           
+        $candidate_firstname->addValidator("regex",true,[                           
                            'pattern'=>'/^[a-zA-Z.\- ?]+$/',
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter valid candidate first name.'
-                           )
-        				));
+                           ]
+        				]);
         $candidate_lastname = new Zend_Form_Element_Text('candidate_lastname');
         $candidate_lastname->setIsArray(TRUE);
         $candidate_lastname->setAttrib('maxLength', 90);
@@ -66,18 +66,18 @@ class Default_Form_Multipleresume extends Zend_Form
         $candidate_lastname->setAttrib('class', 'candidate_lastname');
         $candidate_lastname->addFilter(new Zend_Filter_StringTrim());
         $candidate_lastname->setRequired(true);
-        $candidate_lastname->addValidator("regex",true,array(                           
+        $candidate_lastname->addValidator("regex",true,[                           
                            'pattern'=>'/^[a-zA-Z.\- ?]+$/',
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter valid candidate last name.'
-                           )
-        				));				
+                           ]
+        				]);				
                        
         $candidate_resumes = new Zend_Form_Element_Hidden('cand_resume');
         $candidate_resumes->setIsArray(TRUE);
         $candidate_resumes->setRequired(true);
 
-        $candidate_resumes->addValidator('NotEmpty', false, array('messages' => 'Please select file.'));  
+        $candidate_resumes->addValidator('NotEmpty', false, ['messages' => 'Please select file.']);  
         	
 		
         $cand_status = new Zend_Form_Element_Select("cand_status");
@@ -92,7 +92,7 @@ class Default_Form_Multipleresume extends Zend_Form
         $submit->setLabel('Save'); 
 
 		
-        $this->addElements(array($cand_status,$id,$requisition_id,$candidate_firstname,$candidate_lastname,$candidate_resumes,$submit));
-        $this->setElementDecorators(array('ViewHelper')); 
+        $this->addElements([$cand_status,$id,$requisition_id,$candidate_firstname,$candidate_lastname,$candidate_resumes,$submit]);
+        $this->setElementDecorators(['ViewHelper']); 
     }
 }

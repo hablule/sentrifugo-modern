@@ -43,28 +43,28 @@ class Default_Form_Menu extends Zend_Form
         // Menu Name
         $name = new Zend_Form_Element_Text('menuName');
         $name->setLabel('Menu Name')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '100'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '100'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', true, array('messages' => 'Please enter a Menu Name.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please enter a Menu Name.']);
 
         // URL Path
         $url = new Zend_Form_Element_Text('url');
         $url->setLabel('URL Path')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '255'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '255'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', true, array('messages' => 'Please enter a URL.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please enter a URL.']);
 
         // Unique URL Validator (Prevent routing conflicts)
         // Note: '/#' is often used as a placeholder for parent menus, so we allow duplicates of '/#'
-        $urlValidator = new Zend_Validate_Db_NoRecordExists(array(
+        $urlValidator = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_menu',
             'field'   => 'url',
-            'exclude' => ($idVal > 0) ? array('field' => 'id', 'value' => $idVal) : null
-        ));
+            'exclude' => ($idVal > 0) ? ['field' => 'id', 'value' => $idVal] : null
+        ]);
         $urlValidator->setMessage('This URL is already assigned to another menu.');
 
         // Custom logic to bypass unique check if URL is exactly '/#'
@@ -75,35 +75,35 @@ class Default_Form_Menu extends Zend_Form
         // Description
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Description')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
         // Help Text
         $helpText = new Zend_Form_Element_Textarea('helpText');
         $helpText->setLabel('Help Text')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
         
         // Tooltip
         $toolTip = new Zend_Form_Element_Text('toolTip');
         $toolTip->setLabel('Tooltip')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '255', 'rows' => 1))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '255', 'rows' => 1])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
         // Menu Order`
         $menuOrder = new Zend_Form_Element_Text('menuOrder');
         $menuOrder->setLabel('Menu Order')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '5'))
-            ->addValidator('Digits', true, array('messages' => 'Please enter numbers only.'));
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '5'])
+            ->addValidator('Digits', true, ['messages' => 'Please enter numbers only.']);
 
         // Segment Flag
         $segmentFlag = new Zend_Form_Element_Select('segment_flag');
         $segmentFlag->setLabel('Segment Flag')
             ->setAttrib('class', 'formDataElement')
-            ->addMultiOptions(array('1' => '1', '2' => '2')); // Assuming these are the standard Sentrifugo options
+            ->addMultiOptions(['1' => '1', '2' => '2']); // Assuming these are the standard Sentrifugo options
 
         /* --------------------------------------------------------------
          * 3. Select Elements
@@ -120,7 +120,7 @@ class Default_Form_Menu extends Zend_Form
         $menugroup_id->setLabel('Menu Group (Dashboard Category)')
             ->setRequired(true)
             ->setAttrib('class', 'formDataElement')
-            ->addValidator('NotEmpty', true, array('messages' => 'Please select a Menu Group.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please select a Menu Group.']);
         // Options populated in Controller
 
         // Module Name (Physical Code Location)
@@ -128,7 +128,7 @@ class Default_Form_Menu extends Zend_Form
         $module_name->setLabel('Module (Code Location)')
             ->setRequired(true)
             ->setAttrib('class', 'formDataElement')
-            ->addValidator('NotEmpty', true, array('messages' => 'Please select a Module.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please select a Module.']);
         // Options populated in Controller
 
         /* --------------------------------------------------------------
@@ -159,7 +159,7 @@ class Default_Form_Menu extends Zend_Form
         $iconPath = new Zend_Form_Element_File('iconPath');
         $iconPath->setLabel('Icon Image')
             ->setAttrib('title', 'Upload a small icon image.')
-            ->addValidator('Extension', false, array('jpg', 'png', 'gif', 'svg'))
+            ->addValidator('Extension', false, ['jpg', 'png', 'gif', 'svg'])
             ->addValidator('Size', false, 2048000); // 2MB max
 
         $uploadDir = realpath(APPLICATION_PATH . '/../public/uploads') . DIRECTORY_SEPARATOR . 'menuIcons';
@@ -176,10 +176,10 @@ class Default_Form_Menu extends Zend_Form
 
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save')
-            ->setAttribs(array(
+            ->setAttribs([
                 'id' => 'submitbutton',
                 'class' => 'actbtn_btn'
-            ));
+            ]);
 
         // SSOT AJAX Submission Pattern
         $urlAction  = "'menu/save/format/json'";
@@ -192,7 +192,7 @@ class Default_Form_Menu extends Zend_Form
          * Build Form
          * -------------------------------------------------------------- */
 
-        $this->addElements(array(
+        $this->addElements([
             $idElement,
             $name,
             $url,
@@ -208,16 +208,16 @@ class Default_Form_Menu extends Zend_Form
             $isactive,
             $isdefault,
             $submit
-        ));
+        ]);
 
         // Ensure File Decorator is applied to the upload field
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
             if (!$element instanceof Zend_Form_Element_File) {
-                $element->setDecorators(array('ViewHelper'));
+                $element->setDecorators(['ViewHelper']);
             }
         }
         
-        $iconPath->setDecorators(array('File'));
+        $iconPath->setDecorators(['File']);
     }
 }

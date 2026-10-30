@@ -60,8 +60,8 @@ class Default_Form_leavemanagementreport extends Zend_Form
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 
-		$this->addElements(array($id,$department,$month,$weekend_startday,$weekend_endday,$submit));
-		$this->setElementDecorators(array('ViewHelper'));
+		$this->addElements([$id,$department,$month,$weekend_startday,$weekend_endday,$submit]);
+		$this->setElementDecorators(['ViewHelper']);
           		 
 	}
 }

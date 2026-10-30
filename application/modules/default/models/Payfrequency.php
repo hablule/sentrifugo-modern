@@ -71,7 +71,7 @@ class Default_Model_Payfrequency extends Zend_Db_Table_Abstract
 	public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
 	{
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 
 		if (!empty($searchData) && $searchData !== 'undefined') {
 			$searchValues = json_decode($searchData, true);
@@ -91,25 +91,25 @@ class Default_Model_Payfrequency extends Zend_Db_Table_Abstract
 			}
 		}
 
-		$tableHeaders = array(
+		$tableHeaders = [
 			'action'          => 'Action',
 			'code'            => 'Frequency Code',
 			'name'            => 'Frequency Name',
 			'frequency_type'  => 'Type',
 			'cadence_summary' => 'Cadence Rule',
 			'status_text'     => 'Status'
-		);
+		];
 
 		$tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-		return array(
+		return [
 			'sort'           => $sort,
 			'by'             => $by,
 			'pageNo'         => $pageNo,
 			'perPage'        => $perPage,
 			'tablecontent'   => $tableContent,
 			'objectname'     => 'payfrequency',
-			'extra'          => array(),
+			'extra'          => [],
 			'tableheader'    => $tableHeaders,
 			'jsGridFnName'   => 'getAjaxgridData',
 			'jsFillFnName'   => '',
@@ -117,11 +117,11 @@ class Default_Model_Payfrequency extends Zend_Db_Table_Abstract
 			'menuName'       => 'Pay Frequencies',
 			'call'           => $call,
 			'dashboardcall'  => $dashboardcall,
-			'search_filters' => array(
-				'status_text'    => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive')),
-				'frequency_type' => array('type' => 'select', 'filter_data' => array('' => 'All', 'FIXED_INTERVAL' => 'Fixed Interval', 'CALENDAR_BASED' => 'Calendar Based'))
-			)
-		);
+			'search_filters' => [
+				'status_text'    => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']],
+				'frequency_type' => ['type' => 'select', 'filter_data' => ['' => 'All', 'FIXED_INTERVAL' => 'Fixed Interval', 'CALENDAR_BASED' => 'Calendar Based']]
+			]
+		];
 	}
 
 	public function getGridData($sort, $by, $pageNo, $perPage, $searchQuery = '')
@@ -133,8 +133,8 @@ class Default_Model_Payfrequency extends Zend_Db_Table_Abstract
 		$select = $this->select()
 			->setIntegrityCheck(false)
 			->from(
-				array('pf' => $this->_name),
-				array(
+				['pf' => $this->_name],
+				[
 					'id' => 'pf.id',
 					'code',
 					'name',
@@ -146,7 +146,7 @@ class Default_Model_Payfrequency extends Zend_Db_Table_Abstract
                             ELSE 'Calendar Anchored'
                         END
                     ")
-				)
+				]
 			)
 			->where('pf.isactive != ?', 5);
 
@@ -161,7 +161,7 @@ class Default_Model_Payfrequency extends Zend_Db_Table_Abstract
 
 	public function getPairs($activeOnly = true)
 	{
-		$select = $this->select()->from($this->_name, array('id', 'name'))->order('name ASC');
+		$select = $this->select()->from($this->_name, ['id', 'name'])->order('name ASC');
 		if ($activeOnly) {
 			$select->where('isactive = ?', 1);
 		}
@@ -188,7 +188,7 @@ class Default_Model_Payfrequency extends Zend_Db_Table_Abstract
 	{
 		$db = $this->getAdapter();
 		$select = $db->select()
-			->from('main_payfrequency_anchor', array('anchor_day'))
+			->from('main_payfrequency_anchor', ['anchor_day'])
 			->where('payfrequency_id = ?', $frequencyId)
 			->order('anchor_day ASC');
 
@@ -216,7 +216,7 @@ class Default_Model_Payfrequency extends Zend_Db_Table_Abstract
 		if (!empty($id)) {
 			$data['modifiedby']   = $userId;
 			$data['modifieddate'] = $currentDate;
-			$this->update($data, array('id = ?' => (int)$id));
+			$this->update($data, ['id = ?' => (int)$id]);
 			return 'update';
 		}
 
@@ -237,16 +237,16 @@ class Default_Model_Payfrequency extends Zend_Db_Table_Abstract
 		$db = $this->getAdapter();
 
 		// 1. Wipe existing anchors
-		$db->delete('main_payfrequency_anchor', array('payfrequency_id = ?' => $frequencyId));
+		$db->delete('main_payfrequency_anchor', ['payfrequency_id = ?' => $frequencyId]);
 
 		// 2. Insert new anchors
 		foreach ($anchors as $day) {
 			$dayInt = (int)$day;
 			if ($dayInt >= 1 && $dayInt <= 31) {
-				$db->insert('main_payfrequency_anchor', array(
+				$db->insert('main_payfrequency_anchor', [
 					'payfrequency_id' => $frequencyId,
 					'anchor_day'      => $dayInt
-				));
+				]);
 			}
 		}
 	}
@@ -260,13 +260,13 @@ class Default_Model_Payfrequency extends Zend_Db_Table_Abstract
 		$auth = Zend_Auth::getInstance();
 		$userId = $auth->hasIdentity() ? (int)$auth->getStorage()->read()->id : 0;
 
-		$data = array(
+		$data = [
 			'isactive'     => 5,
 			'modifiedby'   => $userId,
 			'modifieddate' => gmdate("Y-m-d H:i:s")
-		);
+		];
 
-		return $this->update($data, array('id = ?' => (int)$id));
+		return $this->update($data, ['id = ?' => (int)$id]);
 	}
 
 	public function toggleStatus($id, $status)
@@ -274,13 +274,13 @@ class Default_Model_Payfrequency extends Zend_Db_Table_Abstract
 		$auth = Zend_Auth::getInstance();
 		$userId = $auth->hasIdentity() ? (int)$auth->getStorage()->read()->id : 0;
 
-		$data = array(
+		$data = [
 			'isactive'     => (int)$status,
 			'modifiedby'   => $userId,
 			'modifieddate' => gmdate("Y-m-d H:i:s")
-		);
+		];
 
-		return $this->update($data, array('id = ?' => (int)$id));
+		return $this->update($data, ['id = ?' => (int)$id]);
 	}
 
 	/* =================================================================================
@@ -306,7 +306,7 @@ class Default_Model_Payfrequency extends Zend_Db_Table_Abstract
 		$db = $this->getAdapter();
 		try {
 			$salaryCheck = $db->select()
-				->from('main_empsalarydetails', array('empsalary_id'))
+				->from('main_empsalarydetails', ['empsalary_id'])
 				->where('amount_frequency = ?', (int)$id);
 			if ($db->fetchRow($salaryCheck)) return true;
 		} catch (\Throwable $e) {

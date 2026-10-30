@@ -30,7 +30,7 @@ class Default_Form_empschedule extends Zend_Form
        
         // $sch_name->getValidator('Db_NoRecordExists')->setMessage('Schedule already Assigned.');
         $sch_name->setRequired(true);
-        $sch_name->addValidator('NotEmpty',false,array('messages'=>'Please fill schedule name'));
+        $sch_name->addValidator('NotEmpty',false,['messages'=>'Please fill schedule name']);
         $description = new Zend_Form_Element_Text('description');
         $start_date = new Zend_Form_Element_Text('start_date');
         $end_date = new Zend_Form_Element_Text('end_date');
@@ -41,8 +41,8 @@ class Default_Form_empschedule extends Zend_Form
         $back->setLabel('Cancel');
         $back->setAttrib('onClick', "parent.location='" . Zend_Controller_Front::getInstance()->getBaseUrl() .'/employee/add' ."'");
 
-        $this->addElements(array($id,$sch_name,$back,$isactive,$description,$start_date,$end_date,$submit));
-        $this->setElementDecorators(array('ViewHelper'));
+        $this->addElements([$id,$sch_name,$back,$isactive,$description,$start_date,$end_date,$submit]);
+        $this->setElementDecorators(['ViewHelper']);
     }
 
 

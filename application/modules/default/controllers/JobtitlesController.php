@@ -59,7 +59,7 @@ class Default_JobtitlesController extends Zend_Controller_Action
 		$objname = $this->_getParam('objname');
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall',null);
-		$data = array();		$searchQuery = '';		$searchArray = array();		$tablecontent='';
+		$data = [];		$searchQuery = '';		$searchArray = [];		$tablecontent='';
 
 		if($refresh == 'refresh')
 		{
@@ -69,7 +69,7 @@ class Default_JobtitlesController extends Zend_Controller_Action
 			$perPage = PERPAGE;
 
 			$sort = 'DESC';$by = 'modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';
-			$searchArray = array();
+			$searchArray = [];
 		}
 		else
 		{
@@ -194,7 +194,7 @@ class Default_JobtitlesController extends Zend_Controller_Action
 		$jobtitlesmodel = new Default_Model_Jobtitles();
 		$jobtitlesform->setAction(BASE_URL . 'jobtitles/edit/id/'.$id);
 
-		$msgarray = array();
+		$msgarray = [];
 	
 		$this->view->msgarray = $msgarray;
 		$this->view->emptyFlag = $emptyFlag;
@@ -248,15 +248,15 @@ class Default_JobtitlesController extends Zend_Controller_Action
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = '';
-				$data = array('code'=>trim($code),
+				$data = ['code'=>trim($code),
 				           'name'=>trim($name),
 						  'description'=>trim($description),
 						  'isactive'=>trim($isactive),
 						  'modifiedby'=>$loginUserId,
 						  'modifieddate'=>gmdate("Y-m-d H:i:s")
-				);
+				];
 				if($id!=''){
-					$where = array('jobtitle_id=?'=>$id);
+					$where = ['jobtitle_id=?'=>$id];
 					$actionflag = 2;
 				}
 				else
@@ -271,12 +271,12 @@ class Default_JobtitlesController extends Zend_Controller_Action
 				if($Id == 'update')
 				{
 					$tableid = $id;
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Job title updated successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Job title updated successfully."]);
 				}
 				else
 				{
 					$tableid = $Id;
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Job title added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Job title added successfully."]);
 				}
 				$menuID = JOBTITLES;
 				$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
@@ -320,7 +320,7 @@ class Default_JobtitlesController extends Zend_Controller_Action
 		$jobtitlesmodel = new Default_Model_Jobtitles();
 		$jobtitlesform->setAction(BASE_URL . 'jobtitles/add');
 
-		$msgarray = array();
+		$msgarray = [];
 		$this->view->form = $jobtitlesform;
 
 		$this->view->msgarray = $msgarray;
@@ -336,15 +336,15 @@ class Default_JobtitlesController extends Zend_Controller_Action
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = '';
-				$data = array('code'=>trim($code),
+				$data = ['code'=>trim($code),
 				           'name'=>trim($name),
 						  'description'=>trim($description),
 						  'isactive'=>trim($isactive),
 						  'modifiedby'=>$loginUserId,
 						  'modifieddate'=>gmdate("Y-m-d H:i:s")
-				);
+				];
 				if($id!=''){
-					$where = array('id=?'=>$id);
+					$where = ['id=?'=>$id];
 					$actionflag = 2;
 				}
 				else
@@ -359,12 +359,12 @@ class Default_JobtitlesController extends Zend_Controller_Action
 				if($Id == 'update')
 				{
 					$tableid = $id;
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Job title updated successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Job title updated successfully."]);
 				}
 				else
 				{
 					$tableid = $Id;
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Job title added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Job title added successfully."]);
 				}
 				$menuID = JOBTITLES;
 				$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
@@ -388,7 +388,7 @@ class Default_JobtitlesController extends Zend_Controller_Action
 	}
 	public function addpopupAction()
 	{
-		$msgarray = array();
+		$msgarray = [];
 		$emptyFlag = '';
 		Zend_Layout::getMvcInstance()->setLayoutPath(APPLICATION_PATH."/layouts/scripts/popup/");
 		$auth = Zend_Auth::getInstance();
@@ -408,7 +408,7 @@ $controllername='jobtitles';
 		$jobtitlesform = new Default_Form_jobtitles();
 		$jobtitlesmodel = new Default_Model_Jobtitles();
 
-		$msgarray = array();
+		$msgarray = [];
 		$this->view->form = $jobtitlesform;
 
 		$this->view->msgarray = $msgarray;
@@ -423,15 +423,15 @@ $controllername='jobtitles';
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = '';
-				$data = array('code'=>trim($code),
+				$data = ['code'=>trim($code),
 				           'name'=>trim($name),
 						  'description'=>trim($description),
 						  'isactive'=>'Y',
 						  'modifiedby'=>$loginUserId,
 						  'modifieddate'=>gmdate("Y-m-d H:i:s")
-				);
+				];
 				if($id!=''){
-					$where = array('id=?'=>$id);
+					$where = ['id=?'=>$id];
 					$actionflag = 2;
 				}
 				else
@@ -492,14 +492,14 @@ $controllername='jobtitles';
 		{
 			$jobtitlesmodel = new Default_Model_Jobtitles();
 			$positionsModel = new Default_Model_Positions();
-			$data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-			$where = array('id=?'=>$id);
+			$data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+			$where = ['id=?'=>$id];
 			$job_data = $jobtitlesmodel->getsingleJobTitleData($id);
 			$Id = $jobtitlesmodel->SaveorUpdateJobTitleData($data, $where);
 			if($Id == 'update')
 			{
-				$positionData = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-				$positionsWhere = array('jobtitleid=?'=>$id);
+				$positionData = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+				$positionsWhere = ['jobtitleid=?'=>$id];
 				$positionsModel->SaveorUpdatePositionData($positionData, $positionsWhere);
 				sapp_Global::send_configuration_mail("Job Titles", $job_data[0]['jobtitlename']);
 				$menuID = JOBTITLES;
@@ -521,16 +521,16 @@ $controllername='jobtitles';
 		// delete success message after delete in view
 		if($deleteflag==1)
 		{
-		
+
 			if(	$messages['msgtype'] == 'error')
 			{
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
 			}
 			if(	$messages['msgtype'] == 'success')
 			{
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
 			}
-			
+
 			//$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Job title deleted successfully.",'deleteflag'=>$deleteflag)); 
 		}
 		$this->_helper->json($messages);

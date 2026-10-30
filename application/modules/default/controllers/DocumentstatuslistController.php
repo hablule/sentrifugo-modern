@@ -23,7 +23,7 @@ class Default_DocumentstatuslistController extends Zend_Controller_Action
       $refresh = $this->_getParam('refresh');
       $dashboradcall = $this->_getParam('dashboradcall');
 
-      $data = array();
+      $data = [];
 
       if ($refresh == 'refresh') {
           if ($dashboradcall == 'Yes') {
@@ -76,13 +76,13 @@ try {
                     $loginUserId = $auth->getStorage()->read()->id;
                 }
                 $model = new Default_Model_Documentstatuslist();
-                $data = array(
+                $data = [
                     'iddocumentstatus_id'=>$this->_request->getParam('iddocumentstatus_id'),
                     'value'=>$this->_request->getParam('value'),
                     'description'=>$this->_request->getParam('description'),
                     'createdby'=>$loginUserId,
                     'createddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
 
                 $tableid=$model->SaveorUpdateData($data, '');
                 sapp_Global::logManager(346,1,$loginUserId,$tableid);
@@ -188,19 +188,19 @@ Zend_Debug::dump($th->getMessage());    }
 
 				$date = gmdate("Y-m-d H:i:s");
 
-				$data = array(
+				$data = [
                     'iddocumentstatus_id'  => $iddocumentstatus_id ,
 
 							'value'  => $value,
                             'description'  => $description,
                             'isactive'=>utlis::getcheckboxvalue($this->_request->getParam('isactive')),
 
-							);
+							];
 				if($id!=''){
 
 					$data['modifiedby'] = $loginUserId;
 					$data['modifieddate'] = $date;
-					$where = array('iddocumentstatuslist_id=?'=>$id);
+					$where = ['iddocumentstatuslist_id=?'=>$id];
 				}
 				else
 				{
@@ -215,11 +215,11 @@ Zend_Debug::dump($th->getMessage());    }
 				
 				if($Id == 'update')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Document Status List updated successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Document Status List updated successfully."]);
 				}
 				else
 				{
-			     $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Document Status List added successfully."));
+			     $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Document Status List added successfully."]);
 				}
 					
 				$this->_redirect('documentstatuslist');

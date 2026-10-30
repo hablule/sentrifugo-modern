@@ -15,10 +15,10 @@ class Schedule_Model_Logreport extends Zend_Db_Table_Abstract
 
         $roleData =  $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('bm' => 'bm_event'), array('datetime' => 'DATE_FORMAT(FROM_UNIXTIME(bm.datetime),"'.DATEFORMAT_MYSQL.'")', 'bm_id' => 'bm.bm_id', 'event_type_id' => 'bm.event_type_id', 'user' => 'es.userfullname', 'shift_name' => 'if (tm.name != "",tm.name,bm.shift_flag)', 'shift_flag' => 'bm.shift_flag', 'status' => 'bm.status'))
+            ->from(['bm' => 'bm_event'], ['datetime' => 'DATE_FORMAT(FROM_UNIXTIME(bm.datetime),"'.DATEFORMAT_MYSQL.'")', 'bm_id' => 'bm.bm_id', 'event_type_id' => 'bm.event_type_id', 'user' => 'es.userfullname', 'shift_name' => 'if (tm.name != "",tm.name,bm.shift_flag)', 'shift_flag' => 'bm.shift_flag', 'status' => 'bm.status'])
             ->order("$sort_field $sort_order")
-            ->joinLeft(array('tm' => 'main_time_table'), 'tm.time_id=bm.shift_id')
-            ->joinInner(array('es'=>'employees_summary'),'es.user_id = bm.user_id')
+            ->joinLeft(['tm' => 'main_time_table'], 'tm.time_id=bm.shift_id')
+            ->joinInner(['es'=>'employees_summary'],'es.user_id = bm.user_id')
             ->where($where)
             ->limitPage($pageNo, $perPage);
             //die($roleData);
@@ -26,10 +26,10 @@ class Schedule_Model_Logreport extends Zend_Db_Table_Abstract
     }
     public function getempLis()
     {
-        $config = array(
+        $config = [
             'name' => 'employees_summary',
             'primary' => 'id'
-        );
+        ];
         $db = new Zend_Db_Table($config);
         $emplist = $db->select()
             ->setIntegrityCheck(false)
@@ -40,8 +40,8 @@ class Schedule_Model_Logreport extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $p1, $p2, $p3, $p4)
     {
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
         $db = Zend_Db_Table::getDefaultAdapter();
         if($searchData != '' && $searchData!='undefined')
         {
@@ -68,7 +68,7 @@ class Schedule_Model_Logreport extends Zend_Db_Table_Abstract
         }
         $objName = 'logreport';
         $objId='logreport';
-        $tableFields = array(
+        $tableFields = [
             'datetime' => 'Log Date and Time',
             'bm_id' => 'Biometric Machine ID',
             //'event_type_id' => 'Event Type',
@@ -76,13 +76,13 @@ class Schedule_Model_Logreport extends Zend_Db_Table_Abstract
             'shift_name' => 'Shift',
             'status' => 'Shift Status',
             'shift_flag' => 'Shift Flag',
-        );
+        ];
 
         $tablecontent = $this->getLogData($sort, $by, $pageNo, $perPage, $searchQuery);
         $group_model = new Schedule_Model_Timetable();
         $group_data=$group_model->getallshifts();
 
-        $group_arr = array();
+        $group_arr = [];
 
 		foreach($group_data as $gkey => $gdata)
 		{
@@ -91,7 +91,7 @@ class Schedule_Model_Logreport extends Zend_Db_Table_Abstract
         $log_model = new Schedule_Model_Logreport();
         $emp_data=$log_model->getempLis();
 
-        $emp_arr = array();
+        $emp_arr = [];
 
 		foreach($emp_data as $ekey => $edata)
 		{
@@ -99,7 +99,7 @@ class Schedule_Model_Logreport extends Zend_Db_Table_Abstract
 		}
 
 
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
@@ -108,7 +108,7 @@ class Schedule_Model_Logreport extends Zend_Db_Table_Abstract
             'objectname' => $objName,
             'objectId' => $objId,
             'menuName' => 'Bm Events',
-            'extra' => array(),
+            'extra' => [],
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
             'jsFillFnName' => '',
@@ -116,8 +116,8 @@ class Schedule_Model_Logreport extends Zend_Db_Table_Abstract
             'add' => 'add',
             'call' => $call,
             'dashboardcall' => $dashboardcall,
-            'search_filters' => array(
-                'datetime'=>array('type'=>'datepicker'),
+            'search_filters' => [
+                'datetime'=>['type'=>'datepicker'],
                 // 'shift_name' =>array(
                 //     'type'=>'select',
                 //     'filter_data' => array(''=>'All')+$group_arr,),
@@ -125,12 +125,12 @@ class Schedule_Model_Logreport extends Zend_Db_Table_Abstract
                 //     'status' =>array(
                 //         'type'=>'select',
                 //         'filter_data' => array(''=>'All','start'=>'Start','end'=>'End')),
-                        'shift_flag' =>array(
+                        'shift_flag' =>[
                             'type'=>'select',
-                            'filter_data' => array(''=>'All','OverTime'=>'OverTime','Offshift'=>'Offshift','absent'=>'Absent','Early'=>'Early','Late'=>'Late')),
-    ),
+                            'filter_data' => [''=>'All','OverTime'=>'OverTime','Offshift'=>'Offshift','absent'=>'Absent','Early'=>'Early','Late'=>'Late']],
+    ],
 
-        );
+        ];
         return $dataTmp;
     }
 }

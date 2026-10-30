@@ -46,7 +46,7 @@ class Expenses_Model_Advances extends Zend_Db_Table_Abstract
 		//$emp_id = 9;
 		$select =  $this->select()
 						->setIntegrityCheck(false)
-						->from(array('c'=>'expense_advacne_summary'),array('c.id','c.total','c.utilized','c.returned','c.balance','c.employee_id'))						
+						->from(['c'=>'expense_advacne_summary'],['c.id','c.total','c.utilized','c.returned','c.balance','c.employee_id'])						
 						->where('c.isactive = 1 AND c.employee_id='.$emp_id);
 		return $this->fetchAll($select)->toArray();
 		
@@ -68,12 +68,12 @@ class Expenses_Model_Advances extends Zend_Db_Table_Abstract
 		//$emp_id=9;
 	  $myadvance = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('adv' => 'expense_advance'),array('amount'=>'adv.amount','createddate'=>'DATE_FORMAT(adv.createddate,"'.DATEFORMAT_MYSQL.'")'))
-	    ->joinLeft(array('tp'=>'tm_projects'), "tp.id = adv.project_id and
+		->from(['adv' => 'expense_advance'],['amount'=>'adv.amount','createddate'=>'DATE_FORMAT(adv.createddate,"'.DATEFORMAT_MYSQL.'")'])
+	    ->joinLeft(['tp'=>'tm_projects'], "tp.id = adv.project_id and
 	    adv.project_id IS NOT NULL")
-		->joinInner(array('c'=>'main_currency'), "c.id = adv.currency_id",array('currencycode'=>'c.currencycode'))
-		->joinInner(array('mc'=>'main_users'), "mc.id = adv.createdby")
-		->joinInner(array('e'=>'main_employees'),'e.id = mc.empid',array('userfullname'=>'e.userfullname'))
+		->joinInner(['c'=>'main_currency'], "c.id = adv.currency_id",['currencycode'=>'c.currencycode'])
+		->joinInner(['mc'=>'main_users'], "mc.id = adv.createdby")
+		->joinInner(['e'=>'main_employees'],'e.id = mc.empid',['userfullname'=>'e.userfullname'])
 		->where($where.' and adv.isactive = 1 and adv.type = "advance" and adv.to_id = '.$emp_id)
 		->order("adv.id DESC")
 		->limit($limit,$offset); 
@@ -96,12 +96,12 @@ class Expenses_Model_Advances extends Zend_Db_Table_Abstract
 		//$emp_id=9;
 		 $myadvance =$this->select()
 		->setIntegrityCheck(false)
-		->from(array('adv' => 'expense_advance'),array('createddate'=>'DATE_FORMAT(adv.createddate,"'.DATEFORMAT_MYSQL.'")'))
-	    ->joinLeft(array('tp'=>'tm_projects'), "tp.id = adv.project_id and
+		->from(['adv' => 'expense_advance'],['createddate'=>'DATE_FORMAT(adv.createddate,"'.DATEFORMAT_MYSQL.'")'])
+	    ->joinLeft(['tp'=>'tm_projects'], "tp.id = adv.project_id and
 	    adv.project_id IS NOT NULL")
-		->joinInner(array('c'=>'main_currency'), "c.id = adv.currency_id",array('currencycode'=>'c.currencycode'))
-		->joinInner(array('mc'=>'main_users'), "mc.id = adv.createdby")
-		->joinInner(array('e'=>'main_employees'),'mc.empid = e.id',array('userfullname'=>'e.userfullname'))
+		->joinInner(['c'=>'main_currency'], "c.id = adv.currency_id",['currencycode'=>'c.currencycode'])
+		->joinInner(['mc'=>'main_users'], "mc.id = adv.createdby")
+		->joinInner(['e'=>'main_employees'],'mc.empid = e.id',['userfullname'=>'e.userfullname'])
 		->where($where.' and adv.isactive = 1 and adv.type = "advance" and  adv.to_id = '.$emp_id);
 		$advance_count = $this->fetchAll($myadvance)->toArray();
 		return count($advance_count);
@@ -129,10 +129,10 @@ class Expenses_Model_Advances extends Zend_Db_Table_Abstract
        
         $employeesData = $this->select()
                                 ->setIntegrityCheck(false)	                                
-                                ->from(array('e' => 'employees_summary'),
-                                        array('*','id'=>'e.user_id','cnt'=>'(select count(*) from main_logmanager where is_active =1 and last_modifiedby = e.user_id)' ))                               
+                                ->from(['e' => 'employees_summary'],
+                                        ['*','id'=>'e.user_id','cnt'=>'(select count(*) from main_logmanager where is_active =1 and last_modifiedby = e.user_id)' ])                               
                                 ->where($where);
-		$username_arr = array();
+		$username_arr = [];
 		$employeesDataArray = $this->fetchAll($employeesData)->toArray();
 		
         return $employeesDataArray;  
@@ -151,8 +151,8 @@ class Expenses_Model_Advances extends Zend_Db_Table_Abstract
 		
 		$select =  $this->select()
 						->setIntegrityCheck(false)
-						->from(array('ea'=>'expense_advance'))	
-						->joinInner(array('mu'=>'main_users'), "mu.id = ea.from_id",array('userfullname'=>'mu.userfullname'))
+						->from(['ea'=>'expense_advance'])	
+						->joinInner(['mu'=>'main_users'], "mu.id = ea.from_id",['userfullname'=>'mu.userfullname'])
 						->where('ea.isactive = 1 AND mu.isactive = 1 AND ea.type = "advance" AND ea.to_id='.$emp_id)
 						->group('ea.from_id');
 		return $this->fetchAll($select)->toArray();

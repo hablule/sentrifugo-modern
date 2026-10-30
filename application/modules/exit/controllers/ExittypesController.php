@@ -62,9 +62,9 @@ class Exit_ExittypesController extends Zend_Controller_Action
 		$objname = $this->_getParam('objname');
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 		
 		if($refresh == 'refresh')
@@ -123,7 +123,7 @@ class Exit_ExittypesController extends Zend_Controller_Action
 		if($callval == 'ajaxcall')
 			$this->_helper->layout->disableLayout();
 		
-		$msgarray = array();
+		$msgarray = [];
 		$addExittypesForm = new Exit_Form_Exittypes();
 		$addExittypesForm->setAttrib('action',BASE_URL.'exit/exittypes/add');
 		$this->view->form = $addExittypesForm; 
@@ -140,7 +140,7 @@ class Exit_ExittypesController extends Zend_Controller_Action
 				$description = $this->_request->getParam('description');
 
 				/** prepare data to insert into database **/
-				$data = array(
+				$data = [
 						'exit_type' => $exitType,
 						'description' => $description,
 						'isused'=> 0, //default value
@@ -149,7 +149,7 @@ class Exit_ExittypesController extends Zend_Controller_Action
 						'createdby' => $this->loggedInUser,
 						'modifieddate'=> gmdate("Y-m-d H:i:s"),
 						'createddate'=> gmdate("Y-m-d H:i:s")
-				);
+				];
 				$where = '';
 				$res = $this->exittypesModel->SaveorUpdateExitTypesData($data,$where );
 
@@ -158,11 +158,11 @@ class Exit_ExittypesController extends Zend_Controller_Action
 					/** insert into log manager table **/
 					sapp_Global::logManager(EXIT_PROC_TYPES,1,$this->loggedInUser,$res);
 					
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Exit type added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Exit type added successfully."]);
 				}
 				else
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("error" => "Failed to add new exit type. Please try again."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["error" => "Failed to add new exit type. Please try again."]);
 				}
 
 				$this->_redirect('exit/exittypes');
@@ -247,15 +247,15 @@ class Exit_ExittypesController extends Zend_Controller_Action
 						$description = $this->_request->getParam('description');
 
 						/** prepare data object and where clause **/
-						$data = array(
+						$data = [
 								'exit_type' => $exit_type,
 								'description' =>$description,
 								'isactive'=> 1, //default value
 								'modifiedby'=> $this->loggedInUser,
 								'modifieddate'=> gmdate("Y-m-d H:i:s"),
 								
-						);
-						$where = array('id=?' => $id);
+						];
+						$where = ['id=?' => $id];
 
 						/** update exit type details **/
 						$res = $this->exittypesModel->SaveorUpdateExitTypesData($data,$where);
@@ -265,11 +265,11 @@ class Exit_ExittypesController extends Zend_Controller_Action
 							/** insert into log manager table **/
 							sapp_Global::logManager(EXIT_PROC_TYPES,2,$this->loggedInUser,$id);
 
-							$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Exit type updated successfully."));
+							$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Exit type updated successfully."]);
 						}
 						else
 						{
-							$this->_helper->getHelper("FlashMessenger")->addMessage(array("error" => "Failed to update exit type. Please try again."));
+							$this->_helper->getHelper("FlashMessenger")->addMessage(["error" => "Failed to update exit type. Please try again."]);
 						}
 
 						$this->_redirect('exit/exittypes');
@@ -391,7 +391,7 @@ class Exit_ExittypesController extends Zend_Controller_Action
 			  {
 				
 				$QuesData = $exitquestionsmodel->getExitQuestionsByexitId($id);
-				$d=array();
+				$d=[];
 				foreach($QuesData as $key => $value)
 				{
  
@@ -401,8 +401,8 @@ class Exit_ExittypesController extends Zend_Controller_Action
 				
 				if(sizeof($QuesData) == 0)
 				{				
-				  $data = array('isactive'=>0,'modifiedby'=>$loginUserId,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-				  $where = array('id=?'=>$id);
+				  $data = ['isactive'=>0,'modifiedby'=>$loginUserId,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+				  $where = ['id=?'=>$id];
 				  $Id = $exittypesModel->SaveorUpdateExitTypesData($data, $where);
 				   
 				    if($Id == 'update')
@@ -430,8 +430,8 @@ class Exit_ExittypesController extends Zend_Controller_Action
 			  	if(sizeof($QuesData)> 0)
 			  	{ 
 			  		
-			  	 $data = array('isactive'=>0,'modifiedby'=>$loginUserId,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-				  $where = array('id=?'=>$id);
+			  	 $data = ['isactive'=>0,'modifiedby'=>$loginUserId,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+				  $where = ['id=?'=>$id];
 				  $Id = $exittypesModel->SaveorUpdateExitTypesData($data, $where);
 			  			
 			  	  $exitquestionsmodel->UpdateExitQuestionData($d);
@@ -468,11 +468,11 @@ class Exit_ExittypesController extends Zend_Controller_Action
 			{
 				if(	$messages['msgtype'] == 'error')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
 				}
 				if(	$messages['msgtype'] == 'success')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
 				}
 				
 			}
@@ -489,7 +489,7 @@ class Exit_ExittypesController extends Zend_Controller_Action
 		}
 		$id = $this->getRequest()->getParam('id');
 
-		$msgarray = array();
+		$msgarray = [];
 		$controllername = 'exittypes';
 		$exittypeForm = new Exit_Form_Exittypes();
 		$exittypesModel = new Exit_Model_Exittypes();
@@ -501,16 +501,16 @@ class Exit_ExittypesController extends Zend_Controller_Action
 			$description = $this->_request->getParam('description');
 			$actionflag = '';
 			$tableid  = ''; 
-			   $data = array('exit_type'=>$exittype_name, 
+			   $data = ['exit_type'=>$exittype_name, 
 							 'description'=>$description,
 							 'modifiedby'=>$loginUserId,
 							  'modifiedby'=>$loginUserId,
 							  'modifieddate'=>gmdate("Y-m-d H:i:s")
-					);
+					];
 					
 				
 				if($id!=''){
-					$where = array('id=?'=>$id);  
+					$where = ['id=?'=>$id];  
 					$actionflag = 2;
 				}
 				else

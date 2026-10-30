@@ -44,9 +44,9 @@ class Default_AppraisalquestionsController extends Zend_Controller_Action
 		$objname = $this->_getParam('objname');
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 		
 		if($refresh == 'refresh')
@@ -94,12 +94,12 @@ public function addpopupAction()
 		}
 		$id = $this->getRequest()->getParam('id');
 
-		$msgarray = array();
+		$msgarray = [];
 		$controllername = 'appraisalquestions';
 		$appraisalquestionsform = new Default_Form_Appraisalquestions();
 		$appraisalCategoryModel = new Default_Model_Appraisalcategory();
-		$msgarray = array();
-		$popConfigPermission = array();
+		$msgarray = [];
+		$popConfigPermission = [];
 		
 	 	if(sapp_Global::_checkprivileges(APPRAISALQUESTIONS,$loginuserGroup,$loginuserRole,'add') == 'Yes'){
 	 		array_push($popConfigPermission,'appraisalquestions');
@@ -113,7 +113,7 @@ public function addpopupAction()
 			$description = trim($this->_request->getParam('description'));
 			$actionflag = '';
 			$tableid  = ''; 
-			   $data = array('pa_category_id'=>$pa_category_id,
+			   $data = ['pa_category_id'=>$pa_category_id,
 			                 'question'=>$question, 
 							 'description'=>($description!=''?$description:NULL),			   
 							 'module_flag'=>1, // 1 - Performance Appraisal
@@ -121,9 +121,9 @@ public function addpopupAction()
 							 'modifiedby_group'=>$loginuserGroup,			   
 							 'modifiedby'=>$loginUserId,
 							 'modifieddate'=>gmdate("Y-m-d H:i:s")
-					);
+					];
 				if($id!=''){
-					$where = array('id=?'=>$id);  
+					$where = ['id=?'=>$id];  
 					$actionflag = 2;
 				}
 				else
@@ -186,8 +186,8 @@ public function addpopupAction()
 			$this->_helper->layout->disableLayout();
 		$appraisalquestionsform = new Default_Form_Appraisalquestions();
 		$appraisalCategoryModel = new Default_Model_Appraisalcategory();
-		$msgarray = array();
-		$popConfigPermission = array();
+		$msgarray = [];
+		$popConfigPermission = [];
 		
 	 	if(sapp_Global::_checkprivileges(APPRAISALQUESTIONS,$loginuserGroup,$loginuserRole,'add') == 'Yes'){
 	 		array_push($popConfigPermission,'appraisalquestions');
@@ -305,8 +305,8 @@ public function addpopupAction()
 		$appraisalquestionsform = new Default_Form_Appraisalquestions();
 		$appraisalCategoryModel = new Default_Model_Appraisalcategory();
 		$appraisalquestionsmodel = new Default_Model_Appraisalquestions();	
-		$msgarray = array();
-		$popConfigPermission = array();
+		$msgarray = [];
+		$popConfigPermission = [];
 		
 		if(sapp_Global::_checkprivileges(APPRAISALQUESTIONS,$loginuserGroup,$loginuserRole,'add') == 'Yes'){
 	 		array_push($popConfigPermission,'appraisalquestions');
@@ -376,7 +376,7 @@ public function addpopupAction()
 				 $loginuserGroup = $auth->getStorage()->read()->group_id;
 		} 
 	    $appraisalquestionsmodel = new Default_Model_Appraisalquestions();	
-		$msgarray = array();
+		$msgarray = [];
 		$errorflag = 'true';
 		$pa_category_id = $this->_request->getParam('pa_category_id');
 		$question_arr = $this->_request->getParam('question');
@@ -423,7 +423,7 @@ public function addpopupAction()
 			$where = '';
 			for($i=0;$i<sizeof($question_arr);$i++)
 			{
-			   $data = array('pa_category_id'=>$pa_category_id,
+			   $data = ['pa_category_id'=>$pa_category_id,
 			                 'question'=>trim($question_arr[$i]), 
 							 'description'=>($description_arr[$i]!=''?trim($description_arr[$i]):NULL),
 							  'modifiedby'=>$loginUserId,
@@ -436,7 +436,7 @@ public function addpopupAction()
                                                           'module_flag'=>1, // 1 - Performance Appraisal
 							  'createddate'=> gmdate("Y-m-d H:i:s"),
 							  'isactive'=> 1
-					);
+					];
 				
 				$Id = $appraisalquestionsmodel->SaveorUpdateAppraisalQuestionData($data, $where);
 				$tableid = $Id; 	
@@ -444,7 +444,7 @@ public function addpopupAction()
 				$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
 			}
 				
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Question added successfully."));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Question added successfully."]);
 				$this->_redirect('appraisalquestions');	
                   }
         catch(Exception $e)
@@ -478,7 +478,7 @@ public function addpopupAction()
 				 $loginuserGroup = $auth->getStorage()->read()->group_id;
 		} 
 	    $appraisalquestionsmodel = new Default_Model_Appraisalquestions();	
-		$msgarray = array();
+		$msgarray = [];
 		  if($appraisalquestionsform->isValid($this->_request->getPost())){
             try{
             $id = $this->_request->getParam('id');
@@ -487,7 +487,7 @@ public function addpopupAction()
 			$description = trim($this->_request->getParam('description'));
 			$actionflag = '';
 			$tableid  = ''; 
-			   $data = array('pa_category_id'=>$pa_category_id,
+			   $data = ['pa_category_id'=>$pa_category_id,
 			                 'question'=>$question, 
 							 'description'=>($description!=''?$description:NULL),			   
 							 'module_flag'=>1, // 1 - Performance Appraisal
@@ -495,9 +495,9 @@ public function addpopupAction()
 							 'modifiedby_group'=>$loginuserGroup,			   
 							 'modifiedby'=>$loginUserId,
 							 'modifieddate'=>gmdate("Y-m-d H:i:s")
-					);
+					];
 				if($id!=''){
-					$where = array('id=?'=>$id);  
+					$where = ['id=?'=>$id];  
 					$actionflag = 2;
 				}
 				else
@@ -515,12 +515,12 @@ public function addpopupAction()
 				if($Id == 'update')
 				{
 				   $tableid = $id;
-				   $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Question updated successfully."));
+				   $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Question updated successfully."]);
 				}   
 				else
 				{
 				   $tableid = $Id; 	
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Question added successfully."));					   
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Question added successfully."]);					   
 				}   
 				$menuID = APPRAISALQUESTIONS;
 				$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
@@ -568,9 +568,9 @@ public function addpopupAction()
 				
 				if($appraisalquestionsdata[0]['isused'] == 0)	
 				{
-					  $data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"),'modifiedby_role'=>$loginuserRole,
-									 'modifiedby_group'=>$loginuserGroup,'modifiedby'=>$loginUserId);
-					  $where = array('id=?'=>$id);
+					  $data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"),'modifiedby_role'=>$loginuserRole,
+									 'modifiedby_group'=>$loginuserGroup,'modifiedby'=>$loginUserId];
+					  $where = ['id=?'=>$id];
 					  $Id = $appraisalquestionsmodel->SaveorUpdateAppraisalQuestionData($data, $where);
 					    if($Id == 'update')
 						{
@@ -604,11 +604,11 @@ public function addpopupAction()
 			{
 				if(	$messages['msgtype'] == 'error')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
 				}
 				if(	$messages['msgtype'] == 'success')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
 				}
 				
 			}
@@ -640,7 +640,7 @@ public function addpopupAction()
 			$moduleflag = trim($this->_request->getParam('moduleflag'));
 			$actionflag = '';
 			$tableid  = ''; 
-			   $data = array('pa_category_id'=>$categoryval,
+			   $data = ['pa_category_id'=>$categoryval,
 			                 'question'=>$questionval, 
 							 'description'=>($description!=''?$description:NULL),			   
 							 'module_flag'=>$moduleflag, // 1 - Performance Appraisal
@@ -653,7 +653,7 @@ public function addpopupAction()
 			   				 'isactive'=>1,
 			   				 'createddate'=>gmdate("Y-m-d H:i:s"),
 							 'modifieddate'=>gmdate("Y-m-d H:i:s")
-					);
+					];
 				
 					$where = '';
 					$actionflag = 1;

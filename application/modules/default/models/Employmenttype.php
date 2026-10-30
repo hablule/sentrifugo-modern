@@ -72,7 +72,7 @@ class Default_Model_Employmenttype extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -84,7 +84,7 @@ class Default_Model_Employmenttype extends Zend_Db_Table_Abstract
                     } elseif ($val === 'Inactive') {
                         $searchQuery .= " t.isactive = 0 AND ";
                     }
-                } elseif (in_array($key, array('benefits_text', 'leave_text', 'overtime_text', 'timesheet_text', 'term_text'))) {
+                } elseif (in_array($key, ['benefits_text', 'leave_text', 'overtime_text', 'timesheet_text', 'term_text'])) {
                     // Reverse map UI strings to respective boolean columns
                     $col = str_replace('_text', '', $key);
                     $dbCol = 't.' . ($col == 'benefits' ? 'is_benefits_eligible' : ($col == 'leave' ? 'is_leave_eligible' : ($col == 'overtime' ? 'is_overtime_eligible' : ($col == 'timesheet' ? 'requires_timesheet' : 'has_fixed_term'))));
@@ -102,7 +102,7 @@ class Default_Model_Employmenttype extends Zend_Db_Table_Abstract
         }
 
         // Exact column aliases defined in getGridData()
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'         => 'Action',
             'name'           => 'Type Name',
             'code'           => 'Code',
@@ -112,11 +112,11 @@ class Default_Model_Employmenttype extends Zend_Db_Table_Abstract
             'timesheet_text' => 'Timesheets',
             'term_text'      => 'Fixed Term',
             'status_text'    => 'Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
@@ -124,17 +124,17 @@ class Default_Model_Employmenttype extends Zend_Db_Table_Abstract
             'tablecontent'   => $tableContent,
             'objectname'     => 'employmenttype',
             'tableheader'    => $tableHeaders,
-            'extra'          => array(),
+            'extra'          => [],
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
             'searchArray'    => $searchArray,
             'menuName'       => 'Employment Status',
             'call'           => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => array(
-                'status_text' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive'))
-            )
-        );
+            'search_filters' => [
+                'status_text' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']]
+            ]
+        ];
     }
 
     /**
@@ -159,7 +159,7 @@ class Default_Model_Employmenttype extends Zend_Db_Table_Abstract
 
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('t' => $this->_name), array(
+            ->from(['t' => $this->_name], [
                 'id' => 't.id',
                 '*',
                 'benefits_text'  => new Zend_Db_Expr("CASE WHEN t.is_benefits_eligible = 1 THEN 'Yes' ELSE 'No' END"),
@@ -168,7 +168,7 @@ class Default_Model_Employmenttype extends Zend_Db_Table_Abstract
                 'timesheet_text' => new Zend_Db_Expr("CASE WHEN t.requires_timesheet = 1 THEN 'Yes' ELSE 'No' END"),
                 'term_text'      => new Zend_Db_Expr("CASE WHEN t.has_fixed_term = 1 THEN 'Yes' ELSE 'No' END"),
                 'status_text'    => new Zend_Db_Expr("CASE WHEN t.isactive = 1 THEN 'Active' ELSE 'Inactive' END")
-            ))
+            ])
             ->where('t.isactive != 5');
 
         if (!empty($searchQuery)) {
@@ -188,7 +188,7 @@ class Default_Model_Employmenttype extends Zend_Db_Table_Abstract
      */
     public function getPairs($activeOnly = true)
     {
-        $select = $this->select()->from($this->_name, array('id', 'name'))->order('name ASC');
+        $select = $this->select()->from($this->_name, ['id', 'name'])->order('name ASC');
         if ($activeOnly) {
             $select->where("isactive = 1");
         }
@@ -227,7 +227,7 @@ class Default_Model_Employmenttype extends Zend_Db_Table_Abstract
         if (!empty($id)) {
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = gmdate("Y-m-d H:i:s");
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return 'update';
         }
 
@@ -257,12 +257,12 @@ class Default_Model_Employmenttype extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => 5,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
-        return $this->update($data, array('id = ?' => (int)$id));
+        ];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /**
@@ -277,12 +277,12 @@ class Default_Model_Employmenttype extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => (int)$status,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
-        return $this->update($data, array('id = ?' => (int)$id));
+        ];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* =================================================================================

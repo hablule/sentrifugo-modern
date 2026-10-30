@@ -70,7 +70,7 @@ class Default_SitepreferenceController extends Zend_Controller_Action
         $session = sapp_Global::_readSession();
         if (!isset($session)) {
             if ($this->getRequest()->isXmlHttpRequest()) {
-                echo Zend_Json::encode(array('login' => 'failed'));
+                echo Zend_Json::encode(['login' => 'failed']);
                 exit;
             } else {
                 $this->_redirect('');
@@ -121,7 +121,7 @@ class Default_SitepreferenceController extends Zend_Controller_Action
 
             try {
                 // Ensure empty string selects convert to NULL for foreign keys
-                $data = array(
+                $data = [
                     'company_id'         => $request->getParam('company_id') ?: null,
                     'nationality_id'     => $request->getParam('nationality_id') ?: null,
                     'language_id'        => $request->getParam('language_id') ?: null,
@@ -134,7 +134,7 @@ class Default_SitepreferenceController extends Zend_Controller_Action
                     'default_per_page'   => (int) $request->getParam('default_per_page', 20),
                     'description'        => trim((string) $request->getParam('description', '')),
                     'isactive'           => 1 // Hardcoded to 1 for global config
-                );
+                ];
 
                 // Save and trigger Atomic Cache Rebuild
                 $this->_model->saveSingletonRecord($data);
@@ -145,22 +145,22 @@ class Default_SitepreferenceController extends Zend_Controller_Action
                 $db->commit();
 
                 // FlashMessenger for reload
-                $this->_helper->flashMessenger->addMessage(array('success' => "Global Preferences updated successfully."));
+                $this->_helper->flashMessenger->addMessage(['success' => "Global Preferences updated successfully."]);
 
                 // SSOT Strict AJAX JSON Response (Success with Reload via saveDetails helper)
-                $this->_helper->json(array(
+                $this->_helper->json([
                     'result'    => 'saved',
                     'nomessage' => 'yes'
-                ));
+                ]);
             } catch (\Throwable $e) {
                 $db->rollBack();
                 error_log("SitePreference Save Error: " . $e->getMessage());
 
-                $this->_helper->json(array(
+                $this->_helper->json([
                     'result'  => 'exception',
                     'message' => 'System error occurred. Check logs.',
                     'msgtype' => 'error'
-                ));
+                ]);
             }
         } else {
             // Validation Error - Raw Array output directly

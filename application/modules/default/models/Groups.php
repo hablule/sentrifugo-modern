@@ -52,7 +52,7 @@ class Default_Model_Groups extends Zend_Db_Table_Abstract
     public function saveRecord($data, $id = null)
     {
         if (!empty($id)) {
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return 'update';
         } else {
             $this->insert($data);
@@ -73,11 +73,11 @@ class Default_Model_Groups extends Zend_Db_Table_Abstract
      */
     public function deleteRecord($id)
     {
-        $data = array(
+        $data = [
             'isactive' => '5',
             'modified' => gmdate("Y-m-d H:i:s")
-        );
-        return $this->update($data, array('id = ?' => (int)$id));
+        ];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /**
@@ -85,7 +85,7 @@ class Default_Model_Groups extends Zend_Db_Table_Abstract
      */
     public function distroyRecord($id)
     {
-        return $this->delete(array('id = ?' => (int)$id));
+        return $this->delete(['id = ?' => (int)$id]);
     }
 
 
@@ -111,7 +111,7 @@ class Default_Model_Groups extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -129,25 +129,25 @@ class Default_Model_Groups extends Zend_Db_Table_Abstract
             }
         }
 
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'      => 'Action',
             'name'        => 'Group Name',
             'code'        => 'Code',
             'description' => 'Description',
             'status_text' => 'Status'
-        );
+        ];
 
         // Fetch Query Object
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
             'perPage'        => $perPage,
             'tablecontent'   => $tableContent, // Returns Zend_Db_Select
             'objectname'     => 'groups',
-            'extra'          => array(),
+            'extra'          => [],
             'tableheader'    => $tableHeaders,
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
@@ -155,13 +155,13 @@ class Default_Model_Groups extends Zend_Db_Table_Abstract
             'menuName'       => 'Groups',
             'dashboardcall'  => $dashboardcall,
             'call'           => $call,
-            'search_filters' => array(
-                'status_text' => array(
+            'search_filters' => [
+                'status_text' => [
                     'type'        => 'select',
-                    'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive')
-                )
-            )
-        );
+                    'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']
+                ]
+            ]
+        ];
     }
 
 
@@ -188,15 +188,15 @@ class Default_Model_Groups extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from(
-                array('g' => $this->_name),
-                array(
+                ['g' => $this->_name],
+                [
                     'id',
                     'name',
                     'code',
                     'description',
                     'isactive',
                     'status_text' => new Zend_Db_Expr("CASE WHEN g.isactive='Y' THEN 'Active' ELSE 'Inactive' END")
-                )
+                ]
             )
             ->where($where)
             ->order("$by $sort")
@@ -219,14 +219,14 @@ class Default_Model_Groups extends Zend_Db_Table_Abstract
      */
     public function getPairs($activeOnly = true)
     {
-        $select = $this->select()->from($this->_name, array('id', 'name'));
+        $select = $this->select()->from($this->_name, ['id', 'name']);
         if ($activeOnly) {
             $select->where("isactive = 'Y'");
         }
         $select->order('name ASC');
 
         $results = $this->fetchAll($select);
-        $data = array();
+        $data = [];
         foreach ($results as $row) {
             $data[$row['id']] = $row['name'];
         }
@@ -238,7 +238,7 @@ class Default_Model_Groups extends Zend_Db_Table_Abstract
      */
     public function getDataList($activeOnly = true)
     {
-        $select = $this->select()->from($this->_name, array('id', 'name'));
+        $select = $this->select()->from($this->_name, ['id', 'name']);
         if ($activeOnly) {
             $select->where("isactive = 'Y'");
         }
@@ -263,13 +263,13 @@ class Default_Model_Groups extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from(
-                array('g' => $this->_name),
-                array('id', 'group_name' => 'g.name')
+                ['g' => $this->_name],
+                ['id', 'group_name' => 'g.name']
             )
             ->joinLeft(
-                array('r' => 'main_role'),
+                ['r' => 'main_role'],
                 "g.id = r.group_id AND r.isactive = 'Y'",
-                array('cnt' => new Zend_Db_Expr('COUNT(r.id)'))
+                ['cnt' => new Zend_Db_Expr('COUNT(r.id)')]
             )
             ->where("g.isactive = 'Y'")
             ->group('g.id')
@@ -277,12 +277,12 @@ class Default_Model_Groups extends Zend_Db_Table_Abstract
 
         $result = $this->fetchAll($select);
 
-        $group_arr = array();
+        $group_arr = [];
         foreach ($result as $row) {
-            $group_arr[$row['id']] = array(
+            $group_arr[$row['id']] = [
                 'group_name' => $row['group_name'],
                 'cnt'        => $row['cnt']
-            );
+            ];
         }
 
         return $group_arr;
@@ -295,7 +295,7 @@ class Default_Model_Groups extends Zend_Db_Table_Abstract
     public function getGroupsListForRolesview($activeOnly = true)
     {
         $select = $this->select()
-            ->from($this->_name, array('id', 'name'))
+            ->from($this->_name, ['id', 'name'])
             ->order('displayorder ASC');
 
         if ($activeOnly) {
@@ -320,7 +320,7 @@ class Default_Model_Groups extends Zend_Db_Table_Abstract
             ->where('id = ?', (int)$id);
 
         $row = $this->fetchRow($select);
-        return ($row) ? $row->toArray() : array();
+        return ($row) ? $row->toArray() : [];
     }
 
     /**
@@ -338,7 +338,7 @@ class Default_Model_Groups extends Zend_Db_Table_Abstract
         }
 
         $row = $this->fetchRow($select);
-        return ($row) ? $row->toArray() : array();
+        return ($row) ? $row->toArray() : [];
     }
 
     /**
@@ -356,7 +356,7 @@ class Default_Model_Groups extends Zend_Db_Table_Abstract
         }
 
         $row = $this->fetchRow($select);
-        return ($row) ? $row->toArray() : array();
+        return ($row) ? $row->toArray() : [];
     }
 
 
@@ -400,7 +400,7 @@ class Default_Model_Groups extends Zend_Db_Table_Abstract
     public function getNextDisplayOrder()
     {
         $select = $this->select()
-            ->from($this->_name, array('max_order' => new Zend_Db_Expr('MAX(displayorder)')));
+            ->from($this->_name, ['max_order' => new Zend_Db_Expr('MAX(displayorder)')]);
 
         $row = $this->fetchRow($select);
         return ($row && $row['max_order']) ? ($row['max_order'] + 1) : 1;
@@ -411,7 +411,7 @@ class Default_Model_Groups extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->from(
                 $this->_name,
-                array('cnt' => new Zend_Db_Expr('COUNT(id)'))
+                ['cnt' => new Zend_Db_Expr('COUNT(id)')]
             );
 
         if ($activeOnly) {

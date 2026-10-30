@@ -72,12 +72,12 @@ class Default_Form_Nationality extends Zend_Form
         $citizenship = new Zend_Form_Element_Select('citizenship');
         $citizenship->setLabel('Confers Citizenship')
             ->setAttrib('class', 'formDataElement')
-            ->addMultiOptions(array(
+            ->addMultiOptions([
                 '1' => 'Yes (Grants full rights/passport)',
                 '0' => 'No (National or territory status only)'
-            ))
+            ])
             ->setRequired(true)
-            ->addValidator('NotEmpty', true, array('messages' => 'Please select whether this status confers full citizenship.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please select whether this status confers full citizenship.']);
 
         /* --------------------------------------------------------------
          * Multi-Select Elements (The Junction Linkers)
@@ -86,11 +86,11 @@ class Default_Form_Nationality extends Zend_Form
         // Mapped Countries (Geography Pillar)
         $mapped_countries = new Zend_Form_Element_Multiselect('mapped_countries');
         $mapped_countries->setLabel('Associated Countries (Geography)')
-            ->setAttribs(array(
+            ->setAttribs([
                 'class' => 'formDataElement',
                 'size'  => 5, // Shows 5 rows in standard HTML multiselect
                 'title' => 'Select the geographical countries associated with this legal status. The first country selected will be marked as Primary.'
-            ))
+            ])
             ->setRegisterInArrayValidator(false) // Required when populating dynamically in the controller
             ->setRequired(false); // A nationality might not have a specific country yet
 
@@ -101,45 +101,45 @@ class Default_Form_Nationality extends Zend_Form
         // Code (ISO Alpha-3 equivalent)
         $code = new Zend_Form_Element_Text('code');
         $code->setLabel('Nationality Code')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '60', 'placeholder' => 'ISO Alpha-3 equivalent e.g., USA, GBR'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '60', 'placeholder' => 'ISO Alpha-3 equivalent e.g., USA, GBR'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
             ->addFilter('StringToUpper') // Force uppercase for standard DB storage
-            ->addValidator('NotEmpty', true, array('messages' => 'Please enter the nationality code.'))
-            ->addValidator('Regex', true, array(
+            ->addValidator('NotEmpty', true, ['messages' => 'Please enter the nationality code.'])
+            ->addValidator('Regex', true, [
                 'pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9 ]*)$/',
-                'messages' => array(Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space or contain special characters.')
-            ));
+                'messages' => [Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space or contain special characters.']
+            ]);
 
         $excludeClauseCode = ($idVal > 0) ? "id != $idVal AND isactive != 5" : "isactive != 5";
-        $codeVal = new Zend_Validate_Db_NoRecordExists(array(
+        $codeVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_nationality',
             'field'   => 'code',
             'exclude' => $excludeClauseCode
-        ));
+        ]);
         $codeVal->setMessage('This code already exists in the system.');
         $code->addValidator($codeVal);
 
         // Name (Legal Entity Name)
         $name = new Zend_Form_Element_Text('name');
         $name->setLabel('Nationality Name')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '100', 'placeholder' => 'e.g., British Citizen, US National'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '100', 'placeholder' => 'e.g., British Citizen, US National'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', true, array('messages' => 'Please enter a nationality name.'))
-            ->addValidator('Regex', true, array(
+            ->addValidator('NotEmpty', true, ['messages' => 'Please enter a nationality name.'])
+            ->addValidator('Regex', true, [
                 'pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9 ]*)$/',
-                'messages' => array(Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space or contain special characters.')
-            ));
+                'messages' => [Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space or contain special characters.']
+            ]);
 
         $excludeClauseName = ($idVal > 0) ? "id != $idVal AND isactive != 5" : "isactive != 5";
-        $nameVal = new Zend_Validate_Db_NoRecordExists(array(
+        $nameVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_nationality',
             'field'   => 'name',
             'exclude' => $excludeClauseName
-        ));
+        ]);
         $nameVal->setMessage('This nationality name already exists.');
         $name->addValidator($nameVal);
 
@@ -150,7 +150,7 @@ class Default_Form_Nationality extends Zend_Form
         // Description (Optional)
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Description / Notes')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -171,7 +171,7 @@ class Default_Form_Nationality extends Zend_Form
 
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save')
-            ->setAttribs(array('id' => 'submitbutton', 'class' => 'actbtn_btn'));
+            ->setAttribs(['id' => 'submitbutton', 'class' => 'actbtn_btn']);
 
         // SSOT AJAX Submission Pattern (Strict Quoting)
         $urlAction  = "'nationality/save/format/json'";
@@ -182,7 +182,7 @@ class Default_Form_Nationality extends Zend_Form
          * Build Form & Apply Decorators
          * -------------------------------------------------------------- */
 
-        $this->addElements(array(
+        $this->addElements([
             $idElement,
             $name,
             $code,
@@ -191,12 +191,12 @@ class Default_Form_Nationality extends Zend_Form
             $description,
             $isactive,
             $submit
-        ));
+        ]);
 
         // Strip default Zend Decorators and enforce ViewHelper universally
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
-            $element->setDecorators(array('ViewHelper'));
+            $element->setDecorators(['ViewHelper']);
         }
     }
 }

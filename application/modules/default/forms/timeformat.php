@@ -35,7 +35,7 @@ class Default_Form_timeformat extends Zend_Form
         $timeformat->setAttrib('maxLength', 20);
         $timeformat->addFilter(new Zend_Filter_StringTrim());
         $timeformat->setRequired(true);
-        $timeformat->addValidator('NotEmpty', false, array('messages' => 'Please enter time format.'));  
+        $timeformat->addValidator('NotEmpty', false, ['messages' => 'Please enter time format.']);  
 			
 		$description = new Zend_Form_Element_Textarea('description');
         $description->setAttrib('rows', 10);
@@ -51,7 +51,7 @@ class Default_Form_timeformat extends Zend_Form
 		$toggleDivId = "''";
 		$jsFunction = "'redirecttocontroller(\'timeformat\');'";;
 
-		 $this->addElements(array($id,$timeformat,$description,$submit));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 $this->addElements([$id,$timeformat,$description,$submit]);
+         $this->setElementDecorators(['ViewHelper']); 
 	}
 }

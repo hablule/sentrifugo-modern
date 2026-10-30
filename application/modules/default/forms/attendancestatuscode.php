@@ -35,20 +35,20 @@ class Default_Form_attendancestatuscode extends Zend_Form
         $attendancestatuscode->setAttrib('maxLength', 20);
         //$attendancestatuscode->addFilter(new Zend_Filter_StringTrim());
         $attendancestatuscode->setRequired(true);
-        $attendancestatuscode->addValidator('NotEmpty', false, array('messages' => 'Please enter attendance status.'));  
-		$attendancestatuscode->addValidator("regex",true,array(
+        $attendancestatuscode->addValidator('NotEmpty', false, ['messages' => 'Please enter attendance status.']);  
+		$attendancestatuscode->addValidator("regex",true,[
 									
 									'pattern'=> '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9 ]*)$/',
 								   
-								   'messages'=>array(
+								   'messages'=>[
 									   'regexNotMatch'=>'Please enter valid attendance status.'
-								   )
-					));
+								   ]
+					]);
    		$attendancestatuscode->addValidator(new Zend_Validate_Db_NoRecordExists(
-                                              array('table'=>'main_attendancestatuscode',
+                                              ['table'=>'main_attendancestatuscode',
                                                         'field'=>'attendancestatuscode',
                                                       'exclude'=>'id!="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('id').'" and isactive=1',    
-                                                 ) )  
+                                                 ] )  
                                     );
         $attendancestatuscode->getValidator('Db_NoRecordExists')->setMessage('Attendance status already exists.');		
 		
@@ -64,7 +64,7 @@ class Default_Form_attendancestatuscode extends Zend_Form
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 
-		 $this->addElements(array($id,$attendancestatuscode,$description,$submit));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 $this->addElements([$id,$attendancestatuscode,$description,$submit]);
+         $this->setElementDecorators(['ViewHelper']); 
 	}
 }

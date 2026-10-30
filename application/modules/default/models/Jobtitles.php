@@ -34,7 +34,7 @@ class Default_Model_Jobtitles extends Zend_Db_Table_Abstract
 		
 		$JobtitlesData = $this->select()
     					   ->setIntegrityCheck(false)	 
-						   ->from(array('j' => 'main_jobtitle'),array('jobtitle_id'=>'j.jobtitle_id','code'=>'j.code','name'=>'j.name','isactive'=>'if(j.isactive="Y","Yes","No")','description'=>'j.description'))
+						   ->from(['j' => 'main_jobtitle'],['jobtitle_id'=>'j.jobtitle_id','code'=>'j.code','name'=>'j.name','isactive'=>'if(j.isactive="Y","Yes","No")','description'=>'j.description'])
 						   ->where($where)
     					   ->order("$by $sort") 
     					   ->limitPage($pageNo, $perPage);
@@ -57,7 +57,7 @@ class Default_Model_Jobtitles extends Zend_Db_Table_Abstract
 	public function SaveorUpdateJobTitleData($data, $where)
 	{
 		try {
-	
+
 	    if($where != ''){
 			$this->update($data, $where);
 			return 'update';
@@ -82,7 +82,7 @@ class Default_Model_Jobtitles extends Zend_Db_Table_Abstract
 	
 	$JobtitlesData = $this->select()
 				   ->setIntegrityCheck(false)	 
-				   ->from(array('j' => 'main_jobtitle'),array('j.*'))
+				   ->from(['j' => 'main_jobtitle'],['j.*'])
 				   ->where($where)
 				   ->order('j.name');
 	
@@ -92,7 +92,7 @@ class Default_Model_Jobtitles extends Zend_Db_Table_Abstract
 	
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$exParam1='',$exParam2='',$exParam3='',$exParam4='')
 	{		
-        $searchQuery = '';$tablecontent = '';  $searchArray = array();$data = array(); $dataTmp = array();
+        $searchQuery = '';$tablecontent = '';  $searchArray = [];$data = []; $dataTmp = [];
 		if($searchData != '' && $searchData!='undefined')
 		{
 			$searchValues = json_decode($searchData);
@@ -106,18 +106,18 @@ class Default_Model_Jobtitles extends Zend_Db_Table_Abstract
 		/** search from grid - END **/
 		$objName = 'jobtitles';
 		
-		$tableFields = array('action'=>'Action','code' => 'Job Title Code','name' =>'Job Title','description' => 'Job Description','isactive'=>'Active');
+		$tableFields = ['action'=>'Action','code' => 'Job Title Code','name' =>'Job Title','description' => 'Job Description','isactive'=>'Active'];
 		
 		$tablecontent = $this->getJobtitlesData($sort, $by,$pageNo,$perPage,$searchQuery);     
 		
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -125,12 +125,12 @@ class Default_Model_Jobtitles extends Zend_Db_Table_Abstract
 			'call'=>$call,
 			'add'=>'add',
 			'dashboardcall'=>$dashboardcall,
-			'search_filters' => array(
-				'isactive' => array(
+			'search_filters' => [
+				'isactive' => [
 					'type' => 'select',
-					'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-		),
-		);		
+					'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+		],
+		];		
 			
 		return $dataTmp;
 	}

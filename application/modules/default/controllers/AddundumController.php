@@ -56,8 +56,8 @@ class Default_AddundumController extends Zend_Controller_Action
         $addundumperks=$perkModel->addundumperk();
         $addundumloads=$loadModel->addundumload();
         //die(json_encode($addundumperks));
-    $datas = array();
-    $loads=array();
+    $datas = [];
+    $loads=[];
         foreach ($addundumperks as $value) {
         $check=$util->checkexist('main_addundum','addundum_id','perk_id','emp_id',$value['perk_id'],$value['emp_id']);
     if($check=='no'){
@@ -70,7 +70,7 @@ class Default_AddundumController extends Zend_Controller_Action
         $temp_amount_approved=$value['amount_approved'];
         $temp_modifiedby=$value['modifiedby'];
         $temp_modifieddate=$value['modifieddate'];
-                $data = array();
+                $data = [];
                 $data['emp_id'] = (int) $temp_emp_id;
                 $data['perk_id'] = (int)$temp_perk_id;
                 $data['amount_due'] =(double)$temp_amount;
@@ -97,7 +97,7 @@ class Default_AddundumController extends Zend_Controller_Action
             $temp_amount_approveds=$values['amount_approved'];
             $temp_modifiedbys=$values['modifiedby'];
             $temp_modifieddates=$values['modifieddate'];
-                    $load = array();
+                    $load = [];
                     $load['emp_id'] = (int) $temp_emps_id;
                     $load['load_id'] = (int)$temp_load_id;
                     $load['amount_due'] =(double)$temp_amounts;

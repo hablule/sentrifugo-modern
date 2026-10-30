@@ -34,17 +34,17 @@ class Default_Model_Widgets extends Zend_Db_Table_Abstract
 		try {
 			//code...
 
-			$menuDetails = array();
+			$menuDetails = [];
 			$objectCsv = "";
 			$db = Zend_Db_Table::getDefaultAdapter();
 			$menu = $db->query("SELECT menuid from main_settings WHERE isactive = 1 AND flag = 1 AND userid = " . $userid);
 			$menuids = $menu->fetch();
 			if (!empty($menuids) && $menuids['menuid'] != '') {
 				$menuIdArr = explode(',', $menuids['menuid']);
-				$privilige_spl_menu = array(LEAVEREQUEST, SITEPREFERENCE, EMPLOYEETABS); //array for menu Items (which have no priviliges for view)
+				$privilige_spl_menu = [LEAVEREQUEST, SITEPREFERENCE, EMPLOYEETABS]; //array for menu Items (which have no priviliges for view)
 				$total_menu_items = array_intersect($privilige_spl_menu, $menuIdArr);
 				$count_menu =  count($total_menu_items); //checking above Ids exist or not
-				$splprivilegedMenusArr = array();
+				$splprivilegedMenusArr = [];
 				if ($count_menu > 0)  //if exists query to fetch details of menu Items
 				{
 					$privilige_spl_menu_list = implode(',', $total_menu_items);
@@ -163,7 +163,7 @@ class Default_Model_Widgets extends Zend_Db_Table_Abstract
 	}
 
 
-	function format2($id = '')
+	public function format2($id = '')
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$auth = Zend_Auth::getInstance();
@@ -183,7 +183,7 @@ class Default_Model_Widgets extends Zend_Db_Table_Abstract
 								WHERE ( me.id <>" . $loginUserId . " AND me.backgroundchk_status <> 'Not Applicable' AND me.backgroundchk_status <> 'Yet to start' ) union 
 				SELECT count(distinct me.user_id) FROM employees_summary AS me LEFT JOIN main_bgcheckdetails AS dt ON dt.specimen_id = me.user_id LEFT JOIN main_bgagencylist AS al ON al.id = dt.bgagency_id WHERE (me.backgroundchk_status <> 'Not Applicable' AND me.backgroundchk_status <> 'Yet to start') ;";
 				$res_arr = $db->query($cand_screen_qry)->fetchAll();
-				$res = array();
+				$res = [];
 				if (!empty($res_arr)) {
 					foreach ($res_arr as $res1) {
 						$cnt1 = $res1['cnt1'];
@@ -195,7 +195,7 @@ class Default_Model_Widgets extends Zend_Db_Table_Abstract
 
 		return $res;
 	}
-	function format4($id = '')
+	public function format4($id = '')
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$auth = Zend_Auth::getInstance();
@@ -236,7 +236,7 @@ class Default_Model_Widgets extends Zend_Db_Table_Abstract
 		return $res1;
 	}
 
-	function format5($id = '')
+	public function format5($id = '')
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$auth = Zend_Auth::getInstance();
@@ -253,7 +253,7 @@ class Default_Model_Widgets extends Zend_Db_Table_Abstract
 		$order = '';
 		if ($id != '') {
 			$limit = "LIMIT 0,5";
-			$res_array = array();
+			$res_array = [];
 
 			if ($id == 11 || $id == 80 || $id == 86 || $id == 87 || $id == 88 || $id == 89 || $id == 90 || $id == 91 || $id == 92 || $id == 93 || $id == 100 || $id == 101 || $id == 102 || $id == 103 || $id == 107 || $id == 108 || $id ==	110 || $id == 114 || $id == 115 || $id == 116 || $id == 117 || $id == 118 || $id == 120 || $id == 121 || $id == 123 || $id == 124 || $id == 125 || $id == 126 || $id ==	127 || $id == 128 || $id == 132 || $id == 142 || $id == 144 || $id == 145 || $id == 150 || $id == 151 || $id == 152 || $id == 165 || $id == 166 || $id == 182) {
 				if ($id == 11) {
@@ -636,7 +636,7 @@ class Default_Model_Widgets extends Zend_Db_Table_Abstract
 						$res_array['appraisal_period'] = 'Yearly';
 					}
 					$manager_ids = $result['manager_ids'];
-					$mngrTotArr = isset($manager_ids) ? explode(",", $manager_ids) : array();
+					$mngrTotArr = isset($manager_ids) ? explode(",", $manager_ids) : [];
 					$bunit = "select unitname from main_businessunits where id = $Bunit and isactive=1;";
 					$result = $db->query($bunit)->fetch();
 					$res_array['businessUnit'] = $result['unitname'];
@@ -647,7 +647,7 @@ class Default_Model_Widgets extends Zend_Db_Table_Abstract
 					}
 					$qryStr = "select line_manager_1 as mgr from main_pa_questions_privileges where pa_initialization_id = $initId and isactive=1 group by line_manager_1;";
 					$result = $db->query($qryStr)->fetchAll();
-					$mgrIdArr = array();
+					$mgrIdArr = [];
 					$mgrIdList = '';
 					if (!empty($result)) {
 						foreach ($result as $mgrId) {
@@ -740,7 +740,7 @@ class Default_Model_Widgets extends Zend_Db_Table_Abstract
 		return $res_array;
 	}
 
-	function format1()
+	public function format1()
 	{
 		$auth = Zend_Auth::getInstance();
 		$session = $auth->getStorage()->read();
@@ -757,7 +757,7 @@ class Default_Model_Widgets extends Zend_Db_Table_Abstract
 		return $res;
 	}
 
-	function format3($id = '')
+	public function format3($id = '')
 	{
 		$auth = Zend_Auth::getInstance();
 		$session = $auth->getStorage()->read();
@@ -860,7 +860,7 @@ class Default_Model_Widgets extends Zend_Db_Table_Abstract
 		return $res;
 	}
 
-	function format6($id = '')
+	public function format6($id = '')
 	{
 		$auth = Zend_Auth::getInstance();
 		$session = $auth->getStorage()->read();
@@ -889,7 +889,7 @@ class Default_Model_Widgets extends Zend_Db_Table_Abstract
 		return $res;
 	}
 
-	function format7($id = '')
+	public function format7($id = '')
 	{
 		$auth = Zend_Auth::getInstance();
 		$session = $auth->getStorage()->read();
@@ -907,7 +907,7 @@ class Default_Model_Widgets extends Zend_Db_Table_Abstract
 		return $res;
 	}
 
-	function getUrl($menu_id = '')
+	public function getUrl($menu_id = '')
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$res = '';

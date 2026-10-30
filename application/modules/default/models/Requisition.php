@@ -38,7 +38,7 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $statusFilter = null)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if (!empty($searchData) && $searchData !== 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -66,25 +66,25 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
             $searchQuery .= ($searchQuery ? " AND " : "") . " r.status IN ('Closed', 'Rejected') ";
         }
 
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'              => 'Action',
             'code'                => 'Requisition Code',
             'manager_name'        => 'Hiring Manager',
             'requested_fte'       => 'Target FTE',
             'filled_fte'          => 'Filled FTE',
             'status'              => 'Campaign Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
             'perPage'        => $perPage,
             'tablecontent'   => $tableContent,
             'objectname'     => 'requisition',
-            'extra'          => array(),
+            'extra'          => [],
             'tableheader'    => $tableHeaders,
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
@@ -92,8 +92,8 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
             'menuName'       => 'Requisitions',
             'call'           => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => array()
-        );
+            'search_filters' => []
+        ];
     }
 
     public function getGridData($sort, $by, $pageNo, $perPage, $searchQuery = '')
@@ -105,7 +105,7 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
 
         // Subquery to calculate total filled FTE for this requisition
         $filledSubquery = $db->select()
-            ->from('map_requisition_position', array('requisition_id', 'total_filled' => new Zend_Db_Expr('SUM(target_fte)')))
+            ->from('map_requisition_position', ['requisition_id', 'total_filled' => new Zend_Db_Expr('SUM(target_fte)')])
             ->where('status = ?', 'Filled')
             ->where('isactive != ?', 5)
             ->group('requisition_id');
@@ -113,24 +113,24 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from(
-                array('r' => $this->_name),
-                array(
+                ['r' => $this->_name],
+                [
                     'id' => 'r.id',
                     'code',
                     'requested_fte',
                     'status',
                     'filled_fte' => new Zend_Db_Expr('COALESCE(filled_sub.total_filled, 0.00)')
-                )
+                ]
             )
             ->joinLeft(
-                array('emp' => 'main_employee'),
+                ['emp' => 'main_employee'],
                 'r.requested_by_employee_id = emp.id',
-                array('manager_name' => new Zend_Db_Expr("COALESCE(NULLIF(emp.userfullname, ''), CONCAT(emp.firstname, ' ', emp.lastname), 'Unassigned')"))
+                ['manager_name' => new Zend_Db_Expr("COALESCE(NULLIF(emp.userfullname, ''), CONCAT(emp.firstname, ' ', emp.lastname), 'Unassigned')")]
             )
             ->joinLeft(
-                array('filled_sub' => clone $filledSubquery), // Subquery alias
+                ['filled_sub' => clone $filledSubquery], // Subquery alias
                 'r.id = filled_sub.requisition_id',
-                array()
+                []
             )
             ->where('r.isactive != ?', 5);
 
@@ -165,11 +165,11 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
 
         $result = $db->fetchRow($sql);
 
-        return array(
+        return [
             'action_required'  => (int)$result['action_required'],
             'active_pipelines' => (int)$result['active_pipelines'],
             'concluded'        => (int)$result['concluded']
-        );
+        ];
     }
 
     /* =================================================================================
@@ -185,7 +185,7 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
         if (!empty($id)) {
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = $currentDate;
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return 'update';
         }
 
@@ -203,8 +203,8 @@ class Default_Model_Requisition extends Zend_Db_Table_Abstract
     {
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? (int)$auth->getStorage()->read()->id : 0;
-        $data = array('isactive' => 5, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s"));
-        return $this->update($data, array('id = ?' => (int)$id));
+        $data = ['isactive' => 5, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s")];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* =================================================================================

@@ -98,7 +98,7 @@ class Default_Model_Financialpolicyledger extends Zend_Db_Table_Abstract
         ?string $valueNew,
         int $userId
     ): int {
-        $data = array(
+        $data = [
             'source_module'  => $sourceModule,
             'record_id'      => $recordId,
             'action_type'    => $actionType,
@@ -108,7 +108,7 @@ class Default_Model_Financialpolicyledger extends Zend_Db_Table_Abstract
             'value_new'      => $valueNew,
             'modifiedby'     => $userId,
             'modifieddate'   => gmdate("Y-m-d H:i:s")
-        );
+        ];
 
         $this->insert($data);
         return (int)$this->getAdapter()->lastInsertId($this->_name);

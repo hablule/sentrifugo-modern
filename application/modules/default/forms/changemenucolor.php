@@ -34,15 +34,15 @@ class Default_Form_changemenucolor extends Zend_Form
 		 $default = new Zend_Form_Element_Button('default');
 		 $default->setLabel('Reset');
 		 $theme = new Zend_Form_Element_Select('theme');
-		 $theme->addMultiOptions(array(
+		 $theme->addMultiOptions([
             ' ' => 'Select...',
       
-        ));
-		$theme->addValidator('NotEmpty', false, array('messages' => 'Please Select Theme.')); 
+        ]);
+		$theme->addValidator('NotEmpty', false, ['messages' => 'Please Select Theme.']); 
         $theme->setRequired(true);
 		 $default->setAttrib('onClick' ,"parent.location='" . Zend_Controller_Front::getInstance()->getBaseUrl() . '/dashboard/reset' . "'");
 
-		 $this->addElements(array($id,$submit,$theme,$default));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 $this->addElements([$id,$submit,$theme,$default]);
+         $this->setElementDecorators(['ViewHelper']); 
 	}
 }

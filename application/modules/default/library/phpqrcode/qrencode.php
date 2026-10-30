@@ -27,9 +27,9 @@
  
     class QRrsblock {
         public $dataLength;
-        public $data = array();
+        public $data = [];
         public $eccLength;
-        public $ecc = array();
+        public $ecc = [];
         
         public function __construct($dl, $data, $el, &$ecc, QRrsItem $rs)
         {
@@ -46,10 +46,10 @@
 
     class QRrawcode {
         public $version;
-        public $datacode = array();
-        public $ecccode = array();
+        public $datacode = [];
+        public $ecccode = [];
         public $blocks;
-        public $rsblocks = array(); //of RSblock
+        public $rsblocks = []; //of RSblock
         public $count;
         public $dataLength;
         public $eccLength;
@@ -58,7 +58,7 @@
         //----------------------------------------------------------------------
         public function __construct(QRinput $input)
         {
-            $spec = array(0,0,0,0,0);
+            $spec = [0,0,0,0,0];
             
             $this->datacode = $input->getByteStream();
             if(is_null($this->datacode)) {
@@ -243,7 +243,7 @@
         //----------------------------------------------------------------------
         public function encodeString8bit($string, $version, $level)
         {
-            if(string == NULL) {
+            if(\STRING == NULL) {
                 throw new Exception('empty string!');
                 return NULL;
             }
@@ -251,7 +251,7 @@
             $input = new QRinput($version, $level);
             if($input == NULL) return NULL;
 
-            $ret = $input->append($input, QR_MODE_8, strlen($string), str_split($string));
+            $ret = $input->append($input, QR_MODE_8, strlen($string));
             if($ret < 0) {
                 unset($input);
                 return NULL;
@@ -342,7 +342,7 @@
             
                 if($this->bit == -1) {
                     $this->bit = 0;
-                    return array('x'=>$this->x, 'y'=>$this->y);
+                    return ['x'=>$this->x, 'y'=>$this->y];
                 }
 
                 $x = $this->x;
@@ -386,7 +386,7 @@
 
             } while(ord($this->frame[$y][$x]) & 0x80);
                         
-            return array('x'=>$x, 'y'=>$y);
+            return ['x'=>$x, 'y'=>$y];
         }
         
     } ;

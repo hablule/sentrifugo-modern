@@ -65,7 +65,7 @@ class Default_Form_Currencyconverter extends Zend_Form
         $base_currency_id->setLabel('Base Currency')
             ->setAttrib('class', 'formDataElement')
             ->setRequired(true)
-            ->addValidator('NotEmpty', true, array('messages' => 'Please select a Base Currency.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please select a Base Currency.']);
         // Options populated in Controller via getPairs()
 
         // Target Currency
@@ -73,18 +73,18 @@ class Default_Form_Currencyconverter extends Zend_Form
         $target_currency_id->setLabel('Target Currency')
             ->setAttrib('class', 'formDataElement')
             ->setRequired(true)
-            ->addValidator('NotEmpty', true, array('messages' => 'Please select a Target Currency.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please select a Target Currency.']);
 
         // Cross-Field Validation: Target cannot equal Base
-        $target_currency_id->addValidator('Callback', true, array(
+        $target_currency_id->addValidator('Callback', true, [
             'callback' => function ($value, $context) {
                 if (empty($value) || empty($context['base_currency_id'])) return true;
                 return $value !== $context['base_currency_id'];
             },
-            'messages' => array(
+            'messages' => [
                 Zend_Validate_Callback::INVALID_VALUE => 'Target Currency cannot be the same as Base Currency.'
-            )
-        ));
+            ]
+        ]);
 
         /* --------------------------------------------------------------
          * Text / Date Elements
@@ -93,31 +93,31 @@ class Default_Form_Currencyconverter extends Zend_Form
         // Exchange Rate
         $exchange_rate = new Zend_Form_Element_Text('exchange_rate');
         $exchange_rate->setLabel('Exchange Rate')
-            ->setAttribs(array('class' => 'formDataElement', 'placeholder' => 'e.g., 1.2500'))
+            ->setAttribs(['class' => 'formDataElement', 'placeholder' => 'e.g., 1.2500'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', true, array('messages' => 'Please enter the exchange rate.'))
-            ->addValidator('Float', true, array(
+            ->addValidator('NotEmpty', true, ['messages' => 'Please enter the exchange rate.'])
+            ->addValidator('Float', true, [
                 'locale'   => 'en_US', // Standardize float parsing
-                'messages' => array(Zend_Validate_Float::NOT_FLOAT => 'Exchange rate must be a valid number.')
-            ));
+                'messages' => [Zend_Validate_Float::NOT_FLOAT => 'Exchange rate must be a valid number.']
+            ]);
 
         // Start Date
         $start_date = new Zend_Form_Element_Text('start_date');
         $start_date->setLabel('Start Date')
-            ->setAttribs(array('class' => 'formDataElement', 'readonly' => 'readonly', 'id' => 'start_date'))
+            ->setAttribs(['class' => 'formDataElement', 'readonly' => 'readonly', 'id' => 'start_date'])
             ->setRequired(true)
-            ->addValidator('NotEmpty', true, array('messages' => 'Please select a start date.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please select a start date.']);
 
         // End Date
         $end_date = new Zend_Form_Element_Text('end_date');
         $end_date->setLabel('End Date')
-            ->setAttribs(array('class' => 'formDataElement', 'readonly' => 'readonly', 'id' => 'end_date'))
+            ->setAttribs(['class' => 'formDataElement', 'readonly' => 'readonly', 'id' => 'end_date'])
             ->setRequired(false);
 
         // Cross-Field Validation: End Date must be >= Start Date
-        $end_date->addValidator('Callback', true, array(
+        $end_date->addValidator('Callback', true, [
             'callback' => function ($value, $context) {
                 if (empty($value) || empty($context['start_date'])) return true; // Pass if empty
                 // Convert UI format back to timestamps for safe comparison
@@ -125,10 +125,10 @@ class Default_Form_Currencyconverter extends Zend_Form
                 $end   = strtotime(sapp_Global::change_date($value, 'database'));
                 return $end >= $start;
             },
-            'messages' => array(
+            'messages' => [
                 Zend_Validate_Callback::INVALID_VALUE => 'End Date must be greater than or equal to the Start Date.'
-            )
-        ));
+            ]
+        ]);
 
         /* --------------------------------------------------------------
          * Textarea Elements
@@ -137,7 +137,7 @@ class Default_Form_Currencyconverter extends Zend_Form
         // Description
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Description')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -158,7 +158,7 @@ class Default_Form_Currencyconverter extends Zend_Form
 
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save')
-            ->setAttribs(array('id' => 'submitbutton', 'class' => 'actbtn_btn'));
+            ->setAttribs(['id' => 'submitbutton', 'class' => 'actbtn_btn']);
 
         // SSOT AJAX Submission Pattern (Strict Quoting & Escaping)
         $urlAction  = "'currencyconverter/save/format/json'";
@@ -169,7 +169,7 @@ class Default_Form_Currencyconverter extends Zend_Form
          * Build Form & Apply Decorators
          * -------------------------------------------------------------- */
 
-        $this->addElements(array(
+        $this->addElements([
             $idElement,
             $base_currency_id,
             $target_currency_id,
@@ -179,12 +179,12 @@ class Default_Form_Currencyconverter extends Zend_Form
             $description,
             $isactive,
             $submit
-        ));
+        ]);
 
         // Strip default Zend Decorators and enforce ViewHelper universally
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
-            $element->setDecorators(array('ViewHelper'));
+            $element->setDecorators(['ViewHelper']);
         }
     }
 }

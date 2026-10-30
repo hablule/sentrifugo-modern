@@ -19,8 +19,8 @@ class Timemanagement_Form_Employeeschedule extends Zend_Form{
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setAttrib('id','submitBtn');
         $submit->setLabel('save');
-        $this->addElements(array($id,$workdays,$from,$to,$submit));
-        $this->setElementDecorators(array('ViewHelper')); 
+        $this->addElements([$id,$workdays,$from,$to,$submit]);
+        $this->setElementDecorators(['ViewHelper']); 
     }
 }
 

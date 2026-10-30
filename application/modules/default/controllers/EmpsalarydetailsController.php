@@ -55,7 +55,7 @@ class Default_EmpsalarydetailsController extends Zend_Controller_Action
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 
 				$employeeModal = new Default_Model_Employee();
 				try {
@@ -74,9 +74,9 @@ class Default_EmpsalarydetailsController extends Zend_Controller_Action
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall', null);
-								$data = array();
+								$data = [];
 								$searchQuery = '';
-								$searchArray = array();
+								$searchArray = [];
 								$tablecontent = '';
 								if ($refresh == 'refresh') {
 									if ($dashboardcall == 'Yes')
@@ -89,7 +89,7 @@ class Default_EmpsalarydetailsController extends Zend_Controller_Action
 									$pageNo = 1;
 									$searchData = '';
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 								} else {
 									$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 									$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'e.modifieddate';
@@ -142,7 +142,7 @@ class Default_EmpsalarydetailsController extends Zend_Controller_Action
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 
 				$employeeModal = new Default_Model_Employee();
 				try {
@@ -161,9 +161,9 @@ class Default_EmpsalarydetailsController extends Zend_Controller_Action
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall', null);
-								$data = array();
+								$data = [];
 								$searchQuery = '';
-								$searchArray = array();
+								$searchArray = [];
 								$tablecontent = '';
 								if ($refresh == 'refresh') {
 									if ($dashboardcall == 'Yes')
@@ -176,7 +176,7 @@ class Default_EmpsalarydetailsController extends Zend_Controller_Action
 									$pageNo = 1;
 									$searchData = '';
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 								} else {
 									$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 									$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'e.modifieddate';
@@ -222,7 +222,7 @@ class Default_EmpsalarydetailsController extends Zend_Controller_Action
 					$loginuserGroup = $auth->getStorage()->read()->group_id;
 				}
 
-				$popConfigPermission = array();
+				$popConfigPermission = [];
 				if (sapp_Global::_checkprivileges(CURRENCY, $loginuserGroup, $loginuserRole, 'add') == 'Yes') {
 					array_push($popConfigPermission, 'currency');
 				}
@@ -268,7 +268,7 @@ class Default_EmpsalarydetailsController extends Zend_Controller_Action
 
 								$payfrequencyModal = new Default_Model_Payfrequency();
 
-								$msgarray = array();
+								$msgarray = [];
 
 								$basecurrencymodeldata = $currencymodel->getCurrencyList();
 								$empsalarydetailsform->currencyid->addMultiOption('', 'Select Salary Currency');
@@ -304,7 +304,7 @@ class Default_EmpsalarydetailsController extends Zend_Controller_Action
 
 								$this->view->form = $empsalarydetailsform;
 
-								$this->view->data = isset($data[0]) ? $data[0] : array();
+								$this->view->data = $data[0] ?? [];
 								$this->view->id = $id;
 								$this->view->msgarray = $msgarray;
 								$this->view->emptyFlag = $emptyFlag;
@@ -339,7 +339,7 @@ class Default_EmpsalarydetailsController extends Zend_Controller_Action
 					$loginuserRole = $auth->getStorage()->read()->emprole;
 					$loginuserGroup = $auth->getStorage()->read()->group_id;
 				}
-				$popConfigPermission = array();
+				$popConfigPermission = [];
 				if (sapp_Global::_checkprivileges(CURRENCY, $loginuserGroup, $loginuserRole, 'add') == 'Yes') {
 					array_push($popConfigPermission, 'currency');
 				}
@@ -385,7 +385,7 @@ class Default_EmpsalarydetailsController extends Zend_Controller_Action
 
 
 
-								$msgarray = array();
+								$msgarray = [];
 								
 								$empsalaryData = $empsalarydetailsModal->getsingleSalaryDetailsData($id);
 
@@ -433,7 +433,7 @@ class Default_EmpsalarydetailsController extends Zend_Controller_Action
 									$empsalarydetailsform->isactive->setValue(utlis::getcheckboxvalue($empsalaryData[0]['isactive'],'form'));
 								}
 
-								$this->view->data = isset($data[0]) ? $data[0] : array();
+								$this->view->data = $data[0] ?? [];
 								$this->view->id = $id;
 								$this->view->msgarray = $msgarray;
 								$this->view->employeedata = $employeeData[0];
@@ -477,7 +477,7 @@ class Default_EmpsalarydetailsController extends Zend_Controller_Action
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 
 				$employeeModal = new Default_Model_Employee();
 				try {
@@ -496,9 +496,9 @@ class Default_EmpsalarydetailsController extends Zend_Controller_Action
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall', null);
-								$data = array();
+								$data = [];
 								$searchQuery = '';
-								$searchArray = array();
+								$searchArray = [];
 								$tablecontent = '';
 								if ($refresh == 'refresh') {
 									if ($dashboardcall == 'Yes')
@@ -511,7 +511,7 @@ class Default_EmpsalarydetailsController extends Zend_Controller_Action
 									$pageNo = 1;
 									$searchData = '';
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 								} else {
 									$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 									$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'e.modifieddate';
@@ -604,7 +604,7 @@ class Default_EmpsalarydetailsController extends Zend_Controller_Action
 				$actionflag = '';
 				$tableid  = '';
 				// $salary = sapp_Global::_encrypt($salary);
-				$data = array(
+				$data = [
 					'emp_id' => $user_id,
 					'currency_id' => $currencyid,
 					'amount_frequency' => $salarytype,
@@ -615,9 +615,9 @@ class Default_EmpsalarydetailsController extends Zend_Controller_Action
 					'end_date' => sapp_Global::change_date($to, 'database'),
 					'modifiedby' => $loginUserId,
 					'modifieddate' => gmdate("Y-m-d H:i:s")
-				);
+				];
 				if ($id != '') {
-					$where = array('empsalary_id=?' => $id);
+					$where = ['empsalary_id=?' => $id];
 					$actionflag = 2;
 					$data['modifiedby'] = $loginUserId;
 					$data['modifieddate'] = gmdate("Y-m-d H:i:s");
@@ -646,7 +646,7 @@ class Default_EmpsalarydetailsController extends Zend_Controller_Action
 				Zend_Layout::getMvcInstance()->setLayoutPath(APPLICATION_PATH . "/layouts/scripts/popup/");
 			} else {
 
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("error" => FIELDMSG));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["error" => FIELDMSG]);
 			}
 			// $this->_redirect('empsalarydetails/index/userid/' . $userid);
 		} else {

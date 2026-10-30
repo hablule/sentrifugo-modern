@@ -29,9 +29,9 @@ class Schedule_TimescheduleController extends Zend_Controller_Action
             $view = Zend_Layout::getMvcInstance()->getView();
             $objname = $this->_getParam('objname');
             $refresh = $this->_getParam('refresh');
-            $data = array();
+            $data = [];
             $searchQuery = '';
-            $searchArray = array();
+            $searchArray = [];
             $tablecontent = '';
             $dashboardcall = $this->_getParam('dashboardcall');
 
@@ -45,7 +45,7 @@ class Schedule_TimescheduleController extends Zend_Controller_Action
                 $pageNo = 1;
                 $searchData = '';
                 $searchQuery = '';
-                $searchArray = array();
+                $searchArray = [];
             } else {
                 $sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
                 $by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'ms.modifieddate  ';
@@ -135,7 +135,7 @@ class Schedule_TimescheduleController extends Zend_Controller_Action
 
             if ($id) {    //Edit Record...
                 if ($this->_getParam('test') == 'true') {
-                    $form->test2->addValidator("NotEmpty", false, array('messages' => "need to add cycle"));
+                    $form->test2->addValidator("NotEmpty", false, ['messages' => "need to add cycle"]);
                     $form->test2->setRequired(true);
                 } else {
                     $form->test2->removeValidator("NotEmpty");
@@ -197,7 +197,7 @@ class Schedule_TimescheduleController extends Zend_Controller_Action
                     $cycle = $this->_request->getParam('cycle');
                     $description = $this->_request->getParam('description');
                     $date = gmdate("Y-m-d H:i:s");
-                    $data = array(
+                    $data = [
                         'name' => $name,
                         'code' => $code,
                         'description' => $description,
@@ -207,13 +207,13 @@ class Schedule_TimescheduleController extends Zend_Controller_Action
                         'isverified' => utlis::getcheckboxvalue($this->_request->getParam('isverified'), 'database'),
                         'cycle' => $cycle,
 
-                    );
+                    ];
 
                     if ($id != '') {
 
                         $data['modifiedby'] = $loginUserId;
                         $data['modifieddate'] = $date;
-                        $where = array('schedule_id=?' => $id);
+                        $where = ['schedule_id=?' => $id];
                     } else {
                         $data['createdby'] = $loginUserId;
                         $data['createddate'] = $date;
@@ -260,7 +260,7 @@ class Schedule_TimescheduleController extends Zend_Controller_Action
                                 $msgarray['cycle'] = "Schedule cycle and Schedule cycle shift";
                             }
                         }
-                        $this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Schedule updated successfully."));
+                        $this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Schedule updated successfully."]);
                     } else {
 
                         $schedule = json_decode($this->_getParam('test2'), true);
@@ -276,7 +276,7 @@ class Schedule_TimescheduleController extends Zend_Controller_Action
                             }
                         }
 
-                        $this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Schedule added successfully."));
+                        $this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Schedule added successfully."]);
                     }
 
                     $this->_redirect('schedule/timeschedule');
@@ -339,7 +339,7 @@ class Schedule_TimescheduleController extends Zend_Controller_Action
     // }
     public function addpopupAction()
     {
-        $msgarray = array();
+        $msgarray = [];
         Zend_Layout::getMvcInstance()->setLayoutPath(APPLICATION_PATH . "/layouts/scripts/popup/");
         $controllername = 'timeschedule';
         $timetableform = new Schedule_Form_Timetable();
@@ -355,14 +355,14 @@ class Schedule_TimescheduleController extends Zend_Controller_Action
                 $desc = $this->_request->getParam('description');
                 $time_in = $this->_request->getParam('time_in');
                 $time_out = $this->_request->getParam('time_out');
-                $data = array(
+                $data = [
                     'name' => $desc,
                     'time' => $time_in . '-' . $time_out,
                     'start_time' => sapp_Global::change_time($time_in, 'database'),
                     'end_time' => sapp_Global::change_time($time_out, 'database'),
                     'created_by' => $login,
                     'modified' => $login
-                );
+                ];
 
                 $actionflag = 1;
                 $menuID = SCHEDULE;
@@ -388,7 +388,7 @@ class Schedule_TimescheduleController extends Zend_Controller_Action
 
     public function getAllShifts()
     {
-        $new_data = array();
+        $new_data = [];
         if ($this->_request->getParam('mon_check') == 1) {
             $temp_arr = [];
             $shifts = $this->_request->getParam('mon_shift');

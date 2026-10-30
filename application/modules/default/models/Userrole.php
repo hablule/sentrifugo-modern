@@ -35,7 +35,7 @@ class Default_Model_Userrole extends Zend_Db_Table_Abstract
 
         $this->update(
             $data,
-            array('userrole_id = ?' => (int)$id)
+            ['userrole_id = ?' => (int)$id]
         );
         return 'update';
     }
@@ -64,8 +64,8 @@ class Default_Model_Userrole extends Zend_Db_Table_Abstract
     public function deleteRecord($id)
     {
         return $this->update(
-            array('isactive' => '5'),
-            array('userrole_id = ?' => (int)$id)
+            ['isactive' => '5'],
+            ['userrole_id = ?' => (int)$id]
         );
     }
 
@@ -86,8 +86,8 @@ class Default_Model_Userrole extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from(
-                array('ur' => $this->_name),
-                array(
+                ['ur' => $this->_name],
+                [
                     'id' => 'ur.userrole_id',
                     'role_id' => 'ur.role_id',
                     'user_id' => 'ur.user_id',
@@ -102,26 +102,26 @@ class Default_Model_Userrole extends Zend_Db_Table_Abstract
                     'status_text' => new Zend_Db_Expr(
                         "CASE WHEN ur.isactive = 'Y' THEN 'Active' ELSE 'Inactive' END"
                     )
-                )
+                ]
             )
             ->joinInner(
-                array('r' => 'main_role'),
+                ['r' => 'main_role'],
                 'ur.role_id = r.id',
-                array('rolename' => 'r.name')
+                ['rolename' => 'r.name']
             )
             ->joinInner(
-                array('u' => 'main_users'),
+                ['u' => 'main_users'],
                 'ur.user_id = u.id',
-                array()
+                []
             )
             ->joinLeft(
-                array('e' => 'main_employees'),
+                ['e' => 'main_employees'],
                 'u.empid = e.id',
-                array(
+                [
                     'profileimg' => 'e.profileimg',
                     // Fallback name logic (COALESCE handles missing employee records)
                     'userfullname' => new Zend_Db_Expr("COALESCE(NULLIF(e.userfullname, ''), u.username)")
-                )
+                ]
             )
             ->where($where)
             ->order("$by $sort")
@@ -148,7 +148,7 @@ class Default_Model_Userrole extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         // 1. Process Search Filters from Grid
         if ($searchData != '' && $searchData != 'undefined') {
@@ -172,14 +172,14 @@ class Default_Model_Userrole extends Zend_Db_Table_Abstract
         }
 
         // 2. Define Table Column Mappings [DB Alias => UI Label]
-        $tableFields = array(
+        $tableFields = [
             'action'        => 'Action',
             'userfullname'  => 'Full Name',
             'rolename'      => 'Role Name',
             'datefrom'      => 'Valid From',
             'dateto'        => 'Valid Until',
             'status_text'   => 'Status'
-        );
+        ];
 
         // 3. Fetch Data using standard Sentrifugo paginated select
         // Note: getUserRoleGridData must be defined in your model (as generated previously)
@@ -188,19 +188,19 @@ class Default_Model_Userrole extends Zend_Db_Table_Abstract
         // 4. Prepare Filters (Dropdowns for the grid header)
         $role_model = new Default_Model_Roles();
         $roles_list = $role_model->getRolesList('', false); // Fetch simple rolenames
-        $role_filter = array();
+        $role_filter = [];
         foreach ($roles_list as $r) {
             $role_filter[$r['name']] = $r['name'];
         }
 
-        $dataTmp = array(
+        $dataTmp = [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
             'perPage'        => $perPage,
             'tablecontent'   => $tablecontent,
             'objectname'     => 'userrole', // Used for auto-building URLs: userrole/edit/id/X
-            'extra'          => array(),
+            'extra'          => [],
             'tableheader'    => $tableFields,
             'jsGridFnName'   => 'getAjaxgridData', // Core Sentrifugo JS function
             'jsFillFnName'   => '',
@@ -208,23 +208,23 @@ class Default_Model_Userrole extends Zend_Db_Table_Abstract
             'menuName'       => 'User Role',
             'dashboardcall'  => $dashboardcall,
             'call'           => $call,
-            'search_filters' => array(
-                'datefrom' => array(
+            'search_filters' => [
+                'datefrom' => [
                     'type' => 'datepicker'
-                ),
-                'dateto' => array(
+                ],
+                'dateto' => [
                     'type' => 'datepicker'
-                ),
-                'status_text' => array(
+                ],
+                'status_text' => [
                     'type'        => 'select',
-                    'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive')
-                ),
-                'rolename' => array(
+                    'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']
+                ],
+                'rolename' => [
                     'type'        => 'select',
-                    'filter_data' => array('' => 'All') + $role_filter
-                )
-            )
-        );
+                    'filter_data' => ['' => 'All'] + $role_filter
+                ]
+            ]
+        ];
 
         return $dataTmp;
     }
@@ -244,37 +244,37 @@ class Default_Model_Userrole extends Zend_Db_Table_Abstract
         // 1. Input Mapping: Map UI filter values (1/0) to DB storage format (Y/N)
         if ($activeStatus !== null) {
             // If UI sends 1, '1', or 'Y', we query for 'Y'. Otherwise, we query for 'N'.
-            $activeStatus = (in_array($activeStatus, array('1', 1, 'Y'), true)) ? 'Y' : 'N';
+            $activeStatus = (in_array($activeStatus, ['1', 1, 'Y'], true)) ? 'Y' : 'N';
         }
 
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from(
-                array('ur' => $this->_name),
-                array(
+                ['ur' => $this->_name],
+                [
                     '*', // Select all original columns (userrole_id, role_id, user_id, etc.)
                     // 2. Output Mapping: Transform 'Y'/'N' to 1/0 so Checkboxes are 'checked' automatically
                     'isactive' => new Zend_Db_Expr("IF(ur.isactive = 'Y', 1, 0)")
-                )
+                ]
             )
             ->joinInner(
-                array('r' => 'main_role'),
+                ['r' => 'main_role'],
                 'ur.role_id = r.id',
-                array('rolename' => 'r.name')
+                ['rolename' => 'r.name']
             )
             ->joinInner(
-                array('u' => 'main_users'),
+                ['u' => 'main_users'],
                 'ur.user_id = u.id',
-                array()
+                []
             )
             ->joinLeft(
-                array('e' => 'main_employees'),
+                ['e' => 'main_employees'],
                 'u.empid = e.id',
-                array(
+                [
                     'profileimg' => 'e.profileimg',
                     // Fallback name logic (COALESCE handles missing employee records)
                     'userfullname' => new Zend_Db_Expr("COALESCE(NULLIF(e.userfullname, ''), u.username)")
-                )
+                ]
             );
 
         // Apply status filter based on mapped 'Y'/'N'
@@ -383,7 +383,7 @@ class Default_Model_Userrole extends Zend_Db_Table_Abstract
     public function userHasRole($userId, $roleId)
     {
         $select = $this->select()
-            ->from($this->_name, array('userrole_id'))
+            ->from($this->_name, ['userrole_id'])
             ->where('user_id = ?', (int)$userId)
             ->where('role_id = ?', (int)$roleId)
             ->where('isactive = ?', '1')
@@ -403,12 +403,12 @@ class Default_Model_Userrole extends Zend_Db_Table_Abstract
     public function deactivateUserRole($userRoleId, $loginUserId)
     {
         return $this->update(
-            array(
+            [
                 'isactive'      => '0',
                 'modifiedby'    => $loginUserId,
                 'modifieddate'  => new Zend_Db_Expr('NOW()')
-            ),
-            array('userrole_id = ?' => (int)$userRoleId)
+            ],
+            ['userrole_id = ?' => (int)$userRoleId]
         );
     }
 }

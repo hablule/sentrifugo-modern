@@ -21,9 +21,9 @@ class Schedule_CycleshiftController extends Zend_Controller_Action
             $view = Zend_Layout::getMvcInstance()->getView();
             $objname = $this->_getParam('objname');
             $refresh = $this->_getParam('refresh');
-            $data = array();
+            $data = [];
             $searchQuery = '';
-            $searchArray = array();
+            $searchArray = [];
             $tablecontent = '';
             $dashboardcall = $this->_getParam('dashboardcall');
 
@@ -37,7 +37,7 @@ class Schedule_CycleshiftController extends Zend_Controller_Action
                 $pageNo = 1;
                 $searchData = '';
                 $searchQuery = '';
-                $searchArray = array();
+                $searchArray = [];
             } else {
                 $sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
                 $by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'sc.modifieddate  ';
@@ -100,7 +100,7 @@ class Schedule_CycleshiftController extends Zend_Controller_Action
             $form = new Schedule_Form_Cycleshift();
 
             if ($this->_getParam('shift') != '') {
-                $shifts = array();
+                $shifts = [];
                 $shiftParam = json_decode($this->_getParam('shift'), true);
 
                 foreach ($shiftParam as $shiftData) {
@@ -115,14 +115,14 @@ class Schedule_CycleshiftController extends Zend_Controller_Action
                 // utlis::isoverlappingshift($this->_getParam('shiftid'));
                 if (!utlis::isoverlappingshift($this->_getParam('shiftid'))) {
                     if ($form->isValid($this->getRequest()->getPost())) {
-                        $cycleshiftdata = array();
+                        $cycleshiftdata = [];
 
                         foreach ($this->_getParam('shiftid') as $key => $value) {
-                            $data = array(
+                            $data = [
                                 'shift_id' => $value,
                                 'description' => $this->_getParam('description'),
                                 'isactive' => $this->_getParam('isactive'),
-                            );
+                            ];
                             array_push($cycleshiftdata, $data);
                         }
 
@@ -168,7 +168,7 @@ class Schedule_CycleshiftController extends Zend_Controller_Action
             if ($id != '') {
                 $cycleshiftData = $model->getCycleShift($id);
 
-                $shifts = array();
+                $shifts = [];
                 foreach ($cycleshiftData as $value) {
                     array_push($shifts, $value['shift_id']);
                 }
@@ -189,32 +189,32 @@ class Schedule_CycleshiftController extends Zend_Controller_Action
                         /* Zend_Debug::dump($db_shift,'test1'); */
 
                         if (count($db_shift) == 0 && count($form_shift) == 0) {
-                            $data = array(
+                            $data = [
                                 'description' => $this->_getParam('description'),
                                 'isactive' => utlis::getcheckboxvalue($this->_getParam('isactive'))
-                            );
+                            ];
                             $model->SaveorUpdateData($data, 'schedulecycle_id=' + $id);
                         }
                         if (count($form_shift) > 0) {
                             foreach ($form_shift as $value) {
-                                $data = array(
+                                $data = [
                                     'schedulecycle_id' => $cycleshiftData[0]['schedulecycle_id'],
                                     'shift_id' => $value,
                                     'description' => $this->_getParam('description'),
                                     'isactive' => utlis::getcheckboxvalue($this->_getParam('isactive'))
-                                );
+                                ];
                                 $model->SaveorUpdateData($data, '');
                             }
                         }
                         if (count($db_shift) != count($shifts)) {
                             if (count($db_shift) > 0) {
                                 foreach ($db_shift as $value) {
-                                    $data = array(
+                                    $data = [
                                         'schedulecycle_id' => $cycleshiftData[0]['schedulecycle_id'],
                                         'shift_id' => $value,
                                         'description' => $this->_getParam('description'),
                                         'isactive' => utlis::getcheckboxvalue($this->_getParam('isactive'), 'database')
-                                    );
+                                    ];
                                 }
                                 $model->deleteCycleshift($value, $id);
                             }
@@ -259,7 +259,7 @@ class Schedule_CycleshiftController extends Zend_Controller_Action
             $loginUserId = $auth->getStorage()->read()->id;
         }
         $cyclemodel = new Schedule_Model_Cycleshift();
-        $msgarray = array();
+        $msgarray = [];
 
         if ($appraisalCategoryForm->isValid($this->_request->getPost())) {
             try {
@@ -268,14 +268,14 @@ class Schedule_CycleshiftController extends Zend_Controller_Action
                 $actionflag = '';
                 $tableid  = '';
 
-                $data = array(
+                $data = [
                     'schedulecycle_id' => $this->_getParam('schedulecycle_id'),
                     'shift_id' => $this->_getParam('shift_id'),
                     'description' => $this->_getParam('description'),
                     'isactive' => $this->_getParam('isactive')
-                );
+                ];
                 if ($id != '') {
-                    $where = array('id=?' => $id);
+                    $where = ['id=?' => $id];
                     $actionflag = 2;
                 } else {
                     $data['createdby'] = $loginUserId;
@@ -287,10 +287,10 @@ class Schedule_CycleshiftController extends Zend_Controller_Action
                 $Id = $cyclemodel->SaveorUpdateData($data, $where);
                 if ($Id == 'update') {
                     $tableid = $id;
-                    $this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Cycle shift updated successfully."));
+                    $this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Cycle shift updated successfully."]);
                 } else {
                     $tableid = $Id;
-                    $this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Cycle shift added successfully."));
+                    $this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Cycle shift added successfully."]);
                 }
                 $menuID = 359;
                 $result = sapp_Global::logManager($menuID, $actionflag, $loginUserId, $tableid);

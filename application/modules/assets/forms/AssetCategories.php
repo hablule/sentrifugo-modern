@@ -43,21 +43,21 @@ class Assets_Form_AssetCategories extends Zend_Form
         $assetcategoryname->addFilter(new Zend_Filter_StringTrim());
         $assetcategoryname->setRequired(TRUE);
         $assetcategoryname->setAttrib('placeholder', 'Enter Category Name');
-        $assetcategoryname->addValidator('NotEmpty', false, array('messages' => 'Please enter asset category.'));  
-		$assetcategoryname->addValidator("regex",true,array(                           
+        $assetcategoryname->addValidator('NotEmpty', false, ['messages' => 'Please enter asset category.']);  
+		$assetcategoryname->addValidator("regex",true,[                           
                            'pattern'=>'/^(?![0-9]*$)[a-zA-Z0-9.,&\(\)\/\-_\' ?]+$/',
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter a valid asset category.'
-                           )
-        			));
+                           ]
+        			]);
 		
 		$assetcategoryname->addValidator(new Zend_Validate_Db_NoRecordExists(
-	                                            array(  'table'=>'assets_categories',
+	                                            [  'table'=>'assets_categories',
 	                                                     'field'=>'name',
 	                                            		'exclude'=>'id!="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('id').'" and is_active=1 and parent=0',
 	                                            		 
 	
-	                                                      ) ) );
+	                                                      ] ) );
 		$assetcategoryname->getValidator('Db_NoRecordExists')->setMessage('category already exists.');
 	
 			
@@ -69,12 +69,12 @@ class Assets_Form_AssetCategories extends Zend_Form
 		$subcatfield->setAttrib('placeholder', 'Enter Sub Category');
 		$subcatfield->setAttrib('onkeyup', 'checkvalidity();');
         $subcatfield->addFilter(new Zend_Filter_StringTrim());
-        $subcatfield->addValidator("regex",true,array(
+        $subcatfield->addValidator("regex",true,[
         		'pattern'=>'/^(?![0-9]*$)[a-zA-Z0-9.,&\(\)\/\-_\' ?]+$/',
-        		'messages'=>array(
+        		'messages'=>[
         				'regexNotMatch'=>'Please enter a valid sub category name.'
-        		)
-        ));
+        		]
+        ]);
       /*   $subcatfield->addValidator(new Zend_Validate_Db_NoRecordExists(
         		array(  'table'=>'assets_categories',
         				'field'=>'name',
@@ -97,8 +97,8 @@ class Assets_Form_AssetCategories extends Zend_Form
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 
-		$this->addElements(array($id,$assetcategoryname,$subcatfield,$submit));
-        $this->setElementDecorators(array('ViewHelper')); 
+		$this->addElements([$id,$assetcategoryname,$subcatfield,$submit]);
+        $this->setElementDecorators(['ViewHelper']); 
          
 	}
 	

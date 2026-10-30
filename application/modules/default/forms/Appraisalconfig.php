@@ -21,12 +21,12 @@
 
 class Default_Form_Appraisalconfig extends Zend_Form
 {
-	public $bunitdata = array();
+	public $bunitdata = [];
 	
-	public function __construct(array $bunitdata = array())  //calling constructer for data catching from controller 
+	public function __construct(array $bunitdata = [])  //calling constructer for data catching from controller 
 	{
 		$this->bunitdata = $bunitdata;
-		parent::__construct($options = array());
+		parent::__construct($options = []);
 	}
 	public function init()
 	{
@@ -45,8 +45,8 @@ class Default_Form_Appraisalconfig extends Zend_Form
 			$bunitdata = $this->bunitdata;
 	    	 if(!empty($bunitdata))
 	    	 {
-				$businessunit_id->addMultiOptions(array(''=>'Select Business unit',
-                                            '0'=>'No Business Unit'));
+				$businessunit_id->addMultiOptions([''=>'Select Business unit',
+                                            '0'=>'No Business Unit']);
                 
 	    	    foreach ($bunitdata as $data){
 				   $businessunit_id->addMultiOption($data['id'],$data['unitname']);
@@ -54,16 +54,16 @@ class Default_Form_Appraisalconfig extends Zend_Form
 	    	 }
 	    	 else 
 	    	 {
-	    	 	$businessunit_id->addMultiOptions(array(''=>'Select Business unit'));
+	    	 	$businessunit_id->addMultiOptions([''=>'Select Business unit']);
 	    	 	
 	    	 }
 		}else
 		{
-			$businessunit_id->addMultiOptions(array(''=>'Select Business unit'));
+			$businessunit_id->addMultiOptions([''=>'Select Business unit']);
 		}	
         $businessunit_id->setRegisterInArrayValidator(false);
         $businessunit_id->setRequired(true);
-		$businessunit_id->addValidator('NotEmpty', false, array('messages' => 'Please select business unit.'));
+		$businessunit_id->addValidator('NotEmpty', false, ['messages' => 'Please select business unit.']);
 		
 		
 		$department_id = new Zend_Form_Element_Select('department_id');
@@ -77,15 +77,15 @@ class Default_Form_Appraisalconfig extends Zend_Form
 		$performance_app_flag = new Zend_Form_Element_Radio('performance_app_flag');
 		$performance_app_flag->setLabel("Applicability");
         $performance_app_flag->setAttrib('onclick', 'checkimplementfun(this)');
-        $performance_app_flag->addMultiOptions(array(
+        $performance_app_flag->addMultiOptions([
 										        '1' => 'Business unit wise',
 										        '0' => 'Department wise',
-    									   ));
+    									   ]);
 		$performance_app_flag->setSeparator('');
 		$performance_app_flag->setValue(1);    									   
 		$performance_app_flag->setRegisterInArrayValidator(false);
 		$performance_app_flag->setRequired(true);
-		$performance_app_flag->addValidator('NotEmpty', false, array('messages' => 'Please select applicability.'));
+		$performance_app_flag->addValidator('NotEmpty', false, ['messages' => 'Please select applicability.']);
 		
 		
 		
@@ -93,30 +93,30 @@ class Default_Form_Appraisalconfig extends Zend_Form
 		$appraisal_mode = new Zend_Form_Element_Select('appraisal_mode');
 		$appraisal_mode->setLabel("Appraisal Mode");
         $appraisal_mode->setAttrib('class', 'selectoption');
-        $appraisal_mode->addMultiOptions(array(''   => 'Select appraisal mode',
+        $appraisal_mode->addMultiOptions([''   => 'Select appraisal mode',
         										'Quarterly'  => 'Quarterly', 
         										'Half-yearly'	 => 'Half-yearly',
-        										'Yearly'	 =>	'Yearly'   ));
+        										'Yearly'	 =>	'Yearly'   ]);
 		$appraisal_mode->setRegisterInArrayValidator(false);
 		$appraisal_mode->setRequired(true);
-		$appraisal_mode->addValidator('NotEmpty', false, array('messages' => 'Please select appraisal mode.'));
+		$appraisal_mode->addValidator('NotEmpty', false, ['messages' => 'Please select appraisal mode.']);
   
 		$appraisal_ratings = new Zend_Form_Element_Select('appraisal_ratings');
 		$appraisal_ratings->setLabel("Appraisal Ratings");
         $appraisal_ratings->setAttrib('class', 'selectoption');
-        $appraisal_ratings->addMultiOptions(array('' => 'Select ratings',
+        $appraisal_ratings->addMultiOptions(['' => 'Select ratings',
         										'1'=> '1-5',
-        										'2'=> '1-10'));
+        										'2'=> '1-10']);
 		$appraisal_ratings->setRegisterInArrayValidator(false);
 		$appraisal_ratings->setRequired(true);
-		$appraisal_ratings->addValidator('NotEmpty', false, array('messages' => 'Please select appraisal ratings.'));
+		$appraisal_ratings->addValidator('NotEmpty', false, ['messages' => 'Please select appraisal ratings.']);
 	
         $submit = new Zend_Form_Element_Submit('submit');
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 
-		 $this->addElements(array($id,$businessunit_id,$performance_app_flag,$department_id,$appraisal_mode,$appraisal_ratings,$submit));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 $this->addElements([$id,$businessunit_id,$performance_app_flag,$department_id,$appraisal_mode,$appraisal_ratings,$submit]);
+         $this->setElementDecorators(['ViewHelper']); 
 		
 	}
 }

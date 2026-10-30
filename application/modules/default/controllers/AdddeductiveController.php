@@ -67,7 +67,7 @@ class Default_AdddeductiveController extends Zend_Controller_Action
         }
         if($this->getRequest()->getPost()){
 			if($form->isValid($this->_request->getPost())){
-                $data = array(
+                $data = [
                     'code' => $this->getRequest()->getParam('code'),
                     'name' => $this->getRequest()->getParam('name'),
                     'load_category_id' => (int)$this->getRequest()->getParam('category'),
@@ -84,10 +84,10 @@ class Default_AdddeductiveController extends Zend_Controller_Action
                     'parameters' => trim($this->getRequest()->getParam('parameters'), ','),
                     'createdby' => $loginUserId,
                     'createddate' => gmdate("Y-m-d H:i:s"),
-                );
+                ];
                 $data['isactive'] = 'Y';
                 $tableid=$formModel->addData($data);
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Load Added successfully."));
+                $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Load Added successfully."]);
                 $this->view->messages = $this->_helper->flashMessenger->getMessages();
                 
                 $result = sapp_Global::logManager(DEDUCTIVE,1,$loginUserId,$tableid);
@@ -131,12 +131,12 @@ class Default_AdddeductiveController extends Zend_Controller_Action
 
             if ($form->isValid($this->getRequest()->getPost())) {
 
-                $data = array(
+                $data = [
                     'name' => $this->_request->getParam('name_cat'),
                     'description' => $this->_request->getParam('description_cat'),
                     'isactive' => 'Y',
 
-                );
+                ];
                 
                 //  die(json_encode($data));
                 $tableid = $formModel->addCategory($data);
@@ -236,8 +236,8 @@ class Default_AdddeductiveController extends Zend_Controller_Action
         if($this->getRequest()->getPost()){
 			if($form->isValid($this->_request->getPost())){
             //die(json_encode($this->getRequest()->getPost()));
-            $where = array('load_id=?' => $this->getRequest()->getParam('id'));
-            $data = array(
+            $where = ['load_id=?' => $this->getRequest()->getParam('id')];
+            $data = [
                 'code' => $this->getRequest()->getParam('code'),
                 'name' => $this->getRequest()->getParam('name'),
                 'load_category_id' => (int)$this->getRequest()->getParam('category'),
@@ -255,13 +255,13 @@ class Default_AdddeductiveController extends Zend_Controller_Action
                 'modifiedby' => $loginUserId,
                 'modifieddate' => gmdate("Y-m-d H:i:s"),
                 'isactive' => utlis::getcheckboxvalue($this->getRequest()->getParam('isactive')),
-            );
+            ];
             //$data['isactive'] = 'Yes';
             // die(json_encode($data));
             $tableid = $this->getRequest()->getParam('id');
             $result = sapp_Global::logManager(DEDUCTIVE,2,$loginUserId,$tableid);
             $formModel->editDeductive($data, $where);
-            $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Load updated successfully."));
+            $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Load updated successfully."]);
             $this->_redirect('adddeductive');
         }
         else   {
@@ -299,7 +299,7 @@ public function viewAction()
         $payrollmodel = new Default_Model_Adddeductive();
         $empmodel = new Default_Model_Emplistdeductive();
         $form = new Default_Form_adddeductive();
-        $inter_options = array();
+        $inter_options = [];
         $call = $this->_getParam('call');
         if ($this->_request->isPost()) {
 
@@ -317,13 +317,13 @@ public function viewAction()
         $view = Zend_Layout::getMvcInstance()->getView();
         $objname = $this->_getParam('objname');
         $refresh = $this->_getParam('refresh');
-        $data = array();
-        $data2 = array();
+        $data = [];
+        $data2 = [];
         $searchQuery2 = '';
-        $searchArray2 = array();
+        $searchArray2 = [];
 
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         $tablecontent = '';
         $tablecontent2 = '';
         $auth = Zend_Auth::getInstance();
@@ -359,8 +359,8 @@ public function viewAction()
             $searchData2 = '';
             $searchQuery2 = '';
 
-            $searchArray = array();
-            $searchArray2 = array();
+            $searchArray = [];
+            $searchArray2 = [];
         } else {
             $sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
             $sort2 = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
@@ -418,13 +418,13 @@ public function viewAction()
              $temp_id = $_POST['emp_ids'];
         $temp_deductives_id = $_POST['deductive_ids'];
         $temp_deductives_autos = $_POST['deductive_autos'];
-        $datas = array();
+        $datas = [];
         foreach ($temp_id as $id) {
 
             foreach ($temp_deductives_id as $deductive_id) {
                 foreach ($temp_deductives_autos as $deductive_auto) {
 
-                $data = array();
+                $data = [];
                 $amounts=$payrollmodel->getloadamount((int)$deductive_id);
 
                 $type=$payrollmodel->getloadtype((int)$deductive_id);
@@ -470,7 +470,7 @@ public function viewAction()
     }
           // die(json_encode($data));
             $payrollmodel->saveMultiEmpLoad($datas);
-            return $this->_helper->_json(array('sucess'=>'Load Assigned Successfully'));
+            return $this->_helper->_json(['sucess'=>'Load Assigned Successfully']);
         
     }
     public function deleteAction()
@@ -489,7 +489,7 @@ public function viewAction()
 			$model = new Default_Model_Deductive();
 
 		
-			$where = array('load_id=?' => $id);
+			$where = ['load_id=?' => $id];
 			$Id = $model->DeleteData($where);
 			if ($Id == 'delete') {
 				$messages['message'] = 'Load deleted successfully.';
@@ -504,10 +504,10 @@ public function viewAction()
 		}
 		if ($deleteflag == 1) {
 			if ($messages['msgtype'] == 'error') {
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("error" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["error" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag]);
 			}
 			if ($messages['msgtype'] == 'success') {
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag]);
 			}
 		}
 		$this->_helper->json($messages);

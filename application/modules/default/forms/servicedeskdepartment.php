@@ -34,19 +34,19 @@ class Default_Form_servicedeskdepartment extends Zend_Form
 		$servicedeskdepartment->setAttrib('maxLength', 30);
 		$servicedeskdepartment->addFilter(new Zend_Filter_StringTrim());
 		$servicedeskdepartment->setRequired(true);
-        $servicedeskdepartment->addValidator('NotEmpty', false, array('messages' => 'Please enter category.'));
-		$servicedeskdepartment->addValidator("regex",true,array(                           
+        $servicedeskdepartment->addValidator('NotEmpty', false, ['messages' => 'Please enter category.']);
+		$servicedeskdepartment->addValidator("regex",true,[                           
                            'pattern'=>'/^[a-zA-Z0-9\- ]+$/',
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter valid category.'
-                           )
-        	));
+                           ]
+        	]);
         $servicedeskdepartment->addValidator(new Zend_Validate_Db_NoRecordExists(
-	                                            array(  'table'=>'main_sd_depts',
+	                                            [  'table'=>'main_sd_depts',
 	                                                     'field'=>'service_desk_name',
 	                                                     'exclude'=>'id!="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('id').'" AND isactive=1',    
 	
-	                                                      ) ) );
+	                                                      ] ) );
 		$servicedeskdepartment->getValidator('Db_NoRecordExists')->setMessage('Category name already exists.');	
 
 		$description = new Zend_Form_Element_Textarea('description');
@@ -59,7 +59,7 @@ class Default_Form_servicedeskdepartment extends Zend_Form
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 
-		 $this->addElements(array($id,$servicedeskdepartment,$description,$submit));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 $this->addElements([$id,$servicedeskdepartment,$description,$submit]);
+         $this->setElementDecorators(['ViewHelper']); 
 	}
 }

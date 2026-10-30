@@ -65,7 +65,7 @@ class Default_Form_Groups extends Zend_Form
             ? 'Please select privileges other than time management.'
             : 'Please select privileges.';
 
-        $prev_cnt->addValidator('NotEmpty', false, array('messages' => $privMsg));
+        $prev_cnt->addValidator('NotEmpty', false, ['messages' => $privMsg]);
 
         /* --------------------------------------------------------------
          * 2. Text Elements
@@ -74,36 +74,36 @@ class Default_Form_Groups extends Zend_Form
         // Group Name
         $name = new Zend_Form_Element_Text('name');
         $name->setLabel('Group Name')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '100'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '100'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', true, array('messages' => 'Name is required.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Name is required.']);
 
         // Logic for unique check (Exclude current ID if editing)
-        $nameValidator = new Zend_Validate_Db_NoRecordExists(array(
+        $nameValidator = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_group',
             'field'   => 'name',
-            'exclude' => ($idVal > 0) ? array('field' => 'id', 'value' => $idVal) : null
-        ));
+            'exclude' => ($idVal > 0) ? ['field' => 'id', 'value' => $idVal] : null
+        ]);
         $nameValidator->setMessage('This group name already exists.');
         $name->addValidator($nameValidator);
 
         // Group Code
         $code = new Zend_Form_Element_Text('code');
         $code->setLabel('Group Code')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '60'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '60'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', true, array('messages' => 'Code is required.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Code is required.']);
 
         // Unique Check for Code
-        $codeValidator = new Zend_Validate_Db_NoRecordExists(array(
+        $codeValidator = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_group',
             'field'   => 'code',
-            'exclude' => ($idVal > 0) ? array('field' => 'id', 'value' => $idVal) : null
-        ));
+            'exclude' => ($idVal > 0) ? ['field' => 'id', 'value' => $idVal] : null
+        ]);
         $codeValidator->setMessage('This group code already exists.');
         $code->addValidator($codeValidator);
         
@@ -114,7 +114,7 @@ class Default_Form_Groups extends Zend_Form
             ->setRequired(true);
 
         // Populate options 1 to 100
-        $orderOptions = array();
+        $orderOptions = [];
         for ($i = 1; $i <= 100; $i++) {
             $orderOptions[$i] = $i;
         }
@@ -126,10 +126,10 @@ class Default_Form_Groups extends Zend_Form
 
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Description')
-            ->setAttribs(array(
+            ->setAttribs([
                 'class' => 'formDataElement fck_editor_height',
                 'rows'  => '4'
-            ))
+            ])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -165,7 +165,7 @@ class Default_Form_Groups extends Zend_Form
          * Build Form
          * -------------------------------------------------------------- */
 
-        $this->addElements(array(
+        $this->addElements([
             $idElement,
             $prev_cnt,
             $name,
@@ -174,9 +174,9 @@ class Default_Form_Groups extends Zend_Form
             $description,
             $isactive,
             $submit
-        ));
+        ]);
 
         // Set Standard Decorators
-        $this->setElementDecorators(array('ViewHelper'));
+        $this->setElementDecorators(['ViewHelper']);
     }
 }

@@ -43,8 +43,8 @@ class Default_AppraisalratingsController extends Zend_Controller_Action
             $loginuserGroup = $auth->getStorage()->read()->group_id;
         }	
     	$errorMsg = '';
-    	$msgarray = array();
-    	$bunitdataArr = array();
+    	$msgarray = [];
+    	$bunitdataArr = [];
     	$flag = '';
     	$implementationflag = '';
         $appInitModel = new Default_Model_Appraisalinit();
@@ -58,9 +58,9 @@ class Default_AppraisalratingsController extends Zend_Controller_Action
 		$objname = $this->_getParam('objname');
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 		if($refresh == 'refresh')
 		{
@@ -107,9 +107,9 @@ class Default_AppraisalratingsController extends Zend_Controller_Action
         $appInitModel = new Default_Model_Appraisalinit();
         $appraisalratingsmodel = new Default_Model_Appraisalratings();
         $employeeIds = '';
-        $msgarray = array();
-        $check = array();
-        $checkActiveApp = array();
+        $msgarray = [];
+        $check = [];
+        $checkActiveApp = [];
         $appraisal_rating = '';
         $errorMsg = '';
 		$checkActiveApp = $appInitModel->checkAppraisalExists($businessunit_id,$department_id,$performanceappflag);
@@ -157,7 +157,7 @@ class Default_AppraisalratingsController extends Zend_Controller_Action
 		}
 		$callval = $this->getRequest()->getParam('call');
 		$errorMsg = '';
-		$msgarray = array();
+		$msgarray = [];
 		$buOptions = '';
         $deptOptions = '';
         $performanceappflag = '';
@@ -169,7 +169,7 @@ class Default_AppraisalratingsController extends Zend_Controller_Action
 			$checkActiveApp = $appInitModel->checkAppraisalExists($businessUnit,$department);
 			if(count($checkActiveApp) > 0)
 			{
-				$checkActiveApp = !empty($checkActiveApp[0])?$checkActiveApp[0]:array();
+				$checkActiveApp = !empty($checkActiveApp[0])?$checkActiveApp[0]:[];
 				$config_id = !empty($checkActiveApp['id'])?$checkActiveApp['id']:0;
 				$appraisalratingsmodel = new Default_Model_Appraisalratings();
 				//Using configuration Id getting appraisal settings data 
@@ -202,7 +202,7 @@ class Default_AppraisalratingsController extends Zend_Controller_Action
 					$department = $checkActiveApp['department_id'];
 					$optionsArray = $this->buildoptions($businessUnit,$department);
 					$buOptions = $optionsArray['buoptions'];
-					$deptOptions = isset($optionsArray['deptoptions'])?$optionsArray['deptoptions']:'';
+					$deptOptions = $optionsArray['deptoptions'] ?? '';
 					/* End */
 					$performanceappflag = ($department == '') ? 1:0; //performanceappflag is assigning based on initialization table
 					$this->view->performanceappflag = $performanceappflag;	
@@ -226,7 +226,7 @@ class Default_AppraisalratingsController extends Zend_Controller_Action
         	$bunitModel = new Default_Model_Businessunits();
         	$flag = 1;
 			//$bunitdataArr = $bunitModel->fetchAll('isactive=1','unitname')->toArray();
-			$bunitdataArr = $appInitModel->getbusinnessunits_initialized('');
+			$bunitdataArr = $appInitModel->getbusinnessunits_initialized();
 			$this->view->bunitdataarr = $bunitdataArr;
 			$this->view->flag = $flag;
         	if($this->getRequest()->getPost())
@@ -348,7 +348,7 @@ class Default_AppraisalratingsController extends Zend_Controller_Action
 						
 		}
 		$appInitModel = new Default_Model_Appraisalinit();
-		$msgarray = array();
+		$msgarray = [];
 		$buOptions = '';
         $deptOptions = '';
 		if($id == '')
@@ -386,7 +386,7 @@ class Default_AppraisalratingsController extends Zend_Controller_Action
 							$performanceappflag = ($department == '') ? 1:0; //performanceappflag is assigning based on initialization table
 							$optionsArray = $this->buildoptions($businessUnit,$department,$performanceappflag);
 							$buOptions = $optionsArray['buoptions'];
-							$deptOptions = isset($optionsArray['deptoptions'])?$optionsArray['deptoptions']:'';
+							$deptOptions = $optionsArray['deptoptions'] ?? '';
 							/* End */
 							$this->view->performanceappflag = $performanceappflag;	
 							$this->view->buOptions = $buOptions;
@@ -428,7 +428,7 @@ class Default_AppraisalratingsController extends Zend_Controller_Action
         	$deptOptions = '';
         	$businessUnitId = '';
         	$department = '';
-        	$deptArr = array();
+        	$deptArr = [];
         	$flag = 2;
         	$appraisaldataArr = $appInitModel->getAppDataById($id);
         	if(!empty($appraisaldataArr))
@@ -438,7 +438,7 @@ class Default_AppraisalratingsController extends Zend_Controller_Action
         		$performanceappflag = ($departmentId == '') ? 1:0;
         		$optionsArray = $this->buildoptions($businessUnitId,$departmentId,$performanceappflag);
         		$buOptions = $optionsArray['buoptions'];
-        		$deptOptions = isset($optionsArray['deptoptions'])?$optionsArray['deptoptions']:'';
+        		$deptOptions = $optionsArray['deptoptions'] ?? '';
         	}
         	if($this->getRequest()->getPost())
 			{
@@ -476,7 +476,7 @@ class Default_AppraisalratingsController extends Zend_Controller_Action
 				}
 			}
 		//}
-		return array('buoptions' => $buOptions,'deptoptions'=> $deptOptions);		
+		return ['buoptions' => $buOptions,'deptoptions'=> $deptOptions];		
 	}	
 	   
 	public function save($appraisalratingsform)
@@ -502,11 +502,11 @@ class Default_AppraisalratingsController extends Zend_Controller_Action
         	$department = $this->_request->getParam('departmentid');
         }
 		$res = $app_init_model->checkAppraisalExists($businessUnit,$department);
-		$implementation = isset($res[0]['performance_app_flag'])?$res[0]['performance_app_flag']:NULL;
+		$implementation = $res[0]['performance_app_flag'] ?? NULL;
 		$rating_type  = !empty($res[0]['appraisal_ratings'])?$res[0]['appraisal_ratings']:NULL;
 		$configured_id  = 0;
-		$msgarray = array();
-		$resultArr = array();
+		$msgarray = [];
+		$resultArr = [];
 		$errorflag = "true";
 		$id = $this->_request->getParam('id');
 		$dept_id = $this->_request->getParam('departmentid');
@@ -525,16 +525,16 @@ class Default_AppraisalratingsController extends Zend_Controller_Action
 	            	$rating_text =  $this->_request->getParam('rating_text_'.($i+1));
 	            	$update_id = $this->_request->getParam('update_id_'.($i+1));
 	            	/* for Update record  */
-					$where = array('id=?'=>$update_id);
+					$where = ['id=?'=>$update_id];
 					$actionflag = 2; 
 					$tableid  = '';
-					$data = array(
+					$data = [
 			            		 'rating_text'=> $rating_text,
 								 'modifiedby_role' => $loginRole,
 								 'modifiedby_group' => $loginGroup,
 			                	 'modifiedby'=>$loginUserId,
 							  	 'modifieddate'=>gmdate("Y-m-d H:i:s"),
-					 			  );;
+					 			  ];;
 					$Id = $appraisalratingsmodel->SaveorUpdateAppraisalRatingsData($data, $where);
 				}
             }
@@ -544,7 +544,7 @@ class Default_AppraisalratingsController extends Zend_Controller_Action
 				{
 					$rating_text =  $this->_request->getParam('rating_text_'.$i);
 					$tableid  = '';
-					$data = array(
+					$data = [
 						'pa_configured_id'=>$configured_id, 
 						'pa_initialization_id' => $appraisalid,	
 						'rating_type'=>$rating_type,
@@ -559,7 +559,7 @@ class Default_AppraisalratingsController extends Zend_Controller_Action
 						'createdby' => $loginUserId,
 						'createddate' => gmdate("Y-m-d H:i:s"),
 						'isactive' => 1
-					);
+					];
 					$where = '';
 					$actionflag = 1;
 					$Id = $appraisalratingsmodel->SaveorUpdateAppraisalRatingsData($data, $where);
@@ -568,12 +568,12 @@ class Default_AppraisalratingsController extends Zend_Controller_Action
 			if($Id == 'update')
 			{
 				$tableid = $id;
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Ratings updated successfully."));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Ratings updated successfully."]);
 			}   
 			else
 			{
 				$tableid = $Id; 	
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Ratings added successfully."));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Ratings added successfully."]);
 			}	
 			/*
 			 *   Logs Storing
@@ -608,7 +608,7 @@ class Default_AppraisalratingsController extends Zend_Controller_Action
 			$dept_str = ($dept == '') ? " ":"and department <b>$dept</b> "; 
 			$emp_id_str = ($loginRole == SUPERADMINROLE) ? " ":"($loginUserEmpId)";
 			//Preparing Employee array for Bcc
-			$empArr = array();
+			$empArr = [];
 			if(!empty($employeeDetailsArr))
 			{
 				$empArrList = '';

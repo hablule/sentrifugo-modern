@@ -58,53 +58,53 @@ class Default_Form_Remunerationbasis extends Zend_Form
          * 2. Text Elements
          * -------------------------------------------------------------- */
 
-		$ssotRegexValidator = array(
+		$ssotRegexValidator = [
 			'Regex',
 			true,
-			array(
+			[
 				'pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9 ]*)$/',
-				'messages' => array(
+				'messages' => [
 					Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space or contain special characters.'
-				)
-			)
-		);
+				]
+			]
+		];
 
 		// Code
 		$code = new Zend_Form_Element_Text('code');
 		$code->setLabel('Remuneration Code')
-			->setAttribs(array('class' => 'formDataElement', 'maxlength' => '60', 'placeholder' => 'e.g., SALARY, HOURLY'))
+			->setAttribs(['class' => 'formDataElement', 'maxlength' => '60', 'placeholder' => 'e.g., SALARY, HOURLY'])
 			->setRequired(true)
 			->addFilter('StringTrim')
 			->addFilter('StripTags')
 			->addFilter('StringToUpper')
-			->addValidator('NotEmpty', false, array('messages' => 'Please enter a remuneration code.'))
-			->addValidator('StringLength', false, array('max' => 60))
+			->addValidator('NotEmpty', false, ['messages' => 'Please enter a remuneration code.'])
+			->addValidator('StringLength', false, ['max' => 60])
 			->addValidator($ssotRegexValidator[0], $ssotRegexValidator[1], $ssotRegexValidator[2]);
 
-		$codeVal = new Zend_Validate_Db_NoRecordExists(array(
+		$codeVal = new Zend_Validate_Db_NoRecordExists([
 			'table'   => 'main_remunerationbasis',
 			'field'   => 'code',
-			'exclude' => ($idVal > 0) ? array('field' => 'id', 'value' => $idVal) : null
-		));
+			'exclude' => ($idVal > 0) ? ['field' => 'id', 'value' => $idVal] : null
+		]);
 		$codeVal->setMessage('This remuneration code already exists.');
 		$code->addValidator($codeVal);
 
 		// Name
 		$name = new Zend_Form_Element_Text('name');
 		$name->setLabel('Remuneration Basis Name')
-			->setAttribs(array('class' => 'formDataElement', 'maxlength' => '100', 'placeholder' => 'e.g., Fixed Salary, Hourly Wage'))
+			->setAttribs(['class' => 'formDataElement', 'maxlength' => '100', 'placeholder' => 'e.g., Fixed Salary, Hourly Wage'])
 			->setRequired(true)
 			->addFilter('StringTrim')
 			->addFilter('StripTags')
-			->addValidator('NotEmpty', false, array('messages' => 'Please enter a remuneration name.'))
-			->addValidator('StringLength', false, array('max' => 100))
+			->addValidator('NotEmpty', false, ['messages' => 'Please enter a remuneration name.'])
+			->addValidator('StringLength', false, ['max' => 100])
 			->addValidator($ssotRegexValidator[0], $ssotRegexValidator[1], $ssotRegexValidator[2]);
 
-		$nameVal = new Zend_Validate_Db_NoRecordExists(array(
+		$nameVal = new Zend_Validate_Db_NoRecordExists([
 			'table'   => 'main_remunerationbasis',
 			'field'   => 'name',
-			'exclude' => ($idVal > 0) ? array('field' => 'id', 'value' => $idVal) : null
-		));
+			'exclude' => ($idVal > 0) ? ['field' => 'id', 'value' => $idVal] : null
+		]);
 		$nameVal->setMessage('This remuneration name already exists.');
 		$name->addValidator($nameVal);
 
@@ -115,12 +115,12 @@ class Default_Form_Remunerationbasis extends Zend_Form
 		$calculation_method = new Zend_Form_Element_Select('calculation_method');
 		$calculation_method->setLabel('Payroll Calculation Method')
 			->setAttrib('class', 'formDataElement')
-			->addMultiOptions(array(
+			->addMultiOptions([
 				'FIXED_SALARY'    => 'Fixed Salary (Prorated automatically by pay frequency)',
 				'HOURLY_RATE'     => 'Hourly Wage (Calculated from approved T&A hours)',
 				'PIECE_RATE'      => 'Piece Rate (Units completed injection)',
 				'COMMISSION_ONLY' => 'Commission Only (Sales incentive injection)'
-			))
+			])
 			->setRequired(true)
 			->setValue('FIXED_SALARY');
 
@@ -130,7 +130,7 @@ class Default_Form_Remunerationbasis extends Zend_Form
 
 		$description = new Zend_Form_Element_Textarea('description');
 		$description->setLabel('Description')
-			->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+			->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
 			->addFilter('StringTrim')
 			->addFilter('StripTags');
 
@@ -150,7 +150,7 @@ class Default_Form_Remunerationbasis extends Zend_Form
 
 		$submit = new Zend_Form_Element_Submit('submit');
 		$submit->setLabel('Save')
-			->setAttribs(array('id' => 'submitbutton', 'class' => 'actbtn_btn'));
+			->setAttribs(['id' => 'submitbutton', 'class' => 'actbtn_btn']);
 
 		$urlAction  = "'remunerationbasis/save/format/json'";
 		$jsFunction = "'redirecttocontroller(\\'remunerationbasis\\');'";
@@ -159,7 +159,7 @@ class Default_Form_Remunerationbasis extends Zend_Form
 		/* --------------------------------------------------------------
          * Build Form
          * -------------------------------------------------------------- */
-		$this->addElements(array(
+		$this->addElements([
 			$idElement,
 			$code,
 			$name,
@@ -167,11 +167,11 @@ class Default_Form_Remunerationbasis extends Zend_Form
 			$description,
 			$isactive,
 			$submit
-		));
+		]);
 
 		$this->clearDecorators();
 		foreach ($this->getElements() as $element) {
-			$element->setDecorators(array('ViewHelper'));
+			$element->setDecorators(['ViewHelper']);
 		}
 	}
 }

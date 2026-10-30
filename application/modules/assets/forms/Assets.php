@@ -40,7 +40,7 @@ class Assets_Form_Assets extends Zend_Form
 		$assetcategory_id->setLabel('Category');
 		$assetcategory_id->setRequired(TRUE);
 		$assetcategory_id->addMultiOption('','Select Asset Category');
-		$assetcategory_id->addValidator('NotEmpty', true, array('messages' => 'Please select Asset category.')); 
+		$assetcategory_id->addValidator('NotEmpty', true, ['messages' => 'Please select Asset category.']); 
 		$AssetCategoriesModel = new Assets_Model_Assetcategory();	
 		$catData = $AssetCategoriesModel->fetchAll('isactive="Y" ','name');
 		foreach ($catData as $cat){
@@ -52,7 +52,7 @@ class Assets_Form_Assets extends Zend_Form
 		$assettype_id->setLabel('Type');
 		$assettype_id->setRequired(TRUE);
 		$assettype_id->addMultiOption('','Select Asset Type');
-		$assettype_id->addValidator('NotEmpty', true, array('messages' => 'Please select Asset type.')); 
+		$assettype_id->addValidator('NotEmpty', true, ['messages' => 'Please select Asset type.']); 
 		$AssetCategoriesModel2 = new Assets_Model_Assettype();	
 		$catData2 = $AssetCategoriesModel2->fetchAll('isactive="Y" ','name');
 		foreach ($catData2 as $cat2){
@@ -63,7 +63,7 @@ class Assets_Form_Assets extends Zend_Form
 		$uom_id->setLabel('UOM');
 		$uom_id->setRequired(TRUE);
 		$uom_id->addMultiOption('','Select Uom');
-		$uom_id->addValidator('NotEmpty', true, array('messages' => 'Please select Uom.')); 
+		$uom_id->addValidator('NotEmpty', true, ['messages' => 'Please select Uom.']); 
 		$AssetCategoriesModel3 = new Assets_Model_Uom();	
 		$catData3 = $AssetCategoriesModel3->fetchAll('isactive="Y" ','name');
 		foreach ($catData3 as $cat3){
@@ -73,12 +73,12 @@ class Assets_Form_Assets extends Zend_Form
         $Text0 = new Zend_Form_Element_Text("name");
 		$Text0->setLabel('Name');
 
-        $Text0->addValidator('NotEmpty',false,array('messages'=>'Name required'));
+        $Text0->addValidator('NotEmpty',false,['messages'=>'Name required']);
         $Text0->setRequired(true);
         $Text1 = new Zend_Form_Element_Text("code");
 		$Text1->setLabel('Code');
 
-        $Text1->addValidator('NotEmpty',false,array('messages'=>'Code required'));
+        $Text1->addValidator('NotEmpty',false,['messages'=>'Code required']);
         $Text1->setRequired(true);
         
         $Text2 = new Zend_Form_Element_Text("description");
@@ -90,10 +90,10 @@ class Assets_Form_Assets extends Zend_Form
         $isactive->setRequired(true);
 
         $Text1->addValidator(new Zend_Validate_Db_NoRecordExists(
-            array('table'=>'main_asset',
+            ['table'=>'main_asset',
                       'field'=>'code',
                     'exclude'=>'asset_id!="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('id').'"',    
-               ) )  
+               ] )  
         );
         
         $Text1->getValidator('Db_NoRecordExists')->setMessage('Code already exists.');
@@ -105,13 +105,13 @@ class Assets_Form_Assets extends Zend_Form
 		$submit->setLabel('Save');
 
 		$this->addElements(
-						array
-								(
+						
+								[
 								$id,$Text0, $Text1,$Text2,
 								$isactive,$assetcategory_id,$assettype_id,$uom_id,$submit
-								)
+								]
 							);
-        $this->setElementDecorators(array('ViewHelper')); 
+        $this->setElementDecorators(['ViewHelper']); 
 	
 	}
 	

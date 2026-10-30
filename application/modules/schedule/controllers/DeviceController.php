@@ -24,9 +24,9 @@ class Schedule_DeviceController extends Zend_Controller_Action
 			$refresh = $this->_getParam('refresh');
 			$dashboardcall = $this->_getParam('dashboardcall');
 
-			$data = array();
+			$data = [];
 			$searchQuery = '';
-			$searchArray = array();
+			$searchArray = [];
 			$tablecontent = '';
 
 			if ($refresh == 'refresh') {
@@ -89,20 +89,20 @@ class Schedule_DeviceController extends Zend_Controller_Action
 				$where = 'id = '.$id;
 				Zend_Debug::dump($deviceForm->isValid($this->getRequest()->getPost()));die;
 				if($deviceForm->isValid($this->getRequest()->getPost())){
-					$data = array(
+					$data = [
 						"device_model"=>$this->getRequest()->getParam('device_name'),
 						"device_ip"=>$this->getRequest()->getParam('device_ip'),
 						"device_port"=>$this->getRequest()->getParam('device_port'),
 						"connection_mode"=>$this->getRequest()->getParam('connection_mode'),
-					);
+					];
 					Zend_Debug::dump($data);die;
 					$deviceModel->saveDevice($data, $where);
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Device Updated Successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Device Updated Successfully."]);
 					$this->_redirect('schedule/device');
 				}
 			}
 			else{
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("error" => "Cannot Update Device. Please try again."));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["error" => "Cannot Update Device. Please try again."]);
 			}
 		}
 		$this->view->form = $deviceForm;
@@ -158,7 +158,7 @@ class Schedule_DeviceController extends Zend_Controller_Action
 		$call = $this->_getParam('call');
 		$dashboardcall = $this->_getParam('dashboardcall');
 		$deviceModel->deleteDevice($objID);
-		$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Device Deleted Successfully."));
+		$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Device Deleted Successfully."]);
 		if ($dashboardcall == 'Yes')
 			$this->_redirect('schedule/device/dashboardcall');
 		else

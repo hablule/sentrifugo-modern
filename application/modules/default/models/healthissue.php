@@ -13,10 +13,10 @@ class Default_Model_healthissue extends Zend_Db_Table_Abstract{
 
         $bank = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('hi'=>'main_healthissue'),array('hi.*','hi.healthissue_id as id','if(hi.isactive="Y","Yes","No") as isactive'))
-            ->join(array('hs'=>'main_healthseverity'),'hi.healthseverity_id = hs.healthseverity_id',array('hs.name as severity_name'))
-            ->join(array('hit'=>'main_healthissuetype'),'hit.issuetype_id = hi.issuetype_id',array('hit.name as issue_name'))
-            ->join(array('isc'=>'main_healthissuecategory'),'hi.issuecategory_id=isc.issuecategory_id',array('isc.name as isc_name'))
+            ->from(['hi'=>'main_healthissue'],['hi.*','hi.healthissue_id as id','if(hi.isactive="Y","Yes","No") as isactive'])
+            ->join(['hs'=>'main_healthseverity'],'hi.healthseverity_id = hs.healthseverity_id',['hs.name as severity_name'])
+            ->join(['hit'=>'main_healthissuetype'],'hit.issuetype_id = hi.issuetype_id',['hit.name as issue_name'])
+            ->join(['isc'=>'main_healthissuecategory'],'hi.issuecategory_id=isc.issuecategory_id',['isc.name as isc_name'])
             ->where($where)
             ->order("$by $sort")
             ->limitPage($pageNo, $perPage);
@@ -26,7 +26,7 @@ class Default_Model_healthissue extends Zend_Db_Table_Abstract{
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $a = '', $b = '', $c = '', $d = '')
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
             foreach ($searchValues as $key => $val) {
@@ -51,7 +51,7 @@ class Default_Model_healthissue extends Zend_Db_Table_Abstract{
             $searchQuery = rtrim($searchQuery, " AND");
         }
         $objName = 'healthissue';
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
 
             'name' => 'Name',
@@ -60,30 +60,30 @@ class Default_Model_healthissue extends Zend_Db_Table_Abstract{
             'issue_name' => 'Issue type',
             'isc_name'=>'Issue category',
             'isactive'=>'Active'
-        );
+        ];
 
         $tablecontent = $this->getData($sort, $by, $pageNo, $perPage, $searchQuery);
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
             'perPage' => $perPage,
             'tablecontent' => $tablecontent,
             'objectname' => $objName,
-            'extra' => array(),
+            'extra' => [],
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
             'jsFillFnName' => '',
             'searchArray' => $searchArray,
             'call' => $call,
             'dashboardcall' => $dashboardcall,
-            'search_filters' => array(
+            'search_filters' => [
             
-                'isactive' => array(
+                'isactive' => [
                     'type' => 'select',
-                    'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-    )
-        );
+                    'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+    ]
+        ];
         return $dataTmp;
     }
 

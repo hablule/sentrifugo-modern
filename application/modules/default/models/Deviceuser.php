@@ -14,8 +14,8 @@ class Default_Model_Deviceuser extends Zend_Db_Table_Abstract{
 
         $dependencyData = $this->select()
                         ->setIntegrityCheck(false)
-                        ->from(array('d'=>'main_device_users'),array('user_id as id','firstname'=>'firstname','middlename'=>'middlename','relationship_id'=>'relationship_id','dateofbirth'=>'DATE_FORMAT(dateofbirth,"'.DATEFORMAT_MYSQL.'")'))
-                        ->join(array('r'=>'main_relationship'),'r.relationship_id = d.relationship_id')
+                        ->from(['d'=>'main_device_users'],['user_id as id','firstname'=>'firstname','middlename'=>'middlename','relationship_id'=>'relationship_id','dateofbirth'=>'DATE_FORMAT(dateofbirth,"'.DATEFORMAT_MYSQL.'")'])
+                        ->join(['r'=>'main_relationship'],'r.relationship_id = d.relationship_id')
                        ->where($where)
                        ->order("$by $sort") 
                        ->limitPage($pageNo, $perPage);

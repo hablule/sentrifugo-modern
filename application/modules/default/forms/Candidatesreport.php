@@ -36,7 +36,7 @@ class Default_Form_Candidatesreport extends Zend_Form{
         $cand_status = new Zend_Form_Element_Select("cand_status");
         $cand_status->setRegisterInArrayValidator(false);
         $cand_status->addMultiOptions(
-        	array(
+        	[
         		'' => 'Select Candidate Status',
 	        	'Shortlisted' => 'Shortlisted',
 	        	'Selected' => 'Selected',
@@ -47,7 +47,7 @@ class Default_Form_Candidatesreport extends Zend_Form{
 	        	'Not Scheduled' => 'Not Scheduled',
 	        	'Recruited' => 'Recruited',
 	        	'Requisition Closed/Completed' => 'Requisition Closed/Completed'
-        	)
+        	]
         );
         $cand_status->setLabel("Candidate Status");
         $cand_status->setAttrib('title', 'Candidate Status');
@@ -57,7 +57,7 @@ class Default_Form_Candidatesreport extends Zend_Form{
         $submit->setAttrib('id', 'idsubmitbutton');
         $submit->setLabel('Report'); 
         
-        $this->addElements(array($requisition_code, $cand_status, $submit));
-        $this->setElementDecorators(array('ViewHelper'));
+        $this->addElements([$requisition_code, $cand_status, $submit]);
+        $this->setElementDecorators(['ViewHelper']);
     }
 }

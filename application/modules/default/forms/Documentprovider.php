@@ -12,7 +12,7 @@ $id = new Zend_Form_Element_Hidden("id");
 $selected_option = Zend_Controller_Front::getInstance()->getRequest()->getParam('selected_option',null);
 
 $country = new Zend_Form_Element_Select("country");
-$country->addValidator('NotEmpty',false,array('messages'=>'Select country'));
+$country->addValidator('NotEmpty',false,['messages'=>'Select country']);
 $country->setRegisterInArrayValidator(false);
 $country->setLabel("Country");		
 $country->setAttrib("class", "formDataElement"); 
@@ -23,7 +23,7 @@ if($selected_option == 'fill-up-form'){
     // $country->setRequired(true);
 }
 // $country->setRequired(true);
-$country->addValidator('NotEmpty', false, array('messages' => 'Please select country.'));
+$country->addValidator('NotEmpty', false, ['messages' => 'Please select country.']);
 $state = new Zend_Form_Element_Select("state");
 $state->setRegisterInArrayValidator(false);
 
@@ -31,8 +31,8 @@ if($selected_option == 'fill-up-form'){
     // $state->setRequired(true);
 }
 
-$state->addValidator('NotEmpty', false, array('messages' => 'Please select state.')); 
-$state->addMultiOptions(array(''=>'Select State'));
+$state->addValidator('NotEmpty', false, ['messages' => 'Please select state.']); 
+$state->addMultiOptions([''=>'Select State']);
 $state->setLabel("State");		
 $state->setAttrib("class", "formDataElement"); 
 $state->setAttrib('onchange', 'displayParticularCity_normal(this,"","city","")');
@@ -41,7 +41,7 @@ $state->setAttrib('title', 'State');
 
 $city = new Zend_Form_Element_Select("city");
 $city->setRegisterInArrayValidator(false);
-$city->addMultiOptions(array(''=>'Select City'));
+$city->addMultiOptions([''=>'Select City']);
 $city->setLabel("City");		
 $city->setAttrib("class", "formDataElement");         
 $city->setAttrib('title', 'City');
@@ -50,13 +50,13 @@ if($selected_option == 'fill-up-form'){
     // $city->setRequired(true);
 }
 
-$city->addValidator('NotEmpty', false, array('messages' => 'Please select city.'));
+$city->addValidator('NotEmpty', false, ['messages' => 'Please select city.']);
 $city->setRequired(true);
 $Text1 = new Zend_Form_Element_Text("code");
-$Text1->addValidator('NotEmpty',false,array('messages'=>'value required'));
+$Text1->addValidator('NotEmpty',false,['messages'=>'value required']);
 $Text1->setRequired(true);
 $Text0= new Zend_Form_Element_Text("name");
-$Text0->addValidator('NotEmpty',false,array('messages'=>'name required'));
+$Text0->addValidator('NotEmpty',false,['messages'=>'name required']);
 $Text0->setRequired(true);
 
 $Text2 = new Zend_Form_Element_Text("description");
@@ -65,17 +65,17 @@ $CheckBox3 = new Zend_Form_Element_Checkbox("isactive");
 $CheckBox3->setValue(1);
 $Submit4 = new Zend_Form_Element_Submit("submit");
 $Text1->addValidator(new Zend_Validate_Db_NoRecordExists(
-    array('table'=>'main_iddocumentprovider',
+    ['table'=>'main_iddocumentprovider',
               'field'=>'code',
             'exclude'=>'iddocumentprovider_id!="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('id').'"',    
-       ) )  
+       ] )  
 );
 
 $Text1->getValidator('Db_NoRecordExists')->setMessage('code already exists.');
 $Text1 ->setAttrib('maxlength', '25');
 $Text0 ->setAttrib('maxlength', '60');
-$this->addElements(array($id,$country,$state,$city,$Text0,$Text1,$Text2,$CheckBox3,$Submit4));
-$this->setElementDecorators(array('ViewHelper')); 
+$this->addElements([$id,$country,$state,$city,$Text0,$Text1,$Text2,$CheckBox3,$Submit4]);
+$this->setElementDecorators(['ViewHelper']); 
 } 
  } 
  ?>

@@ -36,9 +36,9 @@ class Default_Model_Empholidays extends Zend_Db_Table_Abstract
 
         $bank = $this->select()
         ->setIntegrityCheck(false)
-        ->from(array('eh' => 'main_empholiday'), array('id' => 'eh.empholiday_id', 'description' => 'eh.description','isactive'=>'if(eh.isactive="N","No","Yes")'))
-        ->joinLeft(array('h' => 'main_holidaydates'), "h.holiday_id = eh.holiday_id ", array('holidayname' => 'h.name'))
-        ->joinLeft(array('hc' => 'main_holidaycategory'), "hc.holidaycategory_id = eh.holidaycategory_id ", array('categoryname' => 'hc.name'))
+        ->from(['eh' => 'main_empholiday'], ['id' => 'eh.empholiday_id', 'description' => 'eh.description','isactive'=>'if(eh.isactive="N","No","Yes")'])
+        ->joinLeft(['h' => 'main_holidaydates'], "h.holiday_id = eh.holiday_id ", ['holidayname' => 'h.name'])
+        ->joinLeft(['hc' => 'main_holidaycategory'], "hc.holidaycategory_id = eh.holidaycategory_id ", ['categoryname' => 'hc.name'])
         ->order("$by $sort")
         ->where($where)
         ->limitPage($pageNo, $perPage);
@@ -50,8 +50,8 @@ class Default_Model_Empholidays extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $exParam1 , $exParam2 = '', $exParam3 = '', $exParam4 = '')
     {
 		$searchQuery = '';
-		$searchArray = array();
-		$data = array();
+		$searchArray = [];
+		$data = [];
 	
 
 		if ($searchData != '' && $searchData != 'undefined') {
@@ -83,7 +83,7 @@ class Default_Model_Empholidays extends Zend_Db_Table_Abstract
 			$searchQuery = rtrim($searchQuery, " AND");
 		}
         $objName = 'empholidays';
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'holidayname' => 'Holiday Name',
             'categoryname' => 'Holiday Category',
@@ -91,9 +91,9 @@ class Default_Model_Empholidays extends Zend_Db_Table_Abstract
             'isactive' => 'Active ',
 
 
-        );
+        ];
         $tablecontent = $this->getData($sort, $by, $pageNo, $perPage, $searchQuery, $exParam1);
-        $dataTmp = array(
+        $dataTmp = [
             'userid' => $exParam1,
 			'sort' => $sort,
 			'by' => $by,
@@ -101,7 +101,7 @@ class Default_Model_Empholidays extends Zend_Db_Table_Abstract
 			'perPage' => $perPage,
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getEmployeeAjaxgridData',
 			'jsFillFnName' => '',
@@ -113,12 +113,12 @@ class Default_Model_Empholidays extends Zend_Db_Table_Abstract
 			'call' => $call,
 			'userAction' => $exParam3,	
 
-			'context' => $exParam2,	'search_filters' => array(
-				'isactive' => array(
+			'context' => $exParam2,	'search_filters' => [
+				'isactive' => [
 					'type' => 'select',
-					'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-		),
-        );
+					'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+		],
+        ];
         return $dataTmp;
     }
 	public function getEmpLeavesData($sort, $by, $pageNo, $perPage,$searchQuery,$id)
@@ -130,7 +130,7 @@ class Default_Model_Empholidays extends Zend_Db_Table_Abstract
 		
 		$empskillsData = $this->select()
     					   ->setIntegrityCheck(false)	 
-						   ->from(array('e' => 'main_employeeleaves'),array('id'=>'e.id','leavelimit'=>'e.emp_leave_limit','used_leaves'=>'e.used_leaves','e.alloted_year'))
+						   ->from(['e' => 'main_employeeleaves'],['id'=>'e.id','leavelimit'=>'e.emp_leave_limit','used_leaves'=>'e.used_leaves','e.alloted_year'])
 						   ->where($where)
     					   ->order("$by $sort") 
     					   ->limitPage($pageNo, $perPage);
@@ -142,7 +142,7 @@ class Default_Model_Empholidays extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('el'=>'main_employeeleaves'),array('el.*'))
+						->from(['el'=>'main_employeeleaves'],['el.*'])
 						->where('el.user_id='.$id.' AND el.isactive = 1 AND el.alloted_year = year(now())');
 		
 		return $this->fetchAll($select)->toArray();
@@ -151,9 +151,9 @@ class Default_Model_Empholidays extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 		->setIntegrityCheck(false)
-        ->from(array('eh' => 'main_empholiday'), array('id' => 'eh.empholiday_id', 'description' => 'eh.description','isactive'=>'if(eh.isactive="N","No","Yes")'))
-        ->joinLeft(array('h' => 'main_holidaydates'), "h.holiday_id = eh.holiday_id ", array('holidayname' => 'h.name'))
-        ->joinLeft(array('hc' => 'main_holidaycategory'), "hc.holidaycategory_id = eh.holidaycategory_id ", array('categoryname' => 'hc.name'))
+        ->from(['eh' => 'main_empholiday'], ['id' => 'eh.empholiday_id', 'description' => 'eh.description','isactive'=>'if(eh.isactive="N","No","Yes")'])
+        ->joinLeft(['h' => 'main_holidaydates'], "h.holiday_id = eh.holiday_id ", ['holidayname' => 'h.name'])
+        ->joinLeft(['hc' => 'main_holidaycategory'], "hc.holidaycategory_id = eh.holidaycategory_id ", ['categoryname' => 'hc.name'])
         ->where('eh.empholiday_id='.$id);
 		
 		return $this->fetchAll($select)->toArray();
@@ -193,7 +193,7 @@ class Default_Model_Empholidays extends Zend_Db_Table_Abstract
 	{
 		$result =  $this->select()
     				->setIntegrityCheck(false) 	
-    				->from(array('l'=>'empholiday_summary'),array('l.*'))
+    				->from(['l'=>'empholiday_summary'],['l.*'])
  	  				->where(" l.emp_id = ".$id);
     	return $this->fetchAll($result)->toArray();
 	}

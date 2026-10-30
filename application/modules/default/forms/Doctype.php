@@ -8,15 +8,15 @@ class Default_Form_Doctype extends Zend_Form{
 
         $id = new Zend_Form_Element_Hidden('id');
         $name = new Zend_Form_Element_Text('name');
-        $name->addValidator('NotEmpty',false,array('messages'=>'Type required'));
+        $name->addValidator('NotEmpty',false,['messages'=>'Type required']);
         $name->setRequired(true);
         $name->setLabel("Document Type");
         $name->addValidator(new Zend_Validate_Db_NoRecordExists(
-            array(
+            [
                 'table'=>'main_doctype',
                 'field'=>'name'
 
-            )
+            ]
             ));
         $name->getValidator("Db_NoRecordExists")->setMessage('Name already exists');
         $description = new Zend_Form_Element_Text('description');
@@ -25,8 +25,8 @@ class Default_Form_Doctype extends Zend_Form{
         $isactive->setLabel("Active");
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel("Save");
-		 $this->addElements(array($id, $name,$isactive, $description,$submit));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 $this->addElements([$id, $name,$isactive, $description,$submit]);
+         $this->setElementDecorators(['ViewHelper']); 
     }
 }
 ?>

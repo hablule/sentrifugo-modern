@@ -93,7 +93,7 @@ class Default_WizardController extends Zend_Controller_Action
 			
             if($this->_request->getPost())
             { 
-                $defined_menus = array(TIMEMANAGEMENT,RESOURCEREQUISITION,BGCHECKS,STAFFING,COMPLIANCES,REPORTS,BENEFITS,SERVICEDESK, PERFORMANCEAPPRAISAL);
+                $defined_menus = [TIMEMANAGEMENT,RESOURCEREQUISITION,BGCHECKS,STAFFING,COMPLIANCES,REPORTS,BENEFITS,SERVICEDESK, PERFORMANCEAPPRAISAL];
                 $chk_menu = $this->_request->getParam('chk_menu');// menus to be activate
 				$chk_menu = trim($chk_menu,',');
 				$logmenus = $chk_menu;
@@ -102,7 +102,7 @@ class Default_WizardController extends Zend_Controller_Action
 					$chk_menu = explode(',',$chk_menu);					
 				}
                 else 
-                    $chk_menu = array();
+                    $chk_menu = [];
                 $disable_menus = array_diff($defined_menus, $chk_menu); //menus to be deactivated                              
                 if(!empty($chk_menu))
                 {                                        
@@ -126,11 +126,11 @@ class Default_WizardController extends Zend_Controller_Action
 		             $menuNames = $menumodel->getMenusNamesByIds($logmenus); 
                     
 		             
-	            $logarr = array('userid' => $loginUserId,
+	            $logarr = ['userid' => $loginUserId,
 	                            'recordid' =>$logmenus,
 	                            'childrecordid' => $menuNames,
 	                            'date' => $date->get('yyyy-MM-dd HH:mm:ss')
-	                            );
+	                            ];
 	            $jsonlogarr = json_encode($logarr);
 	            $menuID = MANAGEMODULE;
 	            $actionflag = 2;
@@ -139,10 +139,10 @@ class Default_WizardController extends Zend_Controller_Action
                   $menumodel->addOrUpdateMenuLogManager($menuID,$actionflag,$jsonlogarr,$loginUserId,$menuNames);
                   
                  
-                  	$wizardarray = array('manage_modules' => 2,
+                  	$wizardarray = ['manage_modules' => 2,
                   						 'modifiedby'=>$loginUserId,
                   						'modifieddate'=>gmdate("Y-m-d H:i:s")
-                  					);
+                  					];
 					 if($wizardData['site_config'] == 2 && $wizardData['org_details'] == 2 && $wizardData['departments'] == 2 && $wizardData['servicerequest'] == 2 && $wizardData['businessunit'] == 2&& $wizardData['section'] == 2 && $wizardData['division'] == 2 && $wizardData['project'] == 2 && $wizardData['team'] == 2)
 					 {
 					 	$wizardarray['iscomplete'] = 2;
@@ -214,8 +214,8 @@ class Default_WizardController extends Zend_Controller_Action
             $loginuserRole = $auth->getStorage()->read()->emprole;
             $loginuserGroup = $auth->getStorage()->read()->group_id;
         }
-        $popConfigPermission = array();
-        $msgarray = array();
+        $popConfigPermission = [];
+        $msgarray = [];
 		
         $wizardpreferenceform = new Default_Form_wizardpreference();	
         $dateformatidmodel = new Default_Model_Dateformat();
@@ -227,10 +227,10 @@ class Default_WizardController extends Zend_Controller_Action
         $employmentstatusmodel = new Default_Model_Employmentstatus();
         $statesmodel = new Default_Model_States();
         $citiesmodel = new Default_Model_Cities();
-        $date_formats_arr = array();
-        $time_formats_arr = array();
-        $passworddataArr = array();
-        $currencynameArr = array();
+        $date_formats_arr = [];
+        $time_formats_arr = [];
+        $passworddataArr = [];
+        $currencynameArr = [];
         $countryId = '';
         $stateId = '';
         $cityId = '';  
@@ -268,9 +268,9 @@ class Default_WizardController extends Zend_Controller_Action
             {
             	if(!empty($orginfodata))
                 {
-                	$countryId = isset($orginfodata[0]['country'])?$orginfodata[0]['country']:"";
-                    $stateId = isset($orginfodata[0]['state'])?$orginfodata[0]['state']:"";
-                    $cityId = isset($orginfodata[0]['city'])?$orginfodata[0]['city']:"";
+                	$countryId = $orginfodata[0]['country'] ?? "";
+                    $stateId = $orginfodata[0]['state'] ?? "";
+                    $cityId = $orginfodata[0]['city'] ?? "";
                     $wizardpreferenceform->organisationid->setValue($orginfodata[0]['company_id']);
                 	
                 }else
@@ -284,9 +284,9 @@ class Default_WizardController extends Zend_Controller_Action
                 }
             	if(count($_POST) > 0)
                 {
-                    $countryId = isset($_POST['perm_country'])?$_POST['perm_country']:"";
-                    $stateId = isset($_POST['perm_state'])?$_POST['perm_state']:"";
-                    $cityId = isset($_POST['perm_city'])?$_POST['perm_city']:"";                                    
+                    $countryId = $_POST['perm_country'] ?? "";
+                    $stateId = $_POST['perm_state'] ?? "";
+                    $cityId = $_POST['perm_city'] ?? "";                                    
                 }
                 $date_formats_arr = $dateformatidmodel->getAllDateFormats();
                 
@@ -488,7 +488,7 @@ class Default_WizardController extends Zend_Controller_Action
                 {
                 	
                 	
-                	$othercurrencydata=array('currencyname'=>trim($othercurrencyname),
+                	$othercurrencydata=['currencyname'=>trim($othercurrencyname),
 					                       'currencycode'=>trim($othercurrencycode),
 							  	           'modifiedby'=>$loginUserId,
 								  	       'modifieddate'=>gmdate("Y-m-d H:i:s"),
@@ -498,7 +498,7 @@ class Default_WizardController extends Zend_Controller_Action
                 	                       'createddate'=>gmdate("Y-m-d H:i:s"),
                 		                
                 			
-                	);
+                	];
                 
                 	
                  	$currencywhere = '';
@@ -516,11 +516,11 @@ class Default_WizardController extends Zend_Controller_Action
 				 * Start -  Updating and Inserting Site Preference Data after fetching currency id
 				 */
                         
-                if($id!='')
+                if($id!=0)
                 {
-                    
-                    
-                    $where =array('id'=>$id);
+
+
+                    $where =['id'=>$id];
                    // $actionflag = 2;
                 }
                 else
@@ -528,7 +528,7 @@ class Default_WizardController extends Zend_Controller_Action
                     $where = '';
                     //$actionflag = 1;
                 }
-                $siteprference_data = array( 
+                $siteprference_data = [ 
                                 'dateformatid'=>$dateformatid,
                                 'timeformatid'=>$timeformatid,
                                 'timezoneid'=>$timezoneid,
@@ -541,13 +541,13 @@ class Default_WizardController extends Zend_Controller_Action
                                 'modifiedby'=>$loginUserId,
                                 'modifieddate'=>$date->get('yyyy-MM-dd HH:mm:ss'),
                 				'isactive'=>1,
-                            );
+                            ];
                 
-                $site_update_arr = array(
+                $site_update_arr = [
                                     'isactive' => 0,
                                     'modifieddate'=>$date->get('yyyy-MM-dd HH:mm:ss'),
                                     'modifiedby'=>$loginUserId,                                                
-                                );
+                                ];
                  
                 $systempreferencemodel->SaveorUpdateSystemPreferanceData($site_update_arr, 'isactive = 1'); 
                 $Id = $systempreferencemodel->SaveorUpdateSystemPreferanceData($siteprference_data,$where);
@@ -566,7 +566,7 @@ class Default_WizardController extends Zend_Controller_Action
 	                	$countrynamearr = $countriesmodel->getCountryCode($perm_country);	
 	            		if(!empty($countrynamearr))
 						{
-							 $country_data = array('country'=>trim($countrynamearr[0]['country_name']),
+							 $country_data = ['country'=>trim($countrynamearr[0]['country_name']),
 										           'countrycode'=>trim($countrynamearr[0]['country_code']),
 												  'citizenship'=>NULL,
 							 					  'createdby'=>$loginUserId,
@@ -575,7 +575,7 @@ class Default_WizardController extends Zend_Controller_Action
 												  'modifieddate'=>gmdate("Y-m-d H:i:s"),
 												  'country_id_org'=>$perm_country,
 							 					  'isactive'=>1	
-							);
+							];
 							$Country_Id = $countriesmodel->SaveorUpdateCountryData($country_data, '');
 						}
                 	}
@@ -586,7 +586,7 @@ class Default_WizardController extends Zend_Controller_Action
 					// Inserting into main_cities if not added
 						$City_Id = $citiesmodel->SaveorUpdateCitiesData($perm_country,$perm_state,$perm_cityArr[1],$perm_city,$loginUserId);
                 
-                 	$location_data = array('country'=>$perm_country,
+                 	$location_data = ['country'=>$perm_country,
 					                       'state'=>$perm_state,
 							  	           'city'=>$perm_city,
                  							'createdby'=>$loginUserId,
@@ -594,10 +594,10 @@ class Default_WizardController extends Zend_Controller_Action
                  							'modifiedby'=>$loginUserId,
 								  	       'modifieddate'=>gmdate("Y-m-d H:i:s"),
                  							'isactive'=>1	
-					);
-					if($organisationid !='')
+					];
+					if($organisationid !=0)
 					{
-						$locwhere = array('id=?'=>$organisationid);
+						$locwhere = ['id=?'=>$organisationid];
 						$LocationId = $orgInfoModel->SaveorUpdateData($location_data, $locwhere);
 					}
 						
@@ -610,13 +610,13 @@ class Default_WizardController extends Zend_Controller_Action
 				/*
 				 * Start - Updating Employee Code
 				 */	
-					$empcode_data = array('employee_code'=>trim($employee_code),
+					$empcode_data = ['employee_code'=>trim($employee_code),
 							  	           'modifiedBy'=>$loginUserId,
 								  	       'modifieddate'=>gmdate("Y-m-d H:i:s")
-					);
-					if($empcodeid !='')
+					];
+					if($empcodeid !=0)
 					{
-						$empcodewhere = array('id=?'=>$empcodeid);
+						$empcodewhere = ['id=?'=>$empcodeid];
 					}
 					else
 					{
@@ -636,11 +636,11 @@ class Default_WizardController extends Zend_Controller_Action
 				 */	
 					if(!empty($workcodename))
 					{
-						$empstat_update_arr = array(
+						$empstat_update_arr = [
 				                                    'isactive' => 0,
 				                                    'modifieddate'=>$date->get('yyyy-MM-dd HH:mm:ss'),
 				                                    'modifiedby'=>$loginUserId,                                                
-                                					);
+                                					];
 						$Empstat_update_Id = $employmentstatusmodel->SaveorUpdateEmploymentStatusData($empstat_update_arr, 'isactive=1');
 						                                					
 						for($j=0;$j<sizeof($workcodename);$j++)
@@ -681,14 +681,14 @@ class Default_WizardController extends Zend_Controller_Action
 								        $workcode = 'FT';
 								}	
 								
-								$empstatus_data = array('workcode'=>trim($workcode),
+								$empstatus_data = ['workcode'=>trim($workcode),
 									          'workcodename'=>trim($workcodename[$j]),
 											  'createdby'=>$loginUserId,
 											  'createddate'=>gmdate("Y-m-d H:i:s"),	
 											  'modifiedby'=>$loginUserId,
 											  'modifieddate'=>gmdate("Y-m-d H:i:s"),
 											  'isactive'=>1	
-											);
+											];
 							  $Empstat_Id = $employmentstatusmodel->SaveorUpdateEmploymentStatusData($empstatus_data, '');				
 					   }
 					}
@@ -700,10 +700,10 @@ class Default_WizardController extends Zend_Controller_Action
 				 * Update Wizard Table
 				 */	
 					
-					$wizardarray = array('site_config' => 2,
+					$wizardarray = ['site_config' => 2,
                   						 'modifiedby'=>$loginUserId,
                   						'modifieddate'=>gmdate("Y-m-d H:i:s")
-                  					);
+                  					];
             		if($wizardData['org_details'] == 2 && $wizardData['departments'] == 2 && $wizardData['servicerequest'] == 2)
 					 {
 					 	$wizardarray['iscomplete'] = 2;
@@ -717,7 +717,7 @@ class Default_WizardController extends Zend_Controller_Action
             catch (Exception $e) 
             {
                 $trDb->rollBack();
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Something went wrong,please try again later."));
+                $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Something went wrong,please try again later."]);
                  $this->_redirect('wizard/configuresite');					   
             }
            		
@@ -749,7 +749,7 @@ class Default_WizardController extends Zend_Controller_Action
             $loginuserRole = $auth->getStorage()->read()->emprole;
             $loginuserGroup = $auth->getStorage()->read()->group_id;
         }
-        $popConfigPermission = array();
+        $popConfigPermission = [];
         $new_stateId ='';
 		if(sapp_Global::_checkprivileges(COUNTRIES,$loginuserGroup,$loginuserRole,'add') == 'Yes'){
                 array_push($popConfigPermission,'country');
@@ -760,7 +760,7 @@ class Default_WizardController extends Zend_Controller_Action
 		if(sapp_Global::_checkprivileges(CITIES,$loginuserGroup,$loginuserRole,'add') == 'Yes'){
                 array_push($popConfigPermission,'city');
         }
-        $msgarray = array();
+        $msgarray = [];
         $new_stateId = '';
         $new_cityId = '';
         $id = $this->getRequest()->getParam('id');
@@ -806,9 +806,9 @@ class Default_WizardController extends Zend_Controller_Action
                 $actionpage = 'edit';                
                 if(count($_POST) > 0)
                 {
-                    $countryId = isset($_POST['country'])?$_POST['country']:"";
-                    $stateId = isset($_POST['state'])?$_POST['state']:"";
-                    $cityId = isset($_POST['city'])?$_POST['city']:"";                                    
+                    $countryId = $_POST['country'] ?? "";
+                    $stateId = $_POST['state'] ?? "";
+                    $cityId = $_POST['city'] ?? "";                                    
                 }
                 if($countryId != '')
                 {
@@ -842,7 +842,7 @@ class Default_WizardController extends Zend_Controller_Action
 			   $domaindata=$orgInfoModel->getBusinessdomain();
 			   foreach($domaindata as $domaindatas)
 			   {
-				$form->domain->addMultiOptions(array($domaindatas['id'] => $domaindatas['name']));
+				$form->domain->addMultiOptions([$domaindatas['id'] => $domaindatas['name']]);
 
 			   }
 
@@ -906,7 +906,7 @@ class Default_WizardController extends Zend_Controller_Action
                 if(sizeof($imageArr) > 1)
                 {
                     $imagename = $imageArr[0]; $imageext = $imageArr[1];
-                    $extArr = array('gif', 'jpg', 'jpeg', 'png');
+                    $extArr = ['gif', 'jpg', 'jpeg', 'png'];
                     if(!in_array($imageext, $extArr))
                     {
                         $msgarray['org_image_value'] = 'Please upload an appropriate image file.';
@@ -939,7 +939,7 @@ class Default_WizardController extends Zend_Controller_Action
 				if(!empty($domain))
 				$domain = implode(',',$domain);
 				$date = new Zend_Date();
-				$data = array(
+				$data = [
 							'name'=> trim($this->_request->getParam('organisationname')),
 							'domain' =>trim($domain),
 							'code'=>trim($this->_request->getParam('code')),
@@ -951,7 +951,7 @@ class Default_WizardController extends Zend_Controller_Action
 							'designation' => trim($this->_request->getParam('jobtitle_id',null)),
 							'modifiedby' =>	$loginUserId,
 							'modifieddate' => gmdate("Y-m-d H:i:s")
-						);
+						];
 				
 				$db = Zend_Db_Table::getDefaultAdapter();	
 				$db->beginTransaction();
@@ -979,14 +979,14 @@ class Default_WizardController extends Zend_Controller_Action
 							}
 						}
 					}
-					$where = array('id=?'=>$id);
+					$where = ['id=?'=>$id];
 					if($imagepath == '')
 						unset($data['org_image']);
 					else if($filecopy == 'error')
 						unset($data['org_image']);
 					if($id!='')
 					{
-						$where = array('company_id=?'=>$id);
+						$where = ['company_id=?'=>$id];
 						$actionflag = 2;
 					}
 					else
@@ -1014,22 +1014,22 @@ class Default_WizardController extends Zend_Controller_Action
 					
 					
 					
-					$wizardarray = array('org_details' => 2,
+					$wizardarray = ['org_details' => 2,
                   						 'modifiedby'=>$loginUserId,
                   						'modifieddate'=>gmdate("Y-m-d H:i:s")
-                  					);
+                  					];
 					if($wizardData['site_config'] == 2 && $wizardData['departments'] == 2 && $wizardData['servicerequest'] == 2)
 					 {
 					 	$wizardarray['iscomplete'] = 2;
 					 }                  					
                		$wizard_model->SaveorUpdateWizardData($wizardarray,'');
                		
-               		$location_data = array('country' => trim((int)$this->_request->getParam('country')),
+               		$location_data = ['country' => trim((int)$this->_request->getParam('country')),
 											'state' => trim(intval($this->_request->getParam('state'))),
 											'city' => trim(intval($this->_request->getParam('city'))),
                  							'modifiedby'=>$loginUserId,
 								  	       'modifieddate'=>gmdate("Y-m-d H:i:s"),
-					);
+					];
 					
 				//	$LocationId = $wizard_model->SaveorUpdateWizardData($location_data, '');
 					
@@ -1043,7 +1043,7 @@ class Default_WizardController extends Zend_Controller_Action
 				catch(Exception $e)
 				{	
 					$db->rollBack();
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Something went wrong,please try again later."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Something went wrong,please try again later."]);
 					$this->_redirect('wizard/configureorganisation');
 				}
             }
@@ -1079,10 +1079,10 @@ class Default_WizardController extends Zend_Controller_Action
 		$db->beginTransaction();
 		try
 		{
-	    	$Completion_data = array( 'iscomplete'=>0,
+	    	$Completion_data = [ 'iscomplete'=>0,
 	                 				'modifiedby'=>$loginUserId,
 									'modifieddate'=>gmdate("Y-m-d H:i:s"),
-						);
+						];
 			$CompleteId = $wizard_model->SaveorUpdateWizardData($Completion_data, '');
 			$db->commit();
 			$result['result'] = 'success';
@@ -1132,7 +1132,7 @@ class Default_WizardController extends Zend_Controller_Action
 			$loginUserId = $auth->getStorage()->read()->id;
 		}
 
-		$msgarray = array();
+		$msgarray = [];
 
 		$controllername = 'businessunits';
 	 
@@ -1158,14 +1158,14 @@ class Default_WizardController extends Zend_Controller_Action
 		if (empty($compdatas)) {
 			$msgarray['company_id'] = 'Company is not configured yet.';
 		} else {
-				$form->company_id->addMultiOptions(array($compdatas['company_id'] => $compdatas['name']));
+				$form->company_id->addMultiOptions([$compdatas['company_id'] => $compdatas['name']]);
 		
 		}
 		if (empty($sbunitdatas)) {
 			$msgarray['parentsbu_id'] = 'Bussiness Unit is not configured yet.';
 		} else {
 			foreach($sbunitdatas as $sbunitdata){
-				$form->parentsbu_id->addMultiOptions(array($sbunitdata['sbunit_id'] => $sbunitdata['name']));
+				$form->parentsbu_id->addMultiOptions([$sbunitdata['sbunit_id'] => $sbunitdata['name']]);
 
 			}
 		
@@ -1174,7 +1174,7 @@ class Default_WizardController extends Zend_Controller_Action
 			$msgarray['representative_id'] = 'Employee is not configured yet.';
 		} else {
 			foreach($empdatas as $empdata){
-				$form->representative_id->addMultiOptions(array($empdata['id'] => $empdata['userfullname']));
+				$form->representative_id->addMultiOptions([$empdata['id'] => $empdata['userfullname']]);
 
 			}
 		
@@ -1196,14 +1196,14 @@ $this->view->msgarray = $msgarray;
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = '';
-				$data = array(	
+				$data = [	
 				'name' => $name,
 				'code'=>$code,
 				'description' => $description,
 				'representative_id' => $representative_id,
 				'company_id' => $company_id,   
 				'parentsbu_id' => $parentsbu_id, 
-				);
+				];
 
 					$data['createdby'] = $loginUserId;
 					$data['createddate'] = gmdate("Y-m-d H:i:s");
@@ -1214,10 +1214,10 @@ $this->view->msgarray = $msgarray;
 //die(json_encode($data));
 				$Id = $model->SaveorUpdateBusinessUnits($data, $where);
 
-				$wizardarray = array('businessunit' => 2,
+				$wizardarray = ['businessunit' => 2,
 				'modifiedby'=>$loginUserId,
 			   'modifieddate'=>gmdate("Y-m-d H:i:s")
-		   );
+		   ];
 if($wizardData['site_config'] == 2 && $wizardData['org_details'] == 2 && $wizardData['departments'] == 2 && $wizardData['servicerequest'] == 2 && $wizardData['manage_modules'] == 2&& $wizardData['section'] == 2 && $wizardData['division'] == 2 && $wizardData['project'] == 2 && $wizardData['team'] == 2)
 {
 $wizardarray['iscomplete'] = 2;
@@ -1227,7 +1227,7 @@ $trDb->commit();
 sapp_Global::generateAccessControl();
 				$tableid = $Id;
 				$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Bussieness Unit   added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Bussieness Unit   added successfully."]);
 					$this->view->messages = $this->_helper->flashMessenger->getMessages();
 
 				
@@ -1272,7 +1272,7 @@ public function divisionAction(){
 		$loginUserId = $auth->getStorage()->read()->id;
 	}
 
-	$msgarray = array();
+	$msgarray = [];
 
 	$controllername = 'division';
  
@@ -1301,14 +1301,14 @@ public function divisionAction(){
 	if (empty($compdatas)) {
 		$msgarray['company_id'] = 'Company is not configured yet.';
 	} else {
-			$form->company_id->addMultiOptions(array($compdatas['company_id'] => $compdatas['name']));
+			$form->company_id->addMultiOptions([$compdatas['company_id'] => $compdatas['name']]);
 	
 	}
 	if (empty($sbunitdatas)) {
 		$msgarray['sbunit'] = 'Bussiness Unit is not configured yet.';
 	} else {
 		foreach($sbunitdatas as $sbunitdata){
-			$form->sbunit_id->addMultiOptions(array($sbunitdata['sbunit_id'] => $sbunitdata['name']));
+			$form->sbunit_id->addMultiOptions([$sbunitdata['sbunit_id'] => $sbunitdata['name']]);
 
 		}
 	
@@ -1317,7 +1317,7 @@ public function divisionAction(){
 		$msgarray['representative_id'] = 'Employee is not configured yet.';
 	} else {
 		foreach($empdatas as $empdata){
-			$form->representative_id->addMultiOptions(array($empdata['id'] => $empdata['userfullname']));
+			$form->representative_id->addMultiOptions([$empdata['id'] => $empdata['userfullname']]);
 
 		}
 	
@@ -1326,7 +1326,7 @@ public function divisionAction(){
 		$msgarray['parentdivision_id'] = 'Division is not configured yet.';
 	} else {
 		foreach($devisiondatas as $devisiondata){
-			$form->parentdivision_id->addMultiOptions(array($devisiondata['division_id'] => $devisiondata['name']));
+			$form->parentdivision_id->addMultiOptions([$devisiondata['division_id'] => $devisiondata['name']]);
 
 		}
 	
@@ -1348,7 +1348,7 @@ $this->view->msgarray = $msgarray;
 			$date = new Zend_Date();
 			$actionflag = '';
 			$tableid  = '';
-			$data = array(	
+			$data = [	
 			'name' => $name,
 			'code'=>$code,
 			'description' => $description,
@@ -1356,7 +1356,7 @@ $this->view->msgarray = $msgarray;
 			'company_id' => $company_id,   
 			'sbunit_id' => $sbunit_id, 
 			'parentdivision_id' =>$parentdivision_id
-			);
+			];
 
 				$data['createdby'] = $loginUserId;
 				$data['createddate'] = gmdate("Y-m-d H:i:s");
@@ -1368,10 +1368,10 @@ $this->view->msgarray = $msgarray;
 			$Id = $model->SaveorUpdateData($data, $where);
 
 			
-			$wizardarray = array('division' => 2,
+			$wizardarray = ['division' => 2,
 			'modifiedby'=>$loginUserId,
 		   'modifieddate'=>gmdate("Y-m-d H:i:s")
-	   );
+	   ];
 if($wizardData['site_config'] == 2 && $wizardData['org_details'] == 2 && $wizardData['departments'] == 2 && $wizardData['servicerequest'] == 2 && $wizardData['manage_modules'] == 2&& $wizardData['section'] == 2 && $wizardData['manage_module'] == 2 && $wizardData['project'] == 2 && $wizardData['team'] == 2)
 {
 $wizardarray['iscomplete'] = 2;
@@ -1381,7 +1381,7 @@ $trDb->commit();
 sapp_Global::generateAccessControl();
 			$tableid = $Id;
 			$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Division   added successfully."));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Division   added successfully."]);
 				$this->view->messages = $this->_helper->flashMessenger->getMessages();
 
 			
@@ -1425,7 +1425,7 @@ public function teamAction(){
 		$loginUserId = $auth->getStorage()->read()->id;
 	}
 
-	$msgarray = array();
+	$msgarray = [];
 
 	$controllername = 'team';
  
@@ -1468,14 +1468,14 @@ public function teamAction(){
 	if (empty($compdatas)) {
 		$msgarray['company_id'] = 'Company is not configured yet.';
 	} else {
-			$form->company_id->addMultiOptions(array($compdatas['company_id'] => $compdatas['name']));
+			$form->company_id->addMultiOptions([$compdatas['company_id'] => $compdatas['name']]);
 	
 	}
 	if (empty($sbunitdatas)) {
 		$msgarray['sbunit_id'] = 'Bussiness Unit is not configured yet.';
 	} else {
 		foreach($sbunitdatas as $sbunitdata){
-			$form->sbunit_id->addMultiOptions(array($sbunitdata['sbunit_id'] => $sbunitdata['name']));
+			$form->sbunit_id->addMultiOptions([$sbunitdata['sbunit_id'] => $sbunitdata['name']]);
 
 		}
 	
@@ -1484,7 +1484,7 @@ public function teamAction(){
 		$msgarray['representative_id'] = 'Employee is not configured yet.';
 	} else {
 		foreach($empdatas as $empdata){
-			$form->representative_id->addMultiOptions(array($empdata['id'] => $empdata['userfullname']));
+			$form->representative_id->addMultiOptions([$empdata['id'] => $empdata['userfullname']]);
 
 		}
 	
@@ -1493,7 +1493,7 @@ public function teamAction(){
 		$msgarray['division_id'] = 'Division is not configured yet.';
 	} else {
 		foreach($devisiondatas as $devisiondata){
-			$form->division_id->addMultiOptions(array($devisiondata['division_id'] => $devisiondata['name']));
+			$form->division_id->addMultiOptions([$devisiondata['division_id'] => $devisiondata['name']]);
 
 		}
 	
@@ -1502,7 +1502,7 @@ public function teamAction(){
 		$msgarray['departement_id'] = 'Department is not configured yet.';
 	} else {
 		foreach($dptdata as $dptdatas){
-			$form->departement_id->addMultiOptions(array($dptdatas['department_id'] => $dptdatas['name']));
+			$form->departement_id->addMultiOptions([$dptdatas['department_id'] => $dptdatas['name']]);
 
 		}
 	
@@ -1511,7 +1511,7 @@ public function teamAction(){
 		$msgarray['section_id'] = 'Section is not configured yet.';
 	} else {
 		foreach($secdata as $secdatas){
-			$form->section_id->addMultiOptions(array($secdatas['section_id'] => $secdatas['name']));
+			$form->section_id->addMultiOptions([$secdatas['section_id'] => $secdatas['name']]);
 
 		}
 	
@@ -1522,7 +1522,7 @@ public function teamAction(){
 
 	} else {
 		foreach($projectdata as $projectdatas){
-			$form->project_id->addMultiOptions(array($projectdatas['project_id'] => $projectdatas['name']));
+			$form->project_id->addMultiOptions([$projectdatas['project_id'] => $projectdatas['name']]);
 
 		}
 	}
@@ -1530,7 +1530,7 @@ public function teamAction(){
 		$msgarray['parentteam_id'] = 'Team is not configured yet.';
 	} else {
 		foreach($teamdata as $teamdatas){
-			$form->parentteam_id->addMultiOptions(array($secdatas['team_id'] => $secdatas['name']));
+			$form->parentteam_id->addMultiOptions([$secdatas['team_id'] => $secdatas['name']]);
 
 		}
 	
@@ -1556,7 +1556,7 @@ $this->view->msgarray = $msgarray;
 			$date = new Zend_Date();
 			$actionflag = '';
 			$tableid  = '';
-			$data = array(	
+			$data = [	
 			'name' => $name,
 			'code'=>$code,
 			'description' => $description,
@@ -1570,7 +1570,7 @@ $this->view->msgarray = $msgarray;
 			'project_id' =>$project_id
 
 
-			);
+			];
 
 				$data['createdby'] = $loginUserId;
 				$data['createddate'] = gmdate("Y-m-d H:i:s");
@@ -1579,10 +1579,10 @@ $this->view->msgarray = $msgarray;
 				$actionflag = 1;
 				$menuID = TEAM;
 			$Id = $model->SaveorUpdateData($data, $where);
-			$wizardarray = array('team' => 2,
+			$wizardarray = ['team' => 2,
 			'modifiedby'=>$loginUserId,
 		   'modifieddate'=>gmdate("Y-m-d H:i:s")
-	   );
+	   ];
 			if($wizardData['site_config'] == 2 && $wizardData['org_details'] == 2 && $wizardData['departments'] == 2 && $wizardData['servicerequest'] == 2 && $wizardData['manage_modules'] == 2&& $wizardData['section'] == 2 && $wizardData['division'] == 2 && $wizardData['project'] == 2 && $wizardData['businessunit'] == 2)
 {
 $wizardarray['iscomplete'] = 2;
@@ -1592,7 +1592,7 @@ $trDb->commit();
 sapp_Global::generateAccessControl();
 			$tableid = $Id;
 			$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Team   added successfully."));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Team   added successfully."]);
 				$this->view->messages = $this->_helper->flashMessenger->getMessages();
 
 			
@@ -1638,7 +1638,7 @@ public function departmentsAction()
 			$loginUserId = $auth->getStorage()->read()->id;
 		}
 
-		$msgarray = array();
+		$msgarray = [];
 
 		$controllername = 'departments';
 	 
@@ -1671,14 +1671,14 @@ public function departmentsAction()
 		if (empty($compdatas)) {
 			$msgarray['company_id'] = 'Company is not configured yet.';
 		} else {
-				$form->company_id->addMultiOptions(array($compdatas['company_id'] => $compdatas['name']));
+				$form->company_id->addMultiOptions([$compdatas['company_id'] => $compdatas['name']]);
 		
 		}
 		if (empty($sbunitdatas)) {
 			$msgarray['sbunit'] = 'Bussiness Unit is not configured yet.';
 		} else {
 			foreach($sbunitdatas as $sbunitdata){
-				$form->sbunit_id->addMultiOptions(array($sbunitdata['sbunit_id'] => $sbunitdata['name']));
+				$form->sbunit_id->addMultiOptions([$sbunitdata['sbunit_id'] => $sbunitdata['name']]);
 
 			}
 		
@@ -1687,7 +1687,7 @@ public function departmentsAction()
 			$msgarray['representative_id'] = 'Employee is not configured yet.';
 		} else {
 			foreach($empdatas as $empdata){
-				$form->representative_id->addMultiOptions(array($empdata['id'] => $empdata['userfullname']));
+				$form->representative_id->addMultiOptions([$empdata['id'] => $empdata['userfullname']]);
 
 			}
 		
@@ -1696,7 +1696,7 @@ public function departmentsAction()
 			$msgarray['division_id'] = 'Division is not configured yet.';
 		} else {
 			foreach($devisiondatas as $devisiondata){
-				$form->division_id->addMultiOptions(array($devisiondata['division_id'] => $devisiondata['name']));
+				$form->division_id->addMultiOptions([$devisiondata['division_id'] => $devisiondata['name']]);
 
 			}
 		
@@ -1705,7 +1705,7 @@ public function departmentsAction()
 			$msgarray['parentdepartement_id'] = 'Department is not configured yet.';
 		} else {
 			foreach($dptdata as $dptdatas){
-				$form->parentdepartement_id->addMultiOptions(array($dptdatas['department_id'] => $dptdatas['name']));
+				$form->parentdepartement_id->addMultiOptions([$dptdatas['department_id'] => $dptdatas['name']]);
 
 			}
 		
@@ -1727,7 +1727,7 @@ $this->view->msgarray = $msgarray;
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = '';
-				$data = array(	
+				$data = [	
 				'name' => $name,
 				'code'=>$code,
 				'description' => $description,
@@ -1737,7 +1737,7 @@ $this->view->msgarray = $msgarray;
 				'division_id' =>$division_id,
 				'parentdepartement_id' =>$parentdepartement_id
 
-				);
+				];
 
 					$data['createdby'] = $loginUserId;
 					$data['createddate'] = gmdate("Y-m-d H:i:s");
@@ -1748,10 +1748,10 @@ $this->view->msgarray = $msgarray;
 
 				$Id = $model->SaveorUpdateData($data, $where);
 				
-				$wizardarray = array('departments' => 2,
+				$wizardarray = ['departments' => 2,
 				'modifiedby'=>$loginUserId,
 			   'modifieddate'=>gmdate("Y-m-d H:i:s")
-		   );
+		   ];
 if($wizardData['site_config'] == 2 && $wizardData['org_details'] == 2 && $wizardData['businessunit'] == 2 && $wizardData['servicerequest'] == 2 && $wizardData['manage_modules'] == 2&& $wizardData['section'] == 2 && $wizardData['division'] == 2 && $wizardData['project'] == 2)
 {
 $wizardarray['iscomplete'] = 2;
@@ -1761,7 +1761,7 @@ $trDb->commit();
 sapp_Global::generateAccessControl();
 				$tableid = $Id;
 				$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Department   added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Department   added successfully."]);
 					$this->view->messages = $this->_helper->flashMessenger->getMessages();
 
 				
@@ -1806,7 +1806,7 @@ Zend_Debug::dump($th->getMessage());
 			$loginUserId = $auth->getStorage()->read()->id;
 		}
 
-		$msgarray = array();
+		$msgarray = [];
 
 		$controllername = 'section';
 	 
@@ -1841,14 +1841,14 @@ Zend_Debug::dump($th->getMessage());
 		if (empty($compdatas)) {
 			$msgarray['company_id'] = 'Company is not configured yet.';
 		} else {
-				$form->company_id->addMultiOptions(array($compdatas['company_id'] => $compdatas['name']));
+				$form->company_id->addMultiOptions([$compdatas['company_id'] => $compdatas['name']]);
 		
 		}
 		if (empty($sbunitdatas)) {
 			$msgarray['sbunit_id'] = 'Bussiness Unit is not configured yet.';
 		} else {
 			foreach($sbunitdatas as $sbunitdata){
-				$form->sbunit_id->addMultiOptions(array($sbunitdata['sbunit_id'] => $sbunitdata['name']));
+				$form->sbunit_id->addMultiOptions([$sbunitdata['sbunit_id'] => $sbunitdata['name']]);
 
 			}
 		
@@ -1857,7 +1857,7 @@ Zend_Debug::dump($th->getMessage());
 			$msgarray['representative_id'] = 'Employee is not configured yet.';
 		} else {
 			foreach($empdatas as $empdata){
-				$form->representative_id->addMultiOptions(array($empdata['id'] => $empdata['userfullname']));
+				$form->representative_id->addMultiOptions([$empdata['id'] => $empdata['userfullname']]);
 
 			}
 		
@@ -1866,7 +1866,7 @@ Zend_Debug::dump($th->getMessage());
 			$msgarray['division_id'] = 'Division is not configured yet.';
 		} else {
 			foreach($devisiondatas as $devisiondata){
-				$form->division_id->addMultiOptions(array($devisiondata['division_id'] => $devisiondata['name']));
+				$form->division_id->addMultiOptions([$devisiondata['division_id'] => $devisiondata['name']]);
 
 			}
 		
@@ -1875,7 +1875,7 @@ Zend_Debug::dump($th->getMessage());
 			$msgarray['departement_id'] = 'Department is not configured yet.';
 		} else {
 			foreach($dptdata as $dptdatas){
-				$form->departement_id->addMultiOptions(array($dptdatas['department_id'] => $dptdatas['name']));
+				$form->departement_id->addMultiOptions([$dptdatas['department_id'] => $dptdatas['name']]);
 
 			}
 		
@@ -1884,7 +1884,7 @@ Zend_Debug::dump($th->getMessage());
 			$msgarray['parentsection_id'] = 'Section is not configured yet.';
 		} else {
 			foreach($secdata as $secdatas){
-				$form->parentsection_id->addMultiOptions(array($secdatas['department_id'] => $secdatas['name']));
+				$form->parentsection_id->addMultiOptions([$secdatas['department_id'] => $secdatas['name']]);
 
 			}
 		
@@ -1908,7 +1908,7 @@ $this->view->msgarray = $msgarray;
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = '';
-				$data = array(	
+				$data = [	
 				'name' => $name,
 				'code'=>$code,
 				'description' => $description,
@@ -1918,7 +1918,7 @@ $this->view->msgarray = $msgarray;
 				'division_id' =>$division_id,
 				'departement_id' =>$departement_id,
 				'parentsection_id' =>$parentsection_id
-				);
+				];
 
 					$data['createdby'] = $loginUserId;
 					$data['createddate'] = gmdate("Y-m-d H:i:s");
@@ -1928,10 +1928,10 @@ $this->view->msgarray = $msgarray;
 					$menuID = SECTION;
 				$Id = $model->SaveorUpdateData($data, $where);
 				
-				$wizardarray = array('section' => 2,
+				$wizardarray = ['section' => 2,
 				'modifiedby'=>$loginUserId,
 			   'modifieddate'=>gmdate("Y-m-d H:i:s")
-		   );
+		   ];
 if($wizardData['site_config'] == 2 && $wizardData['org_details'] == 2 && $wizardData['departments'] == 2 && $wizardData['servicerequest'] == 2 && $wizardData['manage_modules'] == 2&& $wizardData['businessunit'] == 2 && $wizardData['division'] == 2 && $wizardData['project'] == 2)
 {
 $wizardarray['iscomplete'] = 2;
@@ -1941,7 +1941,7 @@ $trDb->commit();
 sapp_Global::generateAccessControl();
 				$tableid = $Id;
 				$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Section   added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Section   added successfully."]);
 					$this->view->messages = $this->_helper->flashMessenger->getMessages();
 
 				
@@ -1987,7 +1987,7 @@ Zend_Debug::dump($th->getMessage());
 			$loginUserId = $auth->getStorage()->read()->id;
 		}
 
-		$msgarray = array();
+		$msgarray = [];
 
 		$controllername = 'project';
 	 
@@ -2008,7 +2008,7 @@ Zend_Debug::dump($th->getMessage());
 			$msgarray['representative_id'] = 'Employee is not configured yet.';
 		} else {
 			foreach($empdatas as $empdata){
-				$form->representative_id->addMultiOptions(array($empdata['id'] => $empdata['userfullname']));
+				$form->representative_id->addMultiOptions([$empdata['id'] => $empdata['userfullname']]);
 
 			}
 		
@@ -2025,13 +2025,13 @@ Zend_Debug::dump($th->getMessage());
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = '';
-				$data = array(	
+				$data = [	
 				'name' => $name,
 				'code'=>$code,
 				'description' => $description,
 				'representative_id' => $representative_id,
 				
-				);
+				];
 
 					$data['createdby'] = $loginUserId;
 					$data['createddate'] = gmdate("Y-m-d H:i:s");
@@ -2042,10 +2042,10 @@ Zend_Debug::dump($th->getMessage());
 //die(json_encode($data));
 				$Id = $model->SaveorUpdateData($data, $where);
 				
-				$wizardarray = array('project' => 2,
+				$wizardarray = ['project' => 2,
 				'modifiedby'=>$loginUserId,
 			   'modifieddate'=>gmdate("Y-m-d H:i:s")
-		   );
+		   ];
 if($wizardData['site_config'] == 2 && $wizardData['org_details'] == 2 && $wizardData['departments'] == 2 && $wizardData['servicerequest'] == 2 && $wizardData['manage_modules'] == 2&& $wizardData['section'] == 2 && $wizardData['division'] == 2 && $wizardData['businessunit'] == 2)
 {
 $wizardarray['iscomplete'] = 2;
@@ -2055,7 +2055,7 @@ $trDb->commit();
 sapp_Global::generateAccessControl();
 				$tableid = $Id;
 				$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Project added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Project added successfully."]);
 					$this->view->messages = $this->_helper->flashMessenger->getMessages();
 
 				
@@ -2097,7 +2097,7 @@ Zend_Debug::dump($th->getMessage());
 		} 
 	    $appraisalquestionsmodel = new Default_Model_Appraisalquestions();	
 	    $deptModel = new Default_Model_Departments();
-		$msgarray = array();
+		$msgarray = [];
 		$errorflag = 'true';
 		$bunit_id = $this->_request->getParam('bunit_id');
 		$department_arr = $this->_request->getParam('department');
@@ -2132,7 +2132,7 @@ Zend_Debug::dump($th->getMessage());
 					$msgarray['bunit_id'] = $bunit_id;
 					$errorflag = 'false';
 					}
-					
+
 					//check department code existance
 					/* if(strlen(trim($department_arr[$i])) > 3)
 			   		$deptCode = strtoupper(substr(trim($department_arr[$i]), 0, 4));
@@ -2141,7 +2141,7 @@ Zend_Debug::dump($th->getMessage());
 					if($errorflag != 'false')
 					{
 					$deptcodeExistance = $deptModel->checkCodeDuplicates($deptCode,'');
-					
+
 						if($deptcodeExistance)
 						{
 							$msgarray['dept_name'][$i] = 'Department code already exists.';
@@ -2184,7 +2184,7 @@ Zend_Debug::dump($th->getMessage());
 				
 			   // Random Capital string generation for 4 characters.				
 			   $deptCode = $this->generateRandomCodeString();	
-			   $data = array('deptname'=>trim($department_arr[$i]),
+			   $data = ['deptname'=>trim($department_arr[$i]),
 			                 'deptcode'=>$deptCode, 
 							 'startdate'=>NULL,
 							 'country'=>!empty($organisationData)?$organisationData[0]['country']:NULL,
@@ -2197,7 +2197,7 @@ Zend_Debug::dump($th->getMessage());
 							 'createddate'=>$date->get('yyyy-MM-dd HH:mm:ss'), 	
 							 'modifiedby'=>$loginUserId,
 							 'modifieddate'=>$date->get('yyyy-MM-dd HH:mm:ss')
-					);
+					];
 				
 				$Id = $deptModel->SaveorUpdateDepartmentsUnits($data, $where);
 				$tableid = $Id; 	
@@ -2208,10 +2208,10 @@ Zend_Debug::dump($th->getMessage());
 			 $wizard_model = new Default_Model_Wizard();
 			 $wizardData = $wizard_model->getWizardData();
 			
-					$wizardarray = array('departments' => 2,
+					$wizardarray = ['departments' => 2,
                   						 'modifiedby'=>$loginUserId,
                   						'modifieddate'=>gmdate("Y-m-d H:i:s")
-                  					);
+                  					];
 					 if($wizardData['site_config'] == 2 && $wizardData['org_details'] == 2 && $wizardData['servicerequest'] == 2)
 					 {
 					 	$wizardarray['iscomplete'] = 2;
@@ -2279,7 +2279,7 @@ Zend_Debug::dump($th->getMessage());
 				
                 // Random Capital string generation for 4 characters.				
 				$unitCode = $this->generateRandomCodeString();	
-			    $data = array('unitname'=>$unitname,
+			    $data = ['unitname'=>$unitname,
 			                 'unitcode'=>$unitCode, 
 							 'startdate'=>NULL,
 							 'country'=>!empty($organisationData)?$organisationData[0]['country']:NULL,
@@ -2291,7 +2291,7 @@ Zend_Debug::dump($th->getMessage());
 							 'createddate'=>$date->get('yyyy-MM-dd HH:mm:ss'), 	
 							 'modifiedby'=>$loginUserId,
 							 'modifieddate'=>$date->get('yyyy-MM-dd HH:mm:ss')
-					);
+					];
 				
 					$where = '';
 					$actionflag = 1;
@@ -2340,7 +2340,7 @@ Zend_Debug::dump($th->getMessage());
         $wizard_model = new Default_Model_Wizard();
         $servicedeskdepartmentmodel = new Default_Model_Servicedeskdepartment();
         $wizardData = $wizard_model->getWizardData();
-        $msgarray = array();
+        $msgarray = [];
         
         $servicedeskdepartmentData = $servicedeskdepartmentmodel->getSDDepartmentData();
         if(empty($servicedeskdepartmentData)) {
@@ -2364,7 +2364,7 @@ Zend_Debug::dump($th->getMessage());
 				 $loginuserGroup = $auth->getStorage()->read()->group_id;
 		} 
 	    $servicedeskrequestmodel = new Default_Model_Servicedeskrequest();	
-		$msgarray = array();
+		$msgarray = [];
 		$errorflag = 'true';
 		$service_desk_id = $this->_request->getParam('category_id');
 		$requesttype_arr = $this->_request->getParam('requesttype');
@@ -2414,7 +2414,7 @@ Zend_Debug::dump($th->getMessage());
 			$date = new Zend_Date();
 			for($i=0;$i<sizeof($requesttype_arr);$i++)
 			{
-			   $data = array('service_desk_id'=>$service_desk_id,
+			   $data = ['service_desk_id'=>$service_desk_id,
 			                 'service_request_name'=>$requesttype_arr[$i], 
 							 'description'=>($description_arr[$i]!=''?$description_arr[$i]:NULL),
 			   				  'createdby'=>$loginUserId,
@@ -2422,7 +2422,7 @@ Zend_Debug::dump($th->getMessage());
 							  'modifiedby'=>$loginUserId,
 							  'modifieddate'=>gmdate("Y-m-d H:i:s"),
 			   				  'isactive' =>1 	
-				);
+				];
 				
 				$Id = $servicedeskrequestmodel->SaveorUpdateServiceDeskRequestData($data, $where);
 				$tableid = $Id; 	
@@ -2433,10 +2433,10 @@ Zend_Debug::dump($th->getMessage());
 			 $wizard_model = new Default_Model_Wizard();
 			 $wizardData = $wizard_model->getWizardData();
 			
-					$wizardarray = array('servicerequest' => 2,
+					$wizardarray = ['servicerequest' => 2,
                   						 'modifiedby'=>$loginUserId,
                   						'modifieddate'=>gmdate("Y-m-d H:i:s")
-                  					);
+                  					];
 					 if($wizardData['site_config'] == 2 && $wizardData['org_details'] == 2 && $wizardData['departments'] == 2)
 					 {
 					 	$wizardarray['iscomplete'] = 2;
@@ -2491,13 +2491,13 @@ public function savecategoryAction()
 				$menumodel = new Default_Model_Menu();
 				$actionflag = '';
 				$tableid  = ''; 
-			   	$data = array('service_desk_name'=>$service_desk_name, 
+			   	$data = ['service_desk_name'=>$service_desk_name, 
 								 'description'=>($description!=''?trim($description):NULL),
 			   					  'createdby'=>$loginUserId,
 							 	'createddate'=>$date->get('yyyy-MM-dd HH:mm:ss'),
 								  'modifiedby'=>$loginUserId,
 								  'modifieddate'=>gmdate("Y-m-d H:i:s")
-						);
+						];
 				
 					$where = '';
 					$actionflag = 1;
@@ -2540,7 +2540,7 @@ public function savecategoryAction()
 		$charactersLength = strlen($characters);
 		$randomString = '';
 		for ($i = 0; $i < $length; $i++) {
-			$randomString .= $characters[rand(0, $charactersLength - 1)];
+			$randomString .= $characters[random_int(0, $charactersLength - 1)];
 		}
 		return $randomString;
 	}

@@ -26,9 +26,9 @@ class Default_PerkcategoryController extends Zend_Controller_Action
         $refresh = $this->_getParam('refresh');
         $dashboardcall = $this->_getParam('dashboardcall');
 
-        $data = array();
+        $data = [];
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         $tablecontent = '';
 
         if ($refresh == 'refresh') {
@@ -79,21 +79,21 @@ class Default_PerkcategoryController extends Zend_Controller_Action
 
             if ($form->isValid($this->getRequest()->getPost())) {
 
-                $data = array(
+                $data = [
                     'name' => $this->_request->getParam('name_cat'),
                     'description' => $this->_request->getParam('description_cat'),
                     'isactive' => 'Yes',
                     'createdby' => $loginUserId,
                     'createddate' => gmdate("Y-m-d H:i:s"),
 
-                );
+                ];
                 //  die(json_encode($data));
                 $tableid = $formModel->addCategory($data);
                 $result = sapp_Global::logManager(PERKCATEGORY, 1, $loginUserId, $tableid);
                 $this->view->eventact = 'added';
                 $close = 'close';
                 $this->view->popup = $close;
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Perk category added successfully."));
+                $this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Perk category added successfully."]);
                 $this->_redirect('perkcategory');
             }
             $messages = $form->getMessages();
@@ -131,19 +131,19 @@ class Default_PerkcategoryController extends Zend_Controller_Action
         $form->addElement($newelement->addelement('checkbox', 'isactive', $perkData[0], 'isactive'));
         if ($this->getRequest()->getPost()) {
             //die(json_encode($this->getRequest()->getPost()));
-            $where = array('perkcategory_id=?' => $this->getRequest()->getParam('id'));
-            $data = array(
+            $where = ['perkcategory_id=?' => $this->getRequest()->getParam('id')];
+            $data = [
                 'name' => $this->getRequest()->getParam('name_cat'),
                 'description' => $this->getRequest()->getParam('description_cat'),
                 'modifiedby' => $loginUserId,
                 'modifieddate' => gmdate("Y-m-d H:i:s"),
                 'isactive' => utlis::getcheckboxvalue($this->_request->getParam('isactive'), 'database')
-            );
+            ];
             $tableid = $this->_getParam('id');
             $formModel->editPerkcategory($data, $where);
             $menuID = PERKCATEGORY;
             $result = sapp_Global::logManager($menuID, $actionflag, $loginUserId, $tableid);
-            $this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Perk Category Updated successfully."));
+            $this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Perk Category Updated successfully."]);
 
             $this->_redirect('perkcategory');
         }
@@ -154,16 +154,16 @@ class Default_PerkcategoryController extends Zend_Controller_Action
 
         $id = $this->_request->getParam('objid');
         $where = 'perkcategory_id =' . (int)$id;
-        $data = array(
+        $data = [
             'isactive' => 'N'
-        );
+        ];
         //die(json_encode($where));
         $res = $formModel->deleteData($where, 'main_perkcategory', 'perkcategory_id');
 
         //$res=$formModel->editPerkcategory($data, $where);
 
         if ($res > 0)
-            return $this->_helper->json(array('flagtype' => 'process', 'message' => 'Deleted'));
+            return $this->_helper->json(['flagtype' => 'process', 'message' => 'Deleted']);
         die();
     }
 

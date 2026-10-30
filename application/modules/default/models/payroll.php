@@ -26,7 +26,7 @@ class Default_Model_payroll extends Zend_Db_Table{
     public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         if($searchData != '' && $searchData!='undefined')
         {
             $searchValues = json_decode($searchData);
@@ -42,9 +42,9 @@ class Default_Model_payroll extends Zend_Db_Table{
         }
 
         $objName = 'payroll';
-        $tableFields = array('action'=>'Action','docment_no'=>'Document No.','paydate'=>'Pay Date');
+        $tableFields = ['action'=>'Action','docment_no'=>'Document No.','paydate'=>'Pay Date'];
         $tablecontent = $this->getPayroll($sort, $by, $pageNo, $perPage,$searchQuery);
-        $dataTmp = array(
+        $dataTmp = [
             'sort'=>$sort,
             'by'=>$by,
             'pageNo'=>$pageNo,
@@ -52,7 +52,7 @@ class Default_Model_payroll extends Zend_Db_Table{
             'tablecontent' => $tablecontent,
             'menuName'=> 'Payroll',
             'objectname' => $objName,
-            'extra' => array(),
+            'extra' => [],
             'add'=>'add',
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
@@ -61,13 +61,13 @@ class Default_Model_payroll extends Zend_Db_Table{
             'searchArray' => $searchArray,
             'call'=>$call,
             'dashboardcall'=>$dashboardcall,
-            'search_filters'=>array(
-                'paydate'=>array(
+            'search_filters'=>[
+                'paydate'=>[
                     'type'=>'datepicker'
-                )
-            )
+                ]
+            ]
             
-        );
+        ];
         return $dataTmp;
     }
 
@@ -92,7 +92,7 @@ class Default_Model_payroll extends Zend_Db_Table{
     {
         $payroll = $this->select()
                         ->setIntegrityCheck(false)
-                        ->from(array('a'=>$this->_name),'a.*')
+                        ->from(['a'=>$this->_name],'a.*')
                         ->where('id = '.$id);
                         
             

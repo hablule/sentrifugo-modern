@@ -23,7 +23,7 @@ class Default_cardproviderController extends Zend_Controller_Action
       $refresh = $this->_getParam('refresh');
       $dashboradcall = $this->_getParam('dashboradcall');
 
-      $data = array();
+      $data = [];
 
       if ($refresh == 'refresh') {
           if ($dashboradcall == 'Yes') {
@@ -81,7 +81,7 @@ class Default_cardproviderController extends Zend_Controller_Action
             $msgarray['bank_id'] = 'Bank  is not configured yet.';
         } else {
             foreach ($add as $adds) {
-                $form->bank_id->addMultiOptions(array($adds['bank_id'] => $adds['name']));
+                $form->bank_id->addMultiOptions([$adds['bank_id'] => $adds['name']]);
             }
         }
 
@@ -92,7 +92,7 @@ class Default_cardproviderController extends Zend_Controller_Action
      
         
         if ($this->getRequest()->isPost()) {
-            $data = array(
+            $data = [
                 'name'=>$this->_request->getParam('name'),
                 'code'=>$this->_request->getParam('code'),
                 'bank_id'=>$this->_request->getParam('bank_id'),
@@ -100,7 +100,7 @@ class Default_cardproviderController extends Zend_Controller_Action
                 'description'=>$this->_request->getParam('description'),
                 'createdby'=>$loginUserId,
                 'createddate'=>gmdate('Y-m-d H:i:s')
-            );
+            ];
           
 
    
@@ -110,7 +110,7 @@ class Default_cardproviderController extends Zend_Controller_Action
                 $tableid = $Id;
                 $actionflag = 1;
                 $result = sapp_Global::logManager(334,$actionflag,$loginUserId,$tableid);
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array('success'=>'Card Provider Added Successful'));
+                $this->_helper->getHelper("FlashMessenger")->addMessage(['success'=>'Card Provider Added Successful']);
                 $this->_redirect('cardprovider');
             }
             $messages = $form->getMessages();
@@ -156,7 +156,7 @@ try {
         $msgarray['bank_id'] = 'Bank  is not configured yet.';
     } else {
         foreach ($add as $adds) {
-            $form->bank_id->addMultiOptions(array($adds['bank_id'] => $adds['name']));
+            $form->bank_id->addMultiOptions([$adds['bank_id'] => $adds['name']]);
         }
     }
 
@@ -172,7 +172,7 @@ try {
                 if ($auth->hasIdentity()) {
                     $loginUserId = $auth->getStorage()->read()->id;
                 }
-                $data = array(
+                $data = [
                     'name'=>$this->_request->getParam('name'),
                 'code'=>$this->_request->getParam('code'),
                 'bank_id'=>$this->_request->getParam('bank_id'),
@@ -180,7 +180,7 @@ try {
                 'description'=>$this->_request->getParam('description'),
                 'createdby'=>$loginUserId,
                 'createddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
 
                 $tableid=$dmtmodel->SaveorUpdateData($data, '');
                 sapp_Global::logManager(334,1,$loginUserId,$tableid);
@@ -234,7 +234,7 @@ Zend_Debug::dump($th->getMessage());    }
               $msgarray['bank_id'] = 'Bank  is not configured yet.';
           } else {
               foreach ($add as $adds) {
-                  $form->bank_id->addMultiOptions(array($adds['bank_id'] => $adds['name']));
+                  $form->bank_id->addMultiOptions([$adds['bank_id'] => $adds['name']]);
               }
           }
   
@@ -256,7 +256,7 @@ Zend_Debug::dump($th->getMessage());    }
             }
         if ($this->getRequest()->isPost()) {
             if ($form->isValid($this->getRequest()->getPost())) {
-                $data = array(
+                $data = [
                     'name'=>$this->_request->getParam('name'),
                     'code'=>$this->_request->getParam('code'),
                     'bank_id'=>$this->_request->getParam('bank_id'),
@@ -265,12 +265,12 @@ Zend_Debug::dump($th->getMessage());    }
                     'isactive'=>utlis::getcheckboxvalue($this->_request->getParam('isactive')),
                     'modifiedby'=>$loginUserId,
                     'modifieddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
                 $dmtmodel->SaveorUpdateData($data,'cardprovider_id='.$id);
                 $tableid = $id;
                 $actionflag = 2;
                 $result = sapp_Global::logManager(334,$actionflag,$loginUserId,$tableid);
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array('success'=>'Card provider  Updated Successful'));
+                $this->_helper->getHelper("FlashMessenger")->addMessage(['success'=>'Card provider  Updated Successful']);
                 $this->_redirect('cardprovider');
             }
             $messages = $form->getMessages();

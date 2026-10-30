@@ -30,8 +30,8 @@ class Expenses_Model_Employeeadvances extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{
 		$searchQuery = '';
-		$searchArray = array();
-		$data = array();
+		$searchArray = [];
+		$data = [];
 
 		if($searchData != '' && $searchData!='undefined')
 		{
@@ -53,21 +53,21 @@ class Expenses_Model_Employeeadvances extends Zend_Db_Table_Abstract
 			
 		$objName = 'employeeadvances';
 		
-		$tableFields = array(
+		$tableFields = [
 					'action'=>'Action',
 					'userfullname' => 'Employee',
 					'total' => 'Amount',
 					'utilized' => 'Utilized',
-		);
+		];
 		$tablecontent = $this->getEmployeeAdvancesData($sort, $by, $pageNo, $perPage,$searchQuery);
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -75,7 +75,7 @@ class Expenses_Model_Employeeadvances extends Zend_Db_Table_Abstract
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall,
 			'menuName' => 'Employee Advances'
-			);
+			];
 			return $dataTmp;
 	}
 
@@ -120,12 +120,12 @@ class Expenses_Model_Employeeadvances extends Zend_Db_Table_Abstract
 		 $employeeadvancesData = 
 		  $this->select()
 		->setIntegrityCheck(false)
-		->from(array('c' => 'expense_advacne_summary'),array('total'=>'c.total','employee_id'=>'c.employee_id','utilized'=>'c.utilized','returned'=>'c.returned','utilized'=>new Zend_Db_Expr('case when c.total=c.utilized  then "Yes" when c.utilized=0 OR c.utilized is null  then "No" when c.total>c.utilized AND c.utilized!=0 then "partial" end')))
-	    ->joinInner(array('u'=>'main_users'), "u.id = c.employee_id and
+		->from(['c' => 'expense_advacne_summary'],['total'=>'c.total','employee_id'=>'c.employee_id','utilized'=>'c.utilized','returned'=>'c.returned','utilized'=>new Zend_Db_Expr('case when c.total=c.utilized  then "Yes" when c.utilized=0 OR c.utilized is null  then "No" when c.total>c.utilized AND c.utilized!=0 then "partial" end')])
+	    ->joinInner(['u'=>'main_users'], "u.id = c.employee_id and
 	   u.isactive = 1") 
-	    ->joinInner(array('mes'=>'employees_summary'), "mes.id = u.id and
+	    ->joinInner(['mes'=>'employees_summary'], "mes.id = u.id and
 	   mes.isactive = 1 ")
-	   ->joinInner(array('e'=>'main_employees'),'e.id = u.empid',array('userfullname'=>'e.userfullname')) 
+	   ->joinInner(['e'=>'main_employees'],'e.id = u.empid',['userfullname'=>'e.userfullname']) 
 	   ->where($where)
 		->order("$by $sort")
 		->limitPage($pageNo, $perPage); 
@@ -166,7 +166,7 @@ class Expenses_Model_Employeeadvances extends Zend_Db_Table_Abstract
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$employeeadvance = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('adv' => 'expense_advance'))
+		->from(['adv' => 'expense_advance'])
 		->where(' adv.id = '.$id.' and adv.isactive = 1'.$cond);
 		return $this->fetchAll($employeeadvance)->toArray();
 		
@@ -178,12 +178,12 @@ class Expenses_Model_Employeeadvances extends Zend_Db_Table_Abstract
 		$where = "adv.isactive = 1";
 		 $employeeadvance = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('adv' => 'expense_advance'))
-	    ->joinLeft(array('tp'=>'tm_projects'), "tp.id = adv.project_id and
-	    adv.project_id IS NOT NULL",array('project_name'=>'tp.project_name'))
-		->joinInner(array('c'=>'main_currency'), "c.id = adv.currency_id",array('currencycode'=>'c.currencycode'))
-		->joinInner(array('mc'=>'main_users'), "mc.id = adv.createdby",array('userfullname'=>'mc.userfullname'))
-		->joinInner(array('mcu'=>'main_users'), "mcu.id = adv.to_id",array('to_name'=>'mcu.userfullname'))
+		->from(['adv' => 'expense_advance'])
+	    ->joinLeft(['tp'=>'tm_projects'], "tp.id = adv.project_id and
+	    adv.project_id IS NOT NULL",['project_name'=>'tp.project_name'])
+		->joinInner(['c'=>'main_currency'], "c.id = adv.currency_id",['currencycode'=>'c.currencycode'])
+		->joinInner(['mc'=>'main_users'], "mc.id = adv.createdby",['userfullname'=>'mc.userfullname'])
+		->joinInner(['mcu'=>'main_users'], "mcu.id = adv.to_id",['to_name'=>'mcu.userfullname'])
 		->where($where.' and adv.isactive = 1 and adv.type="advance" and adv.to_id = '.$id); 
 		return $this->fetchAll($employeeadvance)->toArray();
 		
@@ -195,7 +195,7 @@ class Expenses_Model_Employeeadvances extends Zend_Db_Table_Abstract
 		$where = "ep.isactive = 1 and ep.employee_id=".$id;
 		$employeeadvance = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('ep' => 'expense_advacne_summary'))
+		->from(['ep' => 'expense_advacne_summary'])
 		->where($where); 
 		return $this->fetchAll($employeeadvance)->toArray();
 	}
@@ -205,8 +205,8 @@ class Expenses_Model_Employeeadvances extends Zend_Db_Table_Abstract
 		$where = "ep.isactive = 1 and type='return' and ep.from_id=".$id;
 		$employeereturnadvance = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('ep' => 'expense_advance'))
-		->joinInner(array('mc'=>'main_users'), "ep.to_id = mc.id",array('userfullname'=>'mc.userfullname'))
+		->from(['ep' => 'expense_advance'])
+		->joinInner(['mc'=>'main_users'], "ep.to_id = mc.id",['userfullname'=>'mc.userfullname'])
 		->where($where);
 		return $this->fetchAll($employeereturnadvance)->toArray();
 	}

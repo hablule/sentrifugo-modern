@@ -40,31 +40,31 @@ class Default_Form_Announcements extends Zend_Form
         $businessunit_id->setLabel("Business Units");
         $businessunit_id->setRegisterInArrayValidator(false);
         $businessunit_id->setRequired(true);
-        $businessunit_id->addValidator('NotEmpty', false, array('messages' => 'Please select business unit.'));
+        $businessunit_id->addValidator('NotEmpty', false, ['messages' => 'Please select business unit.']);
         
         $department_id = new Zend_Form_Element_Multiselect("department_id");
         $department_id->setLabel("Departments");  
         $department_id->setRegisterInArrayValidator(false);      
         $department_id->setRequired(true);
-        $department_id->addValidator('NotEmpty', false, array('messages' => 'Please select department.'));
+        $department_id->addValidator('NotEmpty', false, ['messages' => 'Please select department.']);
         
 		$title = new Zend_Form_Element_Text("title");
 		$title->setLabel("Title");
 		$title->setAttrib('maxLength', 100);
 		$title->addFilter(new Zend_Filter_StringTrim());
 		$title->setRequired(true);
-        $title->addValidator('NotEmpty', false, array('messages' => 'Please enter title.'));
-		$title->addValidator("regex",true,array(                           
+        $title->addValidator('NotEmpty', false, ['messages' => 'Please enter title.']);
+		$title->addValidator("regex",true,[                           
                            'pattern'=>'/^[a-zA-Z0-9.\- ?]+$/',
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter valid title.'
-                           )
-        	));
+                           ]
+        	]);
         $title->addValidator(new Zend_Validate_Db_NoRecordExists(
-	                                            array(  'table'=>'main_announcements',
+	                                            [  'table'=>'main_announcements',
 	                                                     'field'=>'title',
 	                                                     'exclude'=>'id!="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('id').'" AND isactive=1',    
-	                                                      ) ) );
+	                                                      ] ) );
 		// Validation for duplicate name is not required	                                                      
 		$title->getValidator('Db_NoRecordExists')->setMessage('Title name already exists.');	
 
@@ -73,9 +73,9 @@ class Default_Form_Announcements extends Zend_Form
         $description->setAttrib('rows', 10);
         $description->setAttrib('cols', 50);
 		$description->setRequired(true);
-        $description->addValidator('NotEmpty', false, array('messages' => 'Please enter description.'));
+        $description->addValidator('NotEmpty', false, ['messages' => 'Please enter description.']);
 
-		$this->addElements(array($id,$businessunit_id,$department_id,$title,$description));
-    	$this->setElementDecorators(array('ViewHelper')); 
+		$this->addElements([$id,$businessunit_id,$department_id,$title,$description]);
+    	$this->setElementDecorators(['ViewHelper']); 
 	}
 }

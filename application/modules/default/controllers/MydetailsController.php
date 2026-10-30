@@ -50,7 +50,7 @@ class Default_MydetailsController extends Zend_Controller_Action
      	if($auth->hasIdentity()){
 					$loginUserId = $auth->getStorage()->read()->id;
 		}
-		$id = $loginUserId;	$data = array();$tabName="employee";
+		$id = $loginUserId;	$data = [];$tabName="employee";
 		$callval = $this->getRequest()->getParam('call');
 		if($callval == 'ajaxcall')
 			$this->_helper->layout->disableLayout();
@@ -169,7 +169,7 @@ class Default_MydetailsController extends Zend_Controller_Action
 						}
 					}
 				
-					$positionlistArr = $positionsmodel->getPositionList($data['jobtitle_id']); 
+					$positionlistArr = $positionsmodel->getPositionList(); 
 					if(sizeof($positionlistArr) > 0)
 					{ 			
 						$employeeform->position_id->addMultiOption('','Select a Position');
@@ -384,9 +384,9 @@ class Default_MydetailsController extends Zend_Controller_Action
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall', null);
-								$data = array();
+								$data = [];
 								$searchQuery = '';
-								$searchArray = array();
+								$searchArray = [];
 								$tablecontent = '';
 								if ($refresh == 'refresh') {
 									if ($dashboardcall == 'Yes')
@@ -399,7 +399,7 @@ class Default_MydetailsController extends Zend_Controller_Action
 									$pageNo = 1;
 									$searchData = '';
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 								} else {
 									$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 									$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'code';
@@ -482,9 +482,9 @@ Zend_Debug::dump($th->getMessage());        }
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall', null);
-								$data = array();
+								$data = [];
 								$searchQuery = '';
-								$searchArray = array();
+								$searchArray = [];
 								$tablecontent = '';
 								if ($refresh == 'refresh') {
 									if ($dashboardcall == 'Yes')
@@ -497,7 +497,7 @@ Zend_Debug::dump($th->getMessage());        }
 									$pageNo = 1;
 									$searchData = '';
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 								} else {
 									$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 									$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'ad.emp_id';
@@ -560,7 +560,7 @@ Zend_Debug::dump($th->getMessage());
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 				
 				if ($Uid != "") {
 					$employeeData = $usersModel->getUserDetailsByIDandFlag($Uid);
@@ -581,9 +581,9 @@ Zend_Debug::dump($th->getMessage());
 					$objname = $this->_getParam('objname');
 					$refresh = $this->_getParam('refresh');
 					$dashboardcall = $this->_getParam('dashboardcall', null);
-					$data = array();
+					$data = [];
 					$searchQuery = '';
-					$searchArray = array();
+					$searchArray = [];
 					$tablecontent = '';
 					if ($refresh == 'refresh') {
 						if ($dashboardcall == 'Yes')
@@ -596,7 +596,7 @@ Zend_Debug::dump($th->getMessage());
 						$pageNo = 1;
 						$searchData = '';
 						$searchQuery = '';
-						$searchArray = array();
+						$searchArray = [];
 					} else {
 						$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 						$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'r.id';
@@ -650,7 +650,7 @@ Zend_Debug::dump($th->getMessage());
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $id;
+				$Uid = $id ?: $id;
 
 
 				if ($Uid != "") {
@@ -674,9 +674,9 @@ Zend_Debug::dump($th->getMessage());
 					$objname = $this->_getParam('objname');
 					$refresh = $this->_getParam('refresh');
 					$dashboardcall = $this->_getParam('dashboardcall', null);
-					$data = array();
+					$data = [];
 					$searchQuery = '';
-					$searchArray = array();
+					$searchArray = [];
 					$tablecontent = '';
 					if ($refresh == 'refresh') {
 						if ($dashboardcall == 'Yes')
@@ -689,7 +689,7 @@ Zend_Debug::dump($th->getMessage());
 						$pageNo = 1;
 						$searchData = '';
 						$searchQuery = '';
-						$searchArray = array();
+						$searchArray = [];
 					} else {
 						$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 						$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'position_id';
@@ -741,8 +741,8 @@ Zend_Debug::dump($th->getMessage());
 				if($callval == 'ajaxcall')
 					$this->_helper->layout->disableLayout();
 				$objName = 'mydetails';$editPrivilege="";
-				$identityDocumentArr = array();
-				$documentsArr = array();
+				$identityDocumentArr = [];
+				$documentsArr = [];
 				$emppersonaldetailsform = new Default_Form_emppersonaldetails();
 				$employeeModal = new Default_Model_Employee();
 				$emppersonaldetailsform->removeElement("submit");
@@ -916,9 +916,9 @@ Zend_Debug::dump($th->getMessage());
 	public function personalAction()
 	{ 
 	    
-				$employeeData =array();$emptyFlag=0;
-				$identityDocumentArr = array();
-				$documentsArr = array();
+				$employeeData =[];$emptyFlag=0;
+				$identityDocumentArr = [];
+				$documentsArr = [];
 				$auth = Zend_Auth::getInstance();
 				if($auth->hasIdentity()){
 							$loginUserId = $auth->getStorage()->read()->id;
@@ -953,7 +953,7 @@ Zend_Debug::dump($th->getMessage());
 						$ethniccodemodel = new Default_Model_Ethniccode();
 						$racecodemodel = new Default_Model_Racecode();	
 						$languagemodel = new Default_Model_Language();
-						$msgarray = array();
+						$msgarray = [];
 								 
 						$genderlistArr = $genderModel->getGenderList();
 								
@@ -1103,9 +1103,9 @@ Zend_Debug::dump($th->getMessage());
 		if($auth->hasIdentity()){
 			$loginUserId = $auth->getStorage()->read()->id;
 		}
-		$documentnameArr = array();
-		$expiry_dateArr = array();
-		$mandatorydocArr = array();
+		$documentnameArr = [];
+		$expiry_dateArr = [];
+		$mandatorydocArr = [];
 		
 		$documentnameArr = $this->_request->getParam('document_name');
 		$expiry_dateArr = $this->_request->getParam('expiry_date');
@@ -1170,14 +1170,14 @@ Zend_Debug::dump($th->getMessage());
 		    $new_post_values = array_filter($post_values);
 		    if(!empty($new_post_values))
 		    {
-			$identitydocArr = array();
+			$identitydocArr = [];
 			$identitydoc = '';
 			$expirydate = '';
 			if(!empty($identityDocumentArr))
 			{
 				for($k=0;$k<sizeof($identityDocumentArr);$k++)
 				{
-					$identitydoc = isset($documentnameArr[$k])?$documentnameArr[$k]:'';
+					$identitydoc = $documentnameArr[$k] ?? '';
 					if(isset($expiry_dateArr[$k]) && $expiry_dateArr[$k] !='empty')
 						$expirydate = sapp_Global::change_date($expiry_dateArr[$k],'database');
 					else
@@ -1209,7 +1209,7 @@ Zend_Debug::dump($th->getMessage());
 			$actionflag = '';
 			$tableid  = '';
 
-			$data = array('user_id'=>$user_id,
+			$data = ['user_id'=>$user_id,
 				                 'genderid'=>$genderid,
 								 'maritalstatusid'=>$maritalstatusid,
                                  'nationalityid'=>$nationalityid,
@@ -1223,9 +1223,9 @@ Zend_Debug::dump($th->getMessage());
 								 'modifiedby'=>$loginUserId,
 			                     'modifieddate'=>gmdate("Y-m-d H:i:s")
 
-			);
+			];
 			if($id!=''){
-				$where = array('user_id=?'=>$user_id);
+				$where = ['user_id=?'=>$user_id];
 				$actionflag = 2;
 			}
 			else
@@ -1240,19 +1240,19 @@ Zend_Debug::dump($th->getMessage());
 			if($Id == 'update')
 			{
 				$tableid = $id;
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Employee personal details updated successfully."));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Employee personal details updated successfully."]);
 					
 			}
 			else
 			{
 				$tableid = $Id;
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Employee personal details added successfully."));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Employee personal details added successfully."]);
 			}
 			$menuID = EMPLOYEE;
 			$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$user_id);
 		 }else
 		 {
-		 	$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>FIELDMSG));
+		 	$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>FIELDMSG]);
 		 }	
 			$this->_redirect('mydetails/personal');
 		}else
@@ -1292,7 +1292,7 @@ Zend_Debug::dump($th->getMessage());
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 				
 
 				//$Uid = $loginUserId;
@@ -1317,9 +1317,9 @@ Zend_Debug::dump($th->getMessage());
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall', null);
-								$data = array();
+								$data = [];
 								$searchQuery = '';
-								$searchArray = array();
+								$searchArray = [];
 								$tablecontent = '';
 								if ($refresh == 'refresh') {
 									if ($dashboardcall == 'Yes')
@@ -1332,7 +1332,7 @@ Zend_Debug::dump($th->getMessage());
 									$pageNo = 1;
 									$searchData = '';
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 								} else {
 									$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 									$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'l.emp_id';
@@ -1396,7 +1396,7 @@ Zend_Debug::dump($th->getMessage());
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $loginUserId;
-				$Uid = ($id) ? $id : $loginUserId;
+				$Uid = $id ?: $loginUserId;
 				if ($Uid != "") {
 					$employeeData = $usersModel->getUserDetailsByIDandFlag($Uid);
 				}
@@ -1416,9 +1416,9 @@ Zend_Debug::dump($th->getMessage());
 					$objname = $this->_getParam('objname');
 					$refresh = $this->_getParam('refresh');
 					$dashboardcall = $this->_getParam('dashboardcall', null);
-					$data = array();
+					$data = [];
 					$searchQuery = '';
-					$searchArray = array();
+					$searchArray = [];
 					$tablecontent = '';
 					if ($refresh == 'refresh') {
 						if ($dashboardcall == 'Yes')
@@ -1431,7 +1431,7 @@ Zend_Debug::dump($th->getMessage());
 						$pageNo = 1;
 						$searchData= '';
 						$searchQuery = '';
-						$searchArray = array();
+						$searchArray = [];
 					} else {
 						$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 						$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'e.modifieddate';
@@ -1489,7 +1489,7 @@ Zend_Debug::dump($th->getMessage());
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $id;
+				$Uid = $id ?: $id;
 				if ($Uid != "") {
 					$employeeData = $usersModel->getUserDetailsByIDandFlag($Uid);
 				}
@@ -1509,9 +1509,9 @@ Zend_Debug::dump($th->getMessage());
 					$objname = $this->_getParam('objname');
 					$refresh = $this->_getParam('refresh');
 					$dashboardcall = $this->_getParam('dashboardcall', null);
-					$data = array();
+					$data = [];
 					$searchQuery = '';
-					$searchArray = array();
+					$searchArray = [];
 					$tablecontent = '';
 					if ($refresh == 'refresh') {
 						if ($dashboardcall == 'Yes')
@@ -1524,7 +1524,7 @@ Zend_Debug::dump($th->getMessage());
 						$pageNo = 1;
 						$searchData = '';
 						$searchQuery = '';
-						$searchArray = array();
+						$searchArray = [];
 					} else {
 						$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 						$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'ep.modifieddate';
@@ -1581,7 +1581,7 @@ Zend_Debug::dump($th->getMessage());
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 				
 
 				$employeeModal = new Default_Model_Employee();
@@ -1603,9 +1603,9 @@ Zend_Debug::dump($th->getMessage());
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall', null);
-								$data = array();
+								$data = [];
 								$searchQuery = '';
-								$searchArray = array();
+								$searchArray = [];
 								$tablecontent = '';
 								if ($refresh == 'refresh') {
 									if ($dashboardcall == 'Yes')
@@ -1618,7 +1618,7 @@ Zend_Debug::dump($th->getMessage());
 									$pageNo = 1;
 									$searchData = '';
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 								} else {
 									$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 									$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'a.modifieddate';
@@ -1656,11 +1656,11 @@ Zend_Debug::dump($th->getMessage());
 	{
 	    
 				$auth = Zend_Auth::getInstance();
-				$empdata =array();
-				$empDeptdata=array();
+				$empdata =[];
+				$empDeptdata=[];
 				$empDept = '';
 				$editPrivilege="";
-				$departmentAddress = array();
+				$departmentAddress = [];
 				if($auth->hasIdentity()){
 							$loginUserId = $auth->getStorage()->read()->id;
 				} 	
@@ -1708,7 +1708,7 @@ Zend_Debug::dump($th->getMessage());
 								$statesmodel = new Default_Model_States();
 								$citiesmodel = new Default_Model_Cities();
 								$orgInfoModel = new Default_Model_Organisationinfo();
-								$msgarray = array();
+								$msgarray = [];
 								
 								$deptModel = new Default_Model_Departments();
 								if($empDept !='' && $empDept !='NULL')
@@ -1866,7 +1866,7 @@ Zend_Debug::dump($th->getMessage());
 							$this->view->controllername = $objName;
 							$this->view->actionname = 'communication';	//Edit action name
 							$this->view->data = $data;
-							$this->view->dataArray = (!empty($departmentAddress))?$departmentAddress:array();	
+							$this->view->dataArray = (!empty($departmentAddress))?$departmentAddress:[];	
 							$this->view->id = $id;
 							$this->view->employeedata = $empdata[0];
 							$this->view->form = $empcommdetailsform;
@@ -1887,8 +1887,8 @@ Zend_Debug::dump($th->getMessage());
 	public function communicationAction()
 	{	
 	
-			$empdata=array();
-			$departmentAddress = array();
+			$empdata=[];
+			$departmentAddress = [];
 			$tabName="communication";
 			$emptyFlag=0;
 			$auth = Zend_Auth::getInstance();
@@ -1913,7 +1913,7 @@ Zend_Debug::dump($th->getMessage());
 					$statesmodel = new Default_Model_States();
 					$citiesmodel = new Default_Model_Cities();
 					$countrieslistArr = $countriesModel->getTotalCountriesList();
-					$msgarray = array();
+					$msgarray = [];
 					//Department address
 					$deptId = $empdata[0]['department_id'];
 					if($deptId !='' && $deptId !='')
@@ -2058,7 +2058,7 @@ Zend_Debug::dump($th->getMessage());
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 
 				$employeeModal = new Default_Model_Employee();
 				try {
@@ -2077,9 +2077,9 @@ Zend_Debug::dump($th->getMessage());
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall', null);
-								$data = array();
+								$data = [];
 								$searchQuery = '';
-								$searchArray = array();
+								$searchArray = [];
 								$tablecontent = '';
 								if ($refresh == 'refresh') {
 									if ($dashboardcall == 'Yes')
@@ -2092,7 +2092,7 @@ Zend_Debug::dump($th->getMessage());
 									$pageNo = 1;
 									$searchData = '';
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 								} else {
 									$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 									$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'isactive';
@@ -2150,7 +2150,7 @@ try {
 					$userID = ($this->_getParam('unitId') !='')? $this->_getParam('unitId'):$this->_getParam('userid');
 				}
 				if($userid == '')	$userid = $userID;
-				$Uid = ($userid)?$userid:$userID;
+				$Uid = $userid ?: $userID;
 				$employeeModal = new Default_Model_Employee();
 				$empdata = $employeeModal->getsingleEmployeeData($Uid);
 
@@ -2171,9 +2171,9 @@ try {
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall', null);
-								$data = array();
+								$data = [];
 								$searchQuery = '';
-								$searchArray = array();
+								$searchArray = [];
 								$tablecontent = '';
 								if ($refresh == 'refresh') {
 									if ($dashboardcall == 'Yes')
@@ -2186,7 +2186,7 @@ try {
 									$pageNo = 1;
 									$searchData = '';
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 								} else {
 									$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 									$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'eh.modifieddate';
@@ -2226,7 +2226,7 @@ Zend_Debug::dump($th->getMessage());	}
 	{
 	   
 
-				$tabName = "education";$employeeData =array();
+				$tabName = "education";$employeeData =[];
 				$auth = Zend_Auth::getInstance();
 				if($auth->hasIdentity()){
 							$loginUserId = $auth->getStorage()->read()->id;
@@ -2239,7 +2239,7 @@ Zend_Debug::dump($th->getMessage());	}
 					$userID = ($this->_getParam('unitId') !='')? $this->_getParam('unitId'):$this->_getParam('userid');
 				}
 				if($userid == '')	$userid = $userID;
-				$Uid = ($userid)?$userid:$userID;
+				$Uid = $userid ?: $userID;
 				$employeeModal = new Default_Model_Employee();
 				$empdata = $employeeModal->getsingleEmployeeData($Uid);
 				
@@ -2258,7 +2258,7 @@ Zend_Debug::dump($th->getMessage());	}
 						$view = Zend_Layout::getMvcInstance()->getView();		
 						$objname = $this->_getParam('objname');
 						$refresh = $this->_getParam('refresh');
-						$data = array();$searchQuery = '';	$searchArray = array();	$tablecontent = '';
+						$data = [];$searchQuery = '';	$searchArray = [];	$tablecontent = '';
 						
 						if($refresh == 'refresh')
 						{
@@ -2293,16 +2293,16 @@ Zend_Debug::dump($th->getMessage());	}
 						}
 								
 						$objName = 'educationdetails';
-						$tableFields = array('action'=>'Action','educationlevel'=>'Education Level',
+						$tableFields = ['action'=>'Action','educationlevel'=>'Education Level',
 										 'institution_name'=>'Institution Name','course'=>'Course',
-										 'from_date'=>'From',"to_date"=>"To","percentage"=>"Percentage");
+										 'from_date'=>'From',"to_date"=>"To","percentage"=>"Percentage"];
 						
 
 						$tablecontent = $educationdetailsModel->geteducationdetails($sort, $by, $pageNo, $perPage,$searchQuery,$Uid);     
 						
 						$educationlevelcodemodel = new Default_Model_Educationlevelcode();
 						$educationlevelArr = $educationlevelcodemodel->getEducationlevelData();
-						$level_opt = array();
+						$level_opt = [];
 						if(!empty($educationlevelArr))
 						{
 							foreach ($educationlevelArr as $educationlevelres)
@@ -2310,14 +2310,14 @@ Zend_Debug::dump($th->getMessage());	}
 								$level_opt[$educationlevelres['id']] = $educationlevelres['educationlevelcode'];
 							}
 						}
-						$dataTmp = array('userid'=>$Uid,
+						$dataTmp = ['userid'=>$Uid,
 							'sort' => $sort,
 							'by' => $by,
 							'pageNo' => $pageNo,
 							'perPage' => $perPage,				
 							'tablecontent' => $tablecontent,
 							'objectname' => $objName,
-							'extra' => array(),
+							'extra' => [],
 							'tableheader' => $tableFields,
 							'jsGridFnName' => 'getEmployeeAjaxgridData',
 							'jsFillFnName' => '',
@@ -2325,14 +2325,14 @@ Zend_Debug::dump($th->getMessage());	}
 							'add'=>'add',
 							'menuName'=>'Education Details','formgrid' => 'true','unitId'=>$Uid,
 							'call'=>$call,'context'=>'mydetails',
-							'search_filters' => array('from_date' =>array('type'=>'datepicker'),
-															'to_date' =>array('type'=>'datepicker'),
-																	'educationlevel' => array(
+							'search_filters' => ['from_date' =>['type'=>'datepicker'],
+															'to_date' =>['type'=>'datepicker'],
+																	'educationlevel' => [
 																		'type' => 'select',
-																		'filter_data' => array('' => 'All')+$level_opt,
-																	),
-														)	
-						);			
+																		'filter_data' => ['' => 'All']+$level_opt,
+																	],
+														]	
+						];			
 						array_push($data,$dataTmp);
 						$this->view->id=$userid;
 						$this->view->controllername = $objName;
@@ -2350,7 +2350,7 @@ Zend_Debug::dump($th->getMessage());	}
 	{
  
 				$tabName = "experience";
-				$employeeData =array();
+				$employeeData =[];
 				$auth = Zend_Auth::getInstance();
 				if($auth->hasIdentity()){
 							$loginUserId = $auth->getStorage()->read()->id;
@@ -2363,7 +2363,7 @@ Zend_Debug::dump($th->getMessage());	}
 					$userID = ($this->_getParam('unitId') !='')? $this->_getParam('unitId'):$this->_getParam('userid');
 				}
 				if($userid == '')	$userid = $userID;
-				$Uid = ($userid)?$userid:$userID;
+				$Uid = $userid ?: $userID;
 				
 				$employeeModal = new Default_Model_Employee();
 				$empdata = $employeeModal->getsingleEmployeeData($Uid);
@@ -2382,7 +2382,7 @@ Zend_Debug::dump($th->getMessage());	}
 						$objname = $this->_getParam('objname');
 						$refresh = $this->_getParam('refresh');
 						
-						$data = array();	$searchQuery = '';	$searchArray = array();		$tablecontent = '';
+						$data = [];	$searchQuery = '';	$searchArray = [];		$tablecontent = '';
 						
 						if($refresh == 'refresh')
 						{
@@ -2418,18 +2418,18 @@ Zend_Debug::dump($th->getMessage());	}
 								
 						$objName = 'experiencedetails';
 						
-						$tableFields = array('action'=>'Action','comp_name'=>'Company Name','comp_website'=>'Company Website','designation'=>'Designation','from_date'=>'From','to_date'=>'To');
+						$tableFields = ['action'=>'Action','comp_name'=>'Company Name','comp_website'=>'Company Website','designation'=>'Designation','from_date'=>'From','to_date'=>'To'];
 						
 						$tablecontent = $experiencedetailsModel->getexperiencedetailsData($sort, $by, $pageNo, $perPage,$searchQuery,$Uid);    
 						
-						$dataTmp = array('userid'=>$Uid,
+						$dataTmp = ['userid'=>$Uid,
 							'sort' => $sort,
 							'by' => $by,
 							'pageNo' => $pageNo,
 							'perPage' => $perPage,				
 							'tablecontent' => $tablecontent,
 							'objectname' => $objName,
-							'extra' => array(),
+							'extra' => [],
 							'tableheader' => $tableFields,
 							'jsGridFnName' => 'getEmployeeAjaxgridData',
 							'jsFillFnName' => '',
@@ -2439,10 +2439,10 @@ Zend_Debug::dump($th->getMessage());	}
 							'formgrid' => 'true',
 							'unitId'=>$Uid,
 							'call'=>$call,'context'=>'mydetails',
-							'search_filters' => array(
-											'from_date' =>array('type'=>'datepicker'),
-											'to_date' =>array('type'=>'datepicker')											
-											)							);			
+							'search_filters' => [
+											'from_date' =>['type'=>'datepicker'],
+											'to_date' =>['type'=>'datepicker']											
+											]							];			
 						
 						array_push($data,$dataTmp);
 						
@@ -2476,7 +2476,7 @@ Zend_Debug::dump($th->getMessage());	}
 					$this->_helper->layout->disableLayout();
 					$userID = ($this->_getParam('unitId') !='')? $this->_getParam('unitId'):$this->_getParam('userid');
 				}	
-				$Uid = ($id)?$id:$userID;
+				$Uid = $id ?: $userID;
 			
 				$employeeleavesModel = new Default_Model_Employeeleaves();
 				$leavemanagementModel = new Default_Model_Leavemanagement();	 		
@@ -2553,7 +2553,7 @@ Zend_Debug::dump($th->getMessage());	}
 						}  		
 						$objname = $this->_getParam('objname');
 						$refresh = $this->_getParam('refresh');
-						$data = array();$searchQuery = '';	$searchArray = array();	$tablecontent = '';
+						$data = [];$searchQuery = '';	$searchArray = [];	$tablecontent = '';
 						if($refresh == 'refresh')
 						{
 							$sort = 'DESC';$by = 'e.modifieddate';$perPage = 10;$pageNo = 1;$searchData = '';
@@ -2583,11 +2583,11 @@ Zend_Debug::dump($th->getMessage());	}
 								
 						$objName = 'empleaves';
 
-						$tableFields = array('action'=>'Action','emp_leave_limit'=>'Allotted Leave Limit','used_leaves'=>'Used Leaves','remainingleaves'=>'Leave Balance','alloted_year'=>'Alloted Year');
+						$tableFields = ['action'=>'Action','emp_leave_limit'=>'Allotted Leave Limit','used_leaves'=>'Used Leaves','remainingleaves'=>'Leave Balance','alloted_year'=>'Alloted Year'];
 						
 
 						$tablecontent = $employeeleavesModel->getEmpLeavesData($sort, $by, $pageNo, $perPage,$searchQuery,$Uid);     
-						$dataTmp = array(
+						$dataTmp = [
 							'userid'=>$Uid, 
 							'sort' => $sort,
 							'by' => $by,
@@ -2595,7 +2595,7 @@ Zend_Debug::dump($th->getMessage());	}
 							'perPage' => $perPage,				
 							'tablecontent' => $tablecontent,
 							'objectname' => $objName,
-							'extra' => array(),
+							'extra' => [],
 							'tableheader' => $tableFields,
 							'jsGridFnName' => 'getEmployeeAjaxgridData',
 							'jsFillFnName' => '',
@@ -2604,7 +2604,7 @@ Zend_Debug::dump($th->getMessage());	}
 							'menuName'=>'Employee Leaves',
 							'formgrid'=>'true','unitId'=>$Uid,
 							'call'=>$call,'context'=>'mydetails'
-						);			
+						];			
 						array_push($data,$dataTmp);
 						$permission = sapp_Global::_checkprivileges(EMPLOYEE,$loginuserGroup,$loginUserRole,'edit');
 						$this->view->dataArray = $data;
@@ -2649,7 +2649,7 @@ Zend_Debug::dump($th->getMessage());	}
 				}
 				//$id=$loginUserId;
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 				if ($Uid != "") {
 					$employeeData = $usersModel->getUserDetailsByIDandFlag($Uid);
 				}
@@ -2672,9 +2672,9 @@ Zend_Debug::dump($th->getMessage());	}
 					$objname = $this->_getParam('objname');
 					$refresh = $this->_getParam('refresh');
 					$dashboardcall = $this->_getParam('dashboardcall', null);
-					$data = array();
+					$data = [];
 					$searchQuery = '';
-					$searchArray = array();
+					$searchArray = [];
 					$tablecontent = '';
 					if ($refresh == 'refresh') {
 						if ($dashboardcall == 'Yes')
@@ -2687,7 +2687,7 @@ Zend_Debug::dump($th->getMessage());	}
 						$pageNo = 1;
 						$searchData = '';
 						$searchQuery = '';
-						$searchArray = array();
+						$searchArray = [];
 					} else {
 						$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 						$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'ls.modifieddate';
@@ -2738,7 +2738,7 @@ Zend_Debug::dump($th->getMessage());	}
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 
 				$employeeModal = new Default_Model_Employee();
 				try {
@@ -2757,9 +2757,9 @@ Zend_Debug::dump($th->getMessage());	}
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall', null);
-								$data = array();
+								$data = [];
 								$searchQuery = '';
-								$searchArray = array();
+								$searchArray = [];
 								$tablecontent = '';
 								if ($refresh == 'refresh') {
 									if ($dashboardcall == 'Yes')
@@ -2772,7 +2772,7 @@ Zend_Debug::dump($th->getMessage());	}
 									$pageNo = 1;
 									$searchData = '';
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 								} else {
 									$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 									$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'ehi.isactive';
@@ -2829,7 +2829,7 @@ Zend_Debug::dump($th->getMessage());	}
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 				
 				
 				$employeeModal = new Default_Model_Employee();
@@ -2851,9 +2851,9 @@ Zend_Debug::dump($th->getMessage());	}
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall', null);
-								$data = array();
+								$data = [];
 								$searchQuery = '';
-								$searchArray = array();
+								$searchArray = [];
 								$tablecontent = '';
 								if ($refresh == 'refresh') {
 									if ($dashboardcall == 'Yes')
@@ -2866,7 +2866,7 @@ Zend_Debug::dump($th->getMessage());	}
 									$pageNo = 1;
 									$searchData = '';
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 								} else {
 									$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 									$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'phoneno';
@@ -2922,7 +2922,7 @@ Zend_Debug::dump($th->getMessage());	}
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 				
 
 				$employeeModal = new Default_Model_Employee();
@@ -2944,9 +2944,9 @@ Zend_Debug::dump($th->getMessage());	}
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall', null);
-								$data = array();
+								$data = [];
 								$searchQuery = '';
-								$searchArray = array();
+								$searchArray = [];
 								$tablecontent = '';
 								if ($refresh == 'refresh') {
 									if ($dashboardcall == 'Yes')
@@ -2959,7 +2959,7 @@ Zend_Debug::dump($th->getMessage());	}
 									$pageNo = 1;
 									$searchData = '';
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 								} else {
 									$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 									$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'digitaladdress';
@@ -2972,7 +2972,7 @@ Zend_Debug::dump($th->getMessage());	}
 									$searchData = $this->_getParam('searchData');
 									$searchData = rtrim($searchData, ',');
 								}
-								$dataTmp = $empaddressmodel->getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $Uid, $conText);
+								$dataTmp = $empaddressmodel->getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall);
 
 								array_push($data, $dataTmp);
 								$this->view->dataArray = $data;
@@ -3011,7 +3011,7 @@ Zend_Debug::dump($th->getMessage());	}
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 				
 				$employeeModal = new Default_Model_Employee();
 				try {
@@ -3030,9 +3030,9 @@ Zend_Debug::dump($th->getMessage());	}
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall', null);
-								$data = array();
+								$data = [];
 								$searchQuery = '';
-								$searchArray = array();
+								$searchArray = [];
 								$tablecontent = '';
 								if ($refresh == 'refresh') {
 									if ($dashboardcall == 'Yes')
@@ -3045,7 +3045,7 @@ Zend_Debug::dump($th->getMessage());	}
 									$pageNo = 1;
 									$searchData = '';
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 								} else {
 									$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 									$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'e.modifieddate';
@@ -3097,7 +3097,7 @@ Zend_Debug::dump($th->getMessage());	}
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 			
 				$employeeModal = new Default_Model_Employee();
 				try {
@@ -3122,9 +3122,9 @@ Zend_Debug::dump($th->getMessage());	}
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall', null);
-								$data = array();
+								$data = [];
 								$searchQuery = '';
-								$searchArray = array();
+								$searchArray = [];
 								$tablecontent = '';
 								if ($refresh == 'refresh') {
 									if ($dashboardcall == 'Yes')
@@ -3137,7 +3137,7 @@ Zend_Debug::dump($th->getMessage());	}
 									$pageNo = 1;
 									$searchData = '';
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 								} else {
 									$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 									$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'e.modifieddate';
@@ -3178,7 +3178,7 @@ Zend_Debug::dump($th->getMessage());	}
 		
 			$usersModel = new Default_Model_Users();
 
-		 	$userID='';$empdata=array(); $conText = "";$objName = 'trainingandcertificationdetails';
+		 	$userID='';$empdata=[]; $conText = "";$objName = 'trainingandcertificationdetails';
 		 	$auth = Zend_Auth::getInstance();
 		 	if($auth->hasIdentity()){
 		 		$loginUserId = $auth->getStorage()->read()->id;
@@ -3196,7 +3196,7 @@ Zend_Debug::dump($th->getMessage());	}
 					}
 
 					if ($id == '')		$id = $userID;
-					$Uid = ($id) ? $id : $userID;
+					$Uid = $id ?: $userID;
 					if ($Uid != "") {
 						$employeeData = $usersModel->getUserDetailsByIDandFlag($Uid);
 					}
@@ -3227,7 +3227,7 @@ Zend_Debug::dump($th->getMessage());	}
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
 							$dashboardcall = $this->_getParam('dashboardcall',null);
-							$data = array();	$searchQuery = '';	$searchArray = array();		$tablecontent = '';
+							$data = [];	$searchQuery = '';	$searchArray = [];		$tablecontent = '';
 
 							if($refresh == 'refresh')
 							{
@@ -3236,7 +3236,7 @@ Zend_Debug::dump($th->getMessage());	}
 								else
 								$perPage = PERPAGE;
 
-								$sort = 'DESC';$by = 'ec.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = array();
+								$sort = 'DESC';$by = 'ec.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = [];
 							}
 							else
 							{
@@ -3282,7 +3282,7 @@ Zend_Debug::dump($th->getMessage());	}
 	   
 			
 				$tabName = "creditcard";
-				$employeeData =array();
+				$employeeData =[];
 				$objName = 'mydetails';
 				$editPrivilege='';
 				$auth = Zend_Auth::getInstance();
@@ -3366,7 +3366,7 @@ Zend_Debug::dump($th->getMessage());	}
 	{
 	  
 				$tabName = "creditcard";
-				$employeeData =array();
+				$employeeData =[];
 				
 			   $auth = Zend_Auth::getInstance();
 			   if($auth->hasIdentity())
@@ -3425,7 +3425,7 @@ Zend_Debug::dump($th->getMessage());	}
 	public function visadetailsviewAction()
 	{
 	 
-				$employeeData =array();$empdata=array();$emptyFlag=0;
+				$employeeData =[];$empdata=[];$emptyFlag=0;
 				$auth = Zend_Auth::getInstance();
 				if($auth->hasIdentity()){
 							$loginUserId = $auth->getStorage()->read()->id;
@@ -3438,7 +3438,7 @@ Zend_Debug::dump($th->getMessage());	}
 					$userID = ($this->_getParam('unitId') !='')? $this->_getParam('unitId'):$this->_getParam('userid');
 				}
 				if($id == '')	$id = $userID;
-				$Uid = ($id)?$id:$userID;
+				$Uid = $id ?: $userID;
 				$employeeModal = new Default_Model_Employee();
 				$empdata = $employeeModal->getsingleEmployeeData($Uid);
 				if($empdata == 'norows')
@@ -3456,7 +3456,7 @@ Zend_Debug::dump($th->getMessage());	}
 						$objname = $this->_getParam('objname');
 						$refresh = $this->_getParam('refresh');
 						$dashboardcall = $this->_getParam('dashboardcall',null);
-						$data = array();	$searchQuery = '';$searchArray = array();$tablecontent = '';$levelsArr=array();
+						$data = [];	$searchQuery = '';$searchArray = [];$tablecontent = '';$levelsArr=[];
 					
 						if($refresh == 'refresh')
 						{
@@ -3464,7 +3464,7 @@ Zend_Debug::dump($th->getMessage());	}
 									$perPage = DASHBOARD_PERPAGE;
 							else	
 									$perPage = PERPAGE;
-							$searchQuery = '';$searchArray = array();
+							$searchQuery = '';$searchArray = [];
 							$sort = 'DESC';$by = 'e.modifieddate';$perPage = 10;$pageNo = 1;$searchData = '';
 						}
 						else 
@@ -3497,7 +3497,7 @@ Zend_Debug::dump($th->getMessage());	}
 	{
 	   
 				$tabName = "visa";
-				$employeeData =array();
+				$employeeData =[];
 				$auth = Zend_Auth::getInstance();
 			   if($auth->hasIdentity())
 			   {
@@ -3596,7 +3596,7 @@ Zend_Debug::dump($th->getMessage());	}
 					$conText = ($this->_getParam('context') !='')? $this->_getParam('context'):$this->getRequest()->getParam('context');
 				}
 				if($userid == '') $userid = $userID;
-				$Uid = ($userid)?$userid:$userID;//die;
+				$Uid = $userid ?: $userID;//die;
 				
 				$empMedicalclaimsform = new Default_Form_Medicalclaims();
 				$empMedicalclaimsModel = new Default_Model_Medicalclaims();
@@ -3619,8 +3619,8 @@ Zend_Debug::dump($th->getMessage());	}
 								$view = Zend_Layout::getMvcInstance()->getView();		
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
-								$data = array();	$employeeData=array();
-								$searchQuery = '';		$searchArray = array();	$tablecontent = '';
+								$data = [];	$employeeData=[];
+								$searchQuery = '';		$searchArray = [];	$tablecontent = '';
 								if($refresh == 'refresh')
 								{
 									$sort = 'DESC';$by = 'm.modifieddate';$perPage = 10;$pageNo = 1;$searchData = '';
@@ -3650,18 +3650,18 @@ Zend_Debug::dump($th->getMessage());	}
 										
 								$objName = 'medicalclaims';
 
-								$tableFields = array('action'=>'Action','injury_type'=>'Medical Claim Type','leaveappliedbyemployee_days'=>'Approved Leaves','leavebyemployeer_days'=>'Employee Applied Leaves','expected_date_join'=> 'Date of Joining');
+								$tableFields = ['action'=>'Action','injury_type'=>'Medical Claim Type','leaveappliedbyemployee_days'=>'Approved Leaves','leavebyemployeer_days'=>'Employee Applied Leaves','expected_date_join'=> 'Date of Joining'];
 
 								$tablecontent = $empMedicalclaimsModel->getempmedicalclaimdetails($sort, $by, $pageNo, $perPage,$searchQuery,$Uid);     
 								
-								$dataTmp = array('userid'=>$Uid,
+								$dataTmp = ['userid'=>$Uid,
 									'sort' => $sort,
 									'by' => $by,
 									'pageNo' => $pageNo,
 									'perPage' => $perPage,				
 									'tablecontent' => $tablecontent,
 									'objectname' => $objName,
-									'extra' => array(),
+									'extra' => [],
 									'tableheader' => $tableFields,
 									'jsGridFnName' => 'getEmployeeAjaxgridData',
 									'jsFillFnName' => '',
@@ -3672,14 +3672,14 @@ Zend_Debug::dump($th->getMessage());	}
 									'unitId'=>$Uid,
 									'call'=>$call,
 									'context'=>'mydetails',
-									'search_filters' => array(
-									'injury_type' => array('type'=>'select',
-														'filter_data'=>array(''=>'All',1 => 'Paternity',2 => 'Maternity',
-															3=>'Disability',4=>'Injury')
-														),
-									'expected_date_join'=>array('type'=>'datepicker'))
+									'search_filters' => [
+									'injury_type' => ['type'=>'select',
+														'filter_data'=>[''=>'All',1 => 'Paternity',2 => 'Maternity',
+															3=>'Disability',4=>'Injury']
+														],
+									'expected_date_join'=>['type'=>'datepicker']]
 									
-								);			
+								];			
 								array_push($data,$dataTmp);
 								$this->view->id=$userid;
 								$this->view->controllername = $objName;
@@ -3708,8 +3708,8 @@ Zend_Debug::dump($th->getMessage());	}
 				$usersModel = new Default_Model_Users();
 
 					$userID = "";
-					$levelsArr = array();
-					$empcompetencyLevelsArr = array();
+					$levelsArr = [];
+					$empcompetencyLevelsArr = [];
 					$auth = Zend_Auth::getInstance();
 					if ($auth->hasIdentity()) {
 						$loginUserId = $auth->getStorage()->read()->id;
@@ -3726,7 +3726,7 @@ Zend_Debug::dump($th->getMessage());	}
 					}
 
 					if ($id == '')		$id = $userID;
-					$Uid = ($id) ? $id : $userID;
+					$Uid = $id ?: $userID;
 					if ($Uid != "") {
 						$employeeData = $usersModel->getUserDetailsByIDandFlag($Uid);
 					}
@@ -3747,9 +3747,9 @@ Zend_Debug::dump($th->getMessage());	}
 									$objname = $this->_getParam('objname');
 									$refresh = $this->_getParam('refresh');
 									$dashboardcall = $this->_getParam('dashboardcall', null);
-									$data = array();
+									$data = [];
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 									$tablecontent = '';
 									if ($refresh == 'refresh') {
 										if ($dashboardcall == 'Yes')
@@ -3809,7 +3809,7 @@ Zend_Debug::dump($th->getMessage());	}
 	   
 				$tabName = "disability";
 				$objName="mydetails";		
-				$employeeData =array();
+				$employeeData =[];
 				$auth = Zend_Auth::getInstance();
 			   if($auth->hasIdentity())
 			   {
@@ -3863,7 +3863,7 @@ Zend_Debug::dump($th->getMessage());	}
 	{
 		
 				$tabName = "dependency";
-				$employeeData =array();
+				$employeeData =[];
 				$auth = Zend_Auth::getInstance();
 				if($auth->hasIdentity())
 				{
@@ -3877,7 +3877,7 @@ Zend_Debug::dump($th->getMessage());	}
 					$userID = ($this->_getParam('unitId') !='')? $this->_getParam('unitId'):$this->_getParam('userid');
 				}
 				if($userid == '')	$userid = $userID;
-				$Uid = ($userid)?$userid:$userID;//die;
+				$Uid = $userid ?: $userID;//die;
 				
 				//Check for this user id record exists or not....
 				$employeeModal = new Default_Model_Employee();
@@ -3898,7 +3898,7 @@ Zend_Debug::dump($th->getMessage());	}
 						$objname = $this->_getParam('objname');
 						$refresh = $this->_getParam('refresh');
 						
-						$data = array();	$searchQuery = '';	$searchArray = array();		$tablecontent = '';
+						$data = [];	$searchQuery = '';	$searchArray = [];		$tablecontent = '';
 						
 						if($refresh == 'refresh')
 						{
@@ -3936,19 +3936,19 @@ Zend_Debug::dump($th->getMessage());	}
 						
 					
 						
-						$tableFields = array('action'=>'Action','dependent_name'=>'Dependent Name','dependent_relation'=>'Dependent Relation','dependent_dob'=>'Dependent DOB');
+						$tableFields = ['action'=>'Action','dependent_name'=>'Dependent Name','dependent_relation'=>'Dependent Relation','dependent_dob'=>'Dependent DOB'];
 						
 
 						$tablecontent = $dependencydetailsModel->getdependencydetailsData($sort, $by, $pageNo, $perPage,$searchQuery,$Uid);     
 						
-						$dataTmp = array('userid'=>$Uid,
+						$dataTmp = ['userid'=>$Uid,
 							'sort' => $sort,
 							'by' => $by,
 							'pageNo' => $pageNo,
 							'perPage' => $perPage,				
 							'tablecontent' => $tablecontent,
 							'objectname' => $objName,
-							'extra' => array(),
+							'extra' => [],
 							'tableheader' => $tableFields,
 							'jsGridFnName' => 'getEmployeeAjaxgridData',
 							'jsFillFnName' => '',
@@ -3957,9 +3957,9 @@ Zend_Debug::dump($th->getMessage());	}
 							'menuName'=>'Dependency Details',
 							'formgrid' => 'true','unitId'=>$Uid,
 							'call'=>$call,'context'=>'mydetails',
-							'search_filters' => array(
-											'dependent_dob' =>array('type'=>'datepicker')					
-											)	);			
+							'search_filters' => [
+											'dependent_dob' =>['type'=>'datepicker']					
+											]	];			
 						
 						array_push($data,$dataTmp);
 						
@@ -3978,7 +3978,7 @@ Zend_Debug::dump($th->getMessage());	}
 	{
 	    
 				$tabName = "workeligibility";
-				$employeeData =array();
+				$employeeData =[];
 				$emptyFlag=0;
 				$objName="mydetails";
 				$editPrivilege="";
@@ -4192,8 +4192,8 @@ Zend_Debug::dump($th->getMessage());	}
 	{
 	   
 				$tabName = "workeligibility";
-				$employeeData =array();
-				$msgarray = array();
+				$employeeData =[];
+				$msgarray = [];
 				$emptyFlag=0;
 				$issuingauthority = '';
 				$auth = Zend_Auth::getInstance();
@@ -4340,25 +4340,25 @@ Zend_Debug::dump($th->getMessage());	}
 							  $issuingauthority = $issuingauthorityArr[0]['issuingauthority'];
 								if($issuingauthority == 1){
 									$workeligibilityform->issuingauth_country->setRequired(true)->addErrorMessage('Please select country.');
-									$workeligibilityform->issuingauth_country->addValidator('NotEmpty', false, array('messages' => 'Please select country.'));
+									$workeligibilityform->issuingauth_country->addValidator('NotEmpty', false, ['messages' => 'Please select country.']);
 								 }
 								else if($issuingauthority == 2)
 								{
 								$workeligibilityform->issuingauth_country->setRequired(true)->addErrorMessage('Please select country.');
-								$workeligibilityform->issuingauth_country->addValidator('NotEmpty', false, array('messages' => 'Please select country.'));
+								$workeligibilityform->issuingauth_country->addValidator('NotEmpty', false, ['messages' => 'Please select country.']);
 								
 								$workeligibilityform->issuingauth_state->setRequired(true)->addErrorMessage('Please select state.');
-								$workeligibilityform->issuingauth_state->addValidator('NotEmpty', false, array('messages' => 'Please select state.'));
+								$workeligibilityform->issuingauth_state->addValidator('NotEmpty', false, ['messages' => 'Please select state.']);
 								}else if($issuingauthority == 3)
 								{
 								$workeligibilityform->issuingauth_country->setRequired(true)->addErrorMessage('Please select country.');
-								$workeligibilityform->issuingauth_country->addValidator('NotEmpty', false, array('messages' => 'Please select country.'));
+								$workeligibilityform->issuingauth_country->addValidator('NotEmpty', false, ['messages' => 'Please select country.']);
 								
 								$workeligibilityform->issuingauth_state->setRequired(true)->addErrorMessage('Please select state.');
-								$workeligibilityform->issuingauth_state->addValidator('NotEmpty', false, array('messages' => 'Please select state.'));
+								$workeligibilityform->issuingauth_state->addValidator('NotEmpty', false, ['messages' => 'Please select state.']);
 									
 									$workeligibilityform->issuingauth_city->setRequired(true)->addErrorMessage('Please select city.');
-									$workeligibilityform->issuingauth_city->addValidator('NotEmpty', false, array('messages' => 'Please select city.')); 
+									$workeligibilityform->issuingauth_city->addValidator('NotEmpty', false, ['messages' => 'Please select city.']); 
 								}
 							}
 							$result = $this->save($workeligibilityform,$tabName);
@@ -4397,7 +4397,7 @@ Zend_Debug::dump($th->getMessage());	}
 		 	if($id == '')		
 			  $id = $userID;
 			  
-		 	$Uid = ($id)?$id:$userID;
+		 	$Uid = $id ?: $userID;
 		  
 		 	$employeeModal = new Default_Model_Employee();
 		 	try
@@ -4420,7 +4420,7 @@ Zend_Debug::dump($th->getMessage());	}
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
 							$dashboardcall = $this->_getParam('dashboardcall',null);
-							$data = array();	$searchQuery = '';	$searchArray = array();		$tablecontent = '';
+							$data = [];	$searchQuery = '';	$searchArray = [];		$tablecontent = '';
 							if($refresh == 'refresh')
 							{
 								if($dashboardcall == 'Yes')
@@ -4486,7 +4486,7 @@ Zend_Debug::dump($th->getMessage());	}
 					$conText = ($this->_getParam('context') !='')? $this->_getParam('context'):$this->getRequest()->getParam('context');
 				}
 				if($id == '')		$id = $userID;
-				$Uid = ($id)?$id:$userID;
+				$Uid = $id ?: $userID;
 				
 				$employeeModal = new Default_Model_Employee();
 				try
@@ -4507,7 +4507,7 @@ Zend_Debug::dump($th->getMessage());	}
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
 							$dashboardcall = $this->_getParam('dashboardcall',null);
-							$data = array();	$searchQuery = '';	$searchArray = array();		$tablecontent = '';
+							$data = [];	$searchQuery = '';	$searchArray = [];		$tablecontent = '';
 							if($refresh == 'refresh')
 							{
 								if($dashboardcall == 'Yes')
@@ -4515,7 +4515,7 @@ Zend_Debug::dump($th->getMessage());	}
 								else	
 									$perPage = PERPAGE;
 												
-								$sort = 'DESC';$by = 'e.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = array();	
+								$sort = 'DESC';$by = 'e.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = [];	
 							}
 							else 
 							{
@@ -4551,8 +4551,8 @@ Zend_Debug::dump($th->getMessage());	}
 	//This function is to save the form details to database tables.
 	public function save($employeeDetailsform,$tabName)
 	{	
-		$data=array();
-		$employeeData =array();
+		$data=[];
+		$employeeData =[];
 		$actionflag = '';	
 		$tableid  = ''; 
 		$date = new Zend_Date();
@@ -4580,7 +4580,7 @@ Zend_Debug::dump($th->getMessage());	}
 			
 			if($id!='')
 			{
-				$where = array('id=?'=>$id);  
+				$where = ['id=?'=>$id];  
 				$actionflag = 2;
 			}
 			else
@@ -4621,7 +4621,7 @@ Zend_Debug::dump($th->getMessage());	}
 				
 						$bloodgroup = $this->_request->getParam('bloodgroup');
 						
-						  $data = array('user_id'=>$user_id,
+						  $data = ['user_id'=>$user_id,
 				                 'genderid'=>$genderid,
 								 'maritalstatusid'=>$maritalstatusid,
                                  'nationalityid'=>$nationalityid,
@@ -4639,7 +4639,7 @@ Zend_Debug::dump($th->getMessage());	}
 				      			 'bloodgroup'=>($bloodgroup!=''?$bloodgroup:NULL),
 								 'modifiedby'=>$loginUserId,
 								 'modifieddate'=>gmdate("Y-m-d H:i:s")
-						);
+						];
 						$Id = $empperdetailsModal->SaveorUpdateEmpPersonalData($data, $where);
 				
 				break;
@@ -4672,7 +4672,7 @@ Zend_Debug::dump($th->getMessage());	}
 						$emergency_name = $this->_request->getParam('emergency_name');
 						$emergency_email = $this->_request->getParam('emergency_email');
 						
-						$data = array('user_id'=>$user_id,
+						$data = ['user_id'=>$user_id,
 				                 'personalemail'=>$personalemail,
 								 'perm_streetaddress'=>$perm_streetaddress, 								 
 				      			 'perm_country'=>($perm_country!=''?$perm_country:NULL),
@@ -4689,7 +4689,7 @@ Zend_Debug::dump($th->getMessage());	}
 								 'emergency_email'=>($emergency_email!=''?$emergency_email:NULL),
 								 'modifiedby'=>$loginUserId,
 								 'modifieddate'=>gmdate("Y-m-d H:i:s")
-						);
+						];
 						$Id = $empcommdetailsModal->SaveorUpdateEmpcommData($data, $where);
 				break;
 				
@@ -4702,7 +4702,7 @@ Zend_Debug::dump($th->getMessage());	}
 						$year_skill_last_used =sapp_Global::change_date($year_skill_last_used,'database');	
 						
 											
-						$data = array('user_id'=>$user_id,
+						$data = ['user_id'=>$user_id,
 									 'skillname'=>$skillname,
 									 'yearsofexp'=>$yearsofexp,
 									 'competencylevelid'=>$competencylevelid, 								 
@@ -4710,7 +4710,7 @@ Zend_Debug::dump($th->getMessage());	}
 									 'modifiedby'=>$loginUserId,
 									 //'modifieddate'=>$date->get('yyyy-MM-dd HH:mm:ss')
 									 'modifieddate'=>gmdate("Y-m-d H:i:s")
-								);
+								];
 						$Id = $empskillsModal->SaveorUpdateEmpSkills($data, $where);
 				break;
 				
@@ -4727,7 +4727,7 @@ Zend_Debug::dump($th->getMessage());	}
 						$fromDate =sapp_Global::change_date($from_date,'database');	
 						$toDate = sapp_Global::change_date($to_date,'database');	
 						
-						$data = array('user_id'=>$user_id,
+						$data = ['user_id'=>$user_id,
 				                 'institution_name'=>$institution_name,
 								 'course'=>$course,
                                  'from_date'=>$fromDate, 								 
@@ -4736,7 +4736,7 @@ Zend_Debug::dump($th->getMessage());	}
 								 'modifiedby'=>$loginUserId,
 								 //'modifieddate'=>$date->get('yyyy-MM-dd HH:mm:ss')
 								 'modifieddate'=>gmdate("Y-m-d H:i:s")
-						);
+						];
 					$Id = $educationDetailsModel->SaveorUpdateEducationDetails($data, $where);
 				break;
 				
@@ -4759,7 +4759,7 @@ Zend_Debug::dump($th->getMessage());	}
 					
 						$reason_for_leaving = $this->_request->getParam('reason_for_leaving');
 																			
-						$data = array(  'comp_name'=>$comp_name,
+						$data = [  'comp_name'=>$comp_name,
 										'comp_website'=>$comp_website,
 										'designation'=>$designation,
 										'from_date'=>$fromDateStr,
@@ -4771,7 +4771,7 @@ Zend_Debug::dump($th->getMessage());	}
 										'user_id'=>$user_id,
 										'modifiedby'=>$loginUserId,
 										'modifieddate'=>gmdate("Y-m-d H:i:s")
-									);
+									];
 										
 						
 						$Id = $experienceDetailsModel->SaveorUpdateEmployeeexperienceData($data,$where);
@@ -4782,13 +4782,13 @@ Zend_Debug::dump($th->getMessage());	}
 						
 						$emp_leave_limit = $this->_request->getParam('leave_limit');
 										
-						$data = array('user_id'=>$user_id,
+						$data = ['user_id'=>$user_id,
 									'emp_leave_limit'=>$emp_leave_limit,
 									'used_leaves'=>$used_leaves,
 									'alloted_year'=>$date->get('yyyy'),
 									'modifiedby'=>$loginUserId,
 									'modifieddate'=>$date->get('yyyy-MM-dd HH:mm:ss')
-								);
+								];
 						$Id = $employeeleavesModel->SaveorUpdateEmpLeaves($data, $where);
 				break;
 				
@@ -4806,7 +4806,7 @@ Zend_Debug::dump($th->getMessage());	}
 								
 								$issuedDateStr = sapp_Global::change_date($issueddate,'database');
 																						
-								$data = array(  'course_name'=>$course_name,
+								$data = [  'course_name'=>$course_name,
 												'description'=>$description,
 												'course_level'=>$course_level,
 												'course_offered_by'=>$course_offered_by,
@@ -4815,7 +4815,7 @@ Zend_Debug::dump($th->getMessage());	}
 												'user_id'=>$user_id,
 												'modifiedby'=>$loginUserId,
 												'modifieddate'=>gmdate("Y-m-d H:i:s")
-											);
+											];
 								 $Id = $TandCdetailsModel->SaveorUpdateEmployeeTandCData($data,$where);
 				break;
 				
@@ -4868,7 +4868,7 @@ Zend_Debug::dump($th->getMessage());	}
 							{
 								$empleaveToDate = sapp_Global::change_date($empleave_to_date, 'database');		
 							}
-							$data = array(  'amount_approved'=>$amount_approved,
+							$data = [  'amount_approved'=>$amount_approved,
 											'amount_claimed_for'=>$amount_claimed,
 											'treatment_details'=>$treatment_details,
 											'total_cost'=>$total_cost,
@@ -4895,7 +4895,7 @@ Zend_Debug::dump($th->getMessage());	}
 											'user_id'=>$user_id,
 											'modifiedby'=>$loginUserId,
 											'modifieddate'=>gmdate("Y-m-d H:i:s")
-										);
+										];
 							
 							$Id = $empMedicalclaimsModel->SaveorUpdateEmpmedicalclaimsDetails($data, $where);
 				break;
@@ -4908,14 +4908,14 @@ Zend_Debug::dump($th->getMessage());	}
 						$description =$this->_request->getParam('disability_description');
 						$other_disability_type=$this->_request->getParam('other_disability_type');
 						
-						$data = array(  'other_disability_type'=>$other_disability_type,
+						$data = [  'other_disability_type'=>$other_disability_type,
 										'disability_type'=>$disability_type,
 										'disability_name'=>$disabiity_name,
 										'disability_description'=>$description,
 										'user_id'=>$loginUserId,
 										'modifiedby'=>$loginUserId,
 										'modifieddate'=>gmdate("Y-m-d H:i:s")
-									);
+									];
 						
 				       $Id = $empDisabilitydetailsModel->SaveorUpdateEmpdisabilityDetails($data, $where);
 				break;
@@ -4929,7 +4929,7 @@ Zend_Debug::dump($th->getMessage());	}
 						$dependentDOB = sapp_Global::change_date($dependentdob, 'database');
 						$dependent_age = $this->_request->getParam('dependent_age');
 																				
-						$data = array(  'dependent_name'=>$dependent_name,
+						$data = [  'dependent_name'=>$dependent_name,
 										'dependent_relation'=>$dependent_relation,
 										'dependent_custody'=>$dependent_custody,
 										'dependent_dob'=>$dependentDOB,
@@ -4937,7 +4937,7 @@ Zend_Debug::dump($th->getMessage());	}
 										'user_id'=>$user_id,
 										'modifiedby'=>$loginUserId,
 										'modifieddate'=>gmdate("Y-m-d H:i:s")
-									);
+									];
 					$Id = $dependencyDetailsModel->SaveorUpdateEmployeedependencyData($data,$where);
 				break;
 				
@@ -4970,7 +4970,7 @@ Zend_Debug::dump($th->getMessage());	}
 							
 							$ininetyfour_expiry = sapp_Global::change_date($ininetyfour_expiry_date, 'database');
 							
-							$data = array(  'passport_number'=>$passport_num,
+							$data = [  'passport_number'=>$passport_num,
 											'passport_issue_date'=>$passport_issue,
 											'passport_expiry_date'=>$passport_expiry,
 											'visa_number'=>$visa_number,
@@ -4985,7 +4985,7 @@ Zend_Debug::dump($th->getMessage());	}
 											'user_id'=>$user_id,
 											'modifiedby'=>$loginUserId,
 											'modifieddate'=>gmdate("Y-m-d H:i:s")
-										);
+										];
 					       $Id = $visaandimmigrationdetailsModel->SaveorUpdatevisaandimmigrationDetails($data,$where);
 				break;
 				
@@ -5000,7 +5000,7 @@ Zend_Debug::dump($th->getMessage());	}
 						$card_issuedBy = $this->_request->getParam('card_issuedby');
 						$card_code = $this->_request->getParam('card_code');
 																		 
-						$data = array(  'card_type'=>$card_type,
+						$data = [  'card_type'=>$card_type,
 										'card_number'=>$card_number,
 										'nameoncard'=>$card_name,
 										'card_expiration'=>$card_expiry,
@@ -5009,7 +5009,7 @@ Zend_Debug::dump($th->getMessage());	}
 										'user_id'=>$user_id,
 										'modifiedby'=>$loginUserId,
 										'modifieddate'=>gmdate("Y-m-d H:i:s")
-									);
+									];
 				       $Id = $creditcardDetailsModel->SaveorUpdateCreditcardDetails($data, $where);
 				break;
 				
@@ -5033,7 +5033,7 @@ Zend_Debug::dump($th->getMessage());	}
 						$cityArr = explode("!@#",$issuingauth_city);
 						$cityStr = $cityArr[0];
 						
-						$data = array(  'documenttype_id'=>$documenttype_id,
+						$data = [  'documenttype_id'=>$documenttype_id,
 										'doc_issue_date'=>$docissueDate,
 										'doc_expiry_date'=>$docexpiryDate,
 										'issuingauth_name'=>$issuingauth_name,
@@ -5044,7 +5044,7 @@ Zend_Debug::dump($th->getMessage());	}
 										'user_id'=>$user_id,
 										'modifiedby'=>$loginUserId,
 										'modifieddate'=>gmdate("Y-m-d H:i:s")
-									);
+									];
 						$Id = $workeligibilityModel->SaveorUpdateWorkEligibilityDetails($data, $where);
 				break;
 				
@@ -5071,7 +5071,7 @@ Zend_Debug::dump($th->getMessage());	}
 						$military_servicetype = $this->_request->getParam('military_servicetype');
 						$veteran_status = $this->_request->getParam('veteran_status');
 				
-						$data = array('user_id'=>$loginUserId,
+						$data = ['user_id'=>$loginUserId,
 				                 'military_status'=>$military_status,
 								 'countries_served'=>$countries_served,
                                  'branch_service'=>($branch_service!=''?$branch_service:NULL),
@@ -5088,7 +5088,7 @@ Zend_Debug::dump($th->getMessage());	}
 								 'veteran_status'=> $veteran_status,
 								 'modifiedby'=>$loginUserId,
 								 'modifieddate'=>gmdate("Y-m-d H:i:s")
-						);
+						];
 				    
 					$Id = $empadditionaldetailsModal->SaveorUpdateEmpAdditionalData($data, $where);
 				break;
@@ -5108,7 +5108,7 @@ Zend_Debug::dump($th->getMessage());	}
 							
 							$accountholding = $this->_request->getParam('accountholding'); 				
 							$accountholding = sapp_Global::change_date($accountholding, 'database');
-							$data = array('user_id'=>$user_id,
+							$data = ['user_id'=>$user_id,
 				                 'currencyid'=>$currencyid,
 								 'salarytype'=>$salarytype,
 								 'salary'=>$salary,
@@ -5121,7 +5121,7 @@ Zend_Debug::dump($th->getMessage());	}
 								 'modifiedby'=>$loginUserId,
 								 'modifieddate'=>gmdate("Y-m-d H:i:s"),
 								 'isactive'=>1
-						);
+						];
 				    $Id = $empsalarydetailsModal->SaveorUpdateEmpSalaryData($data, $where);
 				break;
 			}	//switch case end...
@@ -5139,7 +5139,7 @@ Zend_Debug::dump($th->getMessage());	}
 				else
 					$msgStr = "Employee ".$tabName." details updated successfully.";
 				
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$msgStr));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$msgStr]);
 			}   
 			else
 			{
@@ -5155,13 +5155,13 @@ Zend_Debug::dump($th->getMessage());	}
 				else
 					$msgStr = "Employee ".$tabName." details added successfully.";
 			
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$msgStr));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$msgStr]);
 			}   
 			$menuID = EMPLOYEE;
 			$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$user_id);
          }else
          {
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>FIELDMSG));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>FIELDMSG]);
          }	
 			if($tabName == "employee")	
 				$this->_redirect('mydetails/edit');	
@@ -5197,8 +5197,8 @@ Zend_Debug::dump($th->getMessage());	}
 		    if($id)
 			{
 	    	   $educationDetailsModel = new Default_Model_Educationdetails();
-			  $data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-			  $where = array('id=?'=>$id);
+			  $data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+			  $where = ['id=?'=>$id];
 			  $Id = $educationDetailsModel->SaveorUpdateEducationDetails($data, $where);
 			    if($Id == 'update')
 				{
@@ -5223,7 +5223,7 @@ Zend_Debug::dump($th->getMessage());	}
 	
    /*	Medical claims validations */
 	public function medicalclaimsvalidations()
-	{	$msgarray =array();$errFlag=0;	$fieldValues=array();$totalArr = array();
+	{	$msgarray =[];$errFlag=0;	$fieldValues=[];$totalArr = [];
 		if($this->getRequest()->getPost())
 		{	
 			//Default yes...
@@ -5650,13 +5650,13 @@ Zend_Debug::dump($th->getMessage());	}
 			$Id = $employeeleavesModel->SaveorUpdateEmployeeLeaves($user_id, $emp_leave_limit,$isleavetrasnfer,$loginUserId);
 			 if($id)
 			   {
-				 $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Employee Leave details updated successfully."));
+				 $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Employee Leave details updated successfully."]);
 				 $actionflag = 2;
 				 $tableid = $id;
 			   }
 			   else
 			   {
-				  $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Employee Leave details added successfully.")); 					   
+				  $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Employee Leave details added successfully."]); 					   
 				  $actionflag = 1;
 				  $tableid = $Id;	
 			   }
@@ -5683,7 +5683,7 @@ Zend_Debug::dump($th->getMessage());	}
 	
 	public function updateempdetails($employeeform)
 	{	
-		$emproleStr='';$roleArr=array();
+		$emproleStr='';$roleArr=[];
         $auth = Zend_Auth::getInstance();
         if($auth->hasIdentity())
 		{
@@ -5731,7 +5731,7 @@ Zend_Debug::dump($th->getMessage());	}
             //end of user table
             
 			$date = new Zend_Date();
-			$empstatusarray = array(8,9,10);
+			$empstatusarray = [8,9,10];
 			$actionflag = '';	$tableid  = ''; 
 		
 			if($modeofentry == 'Direct' || $hid_modeofentry == 'Direct')
@@ -5755,7 +5755,7 @@ Zend_Debug::dump($th->getMessage());	}
             try
             {
 				$emppassword = sapp_Global::generatePassword();
-				$user_data = array(
+				$user_data = [
 							    'emprole' =>$emproleStr,
 								$candidate_key => $candidate_value,
 								'emailaddress' => $emailaddress,                                                                
@@ -5768,10 +5768,10 @@ Zend_Debug::dump($th->getMessage());	}
 								'candidatereferredby' => $candidatereferredby,
 								'userstatus' => 'old',
 								'other_modeofentry' => $other_modeofentry,
-							);
+							];
 				if($id!='')
 				{
-					$where = array('user_id=?'=>$user_id);  
+					$where = ['user_id=?'=>$user_id];  
 					$actionflag = 2;
 					$user_where = "id = ".$user_id;
 					unset($user_data['candidatereferredby']);
@@ -5803,7 +5803,7 @@ Zend_Debug::dump($th->getMessage());	}
                 $user_status = $usersModel->SaveorUpdateUserData($user_data, $user_where);
                 if($id == '')	 $user_id = $user_status;
                 
-				$data = array(  'user_id'=>$user_id,
+				$data = [  'user_id'=>$user_id,
 								'reporting_manager'=>$reporting_manager,
 								'emp_status_id'=>$emp_status_id,
 								'businessunit_id'=>$businessunit_id,
@@ -5817,10 +5817,10 @@ Zend_Debug::dump($th->getMessage());	}
 								'years_exp'=>($years_exp=='')?null:$years_exp,
 								'modifiedby'=>$loginUserId,
 								'modifieddate'=>gmdate("Y-m-d H:i:s")
-                            );
+                            ];
                 
 				$Id = $employeeModal->SaveorUpdateEmployeeData($data, $where);
-                $statuswhere = array('id=?'=>$user_id);
+                $statuswhere = ['id=?'=>$user_id];
 			   
 				if (in_array($emp_status_id, $empstatusarray)) 
 				{
@@ -5832,19 +5832,19 @@ Zend_Debug::dump($th->getMessage());	}
 					else if($emp_status_id == 10)
 						$isactivestatus = 4;	
 
-					$statusdata = array('isactive'=>$isactivestatus); 
+					$statusdata = ['isactive'=>$isactivestatus]; 
 
 					$empstatusId = $usersModel->SaveorUpdateUserData($statusdata, $statuswhere);
 				}
                 else
                 {
-                    $statusdata = array('isactive'=> 1); 
+                    $statusdata = ['isactive'=> 1]; 
                     $empstatusId = $usersModel->SaveorUpdateUserData($statusdata, $statuswhere);
                 }										
 				if($Id == 'update')
 				{
 					$tableid = $id;		
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Employee details updated successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Employee details updated successfully."]);
 				}   
 				else
 				{
@@ -5864,7 +5864,7 @@ Zend_Debug::dump($th->getMessage());	}
 					$result = sapp_Global::_sendEmail($options); 
 					//end of mailing
 					$tableid = $Id; 	                    
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Employee details added successfully."));						
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Employee details added successfully."]);						
 				}   
 				$menuID = EMPLOYEE;
 				$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);	
@@ -5875,11 +5875,11 @@ Zend_Debug::dump($th->getMessage());	}
 				{
 					if($user_data['isactive'] == 1)
 					{
-						$act_str = array("Activated" => Zend_Registry::get('currentdate'));
+						$act_str = ["Activated" => Zend_Registry::get('currentdate')];
 					}
 					else 
 					{
-						$act_str = array("Inactivated"=> Zend_Registry::get('currentdate'));
+						$act_str = ["Inactivated"=> Zend_Registry::get('currentdate')];
 					}
 				  
 					$result = sapp_Global::logManager($menuID_user,4,$loginUserId,$user_id,'',$act_str);
@@ -5936,7 +5936,7 @@ Zend_Debug::dump($th->getMessage());	}
 			if(isset($jobtitle_id) && $jobtitle_id != 0 && $jobtitle_id != '')
 			{
 				$positionsmodel = new Default_Model_Positions();
-				$positionlistArr = $positionsmodel->getPositionList($jobtitle_id);
+				$positionlistArr = $positionsmodel->getPositionList();
 				$employeeform->position_id->clearMultiOptions(); 
 				$employeeform->position_id->addMultiOption('','Select Position');
 				foreach($positionlistArr as $positionlistRes)

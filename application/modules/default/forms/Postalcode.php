@@ -50,26 +50,26 @@ class Default_Form_Postalcode extends Zend_Form
         // Country ID (Top-level filter for States)
         $country_id = new Zend_Form_Element_Select('country_id');
         $country_id->setLabel('Country')
-            ->setAttribs(array(
+            ->setAttribs([
                 'class'    => 'formDataElement',
                 // Important: Add a trigger to fetch States via AJAX when changed
                 'onchange' => 'getStatesByCountry(this.value)'
-            ))
+            ])
             ->setRegisterInArrayValidator(false) // Dynamic population in controller
             ->setRequired(true)
-            ->addValidator('NotEmpty', true, array('messages' => 'Please select a Country.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please select a Country.']);
 
         // State ID (Filter for Cities)
         $state_id = new Zend_Form_Element_Select('state_id');
         $state_id->setLabel('State/Province')
-            ->setAttribs(array(
+            ->setAttribs([
                 'class'    => 'formDataElement',
                 // Important: Add a trigger to fetch Cities via AJAX when changed
                 'onchange' => 'getCitiesByState(this.value)'
-            ))
+            ])
             ->setRegisterInArrayValidator(false) // Dynamic population in controller or via AJAX
             ->setRequired(true)
-            ->addValidator('NotEmpty', true, array('messages' => 'Please select a State/Province.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please select a State/Province.']);
 
         // City ID (Foreign Key)
         $city_id = new Zend_Form_Element_Select('city_id');
@@ -77,7 +77,7 @@ class Default_Form_Postalcode extends Zend_Form
             ->setAttrib('class', 'formDataElement')
             ->setRegisterInArrayValidator(false) // Dynamic population in controller or via AJAX
             ->setRequired(true)
-            ->addValidator('NotEmpty', true, array('messages' => 'Please select a City.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please select a City.']);
 
         /* --------------------------------------------------------------
          * Text Elements
@@ -86,11 +86,11 @@ class Default_Form_Postalcode extends Zend_Form
         // Postal/ZIP Code
         $code = new Zend_Form_Element_Text('code');
         $code->setLabel('Postal / ZIP Code')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '20', 'placeholder' => 'e.g., 90210, SW1A 0AA'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '20', 'placeholder' => 'e.g., 90210, SW1A 0AA'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', true, array('messages' => 'Please enter a postal code.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please enter a postal code.']);
 
         // Note: Duplicate validation for 'code' is composite (city_id + code) and MUST be
         // handled manually in the Controller's saveAction, not via Zend_Validate_Db_NoRecordExists.
@@ -102,7 +102,7 @@ class Default_Form_Postalcode extends Zend_Form
         // Description (Optional)
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Description')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -123,7 +123,7 @@ class Default_Form_Postalcode extends Zend_Form
 
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save')
-            ->setAttribs(array('id' => 'submitbutton', 'class' => 'actbtn_btn'));
+            ->setAttribs(['id' => 'submitbutton', 'class' => 'actbtn_btn']);
 
         // SSOT AJAX Submission Pattern (Strict Quoting)
         $urlAction  = "'postalcode/save/format/json'";
@@ -134,7 +134,7 @@ class Default_Form_Postalcode extends Zend_Form
          * Build Form & Apply Decorators
          * -------------------------------------------------------------- */
 
-        $this->addElements(array(
+        $this->addElements([
             $idElement,
             $country_id,
             $state_id,
@@ -143,12 +143,12 @@ class Default_Form_Postalcode extends Zend_Form
             $description,
             $isactive,
             $submit
-        ));
+        ]);
 
         // Strip default Zend Decorators and enforce ViewHelper universally
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
-            $element->setDecorators(array('ViewHelper'));
+            $element->setDecorators(['ViewHelper']);
         }
     }
 }

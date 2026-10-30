@@ -46,9 +46,9 @@ class Default_TitleController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent = '';
 
 		if ($refresh == 'refresh') {
@@ -366,7 +366,7 @@ class Default_TitleController extends Zend_Controller_Action
 			$loginUserId = $auth->getStorage()->read()->id;
 		}
 
-		$msgarray = array();
+		$msgarray = [];
 		$controllername = 'title';
 		$form = new Default_Form_title();
 		$model = new Default_Model_Title();
@@ -382,7 +382,7 @@ class Default_TitleController extends Zend_Controller_Action
 				$actionflag = '';
 				$tableid  = '';
 
-				$data = array(
+				$data = [
 					'code' => $code,
 					'description' => $description,
 					'name' => $name,
@@ -390,14 +390,14 @@ class Default_TitleController extends Zend_Controller_Action
 					'issuffix' => $issuffix,
 					'createdby' => $loginUserId,
 					'createddate' => gmdate("Y-m-d H:i:s")
-				);
+				];
 
 				$where = '';
 				$menuID = TITLE;
 				//die(json_encode($data));
 				$Id = $model->SaveorUpdatetitleData($data, $where);
 				$tableid = $Id;
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Title  added successfully."));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Title  added successfully."]);
 				sapp_Global::logManager($menuID, $this->actionadd, $loginUserId, $tableid);
 
 
@@ -476,12 +476,12 @@ class Default_TitleController extends Zend_Controller_Action
 		if ($id) {
 			//$model = new Default_Model_Title();
 			$model = new Schedule_Model_Timeschedule();
-			$data = array(
+			$data = [
 				'isactive' => 'N',
 				'modifiedby' => $loginUserId,
 				'modifieddate' => gmdate("Y-m-d H:i:s"),
-			);
-			$where = array('id=?' => $id);
+			];
+			$where = ['id=?' => $id];
 			$Id = $model->deleteData($where, 'main_title', 'id');
 			//$Id = $model->SaveorUpdatetitleData($data, $where);
 			if ($Id > 0) {
@@ -497,10 +497,10 @@ class Default_TitleController extends Zend_Controller_Action
 		}
 		if ($deleteflag == 1) {
 			if ($messages['msgtype'] == 'error') {
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("error" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["error" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag]);
 			}
 			if ($messages['msgtype'] == 'success') {
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag]);
 			}
 		}
 		$this->_helper->json($messages);
@@ -548,7 +548,7 @@ class Default_TitleController extends Zend_Controller_Action
 		}
 		$id = $this->getRequest()->getParam('id');
 
-		$msgarray = array();
+		$msgarray = [];
 		$controllername = 'title';
 		$form = new Default_Form_title();
 		$model = new Default_Model_Title();
@@ -564,7 +564,7 @@ class Default_TitleController extends Zend_Controller_Action
 
 				$date = new Zend_Date();
 				$actionflag = '';
-				$data = array(
+				$data = [
 					'code' => $code,
 					'description' => trim($description),
 					'name' => $name,
@@ -572,11 +572,11 @@ class Default_TitleController extends Zend_Controller_Action
 					'issuffix' => $issuffix,
 					'createdby' => $loginUserId,
 					'createddate' => gmdate("Y-m-d H:i:s")
-				);
+				];
 
 
 				if ($id != '') {
-					$where = array('id=?' => $id);
+					$where = ['id=?' => $id];
 					$actionflag = 2;
 				} else {
 
@@ -665,7 +665,7 @@ class Default_TitleController extends Zend_Controller_Action
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = '';
-				$data = array(
+				$data = [
 					'code' => $code,
 					'description' => trim($description),
 					'name' => $name,
@@ -675,7 +675,7 @@ class Default_TitleController extends Zend_Controller_Action
 					'modifiedby' => $loginUserId,
 					'modifieddate' => gmdate("Y-m-d H:i:s"),
 
-				);
+				];
 
 
 				$where = 'id=' . $id;
@@ -684,10 +684,10 @@ class Default_TitleController extends Zend_Controller_Action
 				$Id = $model->SaveorUpdatetitleData($data, $where);
 				if ($Id == 'update') {
 					$tableid = $id;
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Title updated successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Title updated successfully."]);
 				} else {
 					$tableid = $Id;
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Title  added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Title  added successfully."]);
 				}
 				sapp_Global::logManager($menuID, $this->actionupdate, $loginUserId, $tableid);
 

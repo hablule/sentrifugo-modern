@@ -9,8 +9,8 @@ class Schedule_Model_OvertimeCategory extends Zend_Db_Table_Abstract
   public function getOTcategoryGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $p1, $p2, $p3, $p4)
   {
     $searchQuery = '';
-    $searchArray = array();
-    $data = array();
+    $searchArray = [];
+    $data = [];
     $db = Zend_Db_Table::getDefaultAdapter();
     if ($searchData != '' && $searchData != 'undefined') {
         $searchValues = json_decode($searchData);
@@ -33,16 +33,16 @@ class Schedule_Model_OvertimeCategory extends Zend_Db_Table_Abstract
 
     $objName = 'overtimecategory';
     $objID = 'overtimecategory';
-    $tableFields = array(
+    $tableFields = [
         'action' => 'Action',
         'name' => 'Name',
         'description' => 'Description',
         'isactive' => 'Active'
-    );
+    ];
 
     $tablecontent = $this->getOTcategoryData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-    $dataTmp = array(
+    $dataTmp = [
         'sort' => $sort,
         'by' => $by,
         'pageNo' => $pageNo,
@@ -50,7 +50,7 @@ class Schedule_Model_OvertimeCategory extends Zend_Db_Table_Abstract
         'tablecontent' => $tablecontent,
         'objectname' => $objName,
         'objectId' => $objID,
-        'extra' => array(),
+        'extra' => [],
         'tableheader' => $tableFields,
         'jsGridFnName' => 'getAjaxgridData',
         'jsFillFnName' => '',
@@ -60,12 +60,12 @@ class Schedule_Model_OvertimeCategory extends Zend_Db_Table_Abstract
         'fromgrid'=>'true',
         'menuName' => 'Overtime category',
         'dashboardcall' => $dashboardcall,
-        'search_filters' => array(
-            'isactive' => array(
+        'search_filters' => [
+            'isactive' => [
                 'type' => 'select',
-                'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-        ),
-    );
+                'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+        ],
+    ];
     
     return $dataTmp;
   }
@@ -78,7 +78,7 @@ class Schedule_Model_OvertimeCategory extends Zend_Db_Table_Abstract
 
     $roleData =  $this->select()
         ->setIntegrityCheck(false)
-        ->from('main_overtime_category',array('OT_category_id','name','description','if(isactive="Y","Yes","No") as isactive'))
+        ->from('main_overtime_category',['OT_category_id','name','description','if(isactive="Y","Yes","No") as isactive'])
         ->where($where)
         ->order("$by $sort")
         ->limitPage($pageNo, $perPage);
@@ -102,7 +102,7 @@ public function saveORupdateCategory($data, $where)
   {
     $catData =  $this->select()
     ->setIntegrityCheck(false)
-    ->from('main_overtime_category',array('name','description','isactive'))
+    ->from('main_overtime_category',['name','description','isactive'])
     ->where('OT_category_id = '.$id);
     return $this->fetchRow($catData)->toArray();
   }

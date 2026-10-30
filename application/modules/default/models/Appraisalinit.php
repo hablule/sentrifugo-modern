@@ -102,7 +102,7 @@ class Default_Model_Appraisalinit extends Zend_Db_Table_Abstract
     {
         $status = "failure";
         $message = "Something went wrong, please try again.";
-        $result = array('status' => $status,'message' => $message);
+        $result = ['status' => $status,'message' => $message];
         if($init_id != '' && $management_appraisal != '')
         {
             $db = Zend_Db_Table::getDefaultAdapter();
@@ -116,7 +116,7 @@ class Default_Model_Appraisalinit extends Zend_Db_Table_Abstract
             
             $init_query = "update main_pa_initialization set group_settings = 0".$mng_str." where id = '".$init_id."' ";
             $db->query($init_query);
-            $result = array('status' => "success",'message' => "Step - 2 discarded successfully.");            
+            $result = ['status' => "success",'message' => "Step - 2 discarded successfully."];            
         }
         return $result;
     }
@@ -148,7 +148,7 @@ class Default_Model_Appraisalinit extends Zend_Db_Table_Abstract
     }
     public function getappdata_forview($init_id)
     {
-        $data = array();
+        $data = [];
         if($init_id != '')
         {
             $db = Zend_Db_Table::getDefaultAdapter();
@@ -165,7 +165,7 @@ class Default_Model_Appraisalinit extends Zend_Db_Table_Abstract
     }
     public function getAppDataById($init_id)
     {
-        $data = array();
+        $data = [];
         if($init_id != '')
         {
             $db = Zend_Db_Table::getDefaultAdapter();
@@ -176,7 +176,7 @@ class Default_Model_Appraisalinit extends Zend_Db_Table_Abstract
     }
     public function getManagers_report($init_id)
     {
-        $result = array();
+        $result = [];
         $db = Zend_Db_Table::getDefaultAdapter();
         $init_data = $this->getAppDataById($init_id);
         
@@ -221,7 +221,7 @@ class Default_Model_Appraisalinit extends Zend_Db_Table_Abstract
     public function deletelinemanager($init_id,$manager_id,$loginUserId,$loginuserRole,$loginuserGroup)
     {
     	
-        $result = array();
+        $result = [];
         if(!empty($init_id) && !empty($manager_id))
         {
             $db = Zend_Db_Table::getDefaultAdapter();
@@ -234,24 +234,24 @@ class Default_Model_Appraisalinit extends Zend_Db_Table_Abstract
             $cresult = $db->query($cquery)->fetch();
             if($cresult['cnt'] == 0)
             {
-                $data = array(
+                $data = [
                     'group_settings' => 0,
                     'manager_level_type' => null,
                     'modifiedby' => $loginUserId,
                     'modifiedby_role' => $loginuserRole,
                     'modifiedby_group' => $loginuserGroup,
                     'modifieddate' => gmdate("Y-m-d H:i:s"),
-                );
+                ];
                 
                 $this->SaveorUpdateAppraisalInitData($data, "id = ".$init_id);
             }                        
-            $result = array('status' => 'success','message' => 'L1 Manager discarded successfully.');                        
+            $result = ['status' => 'success','message' => 'L1 Manager discarded successfully.'];                        
         }
         return $result;
     }
     public function deletereportmanager($init_id,$manager_id,$loginUserId,$loginuserRole,$loginuserGroup)
     {
-        $result = array();
+        $result = [];
         if(!empty($init_id) && !empty($manager_id))
         {
             $db = Zend_Db_Table::getDefaultAdapter();
@@ -264,24 +264,24 @@ class Default_Model_Appraisalinit extends Zend_Db_Table_Abstract
             $cresult = $db->query($cquery)->fetch();
             if($cresult['cnt'] == 0)
             {
-                $data = array(
+                $data = [
 					'group_settings' => 0,
                     'manager_level_type' => null,
                     'modifiedby' => $loginUserId,
                     'modifiedby_role' => $loginuserRole,
                     'modifiedby_group' => $loginuserGroup,
                     'modifieddate' => gmdate("Y-m-d H:i:s"),
-                );
+                ];
                 
                 $this->SaveorUpdateAppraisalInitData($data, "id = ".$init_id);
             } 
-            $result = array('status' => 'success','message' => 'Line managers discarded successfully.');                        
+            $result = ['status' => 'success','message' => 'Line managers discarded successfully.'];                        
         }
         return $result;
     }
     public function getLineManagers($init_id,$line1_id)
     {
-        $result = array();
+        $result = [];
         if(!empty($init_id) && !empty($line1_id))
         {
             $init_data = $this->getAppDataById($init_id);
@@ -302,7 +302,7 @@ class Default_Model_Appraisalinit extends Zend_Db_Table_Abstract
     }    
 	public function getLineManagers_new($init_id,$line1_id)
     {
-        $result = array();
+        $result = [];
         if(!empty($init_id) && !empty($line1_id))
         {
             $init_data = $this->getAppDataById($init_id);
@@ -324,7 +324,7 @@ class Default_Model_Appraisalinit extends Zend_Db_Table_Abstract
 
     public function getdisplayacontentacc($init_id,$manager_id)
     {
-        $data = array();
+        $data = [];
         if($init_id !== '' && $manager_id !== '')
         {
             $init_data = $this->getAppDataById($init_id);
@@ -348,7 +348,7 @@ class Default_Model_Appraisalinit extends Zend_Db_Table_Abstract
     }
     public function getdisplayacontentreportacc($init_id,$manager_id)
     {
-        $data = array();
+        $data = [];
         if($init_id !== '' && $manager_id !== '')
         {
 			/***
@@ -370,7 +370,7 @@ class Default_Model_Appraisalinit extends Zend_Db_Table_Abstract
     }
     public function getexist_line($init_id)
     {
-        $data = array();
+        $data = [];
         if($init_id !== '')
         {
             $init_data = $this->getAppDataById($init_id);
@@ -391,7 +391,7 @@ class Default_Model_Appraisalinit extends Zend_Db_Table_Abstract
     }
     public function getInitExistEmp($init_id,$line1_id)
     {
-        $data = array();
+        $data = [];
         if($init_id !== '')
         {
             $init_data = $this->getAppDataById($init_id);
@@ -411,7 +411,7 @@ class Default_Model_Appraisalinit extends Zend_Db_Table_Abstract
     }
     public function getEmpInit($init_id,$init_data,$selected_managers_arr)
     {
-        $data = array();
+        $data = [];
         if($init_id !== '')
         {                                   
             if($init_data['initialize_status'] == 1)
@@ -425,7 +425,7 @@ class Default_Model_Appraisalinit extends Zend_Db_Table_Abstract
             $query = "select employee_id "
                     . "from ".$table_name." where pa_initialization_id = '".$init_id."' and isactive = 1 ";
             $exist_result = $db->query($query)->fetchAll();
-            $exist_emp = array();
+            $exist_emp = [];
             if(!empty($exist_result))
             {                
                 foreach($exist_result as $exist)
@@ -464,7 +464,7 @@ class Default_Model_Appraisalinit extends Zend_Db_Table_Abstract
     }
     public function getRepManagers_report($line1_id,$init_id,$employeeids,$businessunit_id,$department_id)
     {
-        $data = array();
+        $data = [];
         $empids = '';
         if($line1_id != '' && $init_id != '')
         {
@@ -502,7 +502,7 @@ class Default_Model_Appraisalinit extends Zend_Db_Table_Abstract
     }
     public function getRepManagers($type,$init_id,$init_data)
     {
-        $data = array();
+        $data = [];
         if($type != '' && $init_id != '')
         {
             $init_data = $this->getAppDataById($init_id);
@@ -516,7 +516,7 @@ class Default_Model_Appraisalinit extends Zend_Db_Table_Abstract
                     . "from ".$table_name." where pa_initialization_id = '".$init_id."' and isactive = 1 "
                     . "group by line_manager_1";
             $exist_result = $db->query($query)->fetchAll();
-            $exist_emp = array();
+            $exist_emp = [];
             if(!empty($exist_result))
             {                
                 foreach($exist_result as $exist)
@@ -556,7 +556,7 @@ class Default_Model_Appraisalinit extends Zend_Db_Table_Abstract
     }    
 	public function getRepManagers_new($type,$init_id,$init_data,$employeeIds)
     {
-        $data = array();
+        $data = [];
         if($type != '' && $init_id != '')
         {
             $init_data = $this->getAppDataById($init_id);
@@ -604,7 +604,7 @@ class Default_Model_Appraisalinit extends Zend_Db_Table_Abstract
     }
     public function check_per_implmentation($businessunit_id,$department_id)
     {
-    	$result = array();
+    	$result = [];
     	$flag = '';
         $db = Zend_Db_Table::getDefaultAdapter();
         $query = "select * from main_pa_implementation where businessunit_id = ".$businessunit_id." and isactive = 1";
@@ -656,14 +656,14 @@ class Default_Model_Appraisalinit extends Zend_Db_Table_Abstract
         $db = Zend_Db_Table::getDefaultAdapter();
         $appInitData = $this->select()
                             ->setIntegrityCheck(false)	
-                            ->from(array('ai'=>'main_pa_initialization'),array('ai.id','ai.status as statusval',
+                            ->from(['ai'=>'main_pa_initialization'],['ai.id','ai.status as statusval',
                                 new Zend_Db_Expr("concat(from_year,'-',to_year) as fin_year"),'ai.appraisal_mode',
                                 new Zend_Db_Expr("CASE WHEN ai.status=1 THEN 'Open' WHEN ai.status=2 THEN 'Closed' ELSE 'Force Closed' END as status "),
 								new Zend_Db_Expr("case when initialize_status = 1 then case when ai.enable_step = 1 then 'Enabled to Managers' when ai.enable_step = 2 then 'Enabled to Employees' end when initialize_status = 2 then 'Initialize later' when initialize_status is null then 'In progress' end as appraisal_process_status"),
                                 new Zend_Db_Expr("case when ai.appraisal_mode = 'Quarterly' then concat('Q',ai.appraisal_period) when ai.appraisal_mode = 'Half-yearly' then concat('H',ai.appraisal_period) when ai.appraisal_mode = 'Yearly' then 'Yearly' end as app_period"),
-                                ))
-                            ->joinLeft(array('b' => 'main_businessunits'),"b.id = ai.businessunit_id and b.isactive=1",array('unitname'))
-                            ->joinLeft(array('d' => 'main_department'),"d.department_id = ai.department_id and d.isactive=1",array('name'))
+                                ])
+                            ->joinLeft(['b' => 'main_businessunits'],"b.id = ai.businessunit_id and b.isactive=1",['unitname'])
+                            ->joinLeft(['d' => 'main_department'],"d.department_id = ai.department_id and d.isactive=1",['name'])
                             ->where($where)
                             ->order("$by $sort") 
                             ->limitPage($pageNo, $perPage);
@@ -674,8 +674,8 @@ class Default_Model_Appraisalinit extends Zend_Db_Table_Abstract
     public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
     {		
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		
         if($searchData != '' && $searchData!='undefined')
         {
@@ -698,19 +698,19 @@ class Default_Model_Appraisalinit extends Zend_Db_Table_Abstract
 			
 		$objName = 'appraisalinit';
 		
-		$tableFields = array('action'=>'Action','unitname' => 'Business Unit','deptname' => 'Department','fin_year' => 'Financial Year',
-                    'appraisal_mode'=>'Appraisal Mode','app_period' => 'Period','status' => 'Appraisal Status','appraisal_process_status' => 'Process Status');
+		$tableFields = ['action'=>'Action','unitname' => 'Business Unit','deptname' => 'Department','fin_year' => 'Financial Year',
+                    'appraisal_mode'=>'Appraisal Mode','app_period' => 'Period','status' => 'Appraisal Status','appraisal_process_status' => 'Process Status'];
 		
 		$tablecontent = $this->getAppraisalInitData($sort, $by, $pageNo, $perPage,$searchQuery);  
 		
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -719,17 +719,17 @@ class Default_Model_Appraisalinit extends Zend_Db_Table_Abstract
 			'call'=>$call,
 			'actionparam'=>'yes',
 			'dashboardcall'=>$dashboardcall,
-                        'search_filters' => array(
-                            'status' =>array(
+                        'search_filters' => [
+                            'status' =>[
                                 'type'=>'select',
-                                'filter_data' => array(''=>'All','1' => 'Open','2' => 'Closed',3=>'Force Closed'),
-                            ),
-                            'appraisal_mode' => array(
+                                'filter_data' => [''=>'All','1' => 'Open','2' => 'Closed',3=>'Force Closed'],
+                            ],
+                            'appraisal_mode' => [
                                 'type' => 'select',
-                                'filter_data' => array('' => 'All','Quarterly' => 'Quarterly','Half-yearly' => 'Half-yearly','Yearly' => 'Yearly',),
-                            ),
-                        ),
-		);
+                                'filter_data' => ['' => 'All','Quarterly' => 'Quarterly','Half-yearly' => 'Half-yearly','Yearly' => 'Yearly',],
+                            ],
+                        ],
+		];
 		return $dataTmp;
 	}
 	
@@ -742,7 +742,7 @@ class Default_Model_Appraisalinit extends Zend_Db_Table_Abstract
 	{
             $select = $this->select()
                             ->setIntegrityCheck(false)
-                            ->from(array('pi'=>'main_pa_initialization'),array('pi.*'))
+                            ->from(['pi'=>'main_pa_initialization'],['pi.*'])
                             ->where('pi.isactive = 1 AND pi.id='.$id.' ');
             return $this->fetchAll($select)->toArray();		
 	}
@@ -751,7 +751,7 @@ class Default_Model_Appraisalinit extends Zend_Db_Table_Abstract
 	{
 		 $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('pim'=>'main_pa_implementation'),array('pim.*'))
+						->from(['pim'=>'main_pa_implementation'],['pim.*'])
 					    ->where('pim.isactive = 1 AND pim.businessunit_id = '.$businessUnitId.' AND pim.department_id = '.$departmentId);
                  
 		return $this->fetchAll($select)->toArray();		
@@ -777,7 +777,7 @@ class Default_Model_Appraisalinit extends Zend_Db_Table_Abstract
 		}
 		$select = $this->select()
 				->setIntegrityCheck(false)
-				->from(array('pi'=>'main_pa_initialization'),array('pi.*'))
+				->from(['pi'=>'main_pa_initialization'],['pi.*'])
 				->where('pi.isactive = 1 AND pi.status in (0,1) AND pi.businessunit_id = '.$businessUnitId.$dept_str.$manager_str);    
 		return $this->fetchAll($select)->toArray();
 	}
@@ -813,7 +813,7 @@ class Default_Model_Appraisalinit extends Zend_Db_Table_Abstract
 		}	
 	}
 	
-public function getEmployeeList($data,$employeeIds='',$flag)
+public function getEmployeeList($data,$employeeIds='',$flag = null)
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$where = 'e.isactive=1';
@@ -856,7 +856,7 @@ public function getEmployeeList($data,$employeeIds='',$flag)
             
             $select = $this->select()
                             ->setIntegrityCheck(false)
-                            ->from(array('pi'=>'main_pa_initialization'),array('pi.*'))
+                            ->from(['pi'=>'main_pa_initialization'],['pi.*'])
                             ->where('pi.isactive = 1 AND pi.status in (0,1) AND pi.initialize_status = 1');
             return $this->fetchAll($select)->toArray();
 	}
@@ -866,7 +866,7 @@ public function getEmployeeList($data,$employeeIds='',$flag)
             
             $select = $this->select()
                             ->setIntegrityCheck(false)
-                            ->from(array('pi'=>'main_pa_initialization'),array('pi.*'))
+                            ->from(['pi'=>'main_pa_initialization'],['pi.*'])
                             ->where('pi.isactive = 1 AND pi.status in (0,1) AND pi.initialize_status = 1 AND enable_step ="'.$enablestep.'"');
             return $this->fetchAll($select)->toArray();
 	}
@@ -910,7 +910,7 @@ public function getEmployeeList($data,$employeeIds='',$flag)
 		$sql_str = "SELECT count(id) as record_count FROM main_pa_questions_privileges_temp WHERE pa_initialization_id=$init_id AND isactive=1";
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$res = $db->fetchRow($sql_str);
-		return isset($res['record_count'])?$res['record_count']:0;
+		return $res['record_count'] ?? 0;
 	}
 	//function to get active records count from questions_previleges table
 	public function getActiveRecordsCount($init_id)
@@ -918,12 +918,12 @@ public function getEmployeeList($data,$employeeIds='',$flag)
 		$sql_str = "SELECT count(id) as record_count FROM main_pa_questions_privileges WHERE pa_initialization_id=$init_id AND isactive=1";
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$res = $db->fetchRow($sql_str);
-		return isset($res['record_count'])?$res['record_count']:0;
+		return $res['record_count'] ?? 0;
 	}
 	//function to get the initialization data for organization hierarchy
     public function getdisplayacontentacc_rep($init_id,$manager_id)
     {
-        $data = array();
+        $data = [];
         if($init_id !== '' && $manager_id !== '')
         {
             $init_data = $this->getAppDataById($init_id);
@@ -980,7 +980,7 @@ public function getEmployeeList($data,$employeeIds='',$flag)
 		}
 		else
 		{
-			return array();
+			return [];
 		}
 	}
 	public function getexistingperformanceappflag($businessunit_id,$from_year,$to_year)

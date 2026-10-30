@@ -57,7 +57,7 @@ class Default_Model_Phonenumber extends Zend_Db_Table_Abstract
 
     public function getPairs($activeOnly = true)
     {
-        $select = $this->select()->from($this->_name, array('id', 'number'))->order('number ASC');
+        $select = $this->select()->from($this->_name, ['id', 'number'])->order('number ASC');
         if ($activeOnly) {
             $select->where('isactive = ?', 1);
         }
@@ -67,7 +67,7 @@ class Default_Model_Phonenumber extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if (!empty($searchData) && $searchData !== 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -90,24 +90,24 @@ class Default_Model_Phonenumber extends Zend_Db_Table_Abstract
         }
 
         // SSOT Mandatory: 'action' => 'Action' must be the first element
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'        => 'Action',
             'number'        => 'Phone Number',
             'type_name'     => 'Type',
             'category_name' => 'Category',
             'status_text'   => 'Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
             'perPage'        => $perPage,
             'tablecontent'   => $tableContent,
             'objectname'     => 'phonenumber',
-            'extra'          => array(),
+            'extra'          => [],
             'tableheader'    => $tableHeaders,
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
@@ -115,10 +115,10 @@ class Default_Model_Phonenumber extends Zend_Db_Table_Abstract
             'menuName'       => 'Phone Directory',
             'call'           => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => array(
-                'status_text' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive'))
-            )
-        );
+            'search_filters' => [
+                'status_text' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']]
+            ]
+        ];
     }
 
     public function getGridData($sort, $by, $pageNo, $perPage, $searchQuery = '')
@@ -134,22 +134,22 @@ class Default_Model_Phonenumber extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from(
-                array('pn' => $this->_name),
-                array(
+                ['pn' => $this->_name],
+                [
                     'id' => 'pn.id',
                     'number',
                     'status_text' => new Zend_Db_Expr("CASE WHEN pn.isactive = 1 THEN 'Active' ELSE 'Inactive' END")
-                )
+                ]
             )
             ->joinInner(
-                array('pt' => 'main_phone_type'),
+                ['pt' => 'main_phone_type'],
                 'pn.type_id = pt.id',
-                array('type_name' => 'pt.name')
+                ['type_name' => 'pt.name']
             )
             ->joinInner(
-                array('pc' => 'main_phone_category'),
+                ['pc' => 'main_phone_category'],
                 'pn.category_id = pc.id',
-                array('category_name' => 'pc.name')
+                ['category_name' => 'pc.name']
             )
             ->where('pn.isactive != ?', 5);
 
@@ -176,7 +176,7 @@ class Default_Model_Phonenumber extends Zend_Db_Table_Abstract
         if (!empty($id)) {
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = $currentDate;
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return 'update';
         }
 
@@ -195,13 +195,13 @@ class Default_Model_Phonenumber extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => 5,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
+        ];
 
-        return $this->update($data, array('id = ?' => (int)$id));
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     public function toggleStatus($id, $status)
@@ -209,13 +209,13 @@ class Default_Model_Phonenumber extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => (int)$status,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
+        ];
 
-        return $this->update($data, array('id = ?' => (int)$id));
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* =================================================================================
@@ -270,7 +270,7 @@ class Default_Model_Phonenumber extends Zend_Db_Table_Abstract
 
         $db = $this->getAdapter();
         $select = $db->select()
-            ->from('map_phone_owner', array('owner_type', 'owner_id'))
+            ->from('map_phone_owner', ['owner_type', 'owner_id'])
             ->where('phone_number_id = ?', (int)$phoneNumberId)
             ->where('isactive != ?', 5);
 
@@ -310,7 +310,7 @@ class Default_Model_Phonenumber extends Zend_Db_Table_Abstract
         $currentDate = gmdate("Y-m-d H:i:s");
 
         // 1. Hard-delete all existing owner mappings for this phone number.
-        $db->delete('map_phone_owner', array('phone_number_id = ?' => (int)$phoneNumberId));
+        $db->delete('map_phone_owner', ['phone_number_id = ?' => (int)$phoneNumberId]);
 
         // 2. Iterate through the submitted owner types and IDs, and insert the new mappings.
         foreach ($owners as $formTypeKey => $ids) {

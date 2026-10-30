@@ -41,7 +41,7 @@ class Default_EmpholidaysController extends Zend_Controller_Action
 				$emptyFlag = 0;
 				$conText = "";
 				$userID = "";
-				$msgarray = array();
+				$msgarray = [];
 				$empGroupId = '';
 				$auth = Zend_Auth::getInstance();
 				if ($auth->hasIdentity()) {
@@ -64,7 +64,7 @@ class Default_EmpholidaysController extends Zend_Controller_Action
 
 
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 				if ($Uid != "") {
 					//TO dispaly EMployee Profile information.....
 					$usersModel = new Default_Model_Users();
@@ -128,9 +128,9 @@ class Default_EmpholidaysController extends Zend_Controller_Action
 							$objname = $this->_getParam('objname');
 							$refresh = $this->_getParam('refresh');
 							$dashboardcall = $this->_getParam('dashboardcall', null);
-							$data = array();
+							$data = [];
 							$searchQuery = '';
-							$searchArray = array();
+							$searchArray = [];
 							$tablecontent = '';
 							if ($refresh == 'refresh') {
 								if ($dashboardcall == 'Yes')
@@ -143,7 +143,7 @@ class Default_EmpholidaysController extends Zend_Controller_Action
 								$pageNo = 1;
 								$searchData = '';
 								$searchQuery = '';
-								$searchArray = array();
+								$searchArray = [];
 							} else {
 								$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 								$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'h.modifieddate';
@@ -202,7 +202,7 @@ try {
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 
 				$employeeModal = new Default_Model_Employee();
 				try {
@@ -222,9 +222,9 @@ try {
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall', null);
-								$data = array();
+								$data = [];
 								$searchQuery = '';
-								$searchArray = array();
+								$searchArray = [];
 								$tablecontent = '';
 								if ($refresh == 'refresh') {
 									if ($dashboardcall == 'Yes')
@@ -237,7 +237,7 @@ try {
 									$pageNo = 1;
 									$searchData = '';
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 								} else {
 									$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 									$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'eh.modifieddate';
@@ -431,7 +431,7 @@ Zend_Debug::dump($th->getMessage());	}
 							$msgarray = $this->view->msgarray;
 
 						} else {
-						$this->save($form,$userid,'add');
+						$this->save($form,$userid);
 						$msgarray = $this->view->msgarray;
 						}
 					}
@@ -624,7 +624,7 @@ try {
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 
 				$employeeModal = new Default_Model_Employee();
 				try {
@@ -643,9 +643,9 @@ try {
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall', null);
-								$data = array();
+								$data = [];
 								$searchQuery = '';
-								$searchArray = array();
+								$searchArray = [];
 								$tablecontent = '';
 								if ($refresh == 'refresh') {
 									if ($dashboardcall == 'Yes')
@@ -658,7 +658,7 @@ try {
 									$pageNo = 1;
 									$searchData = '';
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 								} else {
 									$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 									$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'eh.modifieddate';
@@ -715,7 +715,7 @@ Zend_Debug::dump($th->getMessage());	}
 			$actionflag = '';
 			$tableid  = '';
 			if ($user_id != '') {
-				$data = array(
+				$data = [
 					'emp_id'=>(int)$userid,
 					'holidaycategory_id' => $holiday_group,
 					'holiday_id' => $holiday,
@@ -724,11 +724,11 @@ Zend_Debug::dump($th->getMessage());	}
 
 					'modifiedby' => (int)$loginUserId,
 					'modifieddate' => gmdate("Y-m-d H:i:s")
-				);
+				];
 				if($id!=''){
-					$where = array(
+					$where = [
 						'empholiday_id=?' => $id,
-					);
+					];
 				}else{
 					$where = '';
 					$data['createdby'] = (int)$loginUserId;

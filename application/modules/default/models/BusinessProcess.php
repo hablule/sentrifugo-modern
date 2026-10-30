@@ -71,7 +71,7 @@ class Default_Model_Businessprocess extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if (!empty($searchData) && $searchData !== 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -93,25 +93,25 @@ class Default_Model_Businessprocess extends Zend_Db_Table_Abstract
         }
 
         // SSOT Mandatory: 'action' => 'Action' must be the first element
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'                => 'Action',
             'code'                  => 'Code',
             'name'                  => 'Process Name',
             'requires_control_text' => 'Requires Period Lock',
             'description'           => 'Description',
             'status_text'           => 'Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
             'perPage'        => $perPage,
             'tablecontent'   => $tableContent,
             'objectname'     => 'businessprocess',
-            'extra'          => array(),
+            'extra'          => [],
             'tableheader'    => $tableHeaders,
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
@@ -119,11 +119,11 @@ class Default_Model_Businessprocess extends Zend_Db_Table_Abstract
             'menuName'       => 'Business Processes',
             'call'           => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => array(
-                'status_text'           => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive')),
-                'requires_control_text' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Yes' => 'Yes', 'No' => 'No'))
-            )
-        );
+            'search_filters' => [
+                'status_text'           => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']],
+                'requires_control_text' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Yes' => 'Yes', 'No' => 'No']]
+            ]
+        ];
     }
 
     /**
@@ -147,15 +147,15 @@ class Default_Model_Businessprocess extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from(
-                array('bp' => $this->_name),
-                array(
+                ['bp' => $this->_name],
+                [
                     'id' => 'bp.id',
                     'code',
                     'name',
                     'description',
                     'requires_control_text' => new Zend_Db_Expr("CASE WHEN bp.requires_period_control = 1 THEN 'Yes' ELSE 'No' END"),
                     'status_text' => new Zend_Db_Expr("CASE WHEN bp.isactive = 1 THEN 'Active' ELSE 'Inactive' END")
-                )
+                ]
             )
             ->where('bp.isactive != ?', 5);
 
@@ -176,7 +176,7 @@ class Default_Model_Businessprocess extends Zend_Db_Table_Abstract
      */
     public function getPairs($activeOnly = true)
     {
-        $select = $this->select()->from($this->_name, array('id', 'name'))->order('name ASC');
+        $select = $this->select()->from($this->_name, ['id', 'name'])->order('name ASC');
         if ($activeOnly) {
             $select->where('isactive = ?', 1);
         }
@@ -220,7 +220,7 @@ class Default_Model_Businessprocess extends Zend_Db_Table_Abstract
         if (!empty($id)) {
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = $currentDate;
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return 'update';
         }
 
@@ -245,13 +245,13 @@ class Default_Model_Businessprocess extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => 5,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
+        ];
 
-        return $this->update($data, array('id = ?' => (int)$id));
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /**
@@ -266,13 +266,13 @@ class Default_Model_Businessprocess extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => (int)$status,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
+        ];
 
-        return $this->update($data, array('id = ?' => (int)$id));
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* =================================================================================
@@ -312,7 +312,7 @@ class Default_Model_Businessprocess extends Zend_Db_Table_Abstract
         $db = $this->getAdapter();
 
         $select = $db->select()
-            ->from('map_period_control', array('id'))
+            ->from('map_period_control', ['id'])
             ->where('process_id = ?', (int)$id)
             ->where('isactive != ?', 5);
 

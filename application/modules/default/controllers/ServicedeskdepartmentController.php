@@ -28,7 +28,7 @@ class Default_ServicedeskdepartmentController extends Zend_Controller_Action
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('getrequests', 'json')->initContext();		
     }
-	
+
     public function init()
     {
         $this->_options= $this->getInvokeArg('bootstrap')->getOptions();
@@ -40,17 +40,17 @@ class Default_ServicedeskdepartmentController extends Zend_Controller_Action
         $call = $this->_getParam('call');
 		if($call == 'ajaxcall')
 				$this->_helper->layout->disableLayout();
-		
+
 		$view = Zend_Layout::getMvcInstance()->getView();		
 		$objname = $this->_getParam('objname');
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
-		
-		$data = array();
+
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
-		
+
 		if($refresh == 'refresh')
 		{
 		    if($dashboardcall == 'Yes')
@@ -73,18 +73,18 @@ class Default_ServicedeskdepartmentController extends Zend_Controller_Action
 			$searchData = rtrim($searchData,',');
 			/** search from grid - END **/
 		}
-				
+
 		$dataTmp = $servicedeskdepartmentmodel->getGrid($sort, $by, $perPage, $pageNo, $searchData,$call,$dashboardcall);		 		
-					
+
 		array_push($data,$dataTmp);
 		$this->view->dataArray = $data;
 		$this->view->call = $call ;
 		$this->view->messages = $this->_helper->flashMessenger->getMessages();
 		//$this->renderScript('commongrid/index.phtml');
 		$this->render('commongrid/index', null, true);
-		
+
     }
-	
+
 	 public function addAction()
 	{
 	   $auth = Zend_Auth::getInstance();
@@ -97,7 +97,7 @@ class Default_ServicedeskdepartmentController extends Zend_Controller_Action
 		if($callval == 'ajaxcall')
 			$this->_helper->layout->disableLayout();
 		$servicedeskdepartmentform = new Default_Form_servicedeskdepartment();
-		$msgarray = array();
+		$msgarray = [];
 		$servicedeskdepartmentform->setAttrib('action',BASE_URL.'servicedeskdepartment/add');
 		$this->view->form = $servicedeskdepartmentform; 
 		$this->view->msgarray = $msgarray; 
@@ -165,10 +165,10 @@ class Default_ServicedeskdepartmentController extends Zend_Controller_Action
 		$this->view->flag = 'view';
 		$this->view->form = $servicedeskdepartmentform;
 		$this->render('form');	
-		
+
 	}
-	
-	
+
+
 	public function editAction()
 	{	
 	    $auth = Zend_Auth::getInstance();
@@ -177,12 +177,12 @@ class Default_ServicedeskdepartmentController extends Zend_Controller_Action
 					$loginuserRole = $auth->getStorage()->read()->emprole;
 					$loginuserGroup = $auth->getStorage()->read()->group_id;
 		}
-	 	
+
 		$id = $this->getRequest()->getParam('id');
 		$callval = $this->getRequest()->getParam('call');
 		if($callval == 'ajaxcall')
 			$this->_helper->layout->disableLayout();
-		
+
 		$servicedeskdepartmentform = new Default_Form_servicedeskdepartment();
 		$servicedeskdepartmentmodel = new Default_Model_Servicedeskdepartment();
 		$servicedeskdepartmentform->submit->setLabel('Update');
@@ -225,7 +225,7 @@ class Default_ServicedeskdepartmentController extends Zend_Controller_Action
 		}
 		$this->render('form');	
 	}
-	
+
 	public function save($servicedeskdepartmentform)
 	{
 	  $auth = Zend_Auth::getInstance();
@@ -233,8 +233,8 @@ class Default_ServicedeskdepartmentController extends Zend_Controller_Action
 					$loginUserId = $auth->getStorage()->read()->id;
 		} 
 	    $servicedeskdepartmentmodel = new Default_Model_Servicedeskdepartment();
-		$msgarray = array();
-	    
+		$msgarray = [];
+
 		  if($servicedeskdepartmentform->isValid($this->_request->getPost())){
             try{
             $id = $this->_request->getParam('id');
@@ -242,13 +242,13 @@ class Default_ServicedeskdepartmentController extends Zend_Controller_Action
 			$description = $this->_request->getParam('description');
 			$actionflag = '';
 			$tableid  = ''; 
-			   $data = array('service_desk_name'=>$service_desk_name, 
+			   $data = ['service_desk_name'=>$service_desk_name, 
 							 'description'=>($description!=''?trim($description):NULL),
 							  'modifiedby'=>$loginUserId,
 							  'modifieddate'=>gmdate("Y-m-d H:i:s")
-					);
+					];
 				if($id!=''){
-					$where = array('id=?'=>$id);  
+					$where = ['id=?'=>$id];  
 					$actionflag = 2;
 				}
 				else
@@ -263,12 +263,12 @@ class Default_ServicedeskdepartmentController extends Zend_Controller_Action
 				if($Id == 'update')
 				{
 				   $tableid = $id;
-				   $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Category updated successfully."));
+				   $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Category updated successfully."]);
 				}   
 				else
 				{
 				   $tableid = $Id; 	
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Category added successfully."));					   
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Category added successfully."]);					   
 				}   
 				$menuID = SERVICEDESKDEPARTMENT;
 				$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
@@ -292,9 +292,9 @@ class Default_ServicedeskdepartmentController extends Zend_Controller_Action
 				}
 			return $msgarray;	
 		}
-	
+
 	}
-	
+
 	public function deleteAction()
 	{
             $auth = Zend_Auth::getInstance();
@@ -322,9 +322,9 @@ class Default_ServicedeskdepartmentController extends Zend_Controller_Action
                 if($count < 1)
                 {	
                     $servicedeskdepartmentdata = $servicedeskdepartmentmodel->getServiceDeskDepartmentDatabyID($id);
-                    $data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-                    $where = array('id=?'=>$id);
-                    $reqwhere = array('service_desk_id=?'=>$id);
+                    $data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+                    $where = ['id=?'=>$id];
+                    $reqwhere = ['service_desk_id=?'=>$id];
                     $Id = $servicedeskdepartmentmodel->SaveorUpdateServiceDeskDepartmentData($data, $where);
                     $RId = $servicedeskrequestmodel->SaveorUpdateServiceDeskRequestData($data, $reqwhere);
                     if($Id == 'update')
@@ -356,17 +356,17 @@ class Default_ServicedeskdepartmentController extends Zend_Controller_Action
 			{
 				if(	$messages['msgtype'] == 'error')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
 				}
 				if(	$messages['msgtype'] == 'success')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
 				}
-				
+
 			}
 				$this->_helper->json($messages);		
 	}
-	
+
 public function addpopupAction()
 	{
 		Zend_Layout::getMvcInstance()->setLayoutPath(APPLICATION_PATH."/layouts/scripts/popup/");
@@ -376,7 +376,7 @@ public function addpopupAction()
 		}
 		$id = $this->getRequest()->getParam('id');
 
-		$msgarray = array();
+		$msgarray = [];
 		$controllername = 'servicedeskdepartment';
 		$servicedeskdepartmentform = new Default_Form_servicedeskdepartment();
 		$servicedeskdepartmentmodel = new Default_Model_Servicedeskdepartment();
@@ -388,13 +388,13 @@ public function addpopupAction()
 			$description = $this->_request->getParam('description');
 			$actionflag = '';
 			$tableid  = ''; 
-			   $data = array('service_desk_name'=>$service_desk_name, 
+			   $data = ['service_desk_name'=>$service_desk_name, 
 							 'description'=>$description,
 							  'modifiedby'=>$loginUserId,
 							  'modifieddate'=>gmdate("Y-m-d H:i:s")
-					);
+					];
 				if($id!=''){
-					$where = array('id=?'=>$id);  
+					$where = ['id=?'=>$id];  
 					$actionflag = 2;
 				}
 				else
@@ -416,7 +416,7 @@ public function addpopupAction()
 					$opt .= sapp_Global::selectOptionBuilder($record['id'], utf8_encode($record['service_desk_name']));
 				}
 				$this->view->departmentData = $opt;
-					
+
 				$this->view->eventact = 'added';
 				$close = 'close';
 				$this->view->popup=$close;
@@ -439,14 +439,14 @@ public function addpopupAction()
 		$this->view->ermsg = '';
 		$this->render('form');	
 	}
-	
-	
+
+
 	public function getrequestsAction()
     {
         $service_desk_id = $this->_getParam('service_desk_id',null);
         $service_desk_conf_id = $this->_getParam('service_desk_conf_id',null);
         $request_for_flag = $this->_getParam('request_for_flag',null);
-        $data = array();
+        $data = [];
         $options = sapp_Global::selectOptionBuilder('', 'Select request', '');
         if($service_desk_id != '')
         {
@@ -462,7 +462,7 @@ public function addpopupAction()
 		                    $options .= sapp_Global::selectOptionBuilder($opt['id'], utf8_encode($opt['service_request_name']), '');
 		                }
 		            }
-        			
+
         		}else{
         			$assetsModel = new Assets_Model_Assets();
         			$data = $assetsModel->getAllAssetForCategory($request_for_param[0]);
@@ -491,7 +491,7 @@ public function addpopupAction()
         $attachment = false;
         if($service_desk_conf_id != '')
         {
-        	
+
         	$sd_conf_model = new Default_Model_Servicedeskconf();
         	$sd_conf_data = $sd_conf_model->getServiceDeskConfbyID($service_desk_conf_id);
         	if(count($sd_conf_data)>0){
@@ -499,7 +499,7 @@ public function addpopupAction()
         			$attachment = true;	
         	}
         }
-        $this->_helper->json(array('options' => $options,'datacount'=>count($data),'attachment'=>$attachment));
+        $this->_helper->json(['options' => $options,'datacount'=>count($data),'attachment'=>$attachment]);
     }// end of getrequests action
 	
 }

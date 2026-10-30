@@ -35,32 +35,32 @@ class Default_Form_title extends Zend_Form
         $code->setLabel('Code');
         $code->setAttrib('maxLength', 5);
         $code->setRequired(true);
-        $code->addValidator('NotEmpty', false, array('messages' => 'Please enter Title code.'));
+        $code->addValidator('NotEmpty', false, ['messages' => 'Please enter Title code.']);
         $code->addValidator(new Zend_Validate_Db_NoRecordExists(
-            array(
+            [
                 'table'=>'main_title',
                 'field'=>'code'
-            )
+            ]
         ));
         
         $code->getValidator('Db_NoRecordExists')->setMessage('Code already exists');
         $name = new Zend_Form_Element_Text('name');
         $name->setAttrib('maxLength', 60);
         $name->setRequired(true);
-        $name->addValidator('NotEmpty', false, array('messages' => 'Please enter Title Name.'));  
+        $name->addValidator('NotEmpty', false, ['messages' => 'Please enter Title Name.']);  
       	$name->addValidator(new Zend_Validate_Db_NoRecordExists(
-              array(
+              [
                   'table'=>'main_title',
                   'field'=>'name'
-              )
+              ]
               ));
         $name->getValidator('Db_NoRecordExists')->setMessage('Name already exists.');
-        $name->addValidator("regex",true,array(
+        $name->addValidator("regex",true,[
             'pattern'=>'/^[a-zA-Z.\-?]+$/',
-            'messages'=>array(
+            'messages'=>[
                 'regexNotMatch'=>'Name not valid'
-            )
-            ));	
+            ]
+            ]);	
 		$description = new Zend_Form_Element_Textarea('description');
         $description->setAttrib('rows', 10);
         $description->setAttrib('cols', 50);
@@ -73,7 +73,7 @@ class Default_Form_title extends Zend_Form
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 
-		$this->addElements(array($id,$code,$description,$name,$isprefix,$issuffix,$isactive,$submit));
-        $this->setElementDecorators(array('ViewHelper')); 
+		$this->addElements([$id,$code,$description,$name,$isprefix,$issuffix,$isactive,$submit]);
+        $this->setElementDecorators(['ViewHelper']); 
 	}
 }

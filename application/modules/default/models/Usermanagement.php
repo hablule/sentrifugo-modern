@@ -53,9 +53,9 @@ class Default_Model_Usermanagement extends Zend_Db_Table_Abstract
 
         $userData = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('u' => $this->_name), array('u.*', 'u.isactive' => "if(u.isactive = 1,'Active','Inactive')"))
-            ->joinInner(array('ur' => 'main_userrole'), 'u.id = ur.user_id')
-            ->joinInner(array('r' => ROLE_ARRAY['tablename']), 'r.' . ROLE_ARRAY['colid'] . '=ur.role_id and r.' . ROLE_ARRAY['colisactive'] . '= "Y" and r.' . ROLE_ARRAY['colgroupid'] . ' = ' . USERS_GROUP . " ", array('rolename' => ROLE_ARRAY['colname']))
+            ->from(['u' => $this->_name], ['u.*', 'u.isactive' => "if(u.isactive = 1,'Active','Inactive')"])
+            ->joinInner(['ur' => 'main_userrole'], 'u.id = ur.user_id')
+            ->joinInner(['r' => ROLE_ARRAY['tablename']], 'r.' . ROLE_ARRAY['colid'] . '=ur.role_id and r.' . ROLE_ARRAY['colisactive'] . '= "Y" and r.' . ROLE_ARRAY['colgroupid'] . ' = ' . USERS_GROUP . " ", ['rolename' => ROLE_ARRAY['colname']])
 
             ->where($where)
             ->order("$by $sort")
@@ -137,7 +137,7 @@ class Default_Model_Usermanagement extends Zend_Db_Table_Abstract
         $query .= " " . $limit_str;
         $result = $db->query($query);
         $data = $result->fetchAll();
-        return array('rows' => $data, 'page_cnt' => $page_cnt);
+        return ['rows' => $data, 'page_cnt' => $page_cnt];
     }
     /**
      * This function will return all data of user by passing its primay key id.
@@ -215,7 +215,7 @@ class Default_Model_Usermanagement extends Zend_Db_Table_Abstract
         //  where u.isactive = 1 and  u.userstatus = 'old'
         //   inner join ".ROLE_ARRAY['tablename']." r on r.id = u.emprole and ".ROLE_ARRAY['colgroupid']." is not null and ".ROLE_ARRAY['colgroupid']." not in (".USERS_GROUP.")
         $result = $db->query($query);
-        $options = array();
+        $options = [];
         while ($row = $result->fetch()) {
             $options[$row['id']] = $row['cname'];
         }
@@ -241,8 +241,8 @@ class Default_Model_Usermanagement extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $p2, $p3, $p4, $p5)
     {
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
             if (count($searchValues) > 0) {
@@ -255,42 +255,42 @@ class Default_Model_Usermanagement extends Zend_Db_Table_Abstract
         }
         $objName = 'usermanagement';
 
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'employeeId' => 'User ID',
             'emailaddress' => 'Email',
             'rolename' => 'Role',
             'u.isactive' => 'Status'
 
-        );
+        ];
 
         $tablecontent = $this->getUsersData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
             'perPage' => $perPage,
             'tablecontent' => $tablecontent,
             'objectname' => $objName,
-            'extra' => array(),
+            'extra' => [],
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
             'jsFillFnName' => '',
             'searchArray' => $searchArray,
             'call' => $call,
             'dashboardcall' => $dashboardcall,
-            'search_filters' => array(
-                'u.isactive' => array(
+            'search_filters' => [
+                'u.isactive' => [
                     'type' => 'select',
-                    'filter_data' => array(
+                    'filter_data' => [
                         '' => 'All',
                         1 => 'Active',
                         0 => 'Inactive',
-                    )
-                )
-            ),
-        );
+                    ]
+                ]
+            ],
+        ];
         return $dataTmp;
     }
 
@@ -306,7 +306,7 @@ class Default_Model_Usermanagement extends Zend_Db_Table_Abstract
                   inner join " . ROLE_ARRAY['tablename'] . " r on r.id = u.emprole and " . ROLE_ARRAY['colisactive'] . " = 'Y' 
                   and u.emprole = " . SUPERADMINROLE . " where u.isactive = 1 and u.id = " . SUPERADMIN . " ";
         $result = $db->query($query);
-        $emp_arr = array();
+        $emp_arr = [];
         while ($row = $result->fetch()) {
             $emp_arr[$row['id']]['userfullname'] = $row['userfullname'];
             $emp_arr[$row['id']]['emailaddress'] = $row['emailaddress'];
@@ -372,7 +372,7 @@ class Default_Model_Usermanagement extends Zend_Db_Table_Abstract
 
             $select = $this->select()
                 ->setIntegrityCheck(false)
-                ->from(array('u' => $this->_name), array(
+                ->from(['u' => $this->_name], [
                     'id'      => 'u.id',
                     'name' => new Zend_Db_Expr("
                                     COALESCE(
@@ -381,22 +381,22 @@ class Default_Model_Usermanagement extends Zend_Db_Table_Abstract
                                         u.username
                                     )
                                 ")
-                ))
+                ])
                 ->joinLeft(
-                    array('e' => 'main_employees'),
+                    ['e' => 'main_employees'],
                     'u.empid = e.id',
-                    array()
+                    []
                 )
                 ->where('u.isactive = ?', 1)
                 ->order(new Zend_Db_Expr("name ASC"));
 
             $result = $this->fetchAll($select)->toArray();
 
-            return (!empty($result)) ? $result : array();
+            return (!empty($result)) ? $result : [];
         } catch (Exception $e) {
             // Log the error in a real-world scenario
             // Zend_Registry::get('log')->error($e->getMessage());
-            return array();
+            return [];
         }
     }
 

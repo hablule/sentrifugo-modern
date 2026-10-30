@@ -13,9 +13,9 @@ class Default_Model_Certificate extends Zend_Db_Table_Abstract{
 
         $bank = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('mc'=>'main_certificate'),array('mc.name as name', 'mc.code as code', 'mc.description as description', 'if(mc.isactive="Y","Yes","No") as isactive', 'mc.certificate_id as id'))
-            ->joinLeft(array('mcp'=>'main_certprovider'),"mc.certprovider_id = mcp.certprovider_id",array('provider'=>'mcp.name'))
-            ->joinLeft(array('mcc'=>'main_certificatecategory'),"mc.certificatecategory_id = mcc.certificatecategory_id",array('category'=>'mcc.name'))
+            ->from(['mc'=>'main_certificate'],['mc.name as name', 'mc.code as code', 'mc.description as description', 'if(mc.isactive="Y","Yes","No") as isactive', 'mc.certificate_id as id'])
+            ->joinLeft(['mcp'=>'main_certprovider'],"mc.certprovider_id = mcp.certprovider_id",['provider'=>'mcp.name'])
+            ->joinLeft(['mcc'=>'main_certificatecategory'],"mc.certificatecategory_id = mcc.certificatecategory_id",['category'=>'mcc.name'])
 
             ->order("$by $sort")
             ->where($where)
@@ -25,7 +25,7 @@ class Default_Model_Certificate extends Zend_Db_Table_Abstract{
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $a = '', $b = '', $c = '', $d = '')
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
             foreach ($searchValues as $key => $val) {
@@ -44,7 +44,7 @@ class Default_Model_Certificate extends Zend_Db_Table_Abstract{
             $searchQuery = rtrim($searchQuery, " AND");
         }
         $objName = 'certificate';
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'code' => 'Code',
             'name' => 'Name',
@@ -52,17 +52,17 @@ class Default_Model_Certificate extends Zend_Db_Table_Abstract{
             'category'=>'Category ',
             'description' => 'Description',
             'isactive' => 'Active',
-        );
+        ];
 
         $tablecontent = $this->getData($sort, $by, $pageNo, $perPage, $searchQuery);
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
             'perPage' => $perPage,
             'tablecontent' => $tablecontent,
             'objectname' => $objName,
-            'extra' => array(),
+            'extra' => [],
             // 'add'=>'add',
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
@@ -70,12 +70,12 @@ class Default_Model_Certificate extends Zend_Db_Table_Abstract{
             'searchArray' => $searchArray,
             'call' => $call,
             'dashboardcall' => $dashboardcall,
-            'search_filters' => array(
-                'isactive' => array(
+            'search_filters' => [
+                'isactive' => [
                     'type' => 'select',
-                    'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-            )
-        );
+                    'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+            ]
+        ];
         return $dataTmp;
     }
 
@@ -104,8 +104,8 @@ class Default_Model_Certificate extends Zend_Db_Table_Abstract{
     {
         $linec = $this->select()
                       ->setIntegrityCheck(false)
-                      ->from(array('mc'=>'main_certificate'),array('mc.name as name', 'mc.certificate_id as certificate_id'))
-                      ->joinLeft(array('mcp'=>'main_certprovider'),"mc.certprovider_id = mcp.certprovider_id",array('provider'=>'COALESCE(mcp.name,0)'))
+                      ->from(['mc'=>'main_certificate'],['mc.name as name', 'mc.certificate_id as certificate_id'])
+                      ->joinLeft(['mcp'=>'main_certprovider'],"mc.certprovider_id = mcp.certprovider_id",['provider'=>'COALESCE(mcp.name,0)'])
                       ->where('mc.isactive="Y"');
         return $this->fetchAll($linec)->toArray();
     }

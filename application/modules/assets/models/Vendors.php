@@ -27,8 +27,8 @@ class Assets_Model_Vendors extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{		
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		
 		if($searchData != '' && $searchData!='undefined')
 		{		
@@ -56,30 +56,30 @@ class Assets_Model_Vendors extends Zend_Db_Table_Abstract
 			$searchQuery = rtrim($searchQuery," AND");					
 		}
 		$objName = 'vendors';
-		$tableFields = array('action'=>'Action','name' =>'Name','contact_person' => 'Contact Person','country_name' => 'Country','state_name' => 'State','city_name' => 'City','primary_phone'=>'Primary Phone');
+		$tableFields = ['action'=>'Action','name' =>'Name','contact_person' => 'Contact Person','country_name' => 'Country','state_name' => 'State','city_name' => 'City','primary_phone'=>'Primary Phone'];
 		
 		
 		
 		$tablecontent = $this->getVendorsData($sort, $by, $pageNo, $perPage,$searchQuery);     
 		
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
 			'searchArray' => $searchArray,
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall,
-			'search_filters' => array(
-					'startdate' =>array('type'=>'datepicker')					
-				)
-				);			
+			'search_filters' => [
+					'startdate' =>['type'=>'datepicker']					
+				]
+				];			
 		return $dataTmp;
 	}
 	public function getVendorsData($sort, $by, $pageNo, $perPage,$searchQuery)
@@ -92,11 +92,11 @@ class Assets_Model_Vendors extends Zend_Db_Table_Abstract
 		
 		$vendorsdata =  $this->select()
     					   ->setIntegrityCheck(false)	 
-						   ->from(array('b' => 'main_vendors'),array('id'=>'b.id','isactive'=>'b.isactive','name'=>'b.name','contact_person'=>'b.contact_person','primary_phone'=>'b.primary_phone'))
+						   ->from(['b' => 'main_vendors'],['id'=>'b.id','isactive'=>'b.isactive','name'=>'b.name','contact_person'=>'b.contact_person','primary_phone'=>'b.primary_phone'])
 						   
-						  ->joinLeft(array('c'=>'tbl_countries'), 'c.id=b.country',array('country_name'=>'c.country_name'))
-						   ->joinLeft(array('s'=>'tbl_states'), 's.id=b.state',array('state_name'=>'s.state_name'))
-						   ->joinLeft(array('u'=>'tbl_cities'), 'u.id=b.city',array('city_name'=>'u.city_name'))
+						  ->joinLeft(['c'=>'tbl_countries'], 'c.id=b.country',['country_name'=>'c.country_name'])
+						   ->joinLeft(['s'=>'tbl_states'], 's.id=b.state',['state_name'=>'s.state_name'])
+						   ->joinLeft(['u'=>'tbl_cities'], 'u.id=b.city',['city_name'=>'u.city_name'])
 						   ->where($where)
     					   ->order("$by $sort") 
     					   ->limitPage($pageNo, $perPage);
@@ -130,7 +130,7 @@ class Assets_Model_Vendors extends Zend_Db_Table_Abstract
 	{
 		 $select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('c'=>'main_vendors'),array('c.*'))
+		->from(['c'=>'main_vendors'],['c.*'])
 		->where('c.isactive = 1');
 		return $this->fetchAll($select)->toArray();
 	}

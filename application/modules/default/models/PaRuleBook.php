@@ -53,7 +53,7 @@ class Default_Model_Parulebook extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -69,18 +69,18 @@ class Default_Model_Parulebook extends Zend_Db_Table_Abstract
             $searchQuery = rtrim($searchQuery, " AND");
         }
 
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'       => 'Action',
             'code'         => 'Rulebook Code',
             'name'         => 'Rulebook Name',
             'frequency'    => 'Frequency',
             'trigger_type' => 'Trigger Type',
             'status_text'  => 'Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
@@ -88,17 +88,17 @@ class Default_Model_Parulebook extends Zend_Db_Table_Abstract
             'tablecontent'   => $tableContent,
             'objectname'     => 'parulebook',
             'tableheader'    => $tableHeaders,
-            'extra'          => array(),
+            'extra'          => [],
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
             'searchArray'    => $searchArray,
             'menuName'       => 'Rulebooks (Templates)',
             'call'           => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => array(
-                'status_text' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive'))
-            )
-        );
+            'search_filters' => [
+                'status_text' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']]
+            ]
+        ];
     }
 
     public function getGridData($sort, $by, $pageNo, $perPage, $searchQuery = '')
@@ -107,11 +107,11 @@ class Default_Model_Parulebook extends Zend_Db_Table_Abstract
 
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('rb' => $this->_name), array(
+            ->from(['rb' => $this->_name], [
                 'id' => 'rb.id',
                 '*',
                 'status_text' => new Zend_Db_Expr("CASE WHEN rb.isactive = 1 THEN 'Active' ELSE 'Inactive' END")
-            ))
+            ])
             ->where('rb.isactive != 5');
 
         if (!empty($searchQuery)) {
@@ -124,7 +124,7 @@ class Default_Model_Parulebook extends Zend_Db_Table_Abstract
 
     public function getPairs($activeOnly = true)
     {
-        $select = $this->select()->from($this->_name, array('id', 'name'))->order('name ASC');
+        $select = $this->select()->from($this->_name, ['id', 'name'])->order('name ASC');
         if ($activeOnly) $select->where("isactive = 1");
         return $this->getAdapter()->fetchPairs($select);
     }
@@ -146,7 +146,7 @@ class Default_Model_Parulebook extends Zend_Db_Table_Abstract
     public function getAdHocPairs($activeOnly = true)
     {
         $select = $this->select()
-            ->from($this->_name, array('id', 'name'))
+            ->from($this->_name, ['id', 'name'])
             ->where("frequency = 'Ad-hoc'")
             ->order('name ASC');
             
@@ -168,7 +168,7 @@ class Default_Model_Parulebook extends Zend_Db_Table_Abstract
         if (!empty($id)) {
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = gmdate("Y-m-d H:i:s");
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return (int)$id;
         }
 
@@ -189,23 +189,23 @@ class Default_Model_Parulebook extends Zend_Db_Table_Abstract
         }
 
         $userId = Zend_Auth::getInstance()->getStorage()->read()->id ?? 0;
-        $data = array(
+        $data = [
             'isactive'     => 5,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
-        return $this->update($data, array('id = ?' => (int)$id));
+        ];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     public function toggleStatus($id, $status)
     {
         $userId = Zend_Auth::getInstance()->getStorage()->read()->id ?? 0;
-        $data = array(
+        $data = [
             'isactive'     => (int)$status,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
-        return $this->update($data, array('id = ?' => (int)$id));
+        ];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* =================================================================================
@@ -254,28 +254,28 @@ class Default_Model_Parulebook extends Zend_Db_Table_Abstract
         $date = gmdate("Y-m-d H:i:s");
 
         // 1. Hard purge existing mappings to prevent composite key collisions
-        $db->delete('map_pa_rulebook_target', array('rulebook_id = ?' => (int)$rulebookId));
-        $db->delete('map_pa_rulebook_evaluator', array('rulebook_id = ?' => (int)$rulebookId));
-        $db->delete('map_pa_rulebook_question', array('rulebook_id = ?' => (int)$rulebookId));
+        $db->delete('map_pa_rulebook_target', ['rulebook_id = ?' => (int)$rulebookId]);
+        $db->delete('map_pa_rulebook_evaluator', ['rulebook_id = ?' => (int)$rulebookId]);
+        $db->delete('map_pa_rulebook_question', ['rulebook_id = ?' => (int)$rulebookId]);
 
         // 2. Insert Targets
         foreach ($targets as $t) {
             if (!empty($t['target_type'])) {
-                $db->insert('map_pa_rulebook_target', array(
+                $db->insert('map_pa_rulebook_target', [
                     'rulebook_id' => (int)$rulebookId,
                     'target_type' => $t['target_type'],
                     'target_id'   => (int)$t['target_id'],
                     'isactive'    => 1,
                     'createdby'   => $userId,
                     'createddate' => $date
-                ));
+                ]);
             }
         }
 
         // 3. Insert Evaluators
         foreach ($evaluators as $e) {
             if (!empty($e['evaluator_type'])) {
-                $db->insert('map_pa_rulebook_evaluator', array(
+                $db->insert('map_pa_rulebook_evaluator', [
                     'rulebook_id'    => (int)$rulebookId,
                     'evaluator_type' => $e['evaluator_type'],
                     'evaluator_id'   => (int)($e['evaluator_id'] ?? 0),
@@ -283,14 +283,14 @@ class Default_Model_Parulebook extends Zend_Db_Table_Abstract
                     'isactive'       => 1,
                     'createdby'      => $userId,
                     'createddate'    => $date
-                ));
+                ]);
             }
         }
 
         // 4. Insert Questions
         foreach ($questions as $q) {
             if (!empty($q['question_id'])) {
-                $db->insert('map_pa_rulebook_question', array(
+                $db->insert('map_pa_rulebook_question', [
                     'rulebook_id' => (int)$rulebookId,
                     'question_id' => (int)$q['question_id'],
                     'rating_id'   => isset($q['rating_id']) ? (int)$q['rating_id'] : null,
@@ -298,7 +298,7 @@ class Default_Model_Parulebook extends Zend_Db_Table_Abstract
                     'isactive'    => 1,
                     'createdby'   => $userId,
                     'createddate' => $date
-                ));
+                ]);
             }
         }
     }
@@ -313,11 +313,11 @@ class Default_Model_Parulebook extends Zend_Db_Table_Abstract
     public function getExistingMappings($rulebookId)
     {
         $db = $this->getAdapter();
-        $mappings = array('targets' => array(), 'evaluators' => array(), 'questions' => array());
+        $mappings = ['targets' => [], 'evaluators' => [], 'questions' => []];
 
         // 1. Fetch Targets with resolved names
         $selT = $db->select()
-            ->from(array('rt' => 'map_pa_rulebook_target'), array(
+            ->from(['rt' => 'map_pa_rulebook_target'], [
                 'target_type',
                 'target_id',
                 // Resolve the human-readable name based on the target type
@@ -327,31 +327,31 @@ class Default_Model_Parulebook extends Zend_Db_Table_Abstract
                         ELSE COALESCE(c.name, bu.name, di.name, de.name, se.name, pr.name, tm.name, loc.address1, r.name, em.userfullname, CONCAT('ID: ', rt.target_id))
                     END
                 ")
-            ))
-            ->joinLeft(array('c'  => 'main_company'),      "rt.target_type = 'Company' AND rt.target_id = c.id", array())
-            ->joinLeft(array('bu' => 'main_businessunit'), "rt.target_type = 'BusinessUnit' AND rt.target_id = bu.id", array())
-            ->joinLeft(array('di' => 'main_division'),     "rt.target_type = 'Division' AND rt.target_id = di.id", array())
-            ->joinLeft(array('de' => 'main_department'),   "rt.target_type = 'Department' AND rt.target_id = de.id", array())
-            ->joinLeft(array('se' => 'main_section'),      "rt.target_type = 'Section' AND rt.target_id = se.id", array())
-            ->joinLeft(array('pr' => 'main_project'),      "rt.target_type = 'Project' AND rt.target_id = pr.id", array())
-            ->joinLeft(array('tm' => 'main_team'),         "rt.target_type = 'Team' AND rt.target_id = tm.id", array())
-            ->joinLeft(array('loc' => 'main_location'),     "rt.target_type = 'Location' AND rt.target_id = loc.location_id", array())
-            ->joinLeft(array('r'  => 'main_role'),         "rt.target_type = 'Role' AND rt.target_id = r.id", array())
-            ->joinLeft(array('em' => 'main_employee'),     "rt.target_type = 'Employee' AND rt.target_id = em.id", array())
+            ])
+            ->joinLeft(['c'  => 'main_company'],      "rt.target_type = 'Company' AND rt.target_id = c.id", [])
+            ->joinLeft(['bu' => 'main_businessunit'], "rt.target_type = 'BusinessUnit' AND rt.target_id = bu.id", [])
+            ->joinLeft(['di' => 'main_division'],     "rt.target_type = 'Division' AND rt.target_id = di.id", [])
+            ->joinLeft(['de' => 'main_department'],   "rt.target_type = 'Department' AND rt.target_id = de.id", [])
+            ->joinLeft(['se' => 'main_section'],      "rt.target_type = 'Section' AND rt.target_id = se.id", [])
+            ->joinLeft(['pr' => 'main_project'],      "rt.target_type = 'Project' AND rt.target_id = pr.id", [])
+            ->joinLeft(['tm' => 'main_team'],         "rt.target_type = 'Team' AND rt.target_id = tm.id", [])
+            ->joinLeft(['loc' => 'main_location'],     "rt.target_type = 'Location' AND rt.target_id = loc.location_id", [])
+            ->joinLeft(['r'  => 'main_role'],         "rt.target_type = 'Role' AND rt.target_id = r.id", [])
+            ->joinLeft(['em' => 'main_employee'],     "rt.target_type = 'Employee' AND rt.target_id = em.id", [])
             ->where('rt.rulebook_id = ?', (int)$rulebookId);
 
         $mappings['targets'] = $db->fetchAll($selT);
 
         // 2. Fetch Evaluators
         $selE = $db->select()
-            ->from('map_pa_rulebook_evaluator', array('evaluator_type', 'evaluator_id', 'is_mandatory'))
+            ->from('map_pa_rulebook_evaluator', ['evaluator_type', 'evaluator_id', 'is_mandatory'])
             ->where('rulebook_id = ?', (int)$rulebookId);
         $mappings['evaluators'] = $db->fetchAll($selE);
 
         // 3. Fetch Questions with prompt text
         $selQ = $db->select()
-            ->from(array('mq' => 'map_pa_rulebook_question'), array('question_id', 'rating_id', 'weight'))
-            ->joinInner(array('q' => 'main_pa_question'), 'mq.question_id = q.id', array('question_name' => 'name'))
+            ->from(['mq' => 'map_pa_rulebook_question'], ['question_id', 'rating_id', 'weight'])
+            ->joinInner(['q' => 'main_pa_question'], 'mq.question_id = q.id', ['question_name' => 'name'])
             ->where('mq.rulebook_id = ?', (int)$rulebookId);
         $mappings['questions'] = $db->fetchAll($selQ);
 

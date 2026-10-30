@@ -53,7 +53,7 @@ class Default_Model_Privileges extends Zend_Db_Table_Abstract
     public function getPrivilegeMapByGroup($groupId)
     {
         $select = $this->select()
-            ->from($this->_name, array('object', 'id')) // object = Menu ID, id = Privilege ID
+            ->from($this->_name, ['object', 'id']) // object = Menu ID, id = Privilege ID
             ->where('group_id = ?', (int)$groupId);
 
         // fetchPairs returns an associative array: [col1 => col2]
@@ -70,7 +70,7 @@ class Default_Model_Privileges extends Zend_Db_Table_Abstract
     public function getPrivilegeMapByRole($roleId)
     {
         $select = $this->select()
-            ->from($this->_name, array('object', 'id')) // object = Menu ID, id = Privilege ID
+            ->from($this->_name, ['object', 'id']) // object = Menu ID, id = Privilege ID
             ->where('role = ?', (int)$roleId);
 
         // fetchPairs returns an associative array: [col1 => col2]
@@ -114,7 +114,7 @@ class Default_Model_Privileges extends Zend_Db_Table_Abstract
     public function getMenuItemsByGroupId($groupid = '')
     {
         if (empty($groupid)) {
-            return array();
+            return [];
         }
 
         $select = $this->select()
@@ -135,10 +135,10 @@ class Default_Model_Privileges extends Zend_Db_Table_Abstract
      * @param int        $idCsv   Flag: 0 = Single ID, 1 = Multiple IDs (IN clause)
      * @return array|mixed
      */
-    public function getObjPrivileges($objId, $groupId = "", $role_id, $idCsv = 0)
+    public function getObjPrivileges($objId, $groupId = "", $role_id = null, $idCsv = 0)
     {
         if (empty($objId) || empty($role_id)) {
-            return array();
+            return [];
         }
 
         $select = $this->select()
@@ -153,7 +153,7 @@ class Default_Model_Privileges extends Zend_Db_Table_Abstract
             $objIds = explode(',', $objId);
 
             $select->reset(Zend_Db_Select::COLUMNS)
-                ->columns(array('object', 'addpermission', 'viewpermission', 'viewattachments', 'isactive'))
+                ->columns(['object', 'addpermission', 'viewpermission', 'viewattachments', 'isactive'])
                 ->where('object IN (?)', $objIds);
 
             return $this->fetchAll($select)->toArray();
@@ -162,7 +162,7 @@ class Default_Model_Privileges extends Zend_Db_Table_Abstract
         // Scenario 2: Fetch Single Object
         else {
             $select->reset(Zend_Db_Select::COLUMNS)
-                ->columns(array(
+                ->columns([
                     'addpermission',
                     'editpermission',
                     'deletepermission',
@@ -170,11 +170,11 @@ class Default_Model_Privileges extends Zend_Db_Table_Abstract
                     'uploadattachments',
                     'viewattachments',
                     'isactive'
-                ))
+                ])
                 ->where('object = ?', (int)$objId);
 
             $row = $this->fetchRow($select);
-            return ($row) ? $row->toArray() : array();
+            return ($row) ? $row->toArray() : [];
         }
     }
 
@@ -208,7 +208,7 @@ class Default_Model_Privileges extends Zend_Db_Table_Abstract
      */
     public function deletePrivilege($id)
     {
-        return $this->delete(array('id = ?' => (int)$id));
+        return $this->delete(['id = ?' => (int)$id]);
     }
 
     /**
@@ -223,17 +223,17 @@ class Default_Model_Privileges extends Zend_Db_Table_Abstract
         // 1. Find all Role IDs belonging to this Group
         $roleSelect = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('r' => 'main_role'), array('id'))
+            ->from(['r' => 'main_role'], ['id'])
             ->where('r.group_id = ?', (int)$groupId);
 
         $roleIds = $this->getAdapter()->fetchCol($roleSelect);
 
         if (!empty($roleIds)) {
             // 2. Delete privileges for these roles for this specific menu object
-            $where = array(
+            $where = [
                 'object = ?' => (int)$menuId,
                 'role IN (?)' => $roleIds
-            );
+            ];
             $this->delete($where);
         }
     }
@@ -251,7 +251,7 @@ class Default_Model_Privileges extends Zend_Db_Table_Abstract
         // 1. Find all Role IDs belonging to this Group
         $roleSelect = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('r' => 'main_role'), array('id'))
+            ->from(['r' => 'main_role'], ['id'])
             ->where('r.group_id = ?', (int)$groupId);
 
         $roleIds = $this->getAdapter()->fetchCol($roleSelect);
@@ -264,8 +264,8 @@ class Default_Model_Privileges extends Zend_Db_Table_Abstract
         // We only want to update fields that are 'No' in the group. 
         // If Group says 'Yes', we leave the Role as is (it might be 'Yes' or 'No').
         // If Group says 'No', the Role MUST be 'No'.
-        $roleUpdateData = array();
-        $cols = array('addpermission', 'editpermission', 'deletepermission', 'viewpermission', 'uploadattachments', 'viewattachments');
+        $roleUpdateData = [];
+        $cols = ['addpermission', 'editpermission', 'deletepermission', 'viewpermission', 'uploadattachments', 'viewattachments'];
 
         foreach ($cols as $col) {
             if (isset($groupData[$col]) && $groupData[$col] === 'No') {
@@ -277,10 +277,10 @@ class Default_Model_Privileges extends Zend_Db_Table_Abstract
         if (!empty($roleUpdateData)) {
             $roleUpdateData['modifieddate'] = gmdate("Y-m-d H:i:s");
 
-            $where = array(
+            $where = [
                 'object = ?'  => (int)$menuId,
                 'role IN (?)' => $roleIds
-            );
+            ];
 
             $this->update($roleUpdateData, $where);
         }

@@ -38,16 +38,16 @@ class Default_Form_empleaves extends Zend_Form
 		$emp_leave_limit->setAttrib('maxLength', 3);
 		$emp_leave_limit->addFilter(new Zend_Filter_StringTrim());
 		$emp_leave_limit->setRequired(true);
-		$emp_leave_limit->addValidator('NotEmpty', false, array('messages' => 'Please enter leave limit for current year.'));
+		$emp_leave_limit->addValidator('NotEmpty', false, ['messages' => 'Please enter leave limit for current year.']);
 
-		$emp_leave_limit->addValidator("regex", true, array(
+		$emp_leave_limit->addValidator("regex", true, [
 
 			'pattern' => '/^(\-?[1-9]|\-?[1-9][0-9])$/',
 
-			'messages' => array(
+			'messages' => [
 				'regexNotMatch' => 'Leave limit must be in the range of 0 to 100.'
-			)
-		));
+			]
+		]);
 
 		$used_leaves = new Zend_Form_Element_Text('used_leaves');
 		$used_leaves->setAttrib('maxLength', 3);
@@ -87,14 +87,14 @@ class Default_Form_empleaves extends Zend_Form
 
 		$isactive = new Zend_Form_Element_Checkbox('isactive');
 		$isactive->setLabel('Active');
-		$this->addElements(array(
+		$this->addElements([
 			$id, //$userid, $emp_leave_limit, $used_leaves, $alloted_year,
 			$leave, $year, $period,
 			$alloteddays, $alloted_year,
 			$submit, $submitbutton,
 			$isactive
-		));
+		]);
 
-		$this->setElementDecorators(array('ViewHelper'));
+		$this->setElementDecorators(['ViewHelper']);
 	}
 }

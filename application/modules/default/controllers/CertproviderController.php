@@ -21,7 +21,7 @@ class Default_CertproviderController extends Zend_Controller_Action
       $refresh = $this->_getParam('refresh');
       $dashboradcall = $this->_getParam('dashboradcall');
 
-      $data = array();
+      $data = [];
 
       if ($refresh == 'refresh') {
           if ($dashboradcall == 'Yes') {
@@ -78,24 +78,24 @@ class Default_CertproviderController extends Zend_Controller_Action
             $msgarray['certprovidercategory_id'] = 'Certification Provider Category is not configured yet.';
         } else {
             foreach ($add as $adds) {
-                $form->certprovidercategory_id->addMultiOptions(array($adds['certprovidercategory_id'] => $adds['name']));
+                $form->certprovidercategory_id->addMultiOptions([$adds['certprovidercategory_id'] => $adds['name']]);
             }
         }
         if ($this->getRequest()->isPost()) {
             if ($form->isValid($this->getRequest()->getPost())) {
-                $data = array(
+                $data = [
                     'name'=>$this->_request->getParam('name'),
                     'code'=>$this->_request->getParam('code'),
                     'certprovidercategory_id'=>$this->_request->getParam('certprovidercategory_id'),
                     'description'=>$this->_request->getParam('description'),
                     'createdby'=>$loginUserId,
                     'createddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
                 $Id=$dmtmodel->SaveorUpdateData($data,'');
                 $tableid = $Id;
                 $actionflag = 1;
                 $result = sapp_Global::logManager(321,$actionflag,$loginUserId,$tableid);
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array('success'=>'Certificate Provider   Added Successful'));
+                $this->_helper->getHelper("FlashMessenger")->addMessage(['success'=>'Certificate Provider   Added Successful']);
                 $this->_redirect('certprovider');
             }
             $messages = $form->getMessages();
@@ -136,21 +136,21 @@ class Default_CertproviderController extends Zend_Controller_Action
             $msgarray['certprovidercategory_id'] = 'Certification Provider Category  is not configured yet.';
         } else {
             foreach ($add as $adds) {
-                $form->certprovidercategory_id->addMultiOptions(array($adds['certprovidercategory_id'] => $adds['name']));
+                $form->certprovidercategory_id->addMultiOptions([$adds['certprovidercategory_id'] => $adds['name']]);
             }
         }
         if ($this->getRequest()->isPost()) {
            
             
             if ($form->isValid($this->getRequest()->getPost())) {
-                $data = array(
+                $data = [
                     'name'=>$this->_request->getParam('name'),
                     'code'=>$this->_request->getParam('code'),
                     'certprovidercategory_id'=>$this->_request->getParam('certprovidercategory_id'),
                     'description'=>$this->_request->getParam('description'),
                     'createdby'=>$loginUserId,
                     'createddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
                 $Id= $dmtmodel->SaveorUpdateData($data,'');
                 $tableid = $Id;
                 $actionflag = 1;
@@ -211,7 +211,7 @@ class Default_CertproviderController extends Zend_Controller_Action
             $msgarray['certprovidercategory_id'] = 'Certification Provider  is not configured yet.';
         } else {
             foreach ($add as $adds) {
-                $form->certprovidercategory_id->addMultiOptions(array($adds['certprovidercategory_id'] => $adds['name']));
+                $form->certprovidercategory_id->addMultiOptions([$adds['certprovidercategory_id'] => $adds['name']]);
             }
         }
         $form->populate($dmtdata);
@@ -219,7 +219,7 @@ class Default_CertproviderController extends Zend_Controller_Action
         $form->isactive->setValue(utlis::getcheckboxvalue($dmtdata['isactive'],'form'));
         if ($this->getRequest()->isPost()) {
             if ($form->isValid($this->getRequest()->getPost())) {
-                $data = array(
+                $data = [
                     'name'=>$this->_request->getParam('name'),
                     'code'=>$this->_request->getParam('code'),
                     'description'=>$this->_request->getParam('description'),
@@ -228,12 +228,12 @@ class Default_CertproviderController extends Zend_Controller_Action
                     'isactive'=>utlis::getcheckboxvalue($this->_request->getParam('isactive')),
                     'modifiedby'=>$loginUserId,
                     'modifieddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
                 $dmtmodel->SaveorUpdateData($data,'certprovider_id='.$id);
                 $tableid = $id;
                 $actionflag = 2;
                 $result = sapp_Global::logManager(322,$actionflag,$loginUserId,$tableid);
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array('success'=>'Certificate provider  Updated Successful'));
+                $this->_helper->getHelper("FlashMessenger")->addMessage(['success'=>'Certificate provider  Updated Successful']);
                 $this->_redirect('certprovider');
             }
             $messages = $form->getMessages();

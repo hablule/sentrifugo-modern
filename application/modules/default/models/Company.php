@@ -78,7 +78,7 @@ class Default_Model_Company extends Zend_Db_Table_Abstract
      */
     public function getPairs($activeOnly = true)
     {
-        $select = $this->select()->from($this->_name, array('id', 'name'))->order('name ASC');
+        $select = $this->select()->from($this->_name, ['id', 'name'])->order('name ASC');
         if ($activeOnly) {
             $select->where('isactive = ?', 1);
         }
@@ -101,7 +101,7 @@ class Default_Model_Company extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if (!empty($searchData) && $searchData !== 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -122,25 +122,25 @@ class Default_Model_Company extends Zend_Db_Table_Abstract
         }
 
         // SSOT Mandatory: 'action' => 'Action' must be the first element
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'              => 'Action',
             'code'                => 'Code',
             'name'                => 'Company Name',
             'registration_number' => 'Reg. Number',
             'representative_name' => 'Representative',
             'status_text'         => 'Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
             'perPage'        => $perPage,
             'tablecontent'   => $tableContent,
             'objectname'     => 'company',
-            'extra'          => array(),
+            'extra'          => [],
             'tableheader'    => $tableHeaders,
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
@@ -148,10 +148,10 @@ class Default_Model_Company extends Zend_Db_Table_Abstract
             'menuName'       => 'Companies',
             'call'           => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => array(
-                'status_text' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive'))
-            )
-        );
+            'search_filters' => [
+                'status_text' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']]
+            ]
+        ];
     }
 
     /**
@@ -176,19 +176,19 @@ class Default_Model_Company extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from(
-                array('c' => $this->_name),
-                array(
+                ['c' => $this->_name],
+                [
                     'id' => 'c.id', // SSOT Aliasing requirement
                     'code',
                     'name',
                     'registration_number',
                     'status_text' => new Zend_Db_Expr("CASE WHEN c.isactive = 1 THEN 'Active' ELSE 'Inactive' END")
-                )
+                ]
             )
             ->joinLeft( // Left join because representative_id is nullable in schema
-                array('e' => 'main_employees'),
+                ['e' => 'main_employees'],
                 'c.representative_id = e.id',
-                array('representative_name' => 'e.userfullname')
+                ['representative_name' => 'e.userfullname']
             )
             ->where('c.isactive != ?', 5);
 
@@ -222,7 +222,7 @@ class Default_Model_Company extends Zend_Db_Table_Abstract
         if (!empty($id)) {
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = $currentDate;
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return 'update';
         }
 
@@ -247,13 +247,13 @@ class Default_Model_Company extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => 5,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
+        ];
 
-        return $this->update($data, array('id = ?' => (int)$id));
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /**
@@ -268,13 +268,13 @@ class Default_Model_Company extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => (int)$status,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
+        ];
 
-        return $this->update($data, array('id = ?' => (int)$id));
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* =================================================================================
@@ -315,7 +315,7 @@ class Default_Model_Company extends Zend_Db_Table_Abstract
 
         // Check 1: Mapped to Strategic Business Units (SBUs)
         $sbuSelect = $db->select()
-            ->from('main_businessunit', array('id'))
+            ->from('main_businessunit', ['id'])
             ->where('company_id = ?', (int)$id)
             ->where('isactive != ?', 5);
 
@@ -324,7 +324,7 @@ class Default_Model_Company extends Zend_Db_Table_Abstract
 
         // Check 2: Mapped to Divisions
         $divSelect = $db->select()
-            ->from('main_division', array('id'))
+            ->from('main_division', ['id'])
             ->where('company_id = ?', (int)$id)
             ->where('isactive != ?', 5);
 
@@ -334,7 +334,7 @@ class Default_Model_Company extends Zend_Db_Table_Abstract
         // Check 3: Mapped to Company-Domain engagement
         // Assuming there is a map_company_businessdomain table as per refactoring plan
         $mapSelect = $db->select()
-            ->from('map_company_businessdomain', array('company_id'))
+            ->from('map_company_businessdomain', ['company_id'])
             ->where('company_id = ?', (int)$id)
             ->where('isactive = ?', 1);
 

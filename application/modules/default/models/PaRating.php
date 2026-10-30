@@ -43,7 +43,7 @@ class Default_Model_Parating extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -59,18 +59,18 @@ class Default_Model_Parating extends Zend_Db_Table_Abstract
             $searchQuery = rtrim($searchQuery, " AND");
         }
 
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'      => 'Action',
             'code'        => 'Scale Code',
             'name'        => 'Scale Name',
             'data_type'   => 'Data Type',
             'ui_widget'   => 'UI Widget',
             'status_text' => 'Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
@@ -78,17 +78,17 @@ class Default_Model_Parating extends Zend_Db_Table_Abstract
             'tablecontent'   => $tableContent,
             'objectname' => 'parating',
             'tableheader' => $tableHeaders,
-            'extra'          => array(),
+            'extra'          => [],
             'jsGridFnName' => 'getAjaxgridData',
             'jsFillFnName' => '',
             'searchArray'    => $searchArray,
             'menuName' => 'Rating Scales',
             'call' => $call,
             'dashboardcall' => $dashboardcall,
-            'search_filters' => array(
-                'status_text' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive'))
-            )
-        );
+            'search_filters' => [
+                'status_text' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']]
+            ]
+        ];
     }
 
     public function getGridData($sort, $by, $pageNo, $perPage, $searchQuery = '')
@@ -97,11 +97,11 @@ class Default_Model_Parating extends Zend_Db_Table_Abstract
 
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('pr' => $this->_name), array(
+            ->from(['pr' => $this->_name], [
                 'id' => 'pr.id',
                 '*',
                 'status_text' => new Zend_Db_Expr("CASE WHEN pr.isactive = 1 THEN 'Active' ELSE 'Inactive' END")
-            ))
+            ])
             ->where('pr.isactive != 5');
 
         if (!empty($searchQuery)) $select->where($searchQuery);
@@ -111,7 +111,7 @@ class Default_Model_Parating extends Zend_Db_Table_Abstract
 
     public function getPairs($activeOnly = true)
     {
-        $select = $this->select()->from($this->_name, array('id', 'name'))->order('name ASC');
+        $select = $this->select()->from($this->_name, ['id', 'name'])->order('name ASC');
         if ($activeOnly) $select->where("isactive = 1");
         return $this->getAdapter()->fetchPairs($select);
     }
@@ -134,7 +134,7 @@ class Default_Model_Parating extends Zend_Db_Table_Abstract
         if (!empty($id)) {
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = gmdate("Y-m-d H:i:s");
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return (int)$id;
         }
 
@@ -155,19 +155,19 @@ class Default_Model_Parating extends Zend_Db_Table_Abstract
         }
 
         $userId = Zend_Auth::getInstance()->getStorage()->read()->id ?? 0;
-        $data = array('isactive' => 5, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s"));
+        $data = ['isactive' => 5, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s")];
 
         // Cascade soft-delete to child options
-        $this->getAdapter()->update('main_pa_rating_option', $data, array('rating_id = ?' => (int)$id));
+        $this->getAdapter()->update('main_pa_rating_option', $data, ['rating_id = ?' => (int)$id]);
 
-        return $this->update($data, array('id = ?' => (int)$id));
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     public function toggleStatus($id, $status)
     {
         $userId = Zend_Auth::getInstance()->getStorage()->read()->id ?? 0;
-        $data = array('isactive' => (int)$status, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s"));
-        return $this->update($data, array('id = ?' => (int)$id));
+        $data = ['isactive' => (int)$status, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s")];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* =================================================================================
@@ -212,8 +212,8 @@ class Default_Model_Parating extends Zend_Db_Table_Abstract
         try {
             // Trace the path: Rating -> Mapped Question -> Assessment Line
             $select = $db->select()
-                ->from(array('al' => 'main_pa_assessment_line'), array('id'))
-                ->joinInner(array('maq' => 'map_pa_appraisal_question'), 'al.map_question_id = maq.id', array())
+                ->from(['al' => 'main_pa_assessment_line'], ['id'])
+                ->joinInner(['maq' => 'map_pa_appraisal_question'], 'al.map_question_id = maq.id', [])
                 ->where('maq.rating_id = ?', (int)$id)
                 ->limit(1);
 
@@ -238,8 +238,8 @@ class Default_Model_Parating extends Zend_Db_Table_Abstract
         if ($dataType === 'Unstructured') {
             $db->update(
                 'main_pa_rating_option',
-                array('isactive' => 5, 'modifiedby' => $userId, 'modifieddate' => $date),
-                array('rating_id = ?' => (int)$ratingId, 'isactive != ?' => 5)
+                ['isactive' => 5, 'modifiedby' => $userId, 'modifieddate' => $date],
+                ['rating_id = ?' => (int)$ratingId, 'isactive != ?' => 5]
             );
             return;
         }
@@ -247,7 +247,7 @@ class Default_Model_Parating extends Zend_Db_Table_Abstract
         // CONDITION 1 & 2: Process Structured Upsert
         $existingSelect = $db->select()->from('main_pa_rating_option', 'id')->where('rating_id = ?', (int)$ratingId)->where('isactive != 5');
         $existingIds = $db->fetchCol($existingSelect);
-        $payloadIds = array();
+        $payloadIds = [];
 
         foreach ($optionsPayload as $opt) {
             $val  = (float)$opt['value'];
@@ -259,15 +259,15 @@ class Default_Model_Parating extends Zend_Db_Table_Abstract
             if (!empty($opt['id'])) {
                 $optId = (int)$opt['id'];
                 $payloadIds[] = $optId;
-                $db->update('main_pa_rating_option', array(
+                $db->update('main_pa_rating_option', [
                     'value'        => $val,
                     'name'         => $name,
                     'icon_class'   => $icon,
                     'modifiedby'   => $userId,
                     'modifieddate' => $date
-                ), array('id = ?' => $optId));
+                ], ['id = ?' => $optId]);
             } else {
-                $db->insert('main_pa_rating_option', array(
+                $db->insert('main_pa_rating_option', [
                     'rating_id'   => (int)$ratingId,
                     'value'       => $val,
                     'name'        => $name,
@@ -275,7 +275,7 @@ class Default_Model_Parating extends Zend_Db_Table_Abstract
                     'isactive'    => 1,
                     'createdby'   => $userId,
                     'createddate' => $date
-                ));
+                ]);
             }
         }
 
@@ -283,8 +283,8 @@ class Default_Model_Parating extends Zend_Db_Table_Abstract
         if (!empty($toDelete)) {
             $db->update(
                 'main_pa_rating_option',
-                array('isactive' => 5, 'modifiedby' => $userId, 'modifieddate' => $date),
-                array('id IN (?)' => $toDelete)
+                ['isactive' => 5, 'modifiedby' => $userId, 'modifieddate' => $date],
+                ['id IN (?)' => $toDelete]
             );
         }
 

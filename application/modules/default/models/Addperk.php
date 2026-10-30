@@ -33,8 +33,8 @@ class Default_Model_Addperk extends Zend_Db_Table_Abstract
 
         $PerkData = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('p' => 'main_perk'), array('perk_id' => 'perk_id', 'name' => 'p.name', 'code' => 'p.code', 'description' => 'p.description', 'start' => 'DATE_FORMAT(p.start,"'.DATEFORMAT_MYSQL.'")', 'end' => 'DATE_FORMAT(p.end,"'.DATEFORMAT_MYSQL.'")', 'type' => 'p.type', 'isactive' => 'if(p.isactive="N","No","Yes")','auto_approved' => 'p.auto_approved'))
-            ->joinInner(array('pc' => 'main_perkcategory'), "pc.perkcategory_id = p.category ", array('category' => 'pc.name'))
+            ->from(['p' => 'main_perk'], ['perk_id' => 'perk_id', 'name' => 'p.name', 'code' => 'p.code', 'description' => 'p.description', 'start' => 'DATE_FORMAT(p.start,"'.DATEFORMAT_MYSQL.'")', 'end' => 'DATE_FORMAT(p.end,"'.DATEFORMAT_MYSQL.'")', 'type' => 'p.type', 'isactive' => 'if(p.isactive="N","No","Yes")','auto_approved' => 'p.auto_approved'])
+            ->joinInner(['pc' => 'main_perkcategory'], "pc.perkcategory_id = p.category ", ['category' => 'pc.name'])
             //    ->joinInner(array('pc'=>'main_perkcategory'), 's.id=c.state',array('state_name'=>'s.state_name'))	
             ->where($where)
             ->order("$by $sort")
@@ -44,8 +44,8 @@ class Default_Model_Addperk extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $p1, $p2, $p3, $p4)
     {
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
         $db = Zend_Db_Table::getDefaultAdapter();
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
@@ -75,7 +75,7 @@ class Default_Model_Addperk extends Zend_Db_Table_Abstract
         $objName = 'addperk';
         $objId = 'add';
 
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'name' => 'Name',
             'code' => 'Code',
@@ -85,10 +85,10 @@ class Default_Model_Addperk extends Zend_Db_Table_Abstract
             'end' => 'End date',
             'type' => 'Type',
             'isactive'=>'Active'
-        );
+        ];
 
         $tablecontent = $this->getAdditionData($sort, $by, $pageNo, $perPage, $searchQuery);
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
@@ -97,7 +97,7 @@ class Default_Model_Addperk extends Zend_Db_Table_Abstract
             'objectname' => $objName,
             'objectId' => $objId,
             'menuName' => 'Perk List',
-            'extra' => array(),
+            'extra' => [],
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
             'jsFillFnName' => '',
@@ -105,39 +105,39 @@ class Default_Model_Addperk extends Zend_Db_Table_Abstract
             'add' => 'add',
             'call' => $call,
             'dashboardcall' => $dashboardcall,
-            'search_filters' => array(
+            'search_filters' => [
 
-            'start' => array('type' => 'datepicker'),
-                'end' => array('type' => 'datepicker'),
-                    'isactive' => array(
+            'start' => ['type' => 'datepicker'],
+                'end' => ['type' => 'datepicker'],
+                    'isactive' => [
                         'type' => 'select',
-                        'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-            ),
-        );
+                        'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+            ],
+        ];
         return $dataTmp;
     }
     public function getsalary($id)
     {
         $result = $this->select()
         ->setIntegrityCheck(false)
-        ->from(array('s' => 'main_empsalarydetails'),array('amount' => 's.amount'))
+        ->from(['s' => 'main_empsalarydetails'],['amount' => 's.amount'])
         ->where('s.emp_id='.$id.' AND s.isactive="Y"');
  //die($result);
             return $this->fetchAll($result)->toArray();
         }
     public function saveMultiEmpPerk($datas)
     {
-        $config = array(
+        $config = [
             'name' => 'main_employeeperk',
             'primary' => 'employeeperk_id'
-        );
+        ];
         $this->table = new Zend_Db_Table($config);
 
         foreach ($datas as $data) {
             $this->table->update($data,'emp_id='.$data['emp_id'].' AND perk_id='.$data['perk_id']);
             $query = $this->select()
                 ->setIntegrityCheck(false)
-                ->from(array('e' => 'main_employeeperk'), 'e.employeeperk_id')
+                ->from(['e' => 'main_employeeperk'], 'e.employeeperk_id')
                 ->where('e.emp_id = ' . $data['emp_id'] . ' AND e.perk_id = ' . $data['perk_id']);
             $result = $this->fetchAll($query)->toArray();
             if(count($result)<=0){
@@ -157,7 +157,7 @@ class Default_Model_Addperk extends Zend_Db_Table_Abstract
         //     $this->table = new Zend_Db_Table($config);
         $query = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('e' => 'main_employees'), 'e.user_id')
+            ->from(['e' => 'main_employees'], 'e.user_id')
             ->where('e.id =' . $id);
         return $this->fetchAll($query)->toArray();
     }
@@ -171,33 +171,33 @@ class Default_Model_Addperk extends Zend_Db_Table_Abstract
         //     $this->table = new Zend_Db_Table($config);
         $query = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('e' => 'main_employeeperk'), 'e.emp_id')
+            ->from(['e' => 'main_employeeperk'], 'e.emp_id')
             ->where('e.perk_id =' . $id);
         return $this->fetchAll($query)->toArray();
     }
     public function getperkamount($id)
     {
-            $config = array(
+            $config = [
                 'name' => 'main_perk',
                 'primary' => 'perk_id'
-            );
+            ];
             $this->table = new Zend_Db_Table($config);
         $query =$this->table ->select()
             ->setIntegrityCheck(false)
-            ->from(array('mp' => 'main_perk'), 'mp.amount')
+            ->from(['mp' => 'main_perk'], 'mp.amount')
             ->where('mp.perk_id =' . $id);
         return $this->table ->fetchAll($query)->toArray();
     }
     public function getperktype($id)
     {
-            $config = array(
+            $config = [
                 'name' => 'main_perk',
                 'primary' => 'perk_id'
-            );
+            ];
             $this->table = new Zend_Db_Table($config);
         $query =$this->table ->select()
             ->setIntegrityCheck(false)
-            ->from(array('mp' => 'main_perk'),array ('mp.type','mp.auto_approved'))
+            ->from(['mp' => 'main_perk'], ['mp.type','mp.auto_approved'])
             ->where('mp.perk_id =' . $id);
             
         return $this->table ->fetchAll($query)->toArray();

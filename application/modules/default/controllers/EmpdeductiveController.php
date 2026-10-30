@@ -58,7 +58,7 @@ class Default_EmpdeductiveController extends Zend_Controller_Action
 			$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 		}
 		if ($id == '')		$id = $userID;
-		$Uid = ($id) ? $id : $userID;
+		$Uid = $id ?: $userID;
 		if ($Uid != "") {
 			$employeeData = $usersModel->getUserDetailsByIDandFlag($Uid);
 		}
@@ -79,9 +79,9 @@ class Default_EmpdeductiveController extends Zend_Controller_Action
 			$objname = $this->_getParam('objname');
 			$refresh = $this->_getParam('refresh');
 			$dashboardcall = $this->_getParam('dashboardcall', null);
-			$data = array();
+			$data = [];
 			$searchQuery = '';
-			$searchArray = array();
+			$searchArray = [];
 			$tablecontent = '';
 			if ($refresh == 'refresh') {
 				if ($dashboardcall == 'Yes')
@@ -94,7 +94,7 @@ class Default_EmpdeductiveController extends Zend_Controller_Action
 				$pageNo = 1;
 				$searchData = '';
 				$searchQuery = '';
-				$searchArray = array();
+				$searchArray = [];
 			} else {
 				$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 				$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'el.modifieddate';
@@ -147,7 +147,7 @@ class Default_EmpdeductiveController extends Zend_Controller_Action
 			$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 		}
 		if ($id == '')		$id = $userID;
-		$Uid = ($id) ? $id : $userID;
+		$Uid = $id ?: $userID;
 		if ($Uid != "") {
 			$employeeData = $usersModel->getUserDetailsByIDandFlag($Uid);
 		}
@@ -168,9 +168,9 @@ class Default_EmpdeductiveController extends Zend_Controller_Action
 			$objname = $this->_getParam('objname');
 			$refresh = $this->_getParam('refresh');
 			$dashboardcall = $this->_getParam('dashboardcall', null);
-			$data = array();
+			$data = [];
 			$searchQuery = '';
-			$searchArray = array();
+			$searchArray = [];
 			$tablecontent = '';
 			if ($refresh == 'refresh') {
 				if ($dashboardcall == 'Yes')
@@ -183,7 +183,7 @@ class Default_EmpdeductiveController extends Zend_Controller_Action
 				$pageNo = 1;
 				$searchData = '';
 				$searchQuery = '';
-				$searchArray = array();
+				$searchArray = [];
 			} else {
 				$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 				$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'el.modifieddate';
@@ -236,7 +236,7 @@ class Default_EmpdeductiveController extends Zend_Controller_Action
 			$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 		}
 		if ($id == '')		$id = $userID;
-		$Uid = ($id) ? $id : $userID;
+		$Uid = $id ?: $userID;
 		if ($Uid != "") {
 			$employeeData = $usersModel->getUserDetailsByIDandFlag($Uid);
 		}
@@ -256,9 +256,9 @@ class Default_EmpdeductiveController extends Zend_Controller_Action
 			$objname = $this->_getParam('objname');
 			$refresh = $this->_getParam('refresh');
 			$dashboardcall = $this->_getParam('dashboardcall', null);
-			$data = array();
+			$data = [];
 			$searchQuery = '';
-			$searchArray = array();
+			$searchArray = [];
 			$tablecontent = '';
 			if ($refresh == 'refresh') {
 				if ($dashboardcall == 'Yes')
@@ -271,7 +271,7 @@ class Default_EmpdeductiveController extends Zend_Controller_Action
 				$pageNo = 1;
 				$searchData = '';
 				$searchQuery = '';
-				$searchArray = array();
+				$searchArray = [];
 			} else {
 				$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 				$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'e.modifieddate';
@@ -451,7 +451,7 @@ class Default_EmpdeductiveController extends Zend_Controller_Action
 				die("Employee load removed");
 			} else {
 				$temp_data = explode('&', $_POST['data']);
-				$data = array();
+				$data = [];
 				foreach ($temp_data as $temp) {
 					$temp = explode('=', $temp);
 					if ($temp[0] != 'amount') {
@@ -525,7 +525,7 @@ class Default_EmpdeductiveController extends Zend_Controller_Action
 			if (!empty($empdata)) {
 
 				$formModel = new Default_Model_Deductive();
-				$deductives = $formModel->getIndividualLoad($userid);
+				$deductives = $formModel->getIndividualLoad();
 				$empdeductiveForm->deductive->addMultiOption(' ', 'Select...');
 				foreach ($deductives as $deductive) {
 					$empdeductiveForm->deductive->addMultiOption($deductive['load_id'], $deductive['name']);

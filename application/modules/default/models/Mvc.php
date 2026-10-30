@@ -9,7 +9,7 @@ class Default_Model_Mvc extends Zend_Db_Table_Abstract
     {
         $query = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('t' => 'information_schema.TABLES'), array('t.TABLE_NAME'))
+            ->from(['t' => 'information_schema.TABLES'], ['t.TABLE_NAME'])
             ->where('t.TABLE_SCHEMA="sentrifugo"');
 
         return $this->fetchAll($query)->toArray();
@@ -19,7 +19,7 @@ class Default_Model_Mvc extends Zend_Db_Table_Abstract
     {
         $query = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('c' => 'information_schema.COLUMNS'), array('c.COLUMN_NAME'))
+            ->from(['c' => 'information_schema.COLUMNS'], ['c.COLUMN_NAME'])
             ->where('c.TABLE_SCHEMA="sentrifugo" AND c.TABLE_NAME="' . $table_name . '" AND c.EXTRA="auto_increment"');
         return $this->fetchAll($query)->toArray();
     }

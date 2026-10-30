@@ -39,7 +39,7 @@ class Schedule_ManageremployeeovertimeController extends Zend_Controller_Action
         try {
             //code...
             $auth = Zend_Auth::getInstance();
-            $popConfigPermission = array();
+            $popConfigPermission = [];
             if ($auth->hasIdentity()) {
                 $loginUserId = $auth->getStorage()->read()->id;
                 $loginuserRole = $auth->getStorage()->read()->emprole;
@@ -52,7 +52,7 @@ class Schedule_ManageremployeeovertimeController extends Zend_Controller_Action
             $perm = $access['perm'];
             $overtimemodel = new Schedule_Model_Overtimerequest();
             $form = new Schedule_Form_managerovertimerequest();
-            $inter_options = array();
+            $inter_options = [];
             $call = $this->_getParam('call');
             if ($call == 'ajaxcall')
                 $this->_helper->layout->disableLayout();
@@ -60,9 +60,9 @@ class Schedule_ManageremployeeovertimeController extends Zend_Controller_Action
             $objname = $this->_getParam('objname');
             $refresh = $this->_getParam('refresh');
             $dashboardcall = $this->_getParam('dashboardcall');
-            $data = array();
+            $data = [];
             $searchQuery = '';
-            $searchArray = array();
+            $searchArray = [];
 
             if ($refresh == 'refresh') {
                 if ($dashboardcall == 'Yes')
@@ -74,7 +74,7 @@ class Schedule_ManageremployeeovertimeController extends Zend_Controller_Action
                 $pageNo = 1;
                 $searchData = '';
                 $searchQuery = '';
-                $searchArray = array();
+                $searchArray = [];
             } else {
                 $sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
                 $by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'oa.OT_id';
@@ -130,11 +130,11 @@ class Schedule_ManageremployeeovertimeController extends Zend_Controller_Action
 
         if ($this->getRequest()->getPost()) {
 
-            $where = array('OT_approval_id=?' => $id);
-            $data = array(
+            $where = ['OT_approval_id=?' => $id];
+            $data = [
                 'approved' => $this->getRequest()->getParam('managerstatus')
 
-            );
+            ];
             $overtimeModal->editovertime($data, $where);
             $this->_redirect('manageremployeeovertime');
         }
@@ -175,13 +175,13 @@ class Schedule_ManageremployeeovertimeController extends Zend_Controller_Action
                 if ($form->isValid($this->_request->getPost())) {
                     $approved = $this->getRequest()->getParam('managerstatus');
 
-                    $where = array('OT_approval_id=?' => $id);
-                    $data = array(
+                    $where = ['OT_approval_id=?' => $id];
+                    $data = [
                         'approved' => $this->getRequest()->getParam('managerstatus'),
                         'approved_amount' => $this->getRequest()->getParam('approvedamount'),
                         'approvedBy' => $loginUserId,
                         'approved_date' => gmdate("Y-m-d H:i:s")
-                    );
+                    ];
                     // die(json_encode($data));
                     $overtimeModal->editovertime($data, $where);
                     if ($approved == 'Y') {
@@ -234,7 +234,7 @@ class Schedule_ManageremployeeovertimeController extends Zend_Controller_Action
             $model = new Schedule_Model_Overtimerequest();
 
 
-            $where = array('OT_approval_id=?' => $id);
+            $where = ['OT_approval_id=?' => $id];
             $Id = $model->DeleteData($where);
             sapp_Global::logManager($menuID, $actionflag, $loginUserId, $id);
             if ($Id == 'delete') {
@@ -250,10 +250,10 @@ class Schedule_ManageremployeeovertimeController extends Zend_Controller_Action
         }
         if ($deleteflag == 1) {
             if ($messages['msgtype'] == 'error') {
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array("error" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag));
+                $this->_helper->getHelper("FlashMessenger")->addMessage(["error" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag]);
             }
             if ($messages['msgtype'] == 'success') {
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag));
+                $this->_helper->getHelper("FlashMessenger")->addMessage(["success" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag]);
             }
         }
         $this->_helper->json($messages);

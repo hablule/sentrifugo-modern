@@ -44,7 +44,7 @@ class Default_empuserController extends Zend_Controller_Action
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 				if ($Uid != "") {
 					$employeeData = $usersModel->getUserDetailsByIDandFlag($Uid);
 				}
@@ -64,9 +64,9 @@ class Default_empuserController extends Zend_Controller_Action
 					$objname = $this->_getParam('objname');
 					$refresh = $this->_getParam('refresh');
 					$dashboardcall = $this->_getParam('dashboardcall', null);
-					$data = array();
+					$data = [];
 					$searchQuery = '';
-					$searchArray = array();
+					$searchArray = [];
 					$tablecontent = '';
 					if ($refresh == 'refresh') {
 						if ($dashboardcall == 'Yes')
@@ -79,7 +79,7 @@ class Default_empuserController extends Zend_Controller_Action
 						$pageNo = 1;
 						$searchData = '';
 						$searchQuery = '';
-						$searchArray = array();
+						$searchArray = [];
 					} else {
 						$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 						$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'username';
@@ -136,85 +136,85 @@ Zend_Debug::dump($th->getMessage());
 				if($sitepreferenceArr[0]['passwordid'] == 1)
 				{ 
 				
-					$form->password->addValidator("regex",true,array(
+					$form->password->addValidator("regex",true,[
 									'pattern'=> '/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/',
-								   'messages'=>array(
+								   'messages'=>[
 									   'regexNotMatch'=>'Please enter only alphanumeric characters.'
-								   )
-					)); 
+								   ]
+					]); 
 					
-					$form->confirmpassword->addValidator("regex",true,array(
+					$form->confirmpassword->addValidator("regex",true,[
 									'pattern'=> '/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/',
-								   'messages'=>array(
+								   'messages'=>[
 									   'regexNotMatch'=>'Please enter only alphanumeric characters.'
-								   )
-					));			
+								   ]
+					]);			
 				} 
 				
 				else if($sitepreferenceArr[0]['passwordid'] == 2)
 				{
-					$form->password->addValidator("regex",true,array(
+					$form->password->addValidator("regex",true,[
 								  'pattern'=> '/^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[.\-#$@&\_*])([a-zA-Z0-9.\-#$@&\_*]+)$/',
-								   'messages'=>array(
+								   'messages'=>[
 									   'regexNotMatch'=>'Please enter only characters,numbers and special characters.'
-								   )
-					));
+								   ]
+					]);
 					
-					$form->confirmpassword->addValidator("regex",true,array(
+					$form->confirmpassword->addValidator("regex",true,[
 								  'pattern'=> '/^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[.\-#$@&\_*])([a-zA-Z0-9.\-#$@&\_*]+)$/',
-								   'messages'=>array(
+								   'messages'=>[
 									   'regexNotMatch'=>'Please enter only characters,numbers and special characters.'
-								   )
-					));
+								   ]
+					]);
 				}
 				else if($sitepreferenceArr[0]['passwordid'] == 3)
 				{
-					$form->password->addValidator("regex",true,array(
+					$form->password->addValidator("regex",true,[
 								   'pattern'=>'/^[0-9]+$/', 
-								   'messages'=>array(
+								   'messages'=>[
 									   'regexNotMatch'=>'Please enter numbers only.'
-								   )
-					));
+								   ]
+					]);
 					
-					$form->confirmpassword->addValidator("regex",true,array(
+					$form->confirmpassword->addValidator("regex",true,[
 								   'pattern'=>'/^[0-9]+$/', 
-								   'messages'=>array(
+								   'messages'=>[
 									   'regexNotMatch'=>'Please enter numbers only.'
-								   )
-					));
+								   ]
+					]);
 				}
 				else
 				{
-					$form->password->addValidator("regex",true,array(
+					$form->password->addValidator("regex",true,[
 									'pattern'=> '/^(?=.*[0-9])(?=.*[.\-#$@&\_*])([0-9.\-#$@&\_*]+)$/',
-								   'messages'=>array(
+								   'messages'=>[
 									   'regexNotMatch'=>'Please enter only numbers and special characters.'
-								   )
-					)); 
+								   ]
+					]); 
 					
-					$form->confirmpassword->addValidator("regex",true,array(
+					$form->confirmpassword->addValidator("regex",true,[
 									'pattern'=> '/^(?=.*[0-9])(?=.*[.\-#$@&\_*])([0-9.\-#$@&\_*]+)$/',
-								   'messages'=>array(
+								   'messages'=>[
 									   'regexNotMatch'=>'Please enter only numbers and special characters.'
-								   )
-					));			
+								   ]
+					]);			
 				}
 		}
 		else
         {
-		    $form->password->addValidator("regex",true,array(
+		    $form->password->addValidator("regex",true,[
 									'pattern'=> '/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/', 
-								   'messages'=>array(
+								   'messages'=>[
 									   'regexNotMatch'=>'Please enter only alphanumeric characters.'
-								   )
-					)); 
+								   ]
+					]); 
 					
-			$form->confirmpassword->addValidator("regex",true,array(
+			$form->confirmpassword->addValidator("regex",true,[
 							'pattern'=> '/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/', 
-						   'messages'=>array(
+						   'messages'=>[
 							   'regexNotMatch'=>'Please enter only alphanumeric characters.'
-						   )
-			));	
+						   ]
+			]);	
         } 		
 
 
@@ -231,7 +231,7 @@ Zend_Debug::dump($th->getMessage());
 						$hashpassword = password_hash($this->_request->getParam('password'),PASSWORD_DEFAULT);
 						
 						$emailaddress=$this->_request->getParam('emailaddress');
-						$data = array(
+						$data = [
 							'username'=>$this->_request->getParam('username'),
 							'emailaddress'=>$this->_request->getParam('emailaddress'),
 							'code'=>$this->_request->getParam('code'),
@@ -241,7 +241,7 @@ Zend_Debug::dump($th->getMessage());
 
 							'createdby'=>$loginUserId,
 							'createddate'=>gmdate('Y-m-d H:i:s')
-						);
+						];
 						//die(json_encode($data));
 
 						$Id = $model->SaveorUpdateData($data,'');
@@ -334,7 +334,7 @@ Zend_Debug::dump($th->getMessage());
 					$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 				}
 				if ($id == '')		$id = $userID;
-				$Uid = ($id) ? $id : $userID;
+				$Uid = $id ?: $userID;
 
 				$employeeModal = new Default_Model_Employee();
 				try {
@@ -359,9 +359,9 @@ Zend_Debug::dump($th->getMessage());
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall', null);
-								$data = array();
+								$data = [];
 								$searchQuery = '';
-								$searchArray = array();
+								$searchArray = [];
 								$tablecontent = '';
 								if ($refresh == 'refresh') {
 									if ($dashboardcall == 'Yes')
@@ -374,7 +374,7 @@ Zend_Debug::dump($th->getMessage());
 									$pageNo = 1;
 									$searchData = '';
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 								} else {
 									$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 									$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'code';

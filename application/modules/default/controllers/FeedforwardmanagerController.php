@@ -90,7 +90,7 @@ class Default_FeedforwardmanagerController extends Zend_Controller_Action
     	$quesData = $ffEmpRatModel->getFFQuesDataByIDs($empsData[0]['question_ids']);
     	
 		// Employee response
-		$emp_response = array();
+		$emp_response = [];
 		if($empsData[0]['employee_response'])
 			$emp_response = json_decode($empsData[0]['employee_response'],true);
 			
@@ -98,9 +98,9 @@ class Default_FeedforwardmanagerController extends Zend_Controller_Action
 		$ratingsData = $ffEmpRatModel->getAppRatingsDataByConfgId($pa_conf_id);
 		$ratingType = $ratingsData[0]['rating_type'];
 		
-		$ratingText = array();
-		$ratingTextDisplay = array();
-		$ratingValues = array();
+		$ratingText = [];
+		$ratingTextDisplay = [];
+		$ratingValues = [];
 		foreach ($ratingsData as $rd){
 			$ratingText[] = $rd['rating_text'];
 			$ratingTextDisplay[$rd['id']] = $rd['rating_text'];
@@ -138,7 +138,7 @@ class Default_FeedforwardmanagerController extends Zend_Controller_Action
     	$quesData = $ffEmpRatModel->getFFQuesDataByIDs($empsData[0]['question_ids']);
     	
 		// Employee response
-		$emp_response = array();
+		$emp_response = [];
 		if($empsData[0]['employee_response'])
 			$emp_response = json_decode($empsData[0]['employee_response'],true);
 			
@@ -146,9 +146,9 @@ class Default_FeedforwardmanagerController extends Zend_Controller_Action
 		$ratingsData = $ffEmpRatModel->getAppRatingsDataByConfgId($pa_conf_id);
 		$ratingType = $ratingsData[0]['rating_type'];
 		
-		$ratingText = array();
-		$ratingTextDisplay = array();
-		$ratingValues = array();
+		$ratingText = [];
+		$ratingTextDisplay = [];
+		$ratingValues = [];
 		foreach ($ratingsData as $rd){
 			$ratingText[] = $rd['rating_text'];
 			$ratingTextDisplay[$rd['id']] = $rd['rating_text'];
@@ -179,7 +179,7 @@ class Default_FeedforwardmanagerController extends Zend_Controller_Action
     	$quesData = $ffEmpRatModel->getFFQuesDataByIDs($empsData[0]['question_ids']);
     	
 		// Employee response
-		$emp_response = array();
+		$emp_response = [];
 		if($empsData[0]['employee_response'])
 			$emp_response = json_decode($empsData[0]['employee_response'],true);
 			
@@ -187,9 +187,9 @@ class Default_FeedforwardmanagerController extends Zend_Controller_Action
 		$ratingsData = $ffEmpRatModel->getAppRatingsDataByConfgId($pa_conf_id);
 		$ratingType = $ratingsData[0]['rating_type'];
 		
-		$ratingText = array();
-		$ratingTextDisplay = array();
-		$ratingValues = array();
+		$ratingText = [];
+		$ratingTextDisplay = [];
+		$ratingValues = [];
 		foreach ($ratingsData as $rd){
 			$ratingText[] = $rd['rating_text'];
 			$ratingTextDisplay[$rd['id']] = $rd['rating_text'];

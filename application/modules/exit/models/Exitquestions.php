@@ -69,8 +69,8 @@ class Exit_Model_Exitquestions extends Zend_Db_Table_Abstract
 		
 		$exitQuestionsData = $this->select()
                                 ->setIntegrityCheck(false)	
-                                ->from(array('eq'=>'main_exit_questions'),array('eq.*'))
-                                ->joinInner(array('et'=>'main_exit_types'), 'eq.exit_type_id = et.id', array('exit_type' => 'et.exit_type'))
+                                ->from(['eq'=>'main_exit_questions'],['eq.*'])
+                                ->joinInner(['et'=>'main_exit_types'], 'eq.exit_type_id = et.id', ['exit_type' => 'et.exit_type'])
                                 ->where($where)
                                 ->order("$by $sort") 
                                 ->limitPage($pageNo, $perPage); 
@@ -80,8 +80,8 @@ class Exit_Model_Exitquestions extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{
 		$searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		
 		if($searchData != '' && $searchData!='undefined')
 			{
@@ -103,17 +103,17 @@ class Exit_Model_Exitquestions extends Zend_Db_Table_Abstract
 			
 		$objName = 'configureexitqs';
 		
-		$tableFields = array('action'=>'Action','exit_type'=>'Exit type','question'=>'Question','description'=>'Description');
+		$tableFields = ['action'=>'Action','exit_type'=>'Exit type','question'=>'Question','description'=>'Description'];
 		
 		$tablecontent = $this->getExitquestions('grid',$sort, $by, $pageNo, $perPage,$searchQuery);     
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -121,7 +121,7 @@ class Exit_Model_Exitquestions extends Zend_Db_Table_Abstract
 			'add' =>'add',
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall,
-		);
+		];
 		return $dataTmp;
 	}
 	public function SaveorUpdateExitQuestionData($data, $where)
@@ -156,7 +156,7 @@ class Exit_Model_Exitquestions extends Zend_Db_Table_Abstract
 			 */
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('eq'=>'main_exit_questions'),array('eq.*'))
+						->from(['eq'=>'main_exit_questions'],['eq.*'])
 					    ->where($where);
 		return $this->fetchAll($select)->toArray();	
 	}
@@ -165,7 +165,7 @@ class Exit_Model_Exitquestions extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('eq'=>'main_exit_questions'),array('eq.*'))
+						->from(['eq'=>'main_exit_questions'],['eq.*'])
 					    ->where('eq.isactive = 1 AND eq.exit_type_id='.$id.' ')
 						 ->order('eq.modifieddate DESC') ;
 		return $this->fetchAll($select)->toArray();	

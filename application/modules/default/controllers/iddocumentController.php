@@ -22,7 +22,7 @@ class Default_iddocumentController extends Zend_Controller_Action
             $refresh = $this->_getParam('refresh');
             $dashboradcall = $this->_getParam('dashboradcall');
 
-            $data = array();
+            $data = [];
 
             if ($refresh == 'refresh') {
                 if ($dashboradcall == 'Yes') {
@@ -137,7 +137,7 @@ class Default_iddocumentController extends Zend_Controller_Action
 			$actionflag = '';
 			$tableid  = '';
 
-			$data = array(
+			$data = [
 				                 'name'=>$name,
 				                 'code'=>$code,
 								 'description'=>$description,
@@ -148,9 +148,9 @@ class Default_iddocumentController extends Zend_Controller_Action
                                  'iddocumentcategory_id'=>$doccatid,
                                  'iddocumenttype_id'=>$doctypid,
                                  'iddocumentstatus_id'=>$status,
-			);
+			];
 			if($id!=''){
-				$where = array('iddocument_id=?'=>$id);
+				$where = ['iddocument_id=?'=>$id];
                 $data['modifiedby'] = $loginUserId;
                 $data['modifieddate'] = gmdate("Y-m-d H:i:s");
 				$actionflag = 2;
@@ -217,7 +217,7 @@ try {
                     $loginUserId = $auth->getStorage()->read()->id;
                 }
                 $model = new Default_Model_iddocument();
-                $data = array(
+                $data = [
                     'name'=>$this->_request->getParam('name'),
                     'code'=>$this->_request->getParam('code'),
                     'description'=>$this->_request->getParam('description'),
@@ -230,7 +230,7 @@ try {
                     'iddocumentstatus_id'=>$this->_request->getParam('iddocumentstatus_id'),
                     'createdby'=>$loginUserId,
                     'createddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
 
                 $tableid=$model->SaveorUpdateData($data, '');
                 sapp_Global::logManager(351,1,$loginUserId,$tableid);

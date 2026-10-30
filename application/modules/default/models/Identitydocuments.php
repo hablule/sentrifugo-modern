@@ -33,7 +33,7 @@ class Default_Model_Identitydocuments extends Zend_Db_Table_Abstract
 		
 		$identityDocumentsData = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('i'=>'main_identitydocuments'),array('i.*','mandatory'=>'if(i.mandatory = 1,"Yes","No")','expiry'=>'if(i.expiry = 1,"Yes","No")'))
+                           ->from(['i'=>'main_identitydocuments'],['i.*','mandatory'=>'if(i.mandatory = 1,"Yes","No")','expiry'=>'if(i.expiry = 1,"Yes","No")'])
                            ->where($where)
     					   ->order("$by $sort") 
     					   ->limitPage($pageNo, $perPage);
@@ -44,8 +44,8 @@ class Default_Model_Identitydocuments extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{		
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		
 		if($searchData != '' && $searchData!='undefined')
 			{
@@ -59,19 +59,19 @@ class Default_Model_Identitydocuments extends Zend_Db_Table_Abstract
 			}
 			
 		$objName = 'identitydocuments';
-		$bool_arr = array('' => 'All',1 => 'Yes',2 => 'No');
-		$tableFields = array('action'=>'Action','document_name' => 'Document Name','mandatory' => 'Mandatory','expiry' => 'Expiry','description' => 'Description');
+		$bool_arr = ['' => 'All',1 => 'Yes',2 => 'No'];
+		$tableFields = ['action'=>'Action','document_name' => 'Document Name','mandatory' => 'Mandatory','expiry' => 'Expiry','description' => 'Description'];
 		
 		$tablecontent = $this->getIdentityDocumentsData($sort, $by, $pageNo, $perPage,$searchQuery);     
 		
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -79,17 +79,17 @@ class Default_Model_Identitydocuments extends Zend_Db_Table_Abstract
 			'add' =>'add',
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall,
-			'search_filters' => array(
-                           'mandatory' => array(
+			'search_filters' => [
+                           'mandatory' => [
                                 'type' => 'select',
                                 'filter_data' => $bool_arr,
-                            ),
-                            'expiry' => array(
+                            ],
+                            'expiry' => [
                                 'type' => 'select',
                                 'filter_data' => $bool_arr,
-                            ),
-                        ),
-		);
+                            ],
+                        ],
+		];
 		return $dataTmp;
 	}
 	
@@ -97,7 +97,7 @@ class Default_Model_Identitydocuments extends Zend_Db_Table_Abstract
 	{	$identityCodesArr="";
 		$db = Zend_Db_Table::getDefaultAdapter();		
 	    $select = $this->select()
-                            ->from(array('i'=>'main_identitydocuments'),array('i.*'))
+                            ->from(['i'=>'main_identitydocuments'],['i.*'])
                             ->where('i.isactive=1');							
 		$identityDocumnetsArr = $this->fetchAll($select)->toArray(); 
 		
@@ -109,7 +109,7 @@ class Default_Model_Identitydocuments extends Zend_Db_Table_Abstract
 	{	$identityCodesArr="";
 		$db = Zend_Db_Table::getDefaultAdapter();		
 	    $select = $this->select()
-                            ->from(array('i'=>'main_identitydocuments'),array('i.*'))
+                            ->from(['i'=>'main_identitydocuments'],['i.*'])
                             ->where('i.isactive=1 AND i.id='.$id.'');							
 		$identityDocumnetsArr = $this->fetchAll($select)->toArray(); 
 		

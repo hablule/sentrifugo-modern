@@ -29,7 +29,7 @@ class Default_LocationController extends Zend_Controller_Action
 		$session = sapp_Global::_readSession();
 		if (!isset($session)) {
 			if ($this->getRequest()->isXmlHttpRequest()) {
-				echo Zend_Json::encode(array('login' => 'failed'));
+				echo Zend_Json::encode(['login' => 'failed']);
 				die();
 			} else {
 				$this->_redirect('');
@@ -61,9 +61,9 @@ class Default_LocationController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent = '';
 
 		if ($refresh == 'refresh') {
@@ -119,7 +119,7 @@ class Default_LocationController extends Zend_Controller_Action
 			$this->view->stateaddpermission = $stateaddpermission;
 			$this->view->cityaddpermission = $citypermission;
 		$this->_setParam('selected_option','fill-up-form');
-		$msgarray = array();
+		$msgarray = [];
 		$controllername = 'location';
 		$form = new Default_Form_location();
 		$model = new Default_Model_Location();
@@ -137,24 +137,24 @@ class Default_LocationController extends Zend_Controller_Action
 		if (isset($_POST['country']) && $_POST['country'] != '') {
 			$statesmodel = new Default_Model_States();
 			$statesmodeldata = $statesmodel->getStatesList(intval($_POST['country']));
-			$st_opt = array();
+			$st_opt = [];
 			if (count($statesmodeldata) > 0) {
 				foreach ($statesmodeldata as $dstate) {
 					$st_opt[$dstate['id'] . '!@#' . $dstate['state_name']] = $dstate['state_name'];
 				}
 			}
-			$form->state->addMultiOptions(array('' => 'Select State') + $st_opt);
+			$form->state->addMultiOptions(['' => 'Select State'] + $st_opt);
 		}
 		if (isset($_POST['state']) && $_POST['state'] != '') {
 			$citiesmodel = new Default_Model_Cities();
 			$citiesmodeldata = $citiesmodel->getCitiesList(intval($_POST['state']));
-			$ct_opt = array();
+			$ct_opt = [];
 			if (count($citiesmodeldata) > 0) {
 				foreach ($citiesmodeldata as $dcity) {
 					$ct_opt[$dcity['id'] . '!@#' . $dcity['city_name']] = $dcity['city_name'];
 				}
 			}
-			$form->city->addMultiOptions(array('' => 'Select City') + $ct_opt);
+			$form->city->addMultiOptions(['' => 'Select City'] + $ct_opt);
 		}
 
 		if ($this->getRequest()->getPost()) {
@@ -175,7 +175,7 @@ class Default_LocationController extends Zend_Controller_Action
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = '';
-				$data = array(
+				$data = [
 					'address1' => $address1,
 					'address2' => $address2,
 					'address3' => $address3,
@@ -185,7 +185,7 @@ class Default_LocationController extends Zend_Controller_Action
 					'city_id' => $city,
 					'map_coordinate' => $map_coordinate
 
-				);
+				];
 
 				$data['createdby'] = $loginUserId;
 				$data['createddate'] = gmdate("Y-m-d H:i:s");
@@ -198,7 +198,7 @@ class Default_LocationController extends Zend_Controller_Action
 				
 				$tableid = $Id;
 				sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Location  added successfully."));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Location  added successfully."]);
 
 
 				$this->_redirect('location');
@@ -232,7 +232,7 @@ class Default_LocationController extends Zend_Controller_Action
 			$loginuserGroup = $auth->getStorage()->read()->group_id;
 		}
 
-		$msgarray = array();
+		$msgarray = [];
 		$controllername = 'location';
 		$model = new Default_Model_Location();
 		$countriesModel = new Default_Model_Countries();
@@ -248,24 +248,24 @@ class Default_LocationController extends Zend_Controller_Action
 		if (isset($_POST['country']) && $_POST['country'] != '') {
 			$statesmodel = new Default_Model_States();
 			$statesmodeldata = $statesmodel->getStatesList(intval($_POST['country']));
-			$st_opt = array();
+			$st_opt = [];
 			if (count($statesmodeldata) > 0) {
 				foreach ($statesmodeldata as $dstate) {
 					$st_opt[$dstate['id'] . '!@#' . $dstate['state_name']] = $dstate['state_name'];
 				}
 			}
-			$form->state->addMultiOptions(array('' => 'Select State') + $st_opt);
+			$form->state->addMultiOptions(['' => 'Select State'] + $st_opt);
 		}
 		if (isset($_POST['state']) && $_POST['state'] != '') {
 			$citiesmodel = new Default_Model_Cities();
 			$citiesmodeldata = $citiesmodel->getCitiesList(intval($_POST['state']));
-			$ct_opt = array();
+			$ct_opt = [];
 			if (count($citiesmodeldata) > 0) {
 				foreach ($citiesmodeldata as $dcity) {
 					$ct_opt[$dcity['id'] . '!@#' . $dcity['city_name']] = $dcity['city_name'];
 				}
 			}
-			$form->city->addMultiOptions(array('' => 'Select City') + $ct_opt);
+			$form->city->addMultiOptions(['' => 'Select City'] + $ct_opt);
 		}
 		if ($this->getRequest()->getPost()) {
 			if ($form->isValid($this->getRequest()->getPost())) {
@@ -285,7 +285,7 @@ class Default_LocationController extends Zend_Controller_Action
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = '';
-				$data = array(
+				$data = [
 					'address1' => $address1,
 					'address2' => $address2,
 					'address3' => $address3,
@@ -295,7 +295,7 @@ class Default_LocationController extends Zend_Controller_Action
 					'city_id' => $city,
 					'map_coordinate' => $map_coordinate
 
-				);
+				];
 
 				$data['createdby'] = $loginUserId;
 				$data['createddate'] = gmdate("Y-m-d H:i:s");
@@ -352,7 +352,7 @@ class Default_LocationController extends Zend_Controller_Action
 			$loginuserGroup = $auth->getStorage()->read()->group_id;
 		}
 		$location_id = $this->getRequest()->getParam('id');
-		$msgarray = array();
+		$msgarray = [];
 		$controllername = 'location';
 		$model = new Default_Model_Location();
 		$countriesModel = new Default_Model_Countries();
@@ -389,13 +389,13 @@ class Default_LocationController extends Zend_Controller_Action
 
 			$statesmodel = new Default_Model_States();
 			$statesmodeldata = $statesmodel->getStatesList(intval($_POST['country']));
-			$st_opt = array();
+			$st_opt = [];
 			if (count($statesmodeldata) > 0) {
 				foreach ($statesmodeldata as $dstate) {
 					$st_opt[$dstate['id'] . '!@#' . $dstate['state_name']] = $dstate['state_name'];
 				}
 			}
-			$form->state->addMultiOptions(array('' => 'Select State') + $st_opt);
+			$form->state->addMultiOptions(['' => 'Select State'] + $st_opt);
 		}
 		if ($location_id) {
 			foreach ($location_data as $data) {
@@ -406,13 +406,13 @@ class Default_LocationController extends Zend_Controller_Action
 		if (isset($_POST['state']) && $_POST['state'] != '') {
 			$citiesmodel = new Default_Model_Cities();
 			$citiesmodeldata = $citiesmodel->getCitiesList(intval($_POST['state']));
-			$ct_opt = array();
+			$ct_opt = [];
 			if (count($citiesmodeldata) > 0) {
 				foreach ($citiesmodeldata as $dcity) {
 					$ct_opt[$dcity['id'] . '!@#' . $dcity['city_name']] = $dcity['city_name'];
 				}
 			}
-			$form->city->addMultiOptions(array('' => 'Select City') + $ct_opt);
+			$form->city->addMultiOptions(['' => 'Select City'] + $ct_opt);
 		}
 		if ($location_id) {
 			foreach ($location_data as $data) {
@@ -439,7 +439,7 @@ class Default_LocationController extends Zend_Controller_Action
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = '';
-				$data = array(
+				$data = [
 					'address1' => $address1,
 					'address2' => $address2,
 					'address3' => $address3,
@@ -449,7 +449,7 @@ class Default_LocationController extends Zend_Controller_Action
 					'city_id' => $city,
 					'map_coordinate' => $map_coordinate
 
-				);
+				];
 
 				$data['createdby'] = $loginUserId;
 				$data['createddate'] = gmdate("Y-m-d H:i:s");
@@ -602,7 +602,7 @@ $util=new utlis();
 			$date = new Zend_Date();
 			$actionflag = '';
 			$tableid  = '';
-			$data = array(
+			$data = [
 				'address1' => $address1,
 				'address2' => $address2,
 				'address3' => $address3,
@@ -616,7 +616,7 @@ $util=new utlis();
 
 
 
-			);
+			];
 			$where = 'location_id=' . $id;
 
 			$data['modifiedby'] = $loginUserId;
@@ -625,10 +625,10 @@ $util=new utlis();
 			$Id = $model->SaveorUpdatelocationData($data, $where);
 			if ($Id == 'update') {
 				$tableid = $id;
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Location updated successfully."));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Location updated successfully."]);
 			} else {
 				$tableid = $Id;
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Location  added successfully."));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Location  added successfully."]);
 			}
 			$menuID=LOCATION;
 			sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
@@ -663,7 +663,7 @@ $util=new utlis();
 			$model = new Default_Model_Location();
 
 			
-			$where = array('location_id=?' => $id);
+			$where = ['location_id=?' => $id];
 			$Id = $model->DeleteData($where);
 			if ($Id == 'delete') {
 				$messages['message'] = 'Location deleted successfully.';
@@ -678,12 +678,12 @@ $util=new utlis();
 		}
 		if ($deleteflag == 1) {
 			if ($messages['msgtype'] == 'error') {
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("error" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["error" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag]);
 			}
 			if ($messages['msgtype'] == 'success') {
 				$menuID=LOCATION;
 				sapp_Global::logManager($menuID,$actionflag,$loginUserId,$id);
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag]);
 			}
 		}
 		$this->_helper->json($messages);

@@ -74,7 +74,7 @@ class Default_Model_Holidaydate extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if (!empty($searchData) && $searchData !== 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -97,7 +97,7 @@ class Default_Model_Holidaydate extends Zend_Db_Table_Abstract
         }
 
         // SSOT Mandatory: 'action' => 'Action' must be the first element
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'             => 'Action',
             'holiday_name'       => 'Holiday Policy',
             'start_date'         => 'Start Date',
@@ -106,18 +106,18 @@ class Default_Model_Holidaydate extends Zend_Db_Table_Abstract
             'work_policy'        => 'Work Policy',
             'payroll_multiplier' => 'Multiplier',
             'status_text'        => 'Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
             'perPage'        => $perPage,
             'tablecontent'   => $tableContent,
             'objectname'     => 'holidaydate',
-            'extra'          => array(),
+            'extra'          => [],
             'tableheader'    => $tableHeaders,
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
@@ -125,12 +125,12 @@ class Default_Model_Holidaydate extends Zend_Db_Table_Abstract
             'menuName'       => 'Holiday Calendar',
             'call'           => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => array(
-                'status_text' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive')),
-                'start_date'  => array('type' => 'datepicker'),
-                'end_date'    => array('type' => 'datepicker')
-            )
-        );
+            'search_filters' => [
+                'status_text' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']],
+                'start_date'  => ['type' => 'datepicker'],
+                'end_date'    => ['type' => 'datepicker']
+            ]
+        ];
     }
 
     /**
@@ -155,8 +155,8 @@ class Default_Model_Holidaydate extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from(
-                array('hd' => $this->_name),
-                array(
+                ['hd' => $this->_name],
+                [
                     'id' => 'hd.id',
                     'start_date'  => new Zend_Db_Expr("DATE_FORMAT(hd.start_date, '" . DATEFORMAT_MYSQL . "')"),
                     'end_date'    => new Zend_Db_Expr("DATE_FORMAT(hd.end_date, '" . DATEFORMAT_MYSQL . "')"),
@@ -164,12 +164,12 @@ class Default_Model_Holidaydate extends Zend_Db_Table_Abstract
                     'work_policy',
                     'payroll_multiplier',
                     'status_text' => new Zend_Db_Expr("CASE WHEN hd.isactive = 1 THEN 'Active' ELSE 'Inactive' END")
-                )
+                ]
             )
             ->joinInner(
-                array('h' => 'main_holiday'),
+                ['h' => 'main_holiday'],
                 'hd.holiday_id = h.id',
-                array('holiday_name' => 'h.name')
+                ['holiday_name' => 'h.name']
             )
             ->where('hd.isactive != ?', 5);
 
@@ -193,10 +193,10 @@ class Default_Model_Holidaydate extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from(
-                array('hd' => $this->_name),
-                array('id' => 'hd.id', 'label' => new Zend_Db_Expr("CONCAT(h.name, ' (', hd.start_date, ')')"))
+                ['hd' => $this->_name],
+                ['id' => 'hd.id', 'label' => new Zend_Db_Expr("CONCAT(h.name, ' (', hd.start_date, ')')")]
             )
-            ->joinInner(array('h' => 'main_holiday'), 'hd.holiday_id = h.id', array())
+            ->joinInner(['h' => 'main_holiday'], 'hd.holiday_id = h.id', [])
             ->order('hd.start_date DESC');
 
         if ($activeOnly) {
@@ -269,7 +269,7 @@ class Default_Model_Holidaydate extends Zend_Db_Table_Abstract
         if (!empty($id)) {
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = $currentDate;
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return 'update';
         }
 
@@ -295,17 +295,17 @@ class Default_Model_Holidaydate extends Zend_Db_Table_Abstract
         $userId = $auth->hasIdentity() ? (int)$auth->getStorage()->read()->id : 0;
         $currentDate = gmdate("Y-m-d H:i:s");
 
-        $data = array(
+        $data = [
             'isactive'     => 5,
             'modifiedby'   => $userId,
             'modifieddate' => $currentDate
-        );
+        ];
 
         // Soft delete child lines
         $lineModel = new Default_Model_Holidaydateline();
         $lineModel->softDeleteLinesByHeaderId($id, $userId, $currentDate);
 
-        return $this->update($data, array('id = ?' => (int)$id));
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /**
@@ -320,13 +320,13 @@ class Default_Model_Holidaydate extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? (int)$auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => (int)$status,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
+        ];
 
-        return $this->update($data, array('id = ?' => (int)$id));
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* =================================================================================
@@ -394,8 +394,8 @@ class Default_Model_Holidaydate extends Zend_Db_Table_Abstract
 
         // Query if this holiday date intersects with a Closed period in map_period_control
         $select = $db->select()
-            ->from(array('pc' => 'map_period_control'), array('id'))
-            ->joinInner(array('p' => 'main_period'), 'pc.period_id = p.id', array())
+            ->from(['pc' => 'map_period_control'], ['id'])
+            ->joinInner(['p' => 'main_period'], 'pc.period_id = p.id', [])
             ->where('? BETWEEN p.start_date AND p.end_date', $record['start_date'])
             ->where("pc.status = 'Closed'")
             ->where('pc.isactive = ?', 1);

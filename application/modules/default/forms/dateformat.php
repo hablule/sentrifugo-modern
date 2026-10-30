@@ -36,7 +36,7 @@ class Default_Form_dateformat extends Zend_Form
         
         $dateformat->addFilter(new Zend_Filter_StringTrim());
         $dateformat->setRequired(true);
-        $dateformat->addValidator('NotEmpty', false, array('messages' => 'Please enter date format.'));  
+        $dateformat->addValidator('NotEmpty', false, ['messages' => 'Please enter date format.']);  
        
 			
 		$description = new Zend_Form_Element_Textarea('description');
@@ -56,7 +56,7 @@ class Default_Form_dateformat extends Zend_Form
 		$jsFunction = "'redirecttocontroller(\'dateformat\');'";;
 		 
 
-		 $this->addElements(array($id,$dateformat,$description,$submit,$example));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 $this->addElements([$id,$dateformat,$description,$submit,$example]);
+         $this->setElementDecorators(['ViewHelper']); 
 	}
 }

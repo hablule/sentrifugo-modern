@@ -46,7 +46,7 @@ class Default_EmployeeleavetypesController extends Zend_Controller_Action
 		$objname = $this->_getParam('objname');
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall',null);
-		$data = array();$searchQuery = '';	$searchArray = array();	$tablecontent='';
+		$data = [];$searchQuery = '';	$searchArray = [];	$tablecontent='';
 		
 		if($refresh == 'refresh')
 		{
@@ -56,7 +56,7 @@ class Default_EmployeeleavetypesController extends Zend_Controller_Action
 				$perPage = PERPAGE;
 										
 			$sort = 'DESC';$by = 'e.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	
-			$searchArray = array();
+			$searchArray = [];
 		}
 		else 
 		{
@@ -205,7 +205,7 @@ class Default_EmployeeleavetypesController extends Zend_Controller_Action
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = ''; 
-				   $data = array( 'leavetype'=>trim($leavetype),
+				   $data = [ 'leavetype'=>trim($leavetype),
 				                  'numberofdays'=>$numberofdays, 
 				                  'leavecode'=>trim($leavecode),
 								  'leavepreallocated'=>trim($leavepreallocated),
@@ -214,9 +214,9 @@ class Default_EmployeeleavetypesController extends Zend_Controller_Action
 				      			 'description'=>trim($description),
 								  'modifiedby'=>$loginUserId,
 								'modifieddate'=>gmdate("Y-m-d H:i:s")
-						);
+						];
 					if($id!=''){
-						$where = array('id=?'=>$id);  
+						$where = ['id=?'=>$id];  
 						$actionflag = 2;
 					}
 					else
@@ -271,8 +271,8 @@ class Default_EmployeeleavetypesController extends Zend_Controller_Action
 		    if($id)
 			{
 			$employeeleavetypesmodel = new Default_Model_Employeeleavetypes();
-			  $data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-			  $where = array('id=?'=>$id);
+			  $data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+			  $where = ['id=?'=>$id];
                           $leave_data = $employeeleavetypesmodel->getsingleEmployeeLeavetypeData($id);
 						  
 			  $Id = $employeeleavetypesmodel->SaveorUpdateEmployeeLeaveTypeData($data, $where);
@@ -301,11 +301,11 @@ class Default_EmployeeleavetypesController extends Zend_Controller_Action
 			{
 				if(	$messages['msgtype'] == 'error')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
 				}
 				if(	$messages['msgtype'] == 'success')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
 				}
 			}
 			$this->_helper->json($messages);

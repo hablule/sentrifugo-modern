@@ -38,11 +38,11 @@ class Default_ProjectsController extends Zend_Controller_Action
 		if(!$checkTmEnable){
 			$this->_redirect('error');
 		}*/
-		
+
 		//check Time management module enable
 		if(!sapp_Helper::checkTmEnable())
 			$this->_redirect('error');
-			
+
 		$ajaxContext = $this->_helper->getHelper('AjaxContext');
 		$ajaxContext->addActionContext('addtasksproject', 'html')->initContext();
 		$ajaxContext->addActionContext('addtasks', 'html')->initContext();
@@ -56,7 +56,7 @@ class Default_ProjectsController extends Zend_Controller_Action
 	public function indexAction()
 	{
 		try {
-		
+
 		$projectModel = new Default_Model_Projects();
 		$call = $this->_getParam('call');
 		if($call == 'ajaxcall')
@@ -66,12 +66,11 @@ class Default_ProjectsController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 		$unitId = intval($this->_getParam('unitId'));
-		if(!isset($unitId))
-			$unitId = '';
+		$unitId ??= '';
 
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 		$auth = Zend_Auth::getInstance();
 		if($auth->hasIdentity()){
@@ -101,13 +100,13 @@ class Default_ProjectsController extends Zend_Controller_Action
 		}
       if(Zend_Registry::get( 'tm_role' ) != 'Employee')
 		{
-			$dataTmp = $projectModel->getGrid($sort, $by, $perPage, $pageNo, $searchData,$call,$dashboardcall,$unitId);
+			$dataTmp = $projectModel->getGrid($sort, $by, $perPage, $pageNo, $searchData,$call,$dashboardcall);
 		}
 		else
 		{
 			$dataTmp = $projectModel->getEmpGrid($sort, $by, $perPage, $pageNo, $searchData,$call,$dashboardcall,$loginUserId);
 		}
-			
+
 		array_push($data,$dataTmp);
 		$this->view->dataArray = $data;
 		$this->view->call = $call ;
@@ -145,7 +144,7 @@ class Default_ProjectsController extends Zend_Controller_Action
 					$data = $projectModel->getSingleProjectData($id);
 					if(!empty($data) && $data != "norows")
 					{
-						$data_arr = array();
+						$data_arr = [];
 						$call = $this->_getParam('call');
 						if($call == 'ajaxcall')
 						$this->_helper->layout->disableLayout();
@@ -156,7 +155,7 @@ class Default_ProjectsController extends Zend_Controller_Action
 
 						//$data = array();
 						$searchQuery = '';
-						$searchArray = array();
+						$searchArray = [];
 						$tablecontent='';
 
 						if($refresh == 'refresh')
@@ -233,8 +232,8 @@ class Default_ProjectsController extends Zend_Controller_Action
 			//check project is assigned to employee
 			$checkISAssigned = $projectModel->chkProjAssigned($id);
 			if($checkISAssigned==0){
-				$data = array('is_active'=>0,'modified'=>gmdate("Y-m-d H:i:s"));
-				$where = array('id=?'=>$id);
+				$data = ['is_active'=>0,'modified'=>gmdate("Y-m-d H:i:s")];
+				$where = ['id=?'=>$id];
 				$Id = $projectModel->SaveorUpdateProjectsData($data, $where);;
 				if($Id == 'update')
 				{
@@ -261,11 +260,11 @@ class Default_ProjectsController extends Zend_Controller_Action
 			{
 				if(	$messages['msgtype'] == 'error')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
 				}
 				if(	$messages['msgtype'] == 'success')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
 				}
 			}
 		$this->_helper->json($messages);
@@ -300,7 +299,7 @@ class Default_ProjectsController extends Zend_Controller_Action
 					//echo"<pre>";print_r($data);exit;
 					if(!empty($data) && $data != "norows")
 					{
-						$data_arr = array();
+						$data_arr = [];
 						$call = $this->_getParam('call');
 						if($call == 'ajaxcall')
 						$this->_helper->layout->disableLayout();
@@ -311,7 +310,7 @@ class Default_ProjectsController extends Zend_Controller_Action
 
 						//$data = array();
 						$searchQuery = '';
-						$searchArray = array();
+						$searchArray = [];
 						$tablecontent='';
 
 						if($refresh == 'refresh')
@@ -383,13 +382,13 @@ class Default_ProjectsController extends Zend_Controller_Action
 		if($callval == 'ajaxcall')
 		$this->_helper->layout->disableLayout();
         $popup = $this->getRequest()->getParam('popup');
-		$popConfigPermission = array();
+		$popConfigPermission = [];
 		$projectsForm = new Default_Form_Projects();
 		$projectModel = new Default_Model_Projects();
 
 		$clientModel = new Default_Model_Clients();
 		$clientData = $clientModel->getActiveClientsData();
-		$msgarray = array();
+		$msgarray = [];
 		$this->view->popConfigPermission = $popConfigPermission;
 		
 		if(sizeof($clientData) > 0)
@@ -482,7 +481,7 @@ class Default_ProjectsController extends Zend_Controller_Action
 					{
 						$this->view->form = $projectsForm;
 						$this->view->controllername = $objName;
-						$this->view->data = array();
+						$this->view->data = [];
 						$this->view->ermsg = 'norecord';
 						$this->view->inpage = 'Edit';
 					}
@@ -526,7 +525,7 @@ class Default_ProjectsController extends Zend_Controller_Action
 				$description = $this->_request->getParam('description');
 
 				$date = new Zend_Date();
-				$data = array('project_name'=>ucfirst(trim($project_name)),
+				$data = ['project_name'=>ucfirst(trim($project_name)),
 				              'project_status'=>trim($project_status),
 							  'base_project'=>(trim($base_project)!=''?$base_project:NUll),
 							  'start_date'=>(trim($start_date)!=''?$start_date:NUll),
@@ -538,7 +537,7 @@ class Default_ProjectsController extends Zend_Controller_Action
 							  'project_type'=>trim($project_type),
 				              'modified_by'=>$loginUserId,
 							  'modified'=>gmdate("Y-m-d H:i:s")
-				);
+				];
 
 				if($project_status == 'initiated'){
 					$data['initiated_date'] = gmdate("Y-m-d H:i:s");
@@ -551,7 +550,7 @@ class Default_ProjectsController extends Zend_Controller_Action
 				}
 
 				if($id!=''){
-					$where = array('id=?'=>$id);
+					$where = ['id=?'=>$id];
 				}
 				else
 				{
@@ -574,14 +573,14 @@ class Default_ProjectsController extends Zend_Controller_Action
 				{
 					if(Zend_Registry::get( 'tm_role' ) == 'Manager'){
 						$projectResourcesModel = new Default_Model_Projectresources();
-						$projectResourceData = array( 'project_id'=>trim($insertedId),
+						$projectResourceData = [ 'project_id'=>trim($insertedId),
 										              'emp_id'=>$loginUserId, 
 													  'created_by' => $loginUserId,
 													  'created' =>gmdate("Y-m-d H:i:s"),
 													  'is_active' => 1,
 										   			  'modified_by'=>$loginUserId,
 													  'modified'=>gmdate("Y-m-d H:i:s")	
-						);
+						];
 						$result = $projectResourcesModel->SaveorUpdateProjectResourceData($projectResourceData,'');
 					}
 					
@@ -636,13 +635,13 @@ class Default_ProjectsController extends Zend_Controller_Action
 		if($callval == 'ajaxcall')
 		$this->_helper->layout->disableLayout();
 
-		$popConfigPermission = array();
+		$popConfigPermission = [];
 		$projectsForm = new Timemanagement_Form_Projects();
 		$projectModel = new Timemanagement_Model_Projects();
 
 		$clientModel = new Timemanagement_Model_Clients();
 		$clientData = $clientModel->getActiveClientsData();
-		$msgarray = array();
+		$msgarray = [];
 		array_push($popConfigPermission,'client');
 		if(sapp_Global::_checkprivileges(CURRENCY,$loginuserGroup,$loginuserRole,'add') == 'Yes'){
 		 		array_push($popConfigPermission,'currency');
@@ -738,7 +737,7 @@ class Default_ProjectsController extends Zend_Controller_Action
 					{
 						$this->view->form = $projectsForm;
 						$this->view->controllername = $objName;
-						$this->view->data = array();
+						$this->view->data = [];
 						$this->view->ermsg = 'norecord';
 						$this->view->inpage = 'Edit';
 					}
@@ -782,7 +781,7 @@ class Default_ProjectsController extends Zend_Controller_Action
 				$description = $this->_request->getParam('description');
 
 				$date = new Zend_Date();
-				$data = array('project_name'=>ucfirst(trim($project_name)),
+				$data = ['project_name'=>ucfirst(trim($project_name)),
 				              'project_status'=>trim($project_status),
 							  'base_project'=>(trim($base_project)!=''?$base_project:NUll),
 							  'start_date'=>(trim($start_date)!=''?$start_date:NUll),
@@ -794,7 +793,7 @@ class Default_ProjectsController extends Zend_Controller_Action
 							  'project_type'=>trim($project_type),
 				              'modified_by'=>$loginUserId,
 							  'modified'=>gmdate("Y-m-d H:i:s")
-				);
+				];
 
 				if($project_status == 'initiated'){
 					$data['initiated_date'] = gmdate("Y-m-d H:i:s");
@@ -807,7 +806,7 @@ class Default_ProjectsController extends Zend_Controller_Action
 				}
 
 				if($id!=''){
-					$where = array('id=?'=>$id);
+					$where = ['id=?'=>$id];
 				}
 				else
 				{
@@ -820,24 +819,24 @@ class Default_ProjectsController extends Zend_Controller_Action
 				$insertedId = $projectModel->SaveorUpdateProjectsData($data, $where);
 				if($insertedId == 'update')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Project updated successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Project updated successfully."]);
 				}
 				else
 				{
 					 if(Zend_Registry::get( 'tm_role' ) == 'Manager'){
 						$projectResourcesModel = new Timemanagement_Model_Projectresources();
-						$projectResourceData = array( 'project_id'=>trim($insertedId),
+						$projectResourceData = [ 'project_id'=>trim($insertedId),
 										              'emp_id'=>$loginUserId, 
 													  'created_by' => $loginUserId,
 													  'created' =>gmdate("Y-m-d H:i:s"),
 													  'is_active' => 1,
 										   			  'modified_by'=>$loginUserId,
 													  'modified'=>gmdate("Y-m-d H:i:s")	
-						);
+						];
 						$result = $projectResourcesModel->SaveorUpdateProjectResourceData($projectResourceData,'');
 					}
 					$id = $insertedId; 
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Project added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Project added successfully."]);
 				}
 
 				$this->_redirect('projects');

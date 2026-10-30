@@ -34,7 +34,7 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
     {
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('m' => 'main_menu'), array('m.id'))
+            ->from(['m' => 'main_menu'], ['m.id'])
             ->where('m.url="' . $url . '" ');
 
         return $this->fetchAll($select)->toArray();
@@ -74,12 +74,12 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from(
-                array('m' => $this->_name),
-                array('*') // Select all columns from menu
+                ['m' => $this->_name],
+                ['*'] // Select all columns from menu
             )
-            ->where('m.isactive IN (?)', array(1, 2)) // Active states            
+            ->where('m.isactive IN (?)', [1, 2]) // Active states            
             ->where('m.parent IS NOT NULL')
-            ->order(array('m.parent ASC', 'm.menuOrder ASC'));
+            ->order(['m.parent ASC', 'm.menuOrder ASC']);
 
         return $this->fetchAll($select)->toArray();
 
@@ -108,32 +108,32 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
     public function getMenuArrayByGroup($group_id)
     {
         if (empty($group_id)) {
-            return array();
+            return [];
         }
 
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from(
-                array('m' => $this->_name),
-                array('*') // Select all columns from menu
+                ['m' => $this->_name],
+                ['*'] // Select all columns from menu
             )
             ->joinInner(
-                array('mp' => 'main_privileges'),
+                ['mp' => 'main_privileges'],
                 'm.id = mp.object',
-                array(
+                [
                     'addpermission',
                     'editpermission',
                     'deletepermission',
                     'viewpermission',
                     'uploadattachments',
                     'viewattachments'
-                )
+                ]
             )
-            ->where('m.isactive IN (?)', array(1, 2)) // Active states
+            ->where('m.isactive IN (?)', [1, 2]) // Active states
             ->where('mp.isactive = ?', 1)
             ->where('mp.group_id = ?', (int)$group_id) // Secure parameter binding
             ->where('m.parent IS NOT NULL')
-            ->order(array('m.parent ASC', 'm.menuOrder ASC'));
+            ->order(['m.parent ASC', 'm.menuOrder ASC']);
 
         return $this->fetchAll($select)->toArray();
     }
@@ -150,8 +150,8 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
 
         $select = $db->select()
             ->from(
-                array('m' => $this->_name),
-                array(
+                ['m' => $this->_name],
+                [
                     'menu_id'    => 'm.id',
                     'menuName'   => 'm.menuName',
                     'parent'     => 'm.parent',
@@ -165,15 +165,15 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
                             ELSE 'InActive'
                          END"
                     )
-                )
+                ]
             )
             ->joinLeft(
-                array('p' => 'main_privileges'),
+                ['p' => 'main_privileges'],
                 $db->quoteInto(
                     'p.object = m.id AND p.group_id = ?',
                     (int)$groupId
                 ),
-                array(
+                [
                     'privilege_id' => 'p.id',
                     'group_id'     => 'p.group_id',
                     'addpermission' => new Zend_Db_Expr(
@@ -212,14 +212,14 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
                             ELSE 'InActive'
                          END"
                     )
-                )
+                ]
             )
             ->where('m.isactive = ?', 1)
             ->where('m.parent >= ?', 0)
-            ->order(array(
+            ->order([
                 'm.parent ASC',
                 'm.menuOrder ASC'
-            ));
+            ]);
 
         return $db->fetchAll($select);
     }
@@ -238,8 +238,8 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
 
         $select = $db->select()
             ->from(
-                array('m' => $this->_name),
-                array(
+                ['m' => $this->_name],
+                [
                     'menu_id'    => 'm.id',
                     'menuName'   => 'm.menuName',
                     'parent'     => 'm.parent',
@@ -253,27 +253,27 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
                             ELSE 'InActive'
                          END"
                     )
-                )
+                ]
             )
             // 1. INNER JOIN on Group Privileges. 
             // This enforces Requirement : Menu is a subset of Group. 
             // If Group doesn't have it active, this row effectively drops or logic handles it.
             ->joinInner(
-                array('gp' => 'main_privileges'),
+                ['gp' => 'main_privileges'],
                 $db->quoteInto(
                     'gp.object = m.id AND gp.group_id = ? AND gp.isactive = 1',
                     (int)$groupId
                 ),
-                array() // We don't need group columns in output, just for filtering logic
+                [] // We don't need group columns in output, just for filtering logic
             )
             // LEFT JOIN on Role Privileges.
             ->joinLeft(
-                array('rp' => 'main_privileges'),
+                ['rp' => 'main_privileges'],
                 $db->quoteInto(
                     'rp.object = m.id AND rp.role = ?',
                     (int)$roleId
                 ),
-                array(
+                [
                     'privilege_id' => 'rp.id',
                     'role_id'      => 'rp.role',
                     'group_id'     => 'gp.group_id', // Return the group ID for context
@@ -316,11 +316,11 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
                     'viewupdisabled' => new Zend_Db_Expr(
                         "CASE WHEN gp.viewattachments = 'No' THEN 'Yes' ELSE '' END"
                     )
-                )
+                ]
             )
             ->where('m.isactive = ?', 1)
             ->where('m.parent >= ?', 0)
-            ->order(array('m.parent ASC', 'm.menuOrder ASC'));
+            ->order(['m.parent ASC', 'm.menuOrder ASC']);
 
         return $db->fetchAll($select);
     }
@@ -339,23 +339,23 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from(
-                array('m' => $this->_name),
-                array('*') // Select all columns from main_menu
+                ['m' => $this->_name],
+                ['*'] // Select all columns from main_menu
             )
             ->joinInner(
-                array('mp' => 'main_privileges'),
+                ['mp' => 'main_privileges'],
                 'm.id = mp.object',
-                array(
+                [
                     'addpermission',
                     'editpermission',
                     'deletepermission',
                     'viewpermission',
                     'uploadattachments',
                     'viewattachments'
-                )
+                ]
             )
             // m.isactive in (1,2) handles different active states if applicable in your system
-            ->where('m.isactive IN (?)', array(1, 2))
+            ->where('m.isactive IN (?)', [1, 2])
             ->where('m.parent IS NOT NULL')
             ->where('mp.isactive = ?', 1)
             ->where('mp.role = ?', (int)$role_id);
@@ -371,7 +371,7 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
             $select->where('mp.group_id = ?', (int)$group_id);
         }
 
-        $select->order(array('m.parent ASC', 'm.menuOrder ASC'));
+        $select->order(['m.parent ASC', 'm.menuOrder ASC']);
 
         return $this->fetchAll($select)->toArray();
     }
@@ -390,13 +390,13 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
     {
         $menu_model = new Default_Model_Menu();
         $res = $menu_model->getTotalMenuArray();
-        $tmpArr = array();
-        $tmpMenuArr = array();
-        $tmpMenuDataArr = array();
+        $tmpArr = [];
+        $tmpMenuArr = [];
+        $tmpMenuDataArr = [];
 
         for ($i = 0; $i < sizeof($res); $i++) {
             $tmpMenuArr[$res[$i]['id']] = $res[$i]['parent'];
-            $tmp = array();
+            $tmp = [];
             $tmp['id'] = $res[$i]['id'];
             $tmp["parent"] =  $res[$i]['parent'];
             $tmp["menuName"] =  $res[$i]['menuName'];
@@ -404,7 +404,7 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
             $tmpMenuDataArr[$res[$i]['id']] = $tmp;
         }
 
-        $emptyArr = array();
+        $emptyArr = [];
         foreach ($tmpMenuArr as $key => $value) {
             if ($value == 0 && !array_key_exists($value, $tmpArr)) {
                 $tmpArr[$key] = $emptyArr;
@@ -426,7 +426,7 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
                 }
             }
         }
-        $childs_array = array();
+        $childs_array = [];
         if (array_key_exists($menu_id, $tmpArr)) {
             $childs_array[] = $menu_id;
             if (isset($tmpArr[$menu_id]['childs'])) {
@@ -477,7 +477,7 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
 
         $result = $db->query($query);
 
-        $url_arr = array();
+        $url_arr = [];
 
         while ($row = $result->fetch()) {
             $modulename = $row['modulename'] == '' ? 'default' : $row['modulename'];
@@ -491,30 +491,30 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
             if ($url != 'servicerequests')
                 $url_arr[$url . "controller.php"]['actions'] = $this->getControllersByRole_helper($row);
             else {
-                $service_actions = sapp_Global::generateAccessControl_helper(array('servicerequestscontroller.php' => array('url' => 'servicerequests')), 'random');
+                $service_actions = sapp_Global::generateAccessControl_helper(['servicerequestscontroller.php' => ['url' => 'servicerequests']], 'random');
                 $url_arr[$url . "controller.php"]['actions'] = $service_actions['servicerequestscontroller.php'];
             }
         }
-        $index_arr = array();
+        $index_arr = [];
         $index_arr['indexcontroller.php']['url'] = "index";
         $index_arr['indexcontroller.php']['modulename'] = "default";
-        $index_actions = sapp_Global::generateAccessControl_helper(array('indexcontroller.php' => array('url' => 'index')), 'random');
+        $index_actions = sapp_Global::generateAccessControl_helper(['indexcontroller.php' => ['url' => 'index']], 'random');
         $index_arr['indexcontroller.php']['actions'] = $index_actions['indexcontroller.php'];
 
         $index_arr['dashboardcontroller.php']['url'] = "dashboard";
         $index_arr['dashboardcontroller.php']['modulename'] = "default";
-        $dash_actions = sapp_Global::generateAccessControl_helper(array('dashboardcontroller.php' => array('url' => 'dashboard')), 'random');
+        $dash_actions = sapp_Global::generateAccessControl_helper(['dashboardcontroller.php' => ['url' => 'dashboard']], 'random');
         $index_arr['dashboardcontroller.php']['actions'] = $dash_actions['dashboardcontroller.php'];
 
         if ($role_id == SUPERADMINROLE) {
             $index_arr['managemenuscontroller.php']['url'] = "managemenus";
             $index_arr['managemenuscontroller.php']['modulename'] = "default";
-            $index_actions = sapp_Global::generateAccessControl_helper(array('managemenuscontroller.php' => array('url' => 'managemenus')), 'random');
+            $index_actions = sapp_Global::generateAccessControl_helper(['managemenuscontroller.php' => ['url' => 'managemenus']], 'random');
             $index_arr['managemenuscontroller.php']['actions'] = $index_actions['managemenuscontroller.php'];
 
             $index_arr['wizardcontroller.php']['url'] = "wizard";
             $index_arr['wizardcontroller.php']['modulename'] = "default";
-            $index_actions = sapp_Global::generateAccessControl_helper(array('wizardcontroller.php' => array('url' => 'wizard')), 'random');
+            $index_actions = sapp_Global::generateAccessControl_helper(['wizardcontroller.php' => ['url' => 'wizard']], 'random');
             $index_arr['wizardcontroller.php']['actions'] = $index_actions['wizardcontroller.php'];
         }
 
@@ -522,7 +522,7 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
             if ($group_id == HR_GROUP) {
                 $index_arr['hrwizardcontroller.php']['url'] = "hrwizard";
                 $index_arr['hrwizardcontroller.php']['modulename'] = "default";
-                $index_actions = sapp_Global::generateAccessControl_helper(array('hrwizardcontroller.php' => array('url' => 'hrwizard')), 'random');
+                $index_actions = sapp_Global::generateAccessControl_helper(['hrwizardcontroller.php' => ['url' => 'hrwizard']], 'random');
                 $index_arr['hrwizardcontroller.php']['actions'] = $index_actions['hrwizardcontroller.php'];
             }
         }
@@ -532,7 +532,7 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
     public function getControllersByRole_helper($row)
     {
 
-        $permi_arr = array();
+        $permi_arr = [];
         $i = 0;
         if ($row['addpermission'] == 'Yes')
             $permi_arr[] = 'add';
@@ -577,14 +577,14 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
     {
         if (empty($menuGroupId)) return 0;
 
-        $data = array(
+        $data = [
             'isactive' => 0 // Assuming main_menu uses 1/0 for status
-        );
+        ];
 
-        $where = array(
+        $where = [
             'menugroup_id = ?' => (int)$menuGroupId,
             'isactive = ?'     => 1 // Only update those currently active
-        );
+        ];
 
         return $this->update($data, $where);
     }
@@ -612,7 +612,7 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
     {
         $db = Zend_Db_Table::getDefaultAdapter();
 
-        $arr_menu_ids = array(TIMEMANAGEMENT, PERFORMANCEAPPRAISAL, RESOURCEREQUISITION, BGCHECKS, STAFFING, COMPLIANCES, REPORTS, BENEFITS, SERVICEDESK, EXPENSES, ASSETS, 226, 225);
+        $arr_menu_ids = [TIMEMANAGEMENT, PERFORMANCEAPPRAISAL, RESOURCEREQUISITION, BGCHECKS, STAFFING, COMPLIANCES, REPORTS, BENEFITS, SERVICEDESK, EXPENSES, ASSETS, 226, 225];
         $str_menu_ids = implode(",", $arr_menu_ids);
         $sql = "select id,menuName,iconPath,isactive from main_menu where isactive = 1";
 
@@ -631,7 +631,7 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
     public function getTopLevelMenus()
     {
         $select = $this->select()
-            ->from($this->_name, array('id', 'menuName', 'iconPath', 'isactive'))
+            ->from($this->_name, ['id', 'menuName', 'iconPath', 'isactive'])
             ->where('parent = 0')
             ->order('menuOrder ASC');
 
@@ -649,7 +649,7 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
         $query = "select g.id,g.menuname,(select count(*) from main_logmanager where is_active =1 and menuId = g.id) cnt
                    from main_menu g where g.isactive = 1";
         $result = $db->query($query);
-        $menu_arr = array();
+        $menu_arr = [];
         while ($row = $result->fetch()) {
             $menu_arr[$row['id']]['menuname'] = $row['menuname'];
             $menu_arr[$row['id']]['cnt'] = $row['cnt'];
@@ -667,7 +667,7 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
     {
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('m' => 'main_menu'), array('m.url'))
+            ->from(['m' => 'main_menu'], ['m.url'])
             ->where('m.id=' . $id . '');
 
         return $this->fetchAll($select)->toArray();
@@ -676,7 +676,7 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
     {
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('m' => 'main_menu'), array('m.*'))
+            ->from(['m' => 'main_menu'], ['m.*'])
             ->where('m.parent=0');
 
         return $this->fetchAll($select)->toArray();
@@ -716,13 +716,13 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
         $res = $this->getMenuArray($role_id, $group_id);
         //Zend_Debug::dump($res);
         //die(); 
-        $tmpArr = array();
-        $tmpMenuArr = array();
-        $tmpMenuDataArr = array();
+        $tmpArr = [];
+        $tmpMenuArr = [];
+        $tmpMenuDataArr = [];
 
         for ($i = 0; $i < sizeof($res); $i++) {
             $tmpMenuArr[$res[$i]['id']] = $res[$i]['parent'];
-            $tmp = array();
+            $tmp = [];
             $tmp['id'] = $res[$i]['id'];
             $tmp["parent"] =  $res[$i]['parent'];
             $tmp["menuName"] =  $res[$i]['menuName'];
@@ -743,7 +743,7 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
         /**
          ** prepare an array with parent and second level menus - $tmpArr
          **/
-        $emptyArr = array();
+        $emptyArr = [];
         foreach ($tmpMenuArr as $key => $value) {
             if ($value == 0 && !array_key_exists($value, $tmpArr)) {
                 $tmpArr[$key] = $emptyArr;
@@ -766,9 +766,9 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
             }
         } //end of foreach.
 
-        $menu_data = array();
-        $menu_data_post = array();
-        $permission_data = array();
+        $menu_data = [];
+        $menu_data_post = [];
+        $permission_data = [];
         // die($id);
         if ($id != '') {
             $mdata = $priveleges_model->getMenuItemsByRoleId($id);
@@ -786,7 +786,7 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
                 $permission_data[$val_arr['object']]['uploadattachments'] = $val_arr['uploadattachments'];
                 $permission_data[$val_arr['object']]['viewattachments'] = $val_arr['viewattachments'];
             }
-            $menu_data1 = array();
+            $menu_data1 = [];
             foreach ($menu_data as $menu_id) {
                 if (array_key_exists($menu_id, $tmpMenuArr))
                     $menu_data1[] = $tmpMenuArr[$menu_id];
@@ -797,13 +797,13 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
             $menu_data = array_merge_recursive($menu_data, $menu_data1);
         }
 
-        $return_arr = array(
+        $return_arr = [
             'tmpArr' => $tmpArr,
             'menu_data_post' => $menu_data_post,
             'menu_data' => $menu_data,
             'permission_data' => $permission_data,
             'group_data' => $group_data
-        );
+        ];
         //   Zend_Debug::dump($return_arr);
         //   die();       
         return $return_arr;
@@ -848,34 +848,32 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->from(
                 $this->_name,
-                array('id', 'parent', 'menuName', 'iconPath', 'url')
+                ['id', 'parent', 'menuName', 'iconPath', 'url']
             )
             ->where('isactive = ?', 1)
             ->where('parent IS NOT NULL')
-            ->order(array('parent ASC', 'menuOrder ASC'));
+            ->order(['parent ASC', 'menuOrder ASC']);
 
         $menus = $this->fetchAll($select)->toArray();
 
         // 2. Organize data by Parent ID
-        $grouped = array();
+        $grouped = [];
 
-        $defaultPermissions = array(
+        $defaultPermissions = [
             'addpermission'     => 'Yes',
             'editpermission'    => 'Yes',
             'deletepermission'  => 'Yes',
             'viewpermission'    => 'Yes',
             'uploadattachments' => 'Yes',
             'viewattachments'   => 'Yes'
-        );
+        ];
 
         foreach ($menus as $menu) {
             $menu['default_permissions'] = $defaultPermissions;
 
             $parentId = (int)$menu['parent'];
 
-            if (!isset($grouped[$parentId])) {
-                $grouped[$parentId] = array();
-            }
+            $grouped[$parentId] ??= [];
             $grouped[$parentId][] = $menu;
         }
 
@@ -892,7 +890,7 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
      */
     private function _buildTreeRecursive($grouped, $parentId)
     {
-        $branch = array();
+        $branch = [];
 
         if (isset($grouped[$parentId])) {
             foreach ($grouped[$parentId] as $node) {
@@ -921,13 +919,13 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
         $group_data = $group_model->getGroupDataById($group_id);
         $res = $this->getMenuArraygroup();
 
-        $tmpArr = array(); //final menu array with parents and childs. {menu_id => array({childs=> array(...)})}
-        $tmpMenuArr = array(); //menu parent array {menu_id => parent_id}
-        $tmpMenuDataArr = array(); //menu data array with default permissions. {menu_id => array(menu data and default permissions) }
+        $tmpArr = []; //final menu array with parents and childs. {menu_id => array({childs=> array(...)})}
+        $tmpMenuArr = []; //menu parent array {menu_id => parent_id}
+        $tmpMenuDataArr = []; //menu data array with default permissions. {menu_id => array(menu data and default permissions) }
 
         for ($i = 0; $i < sizeof($res); $i++) {
             $tmpMenuArr[$res[$i]['id']] = $res[$i]['parent'];
-            $tmp = array();
+            $tmp = [];
             $tmp['id'] = $res[$i]['id'];
             $tmp["parent"] =  $res[$i]['parent'];
             $tmp["menuName"] =  $res[$i]['menuName'];
@@ -974,9 +972,9 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
             }
         } //end of foreach. */
 
-        $menu_data = array();
-        $menu_data_post = array();
-        $permission_data = array();
+        $menu_data = [];
+        $menu_data_post = [];
+        $permission_data = [];
         // die($id);
         if ($group_id != '') {
             // die($group_id);
@@ -995,7 +993,7 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
                 $permission_data[$val_arr['object']]['uploadattachments'] = $val_arr['uploadattachments'];
                 $permission_data[$val_arr['object']]['viewattachments'] = $val_arr['viewattachments'];
             }
-            $menu_data1 = array();
+            $menu_data1 = [];
             foreach ($menu_data as $menu_id) {
                 if (array_key_exists($menu_id, $tmpMenuArr))
                     $menu_data1[] = $tmpMenuArr[$menu_id];
@@ -1041,13 +1039,13 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
 
         // }
 
-        $return_arr = array(
+        $return_arr = [
             'tmpArr' => $tmpArr,
             'menu_data_post' => $menu_data_post,
             'menu_data' => $menu_data,
             'permission_data' => $permission_data,
             'group_data' => $group_data
-        );
+        ];
         //   Zend_Debug::dump($return_arr);
         //   die();       
         return $return_arr;
@@ -1070,7 +1068,7 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
         });
 
         // 2️ Build lookup table by parent
-        $grouped = array();
+        $grouped = [];
         foreach ($menuRows as $row) {
             $grouped[$row['parent']][] = $row;
         }
@@ -1088,7 +1086,7 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
      */
     protected function _buildMenuBranch(array $groupedMenus, $parentId)
     {
-        $branch = array();
+        $branch = [];
 
         if (!isset($groupedMenus[$parentId])) {
             return $branch;
@@ -1099,7 +1097,7 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
             // KEY CHANGE: Use the Menu ID as the array key for the new node.
             $menuId = $row['menu_id'];
 
-            $node = array(
+            $node = [
                 'menu_ID'       => $row['menu_id'],
                 'priv_ID'       => $row['privilege_id'],
                 'grp_ID'        => $row['group_id'],
@@ -1119,7 +1117,7 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
                 'uploaddisabled'   => (!empty($row['uploaddisabled']) && $row['uploaddisabled'] == 'Yes') ? 'disabled' : '',
                 'canviewupload' => $row['viewattachments'],
                 'viewupdisabled'   => (!empty($row['viewupdisabled']) && $row['viewupdisabled'] == 'Yes') ? 'disabled' : ''
-            );
+            ];
 
             // Recursively fetch children
             $children = $this->_buildMenuBranch($groupedMenus, $row['menu_id']);
@@ -1154,13 +1152,13 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
 
             $res = $this->getMenuArray_formenu($role_id, $group_id);
             //Zend_Debug::dump($res);
-            $tmpArr = array();
-            $tmpMenuArr = array();
-            $tmpMenuDataArr = array();
+            $tmpArr = [];
+            $tmpMenuArr = [];
+            $tmpMenuDataArr = [];
 
             for ($i = 0; $i < sizeof($res); $i++) {
                 $tmpMenuArr[$res[$i]['id']] = $res[$i]['parent'];
-                $tmp = array();
+                $tmp = [];
                 $tmp['id'] = $res[$i]['id'];
                 $tmp["parent"] =  $res[$i]['parent'];
 
@@ -1182,7 +1180,7 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
             /**
              ** prepare an array with parent and second level menus - $tmpArr
              **/
-            $emptyArr = array();
+            $emptyArr = [];
             foreach ($tmpMenuArr as $key => $value) {
                 /* Zend_Debug::dump($value);
             Zend_Debug::dump($tmpArr); */
@@ -1209,9 +1207,9 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
                 }
             } //end of foreach.
 
-            $menu_data = array();
-            $menu_data_post = array();
-            $permission_data = array();
+            $menu_data = [];
+            $menu_data_post = [];
+            $permission_data = [];
             if ($id != '') {
                 $mdata = $priveleges_model->getMenuItemsByRoleId($id);
 
@@ -1229,7 +1227,7 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
                     $permission_data[$val_arr['object']]['uploadattachments'] = $val_arr['uploadattachments'];
                     $permission_data[$val_arr['object']]['viewattachments'] = $val_arr['viewattachments'];
                 }
-                $menu_data1 = array();
+                $menu_data1 = [];
                 foreach ($menu_data as $menu_id) {
                     if (array_key_exists($menu_id, $tmpMenuArr))
                         $menu_data1[] = $tmpMenuArr[$menu_id];
@@ -1240,13 +1238,13 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
                 $menu_data = array_merge_recursive($menu_data, $menu_data1);
             }
 
-            $return_arr = array(
+            $return_arr = [
                 'tmpArr' => $tmpArr,
                 'menu_data_post' => $menu_data_post,
                 'menu_data' => $menu_data,
                 'permission_data' => $permission_data,
                 'group_data' => $group_data
-            );
+            ];
 
             return $return_arr;
         } catch (\Throwable $th) {
@@ -1267,13 +1265,13 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
         $default_child_menu = sapp_Global::mobile_child_menus();
 
         $res = $this->getMenuArray($role_id, $group_id);
-        $tmpArr = array();
-        $tmpMenuArr = array();
-        $tmpMenuDataArr = array();
+        $tmpArr = [];
+        $tmpMenuArr = [];
+        $tmpMenuDataArr = [];
 
         for ($i = 0; $i < sizeof($res); $i++) {
             $tmpMenuArr[$res[$i]['id']] = $res[$i]['parent'];
-            $tmp = array();
+            $tmp = [];
             $tmp['id'] = $res[$i]['id'];
 
             $tmp["menuName"] =  $res[$i]['menuName'];
@@ -1284,7 +1282,7 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
         /**
          ** prepare an array with parent and second level menus - $tmpArr
          **/
-        $emptyArr = array();
+        $emptyArr = [];
         foreach ($tmpMenuArr as $key => $value) {
             if ($value == 0 && !array_key_exists($value, $tmpArr) && in_array($key, $default_parent_menu)) {
                 $tmpArr[$key] = $emptyArr;
@@ -1310,7 +1308,7 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
         foreach ($tmpArr as $key => $value_arr) {
             if (is_array($value_arr)) {
                 if (isset($value_arr['childs']) && is_array($value_arr['childs'])) {
-                    $new_childs = array();
+                    $new_childs = [];
                     foreach ($value_arr['childs'] as $c_key => $ch_value) {
                         if (in_array($c_key, $default_child_menu))
                             $new_childs[$c_key] = $ch_value;
@@ -1369,7 +1367,7 @@ class Default_Model_Menu extends Zend_Db_Table_Abstract
                 $auth = Zend_Auth::getInstance();
                 $group_id = $auth->getStorage()->read()->group_id;
             }
-            if (in_array($group_id, array(MANAGEMENT_GROUP, MANAGER_GROUP, EMPLOYEE_GROUP)) || empty($group_id)) {
+            if (in_array($group_id, [MANAGEMENT_GROUP, MANAGER_GROUP, EMPLOYEE_GROUP]) || empty($group_id)) {
 
                 return 'Scheduled Interviews';
             }

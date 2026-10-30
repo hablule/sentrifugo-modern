@@ -34,11 +34,11 @@ class Default_Model_Pareport extends Zend_Db_Table_Abstract
         $db = $this->getAdapter();
 
         $select = $db->select()
-            ->from(array('ass' => 'main_pa_assessment'), array(
+            ->from(['ass' => 'main_pa_assessment'], [
                 'total_assessments' => new Zend_Db_Expr('COUNT(ass.id)'),
                 'completed_assessments' => new Zend_Db_Expr("SUM(CASE WHEN ass.status IN ('Completed', 'Acknowledged') THEN 1 ELSE 0 END)"),
                 'average_score' => new Zend_Db_Expr("ROUND(AVG(ass.consolidated_score), 2)")
-            ))
+            ])
             ->where('ass.isactive = 1');
 
         $select = $this->_applyFilters($select, $filters);
@@ -55,10 +55,10 @@ class Default_Model_Pareport extends Zend_Db_Table_Abstract
         $db = $this->getAdapter();
 
         $select = $db->select()
-            ->from(array('ass' => 'main_pa_assessment'), array(
+            ->from(['ass' => 'main_pa_assessment'], [
                 'status',
                 'count' => new Zend_Db_Expr('COUNT(ass.id)')
-            ))
+            ])
             ->where('ass.isactive = 1')
             ->group('ass.status');
 
@@ -98,13 +98,13 @@ class Default_Model_Pareport extends Zend_Db_Table_Abstract
                 break;
 
             case 2: // Manager (Direct Reports Only)
-                $select->joinInner(array('pos' => 'main_empposition'), 'ass.evaluatee_id = pos.employee_id', array())
+                $select->joinInner(['pos' => 'main_empposition'], 'ass.evaluatee_id = pos.employee_id', [])
                     ->where('pos.reportto_id = ?', (int)$empId)
                     ->where('pos.isactive = ?', 'Y');
                 break;
 
             case 3: // Unit Head (Department Wide)
-                $select->joinInner(array('pos' => 'main_empposition'), 'ass.evaluatee_id = pos.employee_id', array())
+                $select->joinInner(['pos' => 'main_empposition'], 'ass.evaluatee_id = pos.employee_id', [])
                     ->where('pos.department_id IN (SELECT id FROM main_department WHERE representative_id = ?)', (int)$empId)
                     ->where('pos.isactive = ?', 'Y');
                 break;

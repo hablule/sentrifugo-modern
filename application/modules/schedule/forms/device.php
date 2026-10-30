@@ -13,7 +13,7 @@ class Schedule_Form_Device extends Zend_Form{
                 ->setAttrib('placeholder', 'Device Name')
                 ->setRequired(true)
                 ->addValidator('NotEmpty', true)
-                ->addValidator('StringLength', false, array(1, 50))
+                ->addValidator('StringLength', false, [1, 50])
                 ->addFilter('StripTags')
                 ->addFilter('StringTrim');
         $device_ip = new Zend_Form_Element_Text('device_ip');
@@ -22,7 +22,7 @@ class Schedule_Form_Device extends Zend_Form{
                 ->setAttrib('placeholder', 'Device IP')
                 ->setRequired(true)
                 ->addValidator('NotEmpty', true)
-                ->addValidator('StringLength', false, array(1, 50))
+                ->addValidator('StringLength', false, [1, 50])
                 ->addFilter('StripTags')
                 ->addFilter('StringTrim');
         $device_port = new Zend_Form_Element_Text('device_port');
@@ -31,7 +31,7 @@ class Schedule_Form_Device extends Zend_Form{
                 ->setAttrib('placeholder', 'Device Port')
                 ->setRequired(true)
                 ->addValidator('NotEmpty', true)
-                ->addValidator('StringLength', false, array(1, 50))
+                ->addValidator('StringLength', false, [1, 50])
                 ->addFilter('StripTags')
                 ->addFilter('StringTrim');
         $connection_mode = new Zend_Form_Element_Text('connection_mode');
@@ -44,14 +44,14 @@ class Schedule_Form_Device extends Zend_Form{
                 ->setAttrib('placeholder', 'Device Status')
                 ->setRequired(true)
                 ->addValidator('NotEmpty', true)
-                ->addValidator('StringLength', false, array(1, 50))
+                ->addValidator('StringLength', false, [1, 50])
                 ->addFilter('StripTags')
                 ->addFilter('StringTrim')
-                ->addMultiOptions(array('' => 'Select Device Status', '1' => 'Active', '2' => 'Inactive'));
+                ->addMultiOptions(['' => 'Select Device Status', '1' => 'Active', '2' => 'Inactive']);
      
         $submit = new Zend_Form_Element_Submit('submit');
-        $this->addElements(array($id, $device_name, $device_ip, $device_port, $connection_mode, $device_status, $submit));
-        $this->setElementDecorators(array('ViewHelper'));
+        $this->addElements([$id, $device_name, $device_ip, $device_port, $connection_mode, $device_status, $submit]);
+        $this->setElementDecorators(['ViewHelper']);
 
     }
 }

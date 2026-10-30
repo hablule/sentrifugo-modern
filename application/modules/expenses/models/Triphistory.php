@@ -74,8 +74,8 @@ class Expenses_Model_Triphistory extends Zend_Db_Table_Abstract
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$tripData = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('ex' => 'expense_trip_history'))
-		->joinInner(array('mu'=>'main_users'), "mu.id = ex.createdby",array('userfullname'=>'mu.userfullname'))		
+		->from(['ex' => 'expense_trip_history'])
+		->joinInner(['mu'=>'main_users'], "mu.id = ex.createdby",['userfullname'=>'mu.userfullname'])		
 		->where('ex.isactive=1 and ex.trip_id='.$trip_id);
 		return $this->fetchAll($tripData)->toArray();
 	}

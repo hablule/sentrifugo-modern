@@ -35,7 +35,7 @@ class Default_Model_Employeeleavetypes extends Zend_Db_Table_Abstract
 
 		$employeeLeaveData = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('e' => 'main_employeeleavetypes'), array('e.id', 'e.numberofdays', 'e.isactive' => 'if(ml.isactive="N","No","Yes")', 'e.leavetype', 'e.leavecode', 'leavepreallocated' => 'if(e.leavepreallocated=1,"Yes","No")', 'leavepredeductable' => 'if(e.leavepredeductable=1,"Yes","No")', 'approval_required' => 'if(e.approval_required=1,"Yes","No")', 'e.description'))
+			->from(['e' => 'main_employeeleavetypes'], ['e.id', 'e.numberofdays', 'e.isactive' => 'if(ml.isactive="N","No","Yes")', 'e.leavetype', 'e.leavecode', 'leavepreallocated' => 'if(e.leavepreallocated=1,"Yes","No")', 'leavepredeductable' => 'if(e.leavepredeductable=1,"Yes","No")', 'approval_required' => 'if(e.approval_required=1,"Yes","No")', 'e.description'])
 			->where($where)
 			->order("$by $sort")
 			->limitPage($pageNo, $perPage);
@@ -58,7 +58,7 @@ class Default_Model_Employeeleavetypes extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('e' => 'main_employeeleavetypes'), array('e.*'))
+			->from(['e' => 'main_employeeleavetypes'], ['e.*'])
 			->where('e.isactive = 1 AND e.id=' . $id . ' ');
 		//die($select);
 		return $this->fetchAll($select)->toArray();
@@ -80,7 +80,7 @@ class Default_Model_Employeeleavetypes extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('e' => 'main_leave'), array('e.leave_id', 'e.name', 'e.description', 'e.alloteddays'))
+			->from(['e' => 'main_leave'], ['e.leave_id', 'e.name', 'e.description', 'e.alloteddays'])
 			->where('e.isactive = "Y"');
 	
 		return $this->fetchAll($select)->toArray();
@@ -110,10 +110,10 @@ class Default_Model_Employeeleavetypes extends Zend_Db_Table_Abstract
 	{
 		$searchQuery = '';
 		$tablecontent = '';
-		$searchArray = array();
-		$data = array();
+		$searchArray = [];
+		$data = [];
 		$id = '';
-		$dataTmp = array();
+		$dataTmp = [];
 		if ($searchData != '' && $searchData != 'undefined') {
 			$searchValues = json_decode($searchData);
 			foreach ($searchValues as $key => $val) {
@@ -126,7 +126,7 @@ class Default_Model_Employeeleavetypes extends Zend_Db_Table_Abstract
 		/** search from grid - END **/
 		$objName = 'employeeleavetypes';
 
-		$tableFields = array(
+		$tableFields = [
 			'action' => 'Action',
 			'leavetype' => 'Leave Type',
 			'numberofdays' => 'Number Of Days',
@@ -136,19 +136,19 @@ class Default_Model_Employeeleavetypes extends Zend_Db_Table_Abstract
 			'approval_required' => 'Is Approval Required',
 			'description' => 'Description',
 			'isactive' => 'Active',
-		);
+		];
 
-		$bool_arr = array('' => 'All', 1 => 'Yes', 2 => 'No');
+		$bool_arr = ['' => 'All', 1 => 'Yes', 2 => 'No'];
 		$tablecontent = $this->getEmployeeLeaveData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -157,18 +157,18 @@ class Default_Model_Employeeleavetypes extends Zend_Db_Table_Abstract
 			'call' => $call,
 			'userAction' => $exParam3,	
 
-			'search_filters' => array(
-				'leavepreallocated' => array(
+			'search_filters' => [
+				'leavepreallocated' => [
 					'type' => 'select',
 					'filter_data' => $bool_arr,
-				),
-				'leavepredeductable' => array(
+				],
+				'leavepredeductable' => [
 					'type' => 'select',
 					'filter_data' => $bool_arr,
-				),
+				],
 
-			),
-		);
+			],
+		];
 
 		return $dataTmp;
 	}

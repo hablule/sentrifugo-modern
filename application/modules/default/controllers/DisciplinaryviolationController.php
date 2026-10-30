@@ -43,9 +43,9 @@ class Default_DisciplinaryviolationController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent = '';
 
 		if ($refresh == 'refresh') {
@@ -95,7 +95,7 @@ class Default_DisciplinaryviolationController extends Zend_Controller_Action
 		if ($callval == 'ajaxcall')
 			$this->_helper->layout->disableLayout();
 		$disciplinaryviolationform = new Default_Form_Disciplinaryviolation();
-		$msgarray = array();
+		$msgarray = [];
 		$disciplinaryviolationform->setAttrib('action', BASE_URL . 'disciplinaryviolation/add');
 		$this->view->form = $disciplinaryviolationform;
 		$this->view->msgarray = $msgarray;
@@ -209,7 +209,7 @@ class Default_DisciplinaryviolationController extends Zend_Controller_Action
 			$loginUserId = $auth->getStorage()->read()->id;
 		}
 		$disciplinaryviolationmodel = new Default_Model_Disciplinaryviolation();
-		$msgarray = array();
+		$msgarray = [];
 
 		if ($disciplinaryviolationform->isValid($this->_request->getPost())) {
 			try {
@@ -218,14 +218,14 @@ class Default_DisciplinaryviolationController extends Zend_Controller_Action
 				$description = $this->_request->getParam('description');
 				$actionflag = '';
 				$tableid  = '';
-				$data = array(
+				$data = [
 					'violationname' => $violationname,
 					'description' => ($description != '' ? trim($description) : NULL),
 					'modifiedby' => $loginUserId,
 					'modifieddate' => gmdate("Y-m-d H:i:s")
-				);
+				];
 				if ($id != '') {
-					$where = array('id=?' => $id);
+					$where = ['id=?' => $id];
 					$actionflag = 2;
 				} else {
 					$data['createdby'] = $loginUserId;
@@ -237,10 +237,10 @@ class Default_DisciplinaryviolationController extends Zend_Controller_Action
 				$Id = $disciplinaryviolationmodel->SaveorUpdateDisciplinaryViolationTypesData($data, $where);
 				if ($Id == 'update') {
 					$tableid = $id;
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Violation Type updated successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Violation Type updated successfully."]);
 				} else {
 					$tableid = $Id;
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Violation Type added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Violation Type added successfully."]);
 				}
 				$menuID = DISCIPLINARY;
 				$result = sapp_Global::logManager($menuID, $actionflag, $loginUserId, $tableid);
@@ -279,9 +279,9 @@ class Default_DisciplinaryviolationController extends Zend_Controller_Action
 				$count = $raisedIncidentData[0]['count'];
 			if ($count < 1) {
 				$disciplinaryviolationtypedata = $disciplinaryviolationmodel->getDisciplinaryViolationTypeDatabyID($id);
-				$data = array('isactive' => 0, 'modifieddate' => gmdate("Y-m-d H:i:s"));
-				$where = array('id=?' => $id);
-				$reqwhere = array('violation_id=?' => $id);
+				$data = ['isactive' => 0, 'modifieddate' => gmdate("Y-m-d H:i:s")];
+				$where = ['id=?' => $id];
+				$reqwhere = ['violation_id=?' => $id];
 				$Id = $disciplinaryviolationmodel->SaveorUpdateDisciplinaryViolationTypesData($data, $where);
 
 				if ($Id == 'update') {
@@ -304,10 +304,10 @@ class Default_DisciplinaryviolationController extends Zend_Controller_Action
 		}
 		if ($deleteflag == 1) {
 			if ($messages['msgtype'] == 'error') {
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("error" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["error" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag]);
 			}
 			if ($messages['msgtype'] == 'success') {
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag]);
 			}
 		}
 		$this->_helper->json($messages);
@@ -321,7 +321,7 @@ class Default_DisciplinaryviolationController extends Zend_Controller_Action
 		}
 		$id = $this->getRequest()->getParam('id');
 
-		$msgarray = array();
+		$msgarray = [];
 		$controllername = 'disciplinaryviolation';
 		$disciplinaryviolationform = new Default_Form_Disciplinaryviolation();
 		$disciplinaryviolationmodel = new Default_Model_Disciplinaryviolation();
@@ -334,14 +334,14 @@ class Default_DisciplinaryviolationController extends Zend_Controller_Action
 				$description = $this->_request->getParam('description');
 				$actionflag = '';
 				$tableid  = '';
-				$data = array(
+				$data = [
 					'violationname' => $violationname,
 					'description' => $description,
 					'modifiedby' => $loginUserId,
 					'modifieddate' => gmdate("Y-m-d H:i:s")
-				);
+				];
 				if ($id != '') {
-					$where = array('id=?' => $id);
+					$where = ['id=?' => $id];
 					$actionflag = 2;
 				} else {
 					$data['createdby'] = $loginUserId;

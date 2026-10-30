@@ -47,7 +47,7 @@ class Default_Form_leaverequest extends Zend_Form
 	    $leavetypeid->addMultiOption('','Select Leave');
         $leavetypeid->setRegisterInArrayValidator(false);
         $leavetypeid->setRequired(true);
-		$leavetypeid->addValidator('NotEmpty', false, array('messages' => 'Please select leave.'));
+		$leavetypeid->addValidator('NotEmpty', false, ['messages' => 'Please select leave.']);
 
 		
       /** commented on 04-02-2015 **/
@@ -66,22 +66,22 @@ class Default_Form_leaverequest extends Zend_Form
         $from_date = new ZendX_JQuery_Form_Element_DatePicker('from_date');
 		$from_date->setAttrib('readonly', 'true');
 		$from_date->setAttrib('onfocus', 'this.blur()');
-		$from_date->setOptions(array('class' => 'brdr_none'));	
+		$from_date->setOptions(['class' => 'brdr_none']);	
 		$from_date->setRequired(true);
-        $from_date->addValidator('NotEmpty', false, array('messages' => 'Please select date.'));
+        $from_date->addValidator('NotEmpty', false, ['messages' => 'Please select date.']);
 		
 		$to_date = new ZendX_JQuery_Form_Element_DatePicker('to_date');
 		$to_date->setAttrib('readonly', 'true');
 		$to_date->setAttrib('onfocus', 'this.blur()');
 		$to_date->setAttrib('onblur', 'validate_todate()');
-		$to_date->setOptions(array('class' => 'brdr_none'));	
+		$to_date->setOptions(['class' => 'brdr_none']);	
 		
 		$reason = new Zend_Form_Element_Textarea('reason');
         $reason->setAttrib('rows', 10);
         $reason->setAttrib('cols', 50);
 		$reason ->setAttrib('maxlength', '100');
 		$reason->setRequired(true);
-        $reason->addValidator('NotEmpty', false, array('messages' => 'Please enter reason.'));
+        $reason->addValidator('NotEmpty', false, ['messages' => 'Please enter reason.']);
 		
 		$leavestatus = new Zend_Form_Element_Text('leavestatus');
         $leavestatus->setAttrib('readonly', 'true');
@@ -108,14 +108,14 @@ class Default_Form_leaverequest extends Zend_Form
 		$jsFunction = "''";
 		 
 /*  */
-		 $submit->setOptions(array('onclick' => "saveDetails($url,$dialogMsg,$toggleDivId,$jsFunction);"
-		));
+		 $submit->setOptions(['onclick' => "saveDetails($url,$dialogMsg,$toggleDivId,$jsFunction);"
+		]);
 
-		$this->addElements(array($id,$reason,$availableleaves,$from_date,$to_date,$leavetypeid,$issatholiday,$appliedleavesdaycount,$leavestatus,$reportto,$createddate,$submit));
-        $this->setElementDecorators(array('ViewHelper'));
-        $this->setElementDecorators(array(
+		$this->addElements([$id,$reason,$availableleaves,$from_date,$to_date,$leavetypeid,$issatholiday,$appliedleavesdaycount,$leavestatus,$reportto,$createddate,$submit]);
+        $this->setElementDecorators(['ViewHelper']);
+        $this->setElementDecorators([
                     'UiWidgetElement',
-        ),array('from_date','to_date')
+        ],['from_date','to_date']
         );   		 
 	}
 
@@ -132,7 +132,7 @@ class Default_Form_leaverequest extends Zend_Form
 $status->setLabel("Action");
         $status->setRegisterInArrayValidator(false);
         $status->setRequired(true);
-		$status->addValidator('NotEmpty', false, array('messages' => 'Please select Action.'));
+		$status->addValidator('NotEmpty', false, ['messages' => 'Please select Action.']);
 
 		$comments = new Zend_Form_Element_Textarea('comments');
 		$comments->setAttrib('rows', 10);
@@ -140,8 +140,8 @@ $status->setLabel("Action");
 		$comments ->setAttrib('maxlength', '100');
 		$comments->setLabel("Comment");
 
-		$this->addElements(array($id,$status,$comments));
-		$this->setElementDecorators(array('ViewHelper'));
+		$this->addElements([$id,$status,$comments]);
+		$this->setElementDecorators(['ViewHelper']);
 
 		return $this;
 	}

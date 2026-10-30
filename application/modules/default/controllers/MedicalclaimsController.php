@@ -40,7 +40,7 @@ class Default_MedicalclaimsController extends Zend_Controller_Action
 			$empOrganizationTabs = explode(",",EMPTABCONFIGS);
 
 		 if(in_array('medical_claims',$empOrganizationTabs)){
-		 	$userID="";$conText = "";$searchArr=array('injury','disability','maternity','paternity');$objName="medicalclaims";
+		 	$userID="";$conText = "";$searchArr=['injury','disability','maternity','paternity'];$objName="medicalclaims";
 		 	$auth = Zend_Auth::getInstance();
 		 	if($auth->hasIdentity()){
 		 		$loginUserId = $auth->getStorage()->read()->id;
@@ -57,7 +57,7 @@ class Default_MedicalclaimsController extends Zend_Controller_Action
 		 		$conText = ($this->_getParam('context') !='')? $this->_getParam('context'):$this->getRequest()->getParam('context');
 		 	}
 		 	if($userid == '') $userid = $userID;
-		 	$Uid = ($userid)?$userid:$userID;
+		 	$Uid = $userid ?: $userID;
 
 		 	$empMedicalclaimsform = new Default_Form_Medicalclaims();
 		 	$empMedicalclaimsModel = new Default_Model_Medicalclaims();
@@ -84,7 +84,7 @@ class Default_MedicalclaimsController extends Zend_Controller_Action
 		 				$objname = $this->_getParam('objname');
 		 				$refresh = $this->_getParam('refresh');
 		 				$dashboardcall = $this->_getParam('dashboardcall',null);
-		 				$data = array();$searchQuery = '';	$searchArray = array();	$tablecontent = '';
+		 				$data = [];$searchQuery = '';	$searchArray = [];	$tablecontent = '';
 		 				if($refresh == 'refresh')
 		 				{
 		 					if($dashboardcall == 'Yes')
@@ -92,7 +92,7 @@ class Default_MedicalclaimsController extends Zend_Controller_Action
 		 					else
 		 					$perPage = PERPAGE;
 
-		 					$sort = 'DESC';$by = 'm.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = array();
+		 					$sort = 'DESC';$by = 'm.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = [];
 		 				}
 		 				else
 		 				{
@@ -144,7 +144,7 @@ class Default_MedicalclaimsController extends Zend_Controller_Action
 			$empOrganizationTabs = explode(",",EMPTABCONFIGS);
 
 		 if(in_array('medical_claims',$empOrganizationTabs)){
-		 	$userID="";$conText = "";$searchArr=array('injury','disability','maternity','paternity');$objName='medicalclaims';
+		 	$userID="";$conText = "";$searchArr=['injury','disability','maternity','paternity'];$objName='medicalclaims';
 		 	$auth = Zend_Auth::getInstance();
 		 	if($auth->hasIdentity()){
 		 		$loginUserId = $auth->getStorage()->read()->id;
@@ -161,7 +161,7 @@ class Default_MedicalclaimsController extends Zend_Controller_Action
 		 		$conText = ($this->_getParam('context') !='')? $this->_getParam('context'):$this->getRequest()->getParam('context');
 		 	}
 		 	if($userid == '') $userid = $userID;
-		 	$Uid = ($userid)?$userid:$userID;
+		 	$Uid = $userid ?: $userID;
 
 		 	$empMedicalclaimsform = new Default_Form_Medicalclaims();
 		 	$empMedicalclaimsModel = new Default_Model_Medicalclaims();
@@ -188,7 +188,7 @@ class Default_MedicalclaimsController extends Zend_Controller_Action
 		 				$objname = $this->_getParam('objname');
 		 				$refresh = $this->_getParam('refresh');
 		 				$dashboardcall = $this->_getParam('dashboardcall',null);
-		 				$data = array();$searchQuery = '';	$searchArray = array();	$tablecontent = '';
+		 				$data = [];$searchQuery = '';	$searchArray = [];	$tablecontent = '';
 		 				if($refresh == 'refresh')
 		 				{
 		 					if($dashboardcall == 'Yes')
@@ -196,7 +196,7 @@ class Default_MedicalclaimsController extends Zend_Controller_Action
 		 					else
 		 					$perPage = PERPAGE;
 
-		 					$sort = 'DESC';$by = 'm.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = array();
+		 					$sort = 'DESC';$by = 'm.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = [];
 		 				}
 		 				else
 		 				{
@@ -243,10 +243,10 @@ class Default_MedicalclaimsController extends Zend_Controller_Action
 
 	public function addpopupAction()
 	{
-		$msgarray = array();
-		$weekendDatailsArr = array();
+		$msgarray = [];
+		$weekendDatailsArr = [];
 		$is_orghead = '';
-		$weekendDatailsArr = array();
+		$weekendDatailsArr = [];
 		$auth = Zend_Auth::getInstance();
 		if($auth->hasIdentity())
 		{
@@ -546,8 +546,8 @@ class Default_MedicalclaimsController extends Zend_Controller_Action
 		 	if($id)
 		 	{
 		 		$empMedicalclaimsModel = new Default_Model_Medicalclaims();
-		 		$data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-		 		$where = array('id=?'=>$id);
+		 		$data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+		 		$where = ['id=?'=>$id];
 		 		$Id = $empMedicalclaimsModel->SaveorUpdateEmpmedicalclaimsDetails($data, $where);
 		 		if($Id == 'update')
 		 		{
@@ -586,7 +586,7 @@ class Default_MedicalclaimsController extends Zend_Controller_Action
 		}
 		$date = new Zend_Date();
 		$errorflag = 'true';
-		$msgarray = array();
+		$msgarray = [];
 		 
 		 
 		if($empMedicalclaimsform->isValid($this->_request->getPost()) && $errorflag == "true")
@@ -644,7 +644,7 @@ class Default_MedicalclaimsController extends Zend_Controller_Action
 				$empleaveToDate = sapp_Global::change_date($empleave_to_date, 'database');
 			}
 
-			$data = array(  'amount_approved'=>$amount_approved,
+			$data = [  'amount_approved'=>$amount_approved,
 								'amount_claimed_for'=>$amount_claimed,
 								'treatment_details'=>$treatment_details,
 								'total_cost'=>$total_cost,
@@ -671,11 +671,11 @@ class Default_MedicalclaimsController extends Zend_Controller_Action
 								'user_id'=>$user_id,
 								'modifiedby'=>$loginUserId,
 			                    'modifieddate'=>gmdate("Y-m-d H:i:s")
-			);
+			];
 
 			if($id!='')
 			{
-				$where = array('id=?'=>$id);
+				$where = ['id=?'=>$id];
 				$actionflag = 2;
 			}
 			else
@@ -730,7 +730,7 @@ class Default_MedicalclaimsController extends Zend_Controller_Action
 			$empOrganizationTabs = explode(",",EMPTABCONFIGS);
 
 			if(in_array('medical_claims',$empOrganizationTabs)){
-				$userID="";$conText = "";$searchArr=array('injury','disability','maternity','paternity');$objName="medicalclaims";
+				$userID="";$conText = "";$searchArr=['injury','disability','maternity','paternity'];$objName="medicalclaims";
 				$auth = Zend_Auth::getInstance();
 				if($auth->hasIdentity()){
 					$loginUserId = $auth->getStorage()->read()->id;
@@ -747,7 +747,7 @@ class Default_MedicalclaimsController extends Zend_Controller_Action
 					$conText = ($this->_getParam('context') !='')? $this->_getParam('context'):$this->getRequest()->getParam('context');
 				}
 				if($userid == '') $userid = $userID;
-				$Uid = ($userid)?$userid:$userID;
+				$Uid = $userid ?: $userID;
 
 				$empMedicalclaimsform = new Default_Form_Medicalclaims();
 				$empMedicalclaimsModel = new Default_Model_Medicalclaims();
@@ -774,7 +774,7 @@ class Default_MedicalclaimsController extends Zend_Controller_Action
 								$objname = $this->_getParam('objname');
 								$refresh = $this->_getParam('refresh');
 								$dashboardcall = $this->_getParam('dashboardcall',null);
-								$data = array();$searchQuery = '';	$searchArray = array();	$tablecontent = '';
+								$data = [];$searchQuery = '';	$searchArray = [];	$tablecontent = '';
 								if($refresh == 'refresh')
 								{
 									if($dashboardcall == 'Yes')
@@ -782,7 +782,7 @@ class Default_MedicalclaimsController extends Zend_Controller_Action
 									else
 									$perPage = PERPAGE;
 
-									$sort = 'DESC';$by = 'm.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = array();
+									$sort = 'DESC';$by = 'm.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';	$searchArray = [];
 								}
 								else
 								{
@@ -826,7 +826,7 @@ class Default_MedicalclaimsController extends Zend_Controller_Action
 	}
 	/*	Medical claims validations */
 	public function medicalclaimsvalidations()
-	{	$msgarray =array();$errFlag=0;	$fieldValues=array();$totalArr = array();
+	{	$msgarray =[];$errFlag=0;	$fieldValues=[];$totalArr = [];
 	if($this->getRequest()->getPost())
 	{
 		$type = $this->_request->getParam('type');

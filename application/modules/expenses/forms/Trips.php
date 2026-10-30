@@ -41,23 +41,23 @@ class Expenses_Form_Trips extends Zend_Form
         $tripname->setAttrib('maxLength', 50);
         $tripname->addFilter(new Zend_Filter_StringTrim());
         $tripname->setRequired(TRUE);
-        $tripname->addValidator('NotEmpty', false, array('messages' => 'Please enter trip name.'));  
-		$tripname->addValidator("regex",true,array(                           
+        $tripname->addValidator('NotEmpty', false, ['messages' => 'Please enter trip name.']);  
+		$tripname->addValidator("regex",true,[                           
                            'pattern'=>'/^(?![0-9]*$)[a-zA-Z0-9.,&\(\)\/\-_\' ?]+$/',
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter a valid client name.'
-                           )
-        			));
+                           ]
+        			]);
 
     		
 		$fromdate = new ZendX_JQuery_Form_Element_DatePicker('from_date');
-		$fromdate->setOptions(array('class' => 'brdr_none'));
+		$fromdate->setOptions(['class' => 'brdr_none']);
 		$fromdate->setLabel("From date");
 		$fromdate->setAttrib('readonly', 'true');
 		$fromdate->setAttrib('onfocus', 'this.blur()');
 		
 		$todate = new ZendX_JQuery_Form_Element_DatePicker('to_date');
-		$todate->setOptions(array('class' => 'brdr_none'));
+		$todate->setOptions(['class' => 'brdr_none']);
 		$todate->setLabel("To date");
 		$todate->setAttrib('readonly', 'true');
 		$todate->setAttrib('onfocus', 'this.blur()');
@@ -78,11 +78,11 @@ class Expenses_Form_Trips extends Zend_Form
 		
 
 
-		$this->addElements(array($id,$tripname,$fromdate,$todate,$description,$submit));
-        $this->setElementDecorators(array('ViewHelper')); 
-		 $this->setElementDecorators(array(
+		$this->addElements([$id,$tripname,$fromdate,$todate,$description,$submit]);
+        $this->setElementDecorators(['ViewHelper']); 
+		 $this->setElementDecorators([
                     'UiWidgetElement',
-        ),array('from_date','to_date')); 
+        ],['from_date','to_date']); 
          
 	}
 	

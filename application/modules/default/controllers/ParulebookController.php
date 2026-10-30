@@ -51,7 +51,7 @@ class Default_ParulebookController extends Zend_Controller_Action
     {
         $session = sapp_Global::_readSession();
         if (!isset($session)) {
-            if ($this->getRequest()->isXmlHttpRequest()) die(Zend_Json::encode(array('login' => 'failed')));
+            if ($this->getRequest()->isXmlHttpRequest()) die(Zend_Json::encode(['login' => 'failed']));
             else $this->_redirect('');
         }
 
@@ -87,7 +87,7 @@ class Default_ParulebookController extends Zend_Controller_Action
             }
 
             $dataTmp = $this->_model->getGrid($sort, $by, $perPage, $page, rtrim($searchData, ','), $call, null);
-            $this->view->dataArray = array($dataTmp);
+            $this->view->dataArray = [$dataTmp];
             $this->view->call      = $call;
             $this->view->messages  = $this->_helper->flashMessenger->getMessages();
         } catch (\Throwable $e) {
@@ -138,7 +138,7 @@ class Default_ParulebookController extends Zend_Controller_Action
 
                 try {
                     // 1. Prepare Header Data
-                    $data = array(
+                    $data = [
                         'name'         => trim($request->getParam('name')),
                         'code'         => trim($request->getParam('code')),
                         'frequency'    => trim($request->getParam('frequency')),
@@ -146,7 +146,7 @@ class Default_ParulebookController extends Zend_Controller_Action
                         'is_mandatory' => (int)$request->getParam('is_mandatory'),
                         'description'  => trim($request->getParam('description')),
                         'isactive'     => (int)$request->getParam('isactive', 1)
-                    );
+                    ];
 
                     // 2. Save Header
                     $actionFlag = ($id > 0) ? 2 : 1;
@@ -158,9 +158,9 @@ class Default_ParulebookController extends Zend_Controller_Action
                     $questions  = json_decode((string)$request->getParam('questions_payload'), true);
 
                     // Sanity check arrays
-                    if (!is_array($targets)) $targets = array();
-                    if (!is_array($evaluators)) $evaluators = array();
-                    if (!is_array($questions)) $questions = array();
+                    if (!is_array($targets)) $targets = [];
+                    if (!is_array($evaluators)) $evaluators = [];
+                    if (!is_array($questions)) $questions = [];
 
                     // 4. Execute Group 6 Junction Sync
                     $this->_model->syncRulebookMappings($rulebookId, $targets, $evaluators, $questions);
@@ -172,15 +172,15 @@ class Default_ParulebookController extends Zend_Controller_Action
                     $db->commit();
 
                     $msg = ($actionFlag == 1) ? 'Added' : 'Updated';
-                    $this->_helper->flashMessenger->addMessage(array('success' => "Rulebook $msg successfully."));
-                    $this->_helper->json(array('result' => 'saved', 'nomessage' => 'yes'));
+                    $this->_helper->flashMessenger->addMessage(['success' => "Rulebook $msg successfully."]);
+                    $this->_helper->json(['result' => 'saved', 'nomessage' => 'yes']);
                 } catch (\Throwable $e) {
                     $db->rollBack();
                     error_log("PaRulebook Save Error: " . $e->getMessage());
-                    $this->_helper->json(array('result' => 'exception', 'message' => 'System error occurred while saving the rulebook.'));
+                    $this->_helper->json(['result' => 'exception', 'message' => 'System error occurred while saving the rulebook.']);
                 }
             } else {
-                $msgarray = array();
+                $msgarray = [];
                 foreach ($form->getMessages() as $field => $errors) {
                     $msgarray[$field] = current($errors);
                 }
@@ -203,12 +203,12 @@ class Default_ParulebookController extends Zend_Controller_Action
                 $this->_model->deleteRecord($id);
                 $menuId = defined('RULEBOOKS') ? RULEBOOKS : 398;
                 sapp_Global::logManager($menuId, 3, $this->_loginUserId, $id);
-                $this->_helper->json(array('msgtype' => 'success', 'message' => 'Rulebook deleted successfully.'));
+                $this->_helper->json(['msgtype' => 'success', 'message' => 'Rulebook deleted successfully.']);
             } catch (\Throwable $e) {
-                $this->_helper->json(array('msgtype' => 'error', 'message' => $e->getMessage()));
+                $this->_helper->json(['msgtype' => 'error', 'message' => $e->getMessage()]);
             }
         } else {
-            $this->_helper->json(array('msgtype' => 'error', 'message' => 'Invalid Request.'));
+            $this->_helper->json(['msgtype' => 'error', 'message' => 'Invalid Request.']);
         }
     }
 
@@ -221,9 +221,9 @@ class Default_ParulebookController extends Zend_Controller_Action
 
             $menuId = defined('RULEBOOKS') ? RULEBOOKS : 398;
             sapp_Global::logManager($menuId, 4, $this->_loginUserId, $id);
-            $this->_helper->json(array('result' => 'yes'));
+            $this->_helper->json(['result' => 'yes']);
         } catch (\Throwable $e) {
-            $this->_helper->json(array('result' => 'no'));
+            $this->_helper->json(['result' => 'no']);
         }
     }
 
@@ -272,7 +272,7 @@ class Default_ParulebookController extends Zend_Controller_Action
     private function _fetchDropdownOptionsForView()
     {
         // 1. Target Types (Keys MUST match the DB ENUM exactly)
-        $this->view->targetTypes = array(
+        $this->view->targetTypes = [
             'Company'      => 'Company',
             'BusinessUnit' => 'Business Unit',
             'Division'     => 'Division',
@@ -284,10 +284,10 @@ class Default_ParulebookController extends Zend_Controller_Action
             'Role'         => 'Role',
             'Employee'     => 'Specific Employee',
             'All'          => 'All Employees (Company-Wide)'
-        );
+        ];
 
         // 2. Fetch Actual Data Arrays for Target ID Selects
-        $this->view->targetData = array();
+        $this->view->targetData = [];
 
         $this->view->targetData['Company'] = (new Default_Model_Company())->getPairs(true);
 
@@ -311,13 +311,13 @@ class Default_ParulebookController extends Zend_Controller_Action
 
 
         // 3. Evaluator Types
-        $this->view->evaluatorTypes = array(
+        $this->view->evaluatorTypes = [
             'Self' => 'Self',
             'Manager' => 'Manager',
             'Peer' => 'Peer',
             'Subordinate' => 'Subordinate',
             'HR' => 'HR Rep'
-        );
+        ];
 
         // 4. Question Pool
         $questionModel = new Default_Model_Paquestion();

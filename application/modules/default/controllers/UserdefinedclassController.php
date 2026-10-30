@@ -178,7 +178,7 @@ class Default_UserdefinedclassController extends Zend_Controller_Action
     public function indexAction()
     {
         $form = new Default_Form_userdefinedclass();
-        $classes = $this->getAllClasses();
+        $classes = static::getAllClasses();
 
         $form->classfun->addMultiOption('empty', "Select...");
         foreach ($classes as $class) {

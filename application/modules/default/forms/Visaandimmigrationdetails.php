@@ -36,83 +36,83 @@ class Default_Form_Visaandimmigrationdetails extends Zend_Form
 			$passport_num->setRequired(true);
 			$passport_num->addFilter(new Zend_Filter_StringTrim());
 			$passport_num->setAttrib('maxLength', 20);
-			$passport_num->addValidator('NotEmpty', false, array('messages' => 'Please enter passport number.'));
-			$passport_num->addValidators(array(
-						 array(
+			$passport_num->addValidator('NotEmpty', false, ['messages' => 'Please enter passport number.']);
+			$passport_num->addValidators([
+						 [
 							 'validator'   => 'Regex',
 							 'breakChainOnFailure' => true,
-							 'options'     => array( 
+							 'options'     => [ 
 							 'pattern' =>'/^[a-zA-Z0-9]+$/i',
-								 'messages' => array(
+								 'messages' => [
 										 'regexNotMatch'=>'Please enter valid passport number.'
-								 )
-							 )
-						 )
-					 )); 
+								 ]
+							 ]
+						 ]
+					 ]); 
 			
         //passport_issue_date....
 				
 			$passport_issue_date = new ZendX_JQuery_Form_Element_DatePicker('passport_issue_date');
 			
-			$passport_issue_date->setOptions(array('class' => 'brdr_none'));	
+			$passport_issue_date->setOptions(['class' => 'brdr_none']);	
 			$passport_issue_date->setAttrib('readonly', 'true');
             $passport_issue_date->setAttrib('onfocus', 'this.blur()');			
 		 
 		//Passport Expiration Date ....
 		$passport_expiry_date = new ZendX_JQuery_Form_Element_DatePicker('passport_expiry_date');
 		$passport_expiry_date->setRequired(true);
-		$passport_expiry_date->setOptions(array('class' => 'brdr_none'));	
+		$passport_expiry_date->setOptions(['class' => 'brdr_none']);	
 		$passport_expiry_date->setAttrib('readonly', 'true');	
 		$passport_expiry_date->setAttrib('onfocus', 'this.blur()');
-		$passport_expiry_date->addValidator('NotEmpty', false, array('messages' => 'Please enter passport expire date.'));
+		$passport_expiry_date->addValidator('NotEmpty', false, ['messages' => 'Please enter passport expire date.']);
 		// Expiration Date should be greater than today's date...
 		$passport_expiry_date->addValidator(new sapp_DateGreaterThanToday());
 		
 		//Visa Number .....
 		$visaNum = new Zend_Form_Element_Text('visa_number');
 		$visaNum ->setRequired(true);
-		$visaNum->addFilters(array('StringTrim', 'StripTags'));
+		$visaNum->addFilters(['StringTrim', 'StripTags']);
 		$visaNum->setAttrib('maxLength', 20);
-		$visaNum->addValidator('NotEmpty', false, array('messages' => 'Please enter visa number.'));
+		$visaNum->addValidator('NotEmpty', false, ['messages' => 'Please enter visa number.']);
 	    
 		//visa_type....(alphanumerics with '-' as only spl character)
 		$visaType = new Zend_Form_Element_Text('visa_type');
 		$visaType->addFilter(new Zend_Filter_StringTrim());
 		$visaType->setAttrib('maxLength', 3);
-		$visaType->addValidators(array(array('StringLength',false,
-								  array('min' => 2,
+		$visaType->addValidators([['StringLength',false,
+								  ['min' => 2,
 										'max' => 3,
-										'messages' => array(
+										'messages' => [
 										Zend_Validate_StringLength::TOO_LONG =>
 										'Visa type code must contain at most %max% characters',
 										Zend_Validate_StringLength::TOO_SHORT =>
-										'Visa type code  must contain at least %min% characters')))));
-		$visaType->addValidators(array(
-					 array(
+										'Visa type code  must contain at least %min% characters']]]]);
+		$visaType->addValidators([
+					 [
 						 'validator'   => 'Regex',
 						 'breakChainOnFailure' => true,
-						 'options'     => array( 
+						 'options'     => [ 
 						 'pattern' =>'/^[a-zA-Z0-9\-\s]+$/i',
-							 'messages' => array(
+							 'messages' => [
 									 'regexNotMatch'=>'Please enter valid visa type code.'
-							 )
-						 )
-					 )
-				 )); 
+							 ]
+						 ]
+					 ]
+				 ]); 
 	 
 		//Visa issue_date....
 		$visa_issue_date = new ZendX_JQuery_Form_Element_DatePicker('visa_issue_date');
-		$visa_issue_date->setOptions(array('class' => 'brdr_none'));	
+		$visa_issue_date->setOptions(['class' => 'brdr_none']);	
 		$visa_issue_date->setAttrib('readonly', 'true');
         $visa_issue_date->setAttrib('onfocus', 'this.blur()'); 		
 		 
 		//Visa Expiration Date ....
 		$visa_expiry_date = new ZendX_JQuery_Form_Element_DatePicker('visa_expiry_date');
 		$visa_expiry_date ->setRequired(true);
-		$visa_expiry_date->setOptions(array('class' => 'brdr_none'));	
+		$visa_expiry_date->setOptions(['class' => 'brdr_none']);	
 		$visa_expiry_date->setAttrib('readonly', 'true');
         $visa_expiry_date->setAttrib('onfocus', 'this.blur()'); 		
-        $visa_expiry_date->addValidator('NotEmpty', false, array('messages' => 'Please enter visa expiry date.'));
+        $visa_expiry_date->addValidator('NotEmpty', false, ['messages' => 'Please enter visa expiry date.']);
 		// Expiration Date should be greater than today's date...
 		$visa_expiry_date->addValidator(new sapp_DateGreaterThanToday());
 	    
@@ -121,22 +121,22 @@ class Default_Form_Visaandimmigrationdetails extends Zend_Form
 		$i_nine_status->addFilter(new Zend_Filter_StringTrim());
 		$i_nine_status->setAttrib('maxLength', 50);
 		
-		$i_nine_status->addValidators(array(
-					 array(
+		$i_nine_status->addValidators([
+					 [
 						 'validator'   => 'Regex',
 						 'breakChainOnFailure' => true,
-						 'options'     => array( 
+						 'options'     => [ 
 						 'pattern' =>'/^[a-zA-Z\s]+$/i',
-							 'messages' => array(
+							 'messages' => [
 									 'regexNotMatch'=>'Please enter only alphabets.'
-							 )
-						 )
-					 )
-				 )); 
+							 ]
+						 ]
+					 ]
+				 ]); 
 	
 		//  Inine_review_date....
 		$i_nine_review_date = new ZendX_JQuery_Form_Element_DatePicker('inine_review_date');
-		$i_nine_review_date->setOptions(array('class' => 'brdr_none'));	
+		$i_nine_review_date->setOptions(['class' => 'brdr_none']);	
 		$i_nine_review_date->setAttrib('readonly', 'true');
         $i_nine_review_date->setAttrib('onfocus', 'this.blur()');		
 		
@@ -145,41 +145,41 @@ class Default_Form_Visaandimmigrationdetails extends Zend_Form
 		$issue_auth->addFilter(new Zend_Filter_StringTrim());
 		$issue_auth->setAttrib('maxLength', 50);
 		
-		$issue_auth->addValidators(array(
-					 array(
+		$issue_auth->addValidators([
+					 [
 						 'validator'   => 'Regex',
 						 'breakChainOnFailure' => true,
-						 'options'     => array( 
+						 'options'     => [ 
 						 'pattern' =>'/^[a-zA-Z\s]+$/i',
-							 'messages' => array(
+							 'messages' => [
 									 'regexNotMatch'=>'Please enter only alphabets.'
-							 )
-						 )
-					 )
-				 )); 
+							 ]
+						 ]
+					 ]
+				 ]); 
 		
 		//Ininetyfour_status....
 		$i_ninetyfour_status = new Zend_Form_Element_Text('ininetyfour_status');
 		$i_ninetyfour_status->addFilter(new Zend_Filter_StringTrim());
 		$i_ninetyfour_status->setAttrib('maxLength', 50);
 		
-		$i_nine_status->addValidators(array(
-					 array(
+		$i_nine_status->addValidators([
+					 [
 						 'validator'   => 'Regex',
 						 'breakChainOnFailure' => true,
-						 'options'     => array( 
+						 'options'     => [ 
 						 'pattern' =>'/^[a-zA-Z\s]+$/i',
-							 'messages' => array(
+							 'messages' => [
 									 'regexNotMatch'=>'Please enter only alphabets.'
-							 )
-						 )
-					 )
-				 )); 
+							 ]
+						 ]
+					 ]
+				 ]); 
 	
 			
 		//Ininetyfour_expiry_date ...
 	  	$i_ninetyfour_expiry_date = new ZendX_JQuery_Form_Element_DatePicker('ininetyfour_expiry_date');
-		$i_ninetyfour_expiry_date->setOptions(array('class' => 'brdr_none'));	
+		$i_ninetyfour_expiry_date->setOptions(['class' => 'brdr_none']);	
 		$i_ninetyfour_expiry_date->setAttrib('readonly', 'true');
         $i_ninetyfour_expiry_date->setAttrib('onfocus', 'this.blur()');		
 		// Expiration Date should be greater than today's date...
@@ -190,13 +190,13 @@ class Default_Form_Visaandimmigrationdetails extends Zend_Form
         $submit->setAttrib('id', 'submitbutton');
         $submit->setLabel('Save');
 
-        $this->addElements(array($id,$user_id,$passport_num,$passport_issue_date,$passport_expiry_date,$visaNum,$visaType,	$visa_issue_date,$visa_expiry_date,$i_nine_status,$i_nine_review_date,$issue_auth,				$i_ninetyfour_status,$i_ninetyfour_expiry_date,$submit));
+        $this->addElements([$id,$user_id,$passport_num,$passport_issue_date,$passport_expiry_date,$visaNum,$visaType,	$visa_issue_date,$visa_expiry_date,$i_nine_status,$i_nine_review_date,$issue_auth,				$i_ninetyfour_status,$i_ninetyfour_expiry_date,$submit]);
 		
-		$this->setElementDecorators(array('ViewHelper')); 
+		$this->setElementDecorators(['ViewHelper']); 
 		
-		$this->setElementDecorators(array(
+		$this->setElementDecorators([
                     'UiWidgetElement',
-        ),array('inine_review_date','ininetyfour_expiry_date','passport_issue_date','passport_expiry_date','visa_issue_date','visa_expiry_date'));
+        ],['inine_review_date','ininetyfour_expiry_date','passport_issue_date','passport_expiry_date','visa_issue_date','visa_expiry_date']);
 		
         }
 }

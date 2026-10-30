@@ -2,13 +2,13 @@
 
 class Default_EmpdeviceController extends Zend_Controller_Action
 {
-    protected $fingermap = array(
+    protected $fingermap = [
         0 => 'Thumb',
         1 => 'Index',
         2 => 'Middle',
         3 => 'Ring',
         4 => 'Pinky',
-    );
+    ];
     public function init()
     {
         $this->_options = $this->getInvokeArg('bootstrap')->getOptions();
@@ -57,7 +57,7 @@ class Default_EmpdeviceController extends Zend_Controller_Action
                             $conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
                         }
                         if ($id == '')        $id = $userID;
-                        $Uid = ($id) ? $id : $userID;
+                        $Uid = $id ?: $userID;
                         if ($Uid != "") {
                             $employeeData = $usersModel->getUserDetailsByIDandFlag($Uid);
                         }
@@ -77,9 +77,9 @@ class Default_EmpdeviceController extends Zend_Controller_Action
                             $objname = $this->_getParam('objname');
                             $refresh = $this->_getParam('refresh');
                             $dashboardcall = $this->_getParam('dashboardcall', null);
-                            $data = array();
+                            $data = [];
                             $searchQuery = '';
-                            $searchArray = array();
+                            $searchArray = [];
                             $tablecontent = '';
                             if ($refresh == 'refresh') {
                                 if ($dashboardcall == 'Yes')
@@ -92,7 +92,7 @@ class Default_EmpdeviceController extends Zend_Controller_Action
                                 $pageNo = 1;
                                 $searchData = '';
                                 $searchQuery = '';
-                                $searchArray = array();
+                                $searchArray = [];
                             } else {
                                 $sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
                                 $by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'md.device_id';
@@ -151,20 +151,16 @@ class Default_EmpdeviceController extends Zend_Controller_Action
             $deviceUser = $userConfigModel->getUserConfig($this->_request->getParam('id'));
             $fingerPrintTemplates = $fingerPrint->getAllFingerPrintTemplate($this->_request->getParam('unitId'));
             $fingerIndex = 0;
-            $finger = array();
+            $finger = [];
            
             foreach ($fingerPrintTemplates as $value) {
                 if ($value['finger'] >= 5) {
                     $fingerType = $this->fingermap[$value['finger'] - 5];
-                    if (!isset($finger[$fingerType])) {
-                        $finger[$fingerType] = array();
-                    }
+                    $finger[$fingerType] ??= [];
                     $finger[$fingerType]["left"] = str_replace('"', '', $value['fingerprint_template']);
                 } else {
                     $fingerType = $this->fingermap[$value['finger']];
-                    if (!isset($finger[$fingerType])) {
-                        $finger[$fingerType] = array();
-                    }
+                    $finger[$fingerType] ??= [];
                     $finger[$fingerType]["right"] = str_replace('"', '', $value['fingerprint_template']);
                 }
 
@@ -230,20 +226,20 @@ class Default_EmpdeviceController extends Zend_Controller_Action
                         $fingerPrint->delete('empid = ' . $this->_request->getParam('unitId'));
                         $device_ids = $this->_request->getParam('device_id');
                         $device_ids = implode(',', $device_ids);
-                        $data = array(
+                        $data = [
                             'employee_id' => $this->_request->getParam('unitId'),
                             'security_level' => $this->_request->getParam('security_level'),
                             'num_of_fingers' => $this->_request->getParam('num_of_fingers'),
                             'device_id' => $device_ids
-                        );
+                        ];
                     
-                        $device_user = array(
+                        $device_user = [
                             'employee_id' => $this->_request->getParam('unitId'),
                             'device_id' =>  $device_ids,
                             'pin' => $this->_request->getParam('pin'),
                             'fingerprint_template' => $this->_request->getParam('fingerprint_template'),
                             'isDataSynced' => 0
-                        );
+                        ];
 
                         foreach ($this->fingermap as $key => $value) {
 
@@ -252,13 +248,13 @@ class Default_EmpdeviceController extends Zend_Controller_Action
                                 Zend_Debug::dump($fingerprintData);
 
                                 if ($fingerprintData->left != '') {
-                                    $fdata = array(
+                                    $fdata = [
                                         'empid' => $this->_request->getParam('unitId'),
                                         'finger' => $key + 5,
                                         'fingerprint_template' => $fingerprintData->left,
                                         'inuse' => 1,
                                         'isactive' => 1
-                                    );
+                                    ];
 
 
 
@@ -266,13 +262,13 @@ class Default_EmpdeviceController extends Zend_Controller_Action
                                 }
                                 if ($fingerprintData->right != '') {
 
-                                    $fdata = array(
+                                    $fdata = [
                                         'empid' => $this->_request->getParam('unitId'),
                                         'finger' => $key,
                                         'fingerprint_template' => $fingerprintData->right,
                                         'inuse' => 1,
                                         'isactive' => 1
-                                    );
+                                    ];
 
                                     $fingerPrint->saveAndUpdateFingerPrintTemplate($fdata, '');
                                 }
@@ -318,25 +314,25 @@ class Default_EmpdeviceController extends Zend_Controller_Action
                             
 
                             if ($fingerprintData->left != '') {
-                                $fdata = array(
+                                $fdata = [
                                     'empid' => $this->_request->getParam('unitId'),
                                     'finger' => $key + 5,
                                     'fingerprint_template' => $fingerprintData->left,
                                     'inuse' => 1,
                                     'isactive' => 1
-                                );
+                                ];
 
                                 $fingerPrintModel->saveAndUpdateFingerPrintTemplate($fdata, '');
                             }
                             if ($fingerprintData->right != '') {
 
-                                $fdata = array(
+                                $fdata = [
                                     'empid' => $this->_request->getParam('unitId'),
                                     'finger' => $key,
                                     'fingerprint_template' => $fingerprintData->right,
                                     'inuse' => 1,
                                     'isactive' => 1
-                                );
+                                ];
 
                                 $fingerPrintModel->saveAndUpdateFingerPrintTemplate($fdata, '');
                             }
@@ -346,15 +342,15 @@ class Default_EmpdeviceController extends Zend_Controller_Action
 
                     $device_ids = implode(',', $device_ids);
 
-                    $data = array(
+                    $data = [
                         'employee_id' => $this->_request->getParam('unitId'),
                         'security_level' => $this->_request->getParam('security_level'),
                         'device_id' => $device_ids
-                    );
-                    $device_user = array(
+                    ];
+                    $device_user = [
                         'employee_id' => $this->_request->getParam('unitId'),
                         'device_id' => $device_ids,
-                    );
+                    ];
 
                     if ($this->_request->getParam('choose_auth_method') != null) {
                         $authChoose = $this->_request->getParam('choose_auth_method');

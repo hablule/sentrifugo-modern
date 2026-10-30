@@ -35,33 +35,33 @@ class Default_Form_holidaydates extends Zend_Form
         $holidayname->setAttrib('maxLength', 60);
         $holidayname->addFilter(new Zend_Filter_StringTrim());
         $holidayname->setRequired(true);
-        $holidayname->addValidator('NotEmpty', false, array('messages' => 'Please enter holiday.'));  
-        $holidayname->addValidator("regex",true,array(                           
+        $holidayname->addValidator('NotEmpty', false, ['messages' => 'Please enter holiday.']);  
+        $holidayname->addValidator("regex",true,[                           
                            'pattern'=>'/^[a-zA-Z0-9.\- ?]+$/',
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter valid holiday.'
-                           )
-        	));
+                           ]
+        	]);
 			
 		$groupid = new Zend_Form_Element_Multiselect('groupid');
         $groupid->setAttrib('class', 'selectoption');
         $groupid->setRegisterInArrayValidator(false);
         $groupid->setRequired(true);
-		$groupid->addValidator('NotEmpty', false, array('messages' => 'Please select holiday group.'));
+		$groupid->addValidator('NotEmpty', false, ['messages' => 'Please select holiday group.']);
 
         $start_date = new Zend_Form_Element_Text('start_date');
 		$start_date->setAttrib('readonly', 'true');
 		$start_date->setAttrib('onfocus', 'this.blur()');
-		$start_date->setOptions(array('class' => 'brdr_none'));	
+		$start_date->setOptions(['class' => 'brdr_none']);	
 		$start_date->setRequired(true);
-        $start_date->addValidator('NotEmpty', false, array('messages' => 'Please select date.'));
+        $start_date->addValidator('NotEmpty', false, ['messages' => 'Please select date.']);
         
         $end_date = new Zend_Form_Element_Text('end_date');
 		$end_date->setAttrib('readonly', 'true');
 		$end_date->setAttrib('onfocus', 'this.blur()');
-		$end_date->setOptions(array('class' => 'brdr_none'));	
+		$end_date->setOptions(['class' => 'brdr_none']);	
 		$end_date->setRequired(true);
-        $end_date->addValidator('NotEmpty', false, array('messages' => 'Please select date.'));
+        $end_date->addValidator('NotEmpty', false, ['messages' => 'Please select date.']);
 		
 		   	
 		$description = new Zend_Form_Element_Textarea('description');
@@ -75,10 +75,10 @@ class Default_Form_holidaydates extends Zend_Form
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 
-		 $this->addElements(array($id,$holidayname,$groupid,$start_date, $end_date ,$description,$isactive,$submit));
-         $this->setElementDecorators(array('ViewHelper'));
-         $this->setElementDecorators(array(
+		 $this->addElements([$id,$holidayname,$groupid,$start_date, $end_date ,$description,$isactive,$submit]);
+         $this->setElementDecorators(['ViewHelper']);
+         $this->setElementDecorators([
                     'UiWidgetElement',
-        ),array('holidaydate'));		 
+        ],['holidaydate']);		 
 	}
 }

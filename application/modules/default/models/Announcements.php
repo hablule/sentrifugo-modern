@@ -60,9 +60,9 @@ class Default_Model_Announcements extends Zend_Db_Table_Abstract
 		// Show announcements with multiple departments
 		$announcementData = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('a'=>'main_announcements'),array('a.*','status' =>new Zend_Db_Expr("case  when a.status = 1 then 'Save as draft' when a.status = 2 then 'Posted' end"),))
-                           ->joinInner(array('b'=>'main_sbunit'), "FIND_IN_SET(b.sbunit_id, a.businessunit_id) and b.isactive = 'Y'",array('unitname'=>'GROUP_CONCAT(DISTINCT b.name)'))
-                           ->joinInner(array('d'=>'main_department'), "FIND_IN_SET(d.department_id, a.department_id) and d.isactive = 1",array('deptname'=>'GROUP_CONCAT(DISTINCT d.name)'))
+                           ->from(['a'=>'main_announcements'],['a.*','status' =>new Zend_Db_Expr("case  when a.status = 1 then 'Save as draft' when a.status = 2 then 'Posted' end"),])
+                           ->joinInner(['b'=>'main_sbunit'], "FIND_IN_SET(b.sbunit_id, a.businessunit_id) and b.isactive = 'Y'",['unitname'=>'GROUP_CONCAT(DISTINCT b.name)'])
+                           ->joinInner(['d'=>'main_department'], "FIND_IN_SET(d.department_id, a.department_id) and d.isactive = 1",['deptname'=>'GROUP_CONCAT(DISTINCT d.name)'])
                            ->where($where)
                            ->group("a.id")
     					   ->order("$by $sort")
@@ -79,8 +79,8 @@ class Default_Model_Announcements extends Zend_Db_Table_Abstract
 		}
 		
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		
 		if($searchData != '' && $searchData!='undefined')
 			{
@@ -105,24 +105,24 @@ class Default_Model_Announcements extends Zend_Db_Table_Abstract
 		if($loginuserGroup != EMPLOYEE_GROUP && $loginuserGroup != SYSTEMADMIN_GROUP)
 			/*$tableFields = array('action'=>'Action','title' => 'Title','description' => 'Description', 'unitname' => 'Business Unit', 'status' => 'Status');*/
 			// Show announcements with multiple departments
-			$tableFields = array('action'=>'Action','title' => 'Title','description' => 'Description', 'unitname' => 'Business Units', 'deptname' => 'Departments', 'status' => 'Status');
+			$tableFields = ['action'=>'Action','title' => 'Title','description' => 'Description', 'unitname' => 'Business Units', 'deptname' => 'Departments', 'status' => 'Status'];
 		else {
 			//$tableFields = array('action'=>'Action','title' => 'Title', 'unitname' => 'Business Unit' ,'description' => 'Description');
 			
 			// Show announcements with multiple departments
-			$tableFields = array('action'=>'Action','title' => 'Title', 'unitname' => 'Business Units', 'deptname' => 'Departments', 'description' => 'Description');
+			$tableFields = ['action'=>'Action','title' => 'Title', 'unitname' => 'Business Units', 'deptname' => 'Departments', 'description' => 'Description'];
 		}
 		
 		$tablecontent = $this->getAnnouncementsData($sort, $by, $pageNo, $perPage,$searchQuery);     
 	
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -131,13 +131,13 @@ class Default_Model_Announcements extends Zend_Db_Table_Abstract
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall,
 			'search_filters' => 
-						array(
-                            'status' => array(
+						[
+                            'status' => [
                                 'type' => 'select',
-                                'filter_data' => array(''=>'All',1=>'Save as draft',2=>'Posted'),
-                           	),
-                        ),
-		);
+                                'filter_data' => [''=>'All',1=>'Save as draft',2=>'Posted'],
+                           	],
+                        ],
+		];
 		return $dataTmp;
 	}
 	
@@ -145,7 +145,7 @@ class Default_Model_Announcements extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('a'=>'main_announcements'),array('a.*'))
+						->from(['a'=>'main_announcements'],['a.*'])
 					    ->where('a.isactive = 1 AND a.id='.$id.' ');
 		return $this->fetchAll($select)->toArray();
 	}
@@ -154,7 +154,7 @@ class Default_Model_Announcements extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('a'=>'main_announcements'),array('a.*'))
+						->from(['a'=>'main_announcements'],['a.*'])
 					    ->where('a.isactive = 1');
 		return $this->fetchAll($select)->toArray();
 	}
@@ -163,7 +163,7 @@ class Default_Model_Announcements extends Zend_Db_Table_Abstract
 	{
 	  $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('b'=>'main_businessunits'),array('b.id','b.unitname'))
+						->from(['b'=>'main_businessunits'],['b.id','b.unitname'])
 					    ->where('b.id in ('.$busi_ids.') AND b.isactive = 1');
 	
 		return $this->fetchAll($select)->toArray();	
@@ -173,7 +173,7 @@ class Default_Model_Announcements extends Zend_Db_Table_Abstract
 	{
 	  $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('d'=>'main_department'),array('d.department_id','d.name'))
+						->from(['d'=>'main_department'],['d.department_id','d.name'])
 					    ->where('d.department_id in ('.$dept_ids.') AND d.isactive = "Y"');
 	
 		return $this->fetchAll($select)->toArray();	
@@ -195,15 +195,15 @@ class Default_Model_Announcements extends Zend_Db_Table_Abstract
 	{
 		try {
 			//code...
-		
+
 		$where = '';
 		$auth = Zend_Auth::getInstance();
      	if($auth->hasIdentity()){
 			$loginuserGroup = $auth->getStorage()->read()->group_id;
 			$loginuserRole = $auth->getStorage()->read()->emprole;
-	
+
 		}
-		
+
 		$where = "a.isactive = 1";
 		if($loginuserGroup == HR_GROUP || $loginuserGroup == MANAGEMENT_GROUP || $loginuserRole == 1)
 		{
@@ -212,18 +212,18 @@ class Default_Model_Announcements extends Zend_Db_Table_Abstract
 		else
 		{
 			$where .= ' AND a.status = 2 ';
-		
+
 			// if($businessunit_id)
 			// $where .= ' AND FIND_IN_SET('.$businessunit_id.',a.businessunit_id)';
 			// if($department_id)
 			// $where .= ' AND FIND_IN_SET('.$department_id.',a.department_id)';
 		}
-		
+
 		$db = Zend_Db_Table::getDefaultAdapter();		
-		
+
 		 $announcementData = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('a'=>'main_announcements'),array('a.*','status' =>new Zend_Db_Expr("case  when a.status = 1 then 'Save as draft' when a.status = 2 then 'Posted' end"),))
+                           ->from(['a'=>'main_announcements'],['a.*','status' =>new Zend_Db_Expr("case  when a.status = 1 then 'Save as draft' when a.status = 2 then 'Posted' end"),])
                             ->where($where)
     					   ->order("a.modifieddate DESC")
     					   ->limitPage(0,5);
@@ -238,7 +238,7 @@ class Default_Model_Announcements extends Zend_Db_Table_Abstract
 						->from(array('a'=>'main_announcements'),array('a.*'))
 					    ->where("a.isactive = 1 AND a.status = 2 $where")
 					    ->order("a.modifieddate DESC");
-					    
+
 		return $this->fetchAll($select)->toArray();*/
 	} catch (\Throwable $th) {
 die("three");	}

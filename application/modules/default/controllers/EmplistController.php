@@ -38,7 +38,7 @@ class Default_EmplistController extends Zend_Controller_Action
         $payrollmodel = new Default_Model_Addperk();
         $empmodel = new Default_Model_Emplist();
         $form = new Default_Form_addperk();
-        $inter_options = array();
+        $inter_options = [];
         $call = $this->_getParam('call');
         if ($call == 'ajaxcall')
             $this->_helper->layout->disableLayout();
@@ -46,13 +46,13 @@ class Default_EmplistController extends Zend_Controller_Action
         $view = Zend_Layout::getMvcInstance()->getView();
         $objname = $this->_getParam('objname');
         $refresh = $this->_getParam('refresh');
-        $data = array();
-        $data2 = array();
+        $data = [];
+        $data2 = [];
         $searchQuery2 = '';
-        $searchArray2 = array();
+        $searchArray2 = [];
 
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         $tablecontent = '';
         $tablecontent2 = '';
 

@@ -21,7 +21,7 @@ class Default_LinetypeController extends Zend_Controller_Action
       $refresh = $this->_getParam('refresh');
       $dashboradcall = $this->_getParam('dashboradcall');
 
-      $data = array();
+      $data = [];
 
       if ($refresh == 'refresh') {
           if ($dashboradcall == 'Yes') {
@@ -68,17 +68,17 @@ class Default_LinetypeController extends Zend_Controller_Action
         }
         if ($this->getRequest()->isPost()) {
             if ($Linetype_Form->isValid($this->getRequest()->getPost())) {
-                $data = array(
+                $data = [
                     'name'=>$this->_request->getParam('name'),
                     'code'=>$this->_request->getParam('code'),
                     'description'=>$this->_request->getParam('description'),
                     'createdby'=>$loginUserId,
                     'createddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
                 die(json_encode($data));
                 $dmtmodel->SaveorUpdateData($data,'');
 
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array('success'=>'Line Type Added Successful'));
+                $this->_helper->getHelper("FlashMessenger")->addMessage(['success'=>'Line Type Added Successful']);
                 $this->_redirect('linetype');
             }
             $messages = $Linetype_Form->getMessages();
@@ -110,7 +110,7 @@ class Default_LinetypeController extends Zend_Controller_Action
 		}
 		$id = $this->_request->getParam('id');
 		$this->view->status=$id;
-		$msgarray = array();
+		$msgarray = [];
 		$controllername = 'linetype';
 		$form = new Default_Form_Linetype();
 		$model = new Default_Model_Linetype();
@@ -126,12 +126,12 @@ class Default_LinetypeController extends Zend_Controller_Action
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = '';
-				$data = array('name'=>$name,
+				$data = ['name'=>$name,
                                 'code'=>$code,
 				 				'description'=>$description,
 						        'createdby'=>$loginUserId,
 								'createddate'=>gmdate("Y-m-d H:i:s")
-				);
+				];
 
 			
 				
@@ -199,20 +199,20 @@ class Default_LinetypeController extends Zend_Controller_Action
         $Linetype_Form->isactive->setValue(utlis::getcheckboxvalue($dmtdata['isactive'],'form'));
         if ($this->getRequest()->isPost()) {
             if ($Linetype_Form->isValid($this->getRequest()->getPost())) {
-                $data = array(
+                $data = [
                     'name'=>$this->_request->getParam('name'),
                     'code'=>$this->_request->getParam('code'),
                     'description'=>$this->_request->getParam('description'),
                     'isactive'=>utlis::getcheckboxvalue($this->_request->getParam('isactive')),
                     'modifiedby'=>$loginUserId,
                     'modifieddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
                 // die(json_encode($data));
                 $id=$dmtmodel->SaveorUpdateData($data,'linetype_id='.$id);
                 $tableid = $id;
                 $actionflag = 2;
                 // $result = sapp_Global::logManager(290,$actionflag,$loginUserid,$tableid);
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array('success'=>'Line Type Updated Successful'));
+                $this->_helper->getHelper("FlashMessenger")->addMessage(['success'=>'Line Type Updated Successful']);
                 $this->_redirect('linetype');
             }
             $messages = $Linetype_Form->getMessages();

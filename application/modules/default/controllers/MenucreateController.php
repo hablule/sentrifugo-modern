@@ -12,7 +12,7 @@ class Default_MenucreateController extends Zend_Controller_Action
             //code...
 
             $loadmodel = new Default_Model_Menucreate();
-            $inter_options = array();
+            $inter_options = [];
             $call = $this->_getParam('call');
             if ($call == 'ajaxcall') {
                 $this->_helper->layout->disableLayout();
@@ -20,9 +20,9 @@ class Default_MenucreateController extends Zend_Controller_Action
             $view = Zend_Layout::getMvcInstance()->getView();
             $objname = $this->_getParam('objname');
             $refresh = $this->_getParam('refresh');
-            $data = array();
+            $data = [];
             $searchQuery = '';
-            $searchArray = array();
+            $searchArray = [];
             $tablecontent = '';
 
 
@@ -40,8 +40,8 @@ class Default_MenucreateController extends Zend_Controller_Action
                 $searchData = '';
                 $searchQuery = '';
                 $sort2 = 'DESC';
-                $searchArray = array();
-                $searchArray2 = array();
+                $searchArray = [];
+                $searchArray2 = [];
             } else {
                 $sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 
@@ -250,9 +250,9 @@ class Default_MenucreateController extends Zend_Controller_Action
             // die(json_encode($permission_data));
             $result = $Menucreate_Model->SaveorUpdateData($data, $where, $permission_data, $permission_where, $group_data, $group_where);
             if ($result == "update") {
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Menu  updated successfully."));
+                $this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Menu  updated successfully."]);
             } else {
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Menu  addedd successfully."));
+                $this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Menu  addedd successfully."]);
             }
 
             $this->_redirect('menucreate');
@@ -288,8 +288,8 @@ class Default_MenucreateController extends Zend_Controller_Action
         if ($id) {
             $model = new Default_Model_Menucreate();
 
-            $data = array('isactive' => 0);
-            $where = array('id=?' => $id);
+            $data = ['isactive' => 0];
+            $where = ['id=?' => $id];
             $Id = $model->DeleteData($data, $where);
             if ($Id == 'update') {
                 $messages['message'] = 'Menu deleted successfully.';
@@ -304,10 +304,10 @@ class Default_MenucreateController extends Zend_Controller_Action
         }
         if ($deleteflag == 1) {
             if ($messages['msgtype'] == 'error') {
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array("error" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag));
+                $this->_helper->getHelper("FlashMessenger")->addMessage(["error" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag]);
             }
             if ($messages['msgtype'] == 'success') {
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag));
+                $this->_helper->getHelper("FlashMessenger")->addMessage(["success" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag]);
             }
         }
         $this->_helper->json($messages);

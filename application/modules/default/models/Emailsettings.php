@@ -44,8 +44,8 @@ class Default_Model_Emailsettings extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{		
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		
 		if($searchData != '' && $searchData!='undefined')
 			{
@@ -59,24 +59,24 @@ class Default_Model_Emailsettings extends Zend_Db_Table_Abstract
 			}
 		$objName = 'accountclasstype';
 		
-		$tableFields = array('action'=>'Action','accountclasstype' => 'Account Class Type','description' => 'Description');
+		$tableFields = ['action'=>'Action','accountclasstype' => 'Account Class Type','description' => 'Description'];
 		$tablecontent = $this->getAccountClassTypeData($sort, $by, $pageNo, $perPage,$searchQuery);     
 		
-	    $dataTmp = array(
+	    $dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
 			'searchArray' => $searchArray,
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall
-		);	
+		];	
 		return $dataTmp;
 	}
 	
@@ -86,7 +86,7 @@ class Default_Model_Emailsettings extends Zend_Db_Table_Abstract
 	{
 	  $accountclassTypeData = $this->select()
     					   ->setIntegrityCheck(false)	
-						   ->from(array('ac'=>'main_accountclasstype'),array('ac.id','ac.accountclasstype'))
+						   ->from(['ac'=>'main_accountclasstype'],['ac.id','ac.accountclasstype'])
                            ->where('ac.id= '.$id.' AND ac.isactive = 1');
       return $this->fetchAll($accountclassTypeData)->toArray();
 	}
@@ -95,7 +95,7 @@ class Default_Model_Emailsettings extends Zend_Db_Table_Abstract
 	{
 	  $accountclassTypeData = $this->select()
     					   ->setIntegrityCheck(false)	
-						   ->from(array('ac'=>'main_accountclasstype'),array('ac.id','ac.accountclasstype'))
+						   ->from(['ac'=>'main_accountclasstype'],['ac.id','ac.accountclasstype'])
                            ->where('ac.isactive = 1')
 						   ->order('ac.accountclasstype');
 						   

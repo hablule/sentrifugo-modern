@@ -32,19 +32,19 @@ class Default_Form_shortlistedcandidates extends Zend_Form
 		
 		$selectionstatus = new Zend_Form_Element_Select('selectionstatus');
 		$selectionstatus->setRequired(true)->addErrorMessage('Please change the candidate status.');
-		$selectionstatus->addFilter('Int')->addValidator('NotEmpty',true, array('integer','zero'));
+		$selectionstatus->addFilter('Int')->addValidator('NotEmpty',true, ['integer','zero']);
 		$selectionstatus->setLabel('domain')
-		->setMultiOptions(array(		
+		->setMultiOptions([		
 							'0'	=>	'Select status',
 							'2'	=>	'Selected' ,
 							'3'	=>	'Rejected'
-							));
+							]);
 		
 		$submit = new Zend_Form_Element_Submit('submit');
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Update');
 		
-		$this->addElements(array($id,$selectionstatus,$submit));
-        $this->setElementDecorators(array('ViewHelper')); 
+		$this->addElements([$id,$selectionstatus,$submit]);
+        $this->setElementDecorators(['ViewHelper']); 
 	}
 }

@@ -79,9 +79,9 @@ class Expenses_MyemployeeexpensesController extends Zend_Controller_Action
 		$dashboardcall = $this->_getParam('dashboardcall');
 		
 		
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 
 		if($refresh == 'refresh')

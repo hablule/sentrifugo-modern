@@ -12,10 +12,10 @@ class Default_Model_Perkapprove extends Zend_Db_Table_Abstract
 
         $AdditionData = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('ep' => 'main_employeeperk'), array('id'=>'ep.employeeperk_id','emp_id' => 'ep.emp_id', 'perk_id'=>'ep.perk_id','approved'=>'if(ep.approved="N","No","Yes")'))
-            ->joinInner(array('mp' => 'main_perk'), "mp.perk_id =ep.perk_id ", array('name' => 'mp.name','type' => 'mp.type','start' =>  'DATE_FORMAT(mp.start,"'.DATEFORMAT_MYSQL.'")','end' =>  'DATE_FORMAT(mp.end,"'.DATEFORMAT_MYSQL.'")','amount' => 'mp.amount'))
-            ->joinInner(array('e' => 'main_employees'), "e.id = ep.emp_id ", array('userfullname' => 'e.userfullname','profileimg'=>'e.profileimg'))
-            ->joinInner(array('pc' => 'main_perkcategory'), "pc.perkcategory_id = mp.category ", array('c_name' => 'pc.name','c_description' => 'pc.description'))
+            ->from(['ep' => 'main_employeeperk'], ['id'=>'ep.employeeperk_id','emp_id' => 'ep.emp_id', 'perk_id'=>'ep.perk_id','approved'=>'if(ep.approved="N","No","Yes")'])
+            ->joinInner(['mp' => 'main_perk'], "mp.perk_id =ep.perk_id ", ['name' => 'mp.name','type' => 'mp.type','start' =>  'DATE_FORMAT(mp.start,"'.DATEFORMAT_MYSQL.'")','end' =>  'DATE_FORMAT(mp.end,"'.DATEFORMAT_MYSQL.'")','amount' => 'mp.amount'])
+            ->joinInner(['e' => 'main_employees'], "e.id = ep.emp_id ", ['userfullname' => 'e.userfullname','profileimg'=>'e.profileimg'])
+            ->joinInner(['pc' => 'main_perkcategory'], "pc.perkcategory_id = mp.category ", ['c_name' => 'pc.name','c_description' => 'pc.description'])
             ->where($where)
             ->order("$by $sort")
             ->limitPage($pageNo, $perPage);
@@ -25,8 +25,8 @@ class Default_Model_Perkapprove extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall,$empids,$perm)
     {
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
         $db = Zend_Db_Table::getDefaultAdapter();
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
@@ -58,7 +58,7 @@ class Default_Model_Perkapprove extends Zend_Db_Table_Abstract
 
         $objId = 'perkapprove';
 
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'name' => 'Perk Name',
             'c_name' => 'Category',
@@ -72,10 +72,10 @@ class Default_Model_Perkapprove extends Zend_Db_Table_Abstract
             // 'earned_time'=> 'Earned Minute',
          
 
-        );
+        ];
         $tablecontent = $this->getAdditionData($sort, $by, $pageNo, $perPage, $searchQuery,$empids,$perm);
 
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
@@ -85,7 +85,7 @@ class Default_Model_Perkapprove extends Zend_Db_Table_Abstract
             'objectId' => $objId,
             'perm'=>$perm,
             'menuName' => 'Employee Perk Request List',
-            'extra' => array(),
+            'extra' => [],
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
             'jsFillFnName' => '',
@@ -93,15 +93,15 @@ class Default_Model_Perkapprove extends Zend_Db_Table_Abstract
             'add' => 'add',
             'call' => $call,
             'dashboardcall' => $dashboardcall,
-            'search_filters'=>array(
-                'start'=>array('type'=>'datepicker'),
-                'end'=>array('type'=>'datepicker'),
-                'approved' => array(
+            'search_filters'=>[
+                'start'=>['type'=>'datepicker'],
+                'end'=>['type'=>'datepicker'],
+                'approved' => [
                     'type' => 'select',
-                    'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
+                    'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
                  
-            ),
-        );
+            ],
+        ];
         return $dataTmp;
     }
    
@@ -116,10 +116,10 @@ class Default_Model_Perkapprove extends Zend_Db_Table_Abstract
     {
         $result = $this->select()
         ->setIntegrityCheck(false)
-        ->from(array('ep' => 'main_employeeperk'), array('employeeperk_id'=>'ep.employeeperk_id','emp_id' => 'ep.emp_id', 'perk_id'=>'ep.perk_id','approved'=>'ep.approved','modifiedby'=>'ep.modifiedby'))
-        ->joinInner(array('mp' => 'main_perk'), "mp.perk_id =ep.perk_id ", array('name' => 'mp.name','type' => 'mp.type','start' => 'mp.start','end' => 'mp.end','amount' => 'mp.amount'))
-        ->joinInner(array('e' => 'main_employees'), "e.id = ep.emp_id ", array('userfullname' => 'e.userfullname'))
-        ->joinInner(array('pc' => 'main_perkcategory'), "pc.perkcategory_id = mp.category ", array('c_name' => 'pc.name','c_description' => 'pc.description'))
+        ->from(['ep' => 'main_employeeperk'], ['employeeperk_id'=>'ep.employeeperk_id','emp_id' => 'ep.emp_id', 'perk_id'=>'ep.perk_id','approved'=>'ep.approved','modifiedby'=>'ep.modifiedby'])
+        ->joinInner(['mp' => 'main_perk'], "mp.perk_id =ep.perk_id ", ['name' => 'mp.name','type' => 'mp.type','start' => 'mp.start','end' => 'mp.end','amount' => 'mp.amount'])
+        ->joinInner(['e' => 'main_employees'], "e.id = ep.emp_id ", ['userfullname' => 'e.userfullname'])
+        ->joinInner(['pc' => 'main_perkcategory'], "pc.perkcategory_id = mp.category ", ['c_name' => 'pc.name','c_description' => 'pc.description'])
         ->where('ep.employeeperk_id='.$id);
 
             return $this->fetchAll($result)->toArray();
@@ -128,10 +128,10 @@ class Default_Model_Perkapprove extends Zend_Db_Table_Abstract
         {
             $result = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('ep' => 'main_employeeperk'), array('employeeperk_id'=>'ep.employeeperk_id','emp_id' => 'ep.emp_id', 'perk_id'=>'ep.perk_id','approved'=>'ep.approved','amount' => 'ep.amount','modifiedby'=>'ep.modifiedby','isactive'=>'ep.isactive'))
-            ->joinInner(array('mp' => 'main_perk'), "mp.perk_id =ep.perk_id ", array('perk_id'=>'mp.perk_id','name' => 'mp.name','type' => 'mp.type','start' => 'mp.start','end' => 'mp.end'))
-            ->joinInner(array('e' => 'main_employees'), "e.id = ep.emp_id ", array('userfullname' => 'e.userfullname'))
-            ->joinInner(array('pc' => 'main_perkcategory'), "pc.perkcategory_id = mp.category ", array('c_name' => 'pc.name','c_description' => 'pc.description'))
+            ->from(['ep' => 'main_employeeperk'], ['employeeperk_id'=>'ep.employeeperk_id','emp_id' => 'ep.emp_id', 'perk_id'=>'ep.perk_id','approved'=>'ep.approved','amount' => 'ep.amount','modifiedby'=>'ep.modifiedby','isactive'=>'ep.isactive'])
+            ->joinInner(['mp' => 'main_perk'], "mp.perk_id =ep.perk_id ", ['perk_id'=>'mp.perk_id','name' => 'mp.name','type' => 'mp.type','start' => 'mp.start','end' => 'mp.end'])
+            ->joinInner(['e' => 'main_employees'], "e.id = ep.emp_id ", ['userfullname' => 'e.userfullname'])
+            ->joinInner(['pc' => 'main_perkcategory'], "pc.perkcategory_id = mp.category ", ['c_name' => 'pc.name','c_description' => 'pc.description'])
             ->where('ep.employeeperk_id='.$id);
                 return $this->fetchAll($result)->toArray();
             }
@@ -139,7 +139,7 @@ class Default_Model_Perkapprove extends Zend_Db_Table_Abstract
         {
             $result = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('mp' => 'main_perk'), "mp.perk_id =ep.perk_id ", array('name' => 'mp.name','type' => 'mp.type','start' => 'mp.start','end' => 'mp.end','amount' => 'mp.amount','auto_approved' => 'mp.auto_approved'))
+            ->from(['mp' => 'main_perk'], "mp.perk_id =ep.perk_id ", ['name' => 'mp.name','type' => 'mp.type','start' => 'mp.start','end' => 'mp.end','amount' => 'mp.amount','auto_approved' => 'mp.auto_approved'])
             ->where('mp.perk_id='.$id);
     
                 return $this->fetchAll($result)->toArray();
@@ -148,7 +148,7 @@ class Default_Model_Perkapprove extends Zend_Db_Table_Abstract
             {
                 $result = $this->select()
                 ->setIntegrityCheck(false)
-                ->from(array('s' => 'main_empsalarydetails'),array('amount' => 's.amount'))
+                ->from(['s' => 'main_empsalarydetails'],['amount' => 's.amount'])
                 ->where('s.emp_id='.$id.' AND s.isactive="Y"');
    // die($result);
                     return $this->fetchAll($result)->toArray();
@@ -160,10 +160,10 @@ class Default_Model_Perkapprove extends Zend_Db_Table_Abstract
         {
             $AdditionData = $this->select()
                 ->setIntegrityCheck(false)
-                ->from(array('ep' => 'main_employeeperk'), array('employeeperk_id'=>'ep.employeeperk_id','emp_id' => 'ep.emp_id', 'perk_id'=>'ep.perk_id','amount' => 'ep.amount','approved' => 'ep.approved','modifiedby' => 'ep.modifiedby','modifieddate' => 'ep.modifieddate','amount_approved' => 'ep.amount_approved'))
-                ->joinInner(array('mp' => 'main_perk'), "mp.perk_id =ep.perk_id ", array('name' => 'mp.name','type' => 'mp.type','start' => 'mp.start','end' => 'mp.end'))
-                ->joinInner(array('e' => 'main_employees'), "e.id = ep.emp_id ", array('userfullname' => 'e.userfullname'))
-                ->joinInner(array('pc' => 'main_perkcategory'), "pc.perkcategory_id = mp.category ", array('c_name' => 'pc.name','c_description' => 'pc.description'))
+                ->from(['ep' => 'main_employeeperk'], ['employeeperk_id'=>'ep.employeeperk_id','emp_id' => 'ep.emp_id', 'perk_id'=>'ep.perk_id','amount' => 'ep.amount','approved' => 'ep.approved','modifiedby' => 'ep.modifiedby','modifieddate' => 'ep.modifieddate','amount_approved' => 'ep.amount_approved'])
+                ->joinInner(['mp' => 'main_perk'], "mp.perk_id =ep.perk_id ", ['name' => 'mp.name','type' => 'mp.type','start' => 'mp.start','end' => 'mp.end'])
+                ->joinInner(['e' => 'main_employees'], "e.id = ep.emp_id ", ['userfullname' => 'e.userfullname'])
+                ->joinInner(['pc' => 'main_perkcategory'], "pc.perkcategory_id = mp.category ", ['c_name' => 'pc.name','c_description' => 'pc.description'])
                 ->where("ep.approved='Y' and ep.isactive='Y'");
                 //die($AdditionData);
                 return $this->fetchAll($AdditionData)->toArray();

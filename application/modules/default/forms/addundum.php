@@ -32,10 +32,10 @@ class Default_Form_addundum extends Zend_Form
 		$managerstatus = new Zend_Form_Element_Select('managerstatus');
 		$managerstatus->setLabel("Approve or Reject or Cancel");
         $managerstatus->setRegisterInArrayValidator(false);
-        $managerstatus->setMultiOptions(array(							
+        $managerstatus->setMultiOptions([							
 							'Y'=>'Approve' ,
 							'N'=>'Reject',
-							));
+							]);
 							$approvedamount = new Zend_Form_Element_Text('approvedamount');
 							$approvedamount->setLabel("Comments");
 							$approvedamount->setAttrib('rows', 10);
@@ -46,7 +46,7 @@ class Default_Form_addundum extends Zend_Form
 		$submit->setLabel('Save');
 		$submit->setAttrib('action',BASE_URL.'addundum');
 
-		$this->addElements(array($id,$managerstatus,$approvedamount,$submit));
-        $this->setElementDecorators(array('ViewHelper'));
+		$this->addElements([$id,$managerstatus,$approvedamount,$submit]);
+        $this->setElementDecorators(['ViewHelper']);
 	}
 }

@@ -23,12 +23,12 @@ class Default_Model_Approvedrequisitions extends Zend_Db_Table_Abstract
 {
     protected $_name = 'main_requisition';
     protected $_primary = 'id';
-        	
+
     public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$statusid,$a1,$a2,$a3)
     {
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 	$requi_model = new Default_Model_Requisition();	
         $auth = Zend_Auth::getInstance();
      	if($auth->hasIdentity())
@@ -54,8 +54,8 @@ class Default_Model_Approvedrequisitions extends Zend_Db_Table_Abstract
                 $searchQuery = rtrim($searchQuery," AND");					
             }
         }
-        $sarray = array('Approved' => 2,'Closed' => 4,'On hold' => 5,'Complete' => 6,'In process' => 7);
-        
+        $sarray = ['Approved' => 2,'Closed' => 4,'On hold' => 5,'Complete' => 6,'In process' => 7];
+
         if($statusid !='' && is_numeric($statusid))
         {
             if($statusid == 1)
@@ -80,7 +80,7 @@ class Default_Model_Approvedrequisitions extends Zend_Db_Table_Abstract
         }
         $objName = 'approvedrequisitions';
 
-        $tableFields = array('action'=>'Action',
+        $tableFields = ['action'=>'Action',
                              'requisition_code' => 'Requisition Code',                            							 
                             'jobtitle_name' => 'Job Title',  
                              'createdby_name'	=> 'Raised By',
@@ -89,18 +89,18 @@ class Default_Model_Approvedrequisitions extends Zend_Db_Table_Abstract
                              'filled_positions' => 'Filled Positions',			 
                            // 'r.createdon'=> 'Raised On',
                           //  'onboard_date' => 'Due Date',
-                            );
-        $search_filters = array(
-                            'r.createdon' =>array('type'=>'datepicker'),
-                            'onboard_date'=>array('type'=>'datepicker')
-                        );
+                            ];
+        $search_filters = [
+                            'r.createdon' =>['type'=>'datepicker'],
+                            'onboard_date'=>['type'=>'datepicker']
+                        ];
         if($dashboardcall == 'Yes')
         {
             $tableFields['req_status'] = "Status";
-            $search_filters['req_status'] = array(
+            $search_filters['req_status'] = [
                 'type' => 'select',
-                'filter_data' => array('Approved' => 'Approved','Closed'=>'Closed','On hold'=>'On hold','Complete'=>'Complete','In process'=>'In process',),
-            );
+                'filter_data' => ['Approved' => 'Approved','Closed'=>'Closed','On hold'=>'On hold','Complete'=>'Complete','In process'=>'In process',],
+            ];
             $statusid = 2;
             $queryflag = 'Approved';
             $statusidstring = sapp_Global::_encrypt('2');
@@ -111,17 +111,17 @@ class Default_Model_Approvedrequisitions extends Zend_Db_Table_Abstract
                 $statusid = $sarray[$queryflag];
             }
         }
-        
+
         $tablecontent = $requi_model->getRequisitionData($sort, $by, $pageNo, $perPage,$searchQuery,$loginUserId,$loginuserGroup,2,$queryflag);     
 
-        $dataTmp = array(
+        $dataTmp = [
                 'sort' => $sort,
                 'by' => $by,
                 'pageNo' => $pageNo,
                 'perPage' => $perPage,				
                 'tablecontent' => $tablecontent,
                 'objectname' => $objName,
-                'extra' => array(),
+                'extra' => [],
                 'tableheader' => $tableFields,
                 'jsGridFnName' => 'getAjaxgridData',
                 'jsFillFnName' => '',
@@ -133,10 +133,10 @@ class Default_Model_Approvedrequisitions extends Zend_Db_Table_Abstract
 				'call'=>$call,
 				'dashboardcall'=>$dashboardcall,
 				'search_filters' => $search_filters,
-        );
+        ];
         if(($statusid == 4 || $statusid == 6) && ($loginuserGroup == HR_GROUP || $loginuserGroup == ''))
         {
-            $dataTmp = $dataTmp + array('defined_actions'=>array('view'));            
+            $dataTmp = $dataTmp + ['defined_actions'=>['view']];            
         }
         return $dataTmp;
     }            

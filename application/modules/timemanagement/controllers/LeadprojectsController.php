@@ -60,9 +60,9 @@ class Timemanagement_LeadprojectsController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 
 		if($refresh == 'refresh')
@@ -120,7 +120,7 @@ class Timemanagement_LeadprojectsController extends Zend_Controller_Action
 				$data = $projectModel->getSingleProjectData($id);
 				if(!empty($data) && $data != "norows")
 				{
-					$data_arr = array();
+					$data_arr = [];
 					$call = $this->_getParam('call');
 					if($call == 'ajaxcall')
 					$this->_helper->layout->disableLayout();
@@ -131,7 +131,7 @@ class Timemanagement_LeadprojectsController extends Zend_Controller_Action
 
 					//$data = array();
 					$searchQuery = '';
-					$searchArray = array();
+					$searchArray = [];
 					$tablecontent='';
 
 					if($refresh == 'refresh')
@@ -206,9 +206,9 @@ class Timemanagement_LeadprojectsController extends Zend_Controller_Action
 		$dashboardcall = $this->_getParam('dashboardcall');
 		$projectId = $this->_getParam('projectId');
 
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 
 		if($refresh == 'refresh')

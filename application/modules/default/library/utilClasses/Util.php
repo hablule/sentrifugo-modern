@@ -35,7 +35,7 @@ class utlis
             $parameterArray = explode(',', $defined['parameters']);
             foreach ($parameterArray as $parameter) {
                 $tempArray = explode('.', $parameter);
-                $parameterValue = $model->getParameterValues($tempArray[0], $tempArray[1]);
+                $parameterValue = $model->getParameterValues($tempArray[0]);
                 array_push($parameterValues, $parameterValue);
             }
             //die(json_encode($parameterValues));
@@ -57,7 +57,7 @@ class utlis
         $classname = explode('.', $userDefined[0]['method'])[0];
         $methodname = explode('.', $userDefined[0]['method'])[1];
         require 'Classes/UserDefined/Classes/' . $classname . '.php';
-        die(call_user_func_array(array($classname, $methodname), array(1, '', '')));
+        die(call_user_func_array([$classname, $methodname], [1, '', '']));
         die(json_encode($userDefined));
     }
     public function tablesList()
@@ -191,10 +191,10 @@ class utlis
     public function checkexist($table, $primary, $coloumn1, $coloumn2, $where1, $where2)
     {
         // die("hh");
-        $config = array(
+        $config = [
             'name' => $table,
             'primary' => $primary
-        );
+        ];
         $table = new Zend_Db_Table($config);
         $data = $table->select()
             ->setIntegrityCheck(false)

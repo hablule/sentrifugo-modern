@@ -26,9 +26,9 @@ class Default_DeductivecategoryController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent = '';
 
 		if ($refresh == 'refresh') {
@@ -78,14 +78,14 @@ class Default_DeductivecategoryController extends Zend_Controller_Action
 
             if ($form->isValid($this->getRequest()->getPost())) {
 
-                $data = array(
+                $data = [
                     'name' => $this->_request->getParam('name_cat'),
                     'description' => $this->_request->getParam('description_cat'),   
                     'isactive' => 'Y', 
                     'createdby' => $loginUserId,
                     'createddate' => gmdate("Y-m-d H:i:s"),  
 
-                );
+                ];
              //  die(json_encode($data));
                 $tableid=$formModel->addCategory($data);
                     $menuid = DEDUCTIVECATEGORY;
@@ -93,7 +93,7 @@ class Default_DeductivecategoryController extends Zend_Controller_Action
                  $this->view->eventact = 'added';
                  $close = 'close';
                  $this->view->popup=$close;
-                 $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Load Category Added successfully."));
+                 $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Load Category Added successfully."]);
 				sapp_Global::logManager($menuid,$actionflag,$loginUserId,$tableid);
                  $this->_redirect('deductivecategory');
             }
@@ -132,21 +132,21 @@ class Default_DeductivecategoryController extends Zend_Controller_Action
 
         if ($this->getRequest()->getPost()) {
             //die(json_encode($this->getRequest()->getPost()));
-            $where = array('load_category_id=?' => $this->getRequest()->getParam('id'));
-            $data = array(
+            $where = ['load_category_id=?' => $this->getRequest()->getParam('id')];
+            $data = [
                 'name' => $this->getRequest()->getParam('name_cat'),
                 'description' => $this->getRequest()->getParam('description_cat'),
                 'modifiedby' => $loginUserId,
                 'modifieddate' => gmdate("Y-m-d H:i:s"),
                 'isactive'=>utlis::getcheckboxvalue($this->_request->getParam('isactive'),'database')
-            );
+            ];
 
             $formModel->editDeductivecategory($data, $where);
             $menuid = DEDUCTIVECATEGORY;
             $actionflag = 2;
             $tableid = $id;
             sapp_Global::logManager($menuid,$actionflag,$loginUserId,$tableid);
-			$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Load Category updated successfully."));
+			$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Load Category updated successfully."]);
 				
             $this->_redirect('deductivecategory');
         }
@@ -158,15 +158,15 @@ class Default_DeductivecategoryController extends Zend_Controller_Action
 
 		$id = $this->_request->getParam('objid');
 		$where = 'load_category_id =' . (int)$id;
-		$data = array(
+		$data = [
 			'isactive' => 'N'
-		);
+		];
         $res = $formModel->deleteData($where,'main_loadcategory','load_category_id');
 		//die(json_encode($where));
         //$res=$formModel->editDeductivecategory($data, $where);
 
 		if ($res > 0)
-			return $this->_helper->json(array('flagtype' => 'process', 'message' => 'Deleted'));
+			return $this->_helper->json(['flagtype' => 'process', 'message' => 'Deleted']);
 		die();
     }
     public function viewAction(){

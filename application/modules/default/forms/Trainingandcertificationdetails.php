@@ -52,11 +52,11 @@ class Default_Form_Trainingandcertificationdetails extends Zend_Form
 
 		$isactive = new Zend_Form_Element_Checkbox('isactive');
         $issueddate = new ZendX_JQuery_Form_Element_DatePicker('issueddate');
-		$issueddate->setOptions(array('class' => 'brdr_none'));	
+		$issueddate->setOptions(['class' => 'brdr_none']);	
 		$issueddate->setAttrib('readonly', 'true');
         $issueddate->setAttrib('onfocus', 'this.blur()');		
 		$expirydate = new ZendX_JQuery_Form_Element_DatePicker('expirydate');
-		$expirydate->setOptions(array('class' => 'brdr_none'));	
+		$expirydate->setOptions(['class' => 'brdr_none']);	
 		$expirydate->setAttrib('readonly', 'true');
         $expirydate->setAttrib('onfocus', 'this.blur()');	
         // description ....
@@ -74,12 +74,12 @@ class Default_Form_Trainingandcertificationdetails extends Zend_Form
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 
-		$this->addElements(array($id,$user_id,$certificate_id,$certprovider_id,$isactive,$description,$isactive,$issueddate,$expirydate,$trainingname,$offeredby,$summaryofcourse,$attestation_image_value,$imgerr,$imgerrmsg,$submit));
-       $this->setElementDecorators(array('ViewHelper')); 
+		$this->addElements([$id,$user_id,$certificate_id,$certprovider_id,$isactive,$description,$isactive,$issueddate,$expirydate,$trainingname,$offeredby,$summaryofcourse,$attestation_image_value,$imgerr,$imgerrmsg,$submit]);
+       $this->setElementDecorators(['ViewHelper']); 
 		
-		$this->setElementDecorators(array(
+		$this->setElementDecorators([
                     'UiWidgetElement',
-        ),array('issueddate','expirydate'));
+        ],['issueddate','expirydate']);
 		
 		
         

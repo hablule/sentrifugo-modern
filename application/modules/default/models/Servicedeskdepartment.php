@@ -33,7 +33,7 @@ class Default_Model_Servicedeskdepartment extends Zend_Db_Table_Abstract
 		
 		$servicedeskDepartmentData = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('sd'=>'main_sd_depts'),array('sd.*'))
+                           ->from(['sd'=>'main_sd_depts'],['sd.*'])
                            ->where($where)
     					   ->order("$by $sort") 
     					   ->limitPage($pageNo, $perPage);
@@ -45,8 +45,8 @@ class Default_Model_Servicedeskdepartment extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{		
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		
 		if($searchData != '' && $searchData!='undefined')
 			{
@@ -61,18 +61,18 @@ class Default_Model_Servicedeskdepartment extends Zend_Db_Table_Abstract
 			
 		$objName = 'servicedeskdepartment';
 		
-		$tableFields = array('action'=>'Action','service_desk_name' => 'Category','description' => 'Description');
+		$tableFields = ['action'=>'Action','service_desk_name' => 'Category','description' => 'Description'];
 		
 		$tablecontent = $this->getServiceDeskDepartmentData($sort, $by, $pageNo, $perPage,$searchQuery);     
 		
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -80,7 +80,7 @@ class Default_Model_Servicedeskdepartment extends Zend_Db_Table_Abstract
 			'add' =>'add',
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall,
-		);
+		];
 		return $dataTmp;
 	}
 	
@@ -88,7 +88,7 @@ class Default_Model_Servicedeskdepartment extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('sd'=>'main_sd_depts'),array('sd.*'))
+						->from(['sd'=>'main_sd_depts'],['sd.*'])
 					    ->where('sd.isactive = 1 AND sd.id='.$id.' ');
 					   
 		return $this->fetchAll($select)->toArray();
@@ -102,7 +102,7 @@ public function getServiceDeskDepartmentDatabyIDs($id)
 		
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('sd'=>'main_sd_depts'),array('sd.service_desk_name'))
+						->from(['sd'=>'main_sd_depts'],['sd.service_desk_name'])
 					    ->where('sd.isactive = 1 AND sd.id IN ('.$id.') ');
 					    
 		return $this->fetchAll($select)->toArray();
@@ -116,7 +116,7 @@ public function getServiceDeskDepartmentDatabyIDs($id)
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('sd'=>'main_sd_depts'),array('sd.*'))
+						->from(['sd'=>'main_sd_depts'],['sd.*'])
 					    ->where('sd.isactive = 1');
 		return $this->fetchAll($select)->toArray();
 	
@@ -143,7 +143,7 @@ public function getServiceDeskDepartmentDatabyIDs($id)
      */
     public function getRequestsById($service_desk_id)
     {
-        $options = array();
+        $options = [];
         if($service_desk_id != '')
         {
             $db = Zend_Db_Table::getDefaultAdapter();

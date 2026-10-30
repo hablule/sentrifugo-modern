@@ -58,7 +58,7 @@ class Default_Model_Address extends Zend_Db_Table_Abstract
 
     public function getPairs($activeOnly = true)
     {
-        $select = $this->select()->from($this->_name, array('id', 'name'))->order('name ASC');
+        $select = $this->select()->from($this->_name, ['id', 'name'])->order('name ASC');
         if ($activeOnly) {
             $select->where('isactive = ?', 1);
         }
@@ -68,7 +68,7 @@ class Default_Model_Address extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if (!empty($searchData) && $searchData !== 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -93,7 +93,7 @@ class Default_Model_Address extends Zend_Db_Table_Abstract
         }
 
         // SSOT Mandatory: 'action' => 'Action' must be the first element
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'            => 'Action',
             'code'              => 'Code',
             'name'              => 'Address Name',
@@ -101,18 +101,18 @@ class Default_Model_Address extends Zend_Db_Table_Abstract
             'city_name'         => 'City',
             'country_name'      => 'Country',
             'status_text'       => 'Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
             'perPage'        => $perPage,
             'tablecontent'   => $tableContent,
             'objectname'     => 'address',
-            'extra'          => array(),
+            'extra'          => [],
             'tableheader'    => $tableHeaders,
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
@@ -120,10 +120,10 @@ class Default_Model_Address extends Zend_Db_Table_Abstract
             'menuName'       => 'Physical Addresses',
             'call'           => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => array(
-                'status_text' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive'))
-            )
-        );
+            'search_filters' => [
+                'status_text' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']]
+            ]
+        ];
     }
 
     public function getGridData($sort, $by, $pageNo, $perPage, $searchQuery = '')
@@ -141,28 +141,28 @@ class Default_Model_Address extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from(
-                array('a' => $this->_name),
-                array(
+                ['a' => $this->_name],
+                [
                     'id' => 'a.id',
                     'code',
                     'name',
                     'status_text' => new Zend_Db_Expr("CASE WHEN a.isactive = 1 THEN 'Active' ELSE 'Inactive' END")
-                )
+                ]
             )
             ->joinInner(
-                array('at' => 'main_address_type'),
+                ['at' => 'main_address_type'],
                 'a.address_type_id = at.id',
-                array('address_type_name' => 'at.name')
+                ['address_type_name' => 'at.name']
             )
             ->joinInner(
-                array('c' => 'main_country'),
+                ['c' => 'main_country'],
                 'a.country_id = c.id',
-                array('country_name' => 'c.name')
+                ['country_name' => 'c.name']
             )
             ->joinInner(
-                array('ci' => 'main_city'),
+                ['ci' => 'main_city'],
                 'a.city_id = ci.id',
-                array('city_name' => 'ci.name')
+                ['city_name' => 'ci.name']
             )
             ->where('a.isactive != ?', 5);
 
@@ -189,7 +189,7 @@ class Default_Model_Address extends Zend_Db_Table_Abstract
         if (!empty($id)) {
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = $currentDate;
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return 'update';
         }
 
@@ -208,13 +208,13 @@ class Default_Model_Address extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => 5,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
+        ];
 
-        return $this->update($data, array('id = ?' => (int)$id));
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     public function toggleStatus($id, $status)
@@ -222,13 +222,13 @@ class Default_Model_Address extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => (int)$status,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
+        ];
 
-        return $this->update($data, array('id = ?' => (int)$id));
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* =================================================================================
@@ -283,7 +283,7 @@ class Default_Model_Address extends Zend_Db_Table_Abstract
 
         $db = $this->getAdapter();
         $select = $db->select()
-            ->from('map_address_owner', array('owner_type', 'owner_id'))
+            ->from('map_address_owner', ['owner_type', 'owner_id'])
             ->where('address_id = ?', (int)$addressId)
             ->where('isactive != ?', 5);
 
@@ -321,7 +321,7 @@ class Default_Model_Address extends Zend_Db_Table_Abstract
         $currentDate = gmdate("Y-m-d H:i:s");
 
         // 1. Hard-delete all existing owner mappings for this address.
-        $db->delete('map_address_owner', array('address_id = ?' => (int)$addressId));
+        $db->delete('map_address_owner', ['address_id = ?' => (int)$addressId]);
 
         // 2. Iterate through the submitted owner types and IDs, and insert the new mappings.
         foreach ($owners as $formTypeKey => $ids) {

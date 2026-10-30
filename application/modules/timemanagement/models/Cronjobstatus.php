@@ -33,7 +33,7 @@ class Timemanagement_Model_Cronjobstatus extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('c'=>$this->_name),array('c.*'))
+		->from(['c'=>$this->_name],['c.*'])
 		->where("c.cronjob_status = 'running'");
 		return $this->fetchAll($select)->toArray();
 

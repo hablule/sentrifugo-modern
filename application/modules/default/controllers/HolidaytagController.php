@@ -50,7 +50,7 @@ class Default_HolidaytagController extends Zend_Controller_Action
         $session = sapp_Global::_readSession();
         if (!isset($session)) {
             if ($this->getRequest()->isXmlHttpRequest()) {
-                echo Zend_Json::encode(array('login' => 'failed'));
+                echo Zend_Json::encode(['login' => 'failed']);
                 exit;
             } else {
                 $this->_redirect('');
@@ -100,7 +100,7 @@ class Default_HolidaytagController extends Zend_Controller_Action
 
             $dataTmp = $this->_model->getGrid($sort, $by, $perPage, $page, rtrim($searchData, ','), $call, $dashboardcall);
 
-            $this->view->dataArray = array($dataTmp);
+            $this->view->dataArray = [$dataTmp];
             $this->view->call      = $call;
 
             $this->view->messages  = $this->_helper->flashMessenger->getMessages();
@@ -174,12 +174,12 @@ class Default_HolidaytagController extends Zend_Controller_Action
             $db->beginTransaction();
 
             try {
-                $data = array(
+                $data = [
                     'code'        => trim((string) $request->getParam('code', '')),
                     'name'        => trim((string) $request->getParam('name', '')),
                     'description' => trim((string) $request->getParam('description', '')),
                     'isactive'    => (int) $request->getParam('isactive', 1)
-                );
+                ];
 
                 $actionFlag = 2;
                 $saveMode   = 'updated';
@@ -199,23 +199,23 @@ class Default_HolidaytagController extends Zend_Controller_Action
                 $db->commit();
 
                 // FlashMessenger for standard redirect
-                $this->_helper->flashMessenger->addMessage(array('success' => "Tag {$saveMode} successfully."));
+                $this->_helper->flashMessenger->addMessage(['success' => "Tag {$saveMode} successfully."]);
 
                 // SSOT Strict AJAX JSON Response
-                $this->_helper->json(array('result' => 'saved', 'nomessage' => 'yes'));
+                $this->_helper->json(['result' => 'saved', 'nomessage' => 'yes']);
             } catch (\Throwable $e) {
                 $db->rollBack();
                 error_log("Holiday Tag Save Error: " . $e->getMessage());
 
-                $this->_helper->json(array(
+                $this->_helper->json([
                     'result'  => 'exception',
                     'message' => 'System error occurred. Check logs.',
                     'msgtype' => 'error'
-                ));
+                ]);
             }
         } else {
             // Validation Error - Raw Array output directly per SSOT
-            $msgarray = array();
+            $msgarray = [];
             foreach ($form->getMessages() as $field => $errors) {
                 $msgarray[$field] = current($errors);
             }
@@ -233,7 +233,7 @@ class Default_HolidaytagController extends Zend_Controller_Action
 
         if ($id) {
             if (sapp_Global::_checkprivileges(HOLIDAY_TAG, $this->_loginuserGroup, $this->_loginuserRole, 'delete') !== 'Yes') {
-                return $this->_helper->json(array('result' => 'error', 'message' => 'Permission Denied.'));
+                return $this->_helper->json(['result' => 'error', 'message' => 'Permission Denied.']);
             }
 
             try {
@@ -245,14 +245,14 @@ class Default_HolidaytagController extends Zend_Controller_Action
                 $this->_model->deleteRecord($id);
                 sapp_Global::logManager(HOLIDAY_TAG, 3, $this->_loginUserId, $id);
 
-                return $this->_helper->json(array('result' => 'saved', 'nomessage' => 'no', 'message' => 'Record deleted successfully.', 'msgtype' => 'success'));
+                return $this->_helper->json(['result' => 'saved', 'nomessage' => 'no', 'message' => 'Record deleted successfully.', 'msgtype' => 'success']);
             } catch (\Throwable $e) {
                 error_log("Holiday Tag Delete Error: " . $e->getMessage());
-                return $this->_helper->json(array('result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error'));
+                return $this->_helper->json(['result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error']);
             }
         }
 
-        return $this->_helper->json(array('result' => 'error', 'message' => 'Invalid request'));
+        return $this->_helper->json(['result' => 'error', 'message' => 'Invalid request']);
     }
 
     public function makeactiveinactiveAction()
@@ -264,10 +264,10 @@ class Default_HolidaytagController extends Zend_Controller_Action
             $this->_model->toggleStatus($id, $status);
             sapp_Global::logManager(HOLIDAY_TAG, 4, $this->_loginUserId, $id);
 
-            $this->_helper->json(array('result' => 'saved', 'nomessage' => 'no', 'msgtype' => 'success', 'message' => 'Status updated successfully.'));
+            $this->_helper->json(['result' => 'saved', 'nomessage' => 'no', 'msgtype' => 'success', 'message' => 'Status updated successfully.']);
         } catch (\Throwable $e) {
             error_log("Holiday Tag Toggle Error: " . $e->getMessage());
-            $this->_helper->json(array('result' => 'exception', 'msgtype' => 'error', 'message' => 'System error occurred.'));
+            $this->_helper->json(['result' => 'exception', 'msgtype' => 'error', 'message' => 'System error occurred.']);
         }
     }
 
@@ -304,7 +304,7 @@ class Default_HolidaytagController extends Zend_Controller_Action
         }
 
         $form = $this->_prepareForm();
-        $msgarray = array();
+        $msgarray = [];
 
         $this->view->popup = '';
         $this->view->prev_cntrl = (string) $request->getParam('prev_cntrl', '');
@@ -314,12 +314,12 @@ class Default_HolidaytagController extends Zend_Controller_Action
             $db->beginTransaction();
 
             try {
-                $data = array(
+                $data = [
                     'code'        => trim((string) $request->getParam('code', '')),
                     'name'        => trim((string) $request->getParam('name', '')),
                     'description' => trim((string) $request->getParam('description', '')),
                     'isactive'    => (int) $request->getParam('isactive', 1)
-                );
+                ];
 
                 $newId = $this->_model->saveRecord($data);
 

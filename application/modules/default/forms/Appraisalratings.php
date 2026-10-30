@@ -35,26 +35,26 @@ class Default_Form_Appraisalratings extends Zend_Form
 		$rating_value->setAttrib('maxLength', 30);
 		$rating_value->addFilter(new Zend_Filter_StringTrim());
 		$rating_value->setRequired(true);
-        $rating_value->addValidator('NotEmpty', false, array('messages' => 'Please enter rating value.'));
-		$rating_value->addValidator("regex",true,array(                           
+        $rating_value->addValidator('NotEmpty', false, ['messages' => 'Please enter rating value.']);
+		$rating_value->addValidator("regex",true,[                           
                            'pattern'=>'/^[a-zA-Z0-9\- ]+$/',
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter valid rating value.'
-                           )
-        	));
+                           ]
+        	]);
         	
         $rating_text = new Zend_Form_Element_Text("Rating Text");
 		$rating_text->setLabel("Rating Text");
 		$rating_text->setAttrib('maxLength', 30);
 		$rating_text->addFilter(new Zend_Filter_StringTrim());
 		$rating_text->setRequired(true);
-        $rating_text->addValidator('NotEmpty', false, array('messages' => 'Please enter rating text.'));
-		$rating_text->addValidator("regex",true,array(                           
+        $rating_text->addValidator('NotEmpty', false, ['messages' => 'Please enter rating text.']);
+		$rating_text->addValidator("regex",true,[                           
                            'pattern'=>'/^[a-zA-Z0-9.\- ?\',\/#@$&*()!]+$/',
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter valid rating text.'
-                           )
-        	));	
+                           ]
+        	]);	
 		
 		
 	
@@ -62,8 +62,8 @@ class Default_Form_Appraisalratings extends Zend_Form
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 
-		 $this->addElements(array($id,$rating_value,$rating_text,$submit));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 $this->addElements([$id,$rating_value,$rating_text,$submit]);
+         $this->setElementDecorators(['ViewHelper']); 
 		
 	}
 }

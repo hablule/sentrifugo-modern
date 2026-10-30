@@ -21,7 +21,7 @@ class Default_PaymentcardController extends Zend_Controller_Action
       $refresh = $this->_getParam('refresh');
       $dashboradcall = $this->_getParam('dashboradcall');
 
-      $data = array();
+      $data = [];
 
       if ($refresh == 'refresh') {
           if ($dashboradcall == 'Yes') {
@@ -83,7 +83,7 @@ class Default_PaymentcardController extends Zend_Controller_Action
             $msgarray['cardprovider_id'] = 'card Provider  is not configured yet.';
         } else {
             foreach ($add as $adds) {
-                $form->cardprovider_id->addMultiOptions(array($adds['cardprovider_id'] => $adds['name']));
+                $form->cardprovider_id->addMultiOptions([$adds['cardprovider_id'] => $adds['name']]);
             }
         }
 
@@ -96,14 +96,14 @@ class Default_PaymentcardController extends Zend_Controller_Action
                $msgarray['paymentcardtype_id'] = 'Payment Card Type  is not configured yet.';
            } else {
                foreach ($addc as $addcs) {
-                   $form->paymentcardtype_id->addMultiOptions(array($addcs['paymentcardtype_id'] => $addcs['name']));
+                   $form->paymentcardtype_id->addMultiOptions([$addcs['paymentcardtype_id'] => $addcs['name']]);
                }
            }
    
            //////////////////////////////
         if ($this->getRequest()->isPost()) {
             if ($form->isValid($this->getRequest()->getPost())) {
-                $data = array(
+                $data = [
                     'name'=>$this->_request->getParam('name'),
                     'code'=>$this->_request->getParam('code'),
                     'paymentcardtype_id'=>$this->_request->getParam('paymentcardtype_id'),
@@ -111,12 +111,12 @@ class Default_PaymentcardController extends Zend_Controller_Action
                     'description'=>$this->_request->getParam('description'),
                     'createdby'=>$loginUserId,
                     'createddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
                 $Id=$dmtmodel->SaveorUpdateData($data,'');
                 $tableid = $Id;
                 $actionflag = 1;
                 $result = sapp_Global::logManager(339,$actionflag,$loginUserId,$tableid);
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array('success'=>'Payment Card Added Successful'));
+                $this->_helper->getHelper("FlashMessenger")->addMessage(['success'=>'Payment Card Added Successful']);
                 $this->_redirect('paymentcard');
             }
             $messages = $form->getMessages();
@@ -154,7 +154,7 @@ try {
           $msgarray['cardprovider_id'] = 'card Provider  is not configured yet.';
       } else {
           foreach ($add as $adds) {
-              $form->cardprovider_id->addMultiOptions(array($adds['cardprovider_id'] => $adds['name']));
+              $form->cardprovider_id->addMultiOptions([$adds['cardprovider_id'] => $adds['name']]);
           }
       }
 
@@ -167,7 +167,7 @@ try {
              $msgarray['paymentcardtype_id'] = 'Payment Card Type  is not configured yet.';
          } else {
              foreach ($addc as $addcs) {
-                 $form->paymentcardtype_id->addMultiOptions(array($addcs['paymentcardtype_id'] => $addcs['name']));
+                 $form->paymentcardtype_id->addMultiOptions([$addcs['paymentcardtype_id'] => $addcs['name']]);
              }
          }
  
@@ -179,7 +179,7 @@ try {
                 if ($auth->hasIdentity()) {
                     $loginUserId = $auth->getStorage()->read()->id;
                 }
-                $data = array(
+                $data = [
                     'name'=>$this->_request->getParam('name'),
                     'code'=>$this->_request->getParam('code'),
                     'paymentcardtype_id'=>$this->_request->getParam('paymentcardtype_id'),
@@ -187,7 +187,7 @@ try {
                     'description'=>$this->_request->getParam('description'),
                     'createdby'=>$loginUserId,
                     'createddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
 
                 $tableid=$dmtmodel->SaveorUpdateData($data, '');
                 sapp_Global::logManager(334,1,$loginUserId,$tableid);
@@ -244,7 +244,7 @@ if (empty($add)) {
     $msgarray['cardprovider_id'] = 'card Provider  is not configured yet.';
 } else {
     foreach ($add as $adds) {
-        $form->cardprovider_id->addMultiOptions(array($adds['cardprovider_id'] => $adds['name']));
+        $form->cardprovider_id->addMultiOptions([$adds['cardprovider_id'] => $adds['name']]);
     }
 }
 
@@ -257,7 +257,7 @@ if (empty($add)) {
        $msgarray['paymentcardtype_id'] = 'Payment Card Type  is not configured yet.';
    } else {
        foreach ($addc as $addcs) {
-           $form->paymentcardtype_id->addMultiOptions(array($addcs['paymentcardtype_id'] => $addcs['name']));
+           $form->paymentcardtype_id->addMultiOptions([$addcs['paymentcardtype_id'] => $addcs['name']]);
        }
    }
 
@@ -272,7 +272,7 @@ if (empty($add)) {
         $form->isactive->setValue(utlis::getcheckboxvalue($dmtdata['isactive'],'form'));
         if ($this->getRequest()->isPost()) {
             if ($form->isValid($this->getRequest()->getPost())) {
-                $data = array(
+                $data = [
                     'name'=>$this->_request->getParam('name'),
                     'code'=>$this->_request->getParam('code'),
                     'paymentcardtype_id'=>$this->_request->getParam('paymentcardtype_id'),
@@ -281,12 +281,12 @@ if (empty($add)) {
                     'isactive'=>utlis::getcheckboxvalue($this->_request->getParam('isactive')),
                     'modifiedby'=>$loginUserId,
                     'modifieddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
                 $dmtmodel->SaveorUpdateData($data,'paymentcard_id='.$id);
                 $tableid = $id;
                 $actionflag = 2;
                 $result = sapp_Global::logManager(339,$actionflag,$loginUserId,$tableid);
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array('success'=>'Paymentcard  Updated Successful'));
+                $this->_helper->getHelper("FlashMessenger")->addMessage(['success'=>'Paymentcard  Updated Successful']);
                 $this->_redirect('paymentcard');
             }
             $messages = $form->getMessages();

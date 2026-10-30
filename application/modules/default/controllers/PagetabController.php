@@ -23,7 +23,7 @@ class Default_PagetabController extends Zend_Controller_Action
       $refresh = $this->_getParam('refresh');
       $dashboradcall = $this->_getParam('dashboradcall');
 
-      $data = array();
+      $data = [];
 
       if ($refresh == 'refresh') {
           if ($dashboradcall == 'Yes') {
@@ -82,8 +82,8 @@ class Default_PagetabController extends Zend_Controller_Action
 				{
 					$data = $dmtmodel->getpagetab($id);
                     $privdata = $privmodel->getPrivilagesById($id);
-                    $groups =array();
-                    $ids = array();
+                    $groups =[];
+                    $ids = [];
                     foreach ($privdata as  $value) {
                         if($value['isactive']=="Y"){
                         $groups[$value['group_id']] = $value['group_id'];
@@ -135,18 +135,18 @@ class Default_PagetabController extends Zend_Controller_Action
         
                         $date = gmdate("Y-m-d H:i:s");
         
-                        $data = array(
+                        $data = [
                                     'tabname'  => $tabname,
                                     'tabcode'  => $tabcode,
                                     'description'  => $description,
                                     'parentpage_id'  => $parentpage_id,
                                     'isactive'=>utlis::getcheckboxvalue($this->_request->getParam('isactive')),
-                                    );
+                                    ];
                         if($id!=''){
         
                             $data['modifiedby'] = $loginUserId;
                             $data['modifieddate'] = $date;
-                            $where = array('pagetab_id=?'=>$id);
+                            $where = ['pagetab_id=?'=>$id];
                         }
                         else
                         {
@@ -172,25 +172,25 @@ class Default_PagetabController extends Zend_Controller_Action
                                 
                                foreach($add_arr as $add)
                                {
-                                    $data = array(
+                                    $data = [
                                         'pagetab_id'=>$id,
                                         'group_id'=>$add,
                                         'createddate'=>$date,
                                         'createdby'=>$loginUserId
     
-                                    );
+                                    ];
                                     $privmodel->SaveorUpdatePrivilegesData($data,$wherepriv);
                                }
                                if(!empty($update_arr)){
                                 
                                foreach($update_arr as $up)
                                {
-                                    $data = array(
+                                    $data = [
                                         'group_id'=>$up,
                                         'modifieddate'=>$date,
                                         'modifiedby'=>$loginUserId
 
-                                    );
+                                    ];
                                     $wherepriv = 'pagetabprivilage_id='.$ids[$up];
                                }
                                foreach($del_arr as $del)
@@ -202,13 +202,13 @@ class Default_PagetabController extends Zend_Controller_Action
                             else{
                                 foreach($this->_getParam('groups') as $value)
                                 {
-                                $data = array(
+                                $data = [
                                     'pagetab_id'=>$Id,
                                     'group_id'=>$value,
                                     'createddate'=>$date,
                                     'createdby'=>$loginUserId
     
-                                );
+                                ];
                                 $privmodel->SaveorUpdatePrivilegesData($data,$wherepriv);
                             }
                             
@@ -217,11 +217,11 @@ class Default_PagetabController extends Zend_Controller_Action
                        
                         if($Id == 'update')
                         {
-                            $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Tab  updated successfully."));
+                            $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Tab  updated successfully."]);
                         }
                         else
                         {
-                         $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Tab added successfully."));
+                         $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Tab added successfully."]);
                         }
                             
                         $this->_redirect('pagetab');

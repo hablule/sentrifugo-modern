@@ -35,7 +35,7 @@ class Default_Form_assignmententryreasoncode extends Zend_Form
         $assignmententryreasoncode->setAttrib('maxLength', 20);
         $assignmententryreasoncode->addFilter(new Zend_Filter_StringTrim());
         $assignmententryreasoncode->setRequired(true);
-        $assignmententryreasoncode->addValidator('NotEmpty', false, array('messages' => 'Please enter  assignment code.'));  
+        $assignmententryreasoncode->addValidator('NotEmpty', false, ['messages' => 'Please enter  assignment code.']);  
    	
 		$description = new Zend_Form_Element_Textarea('description');
         $description->setAttrib('rows', 10);
@@ -46,7 +46,7 @@ class Default_Form_assignmententryreasoncode extends Zend_Form
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 
-		 $this->addElements(array($id,$assignmententryreasoncode,$description,$submit));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 $this->addElements([$id,$assignmententryreasoncode,$description,$submit]);
+         $this->setElementDecorators(['ViewHelper']); 
 	}
 }

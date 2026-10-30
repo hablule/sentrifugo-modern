@@ -30,7 +30,7 @@ class Default_RejectedrequisitionsController extends Zend_Controller_Action
         {
             if($this->getRequest()->isXmlHttpRequest())
             {
-                echo Zend_Json::encode( array('login' => 'failed') );
+                echo Zend_Json::encode( ['login' => 'failed'] );
                 die();	
             }
             else
@@ -59,9 +59,9 @@ class Default_RejectedrequisitionsController extends Zend_Controller_Action
 		} 
 		
         $refresh = $this->_getParam('refresh');
-        $data = array();
+        $data = [];
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         $tablecontent='';
 
         if($refresh == 'refresh')
@@ -71,7 +71,7 @@ class Default_RejectedrequisitionsController extends Zend_Controller_Action
 			else	
 				$perPage = PERPAGE;
             $sort = 'DESC';$by = 'r.modifiedon';$pageNo = 1;$searchData = '';$searchQuery = '';
-            $searchArray = array();
+            $searchArray = [];
         }
         else 
         {
@@ -99,7 +99,7 @@ class Default_RejectedrequisitionsController extends Zend_Controller_Action
         $requi_model = new Default_Model_Requisition();		
 		$clientsModel = new Default_Model_Clients();   
 		$usersModel = new Default_Model_Users();             
-        $data = array();
+        $data = [];
         try
         {
             if($id >0 && is_numeric($id))
@@ -174,7 +174,7 @@ class Default_RejectedrequisitionsController extends Zend_Controller_Action
                     $perPage = $this->_getParam('per_page',10);
                     $pageNo = $this->_getParam('page', 1);            
                     $searchQuery = '';
-                    $searchArray = array();
+                    $searchArray = [];
                     $tablecontent='';
                     /** search from grid - START **/
                     $searchData = $this->_getParam('searchData');	
@@ -196,23 +196,23 @@ class Default_RejectedrequisitionsController extends Zend_Controller_Action
 
                     $objName = 'apprreqcandidates';
 
-                    $tableFields = array('action'=>'Action',
+                    $tableFields = ['action'=>'Action',
                                          'candidate_name' => 'Candidate Name',
                                          'cand_status' => 'Candidate Status',
-                                        );
+                                        ];
                     $candidate_model = new Default_Model_Candidatedetails();
                     $tablecontent = $candidate_model->getCandidatesData_requisition($sort, $by, $pageNo, $perPage,$searchQuery,$id);     
-                    $cand_status_opt = array('' => 'All','Shortlisted' => 'Shortlisted','Selected' => 'Selected','Rejected' => 'Rejected',
+                    $cand_status_opt = ['' => 'All','Shortlisted' => 'Shortlisted','Selected' => 'Selected','Rejected' => 'Rejected',
                                             'On hold' => 'On hold','Disqualified' => 'Disqualified','Scheduled' => 'Scheduled',
-                                            'Not Scheduled' => 'Not Scheduled','Recruited' => 'Recruited','Requisition Closed/Completed' => 'Requisition Closed/Completed');
-                    $dataTmp = array(
+                                            'Not Scheduled' => 'Not Scheduled','Recruited' => 'Recruited','Requisition Closed/Completed' => 'Requisition Closed/Completed'];
+                    $dataTmp = [
                             'sort' => $sort,
                             'by' => $by,
                             'pageNo' => $pageNo,
                             'perPage' => $perPage,				
                             'tablecontent' => $tablecontent,
                             'objectname' => $objName,
-                            'extra' => array(),
+                            'extra' => [],
                             'tableheader' => $tableFields,
                             'jsGridFnName' => 'getAjaxgridData',
                             'jsFillFnName' => '',
@@ -220,13 +220,13 @@ class Default_RejectedrequisitionsController extends Zend_Controller_Action
                             'searchArray' => $searchArray,
                             'menuName' => 'Candidate details',
                             'call'=>'',
-                            'search_filters' => array(
-                                'cand_status' => array(
+                            'search_filters' => [
+                                'cand_status' => [
                                     'type' => 'select',
                                     'filter_data' => $cand_status_opt,
-                                ),
-                            ),
-                    );	
+                                ],
+                            ],
+                    ];	
                 if($data['req_priority'] == 1) {
                     	$data['req_priority']='High';
                     }else if($data['req_priority'] == 2) {

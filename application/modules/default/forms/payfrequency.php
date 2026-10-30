@@ -62,53 +62,53 @@ class Default_Form_Payfrequency extends Zend_Form
          * 2. Text Elements (Code & Name)
          * -------------------------------------------------------------- */
 
-        $ssotRegexValidator = array(
+        $ssotRegexValidator = [
             'Regex',
             true,
-            array(
+            [
                 'pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9 ]*)$/',
-                'messages' => array(
+                'messages' => [
                     Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space or contain special characters.'
-                )
-            )
-        );
+                ]
+            ]
+        ];
 
         // Code
         $code = new Zend_Form_Element_Text('code');
         $code->setLabel('Frequency Code')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '60', 'placeholder' => 'e.g., MTH, BIW, SEMI'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '60', 'placeholder' => 'e.g., MTH, BIW, SEMI'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
             ->addFilter('StringToUpper')
-            ->addValidator('NotEmpty', false, array('messages' => 'Please enter a frequency code.'))
-            ->addValidator('StringLength', false, array('max' => 60))
+            ->addValidator('NotEmpty', false, ['messages' => 'Please enter a frequency code.'])
+            ->addValidator('StringLength', false, ['max' => 60])
             ->addValidator($ssotRegexValidator[0], $ssotRegexValidator[1], $ssotRegexValidator[2]);
 
-        $codeVal = new Zend_Validate_Db_NoRecordExists(array(
+        $codeVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_payfrequency',
             'field'   => 'code',
-            'exclude' => ($idVal > 0) ? array('field' => 'id', 'value' => $idVal) : null
-        ));
+            'exclude' => ($idVal > 0) ? ['field' => 'id', 'value' => $idVal] : null
+        ]);
         $codeVal->setMessage('This frequency code already exists.');
         $code->addValidator($codeVal);
 
         // Name
         $name = new Zend_Form_Element_Text('name');
         $name->setLabel('Frequency Name')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '100', 'placeholder' => 'e.g., Monthly, Bi-Weekly'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '100', 'placeholder' => 'e.g., Monthly, Bi-Weekly'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', false, array('messages' => 'Please enter a frequency name.'))
-            ->addValidator('StringLength', false, array('max' => 100))
+            ->addValidator('NotEmpty', false, ['messages' => 'Please enter a frequency name.'])
+            ->addValidator('StringLength', false, ['max' => 100])
             ->addValidator($ssotRegexValidator[0], $ssotRegexValidator[1], $ssotRegexValidator[2]);
 
-        $nameVal = new Zend_Validate_Db_NoRecordExists(array(
+        $nameVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_payfrequency',
             'field'   => 'name',
-            'exclude' => ($idVal > 0) ? array('field' => 'id', 'value' => $idVal) : null
-        ));
+            'exclude' => ($idVal > 0) ? ['field' => 'id', 'value' => $idVal] : null
+        ]);
         $nameVal->setMessage('This frequency name already exists.');
         $name->addValidator($nameVal);
 
@@ -120,10 +120,10 @@ class Default_Form_Payfrequency extends Zend_Form
         $frequency_type->setLabel('Cadence Type')
             ->setAttrib('class', 'formDataElement')
             ->setAttrib('onchange', 'toggleCadenceFields();')
-            ->addMultiOptions(array(
+            ->addMultiOptions([
                 'FIXED_INTERVAL' => 'Fixed Rolling Interval (e.g., Every 2 Weeks, Every 10 Days)',
                 'CALENDAR_BASED' => 'Calendar Anchored (e.g., 1st & 15th, End of Month)'
-            ))
+            ])
             ->setRequired(true)
             ->setValue('FIXED_INTERVAL');
 
@@ -133,25 +133,25 @@ class Default_Form_Payfrequency extends Zend_Form
 
         $interval_count = new Zend_Form_Element_Text('interval_count');
         $interval_count->setLabel('Interval Step Count')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '5', 'placeholder' => 'e.g., 1, 2, 14'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '5', 'placeholder' => 'e.g., 1, 2, 14'])
             ->addFilter('StringTrim')
-            ->addValidator('Digits', true, array('messages' => 'Interval count must be a positive whole number.'));
+            ->addValidator('Digits', true, ['messages' => 'Interval count must be a positive whole number.']);
 
         $interval_unit = new Zend_Form_Element_Select('interval_unit');
         $interval_unit->setLabel('Interval Unit')
             ->setAttrib('class', 'formDataElement')
-            ->addMultiOptions(array(
+            ->addMultiOptions([
                 ''      => 'Select Unit...',
                 'DAY'   => 'Day(s)',
                 'WEEK'  => 'Week(s)',
                 'MONTH' => 'Month(s)'
-            ));
+            ]);
 
         // Weekly Anchor Day (Used if interval_unit = WEEK)
         $weekly_anchor_day = new Zend_Form_Element_Select('weekly_anchor_day');
         $weekly_anchor_day->setLabel('Week Cycle Start Day')
             ->setAttrib('class', 'formDataElement')
-            ->addMultiOptions(array(
+            ->addMultiOptions([
                 ''          => 'Select Day...',
                 'Monday'    => 'Monday',
                 'Tuesday'   => 'Tuesday',
@@ -160,23 +160,23 @@ class Default_Form_Payfrequency extends Zend_Form
                 'Friday'    => 'Friday',
                 'Saturday'  => 'Saturday',
                 'Sunday'    => 'Sunday'
-            ));
+            ]);
 
         // Monthly Anchor Day (Used if interval_unit = MONTH)
         $monthly_anchor_day = new Zend_Form_Element_Text('monthly_anchor_day');
         $monthly_anchor_day->setLabel('Month Cycle Start Day (1 - 31)')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '2', 'placeholder' => 'e.g., 1 or 26'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '2', 'placeholder' => 'e.g., 1 or 26'])
             ->addFilter('StringTrim')
-            ->addValidator('Between', true, array('min' => 1, 'max' => 31, 'messages' => 'Day must be between 1 and 31.'));        
+            ->addValidator('Between', true, ['min' => 1, 'max' => 31, 'messages' => 'Day must be between 1 and 31.']);        
 
         $global_reference_date = new ZendX_JQuery_Form_Element_DatePicker('global_reference_date');
         $global_reference_date->setLabel('Origin Point / Reference Start Date')
-            ->setAttribs(array(
+            ->setAttribs([
                 'class'    => 'brdr_none formDataElement',
                 'readonly' => 'true',
                 'onfocus'  => 'this.blur()',
                 'placeholder' => 'Anchor date for rolling cycle'
-            ));
+            ]);
 
         /* --------------------------------------------------------------
          * 5. Calendar Based Elements (Dynamic Wrapper 2)
@@ -185,10 +185,10 @@ class Default_Form_Payfrequency extends Zend_Form
         $missing_date_policy = new Zend_Form_Element_Select('missing_date_policy');
         $missing_date_policy->setLabel('Missing Date Fallback Policy')
             ->setAttrib('class', 'formDataElement')
-            ->addMultiOptions(array(
+            ->addMultiOptions([
                 'PREVIOUS_VALID_DAY' => 'Previous Valid Day (Roll back e.g., to Feb 28th)',
                 'NEXT_VALID_DAY'     => 'Next Valid Day (Roll forward e.g., to Mar 1st)'
-            ))
+            ])
             ->setValue('PREVIOUS_VALID_DAY');
 
         /* --------------------------------------------------------------
@@ -197,7 +197,7 @@ class Default_Form_Payfrequency extends Zend_Form
 
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Description')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -217,7 +217,7 @@ class Default_Form_Payfrequency extends Zend_Form
 
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save')
-            ->setAttribs(array('id' => 'submitbutton', 'class' => 'actbtn_btn'));
+            ->setAttribs(['id' => 'submitbutton', 'class' => 'actbtn_btn']);
 
         $urlAction  = "'payfrequency/save/format/json'";
         $jsFunction = "'redirecttocontroller(\\'payfrequency\\');'";
@@ -226,7 +226,7 @@ class Default_Form_Payfrequency extends Zend_Form
         /* --------------------------------------------------------------
          * Build Form
          * -------------------------------------------------------------- */
-        $this->addElements(array(
+        $this->addElements([
             $idElement,
             $calendar_anchors_payload,
             $code,
@@ -241,14 +241,14 @@ class Default_Form_Payfrequency extends Zend_Form
             $description,
             $isactive,
             $submit
-        ));
+        ]);
 
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
             if ($element instanceof ZendX_JQuery_Form_Element_DatePicker) {
-                $element->setDecorators(array('UiWidgetElement'));
+                $element->setDecorators(['UiWidgetElement']);
             } else {
-                $element->setDecorators(array('ViewHelper'));
+                $element->setDecorators(['ViewHelper']);
             }
         }
     }

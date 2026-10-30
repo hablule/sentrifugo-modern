@@ -21,10 +21,10 @@ class Default_Model_emprecordaccessdetail extends Zend_Db_Table_Abstract{
 
 	$bank = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('ad' => 'main_emprecordacessdetail'),array('ad.emprecordaccess_id as emprecordaccess_id','ad.description as description','if(ad.isactive="Y","Yes","No") as isactive','ad.emprecordacessdetail_id as id'))
-			->joinInner(array('ra'=>'main_emprecordaccess'), 'ra.emprecordaccess_id=ad.emprecordaccess_id',array('ra.emprecordaccess_id','recordname'=>'ra.description'))
+            ->from(['ad' => 'main_emprecordacessdetail'],['ad.emprecordaccess_id as emprecordaccess_id','ad.description as description','if(ad.isactive="Y","Yes","No") as isactive','ad.emprecordacessdetail_id as id'])
+			->joinInner(['ra'=>'main_emprecordaccess'], 'ra.emprecordaccess_id=ad.emprecordaccess_id',['ra.emprecordaccess_id','recordname'=>'ra.description'])
 			// ->joinInner(array('e'=>'main_employees'), 'e.id=ad.emp_id',array('e.emp_id'=>'e.id','userfullname'=>'e.userfullname'))
-			->joinInner(array('u'=>'main_employees'), 'u.id=ad.emp_id',array('emp_id'=>'u.id','userfullname'=>'u.userfullname'))
+			->joinInner(['u'=>'main_employees'], 'u.id=ad.emp_id',['emp_id'=>'u.id','userfullname'=>'u.userfullname'])
             ->order("$by $sort")
             ->where($where)
             ->limitPage($pageNo, $perPage);
@@ -40,7 +40,7 @@ class Default_Model_emprecordaccessdetail extends Zend_Db_Table_Abstract{
         else{
             $objName = 'emprecordaccessdetail';
         }
-        $searchArray = array();
+        $searchArray = [];
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
             foreach ($searchValues as $key => $val) {
@@ -49,7 +49,7 @@ class Default_Model_emprecordaccessdetail extends Zend_Db_Table_Abstract{
             }
             $searchQuery = rtrim($searchQuery, " AND");
         }
-		$tableFields = array(
+		$tableFields = [
 			        'action' => 'Action',
 			        'userfullname' => 'Employee',
 			        'recordname' => 'Record Name',
@@ -57,17 +57,17 @@ class Default_Model_emprecordaccessdetail extends Zend_Db_Table_Abstract{
 			        'isactive' => 'Active',
 					// 'password' => 'Password',
 		
-			    );
+			    ];
 
         $tablecontent = $this->getData($sort, $by, $pageNo, $perPage, $searchQuery,$a);
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
             'perPage' => $perPage,
             'tablecontent' => $tablecontent,
             'objectname' => $objName,
-            'extra' => array(),
+            'extra' => [],
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
             'add'=>'add',
@@ -76,21 +76,21 @@ class Default_Model_emprecordaccessdetail extends Zend_Db_Table_Abstract{
             'searchArray' => $searchArray,
             'call' => $call,
             'dashboardcall' => $dashboardcall,
-            'search_filters' => array( 
-                'isactive' => array(
+            'search_filters' => [ 
+                'isactive' => [
                     'type' => 'select',
-                    'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-    )
-        );
+                    'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+    ]
+        ];
         if($a!=''){
-            $dataTmp = array(
+            $dataTmp = [
                 'sort' => $sort,
                 'by' => $by,
                 'pageNo' => $pageNo,
                 'perPage' => $perPage,
                 'tablecontent' => $tablecontent,
                 'objectname' => $objName,
-                'extra' => array(),
+                'extra' => [],
                 'add' => 'add',
                 'tableheader' => $tableFields,
                 'jsGridFnName' => 'getEmployeeAjaxgridData',
@@ -104,12 +104,12 @@ class Default_Model_emprecordaccessdetail extends Zend_Db_Table_Abstract{
                 'searchArray' => $searchArray,
                 'call' => $call,
                 'dashboardcall' => $dashboardcall,
-                'search_filters' => array( 
-                    'isactive' => array(
+                'search_filters' => [ 
+                    'isactive' => [
                         'type' => 'select',
-                        'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-        )
-            );
+                        'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+        ]
+            ];
         }
         return $dataTmp;
     }
@@ -137,9 +137,9 @@ class Default_Model_emprecordaccessdetail extends Zend_Db_Table_Abstract{
 {
     $bank = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('ad' => 'main_emprecordacessdetail'),array('ad.emprecordaccess_id as emprecordaccess_id','ad.description as description','if(ad.isactive="Y","Yes","No") as isactive','ad.emprecordacessdetail_id as id'))
-			->joinInner(array('ra'=>'main_emprecordaccess'), 'ra.emprecordaccess_id=ad.emprecordaccess_id',array('ra.emprecordaccess_id','recordname'=>'ra.description'))
-			 ->joinInner(array('e'=>'main_employees'), 'e.id=ad.emp_id',array('e.emp_id'=>'e.id','userfullname'=>'e.userfullname'))
+            ->from(['ad' => 'main_emprecordacessdetail'],['ad.emprecordaccess_id as emprecordaccess_id','ad.description as description','if(ad.isactive="Y","Yes","No") as isactive','ad.emprecordacessdetail_id as id'])
+			->joinInner(['ra'=>'main_emprecordaccess'], 'ra.emprecordaccess_id=ad.emprecordaccess_id',['ra.emprecordaccess_id','recordname'=>'ra.description'])
+			 ->joinInner(['e'=>'main_employees'], 'e.id=ad.emp_id',['e.emp_id'=>'e.id','userfullname'=>'e.userfullname'])
             ->where("emprecordacessdetail_id=".$id);
             return $this->fetchRow($bank)->toArray();
         }

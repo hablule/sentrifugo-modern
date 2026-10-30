@@ -34,19 +34,19 @@ class Default_Form_Appraisalskills extends Zend_Form
 		$appraisalskill->setAttrib('maxLength', 30);
 		$appraisalskill->addFilter(new Zend_Filter_StringTrim());
 		$appraisalskill->setRequired(true);
-        $appraisalskill->addValidator('NotEmpty', false, array('messages' => 'Please enter skill.'));
-		$appraisalskill->addValidator("regex",true,array(                           
+        $appraisalskill->addValidator('NotEmpty', false, ['messages' => 'Please enter skill.']);
+		$appraisalskill->addValidator("regex",true,[                           
                            'pattern'=>'/^[a-zA-Z0-9.\- ?\',\/#@$&*()!+]+$/',
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter valid skill.'
-                           )
-        	));
+                           ]
+        	]);
         $appraisalskill->addValidator(new Zend_Validate_Db_NoRecordExists(
-	                                            array(  'table'=>'main_pa_skills',
+	                                            [  'table'=>'main_pa_skills',
 	                                                     'field'=>'skill_name',
 	                                                     'exclude'=>'id!="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('id').'" AND isactive=1',    
 	
-	                                                      ) ) );
+	                                                      ] ) );
 		$appraisalskill->getValidator('Db_NoRecordExists')->setMessage('Skill name already exists.');	
 
 		$description = new Zend_Form_Element_Textarea('description');
@@ -59,7 +59,7 @@ class Default_Form_Appraisalskills extends Zend_Form
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 
-		 $this->addElements(array($id,$appraisalskill,$description,$submit));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 $this->addElements([$id,$appraisalskill,$description,$submit]);
+         $this->setElementDecorators(['ViewHelper']); 
 	}
 }

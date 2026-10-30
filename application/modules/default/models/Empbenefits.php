@@ -35,10 +35,10 @@ class Default_Model_Empbenefits extends Zend_Db_Table_Abstract
 
         $bank = $this->select()
         ->setIntegrityCheck(false)
-        ->from(array('ep' => 'main_employeeperk'), array('id'=>'ep.employeeperk_id','emp_id' => 'ep.emp_id', 'perk_id'=>'ep.perk_id','empamount'=>'ep.amount','approved'=>'if(ep.approved="N","No","Yes")','isactive'=>'if(ep.isactive="N","No","Yes")'))
-            ->joinInner(array('mp' => 'main_perk'), "mp.perk_id =ep.perk_id ", array('name' => 'mp.name','type' => 'mp.type','start' =>  'DATE_FORMAT(mp.start,"'.DATEFORMAT_MYSQL.'")','end' =>  'DATE_FORMAT(mp.end,"'.DATEFORMAT_MYSQL.'")','amount' => 'mp.amount'))
-            ->joinInner(array('e' => 'main_employees'), "e.id = ep.emp_id ", array('userfullname' => 'e.userfullname'))
-            ->joinInner(array('pc' => 'main_perkcategory'), "pc.perkcategory_id = mp.category ", array('c_name' => 'pc.name','c_description' => 'pc.description'))
+        ->from(['ep' => 'main_employeeperk'], ['id'=>'ep.employeeperk_id','emp_id' => 'ep.emp_id', 'perk_id'=>'ep.perk_id','empamount'=>'ep.amount','approved'=>'if(ep.approved="N","No","Yes")','isactive'=>'if(ep.isactive="N","No","Yes")'])
+            ->joinInner(['mp' => 'main_perk'], "mp.perk_id =ep.perk_id ", ['name' => 'mp.name','type' => 'mp.type','start' =>  'DATE_FORMAT(mp.start,"'.DATEFORMAT_MYSQL.'")','end' =>  'DATE_FORMAT(mp.end,"'.DATEFORMAT_MYSQL.'")','amount' => 'mp.amount'])
+            ->joinInner(['e' => 'main_employees'], "e.id = ep.emp_id ", ['userfullname' => 'e.userfullname'])
+            ->joinInner(['pc' => 'main_perkcategory'], "pc.perkcategory_id = mp.category ", ['c_name' => 'pc.name','c_description' => 'pc.description'])
             ->where($where)
             ->order("$by $sort")
             ->limitPage($pageNo, $perPage);
@@ -47,8 +47,8 @@ class Default_Model_Empbenefits extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $exParam1 = '', $exParam2 = '', $exParam3 = '', $exParam4 = '')
     {
 		$searchQuery = '';
-		$searchArray = array();
-		$data = array();
+		$searchArray = [];
+		$data = [];
 
 		if ($searchData != '' && $searchData != 'undefined') {
 			$searchValues = json_decode($searchData);
@@ -82,15 +82,15 @@ class Default_Model_Empbenefits extends Zend_Db_Table_Abstract
 			$searchQuery = rtrim($searchQuery, " AND");
 		}
         $objName = 'empbenefits';
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'name' => 'Perk Name',
             'isactive' => 'Active',
             'empamount' => 'Amount',
-           );
+           ];
 
         $tablecontent = $this->getData($sort, $by, $pageNo, $perPage, $searchQuery, $exParam1);
-        $dataTmp = array(
+        $dataTmp = [
             'userid' => $exParam1,
 			'sort' => $sort,
 			'by' => $by,
@@ -98,7 +98,7 @@ class Default_Model_Empbenefits extends Zend_Db_Table_Abstract
 			'perPage' => $perPage,
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getEmployeeAjaxgridData',
 			'jsFillFnName' => '',
@@ -110,30 +110,30 @@ class Default_Model_Empbenefits extends Zend_Db_Table_Abstract
 			'call' => $call,
 			'userAction' => $exParam3,	
 
-			'context' => $exParam2,	'search_filters' => array(
-				'iscurrent' => array(
+			'context' => $exParam2,	'search_filters' => [
+				'iscurrent' => [
 					'type' => 'select',
-					'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-		),
-        'search_filters' => array(
-            'start' =>array('type'=>'datepicker'),
-            'end' =>array('type'=>'datepicker'),
-            'isactive' => array(
+					'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+		],
+        'search_filters' => [
+            'start' =>['type'=>'datepicker'],
+            'end' =>['type'=>'datepicker'],
+            'isactive' => [
                 'type' => 'select',
-                'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-                'approved' => array(
+                'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+                'approved' => [
                     'type' => 'select',
-                    'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-        )
-        );
+                    'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+        ]
+        ];
         return $dataTmp;
     }
     public function SaveorUpdatePerkData($data,$where)
     {
-        $config = array(
+        $config = [
             'name' => 'main_employeeperk',
             'primary' => 'employeeperk_id'
-        );
+        ];
         $table = new Zend_Db_Table($config);
         if($where != ''){
 			$table->update($data, $where);
@@ -148,16 +148,16 @@ class Default_Model_Empbenefits extends Zend_Db_Table_Abstract
     public function getPerkType($id){
         $query = $this->select()
                         ->setIntegrityCheck(false)
-                        ->from(array('p'=>'main_perk'),array('p.*'))
+                        ->from(['p'=>'main_perk'],['p.*'])
                         ->where('p.perk_id='.$id);
         return $this->fetchAll($query)->toArray();
     }
 
     public function deleteEmpPerk($emp_id){
-        $config = array(
+        $config = [
             'name'=>'main_employeeperk',
             'primary'=>'employeeperk_id'
-        );
+        ];
         $this->table = new Zend_Db_Table($config) ;
         $this->table->delete('emp_id='.$emp_id);
     }

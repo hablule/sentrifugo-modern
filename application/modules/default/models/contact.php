@@ -29,7 +29,7 @@ class Default_Model_Contact extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('cp'=>'contactpreferences'),array('cp.id','cp.contactpreferences'))
+						->from(['cp'=>'contactpreferences'],['cp.id','cp.contactpreferences'])
 					    ->where('cp.isactive = 1')
 						->order('cp.contactpreferences');
 		return $this->fetchAll($select)->toArray();

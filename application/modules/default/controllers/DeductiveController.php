@@ -40,7 +40,7 @@ class Default_DeductiveController extends Zend_Controller_Action
 
         if($this->getRequest()->getPost()){
 			if($form->isValid($this->_request->getPost())){
-                $data = array(
+                $data = [
                     'code' => $this->getRequest()->getParam('code'),
                     'name' => $this->getRequest()->getParam('name'),
                     'load_category_id' => (int)$this->getRequest()->getParam('category'),
@@ -57,10 +57,10 @@ class Default_DeductiveController extends Zend_Controller_Action
                     'parameters' => trim($this->getRequest()->getParam('parameters'), ','),
                     'createdby' => $loginUserId,
                     'createddate' => gmdate("Y-m-d H:i:s"),
-                );
+                ];
                 $data['isactive'] = 'Y';
                 $tableid=$formModel->addData($data);
-                $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Load Added successfully."));
+                $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Load Added successfully."]);
                 $this->view->messages = $this->_helper->flashMessenger->getMessages();
                 
                 $result = sapp_Global::logManager(DEDUCTIVE,1,$loginUserId,$tableid);
@@ -185,8 +185,8 @@ class Default_DeductiveController extends Zend_Controller_Action
         if($this->getRequest()->getPost()){
 			if($form->isValid($this->_request->getPost())){
             //die(json_encode($this->getRequest()->getPost()));
-            $where = array('load_id=?' => $this->getRequest()->getParam('id'));
-            $data = array(
+            $where = ['load_id=?' => $this->getRequest()->getParam('id')];
+            $data = [
                 'code' => $this->getRequest()->getParam('code'),
                 'name' => $this->getRequest()->getParam('name'),
                 'load_category_id' => (int)$this->getRequest()->getParam('category'),
@@ -204,13 +204,13 @@ class Default_DeductiveController extends Zend_Controller_Action
                 'modifiedby' => $loginUserId,
                 'modifieddate' => gmdate("Y-m-d H:i:s"),
                 'isactive' => utlis::getcheckboxvalue($this->getRequest()->getParam('isactive')),
-            );
+            ];
             //$data['isactive'] = 'Yes';
             // die(json_encode($data));
             $tableid = $this->getRequest()->getParam('id');
             $result = sapp_Global::logManager(DEDUCTIVE,2,$loginUserId,$tableid);
             $formModel->editDeductive($data, $where);
-            $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Load updated successfully."));
+            $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Load updated successfully."]);
             $this->_redirect('adddeductive');
         }
         else   {
@@ -263,7 +263,7 @@ class Default_DeductiveController extends Zend_Controller_Action
         // $form->type->addMultiOption('Fixed', 'Fixed');
         // $form->type->addMultiOption('Calculated', 'Calculated');
         $this->view->form = $form;
-        $msgarray = array();
+        $msgarray = [];
         $controllername = 'empdeductive';
         $this->view->controllername = $controllername;
         $this->view->eventact = 'added';
@@ -284,12 +284,12 @@ class Default_DeductiveController extends Zend_Controller_Action
 
             if ($form->isValid($this->getRequest()->getPost())) {
 
-                $data = array(
+                $data = [
                     'name' => $this->_request->getParam('name_cat'),
                     'description' => $this->_request->getParam('description_cat'),
                     'isactive' => 'Yes',
 
-                );
+                ];
                 
                 //  die(json_encode($data));
                 $tableid = $formModel->addCategory($data);

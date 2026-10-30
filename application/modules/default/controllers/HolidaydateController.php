@@ -54,7 +54,7 @@ class Default_HolidaydateController extends Zend_Controller_Action
         $session = sapp_Global::_readSession();
         if (!isset($session)) {
             if ($this->getRequest()->isXmlHttpRequest()) {
-                echo Zend_Json::encode(array('login' => 'failed'));
+                echo Zend_Json::encode(['login' => 'failed']);
                 exit;
             } else {
                 $this->_redirect('');
@@ -105,7 +105,7 @@ class Default_HolidaydateController extends Zend_Controller_Action
 
             $dataTmp = $this->_model->getGrid($sort, $by, $perPage, $page, rtrim($searchData, ','), $call, $dashboardcall);
 
-            $this->view->dataArray = array($dataTmp);
+            $this->view->dataArray = [$dataTmp];
             $this->view->call      = $call;
 
             $this->view->messages  = $this->_helper->flashMessenger->getMessages();
@@ -188,11 +188,11 @@ class Default_HolidaydateController extends Zend_Controller_Action
                 $conflicts = $engine->checkOverlap($startDate, $endDate, $holidayId, $id > 0 ? $id : null);
 
                 if (!empty($conflicts)) {
-                    return $this->_helper->json(array(
+                    return $this->_helper->json([
                         'result'    => 'conflict_warning',
                         'conflicts' => $conflicts,
                         'message'   => 'Date overlap detected with existing holiday policies.'
-                    ));
+                    ]);
                 }
             }
 
@@ -203,9 +203,9 @@ class Default_HolidaydateController extends Zend_Controller_Action
                 // Fetch previous state for ledger diffing if updating
                 $oldRecord = ($id > 0) ? $this->_model->getRecordById($id) : null;
 
-                $data = array(
+                $data = [
                     // [Standard Header Data Array...]
-                );
+                ];
 
                 $actionFlag = 2;
                 $saveMode   = 'updated';
@@ -221,7 +221,7 @@ class Default_HolidaydateController extends Zend_Controller_Action
 
                 // --- CORRECTION 2: ATOMIC LINE SYNCING ---
                 $lineModel = new Default_Model_Holidaydateline();
-                $existingLines = $id > 0 ? $lineModel->fetchAll(array('holiday_date_id = ?' => $id, 'isactive != ?' => 5))->toArray() : [];
+                $existingLines = $id > 0 ? $lineModel->fetchAll(['holiday_date_id = ?' => $id, 'isactive != ?' => 5])->toArray() : [];
                 $existingDatesMap = [];
                 foreach ($existingLines as $line) {
                     $existingDatesMap[$line['effective_date']] = $line['id'];
@@ -248,7 +248,7 @@ class Default_HolidaydateController extends Zend_Controller_Action
                 $datesToRemove = array_diff(array_keys($existingDatesMap), array_keys($newDatesMap));
                 foreach ($datesToRemove as $dateToRemove) {
                     $lineId = $existingDatesMap[$dateToRemove];
-                    $lineModel->update(array('isactive' => 5, 'modifieddate' => $currentDate), array('id = ?' => $lineId));
+                    $lineModel->update(['isactive' => 5, 'modifieddate' => $currentDate], ['id = ?' => $lineId]);
 
                     // Audit Deletion
                     $ledgerModel->logChange('HOLIDAY_DATE_LINE', $lineId, 'DELETED', $dateToRemove, null, null, null, $this->_loginUserId);
@@ -258,20 +258,20 @@ class Default_HolidaydateController extends Zend_Controller_Action
                 foreach ($newDatesMap as $dateStr => $sequenceNo) {
                     if (!isset($existingDatesMap[$dateStr])) {
                         // Insert New
-                        $newLineId = $lineModel->saveRecord(array(
+                        $newLineId = $lineModel->saveRecord([
                             'holiday_date_id' => $savedId,
                             'sequence_no'     => $sequenceNo,
                             'effective_date'  => $dateStr,
                             'isactive'        => 1,
                             'createddate'     => $currentDate
-                        ));
+                        ]);
 
                         // Audit Creation
                         $ledgerModel->logChange('HOLIDAY_DATE_LINE', $newLineId, 'CREATED', $dateStr, null, null, null, $this->_loginUserId);
                     } else {
                         // Optional: Update sequence_no if it shifted, but date ID remains preserved
                         $lineId = $existingDatesMap[$dateStr];
-                        $lineModel->update(array('sequence_no' => $sequenceNo), array('id = ?' => $lineId));
+                        $lineModel->update(['sequence_no' => $sequenceNo], ['id = ?' => $lineId]);
                     }
                 }
 
@@ -308,20 +308,20 @@ class Default_HolidaydateController extends Zend_Controller_Action
 
                 $db->commit();
 
-                $this->_helper->flashMessenger->addMessage(array('success' => "Holiday occurrence {$saveMode} successfully."));
-                $this->_helper->json(array('result' => 'saved', 'nomessage' => 'yes'));
+                $this->_helper->flashMessenger->addMessage(['success' => "Holiday occurrence {$saveMode} successfully."]);
+                $this->_helper->json(['result' => 'saved', 'nomessage' => 'yes']);
                 
             } catch (\Throwable $e) {
                 $db->rollBack();
                 error_log("Holiday Date Save Error: " . $e->getMessage());
-                $this->_helper->json(array(
+                $this->_helper->json([
                     'result'  => 'exception',
                     'message' => $e->getMessage(),
                     'msgtype' => 'error'
-                ));
+                ]);
             }
         } else {
-            $msgarray = array();
+            $msgarray = [];
             foreach ($form->getMessages() as $field => $errors) {
                 $msgarray[$field] = current($errors);
             }
@@ -341,7 +341,7 @@ class Default_HolidaydateController extends Zend_Controller_Action
 
         if ($id) {
             if (defined('HOLIDAY_DATE') && sapp_Global::_checkprivileges(HOLIDAY_DATE, $this->_loginuserGroup, $this->_loginuserRole, 'delete') !== 'Yes') {
-                return $this->_helper->json(array('result' => 'error', 'message' => 'Permission Denied.'));
+                return $this->_helper->json(['result' => 'error', 'message' => 'Permission Denied.']);
             }
 
             try {
@@ -372,14 +372,14 @@ class Default_HolidaydateController extends Zend_Controller_Action
                     sapp_Global::logManager(HOLIDAY_DATE, 3, $this->_loginUserId, $id);
                 }
 
-                return $this->_helper->json(array('result' => 'saved', 'nomessage' => 'no', 'message' => 'Record deleted successfully.', 'msgtype' => 'success'));
+                return $this->_helper->json(['result' => 'saved', 'nomessage' => 'no', 'message' => 'Record deleted successfully.', 'msgtype' => 'success']);
             } catch (\Throwable $e) {
                 error_log("Holiday Date Delete Error: " . $e->getMessage());
-                return $this->_helper->json(array('result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error'));
+                return $this->_helper->json(['result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error']);
             }
         }
 
-        return $this->_helper->json(array('result' => 'error', 'message' => 'Invalid request'));
+        return $this->_helper->json(['result' => 'error', 'message' => 'Invalid request']);
     }
 
     public function makeactiveinactiveAction()
@@ -393,10 +393,10 @@ class Default_HolidaydateController extends Zend_Controller_Action
                 sapp_Global::logManager(HOLIDAY_DATE, 4, $this->_loginUserId, $id);
             }
 
-            $this->_helper->json(array('result' => 'saved', 'nomessage' => 'no', 'msgtype' => 'success', 'message' => 'Status updated successfully.'));
+            $this->_helper->json(['result' => 'saved', 'nomessage' => 'no', 'msgtype' => 'success', 'message' => 'Status updated successfully.']);
         } catch (\Throwable $e) {
             error_log("Holiday Date Toggle Error: " . $e->getMessage());
-            $this->_helper->json(array('result' => 'exception', 'msgtype' => 'error', 'message' => 'System error occurred.'));
+            $this->_helper->json(['result' => 'exception', 'msgtype' => 'error', 'message' => 'System error occurred.']);
         }
     }
 
@@ -411,7 +411,7 @@ class Default_HolidaydateController extends Zend_Controller_Action
     {
         $request = $this->getRequest();
         if (!$request->isPost()) {
-            return $this->_helper->json(array('result' => 'error', 'message' => 'Invalid request method.'));
+            return $this->_helper->json(['result' => 'error', 'message' => 'Invalid request method.']);
         }
 
         try {
@@ -427,19 +427,19 @@ class Default_HolidaydateController extends Zend_Controller_Action
                 $msg .= " Errors: " . implode(', ', $summary['errors']);
             }
 
-            $this->_helper->json(array(
+            $this->_helper->json([
                 'result'  => 'saved',
                 'nomessage' => 'no',
                 'message' => $msg,
                 'msgtype' => empty($summary['errors']) ? 'success' : 'warning'
-            ));
+            ]);
         } catch (\Throwable $e) {
             error_log("Holiday Batch Generation Error: " . $e->getMessage());
-            $this->_helper->json(array(
+            $this->_helper->json([
                 'result'  => 'exception',
                 'message' => 'Generation failed: ' . $e->getMessage(),
                 'msgtype' => 'error'
-            ));
+            ]);
         }
     }
 

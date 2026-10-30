@@ -82,11 +82,11 @@ class Expenses_Model_Receipts extends Zend_Db_Table_Abstract
 
 		$receiptsData = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('er' => 'expense_receipts'))
-		->joinLeft(array('ex'=>'expenses'), "ex.id = er.expense_id and ex.isactive=1",array('expense_name'=>'ex.expense_name','expense_amount'=>'ex.expense_amount','status'=>'ex.status','exp_trip_id'=>'ex.trip_id'))
-		->joinLeft(array('c'=>'main_currency'), "c.id = ex.expense_currency_id and ex.isactive=1",array('currencycode'=>'c.currencycode'))
-		->joinLeft(array('extr'=>'expense_trips'), "extr.id = ex.trip_id and extr.isactive=1",array('trip_name'=>'extr.trip_name'))
-		->joinLeft(array('exca'=>'expense_categories'), "exca.id = ex.category_id and ex.isactive=1",array('expense_category_name'=>'exca.expense_category_name'))
+		->from(['er' => 'expense_receipts'])
+		->joinLeft(['ex'=>'expenses'], "ex.id = er.expense_id and ex.isactive=1",['expense_name'=>'ex.expense_name','expense_amount'=>'ex.expense_amount','status'=>'ex.status','exp_trip_id'=>'ex.trip_id'])
+		->joinLeft(['c'=>'main_currency'], "c.id = ex.expense_currency_id and ex.isactive=1",['currencycode'=>'c.currencycode'])
+		->joinLeft(['extr'=>'expense_trips'], "extr.id = ex.trip_id and extr.isactive=1",['trip_name'=>'extr.trip_name'])
+		->joinLeft(['exca'=>'expense_categories'], "exca.id = ex.category_id and ex.isactive=1",['expense_category_name'=>'exca.expense_category_name'])
 		->where($where)
 		->order("id DESC")
 		->limit($limit,$offset)
@@ -164,11 +164,11 @@ class Expenses_Model_Receipts extends Zend_Db_Table_Abstract
 
 		$receiptsData = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('er' => 'expense_receipts'))
-		->joinLeft(array('ex'=>'expenses'), "ex.id = er.expense_id and ex.isactive=1",array('expense_name'=>'ex.expense_name','expense_amount'=>'ex.expense_amount','status'=>'ex.status','exp_trip_id'=>'ex.trip_id'))
-		->joinLeft(array('c'=>'main_currency'), "c.id = ex.expense_currency_id and ex.isactive=1",array('currencycode'=>'c.currencycode'))
-		->joinLeft(array('extr'=>'expense_trips'), "extr.id = ex.trip_id and extr.isactive=1",array('trip_name'=>'extr.trip_name'))
-		->joinLeft(array('exca'=>'expense_categories'), "exca.id = ex.category_id and ex.isactive=1",array('expense_category_name'=>'exca.expense_category_name'))
+		->from(['er' => 'expense_receipts'])
+		->joinLeft(['ex'=>'expenses'], "ex.id = er.expense_id and ex.isactive=1",['expense_name'=>'ex.expense_name','expense_amount'=>'ex.expense_amount','status'=>'ex.status','exp_trip_id'=>'ex.trip_id'])
+		->joinLeft(['c'=>'main_currency'], "c.id = ex.expense_currency_id and ex.isactive=1",['currencycode'=>'c.currencycode'])
+		->joinLeft(['extr'=>'expense_trips'], "extr.id = ex.trip_id and extr.isactive=1",['trip_name'=>'extr.trip_name'])
+		->joinLeft(['exca'=>'expense_categories'], "exca.id = ex.category_id and ex.isactive=1",['expense_category_name'=>'exca.expense_category_name'])
 		->where($where);
 		$receiptCount = $this->fetchAll($receiptsData)->toArray();
 		return count($receiptCount);

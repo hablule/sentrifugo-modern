@@ -47,9 +47,9 @@ class Default_MilitaryserviceController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 		
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 		
 		if($refresh == 'refresh')
@@ -189,13 +189,13 @@ class Default_MilitaryserviceController extends Zend_Controller_Action
 				$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = ''; 
-				   $data = array('militaryservicetype'=>trim($militaryservicetype),
+				   $data = ['militaryservicetype'=>trim($militaryservicetype),
 				   		   'description'=>trim($description),
 						  'modifiedby'=>$loginUserId,
 						  'modifieddate'=>gmdate("Y-m-d H:i:s")
-						);
+						];
 					if($id!=''){
-						$where = array('id=?'=>$id);  
+						$where = ['id=?'=>$id];  
 						$actionflag = 2;
 					}
 					else
@@ -210,12 +210,12 @@ class Default_MilitaryserviceController extends Zend_Controller_Action
 					if($Id == 'update')
 					{
 					   $tableid = $id;
-					   $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Military service type updated successfully."));
+					   $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Military service type updated successfully."]);
 					}   
 					else
 					{
                        $tableid = $Id; 	
-                        $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Military service type  added successfully."));					   
+                        $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Military service type  added successfully."]);					   
 					}   
 					$menuID = MILITARYSERVICE;
 					$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$tableid);
@@ -253,8 +253,8 @@ class Default_MilitaryserviceController extends Zend_Controller_Action
 			{
 			 $militaryservicemodel = new Default_Model_Militaryservice();
 			  $militaryservicedata = $militaryservicemodel->getMilitaryServiceDataByID($id);
-			  $data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-			  $where = array('id=?'=>$id);
+			  $data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+			  $where = ['id=?'=>$id];
 			  $Id = $militaryservicemodel->SaveorUpdateMilitaryServiceData($data, $where);
 			    if($Id == 'update')
 				{
@@ -280,11 +280,11 @@ class Default_MilitaryserviceController extends Zend_Controller_Action
 			{
 				if(	$messages['msgtype'] == 'error')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
 				}
 				if(	$messages['msgtype'] == 'success')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
 				}
 			}
 			$this->_helper->json($messages);

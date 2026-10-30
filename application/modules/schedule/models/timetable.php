@@ -9,7 +9,7 @@ class Schedule_Model_Timetable extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
@@ -29,25 +29,25 @@ class Schedule_Model_Timetable extends Zend_Db_Table_Abstract
         }
         $objName = 'timetable';
         $objID = 'timetable';
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'name' => 'Name',
             'start_time' => 'Start Time',
             'end_time' => 'End Time',
             'isactive' => 'Active'
-        );
+        ];
 
         $tablecontent = $this->getTimetable($sort, $by, $pageNo, $perPage, $searchQuery);
         $group_model = new Schedule_Model_Timetable();
         $group_data = $group_model->getallshifts();
 
-        $group_arr = array();
+        $group_arr = [];
 
         foreach ($group_data as $gkey => $gdata) {
             $group_arr[$gdata['name']] = $gdata['name'];
         }
 
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
@@ -55,7 +55,7 @@ class Schedule_Model_Timetable extends Zend_Db_Table_Abstract
             'tablecontent' => $tablecontent,
             'objectname' => $objName,
             'objectId' => $objID,
-            'extra' => array(),
+            'extra' => [],
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
             'jsFillFnName' => '',
@@ -65,16 +65,16 @@ class Schedule_Model_Timetable extends Zend_Db_Table_Abstract
             'call' => $call,
             'dashboardcall' => $dashboardcall,
             'menuName' => 'Shift Table',
-            'search_filters' => array(
-                'isactive' => array(
+            'search_filters' => [
+                'isactive' => [
                     'type' => 'select',
-                    'filter_data' => array('' => 'All', 'Y' => 'Yes', 'N' => 'No')
-                ),
+                    'filter_data' => ['' => 'All', 'Y' => 'Yes', 'N' => 'No']
+                ],
 
-            ),
+            ],
 
 
-        );
+        ];
 
         return $dataTmp;
     }
@@ -87,9 +87,9 @@ class Schedule_Model_Timetable extends Zend_Db_Table_Abstract
 
         $timetable = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('tm' => 'main_shift'), array(
+            ->from(['tm' => 'main_shift'], [
                 'id' => 'tm.shift_id', 'name' => 'tm.name', 'start_time' => 'DATE_FORMAT(tm.starttime,"%h:%i %p")', 'isactive' => 'if(tm.isactive="Y","Yes","No")', 'end_time' => 'DATE_FORMAT(tm.endtime,"%h:%i %p")'
-            ))
+            ])
             ->order("$by $sort")
             ->where($where)
             ->limitPage($pageNo, $perPage);
@@ -103,8 +103,8 @@ class Schedule_Model_Timetable extends Zend_Db_Table_Abstract
     {
         $timetable = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('mt'=>'main_shift'))
-            ->join(array('tc'=>'main_timecategory'),'mt.timecategory_id = tc.timecategory_id', array('tcname'=>'tc.name', 'tccode'=>'tc.code','tcstolerance'=>'mt.starttolerence', 'tcetolerance'=>'mt.endtolerance'))
+            ->from(['mt'=>'main_shift'])
+            ->join(['tc'=>'main_timecategory'],'mt.timecategory_id = tc.timecategory_id', ['tcname'=>'tc.name', 'tccode'=>'tc.code','tcstolerance'=>'mt.starttolerence', 'tcetolerance'=>'mt.endtolerance'])
             ->where('shift_id = ' . $id);
        
         return $this->fetchAll($timetable)->toArray();
@@ -114,7 +114,7 @@ class Schedule_Model_Timetable extends Zend_Db_Table_Abstract
     {
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('main_shift'), array('starttime', 'endtime'))
+            ->from(['main_shift'], ['starttime', 'endtime'])
             ->where('shift_id in (' . $shifts . ')');
 
         return $this->fetchAll($select)->toArray();
@@ -140,15 +140,15 @@ class Schedule_Model_Timetable extends Zend_Db_Table_Abstract
 
     public function updateSchedule($where, $data)
     {
-        $config = array(
+        $config = [
             'name' => 'main_schedule',
             'primary' => 'sch_id'
-        );
+        ];
         $table = new Zend_Db_Table($config);
 
         $time = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('e' => 'main_time_table'), 'e.time')
+            ->from(['e' => 'main_time_table'], 'e.time')
             ->where('id = ' . $where);
         $res = $this->fetchRow($time)->toArray()['time'];
 
@@ -159,7 +159,7 @@ class Schedule_Model_Timetable extends Zend_Db_Table_Abstract
 
         $schres = $this->fetchAll($sch)->toArray();
         foreach ($schres as $key => $value) {
-            $time = array('time' => str_replace($res, $data['time'], $value['time']));
+            $time = ['time' => str_replace($res, $data['time'], $value['time'])];
             $table->update($time, 'id = ' . $value['id']);
         }
     }
@@ -168,11 +168,11 @@ class Schedule_Model_Timetable extends Zend_Db_Table_Abstract
     {
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('m' => 'main_shift'), 'm.shift_id')
-            ->join(array('n' => 'main_schedulecycleshift'), 'm.shift_id = n.shift_id')
-            ->join(array('l' => 'main_schedulecycle'), 'l.schedulecycle_id = n.schedulecycle_id')
-            ->join(array('ms' =>'main_schedule'),'ms.schedule_id = l.schedule_id')
-            ->join(array('es' => 'main_empschedule'), 'es.schedule_id = ms.schedule_id')
+            ->from(['m' => 'main_shift'], 'm.shift_id')
+            ->join(['n' => 'main_schedulecycleshift'], 'm.shift_id = n.shift_id')
+            ->join(['l' => 'main_schedulecycle'], 'l.schedulecycle_id = n.schedulecycle_id')
+            ->join(['ms' =>'main_schedule'],'ms.schedule_id = l.schedule_id')
+            ->join(['es' => 'main_empschedule'], 'es.schedule_id = ms.schedule_id')
             ->where('m.shift_id in (' . $shiftid . ')');
        
         return $this->fetchAll($select)->toArray();
@@ -182,7 +182,7 @@ class Schedule_Model_Timetable extends Zend_Db_Table_Abstract
     {
         $select = $this->select()
                         ->setIntegrityCheck(false)
-                        ->from(array('m'=>'main_shift'), 'm.name')
+                        ->from(['m'=>'main_shift'], 'm.name')
                         ->where('m.shift_id='.$id);
         return $this->fetchRow($select)->toArray();
     }

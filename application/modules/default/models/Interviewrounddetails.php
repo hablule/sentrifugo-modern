@@ -23,7 +23,7 @@ class Default_Model_Interviewrounddetails extends Zend_Db_Table_Abstract
 {
     protected $_name = 'main_interviewrounddetails';
     protected $_primary = 'id';
-    
+
     /**
      * This function gives data for grid view.
      * @parameters
@@ -44,14 +44,14 @@ class Default_Model_Interviewrounddetails extends Zend_Db_Table_Abstract
 
         $irData = $this->select()
                         ->setIntegrityCheck(false)
-                        ->from(array('ir'=>$this->_name),array('ir.*','interview_date' =>"date_format(interview_date,'".DATEFORMAT_MYSQL."')"))                        
-                        ->joinInner(array('u'=>'main_users'), "u.id = ir.interviewer_id and u.isactive = 1",array('userfullname'=>'u.userfullname'))
+                        ->from(['ir'=>$this->_name],['ir.*','interview_date' =>"date_format(interview_date,'".DATEFORMAT_MYSQL."')"])                        
+                        ->joinInner(['u'=>'main_users'], "u.id = ir.interviewer_id and u.isactive = 1",['userfullname'=>'u.userfullname'])
                         ->where($where)
                         ->order("$by $sort") 
                         ->limitPage($pageNo, $perPage);        
 		return $irData;       		
     }
-    
+
     public function getinterviewstatus($intid)
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();
@@ -108,7 +108,7 @@ class Default_Model_Interviewrounddetails extends Zend_Db_Table_Abstract
         }
         else return '0';
     }
-	
+
     public function getSingleRoundData($id)
     {
 
@@ -120,7 +120,7 @@ class Default_Model_Interviewrounddetails extends Zend_Db_Table_Abstract
     }
     public function getRoundDetailsByCandidateId($cand_id)
     {
-        $data = array();
+        $data = [];
         $db = Zend_Db_Table::getDefaultAdapter();
         $query = "select ir.*,u.userfullname from main_interviewrounddetails ir,main_users u 
                   where ir.candidate_id = ".$cand_id." and ir.isactive = 1 

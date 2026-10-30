@@ -35,9 +35,9 @@ class Default_Model_Creditcarddetails extends Zend_Db_Table_Abstract
 		
 		$expData = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('epc' => 'main_emppaymentcard'), array('id'=>'epc.emppaymentcard_id','paymentcard_id'=>'epc.paymentcard_id','nameoncard'=>'epc.nameoncard','cardnumber'=>'epc.cardnumber','verficationcode'=>'epc.verficationcode','description'=>'epc.description','emp_id' => 'epc.emp_id', 'issueddate'=> 'DATE_FORMAT(epc.issueddate,"'.DATEFORMAT_MYSQL.'")', 'expirydate'=> 'DATE_FORMAT(epc.expirydate,"'.DATEFORMAT_MYSQL.'")','isactive'=>'if(epc.isactive="N","No","Yes")'))
-		->joinLeft(array('mpc' => 'main_paymentcard'), "epc.paymentcard_id =mpc.paymentcard_id ", array('paymentcard_name' => 'mpc.name'))
-		->joinLeft(array('e' => 'main_employees'), "epc.emp_id = e.id ", array('userfullname' => 'e.userfullname'))
+		->from(['epc' => 'main_emppaymentcard'], ['id'=>'epc.emppaymentcard_id','paymentcard_id'=>'epc.paymentcard_id','nameoncard'=>'epc.nameoncard','cardnumber'=>'epc.cardnumber','verficationcode'=>'epc.verficationcode','description'=>'epc.description','emp_id' => 'epc.emp_id', 'issueddate'=> 'DATE_FORMAT(epc.issueddate,"'.DATEFORMAT_MYSQL.'")', 'expirydate'=> 'DATE_FORMAT(epc.expirydate,"'.DATEFORMAT_MYSQL.'")','isactive'=>'if(epc.isactive="N","No","Yes")'])
+		->joinLeft(['mpc' => 'main_paymentcard'], "epc.paymentcard_id =mpc.paymentcard_id ", ['paymentcard_name' => 'mpc.name'])
+		->joinLeft(['e' => 'main_employees'], "epc.emp_id = e.id ", ['userfullname' => 'e.userfullname'])
 		->where($where)
 		->order("$by $sort")
 		->limitPage($pageNo, $perPage);		
@@ -51,7 +51,7 @@ class Default_Model_Creditcarddetails extends Zend_Db_Table_Abstract
 		{
 			$where = "emppaymentcard_id =".$id;
 			$empdependencyDetails = $this->select()
-									->from(array('c'=>'main_emppaymentcard'))
+									->from(['c'=>'main_emppaymentcard'])
 									->where($where);
 		
 			$empdependencyDetailsArr = $this->fetchAll($empdependencyDetails)->toArray(); 
@@ -78,8 +78,8 @@ class Default_Model_Creditcarddetails extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$exParam1='',$exParam2='',$exParam3='',$exParam4='')
 	{		
         $searchQuery = '';$tablecontent = '';
-        $searchArray = array();$data = array();$id='';
-        $dataTmp = array();
+        $searchArray = [];$data = [];$id='';
+        $dataTmp = [];
 		if($searchData != '' && $searchData!='undefined')
 		{
 			$searchValues = json_decode($searchData);
@@ -99,19 +99,19 @@ class Default_Model_Creditcarddetails extends Zend_Db_Table_Abstract
 		/** search from grid - END **/
 		$objName = 'creditcarddetails';
 				
-		$tableFields = array('action'=>'Action','paymentcard_name'=>'Payment Card','isactive'=>'Active','nameoncard'=>'Name','cardnumber'=>'Number','verficationcode'=>'Code','issueddate'=>'Isue Date','expirydate'=>'Expiry date');
+		$tableFields = ['action'=>'Action','paymentcard_name'=>'Payment Card','isactive'=>'Active','nameoncard'=>'Name','cardnumber'=>'Number','verficationcode'=>'Code','issueddate'=>'Isue Date','expirydate'=>'Expiry date'];
 				
 						
 		$tablecontent = $this->getcreditcarddetails($sort, $by,$pageNo,$perPage,$searchQuery,$exParam1);     
 		
-		$dataTmp = array('userid'=>$exParam1,
+		$dataTmp = ['userid'=>$exParam1,
 						'sort' => $sort,
 						'by' => $by,
 						'pageNo' => $pageNo,
 						'perPage' => $perPage,				
 						'tablecontent' => $tablecontent,
 						'objectname' => $objName,
-						'extra' => array(),
+						'extra' => [],
 						'tableheader' => $tableFields,
 						'jsGridFnName' => 'getEmployeeAjaxgridData',
 						'jsFillFnName' => '',
@@ -126,16 +126,16 @@ class Default_Model_Creditcarddetails extends Zend_Db_Table_Abstract
 						'call'=>$call,
 						'context'=>$exParam2,
 								
-						);	
+						];	
 		return $dataTmp;
 	}
 	public function paymentcarddetailview($id)
 	{
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('epc' => 'main_emppaymentcard'), array('id'=>'epc.emppaymentcard_id','paymentcard_id'=>'epc.paymentcard_id','nameoncard'=>'epc.nameoncard','cardnumber'=>'epc.cardnumber','verficationcode'=>'epc.verficationcode','description'=>'epc.description','emp_id' => 'epc.emp_id', 'issueddate'=> 'DATE_FORMAT(epc.issueddate,"'.DATEFORMAT_MYSQL.'")', 'expirydate'=> 'DATE_FORMAT(epc.expirydate,"'.DATEFORMAT_MYSQL.'")','isactive'=>'if(epc.isactive="N","No","Yes")'))
-		->joinLeft(array('mpc' => 'main_paymentcard'), "epc.paymentcard_id =mpc.paymentcard_id ", array('paymentcard_name' => 'mpc.name'))
-		->joinLeft(array('e' => 'main_employees'), "epc.emp_id = e.id ", array('userfullname' => 'e.userfullname'))
+		->from(['epc' => 'main_emppaymentcard'], ['id'=>'epc.emppaymentcard_id','paymentcard_id'=>'epc.paymentcard_id','nameoncard'=>'epc.nameoncard','cardnumber'=>'epc.cardnumber','verficationcode'=>'epc.verficationcode','description'=>'epc.description','emp_id' => 'epc.emp_id', 'issueddate'=> 'DATE_FORMAT(epc.issueddate,"'.DATEFORMAT_MYSQL.'")', 'expirydate'=> 'DATE_FORMAT(epc.expirydate,"'.DATEFORMAT_MYSQL.'")','isactive'=>'if(epc.isactive="N","No","Yes")'])
+		->joinLeft(['mpc' => 'main_paymentcard'], "epc.paymentcard_id =mpc.paymentcard_id ", ['paymentcard_name' => 'mpc.name'])
+		->joinLeft(['e' => 'main_employees'], "epc.emp_id = e.id ", ['userfullname' => 'e.userfullname'])
 		->where('epc.emppaymentcard_id='.$id);
 		return $this->fetchAll($select)->toArray();
 	}

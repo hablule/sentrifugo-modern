@@ -65,68 +65,68 @@ class Default_Form_Timezone extends Zend_Form
         // Timezone Name (e.g., America/New_York)
         $name = new Zend_Form_Element_Text('name');
         $name->setLabel('Timezone Name')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '255', 'placeholder' => 'e.g., America/New_York'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '255', 'placeholder' => 'e.g., America/New_York'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', true, array('messages' => 'Please enter a timezone name.'))
+            ->addValidator('NotEmpty', true, ['messages' => 'Please enter a timezone name.'])
             // SSOT VI: Mandatory Regex for primary string descriptors
-            ->addValidator('Regex', true, array(
+            ->addValidator('Regex', true, [
                 'pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9 _\-\/]*)$/', // Allowed / and _ for standard TZ format
-                'messages' => array(
+                'messages' => [
                     Zend_Validate_Regex::NOT_MATCH => 'Please enter a valid timezone name (Cannot start with a space or be purely numeric).'
-                )
-            ));
+                ]
+            ]);
 
         // Strict Check: Ignore current ID, check against all non-deleted records
         $excludeClauseName = ($idVal > 0) ? "id != $idVal AND isactive != 5" : "isactive != 5";
-        $nameVal = new Zend_Validate_Db_NoRecordExists(array(
+        $nameVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_timezone',
             'field'   => 'name',
             'exclude' => $excludeClauseName
-        ));
+        ]);
         $nameVal->setMessage('This timezone name already exists.');
         $name->addValidator($nameVal);
 
         // Timezone Code / Abbreviation (e.g., EST)
         $code = new Zend_Form_Element_Text('code');
         $code->setLabel('Abbreviation')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '10', 'placeholder' => 'e.g., EST'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '10', 'placeholder' => 'e.g., EST'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', true, array('messages' => 'Please enter a timezone abbreviation.'))
-            ->addValidator('Regex', true, array(
+            ->addValidator('NotEmpty', true, ['messages' => 'Please enter a timezone abbreviation.'])
+            ->addValidator('Regex', true, [
                 'pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9 ]*)$/',
-                'messages' => array(
+                'messages' => [
                     Zend_Validate_Regex::NOT_MATCH => 'Please enter a valid abbreviation (Must contain letters, no leading spaces or special characters).'
-                )
-            ));
+                ]
+            ]);
 
         $excludeClauseCode = ($idVal > 0) ? "id != $idVal AND isactive != 5" : "isactive != 5";
-        $codeVal = new Zend_Validate_Db_NoRecordExists(array(
+        $codeVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_timezone',
             'field'   => 'code',
             'exclude' => $excludeClauseCode
-        ));
+        ]);
         $codeVal->setMessage('This abbreviation already exists.');
         $code->addValidator($codeVal);
 
         // Offset Value (e.g., UTC -05:00)
         $offset_value = new Zend_Form_Element_Text('offset_value');
         $offset_value->setLabel('UTC Offset')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '100', 'placeholder' => 'e.g., UTC -05:00'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '100', 'placeholder' => 'e.g., UTC -05:00'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', true, array('messages' => 'Please enter a UTC offset value.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please enter a UTC offset value.']);
 
         /* --------------------------------------------------------------
          * 3. Textarea Element
          * -------------------------------------------------------------- */
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Description')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -144,10 +144,10 @@ class Default_Form_Timezone extends Zend_Form
          * -------------------------------------------------------------- */
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save')
-            ->setAttribs(array(
+            ->setAttribs([
                 'id'    => 'submitbutton',
                 'class' => 'actbtn_btn'
-            ));
+            ]);
 
         // SSOT AJAX Submission Pattern (Strict Quoting, Empty 2nd Param, No return false)
         $urlAction  = "'timezone/save/format/json'";
@@ -157,14 +157,14 @@ class Default_Form_Timezone extends Zend_Form
         /* --------------------------------------------------------------
          * Build Form & Apply Decorators (SSOT VI)
          * -------------------------------------------------------------- */
-        $this->addElements(array(
+        $this->addElements([
             $idElement, $name, $code, $offset_value, $description, $isactive, $submit
-        ));
+        ]);
 
         // Strip default Zend Decorators and enforce ViewHelper universally
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
-            $element->setDecorators(array('ViewHelper'));
+            $element->setDecorators(['ViewHelper']);
         }
     }
 }

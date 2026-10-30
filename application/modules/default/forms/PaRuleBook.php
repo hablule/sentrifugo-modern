@@ -61,36 +61,36 @@ class Default_Form_Parulebook extends Zend_Form
         $frequency->setLabel('Appraisal Frequency')
             ->setAttrib('class', 'formDataElement')
             ->setRequired(true)
-            ->addMultiOptions(array(
+            ->addMultiOptions([
                 'Annual'    => 'Annual',
                 'Biannual'  => 'Biannual',
                 'Quarterly' => 'Quarterly',
                 'Monthly'   => 'Monthly',
                 'Ad-hoc'    => 'Ad-hoc (Continuous)'
-            ))
-            ->addValidator('NotEmpty', true, array('messages' => 'Please select a frequency.'));
+            ])
+            ->addValidator('NotEmpty', true, ['messages' => 'Please select a frequency.']);
 
         // Trigger Type
         $trigger_type = new Zend_Form_Element_Select('trigger_type');
         $trigger_type->setLabel('Trigger Type')
             ->setAttrib('class', 'formDataElement')
             ->setRequired(true)
-            ->addMultiOptions(array(
+            ->addMultiOptions([
                 'Manual'    => 'Manual',
                 'Automatic' => 'Automatic'
-            ))
-            ->addValidator('NotEmpty', true, array('messages' => 'Please select a trigger type.'));
+            ])
+            ->addValidator('NotEmpty', true, ['messages' => 'Please select a trigger type.']);
 
         // Is Mandatory
         $is_mandatory = new Zend_Form_Element_Select('is_mandatory');
         $is_mandatory->setLabel('Is Mandatory?')
             ->setAttrib('class', 'formDataElement')
             ->setRequired(true)
-            ->addMultiOptions(array(
+            ->addMultiOptions([
                 '1' => 'Yes',
                 '0' => 'No'
-            ))
-            ->addValidator('NotEmpty', true, array('messages' => 'Please select if mandatory.'));
+            ])
+            ->addValidator('NotEmpty', true, ['messages' => 'Please select if mandatory.']);
 
         /* --------------------------------------------------------------
          * 4. Text Elements
@@ -99,51 +99,51 @@ class Default_Form_Parulebook extends Zend_Form
         // Rulebook Code
         $code = new Zend_Form_Element_Text('code');
         $code->setLabel('Rulebook Code')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '60', 'placeholder' => 'e.g., ANNUAL_REVIEW'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '60', 'placeholder' => 'e.g., ANNUAL_REVIEW'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
             ->addFilter('StringToUpper')
-            ->addValidator('NotEmpty', true, array('messages' => 'Please enter a rulebook code.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please enter a rulebook code.']);
 
         // Strict Regex for Codes (No spaces allowed)
-        $code->addValidator('Regex', true, array(
+        $code->addValidator('Regex', true, [
             'pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9_]*)$/',
-            'messages' => array(Zend_Validate_Regex::NOT_MATCH => 'Code must contain letters and cannot start with a space. Only letters, numbers, and underscores allowed.')
-        ));
+            'messages' => [Zend_Validate_Regex::NOT_MATCH => 'Code must contain letters and cannot start with a space. Only letters, numbers, and underscores allowed.']
+        ]);
 
         // DB Unique Check
         $excludeClauseCode = ($idVal > 0) ? "id != $idVal AND isactive != 5" : "isactive != 5";
-        $code->addValidator('Db_NoRecordExists', true, array(
+        $code->addValidator('Db_NoRecordExists', true, [
             'table'    => 'main_pa_rulebook',
             'field'    => 'code',
             'exclude'  => $excludeClauseCode,
-            'messages' => array(Zend_Validate_Db_NoRecordExists::ERROR_RECORD_FOUND => 'This rulebook code already exists.')
-        ));
+            'messages' => [Zend_Validate_Db_NoRecordExists::ERROR_RECORD_FOUND => 'This rulebook code already exists.']
+        ]);
 
         // Rulebook Name
         $name = new Zend_Form_Element_Text('name');
         $name->setLabel('Rulebook Name')
-            ->setAttribs(array('class' => 'formDataElement', 'maxlength' => '100', 'placeholder' => 'e.g., Standard Annual Review'))
+            ->setAttribs(['class' => 'formDataElement', 'maxlength' => '100', 'placeholder' => 'e.g., Standard Annual Review'])
             ->setRequired(true)
             ->addFilter('StringTrim')
             ->addFilter('StripTags')
-            ->addValidator('NotEmpty', true, array('messages' => 'Please enter a rulebook name.'));
+            ->addValidator('NotEmpty', true, ['messages' => 'Please enter a rulebook name.']);
 
         // SSOT VI.4: Standard Regex Validator (Spaces allowed)
-        $name->addValidator('Regex', true, array(
+        $name->addValidator('Regex', true, [
             'pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9 ]*)$/',
-            'messages' => array(Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space or contain special characters.')
-        ));
+            'messages' => [Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space or contain special characters.']
+        ]);
 
         // DB Unique Check
         $excludeClauseName = ($idVal > 0) ? "id != $idVal AND isactive != 5" : "isactive != 5";
-        $name->addValidator('Db_NoRecordExists', true, array(
+        $name->addValidator('Db_NoRecordExists', true, [
             'table'    => 'main_pa_rulebook',
             'field'    => 'name',
             'exclude'  => $excludeClauseName,
-            'messages' => array(Zend_Validate_Db_NoRecordExists::ERROR_RECORD_FOUND => 'This rulebook name already exists.')
-        ));
+            'messages' => [Zend_Validate_Db_NoRecordExists::ERROR_RECORD_FOUND => 'This rulebook name already exists.']
+        ]);
 
         /* --------------------------------------------------------------
          * 5. Textarea Elements
@@ -152,7 +152,7 @@ class Default_Form_Parulebook extends Zend_Form
         // Description
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Description')
-            ->setAttribs(array('class' => 'formDataElement fck_editor_height', 'rows' => 4))
+            ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
 
@@ -175,13 +175,13 @@ class Default_Form_Parulebook extends Zend_Form
         // Standard Zend_Form_Element_Submit. No inline JS onclick attribute.
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save')
-            ->setAttribs(array('id' => 'submitbutton', 'class' => 'actbtn_btn'));
+            ->setAttribs(['id' => 'submitbutton', 'class' => 'actbtn_btn']);
 
         /* --------------------------------------------------------------
          * Build Form & Apply Decorators (SSOT VI.7)
          * -------------------------------------------------------------- */
 
-        $this->addElements(array(
+        $this->addElements([
             $idElement,
             $targetsPayload,
             $evaluatorsPayload,
@@ -194,11 +194,11 @@ class Default_Form_Parulebook extends Zend_Form
             $description,
             $isactive,
             $submit
-        ));
+        ]);
 
         $this->clearDecorators();
         foreach ($this->getElements() as $element) {
-            $element->setDecorators(array('ViewHelper'));
+            $element->setDecorators(['ViewHelper']);
         }
     }
 }

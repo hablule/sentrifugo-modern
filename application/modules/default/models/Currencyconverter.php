@@ -59,9 +59,9 @@ class Default_Model_Currencyconverter extends Zend_Db_Table_Abstract
     {
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('cc' => $this->_name))
-            ->joinInner(array('bc' => 'main_currency'), 'cc.base_currency_id = bc.id', array('base_currency' => 'bc.code'))
-            ->joinInner(array('tc' => 'main_currency'), 'cc.target_currency_id = tc.id', array('target_currency' => 'tc.code'))
+            ->from(['cc' => $this->_name])
+            ->joinInner(['bc' => 'main_currency'], 'cc.base_currency_id = bc.id', ['base_currency' => 'bc.code'])
+            ->joinInner(['tc' => 'main_currency'], 'cc.target_currency_id = tc.id', ['target_currency' => 'tc.code'])
             ->where('cc.isactive != 5');
         
         if ($activeStatus !== null) {
@@ -72,7 +72,7 @@ class Default_Model_Currencyconverter extends Zend_Db_Table_Abstract
             $select->where("$search_val LIKE ?", '%' . $search_str . '%');
         }
 
-        $select->order(array('bc.code ASC', 'tc.code ASC', 'cc.start_date DESC'));
+        $select->order(['bc.code ASC', 'tc.code ASC', 'cc.start_date DESC']);
 
         if ($limit !== null) {
             $select->limit($limit, (int)$offset);
@@ -97,7 +97,7 @@ class Default_Model_Currencyconverter extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -120,7 +120,7 @@ class Default_Model_Currencyconverter extends Zend_Db_Table_Abstract
         }
 
         // Must match exact column aliases defined in getGridData()
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'          => 'Action',
             'base_currency'   => 'Base Currency',
             'target_currency' => 'Target Currency',
@@ -128,11 +128,11 @@ class Default_Model_Currencyconverter extends Zend_Db_Table_Abstract
             'start_date'      => 'Start Date',
             'end_date'        => 'End Date',
             'status_text'     => 'Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort, 
             'by'             => $by, 
             'pageNo'         => $pageNo, 
@@ -140,7 +140,7 @@ class Default_Model_Currencyconverter extends Zend_Db_Table_Abstract
             'tablecontent'   => $tableContent, 
             'objectname'     => 'currencyconverter', 
             'tableheader'    => $tableHeaders,
-            'extra'          => array(), 
+            'extra'          => [], 
             'jsGridFnName'   => 'getAjaxgridData', 
             'jsFillFnName'   => '', 
             'searchArray'    => $searchArray,
@@ -148,10 +148,10 @@ class Default_Model_Currencyconverter extends Zend_Db_Table_Abstract
             'menuName'       => 'Currency Conversions', 
             'call'           => $call, 
             'dashboardcall'  => $dashboardcall, 
-            'search_filters' => array(
-                'status_text' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive'))
-            )
-        );
+            'search_filters' => [
+                'status_text' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']]
+            ]
+        ];
     }
 
     /**
@@ -171,21 +171,21 @@ class Default_Model_Currencyconverter extends Zend_Db_Table_Abstract
         if ($by == 'base_currency') $by = 'bc.code';
         if ($by == 'target_currency') $by = 'tc.code';
         // Prefix default columns to avoid ambiguity
-        if (in_array($by, array('exchange_rate', 'start_date', 'end_date'))) {
+        if (in_array($by, ['exchange_rate', 'start_date', 'end_date'])) {
             $by = 'cc.' . $by;
         }
 
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('cc' => $this->_name), array(
+            ->from(['cc' => $this->_name], [
                 'id'            => 'cc.id', // SSOT IV: Mandatory 'id' alias
                 'exchange_rate' => 'cc.exchange_rate',
                 'start_date'    => new Zend_Db_Expr("DATE_FORMAT(cc.start_date, '" . DATEFORMAT_MYSQL . "')"),
                 'end_date'      => new Zend_Db_Expr("IF(cc.end_date IS NOT NULL, DATE_FORMAT(cc.end_date, '" . DATEFORMAT_MYSQL . "'), '')"),
                 'status_text'   => new Zend_Db_Expr("CASE WHEN cc.isactive = 1 THEN 'Active' ELSE 'Inactive' END")
-            ))
-            ->joinInner(array('bc' => 'main_currency'), 'cc.base_currency_id = bc.id', array('base_currency' => 'bc.code'))
-            ->joinInner(array('tc' => 'main_currency'), 'cc.target_currency_id = tc.id', array('target_currency' => 'tc.code'))
+            ])
+            ->joinInner(['bc' => 'main_currency'], 'cc.base_currency_id = bc.id', ['base_currency' => 'bc.code'])
+            ->joinInner(['tc' => 'main_currency'], 'cc.target_currency_id = tc.id', ['target_currency' => 'tc.code'])
             ->where('cc.isactive != 5');
 
         if (!empty($searchQuery)) {
@@ -229,7 +229,7 @@ class Default_Model_Currencyconverter extends Zend_Db_Table_Abstract
         if (!empty($id)) {
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = gmdate("Y-m-d H:i:s");
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return 'update';
         }
         
@@ -259,12 +259,12 @@ class Default_Model_Currencyconverter extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => 5, 
             'modifiedby'   => $userId, 
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
-        return $this->update($data, array('id = ?' => (int)$id));
+        ];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /**
@@ -279,12 +279,12 @@ class Default_Model_Currencyconverter extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => (int)$status, 
             'modifiedby'   => $userId, 
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
-        return $this->update($data, array('id = ?' => (int)$id));
+        ];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* =================================================================================

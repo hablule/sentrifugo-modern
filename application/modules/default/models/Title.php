@@ -35,7 +35,7 @@ class Default_Model_Title extends Zend_Db_Table_Abstract
 		
 		$titleData = $this->select()
     					   ->setIntegrityCheck(false)	
-						   ->from('main_title',array('id','name','code','description','IF(isprefix="Y","Yes","No") as isprefix','IF(issuffix="Y","Yes","No") as issuffix,IF(isactive="Y","Yes","No") as isactive'))    					
+						   ->from('main_title',['id','name','code','description','IF(isprefix="Y","Yes","No") as isprefix','IF(issuffix="Y","Yes","No") as issuffix,IF(isactive="Y","Yes","No") as isactive'])    					
 						   ->where($where)
     					   ->order("$by $sort") 
     					   ->limitPage($pageNo, $perPage);
@@ -47,8 +47,8 @@ class Default_Model_Title extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{		
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		
 		if($searchData != '' && $searchData!='undefined')
 			{
@@ -62,17 +62,17 @@ class Default_Model_Title extends Zend_Db_Table_Abstract
 			}
 		$objName = 'title';
 		
-        $tableFields = array('action'=>'Action','code' => 'Title Code','name' => 'Title Name','description' => 'Description','isprefix' => 'Prefix','issuffix' => 'Suffix','isactive' => 'Active');		
+        $tableFields = ['action'=>'Action','code' => 'Title Code','name' => 'Title Name','description' => 'Description','isprefix' => 'Prefix','issuffix' => 'Suffix','isactive' => 'Active'];		
         $tablecontent = $this->getTitleData($sort, $by, $pageNo, $perPage,$searchQuery);     
 		
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -81,21 +81,21 @@ class Default_Model_Title extends Zend_Db_Table_Abstract
 			'add'=>'add',
 
 			'dashboardcall'=>$dashboardcall,
-			'search_filters'=>array(
-				'isprefix'=>array(
+			'search_filters'=>[
+				'isprefix'=>[
 					'type'=>'select',
-					'filter_data'=>array(''=>'All','Y'=>'Yes','N'=>'No')
-				),
-				'issuffix'=>array(
+					'filter_data'=>[''=>'All','Y'=>'Yes','N'=>'No']
+				],
+				'issuffix'=>[
 					'type'=>'select',
-					'filter_data'=>array(''=>'All','Y'=>'Yes','N'=>'No')
-				),
-				'isactive'=>array(
+					'filter_data'=>[''=>'All','Y'=>'Yes','N'=>'No']
+				],
+				'isactive'=>[
 					'type'=>'select',
-					'filter_data'=>array(''=>'All','Y'=>'Yes','N'=>'No')
-				)
-			)
-		);	
+					'filter_data'=>[''=>'All','Y'=>'Yes','N'=>'No']
+				]
+			]
+		];	
 		return $dataTmp;
 	}
 	
@@ -117,7 +117,7 @@ class Default_Model_Title extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from('main_title',array('id','name','code','description','IF(isprefix="Y","1","0") as isprefix','IF(issuffix="Y","1","0") as issuffix,IF(isactive="Y","1","0") as isactive'))    					
+						->from('main_title',['id','name','code','description','IF(isprefix="Y","1","0") as isprefix','IF(issuffix="Y","1","0") as issuffix,IF(isactive="Y","1","0") as isactive'])    					
 					    ->where('id='.$id);
 		return $this->fetchAll($select)->toArray();
 	
@@ -126,7 +126,7 @@ class Default_Model_Title extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from('main_title',array('id','name','code','description','IF(isprefix="Y","Yes","No") as isprefix','IF(issuffix="Y","Yes","No") as issuffix,IF(isactive="Y","Yes","No") as isactive'))    					
+						->from('main_title',['id','name','code','description','IF(isprefix="Y","Yes","No") as isprefix','IF(issuffix="Y","Yes","No") as issuffix,IF(isactive="Y","Yes","No") as isactive'])    					
 					    ->where('id='.$id);
 		return $this->fetchAll($select)->toArray();
 	
@@ -162,7 +162,7 @@ class Default_Model_Title extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('t'=>'main_title'),array('id'=>'t.id','title'=>'t.name'))
+						->from(['t'=>'main_title'],['id'=>'t.id','title'=>'t.name'])
 					    ->where("t.isactive = 'Y'")
 						 ->order('t.name');
 		return $this->fetchAll($select)->toArray();

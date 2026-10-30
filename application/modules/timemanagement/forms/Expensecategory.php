@@ -36,18 +36,18 @@ class Timemanagement_Form_Expensecategory extends Zend_Form
         $category->setLabel("Category");
         
         $category->setRequired(true);
-        $category->addValidator('NotEmpty', false, array('messages' => 'Please enter Category.'));
-		$category->addValidator("regex",true,array(
+        $category->addValidator('NotEmpty', false, ['messages' => 'Please enter Category.']);
+		$category->addValidator("regex",true,[
 									'pattern'=> '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9 ]*)$/',
-								    'messages'=>array(
+								    'messages'=>[
 									     'regexNotMatch'=>'Please enter valid Category.'
-								     )
-					       ));	
+								     ]
+					       ]);	
         $category->addValidator(new Zend_Validate_Db_NoRecordExists(
-                                              array('table'=>'tm_expense_categories',
+                                              ['table'=>'tm_expense_categories',
                                                      'field'=>'expense_category',
                                                      'exclude'=>'id!="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('id').'" and is_active=1',    
-                                                 ) )  
+                                                 ] )  
                                     );
         $category->getValidator('Db_NoRecordExists')->setMessage('Category already exists.');	
         	
@@ -55,17 +55,17 @@ class Timemanagement_Form_Expensecategory extends Zend_Form
         $unitPrice = new Zend_Form_Element_Text('unit_price');
         $unitPrice->setAttrib('maxLength', 7);
         $unitPrice->setLabel("Unit Price");
-		$unitPrice->addValidator("regex",true,array(
+		$unitPrice->addValidator("regex",true,[
 									'pattern'=> '/^[1-9]+(\.\d{1,2})?$/',
-								    'messages'=>array(
+								    'messages'=>[
 									     'regexNotMatch'=>'Please enter valid price.'
-								     )
-					       ));        
+								     ]
+					       ]);        
 		$submit = new Zend_Form_Element_Submit('submit');
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 
-		 $this->addElements(array($id,$category,$unitPrice,$submit));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 $this->addElements([$id,$category,$unitPrice,$submit]);
+         $this->setElementDecorators(['ViewHelper']); 
 	}
 }

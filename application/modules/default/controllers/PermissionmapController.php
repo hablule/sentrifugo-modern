@@ -49,7 +49,7 @@ class Default_PermissionmapController extends Zend_Controller_Action
         $session = sapp_Global::_readSession();
         if (!isset($session)) {
             if ($this->getRequest()->isXmlHttpRequest()) {
-                die(Zend_Json::encode(array('login' => 'failed')));
+                die(Zend_Json::encode(['login' => 'failed']));
             } else {
                 $this->_redirect('');
             }
@@ -95,7 +95,7 @@ class Default_PermissionmapController extends Zend_Controller_Action
             // Method call now perfectly safe
             $dataTmp = $this->_model->getGrid($sort, $by, $perPage, $page, rtrim($searchData, ','), $call, $dashboardcall);
 
-            $this->view->dataArray = array($dataTmp);
+            $this->view->dataArray = [$dataTmp];
             $this->view->call      = $call;
             $this->view->messages  = $this->_helper->flashMessenger->getMessages();
         } catch (\Throwable $e) { // FIX 2: Catch \Throwable to trap PHP 8 Fatal Errors
@@ -130,7 +130,7 @@ class Default_PermissionmapController extends Zend_Controller_Action
     {
         $form = new Default_Form_Permissionmap();
         $request = $this->getRequest();
-        $response = array('result' => 'error', 'message' => 'Invalid data');
+        $response = ['result' => 'error', 'message' => 'Invalid data'];
 
         if ($request->isPost()) {
             if ($form->isValid($request->getPost())) {
@@ -140,11 +140,11 @@ class Default_PermissionmapController extends Zend_Controller_Action
                 $db->beginTransaction(); // SSOT V: Transactions Mandatory
 
                 try {
-                    $data = array(
+                    $data = [
                         'permission' => trim($request->getParam('permission')),
                         'description' => trim($request->getParam('description')),
                         'isactive'   => (int)$request->getParam('isactive')
-                    );
+                    ];
 
                     // 1. Save mapping
                     $this->_model->saveRecord($data, $id);
@@ -159,31 +159,31 @@ class Default_PermissionmapController extends Zend_Controller_Action
                     $db->commit();
 
                     // SSOT X.2: FlashMessenger for Success across redirects
-                    $this->_helper->flashMessenger->addMessage(array('success' => 'Permission mapping updated successfully.'));
+                    $this->_helper->flashMessenger->addMessage(['success' => 'Permission mapping updated successfully.']);
 
                     // SSOT X.2: Strict JSON Response Contract
-                    $response = array(
+                    $response = [
                         'result'    => 'saved',
                         'nomessage' => 'no',
                         'message'   => 'Permission mapping updated successfully.',
                         'msgtype'   => 'success'
-                    );
+                    ];
                 } catch (Exception $e) {
                     $db->rollBack();
                     error_log("Sentrifugo Mapping Save Error: " . $e->getMessage());
-                    $response = array(
+                    $response = [
                         'result'  => 'exception',
                         'message' => 'System error occurred while updating ACL mapping.',
                         'msgtype' => 'error'
-                    );
+                    ];
                 }
             } else {
                 // SSOT X.3: Flatten Form Validation Errors
-                $msgarray = array();
+                $msgarray = [];
                 foreach ($form->getMessages() as $field => $errors) {
                     $msgarray[$field] = current($errors);
                 }
-                $response = array('result' => 'error', 'message' => $msgarray);
+                $response = ['result' => 'error', 'message' => $msgarray];
             }
         }
         $this->_helper->json($response);

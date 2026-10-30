@@ -93,9 +93,9 @@ class sapp_Global
 	 */
 	public static function mobile_parent_menus()
 	{
-		$parent_menu = array(
+		$parent_menu = [
 			ORGANIZATION, HUMANRESOURCE, EMPLOYEESELFSERVICE, BGCHECKS, REPORTS
-		);
+		];
 		return $parent_menu;
 	}
 	/**
@@ -104,10 +104,10 @@ class sapp_Global
 	 */
 	public static function mobile_child_menus()
 	{
-		$child_menu = array(
+		$child_menu = [
 			MYDETAILS, LEAVES, MYEMPLOYEES, MYHOLIDAYCALENDAR, SCHEDULEINTERVIEWS, EMPLOYEE,
 			EMPSCREENING, ORGANISATIONINFO, BUSINESSUNITS
-		);
+		];
 		return $child_menu;
 	}
 
@@ -155,12 +155,12 @@ class sapp_Global
 			// Make bold cells
 			$objPHPExcel->getActiveSheet()->getStyle($cell_name)->getFont()->setBold(true);
 			$objPHPExcel->getActiveSheet()->getStyle($cell_name)->applyFromArray(
-				array(
-					'fill' => array(
+				[
+					'fill' => [
 						'type' => PHPExcel_Style_Fill::FILL_SOLID,
-						'color' => array('rgb' => '82CAFF')
-					)
-				)
+						'color' => ['rgb' => '82CAFF']
+					]
+				]
 			);
 			$objPHPExcel->getActiveSheet()->getColumnDimension('A')->setAutoSize(false);
 			$objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(100);
@@ -335,7 +335,7 @@ class sapp_Global
 								}
 								if (!$shift_found) {
 									if ($merge[$temp_key][$temp_key_3]['shift'] == null) {
-										$merge[$temp_key][$temp_key_3]['shift'] = array();
+										$merge[$temp_key][$temp_key_3]['shift'] = [];
 									}
 									array_push($merge[$temp_key][$temp_key_3]['shift'], $temp_key_4);
 								}
@@ -447,7 +447,7 @@ class sapp_Global
 
 			$column_count = 0;
 			$data_index = 6;
-			$empID_cellRow = array();
+			$empID_cellRow = [];
 			sapp_Global::drawCell($objPHPExcel, "A1", "A5", "Employee Name", "Header");
 			sapp_Global::drawCell($objPHPExcel, "B1", "B5", "Business Unit", "Header");
 			sapp_Global::drawCell($objPHPExcel, "C1", "C5", "Division", "Header");
@@ -521,32 +521,32 @@ class sapp_Global
 		// Make bold cells
 		$objPHPExcel->getActiveSheet()->getStyle($cell_name)->getFont()->setBold(true);
 		$objPHPExcel->getActiveSheet()->getStyle($cell_name . ':' . $end_cell_name)->getBorders()->applyFromArray(
-			array(
-				'allborders'     => array(
+			[
+				'allborders'     => [
 					'style' => PHPExcel_Style_Border::BORDER_THIN,
-					'color' => array(
+					'color' => [
 						'rgb' => '808080'
-					)
-				),
-			)
+					]
+				],
+			]
 		);
 		$objPHPExcel->getActiveSheet()->getStyle($cell_name)->applyFromArray(
-			array(
-				'fill' => array(
+			[
+				'fill' => [
 					'type' => PHPExcel_Style_Fill::FILL_SOLID,
-					'color' => array('rgb' => $color),
+					'color' => ['rgb' => $color],
 
-				)
-			)
+				]
+			]
 		);
 		if ($data_type == "Header") {
 			$objPHPExcel->getActiveSheet()->getStyle($cell_name)->getAlignment()->applyFromArray(
-				array(
+				[
 					'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
 					'vertical'   => PHPExcel_Style_Alignment::VERTICAL_CENTER,
 					'rotation'   => 0,
 					'wrap'		=> TRUE
-				)
+				]
 			);
 		}
 		foreach (range('A', 'H') as $columnID) {
@@ -772,10 +772,10 @@ class sapp_Global
 		$alt = time() % 2;
 		for ($i = 0; $i < $length; $i++) {
 			if ($alt == 1) {
-				$password .= $consonants[(rand() % strlen($consonants))];
+				$password .= $consonants[(random_int(0, mt_getrandmax()) % strlen($consonants))];
 				$alt = 0;
 			} else {
-				$password .= $vowels[(rand() % strlen($vowels))];
+				$password .= $vowels[(random_int(0, mt_getrandmax()) % strlen($vowels))];
 				$alt = 1;
 			}
 		}
@@ -848,7 +848,7 @@ class sapp_Global
 
 		if (is_object($obj)) $obj = (array) $obj;
 		if (is_array($obj)) {
-			$new = array();
+			$new = [];
 			foreach ($obj as $key => $val) {
 				$new[$key] = self::toArray($val);
 			}
@@ -864,7 +864,7 @@ class sapp_Global
 	 */
 	public static function parseObjectToArray($object)
 	{
-		$array = array();
+		$array = [];
 		if (is_object($object)) {
 			$array = get_object_vars($object);
 		}
@@ -879,7 +879,7 @@ class sapp_Global
 	{
 		try {
 			$uploaddir = USER_UPLOAD_PREVIEW_PATH;
-			$fileExt = $this->getFileExtenction(basename($_FILES['uploadfile']['name']));
+			$fileExt = static::getFileExtenction(basename($_FILES['uploadfile']['name']));
 
 
 
@@ -1011,7 +1011,7 @@ class sapp_Global
 
 		// Allowed image types
 
-		$allowtype = array('gif', 'jpg', 'jpeg', 'png');
+		$allowtype = ['gif', 'jpg', 'jpeg', 'png'];
 
 		/** Uploading the image **/
 
@@ -1073,11 +1073,11 @@ class sapp_Global
 		// encode with 'urlencode()' the $rezultat and return it in 'onload', inside a BODY tag
 
 
-		$result = array(
+		$result = [
 			'result' => $result_status,
 			'img' => $rezultat,
 			'msg' => $result_msg
-		);
+		];
 		return $result;
 	}
 	/**
@@ -1088,7 +1088,7 @@ class sapp_Global
 	{
 		$max_size = 250;			// maxim size for image file, in KiloBytes
 
-		$allowtype = array('pdf', 'docx', 'rtf', 'odx', 'doc', 'txt', 'odt');
+		$allowtype = ['pdf', 'docx', 'rtf', 'odx', 'doc', 'txt', 'odt'];
 
 		/** Uploading the image **/
 
@@ -1115,12 +1115,12 @@ class sapp_Global
 						$varaible = explode('.', $fileInfo['name']);
 						$extension = end($varaible);
 
-						$logo = md5(uniqid(rand(), true)) . '.' . $extension;
+						$logo = md5(uniqid(random_int(0, mt_getrandmax()), true)) . '.' . $extension;
 						$renameFilter->addFile(
-							array(
+							[
 								'source' => $fileInfo['tmp_name'],
 								'target' => $logo, 'overwrite' => true
-							)
+							]
 						);
 					}
 					// add filters to Zend_File_Transfer_Adapter_Http
@@ -1160,11 +1160,11 @@ class sapp_Global
 			$result_msg = 'The file ' . $filename . ' has not an allowed extension.';
 		}
 
-		$result = array(
+		$result = [
 			'result' => $result_status,
 			'img' => $rezultat,
 			'msg' => $result_msg
-		);
+		];
 		return $result;
 	}
 	/**
@@ -1181,29 +1181,29 @@ class sapp_Global
 	{
 		$date = new Zend_Date(); // initializing Zend Date Object
 		$logmanagermodel = new Default_Model_Logmanager();
-		$jsonlogDataArr = array();
+		$jsonlogDataArr = [];
 		if ($childrecordId != '') {
 			$childrecordArr = explode(',', $childrecordId);
 			for ($i = 0; $i < sizeof($childrecordArr); $i++) {
-				$logarr[$i] = array(
+				$logarr[$i] = [
 					'userid' => $loginUserId,
 					'recordid' => $recordId,
 					'childrecordid' => $childrecordArr[$i],
 
 					'date' => gmdate("Y-m-d H:i:s")
-				);
+				];
 			}
 			$jsonlogarr = json_encode($logarr);
 			$jsonlogarr = rtrim($jsonlogarr, "]");
 			$jsonlogarr = ltrim($jsonlogarr, "[");
 		} else {
-			$logarr = array(
+			$logarr = [
 				'userid' => $loginUserId,
 				'recordid' => $recordId,
 
 
 				'date' => gmdate("Y-m-d H:i:s")
-			);
+			];
 			$jsonlogarr = json_encode($logarr);	// Building Json String of loggedinUser,DatabaseID of UserAction,Date
 		}
 		if (is_array($defined_str) && count($defined_str) > 0) {
@@ -1226,7 +1226,7 @@ class sapp_Global
 	 * @param Array $default_permissions = data from DB to display default privileges of group.
 	 * @return string  HTML of radio buttons.
 	 */
-	public static function usermenu_html($menu_id, $parent_menu_id1, $parent_menu_id2, $display, $permission_data, $chk_disabled = null, $default_permissions)
+	public static function usermenu_html($menu_id, $parent_menu_id1, $parent_menu_id2, $display, $permission_data, $chk_disabled = null, $default_permissions = null)
 	{
 		$parent_class_div1 = '';
 		$parent_class_div2 = '';
@@ -1908,8 +1908,8 @@ class sapp_Global
 		foreach ($priv as  $value) {
 			# code...
 			
-			$tempaction = array();
-			$controllers = array($value['tabcode'] . 'controller.php' => array('url' => $value['tabcode'], 'modulename' => 'default', 'actions' => array()));
+			$tempaction = [];
+			$controllers = [$value['tabcode'] . 'controller.php' => ['url' => $value['tabcode'], 'modulename' => 'default', 'actions' => []]];
 			$acl = self::generateAccessControl_helper($controllers, $role_id);
 			$role_type = $value['code'];
 		if (count($acl) > 0) {
@@ -1919,37 +1919,37 @@ class sapp_Global
 		$actions = $acl[$value['tabcode'] . 'controller.php'];
 				
 				foreach ($actions as $action) {
-					if (strpos($action, 'view') !== false) {
+					if (str_contains($action, 'view')) {
 						
 						if ($value['canview'] == "Y") {
 							array_push($tempaction, $action);
 						}
 					}
-					else if (strpos($action, 'delete') !== false) {
+					else if (str_contains($action, 'delete')) {
 
 
 						if ($value['candelete'] == "Y") {
 							array_push($tempaction, $action);
 						}
 					}
-					else if (strpos($action, 'edit') !== false) {
+					else if (str_contains($action, 'edit')) {
 
 						if ($value['canedit'] == "Y") {
 							
 							array_push($tempaction, $action);
 						}
 					}
-					else if (strpos($action, 'add') !== false) {
+					else if (str_contains($action, 'add')) {
 						if ($value['canadd'] == "Y") {
 							array_push($tempaction, $action);
 						}
 					}
-					else if (strpos($action, 'upload') !== false) {
+					else if (str_contains($action, 'upload')) {
 						if ($value['canupload'] == "Y") {
 							array_push($tempaction, $action);
 						}
 					}
-					else if (strpos($action,'viewupload') != false)
+					else if (str_contains($action,'viewupload'))
 					{
 						if($value['canviewupload'] == "Y")
 						{
@@ -1962,7 +1962,7 @@ class sapp_Global
 				$acl[$value['tabcode'] . 'controller.php'] = $tempaction;
 				
 		foreach ($acl as $con_name => $act_arr) {
-			$moduleName = isset($controllers[$con_name]['modulename']) ? $controllers[$con_name]['modulename'] : 'default';
+			$moduleName = $controllers[$con_name]['modulename'] ?? 'default';
 
 			if ($value['code'] != 'admin') {
 				if (($controllers[$con_name]['url'] != 'index') && ($controllers[$con_name]['url'] != 'dashboard')) {
@@ -2071,38 +2071,38 @@ class sapp_Global
 		$rcontent = "";
 		if ($group_id == HR_GROUP || $group_id == MANAGEMENT_GROUP || $role_id == SUPERADMINROLE) //for HR group and management group
 		{
-			$process_controllers = array('processescontroller.php' => array('url' => 'processes', 'modulename' => 'default', 'actions' => array()));
+			$process_controllers = ['processescontroller.php' => ['url' => 'processes', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($process_controllers, $role_id, $roles['code']);
 			//adding interviewrounds
 			
-			$irounds_controllers = array('interviewroundscontroller.php' => array('url' => 'interviewrounds', 'modulename' => 'default', 'actions' => array()));
+			$irounds_controllers = ['interviewroundscontroller.php' => ['url' => 'interviewrounds', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($irounds_controllers, $role_id, $roles['code']);
 			//end of adding interview rounds
 			
 			//start of employee related controllers
-			$empperformanceappraisal_controllers = array('empperformanceappraisalcontroller.php' => array('url' => 'empperformanceappraisal', 'modulename' => 'default', 'actions' => array()));
+			$empperformanceappraisal_controllers = ['empperformanceappraisalcontroller.php' => ['url' => 'empperformanceappraisal', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($empperformanceappraisal_controllers, $role_id, $roles['code']);
 
-			$emppayslips_controllers = array('emppayslipscontroller.php' => array('url' => 'emppayslips', 'modulename' => 'default', 'actions' => array()));
+			$emppayslips_controllers = ['emppayslipscontroller.php' => ['url' => 'emppayslips', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($emppayslips_controllers, $role_id, $roles['code']);
 
 
 			/* $healthissue_controllers = array('emphealthissuecontroller.php'=>array('url'=>'emphealthissue','modulename'=>'default','actions'=>array()));
 			$rcontent .=self::generateAccessControl_helper3($healthissue_controllers,$role_id,$roles['code']); */
 
-			$empbenefits_controllers = array('empbenefitscontroller.php' => array('url' => 'empbenefits', 'modulename' => 'default', 'actions' => array()));
+			$empbenefits_controllers = ['empbenefitscontroller.php' => ['url' => 'empbenefits', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($empbenefits_controllers, $role_id, $roles['code']);
 
-			$emprequisitiondetails_controllers = array('emprequisitiondetailscontroller.php' => array('url' => 'emprequisitiondetails', 'modulename' => 'default', 'actions' => array()));
+			$emprequisitiondetails_controllers = ['emprequisitiondetailscontroller.php' => ['url' => 'emprequisitiondetails', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($emprequisitiondetails_controllers, $role_id, $roles['code']);
 
-			$emprenumerationdetails_controllers = array('empremunerationdetailscontroller.php' => array('url' => 'empremunerationdetails', 'modulename' => 'default', 'actions' => array()));
+			$emprenumerationdetails_controllers = ['empremunerationdetailscontroller.php' => ['url' => 'empremunerationdetails', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($emprenumerationdetails_controllers, $role_id, $roles['code']);
 
-			$empsecuritycredentials_controllers = array('empsecuritycredentialscontroller.php' => array('url' => 'empsecuritycredentials', 'modulename' => 'default', 'actions' => array()));
+			$empsecuritycredentials_controllers = ['empsecuritycredentialscontroller.php' => ['url' => 'empsecuritycredentials', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($empsecuritycredentials_controllers, $role_id, $roles['code']);
 
-			$apprreqcandidates_controllers = array('apprreqcandidatescontroller.php' => array('url' => 'apprreqcandidates', 'modulename' => 'default', 'actions' => array()));
+			$apprreqcandidates_controllers = ['apprreqcandidatescontroller.php' => ['url' => 'apprreqcandidates', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($apprreqcandidates_controllers, $role_id, $roles['code']);
 
 
@@ -2112,109 +2112,109 @@ class sapp_Global
 		if ($group_id == EMPLOYEE_GROUP || $group_id == HR_GROUP || $group_id == MANAGEMENT_GROUP  || $role_id == SUPERADMINROLE) //for Employee,management ,HR groups
 		{
 			//start of emloyee related controllers
-			$personal_controllers = array('emppersonaldetailscontroller.php' => array('url' => 'emppersonaldetails', 'modulename' => 'default', 'actions' => array()));
+			$personal_controllers = ['emppersonaldetailscontroller.php' => ['url' => 'emppersonaldetails', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($personal_controllers, $role_id, $roles['code']);
 
 
 
-			$employeedocs_controllers = array('empiddocumentcontroller.php' => array('url' => 'empiddocument', 'modulename' => 'default', 'actions' => array()));
+			$employeedocs_controllers = ['empiddocumentcontroller.php' => ['url' => 'empiddocument', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($employeedocs_controllers, $role_id, $roles['code']);
 
-			$communication_controllers = array('empcommunicationdetailscontroller.php' => array('url' => 'empcommunicationdetails', 'modulename' => 'default', 'actions' => array()));
+			$communication_controllers = ['empcommunicationdetailscontroller.php' => ['url' => 'empcommunicationdetails', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($communication_controllers, $role_id, $roles['code']);
 
-			$training_controllers = array('trainingandcertificationdetailscontroller.php' => array('url' => 'trainingandcertificationdetails', 'modulename' => 'default', 'actions' => array()));
+			$training_controllers = ['trainingandcertificationdetailscontroller.php' => ['url' => 'trainingandcertificationdetails', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($training_controllers, $role_id, $roles['code']);
 
-			$experience_controllers = array('experiencedetailscontroller.php' => array('url' => 'experiencedetails', 'modulename' => 'default', 'actions' => array()));
+			$experience_controllers = ['experiencedetailscontroller.php' => ['url' => 'experiencedetails', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($experience_controllers, $role_id, $roles['code']);
 
-			$education_controllers = array('educationdetailscontroller.php' => array('url' => 'educationdetails', 'modulename' => 'default', 'actions' => array()));
+			$education_controllers = ['educationdetailscontroller.php' => ['url' => 'educationdetails', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($education_controllers, $role_id, $roles['code']);
 
-			$medical_controllers = array('medicalclaimscontroller.php' => array('url' => 'medicalclaims', 'modulename' => 'default', 'actions' => array()));
+			$medical_controllers = ['medicalclaimscontroller.php' => ['url' => 'medicalclaims', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($medical_controllers, $role_id, $roles['code']);
 
-			$leaves_controllers = array('empleavescontroller.php' => array('url' => 'empleaves', 'modulename' => 'default', 'actions' => array()));
+			$leaves_controllers = ['empleavescontroller.php' => ['url' => 'empleaves', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($leaves_controllers, $role_id, $roles['code']);
 
-			$skills_controllers = array('empskillscontroller.php' => array('url' => 'empskills', 'modulename' => 'default', 'actions' => array()));
+			$skills_controllers = ['empskillscontroller.php' => ['url' => 'empskills', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($skills_controllers, $role_id, $roles['code']);
-			$phoneno_controllers = array('empphonenocontroller.php' => array('url' => 'empphoneno', 'modulename' => 'default', 'actions' => array()));
+			$phoneno_controllers = ['empphonenocontroller.php' => ['url' => 'empphoneno', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($phoneno_controllers, $role_id, $roles['code']);
-			$bankaccount_controllers = array('empbankaccountcontroller.php' => array('url' => 'empbankaccount', 'modulename' => 'default', 'actions' => array()));
+			$bankaccount_controllers = ['empbankaccountcontroller.php' => ['url' => 'empbankaccount', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($bankaccount_controllers, $role_id, $roles['code']);
 			/* $benefits_controllers = array('empbenefitscontroller.php' => array('url' => 'empbenefits', 'modulename' => 'default', 'actions' => array()));
 			$rcontent .= self::generateAccessControl_helper3($benefits_controllers, $role_id, $roles['code']); */
-			$deductive_controllers = array('empdeductivecontroller.php' => array('url' => 'empdeductive', 'modulename' => 'default', 'actions' => array()));
+			$deductive_controllers = ['empdeductivecontroller.php' => ['url' => 'empdeductive', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($deductive_controllers, $role_id, $roles['code']);
 			/* $leaves_controllers = array('empleavescontroller.php' => array('url' => 'empleaves', 'modulename' => 'default', 'actions' => array()));
 				$rcontent .= self::generateAccessControl_helper3($leaves_controllers, $role_id, $roles['code']); */
 				
-			$presence_controllers = array('emppresencecontroller.php' => array('url' => 'emppresence', 'modulename' => 'default', 'actions' => array()));
+			$presence_controllers = ['emppresencecontroller.php' => ['url' => 'emppresence', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($presence_controllers, $role_id, $roles['code']);
 
-			$device_controllers = array('empdevicecontroller.php' => array('url' => 'empdevice', 'modulename' => 'default', 'actions' => array()));
+			$device_controllers = ['empdevicecontroller.php' => ['url' => 'empdevice', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($device_controllers, $role_id, $roles['code']);
 				
-			$schedule_controllers = array('empschedulecontroller.php' => array('url' => 'empschedule', 'modulename' => 'default', 'actions' => array()));
+			$schedule_controllers = ['empschedulecontroller.php' => ['url' => 'empschedule', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($schedule_controllers, $role_id, $roles['code']);
 
-			$empaddress_controllers = array('empaddresscontroller.php' => array('url' => 'empaddress', 'modulename' => 'default', 'actions' => array()));
+			$empaddress_controllers = ['empaddresscontroller.php' => ['url' => 'empaddress', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($empaddress_controllers, $role_id, $roles['code']);
 			
-			$emppos_controller = array('empposcontroller.php' => array('url' => 'emppos', 'modulename' => 'default', 'actions' => array()));
+			$emppos_controller = ['empposcontroller.php' => ['url' => 'emppos', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($emppos_controller, $role_id, $roles['code']);
-			$emprole_controller = array('emprolecontroller.php' => array('url' => 'emprole', 'modulename' => 'default', 'actions' => array()));
+			$emprole_controller = ['emprolecontroller.php' => ['url' => 'emprole', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($emprole_controller, $role_id, $roles['code']);
-			$empuser_controller = array('empusercontroller.php' => array('url' => 'empuser', 'modulename' => 'default', 'actions' => array()));
+			$empuser_controller = ['empusercontroller.php' => ['url' => 'empuser', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($empuser_controller, $role_id, $roles['code']);
-			$emprecord_controller = array('emprecordaccesscontroller.php' => array('url' => 'emprecordaccess', 'modulename' => 'default', 'actions' => array()));
+			$emprecord_controller = ['emprecordaccesscontroller.php' => ['url' => 'emprecordaccess', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($emprecord_controller, $role_id, $roles['code']);
-			$disability_controllers = array('disabilitydetailscontroller.php' => array('url' => 'disabilitydetails', 'modulename' => 'default', 'actions' => array()));
+			$disability_controllers = ['disabilitydetailscontroller.php' => ['url' => 'disabilitydetails', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($disability_controllers, $role_id, $roles['code']);
 			
-			$weligibility_controllers = array('workeligibilitydetailscontroller.php' => array('url' => 'workeligibilitydetails', 'modulename' => 'default', 'actions' => array()));
+			$weligibility_controllers = ['workeligibilitydetailscontroller.php' => ['url' => 'workeligibilitydetails', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($weligibility_controllers, $role_id, $roles['code']);
 
-			$healthissue_controllers = array('emphealthissuecontroller.php' => array('url' => 'emphealthissue', 'modulename' => 'default', 'actions' => array()));
+			$healthissue_controllers = ['emphealthissuecontroller.php' => ['url' => 'emphealthissue', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($healthissue_controllers, $role_id, $roles['code']);
 
-			$additionaldetails_controllers = array('empadditionaldetailscontroller.php' => array('url' => 'empadditionaldetails', 'modulename' => 'default', 'actions' => array()));
+			$additionaldetails_controllers = ['empadditionaldetailscontroller.php' => ['url' => 'empadditionaldetails', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($additionaldetails_controllers, $role_id, $roles['code']);
 
-			$visa_controllers = array('visaandimmigrationdetailscontroller.php' => array('url' => 'visaandimmigrationdetails', 'modulename' => 'default', 'actions' => array()));
+			$visa_controllers = ['visaandimmigrationdetailscontroller.php' => ['url' => 'visaandimmigrationdetails', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($visa_controllers, $role_id, $roles['code']);
 
-			$creditcard_controllers = array('creditcarddetailscontroller.php' => array('url' => 'creditcarddetails', 'modulename' => 'default', 'actions' => array()));
+			$creditcard_controllers = ['creditcarddetailscontroller.php' => ['url' => 'creditcarddetails', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($creditcard_controllers, $role_id, $roles['code']);
 
-			$dependency_controllers = array('dependencydetailscontroller.php' => array('url' => 'dependencydetails', 'modulename' => 'default', 'actions' => array()));
+			$dependency_controllers = ['dependencydetailscontroller.php' => ['url' => 'dependencydetails', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($dependency_controllers, $role_id, $roles['code']);
 
-			$empholidays_controllers = array('empholidayscontroller.php' => array('url' => 'empholidays', 'modulename' => 'default', 'actions' => array()));
+			$empholidays_controllers = ['empholidayscontroller.php' => ['url' => 'empholidays', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($empholidays_controllers, $role_id, $roles['code']);
 
-			$empjobhistory_controllers = array('empjobhistorycontroller.php' => array('url' => 'empjobhistory', 'modulename' => 'default', 'actions' => array()));
+			$empjobhistory_controllers = ['empjobhistorycontroller.php' => ['url' => 'empjobhistory', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($empjobhistory_controllers, $role_id, $roles['code']);
 
-			$empassetdetails_controllers = array('assetdetailscontroller.php' => array('url' => 'assetdetails', 'modulename' => 'default', 'actions' => array()));
+			$empassetdetails_controllers = ['assetdetailscontroller.php' => ['url' => 'assetdetails', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($empassetdetails_controllers, $role_id, $roles['code']);
 
 			if ($group_id != EMPLOYEE_GROUP) {
-				$empsalarydetails_controllers = array('empsalarydetailscontroller.php' => array('url' => 'empsalarydetails', 'modulename' => 'default', 'actions' => array()));
+				$empsalarydetails_controllers = ['empsalarydetailscontroller.php' => ['url' => 'empsalarydetails', 'modulename' => 'default', 'actions' => []]];
 				$rcontent .= self::generateAccessControl_helper3($empsalarydetails_controllers, $role_id, $roles['code']);
 			}
 			//end of emloyee related controllers
 		}
 		if ($group_id == SYSTEMADMIN_GROUP) //for system admin group
 		{
-			$managemenu_controllers = array('managemenuscontroller.php' => array('url' => 'managemenus', 'modulename' => 'default', 'actions' => array()));
+			$managemenu_controllers = ['managemenuscontroller.php' => ['url' => 'managemenus', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($managemenu_controllers, $role_id, $roles['code']);
 		}
 		if ($group_id == USERS_GROUP) //for users group
 		{
-			$process_controllers = array('processescontroller.php' => array('url' => 'processes', 'modulename' => 'default', 'actions' => array()));
+			$process_controllers = ['processescontroller.php' => ['url' => 'processes', 'modulename' => 'default', 'actions' => []]];
 			$process_acl = self::generateAccessControl_helper($process_controllers, $role_id);
 			$process_acl['processescontroller.php'] = array_combine($process_acl['processescontroller.php'], $process_acl['processescontroller.php']);
 
@@ -2231,58 +2231,58 @@ class sapp_Global
 			//start of emloyee related controllers
 			
 
-			$employeedocs_controllers = array('employeedocscontroller.php' => array('url' => 'employeedocs', 'modulename' => 'default', 'actions' => array()));
+			$employeedocs_controllers = ['employeedocscontroller.php' => ['url' => 'employeedocs', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($employeedocs_controllers, $role_id, $roles['code']);
 
-			$communication_controllers = array('empcommunicationdetailscontroller.php' => array('url' => 'empcommunicationdetails', 'modulename' => 'default', 'actions' => array()));
+			$communication_controllers = ['empcommunicationdetailscontroller.php' => ['url' => 'empcommunicationdetails', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper4($communication_controllers, $role_id, $roles['code']);
 
-			$training_controllers = array('trainingandcertificationdetailscontroller.php' => array('url' => 'trainingandcertificationdetails', 'modulename' => 'default', 'actions' => array()));
+			$training_controllers = ['trainingandcertificationdetailscontroller.php' => ['url' => 'trainingandcertificationdetails', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($training_controllers, $role_id, $roles['code']);
 
-			$experience_controllers = array('experiencedetailscontroller.php' => array('url' => 'experiencedetails', 'modulename' => 'default', 'actions' => array()));
+			$experience_controllers = ['experiencedetailscontroller.php' => ['url' => 'experiencedetails', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($experience_controllers, $role_id, $roles['code']);
 
 			/* $healthissue_controllers = array('emphealthissuecontroller.php'=>array('url'=>'emphealthissue','modulename'=>'default','actions'=>array()));
 			$rcontent .=self::generateAccessControl_helper3($healthissue_controllers,$role_id,$roles['code']); */
 
-			$education_controllers = array('educationdetailscontroller.php' => array('url' => 'educationdetails', 'modulename' => 'default', 'actions' => array()));
+			$education_controllers = ['educationdetailscontroller.php' => ['url' => 'educationdetails', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($education_controllers, $role_id, $roles['code']);
 
-			$medical_controllers = array('medicalclaimscontroller.php' => array('url' => 'medicalclaims', 'modulename' => 'default', 'actions' => array()));
+			$medical_controllers = ['medicalclaimscontroller.php' => ['url' => 'medicalclaims', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($medical_controllers, $role_id, $roles['code']);
 
-			$leaves_controllers = array('empleavescontroller.php' => array('url' => 'empleaves', 'modulename' => 'default', 'actions' => array()));
+			$leaves_controllers = ['empleavescontroller.php' => ['url' => 'empleaves', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper4($leaves_controllers, $role_id, $roles['code']);
 
-			$skills_controllers = array('empskillscontroller.php' => array('url' => 'empskills', 'modulename' => 'default', 'actions' => array()));
+			$skills_controllers = ['empskillscontroller.php' => ['url' => 'empskills', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($skills_controllers, $role_id, $roles['code']);
 
-			$disability_controllers = array('disabilitydetailscontroller.php' => array('url' => 'disabilitydetails', 'modulename' => 'default', 'actions' => array()));
+			$disability_controllers = ['disabilitydetailscontroller.php' => ['url' => 'disabilitydetails', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper4($disability_controllers, $role_id, $roles['code']);
 
-			$weligibility_controllers = array('workeligibilitydetailscontroller.php' => array('url' => 'workeligibilitydetails', 'modulename' => 'default', 'actions' => array()));
+			$weligibility_controllers = ['workeligibilitydetailscontroller.php' => ['url' => 'workeligibilitydetails', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper4($weligibility_controllers, $role_id, $roles['code']);
 
-			$visa_controllers = array('visaandimmigrationdetailscontroller.php' => array('url' => 'visaandimmigrationdetails', 'modulename' => 'default', 'actions' => array()));
+			$visa_controllers = ['visaandimmigrationdetailscontroller.php' => ['url' => 'visaandimmigrationdetails', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($visa_controllers, $role_id, $roles['code']);
 
-			$creditcard_controllers = array('creditcarddetailscontroller.php' => array('url' => 'creditcarddetails', 'modulename' => 'default', 'actions' => array()));
+			$creditcard_controllers = ['creditcarddetailscontroller.php' => ['url' => 'creditcarddetails', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper4($creditcard_controllers, $role_id, $roles['code']);
 
-			$dependency_controllers = array('dependencydetailscontroller.php' => array('url' => 'dependencydetails', 'modulename' => 'default', 'actions' => array()));
+			$dependency_controllers = ['dependencydetailscontroller.php' => ['url' => 'dependencydetails', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($dependency_controllers, $role_id, $roles['code']);
 
-			$empholidays_controllers = array('empholidayscontroller.php' => array('url' => 'empholidays', 'modulename' => 'default', 'actions' => array()));
+			$empholidays_controllers = ['empholidayscontroller.php' => ['url' => 'empholidays', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper4($empholidays_controllers, $role_id, $roles['code']);
 
-			$empjobhistory_controllers = array('empjobhistorycontroller.php' => array('url' => 'empjobhistory', 'modulename' => 'default', 'actions' => array()));
+			$empjobhistory_controllers = ['empjobhistorycontroller.php' => ['url' => 'empjobhistory', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($empjobhistory_controllers, $role_id, $roles['code']);
 
-			$empadditionaldetails_controllers = array('empadditionaldetailscontroller.php' => array('url' => 'empadditionaldetails', 'modulename' => 'default', 'actions' => array()));
+			$empadditionaldetails_controllers = ['empadditionaldetailscontroller.php' => ['url' => 'empadditionaldetails', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($empadditionaldetails_controllers, $role_id, $roles['code']);
 
-			$empassetdetails_controllers = array('assetdetailscontroller.php' => array('url' => 'assetdetails', 'modulename' => 'default', 'actions' => array()));
+			$empassetdetails_controllers = ['assetdetailscontroller.php' => ['url' => 'assetdetails', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper4($empassetdetails_controllers, $role_id, $roles['code']);
 
 			//end of emloyee related controllers
@@ -2290,21 +2290,21 @@ class sapp_Global
 		if ($group_id == MANAGER_GROUP || $group_id == EMPLOYEE_GROUP || $group_id == SYSTEMADMIN_GROUP) //for manager,management groups
 		{
 			//adding interviewrounds
-			$irounds_controllers = array('interviewroundscontroller.php' => array('url' => 'interviewrounds', 'modulename' => 'default', 'actions' => array()));
+			$irounds_controllers = ['interviewroundscontroller.php' => ['url' => 'interviewrounds', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($irounds_controllers, $role_id, $roles['code']);
 			//end of adding interview rounds
 		}
 		if ($group_id == MANAGER_GROUP || $group_id == EMPLOYEE_GROUP || $group_id == SYSTEMADMIN_GROUP) {
-			$apprreqcandidates_controllers = array('apprreqcandidatescontroller.php' => array('url' => 'apprreqcandidates', 'modulename' => 'default', 'actions' => array()));
+			$apprreqcandidates_controllers = ['apprreqcandidatescontroller.php' => ['url' => 'apprreqcandidates', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper4($apprreqcandidates_controllers, $role_id, $roles['code']);
 		}
 		if ($group_id == MANAGEMENT_GROUP  || $role_id == SUPERADMINROLE) //for enabling logs for management
 		{
-			$logmanager_controllers = array('logmanagercontroller.php' => array('url' => 'logmanager', 'modulename' => 'default', 'actions' => array()));
+			$logmanager_controllers = ['logmanagercontroller.php' => ['url' => 'logmanager', 'modulename' => 'default', 'actions' => []]];
 			$rcontent .= self::generateAccessControl_helper3($logmanager_controllers, $role_id, $roles['code']);
 
-			$userloginlog_controllers = array('userloginlogcontroller.php' => array('url' => 'userloginlog', 'modulename' => 'default', 'actions' => array()));
-			$userreportBM_controllers = array('logreportcontroller.php' => array('url' => 'logreport', 'modulename' => 'schedule', 'actions' => array('index')));
+			$userloginlog_controllers = ['userloginlogcontroller.php' => ['url' => 'userloginlog', 'modulename' => 'default', 'actions' => []]];
+			$userreportBM_controllers = ['logreportcontroller.php' => ['url' => 'logreport', 'modulename' => 'schedule', 'actions' => ['index']]];
 			$rcontent .= self::generateAccessControl_helper3($userloginlog_controllers, $role_id, $roles['code']);
 			$rcontent .= self::generateAccessControl_helper3($userreportBM_controllers, $role_id, $roles['code']);
 		}
@@ -2405,7 +2405,7 @@ class sapp_Global
 
 
 		foreach ($acl as $con_name => $act_arr) {
-			$moduleName = isset($controllers[$con_name]['modulename']) ? $controllers[$con_name]['modulename'] : 'default';
+			$moduleName = $controllers[$con_name]['modulename'] ?? 'default';
 
 			if ($role_type != 'admin') {
 				if (($controllers[$con_name]['url'] != 'index') && ($controllers[$con_name]['url'] != 'dashboard')) {
@@ -2472,7 +2472,7 @@ class sapp_Global
 
 		$front = Zend_Controller_Front::getInstance()->getControllerDirectory();
 
-		$acl = array();
+		$acl = [];
 		unset($front['services']);
 
 		foreach ($front as $module => $path) {
@@ -2493,10 +2493,10 @@ class sapp_Global
 
 							$controller = strtolower(substr($class, 0, strpos($class, "Controller")));
 
-							$actions = array();
+							$actions = [];
 
 							foreach (get_class_methods($class) as $action) {
-								if (strstr($action, "Action") !== false) {
+								if (str_contains($action, "Action")) {
 									$actions[] = substr($action, 0, -6);
 								}
 							}
@@ -2519,7 +2519,7 @@ class sapp_Global
 		//if(isset($acl['default']))
 		//$acl = $acl['default'];
 
-		$aacl = array();
+		$aacl = [];
 		if (isset($acl['default']))
 			$aacl = $acl['default'];
 		if (isset($acl['assets'])) {
@@ -2558,17 +2558,17 @@ class sapp_Global
 		if (is_array($options['toEmail'])) $toemailData = implode(',', $options['toEmail']);
 		else
 			$toemailData = $options['toEmail'];
-		$data = array(
+		$data = [
 
 			'toEmail' 			=> 		$toemailData,
-			'toName' => isset($options['toName']) ? $options['toName'] : NULL,
+			'toName' => $options['toName'] ?? NULL,
 			'emailsubject' 		=> 		$options['subject'],
 			'header' 			=> 		$options['header'],
 			'message' 			=> 		$options['message'],
 			'createddate' 		=> 		$date->get('yyyy-MM-dd HH:mm:ss'),
 			'modifieddate'		=>		$date->get('yyyy-MM-dd HH:mm:ss')
 
-		);
+		];
 		$empArrList = '';
 		if (isset($options['cc'])) $data['cc'] 		= 	$options['cc'];
 		if (isset($options['bcc'])) {
@@ -2584,7 +2584,7 @@ class sapp_Global
 
 			//echo "<pre>";print_r($options);
 			$mail_status = sapp_Mail::_email($options);
-			$where = array('id=?' => $id);
+			$where = ['id=?' => $id];
 			$newdata['modifieddate'] = $date->get('yyyy-MM-dd HH:mm:ss');
 			$newdata['is_sent'] = 1;
 			if ($mail_status === true) {
@@ -2600,7 +2600,7 @@ class sapp_Global
 	 */
 	public static function _weekdays()
 	{
-		$weekArr = array(
+		$weekArr = [
 			'0'   => 'Sunday',
 			'1'   => 'Monday',
 			'2'   => 'Tuesday',
@@ -2608,7 +2608,7 @@ class sapp_Global
 			'4'   => 'Thursday',
 			'5'   => 'Friday',
 			'6'	  => 'Saturday'
-		);
+		];
 		return $weekArr;
 	}
 	/**
@@ -2619,7 +2619,7 @@ class sapp_Global
 	 * @param String $action    = action like add,edit,view ...
 	 * @return string  Returns Yes/No
 	 */
-	public static function _checkprivileges($objectId, $groupId = '', $roleId, $action)
+	public static function _checkprivileges($objectId, $groupId = '', $roleId = null, $action = null)
 	{
 		$menuID = $objectId;
 		$privilege_model = new Default_Model_Privileges();
@@ -2639,7 +2639,7 @@ class sapp_Global
 	 * @param Integer $roleId   = role id
 	 * @return string  Returns Yes/No
 	 */
-	public static function _check_menu_access($objectId, $groupId = '', $roleId)
+	public static function _check_menu_access($objectId, $groupId = '', $roleId = null)
 	{
 		$privilege_model = new Default_Model_Privileges();
 		$privilegesofObj = $privilege_model->getObjPrivileges($objectId, $groupId, $roleId);
@@ -2667,8 +2667,8 @@ class sapp_Global
 
 			$ua = $employeeModel->userAccess($loginUserId);
 			$empids = '';
-			$permission = array();
-			$perm = array();
+			$permission = [];
+			$perm = [];
 
 			foreach ($ua as $value) {
 				if ($value['accesslevel'] == 'ALL') {
@@ -2677,14 +2677,14 @@ class sapp_Global
 
 					foreach ($allemp as $all) {
 						$empids .= $all['employee_id'] . ',';
-						$perm[$all['employee_id']] = array('type' => 'ALL', 'permission' => $value['readwrite'], 'empid' => $all['employee_id']);
+						$perm[$all['employee_id']] = ['type' => 'ALL', 'permission' => $value['readwrite'], 'empid' => $all['employee_id']];
 						//	array_push($perm,array($group['employee_id']=>'GROUP','Permission'=>$value['readwrite']));
 					}
 				} else if ($value['accesslevel'] == 'GROUP') {
 					$groups = $employeeModel->getempgroup($value['loginempid']);
 					foreach ($groups as $group) {
 						$empids .= $group['employee_id'] . ',';
-						$perm[$group['employee_id']] = array('type' => 'GROUP', 'permission' => $value['readwrite'], 'empid' => $group['employee_id']);
+						$perm[$group['employee_id']] = ['type' => 'GROUP', 'permission' => $value['readwrite'], 'empid' => $group['employee_id']];
 						//	array_push($perm,array($group['employee_id']=>'GROUP','Permission'=>$value['readwrite']));
 
 					}
@@ -2694,25 +2694,25 @@ class sapp_Global
 					foreach ($chains as  $chain) {
 						$empids .= $chain['employee_id'] . ',';
 
-						$perm[$chain['employee_id']] = array('type' => 'CHAIN', 'permission' => $value['readwrite'], 'empid' => $chain['employee_id']);
+						$perm[$chain['employee_id']] = ['type' => 'CHAIN', 'permission' => $value['readwrite'], 'empid' => $chain['employee_id']];
 						//array_push($perm,array($chain['employee_id']=>'CHAIN','Permission'=>$value['readwrite']));
 					}
 				} else if ($value['accesslevel'] == 'LINE') {
 					$lines = $employeeModel->getempwithoutchain($value['loginempid'], $value['accesslevel']);
 					foreach ($lines as $line) {
 						$empids .= $line['employee_id'] . ',';
-						$perm[$line['employee_id']] = array('type' => 'LINE', 'permission' => $value['readwrite'], 'empid' => $line['employee_id']);
+						$perm[$line['employee_id']] = ['type' => 'LINE', 'permission' => $value['readwrite'], 'empid' => $line['employee_id']];
 						//array_push($perm,array($line['employee_id']=>'LINE','Permission'=>$value['readwrite']));
 					}
 				} else if ($value['accesslevel'] == 'INDIVIDUAL') {
 					$indiviual = $value['emp_id'];
 					$empids .= $indiviual . ',';
-					$perm[$value['emp_id']] = array('type' => 'INDIVIDUAL', 'permission' => $value['readwrite'], 'empid' => $value['emp_id']);
+					$perm[$value['emp_id']] = ['type' => 'INDIVIDUAL', 'permission' => $value['readwrite'], 'empid' => $value['emp_id']];
 					//	array_push($perm,array($value['emp_id']=>'INDIVIDUAL','Permission'=>$value['readwrite']));
 				} else if ($value['accesslevel'] == 'SELF') {
 					$self = $employeeModel->getempwithoutchain($value['loginempid'], $value['accesslevel']);
 					$empids .= $self[0]['employee_id'] . ',';
-					$perm[$self[0]['employee_id']] = array('type' => 'SELF', 'permission' => $value['readwrite'], 'empid' => $self[0]['employee_id']);
+					$perm[$self[0]['employee_id']] = ['type' => 'SELF', 'permission' => $value['readwrite'], 'empid' => $self[0]['employee_id']];
 					//	array_push($perm,array($self[0]['employee_id'] =>'SELF',$value['readwrite']));
 				}
 			}
@@ -2737,36 +2737,36 @@ class sapp_Global
 
 			$ua = $employeeModel->userAccess($loginUserId);
 			$empids = '';
-			$permission = array();
-			$perm = array();
+			$permission = [];
+			$perm = [];
 
 			foreach ($ua as $value) {
 				//Zend_Debug::dump($value);
 				if ($value['accesslevel'] == 'ALL') {
 					$allemp = $employeeModel->getempwithoutchain($value['loginempid'], $value['accesslevel']);
 					foreach ($allemp as $all) {
-						$perm[$all['employee_id']] = array('type' => $value['accesslevel'], 'permission' => $value['readwrite'], 'empid' => $all['employee_id']);
+						$perm[$all['employee_id']] = ['type' => $value['accesslevel'], 'permission' => $value['readwrite'], 'empid' => $all['employee_id']];
 					}
 				} else if ($value['accesslevel'] == 'GROUP') {
 					$groups = $employeeModel->getempgroup($value['loginempid']);
 					foreach ($groups as $group) {
-						$perm[$group['employee_id']] = array('type' => $value['accesslevel'], 'permission' => $value['readwrite'], 'empid' => $group['employee_id']);
+						$perm[$group['employee_id']] = ['type' => $value['accesslevel'], 'permission' => $value['readwrite'], 'empid' => $group['employee_id']];
 					}
 				} else if ($value['accesslevel'] == 'CHAIN') {
 					$chains = $employeeModel->getempchain($value['loginempid']);
 					foreach ($chains as  $chain) {
-						$perm[$chain['employee_id']] = array('type' => $value['accesslevel'], 'permission' => $value['readwrite'], 'empid' => $chain['employee_id']);
+						$perm[$chain['employee_id']] = ['type' => $value['accesslevel'], 'permission' => $value['readwrite'], 'empid' => $chain['employee_id']];
 					}
 				} else if ($value['accesslevel'] == 'LINE') {
 					$lines = $employeeModel->getempwithoutchain($value['loginempid'], $value['accesslevel']);
 					foreach ($lines as $line) {
-						$perm[$line['employee_id']] = array('type' => $value['accesslevel'], 'permission' => $value['readwrite'], 'empid' => $line['employee_id']);
+						$perm[$line['employee_id']] = ['type' => $value['accesslevel'], 'permission' => $value['readwrite'], 'empid' => $line['employee_id']];
 					}
 				} else if ($value['accesslevel'] == 'INDIVIDUAL') {
-					$perm[$value['emp_id']] = array('type' => $value['accesslevel'], 'permission' => $value['readwrite'], 'empid' => $value['emp_id']);
+					$perm[$value['emp_id']] = ['type' => $value['accesslevel'], 'permission' => $value['readwrite'], 'empid' => $value['emp_id']];
 				} else if ($value['accesslevel'] == 'SELF') {
 					$self = $employeeModel->getempwithoutchain($value['loginempid'], $value['accesslevel']);
-					$perm[$self[0]['employee_id']] = array('type' => $value['accesslevel'], 'permission' => $value['readwrite'], 'empid' => $self[0]['employee_id']);
+					$perm[$self[0]['employee_id']] = ['type' => $value['accesslevel'], 'permission' => $value['readwrite'], 'empid' => $self[0]['employee_id']];
 				}
 			}
 
@@ -3021,7 +3021,7 @@ class sapp_Global
 			readfile($file);
 			exit;
 		} else {
-			return array('message' => 'File not found. Please check the path is correct and file exists.');
+			return ['message' => 'File not found. Please check the path is correct and file exists.'];
 		}
 	}
 
@@ -3046,7 +3046,7 @@ class sapp_Global
 			readfile($file);
 			exit;
 		} else {
-			return array('message' => 'File not found. Please check the path is correct and file exists.');
+			return ['message' => 'File not found. Please check the path is correct and file exists.'];
 		}
 	}
 
@@ -3058,7 +3058,7 @@ class sapp_Global
 		$buname = '';
 		$deptname = '';
 		$perf_impl_flag = '';
-		$appraisaldataArr = array();
+		$appraisaldataArr = [];
 		if ($appraisalid) {
 			$appraisaldataArr = $appInitModel->getAppDataById($appraisalid);
 			if (!empty($appraisaldataArr)) {
@@ -3072,7 +3072,7 @@ class sapp_Global
 					{
 						$perf_impl_flag = $perfimplementation['performance_app_flag'];
 					}*/
-					$perf_impl_flag = isset($appraisaldataArr['performance_app_flag']) ? $appraisaldataArr['performance_app_flag'] : 1;
+					$perf_impl_flag = $appraisaldataArr['performance_app_flag'] ?? 1;
 				}
 				if ($perf_impl_flag == 0) {
 					if ($appraisaldataArr['department_id'] != '')
@@ -3085,7 +3085,7 @@ class sapp_Global
 			}
 		}
 
-		return array('buname' => $buname, 'deptname' => $deptname, 'perf_app_flag' => $perf_impl_flag, 'appdata' => $appraisaldataArr);
+		return ['buname' => $buname, 'deptname' => $deptname, 'perf_app_flag' => $perf_impl_flag, 'appdata' => $appraisaldataArr];
 	}
 
 	public static function smartresizeimage(
@@ -3105,7 +3105,7 @@ class sapp_Global
 		$image                        = '';
 		$final_width                  = 0;
 		$final_height                 = 0;
-		list($width_old, $height_old) = $info;
+		[$width_old, $height_old] = $info;
 
 		# Calculating proportionality
 		if ($proportional) {
@@ -3198,8 +3198,8 @@ class sapp_Global
 
 	public static function aasort(&$array, $key)
 	{
-		$sorter = array();
-		$ret = array();
+		$sorter = [];
+		$ret = [];
 		reset($array);
 		foreach ($array as $ii => $va) {
 			$sorter[$ii] = $va[$key];
@@ -3259,9 +3259,9 @@ class sapp_Global
 			$cityId = $wizardData['city'];
 
 		if (count($_POST) > 0) {
-			$countryId = isset($_POST['country']) ? $_POST['country'] : "";
-			$stateId = isset($_POST['state']) ? $_POST['state'] : "";
-			$cityId = isset($_POST['city']) ? $_POST['city'] : "";
+			$countryId = $_POST['country'] ?? "";
+			$stateId = $_POST['state'] ?? "";
+			$cityId = $_POST['city'] ?? "";
 		}
 		if ($countryId != '') {
 			$statesData = $statesmodel->getBasicStatesList((int)$countryId);
@@ -3296,62 +3296,62 @@ class sapp_Global
 	public static function titleArr($id = '', $con = '')
 	{
 		$idsTitleArr =
-			array(
-				57  => array('title' => 'Scheduled Interviews', 'btnText' => 'Schedules', 'emptyText' => 'No interviews scheduled for today', 'addText' => 'Add'),
-				10  =>  array('title' => 'Business Units', 'btnText' => 'View All', 'emptyText' => 'No business units', 'addText' => 'Add Units'),
-				11  => array('title' => 'Departments', 'btnText' => 'View All', 'emptyText' => 'No deparments', 'addText' => 'Add departments'),
-				20  => array('title' => 'Roles & Privileges', 'btnText' => 'View All', 'emptyText' => 'No active roles', 'addText' => 'Add roles'),
-				21  => array('title' => 'Manage External Users', 'btnText' => 'View All', 'emptyText' => 'No external users', 'addText' => 'Add'),
-				14  => array('title' => 'Employees', 'btnText' => 'View All', 'emptyText' => '', 'addText' => 'Add'),
-				23  => array('title' => 'Employee/Candidate Screening', 'btnText' => 'View All', 'emptyText' => '', 'addText' => 'Add'),
-				32  => array('title' => 'My Details', 'btnText' => 'View', 'emptyText' => '', 'addText' => 'Add'),
-				34  => array('title' => 'My Team', 'btnText' => 'View My Team', 'emptyText' => '', 'addText' => 'Add'),
-				41  => array('title' => 'Manage Holiday Group', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => ''),
-				42  => array('title' => 'Manage Holidays', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => ''),
-				45  => array('title' => 'Employee Leaves Summary', 'btnText' => 'View Leaves', 'emptyText' => '', 'addText' => 'Add'),
-				54  => array('title' => 'Openings/Positions', 'btnText' => 'View', 'emptyText' => '', 'addText' => 'Add'),
-				55  => array('title' => 'CV Management', 'btnText' => 'View All', 'emptyText' => 'No data', 'addText' => ''),
-				56  => array('title' => 'Shortlisted & Selected Candidates', 'btnText' => 'View Candidates', 'emptyText' => '', 'addText' => 'Add'),
-				61  => array('title' => 'Leaves Available', 'btnText' => 'Apply Leave', 'emptyText' => '', 'addText' => 'Add'),
-				65  => array('title' => 'Leaves Pending For Approval', 'btnText' => 'Approve Leaves', 'emptyText' => '', 'addText' => 'Add'),
-				44  => array('title' => 'Leave Management Options', 'btnText' => 'View', 'emptyText' => '', 'addText' => 'Add'),
-				43  => array('title' => 'My Holiday Calendar', 'btnText' => 'View Holidays', 'emptyText' => 'No holidays added yet', 'addText' => 'Add'),
-				80  => array('title' => 'Time Zones', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				86  => array('title' => 'Gender', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				87  => array('title' => 'Marital Status', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				88  => array('title' => 'Prefixes', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				89  => array('title' => 'Race Codes', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				90  => array('title' => 'Nationality Context Codes', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				91  => array('title' => 'Nationalities', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				92  => array('title' => 'Account Class Types ', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				93  => array('title' => 'License Types', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				100  => array('title' => 'Countries', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				101  => array('title' => 'States', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				102  => array('title' => 'Cities', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				103  => array('title' => 'Geo Groups', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				107  => array('title' => 'Veteran Status', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				108  => array('title' => 'Military Service Types', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				110  => array('title' => 'Currencies', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				111  => array('title' => 'Currency Conversions', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				114  => array('title' => 'Employment Status', 'btnText' => 'View All', 'emptyText' => '', 'addText' => 'Add'),
-				115  => array('title' => 'EEOC Categories', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				116  => array('title' => 'Job Titles', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				117  => array('title' => 'Pay Frequency', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				118  => array('title' => 'Remuneration Basis', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				120  => array('title' => 'Positions', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				121  => array('title' => 'Languages', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				123  => array('title' => 'Bank Account Types', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				124  => array('title' => 'Competency Levels', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				125  => array('title' => 'Education Levels', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				126  => array('title' => 'Attendance Status', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				127  => array('title' => 'Work Eligibility Document Types', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				128  => array('title' => 'Leave Types', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				131  => array('title' => 'Site Configuration', 'btnText' => 'View', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				132  => array('title' => 'Number Formats', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				136  => array('title' => 'Email Contacts', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				140  => array(
-					'empTabTitle' => array('title' => 'Employee Tabs', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-					'empTabConfigurations' => array(
+			[
+				57  => ['title' => 'Scheduled Interviews', 'btnText' => 'Schedules', 'emptyText' => 'No interviews scheduled for today', 'addText' => 'Add'],
+				10  =>  ['title' => 'Business Units', 'btnText' => 'View All', 'emptyText' => 'No business units', 'addText' => 'Add Units'],
+				11  => ['title' => 'Departments', 'btnText' => 'View All', 'emptyText' => 'No deparments', 'addText' => 'Add departments'],
+				20  => ['title' => 'Roles & Privileges', 'btnText' => 'View All', 'emptyText' => 'No active roles', 'addText' => 'Add roles'],
+				21  => ['title' => 'Manage External Users', 'btnText' => 'View All', 'emptyText' => 'No external users', 'addText' => 'Add'],
+				14  => ['title' => 'Employees', 'btnText' => 'View All', 'emptyText' => '', 'addText' => 'Add'],
+				23  => ['title' => 'Employee/Candidate Screening', 'btnText' => 'View All', 'emptyText' => '', 'addText' => 'Add'],
+				32  => ['title' => 'My Details', 'btnText' => 'View', 'emptyText' => '', 'addText' => 'Add'],
+				34  => ['title' => 'My Team', 'btnText' => 'View My Team', 'emptyText' => '', 'addText' => 'Add'],
+				41  => ['title' => 'Manage Holiday Group', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => ''],
+				42  => ['title' => 'Manage Holidays', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => ''],
+				45  => ['title' => 'Employee Leaves Summary', 'btnText' => 'View Leaves', 'emptyText' => '', 'addText' => 'Add'],
+				54  => ['title' => 'Openings/Positions', 'btnText' => 'View', 'emptyText' => '', 'addText' => 'Add'],
+				55  => ['title' => 'CV Management', 'btnText' => 'View All', 'emptyText' => 'No data', 'addText' => ''],
+				56  => ['title' => 'Shortlisted & Selected Candidates', 'btnText' => 'View Candidates', 'emptyText' => '', 'addText' => 'Add'],
+				61  => ['title' => 'Leaves Available', 'btnText' => 'Apply Leave', 'emptyText' => '', 'addText' => 'Add'],
+				65  => ['title' => 'Leaves Pending For Approval', 'btnText' => 'Approve Leaves', 'emptyText' => '', 'addText' => 'Add'],
+				44  => ['title' => 'Leave Management Options', 'btnText' => 'View', 'emptyText' => '', 'addText' => 'Add'],
+				43  => ['title' => 'My Holiday Calendar', 'btnText' => 'View Holidays', 'emptyText' => 'No holidays added yet', 'addText' => 'Add'],
+				80  => ['title' => 'Time Zones', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				86  => ['title' => 'Gender', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				87  => ['title' => 'Marital Status', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				88  => ['title' => 'Prefixes', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				89  => ['title' => 'Race Codes', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				90  => ['title' => 'Nationality Context Codes', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				91  => ['title' => 'Nationalities', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				92  => ['title' => 'Account Class Types ', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				93  => ['title' => 'License Types', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				100  => ['title' => 'Countries', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				101  => ['title' => 'States', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				102  => ['title' => 'Cities', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				103  => ['title' => 'Geo Groups', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				107  => ['title' => 'Veteran Status', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				108  => ['title' => 'Military Service Types', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				110  => ['title' => 'Currencies', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				111  => ['title' => 'Currency Conversions', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				114  => ['title' => 'Employment Status', 'btnText' => 'View All', 'emptyText' => '', 'addText' => 'Add'],
+				115  => ['title' => 'EEOC Categories', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				116  => ['title' => 'Job Titles', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				117  => ['title' => 'Pay Frequency', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				118  => ['title' => 'Remuneration Basis', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				120  => ['title' => 'Positions', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				121  => ['title' => 'Languages', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				123  => ['title' => 'Bank Account Types', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				124  => ['title' => 'Competency Levels', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				125  => ['title' => 'Education Levels', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				126  => ['title' => 'Attendance Status', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				127  => ['title' => 'Work Eligibility Document Types', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				128  => ['title' => 'Leave Types', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				131  => ['title' => 'Site Configuration', 'btnText' => 'View', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				132  => ['title' => 'Number Formats', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				136  => ['title' => 'Email Contacts', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				140  => [
+					'empTabTitle' => ['title' => 'Employee Tabs', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+					'empTabConfigurations' => [
 						'employeedocs' => 'Employee Documents', 'emp_leaves' => 'Employee Leaves', 'emp_leaves' => 'Employee Leaves', 'emp_salary' => 'Salary Details', 'emppersonaldetails' => 'Personal Details',
 						'empcommunicationdetails' => 'Contact Details', 'emp_skills' => 'Employee Skills', 'emp_jobhistory' => 'Employee Job History', 'experience_details' => 'Experience Details',
 						'education_details' => 'Education  Details', 'trainingandcertification_details' => 'Training & Certification  Details', 'medical_claims' => 'Medical Claims',
@@ -3359,43 +3359,43 @@ class sapp_Global
 						'creditcarddetails' => 'Corporate Card Details', 'workeligibilitydetails' => 'Work Eligibility Details', 'emp_additional' => 'Additional Details',
 						'emp_performanceappraisal' => 'Performance Appraisal', 'emp_payslips' => 'Pay slips', 'emp_benifits' => 'Benefits', 'emp_renumeration' => 'Remuneration Details',
 						'emp_security' => 'Security Credentials'
-					)
-				),
-				144  => array('title' => 'Categories', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				145  => array('title' => 'Request Types', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				146  => array('title' => 'Settings', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				148  => array('title' => '', 'btnText' => '', 'emptyText' => '', 'addText' => 'Add'),
-				150  => array('title' => 'Parameters', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				151  => array('title' => 'Skills', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				152  => array('title' => 'Appraisal Questions', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				154  => array('title' => 'Initialize Appraisal', 'btnText' => 'Initialize', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				155  => array('title' => 'Appraisal Settings', 'btnText' => 'View All', 'emptyText' => '', 'addText' => 'Add'),
-				165  => array('title' => 'Parameters', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				166  => array('title' => 'Feedforward Questions', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				62  => array('title' => 'Pending Leave(s)', 'btnText' => 'View All', 'emptyText' => '', 'addText' => 'Add'),
-				63  => array('title' => 'Approved Leaves', 'btnText' => 'View All', 'emptyText' => '', 'addText' => 'Add'),
-				64  => array('title' => 'Cancelled Leaves', 'btnText' => 'View All', 'emptyText' => '', 'addText' => 'Add'),
-				68  => array('title' => 'Screening Types', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				69  => array('title' => 'Agencies', 'btnText' => 'View All', 'emptyText' => '', 'addText' => 'Add'),
-				85  => array('title' => 'Ethnic Codes', 'btnText' => 'View All', 'emptyText' => 'Ethnic codes not added', 'addText' => 'Add'),
-				134  => array('title' => 'Approved Requisitions', 'btnText' => 'View All', 'emptyText' => '', 'addText' => 'Add'),
-				135  => array('title' => 'Rejected Leaves', 'btnText' => 'View All', 'emptyText' => '', 'addText' => 'Add'),
-				138  => array('title' => 'Rejected Requisitions', 'btnText' => 'View All', 'emptyText' => '', 'addText' => 'Add'),
-				139  => array('title' => 'Identity Documents', 'btnText' => 'View All', 'emptyText' => '', 'addText' => 'Add'),
-				142  =>  array('title' => 'Manage Modules', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'),
-				158  => array('title' => 'Manager Status', 'btnText' => 'View', 'emptyText' => 'No data', 'addText' => ''),
-				159  => array('title' => 'Appraisal Employee Status', 'btnText' => 'View', 'emptyText' => 'No data', 'addText' => ''),
-				35  => array('title' => 'My Team Appraisal', 'btnText' => 'View', 'emptyText' => 'No data', 'addText' => ''),
+					]
+				],
+				144  => ['title' => 'Categories', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				145  => ['title' => 'Request Types', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				146  => ['title' => 'Settings', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				148  => ['title' => '', 'btnText' => '', 'emptyText' => '', 'addText' => 'Add'],
+				150  => ['title' => 'Parameters', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				151  => ['title' => 'Skills', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				152  => ['title' => 'Appraisal Questions', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				154  => ['title' => 'Initialize Appraisal', 'btnText' => 'Initialize', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				155  => ['title' => 'Appraisal Settings', 'btnText' => 'View All', 'emptyText' => '', 'addText' => 'Add'],
+				165  => ['title' => 'Parameters', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				166  => ['title' => 'Feedforward Questions', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				62  => ['title' => 'Pending Leave(s)', 'btnText' => 'View All', 'emptyText' => '', 'addText' => 'Add'],
+				63  => ['title' => 'Approved Leaves', 'btnText' => 'View All', 'emptyText' => '', 'addText' => 'Add'],
+				64  => ['title' => 'Cancelled Leaves', 'btnText' => 'View All', 'emptyText' => '', 'addText' => 'Add'],
+				68  => ['title' => 'Screening Types', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				69  => ['title' => 'Agencies', 'btnText' => 'View All', 'emptyText' => '', 'addText' => 'Add'],
+				85  => ['title' => 'Ethnic Codes', 'btnText' => 'View All', 'emptyText' => 'Ethnic codes not added', 'addText' => 'Add'],
+				134  => ['title' => 'Approved Requisitions', 'btnText' => 'View All', 'emptyText' => '', 'addText' => 'Add'],
+				135  => ['title' => 'Rejected Leaves', 'btnText' => 'View All', 'emptyText' => '', 'addText' => 'Add'],
+				138  => ['title' => 'Rejected Requisitions', 'btnText' => 'View All', 'emptyText' => '', 'addText' => 'Add'],
+				139  => ['title' => 'Identity Documents', 'btnText' => 'View All', 'emptyText' => '', 'addText' => 'Add'],
+				142  =>  ['title' => 'Manage Modules', 'btnText' => 'View All', 'emptyText' => 'Not configured yet', 'addText' => 'Add'],
+				158  => ['title' => 'Manager Status', 'btnText' => 'View', 'emptyText' => 'No data', 'addText' => ''],
+				159  => ['title' => 'Appraisal Employee Status', 'btnText' => 'View', 'emptyText' => 'No data', 'addText' => ''],
+				35  => ['title' => 'My Team Appraisal', 'btnText' => 'View', 'emptyText' => 'No data', 'addText' => ''],
 				160  =>  '',
-				161  => array('title' => 'Self Appraisal', 'btnText' => 'View', 'emptyText' => 'No data', 'addText' => ''),
+				161  => ['title' => 'Self Appraisal', 'btnText' => 'View', 'emptyText' => 'No data', 'addText' => ''],
 				167  =>  '',
 				168  =>  '',
-				169  =>  array('title' => 'Manager Appraisal', 'btnText' => 'View', 'emptyText' => 'No data', 'addText' => ''),
-				170  =>  array('title' => 'Appraise Your Manager', 'btnText' => 'View', 'emptyText' => 'No data', 'addText' => ''),
-				172  => array('title' => 'Feedforward Employee Status', 'btnText' => 'View', 'emptyText' => 'No data', 'addText' => ''),
-				174  => array('title' => 'My Team Appraisal', 'btnText' => 'View', 'emptyText' => 'No data', 'addText' => ''),
-				182  => array('title' => 'Categories', 'btnText' => 'View', 'emptyText' => 'No data', 'addText' => ''),
-			);
+				169  =>  ['title' => 'Manager Appraisal', 'btnText' => 'View', 'emptyText' => 'No data', 'addText' => ''],
+				170  =>  ['title' => 'Appraise Your Manager', 'btnText' => 'View', 'emptyText' => 'No data', 'addText' => ''],
+				172  => ['title' => 'Feedforward Employee Status', 'btnText' => 'View', 'emptyText' => 'No data', 'addText' => ''],
+				174  => ['title' => 'My Team Appraisal', 'btnText' => 'View', 'emptyText' => 'No data', 'addText' => ''],
+				182  => ['title' => 'Categories', 'btnText' => 'View', 'emptyText' => 'No data', 'addText' => ''],
+			];
 		//echo "<pre>";print_r($idsTitleArr[140]['empTabTitle']);exit;
 		return $idsTitleArr[$id][$con];
 	}
@@ -3529,8 +3529,8 @@ class sapp_Global
 				if (!empty($url))
 					$htmlContent .= '<a href="' . BASE_URL . $url . '"class="box_link view_link">' . $btnText . '</a>';
 			} else {
-				$htmlContent .= '<a href="' . $append_url1 . '" class ="cls_redirect"><div class="dashboard_wid_box_inner">Candidates<span class="box_count">' . (isset($format2[0]) ? $format2[0] : 0) . '</span></div>
-			<a href="' . $append_url2 . '" class ="cls_redirect"><div class="dashboard_wid_box_inner last-child">Employees<span class="box_count">' . (isset($format2[1]) ? $format2[1] : 0) . '</span></div>';
+				$htmlContent .= '<a href="' . $append_url1 . '" class ="cls_redirect"><div class="dashboard_wid_box_inner">Candidates<span class="box_count">' . ($format2[0] ?? 0) . '</span></div>
+			<a href="' . $append_url2 . '" class ="cls_redirect"><div class="dashboard_wid_box_inner last-child">Employees<span class="box_count">' . ($format2[1] ?? 0) . '</span></div>';
 				if (!empty($url))
 					$htmlContent .= '<a href="' . BASE_URL . $url . '"class="box_link view_link">' . $btnText . '</a>';
 			}
@@ -3618,7 +3618,7 @@ class sapp_Global
 				$title_arr = self::titleArr($id, 'empTabTitle');
 				$title = $title_arr['title'];
 				$btnText = $title_arr['btnText'];
-				$format5 = array();
+				$format5 = [];
 				foreach (array_rand($config_arr, 5) as $k) {
 					$format5[] = $config_arr[$k];
 				}
@@ -3705,8 +3705,8 @@ class sapp_Global
 				}
 			} else if ($id == 158) {
 				if (!empty($format5)) {
-					$completedMngrCnt = isset($format5['compltedmgrIdArr']) ? $format5['compltedmgrIdArr'] : 0;
-					$notCompletedMngrCnt = isset($format5['notCompltedmgrIdArr']) ? $format5['notCompltedmgrIdArr'] : 0;
+					$completedMngrCnt = $format5['compltedmgrIdArr'] ?? 0;
+					$notCompletedMngrCnt = $format5['notCompltedmgrIdArr'] ?? 0;
 					$total = (int)$completedMngrCnt + (int)$notCompletedMngrCnt;
 					$htmlContent .= '<h4 >' . $title . '</h4><div id="cnt_div" class ="tot_cnt num_color_' . $i . '">' . $total . '</div><div class="dashboard_bottom_div" >';
 					$htmlContent .= '<span class="businessunit_title" title="BusinessUnit">Business Unit : ' . $format5['businessUnit'] . "</span>";
@@ -3955,13 +3955,13 @@ class sapp_Global
 		}
 	}
 	//function to generate access control string for time management
-	public static function generateAccessControl_helper6($roles_arr = array())
+	public static function generateAccessControl_helper6($roles_arr = [])
 	{
 		$front = Zend_Controller_Front::getInstance()->getControllerDirectory();
-		$acl = array();
+		$acl = [];
 		unset($front['services']);
 		unset($front['default']);
-		$tm_classes = array();
+		$tm_classes = [];
 		$current_module = '';
 		foreach ($front as $module => $path) {
 			$current_module = $module;
@@ -3970,7 +3970,7 @@ class sapp_Global
 					include_once $path . DIRECTORY_SEPARATOR . $file;
 				}
 				foreach (get_declared_classes() as $class) {
-					if (is_subclass_of($class, 'Zend_Controller_Action') && substr($class, 0, 14) == 'Timemanagement') {
+					if (is_subclass_of($class, 'Zend_Controller_Action') && str_starts_with($class, 'Timemanagement')) {
 						if (!in_array($class, $tm_classes)) {
 							array_push($tm_classes, $class);
 						}
@@ -3980,9 +3980,9 @@ class sapp_Global
 		}
 		if (!empty($tm_classes)) {
 			foreach ($tm_classes as $tm) {
-				$actions = array();
+				$actions = [];
 				foreach (get_class_methods($tm) as $action) {
-					if (strstr($action, "Action") !== false) {
+					if (str_contains($action, "Action")) {
 						$actions[] = substr($action, 0, -6);
 					}
 				}
@@ -3991,16 +3991,16 @@ class sapp_Global
 			}
 		}
 		//statically add the roles, controllers and methods for time management
-		$tm_roles = array('Admin', 'Manager', 'Employee');
-		$tm_roles_controllers = array(
-			'Admin' => array('index' => array('index', 'week', 'edit', 'view', 'getstates', 'converdate'), 'reports' => array('index', 'employeereports', 'projectsreports', 'getempduration', 'getprojecttaskduration', 'tmreport'), 'clients' => array('index', 'edit', 'view', 'delete', 'addpopup'), 'configuration' => array('index', 'add'), 'currency' => array('index'), 'defaulttasks' => array('index', 'edit', 'view', 'delete', 'checkduptask'), 'emptimesheets' => array('index', 'displayweeks', 'getmonthlyspan', 'accordion', 'employeetimesheet', 'empdisplayweeks', 'emptimesheetmonthly', 'emptimesheetweekly', 'enabletimesheet', 'approvetimesheet', 'rejecttimesheet', 'approvedaytimesheet', 'rejectdaytimesheet', 'getweekstartenddates'), 'expenses' => array('index', 'edit', 'view', 'delete', 'download', 'uploadpreview', 'getprojectbyclientid', 'getfilename', 'submitexpense', 'expensereports', 'viewexpenses', 'viewexpensereports', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus'), 'expensecategory' => array('index', 'edit', 'view', 'delete'), 'projectresources' => array('index', 'resources', 'view', 'addresourcesproject', 'viewemptasks', 'addresources', 'deleteprojectresource', 'assigntasktoresources', 'taskassign', 'resourcetaskdelete', 'resourcetaskassigndelete'), 'projects' => array('index', 'edit', 'view', 'add', 'tasks', 'addtasksproject', 'addtasks', 'delete', 'checkempforprojects'), 'projecttasks' => array('index', 'viewtasksresources', 'deletetask', 'assignresourcestotask', 'saveresources', 'edittaskname')),
-			'Manager' => array('index' => array('index', 'week', 'save', 'submit', 'eraseweek', 'getstates', 'getapprovedtimesheet', 'closeapprovealert', 'converdate'), 'notifications' => array('pendingsubmissions', 'pendingsubmissionsweeklyview', 'weeklymonthlyview'), 'clients' => array('index', 'edit', 'view', 'delete', 'addpopup'), 'defaulttasks' => array('index', 'edit', 'view', 'delete', 'checkduptask'), 'projects' => array('index', 'edit', 'view', 'add', 'tasks', 'addtasksproject', 'addtasks', 'delete', 'checkempforprojects'), 'projectresources' => array('index', 'resources', 'view', 'addresourcesproject', 'viewemptasks', 'addresources', 'deleteprojectresource', 'assigntasktoresources', 'taskassign', 'resourcetaskdelete', 'resourcetaskassigndelete'), 'projecttasks' => array('index', 'viewtasksresources', 'deletetask', 'assignresourcestotask', 'saveresources', 'edittaskname'), 'reports' => array('index', 'employeereports', 'projectsreports', 'getempduration', 'getprojecttaskduration', 'tmreport'), 'emptimesheets' => array('index', 'displayweeks', 'getmonthlyspan', 'accordion', 'employeetimesheet', 'empdisplayweeks', 'emptimesheetmonthly', 'emptimesheetweekly', 'enabletimesheet', 'approvetimesheet', 'rejecttimesheet', 'approvedaytimesheet', 'rejectdaytimesheet', 'getweekstartenddates'), 'expenses' => array('index', 'edit', 'view', 'delete', 'download', 'uploadpreview', 'getprojectbyclientid', 'getfilename', 'submitexpense', 'expensereports', 'viewexpenses', 'viewexpensereports', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus')),
-			'Employee' => array('index' => array('index', 'week', 'save', 'submit', 'eraseweek', 'getstates', 'getapprovedtimesheet', 'closeapprovealert', 'converdate'), 'employeeprojects' => array('index', 'view', 'emptasksgrid'), 'notifications' => array('getnotifications', 'index'), 'expenses' => array('index', 'edit', 'view', 'delete', 'download', 'uploadpreview', 'getprojectbyclientid', 'getfilename', 'submitexpense', 'expensereports', 'viewexpenses', 'viewexpensereports', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus'), 'reports' => array('index', 'employeereports', 'projectsreports', 'getempduration', 'getprojecttaskduration', 'tmreport'))
-		);
-		$acl_new = array();
+		$tm_roles = ['Admin', 'Manager', 'Employee'];
+		$tm_roles_controllers = [
+			'Admin' => ['index' => ['index', 'week', 'edit', 'view', 'getstates', 'converdate'], 'reports' => ['index', 'employeereports', 'projectsreports', 'getempduration', 'getprojecttaskduration', 'tmreport'], 'clients' => ['index', 'edit', 'view', 'delete', 'addpopup'], 'configuration' => ['index', 'add'], 'currency' => ['index'], 'defaulttasks' => ['index', 'edit', 'view', 'delete', 'checkduptask'], 'emptimesheets' => ['index', 'displayweeks', 'getmonthlyspan', 'accordion', 'employeetimesheet', 'empdisplayweeks', 'emptimesheetmonthly', 'emptimesheetweekly', 'enabletimesheet', 'approvetimesheet', 'rejecttimesheet', 'approvedaytimesheet', 'rejectdaytimesheet', 'getweekstartenddates'], 'expenses' => ['index', 'edit', 'view', 'delete', 'download', 'uploadpreview', 'getprojectbyclientid', 'getfilename', 'submitexpense', 'expensereports', 'viewexpenses', 'viewexpensereports', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus'], 'expensecategory' => ['index', 'edit', 'view', 'delete'], 'projectresources' => ['index', 'resources', 'view', 'addresourcesproject', 'viewemptasks', 'addresources', 'deleteprojectresource', 'assigntasktoresources', 'taskassign', 'resourcetaskdelete', 'resourcetaskassigndelete'], 'projects' => ['index', 'edit', 'view', 'add', 'tasks', 'addtasksproject', 'addtasks', 'delete', 'checkempforprojects'], 'projecttasks' => ['index', 'viewtasksresources', 'deletetask', 'assignresourcestotask', 'saveresources', 'edittaskname']],
+			'Manager' => ['index' => ['index', 'week', 'save', 'submit', 'eraseweek', 'getstates', 'getapprovedtimesheet', 'closeapprovealert', 'converdate'], 'notifications' => ['pendingsubmissions', 'pendingsubmissionsweeklyview', 'weeklymonthlyview'], 'clients' => ['index', 'edit', 'view', 'delete', 'addpopup'], 'defaulttasks' => ['index', 'edit', 'view', 'delete', 'checkduptask'], 'projects' => ['index', 'edit', 'view', 'add', 'tasks', 'addtasksproject', 'addtasks', 'delete', 'checkempforprojects'], 'projectresources' => ['index', 'resources', 'view', 'addresourcesproject', 'viewemptasks', 'addresources', 'deleteprojectresource', 'assigntasktoresources', 'taskassign', 'resourcetaskdelete', 'resourcetaskassigndelete'], 'projecttasks' => ['index', 'viewtasksresources', 'deletetask', 'assignresourcestotask', 'saveresources', 'edittaskname'], 'reports' => ['index', 'employeereports', 'projectsreports', 'getempduration', 'getprojecttaskduration', 'tmreport'], 'emptimesheets' => ['index', 'displayweeks', 'getmonthlyspan', 'accordion', 'employeetimesheet', 'empdisplayweeks', 'emptimesheetmonthly', 'emptimesheetweekly', 'enabletimesheet', 'approvetimesheet', 'rejecttimesheet', 'approvedaytimesheet', 'rejectdaytimesheet', 'getweekstartenddates'], 'expenses' => ['index', 'edit', 'view', 'delete', 'download', 'uploadpreview', 'getprojectbyclientid', 'getfilename', 'submitexpense', 'expensereports', 'viewexpenses', 'viewexpensereports', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus']],
+			'Employee' => ['index' => ['index', 'week', 'save', 'submit', 'eraseweek', 'getstates', 'getapprovedtimesheet', 'closeapprovealert', 'converdate'], 'employeeprojects' => ['index', 'view', 'emptasksgrid'], 'notifications' => ['getnotifications', 'index'], 'expenses' => ['index', 'edit', 'view', 'delete', 'download', 'uploadpreview', 'getprojectbyclientid', 'getfilename', 'submitexpense', 'expensereports', 'viewexpenses', 'viewexpensereports', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus', 'updateexpensestatus'], 'reports' => ['index', 'employeereports', 'projectsreports', 'getempduration', 'getprojecttaskduration', 'tmreport']]
+		];
+		$acl_new = [];
 		$access_str = '';
 		foreach ($tm_roles as $tm_role) {
-			$new_tm_final_array = !empty($tm_roles_controllers[$tm_role]) ? $tm_roles_controllers[$tm_role] : array();
+			$new_tm_final_array = !empty($tm_roles_controllers[$tm_role]) ? $tm_roles_controllers[$tm_role] : [];
 			if ($tm_role == 'Admin') {
 				$access_str .= "if(!empty(\$tm_role) && \$tm_role == '$tm_role') { ";
 				$access_str .= "\n\tif(!isset(\$role))
@@ -4057,7 +4057,7 @@ class sapp_Global
 		// could test validity of dates here but I'm already doing
 		// that in the main script
 
-		$aryRange = array();
+		$aryRange = [];
 
 		$iDateFrom = mktime(1, 0, 0, substr($strDateFrom, 5, 2), substr($strDateFrom, 8, 2), substr($strDateFrom, 0, 4));
 		$iDateTo = mktime(1, 0, 0, substr($strDateTo, 5, 2), substr($strDateTo, 8, 2), substr($strDateTo, 0, 4));

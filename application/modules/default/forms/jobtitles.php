@@ -42,23 +42,23 @@ class Default_Form_jobtitles extends Zend_Form
         //                    )
         // 	));
         $code->addValidator(new Zend_Validate_Db_NoRecordExists(
-                                              array('table'=>'main_jobtitle',
+                                              ['table'=>'main_jobtitle',
                                                         'field'=>'code',
                                                       'exclude'=>'jobtitle_id!="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('id').'" and isactive="Y"',    
-                                                 ) )  
+                                                 ] )  
                                     );
         $code->getValidator('Db_NoRecordExists')->setMessage('Job title code already exists.'); 		
       
 		$name = new Zend_Form_Element_Text('name');
         $name->setAttrib('maxLength', 50);
         $name->setRequired(true);
-        $name->addValidator('NotEmpty', false, array('messages' => 'Please enter job title.'));  
-		$name->addValidator("regex",true,array(
+        $name->addValidator('NotEmpty', false, ['messages' => 'Please enter job title.']);  
+		$name->addValidator("regex",true,[
                            'pattern'=>'/^[a-zA-Z][a-zA-Z0-9\-\&\s]*$/', 
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter valid job title.'
-                           )
-        	));
+                           ]
+        	]);
 	
 		$description = new Zend_Form_Element_Textarea('description');
         $description->setLabel('Description');
@@ -69,7 +69,7 @@ class Default_Form_jobtitles extends Zend_Form
         $submit = new Zend_Form_Element_Submit('submit');
 		$submit->setLabel('Save');
 
-		 $this->addElements(array($id,$code,$name,$description,$emptyflag,$isactive,$submit));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 $this->addElements([$id,$code,$name,$description,$emptyflag,$isactive,$submit]);
+         $this->setElementDecorators(['ViewHelper']); 
 	}
 }

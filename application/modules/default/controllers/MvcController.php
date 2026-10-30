@@ -173,7 +173,7 @@ class Default_MvcController extends Zend_Controller_Action
                     if (!isset($msgarray['controller_name'])) {
                         $this->view->successmessage = "Controller created successfully";
                         
-                        $this->_forward('index','index','formutil',array('module_name'=>$this->_getParam('module_name'),'controller_name'=>$this->_getParam('controller_name')));
+                        $this->_forward('index','index','formutil',['module_name'=>$this->_getParam('module_name'),'controller_name'=>$this->_getParam('controller_name')]);
                     }
                     $this->view->msgarray = $msgarray;
                 }

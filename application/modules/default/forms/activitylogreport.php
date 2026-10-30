@@ -58,14 +58,14 @@ class Default_Form_activitylogreport extends Zend_Form
 		$modifieddate->setLabel("Modified Date");
 		$modifieddate->setAttrib('readonly', 'true');
 		$modifieddate->setAttrib('onfocus', 'this.blur()');		
-		$modifieddate->setOptions(array('class' => 'brdr_none'));
+		$modifieddate->setOptions(['class' => 'brdr_none']);
 		
 		
 
-		$this->addElements(array($username,$menu,$useraction,$modifieddate));
-		$this->setElementDecorators(array('ViewHelper'));
-		$this->setElementDecorators(array(
+		$this->addElements([$username,$menu,$useraction,$modifieddate]);
+		$this->setElementDecorators(['ViewHelper']);
+		$this->setElementDecorators([
                     'UiWidgetElement',
-		),array('modifieddate'));
+		],['modifieddate']);
 	}
 }

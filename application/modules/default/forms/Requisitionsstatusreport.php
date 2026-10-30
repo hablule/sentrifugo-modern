@@ -37,7 +37,7 @@ class Default_Form_Requisitionsstatusreport extends Zend_Form{
         $requisition_status = new Zend_Form_Element_Select("req_status");      
         $requisition_status->setLabel("Requisition Status");
         $requisition_status->addMultiOptions(
-	        array(''=>'Select Requisition Status',
+	        [''=>'Select Requisition Status',
 				'Initiated'=>'Initiated',
 				'Approved'=>'Approved',
 				'Rejected'=>'Rejected',
@@ -45,7 +45,7 @@ class Default_Form_Requisitionsstatusreport extends Zend_Form{
 				'On hold'=>'On hold',
 				'Complete'=>'Complete',
 				'In process'=>'In process'	        
-	        )
+	        ]
         );
         
         $requisition_status->setAttrib('title', 'Requisition Status');
@@ -68,7 +68,7 @@ class Default_Form_Requisitionsstatusreport extends Zend_Form{
         $submit->setAttrib('id', 'idsubmitbutton');
         $submit->setLabel('Report'); 
         
-        $this->addElements(array($raised_by, $requisition_status, $raised_in, $reporting_manager, $job_title, $submit));
-        $this->setElementDecorators(array('ViewHelper')); 
+        $this->addElements([$raised_by, $requisition_status, $raised_in, $reporting_manager, $job_title, $submit]);
+        $this->setElementDecorators(['ViewHelper']); 
     }
 }

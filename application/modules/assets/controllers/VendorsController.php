@@ -43,9 +43,9 @@ class Assets_VendorsController extends Zend_Controller_Action
 				$objname = $this->_getParam('objname');
 				$refresh = $this->_getParam('refresh');
 				$dashboardcall = $this->_getParam('dashboardcall');
-				$data = array();
+				$data = [];
 				$searchQuery = '';
-				$searchArray = array();
+				$searchArray = [];
 				$tablecontent='';	
 				if($refresh == 'refresh')
 				{
@@ -118,7 +118,7 @@ class Assets_VendorsController extends Zend_Controller_Action
         {
             $statesmodel = new Default_Model_States();
             $statesmodeldata = $statesmodel->getStatesList(intval($_POST['country']));
-            $st_opt = array();
+            $st_opt = [];
             if(count($statesmodeldata) > 0)
             {
                 foreach($statesmodeldata as $dstate)
@@ -126,13 +126,13 @@ class Assets_VendorsController extends Zend_Controller_Action
                     $st_opt[$dstate['id'].'!@#'.$dstate['state_name']] = $dstate['state_name'];
                 }
             }
-            $vendorsform->state->addMultiOptions(array(''=>'Select State')+$st_opt);
+            $vendorsform->state->addMultiOptions([''=>'Select State']+$st_opt);
         }
         if(isset($_POST['state']) && $_POST['state']!='')
         {
             $citiesmodel = new Default_Model_Cities();
             $citiesmodeldata = $citiesmodel->getCitiesList(intval($_POST['state']));
-            $ct_opt = array();
+            $ct_opt = [];
             if(count($citiesmodeldata) > 0)
             {
                 foreach($citiesmodeldata as $dcity)
@@ -140,7 +140,7 @@ class Assets_VendorsController extends Zend_Controller_Action
                     $ct_opt[$dcity['id'].'!@#'.$dcity['city_name']] = $dcity['city_name'];
                 }
             }
-            $vendorsform->city->addMultiOptions(array(''=>'Select City')+$ct_opt);
+            $vendorsform->city->addMultiOptions([''=>'Select City']+$ct_opt);
         }
 		
 		try
@@ -216,7 +216,7 @@ class Assets_VendorsController extends Zend_Controller_Action
 	}
 	public function addpopupAction(){
 		
-	$msgarray = array();
+	$msgarray = [];
 	$emptyFlag = '';
 	Zend_Layout::getMvcInstance()->setLayoutPath(APPLICATION_PATH."/layouts/scripts/popup/");
 	$auth = Zend_Auth::getInstance();
@@ -266,7 +266,7 @@ class Assets_VendorsController extends Zend_Controller_Action
 	{
 		$statesmodel = new Default_Model_States();
 		$statesmodeldata = $statesmodel->getStatesList(intval($_POST['country']));
-		$st_opt = array();
+		$st_opt = [];
 		if(count($statesmodeldata) > 0)
 		{
 			foreach($statesmodeldata as $dstate)
@@ -274,13 +274,13 @@ class Assets_VendorsController extends Zend_Controller_Action
 				$st_opt[$dstate['id'].'!@#'.$dstate['state_name']] = $dstate['state_name'];
 			}
 		}
-		$vendorsform->state->addMultiOptions(array(''=>'Select State')+$st_opt);
+		$vendorsform->state->addMultiOptions([''=>'Select State']+$st_opt);
 	}
 	if(isset($_POST['state']) && $_POST['state']!='')
 	{
 		$citiesmodel = new Default_Model_Cities();
 		$citiesmodeldata = $citiesmodel->getCitiesList(intval($_POST['state']));
-		$ct_opt = array();
+		$ct_opt = [];
 		if(count($citiesmodeldata) > 0)
 		{
 			foreach($citiesmodeldata as $dcity)
@@ -288,7 +288,7 @@ class Assets_VendorsController extends Zend_Controller_Action
 				$ct_opt[$dcity['id'].'!@#'.$dcity['city_name']] = $dcity['city_name'];
 			}
 		}
-		$vendorsform->city->addMultiOptions(array(''=>'Select City')+$ct_opt);
+		$vendorsform->city->addMultiOptions([''=>'Select City']+$ct_opt);
 	}
 	$vendorsform->setAction(BASE_URL.'assets/vendors/addpopup');
 	try
@@ -398,7 +398,7 @@ class Assets_VendorsController extends Zend_Controller_Action
 						
 							$actionflag = '';
 							$tableid  = ''; 
-							   $data = array(
+							   $data = [
 										'name'=>trim($name),
 										'contact_person'=>trim($contact_person),
 										'address'=>trim($address),
@@ -412,7 +412,7 @@ class Assets_VendorsController extends Zend_Controller_Action
 										'isactive'=>1,
 										'createdby'=>$loginUserId,
 										'modifieddate'=>gmdate("Y-m-d H:i:s")
-									);
+									];
 								
 								
 							
@@ -488,8 +488,8 @@ class Assets_VendorsController extends Zend_Controller_Action
 		if($id)
 		{
 		$vendorsmodel= new Assets_Model_Vendors();
-			$data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
-			$where = array('id=?'=>$id);
+			$data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
+			$where = ['id=?'=>$id];
             $status_data = $vendorsmodel->getsingleVendorsData($id);
 			$Id = $vendorsmodel->SaveorUpdateVendors($data, $where);
 			$messages['message'] = 'vendors deleted successfully.';$messages['msgtype'] = 'success';
@@ -502,9 +502,9 @@ class Assets_VendorsController extends Zend_Controller_Action
 	}
 	public function editAction()
 	{
-				$popConfigPermission = array();
+				$popConfigPermission = [];
 				$auth = Zend_Auth::getInstance();
-				$popConfigPermission = array();
+				$popConfigPermission = [];
 				$objName = 'vendors';
 				if($auth->hasIdentity()){
 							$loginUserId = $auth->getStorage()->read()->id;
@@ -521,7 +521,7 @@ class Assets_VendorsController extends Zend_Controller_Action
 				if(sapp_Global::_checkprivileges(CITIES,$loginuserGroup,$loginuserRole,'add') == 'Yes'){
 						array_push($popConfigPermission,'city');
 				}
-						$msgarray = array(); 
+						$msgarray = []; 
 						
 				
 				$id = $this->getRequest()->getParam('id');
@@ -556,7 +556,7 @@ class Assets_VendorsController extends Zend_Controller_Action
         {
             $statesmodel = new Default_Model_States();
             $statesmodeldata = $statesmodel->getStatesList(intval($_POST['country']));
-            $st_opt = array();
+            $st_opt = [];
             if(count($statesmodeldata) > 0)
             {
                 foreach($statesmodeldata as $dstate)
@@ -564,13 +564,13 @@ class Assets_VendorsController extends Zend_Controller_Action
                     $st_opt[$dstate['id'].'!@#'.$dstate['state_name']] = $dstate['state_name'];
                 }
             }
-            $vendorsform->state->addMultiOptions(array(''=>'Select State')+$st_opt);
+            $vendorsform->state->addMultiOptions([''=>'Select State']+$st_opt);
         }
         if(isset($_POST['state']) && $_POST['state']!='')
         {
             $citiesmodel = new Default_Model_Cities();
             $citiesmodeldata = $citiesmodel->getCitiesList(intval($_POST['state']));
-            $ct_opt = array();
+            $ct_opt = [];
             if(count($citiesmodeldata) > 0)
             {
                 foreach($citiesmodeldata as $dcity)
@@ -578,7 +578,7 @@ class Assets_VendorsController extends Zend_Controller_Action
                     $ct_opt[$dcity['id'].'!@#'.$dcity['city_name']] = $dcity['city_name'];
                 }
             }
-            $vendorsform->city->addMultiOptions(array(''=>'Select City')+$ct_opt);
+            $vendorsform->city->addMultiOptions([''=>'Select City']+$ct_opt);
         }
 		try
 		{
@@ -689,7 +689,7 @@ class Assets_VendorsController extends Zend_Controller_Action
 						
 							$actionflag = '';
 							$tableid  = ''; 
-							   $data = array(
+							   $data = [
 										'name'=>trim($name),
 										'contact_person'=>trim($contact_person),
 										'address'=>trim($address),
@@ -703,10 +703,10 @@ class Assets_VendorsController extends Zend_Controller_Action
 										'isactive'=>1,
 										'createdby'=>$loginUserId,
 										'modifieddate'=>gmdate("Y-m-d H:i:s")
-									);
+									];
 								
 								if($id!=''){
-									$where = array('id=?'=>$id);  
+									$where = ['id=?'=>$id];  
 									$actionflag = 2;
 									$this->view->form = $vendorsform;
 

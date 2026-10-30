@@ -9,8 +9,8 @@ class Schedule_Model_timecategory extends Zend_Db_Table_Abstract
   public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $p1, $p2, $p3, $p4)
   {
     $searchQuery = '';
-    $searchArray = array();
-    $data = array();
+    $searchArray = [];
+    $data = [];
     $db = Zend_Db_Table::getDefaultAdapter();
     if ($searchData != '' && $searchData != 'undefined') {
         $searchValues = json_decode($searchData);
@@ -33,18 +33,18 @@ class Schedule_Model_timecategory extends Zend_Db_Table_Abstract
 
     $objName = 'timecategory';
     $objID = 'timecategory';
-    $tableFields = array(
+    $tableFields = [
         'action' => 'Action',
         'name' => 'Name',
         'code' => 'Code',
 
         'description' => 'Description',
         'isactive' => 'Active'
-    );
+    ];
 
     $tablecontent = $this->getOTcategoryData($sort, $by, $pageNo, $perPage, $searchQuery);
    
-    $dataTmp = array(
+    $dataTmp = [
         'sort' => $sort,
         'by' => $by,
         'pageNo' => $pageNo,
@@ -52,7 +52,7 @@ class Schedule_Model_timecategory extends Zend_Db_Table_Abstract
         'tablecontent' => $tablecontent,
         'objectname' => $objName,
         'objectId' => $objID,
-        'extra' => array(),
+        'extra' => [],
         'tableheader' => $tableFields,
         'jsGridFnName' => 'getAjaxgridData',
         'jsFillFnName' => '',
@@ -61,22 +61,22 @@ class Schedule_Model_timecategory extends Zend_Db_Table_Abstract
         'fromgrid'=>'',
         'menuName' => 'Time Category',
         'dashboardcall' => $dashboardcall,
-        'search_filters' => array(
-            'isactive' => array(
+        'search_filters' => [
+            'isactive' => [
                 'type' => 'select',
-                'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-        ),
-    );
+                'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+        ],
+    ];
     
     return $dataTmp;
   }
 
   public function deleteData($where,$tablename,$id)
   {
-      $config=array(
+      $config=[
           'name'=>$tablename,
           'primary'=>$id
-      );
+      ];
       $table = new Zend_Db_Table($config);
      
       return $table->delete($where);
@@ -90,7 +90,7 @@ class Schedule_Model_timecategory extends Zend_Db_Table_Abstract
 
     $roleData =  $this->select()
         ->setIntegrityCheck(false)
-        ->from('main_timecategory',array('timecategory_id as id','name','code','description','if(isactive="Y","Yes","No") as isactive'))
+        ->from('main_timecategory',['timecategory_id as id','name','code','description','if(isactive="Y","Yes","No") as isactive'])
         ->where($where)
         ->order("$by $sort")
         ->limitPage($pageNo, $perPage);
@@ -102,7 +102,7 @@ class Schedule_Model_timecategory extends Zend_Db_Table_Abstract
   {
     $timeCategoryData = $this->select()
                             ->setIntegrityCheck(false)
-                            ->from('main_timecategory',array('timecategory_id','name'))
+                            ->from('main_timecategory',['timecategory_id','name'])
                             ->where('isactive="Y"');
     return $this->fetchAll($timeCategoryData)->toArray();
   }
@@ -128,7 +128,7 @@ public function saveORupdateCategory($data, $where)
   {
     $catData =  $this->select()
     ->setIntegrityCheck(false)
-    ->from('main_timecategory',array('timecategory_id','name','lablecolor','code','description','isactive'))
+    ->from('main_timecategory',['timecategory_id','name','lablecolor','code','description','isactive'])
     ->where('timecategory_id = '.$id);
     return $this->fetchAll($catData)->toArray();
   }
@@ -137,12 +137,12 @@ public function saveORupdateCategory($data, $where)
   {
       $select = $this->select()
           ->setIntegrityCheck(false)
-          ->from(array('tc' => 'main_timecategory'), 'tc.timecategory_id')
-          ->join(array('m'=>'main_shift'), 'm.timecategory_id = tc.timecategory_id')
-          ->join(array('n' => 'main_schedulecycleshift'), 'm.shift_id = n.shift_id')
-          ->join(array('l' => 'main_schedulecycle'), 'l.schedulecycle_id = n.schedulecycle_id')
-          ->join(array('ms' =>'main_schedule'),'ms.schedule_id = l.schedule_id')
-          ->join(array('es' => 'main_empschedule'), 'es.schedule_id = ms.schedule_id')
+          ->from(['tc' => 'main_timecategory'], 'tc.timecategory_id')
+          ->join(['m'=>'main_shift'], 'm.timecategory_id = tc.timecategory_id')
+          ->join(['n' => 'main_schedulecycleshift'], 'm.shift_id = n.shift_id')
+          ->join(['l' => 'main_schedulecycle'], 'l.schedulecycle_id = n.schedulecycle_id')
+          ->join(['ms' =>'main_schedule'],'ms.schedule_id = l.schedule_id')
+          ->join(['es' => 'main_empschedule'], 'es.schedule_id = ms.schedule_id')
           ->where('tc.timecategory_id in (' . $shiftid . ')');
      
       return $this->fetchAll($select)->toArray();

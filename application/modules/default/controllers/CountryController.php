@@ -71,7 +71,7 @@ class Default_CountryController extends Zend_Controller_Action
         $session = sapp_Global::_readSession();
         if (!isset($session)) {
             if ($this->getRequest()->isXmlHttpRequest()) {
-                die(Zend_Json::encode(array('login' => 'failed')));
+                die(Zend_Json::encode(['login' => 'failed']));
             } else {
                 $this->_redirect('');
             }
@@ -125,7 +125,7 @@ class Default_CountryController extends Zend_Controller_Action
 
             $dataTmp = $this->_model->getGrid($sort, $by, $perPage, $page, rtrim($searchData, ','), $call, $dashboardcall);
 
-            $this->view->dataArray = array($dataTmp);
+            $this->view->dataArray = [$dataTmp];
             $this->view->call      = $call;
             $this->view->messages  = $this->_helper->flashMessenger->getMessages();
         } catch (\Throwable $e) { // SSOT VIII: Catch \Throwable
@@ -192,14 +192,14 @@ class Default_CountryController extends Zend_Controller_Action
                 $db->beginTransaction(); // SSOT V: Transactions Mandatory
 
                 try {
-                    $data = array(
+                    $data = [
                         'name'        => trim($request->getParam('name')),
                         'iso_alpha2'  => trim($request->getParam('iso_alpha2')),
                         'iso_alpha3'  => trim($request->getParam('iso_alpha3')),
                         'phone_code'  => trim($request->getParam('phone_code')),
                         'description' => trim($request->getParam('description')),
                         'isactive'    => (int)$request->getParam('isactive')
-                    );
+                    ];
 
                     $actionFlag = ($id > 0) ? 2 : 1; // 2=Edit, 1=Add
                     $savedId = $this->_model->saveRecord($data, $id);
@@ -208,7 +208,7 @@ class Default_CountryController extends Zend_Controller_Action
                     // Capture the array of selected nationality IDs
                     $selectedNats = $request->getParam('mapped_nationalities');
                     if (!is_array($selectedNats)) {
-                        $selectedNats = empty($selectedNats) ? array() : array($selectedNats);
+                        $selectedNats = empty($selectedNats) ? [] : [$selectedNats];
                     }
 
                     // Sync the Many-to-Many junction table
@@ -216,7 +216,7 @@ class Default_CountryController extends Zend_Controller_Action
 
                     // Sync Geography Groups
                     $selectedGroups = $request->getParam('geographygroup_id');
-                    if (!is_array($selectedGroups)) $selectedGroups = empty($selectedGroups) ? array() : array($selectedGroups);
+                    if (!is_array($selectedGroups)) $selectedGroups = empty($selectedGroups) ? [] : [$selectedGroups];
                     $this->_model->syncGeographyGroupMappings($recordId, $selectedGroups);
 
                     // SSOT I: Dynamic Menu ID logging (100 = Countries)
@@ -227,18 +227,18 @@ class Default_CountryController extends Zend_Controller_Action
 
                     // Set Flash message for the NEXT page load
                     $msg = ($actionFlag == 1) ? 'Added' : 'Updated';
-                    $this->_helper->flashMessenger->addMessage(array('success' => "Country $msg successfully."));
+                    $this->_helper->flashMessenger->addMessage(['success' => "Country $msg successfully."]);
 
                     // SSOT V: Strict JSON Response for Global Redirect Helper
-                    $this->_helper->json(array(
+                    $this->_helper->json([
                         'result'    => 'saved',
                         'nomessage' => 'yes'
-                    ));
+                    ]);
                 } catch (\Throwable $e) {
                     $db->rollBack();
                     error_log("Country Save Error: " . $e->getMessage());
                     // Legacy Exception Contract
-                    $this->_helper->json(array('result' => 'exception', 'message' => 'System error occurred.'));
+                    $this->_helper->json(['result' => 'exception', 'message' => 'System error occurred.']);
                 }
             } else {
                 // SSOT V: Strict JSON Response for Global Validation Helper
@@ -266,7 +266,7 @@ class Default_CountryController extends Zend_Controller_Action
         $form->getElement('submit')->setAttrib('onclick', null);
 
         $request = $this->getRequest();
-        $msgarray = array();
+        $msgarray = [];
 
         // Initialize popup state to prevent view rendering notices
         $this->view->popup = '';
@@ -277,14 +277,14 @@ class Default_CountryController extends Zend_Controller_Action
                 $db->beginTransaction();
 
                 try {
-                    $data = array(
+                    $data = [
                         'name'        => trim($request->getParam('name')),
                         'iso_alpha2'  => trim($request->getParam('iso_alpha2')),
                         'iso_alpha3'  => trim($request->getParam('iso_alpha3')),
                         'phone_code'  => trim($request->getParam('phone_code')),
                         'description' => trim($request->getParam('description')),
                         'isactive'    => (int)$request->getParam('isactive', 1)
-                    );
+                    ];
 
                     $newId = $this->_model->saveRecord($data);
 
@@ -340,13 +340,13 @@ class Default_CountryController extends Zend_Controller_Action
                 $menuId = defined('COUNTRIES') ? COUNTRIES : 100;
                 sapp_Global::logManager($menuId, 3, $this->_loginUserId, $id);
 
-                $this->_helper->json(array('msgtype' => 'success', 'message' => 'Country deleted successfully.'));
+                $this->_helper->json(['msgtype' => 'success', 'message' => 'Country deleted successfully.']);
             } catch (\Throwable $e) {
                 // Catch the model exception (e.g., Record is in use)
-                $this->_helper->json(array('msgtype' => 'error', 'message' => $e->getMessage()));
+                $this->_helper->json(['msgtype' => 'error', 'message' => $e->getMessage()]);
             }
         } else {
-            $this->_helper->json(array('msgtype' => 'error', 'message' => 'Invalid Request.'));
+            $this->_helper->json(['msgtype' => 'error', 'message' => 'Invalid Request.']);
         }
     }
 
@@ -366,9 +366,9 @@ class Default_CountryController extends Zend_Controller_Action
             $menuId = defined('COUNTRIES') ? COUNTRIES : 100;
             sapp_Global::logManager($menuId, 4, $this->_loginUserId, $id);
 
-            $this->_helper->json(array('result' => 'yes'));
+            $this->_helper->json(['result' => 'yes']);
         } catch (\Throwable $e) {
-            $this->_helper->json(array('result' => 'no'));
+            $this->_helper->json(['result' => 'no']);
         }
     }
 

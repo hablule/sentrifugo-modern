@@ -36,7 +36,7 @@ class Default_Form_servicedeskrequest extends Zend_Form
         $servicedeskdepartment->addMultiOption('','Select category');
         $servicedeskdepartment->setRegisterInArrayValidator(false);
         $servicedeskdepartment->setRequired(true);
-		$servicedeskdepartment->addValidator('NotEmpty', false, array('messages' => 'Please select category.'));
+		$servicedeskdepartment->addValidator('NotEmpty', false, ['messages' => 'Please select category.']);
 		
 		$postid = Zend_Controller_Front::getInstance()->getRequest()->getParam('id');
 		if($postid !='')
@@ -46,19 +46,19 @@ class Default_Form_servicedeskrequest extends Zend_Form
 			$servicedeskrequest->setAttrib('maxLength', 30);
 			$servicedeskrequest->addFilter(new Zend_Filter_StringTrim());
 			$servicedeskrequest->setRequired(true);
-	        $servicedeskrequest->addValidator('NotEmpty', false, array('messages' => 'Please enter request type.'));
-			$servicedeskrequest->addValidator("regex",true,array(                           
+	        $servicedeskrequest->addValidator('NotEmpty', false, ['messages' => 'Please enter request type.']);
+			$servicedeskrequest->addValidator("regex",true,[                           
 	                           'pattern'=>'/^[a-zA-Z0-9\- ]+$/',
-	                           'messages'=>array(
+	                           'messages'=>[
 	                               'regexNotMatch'=>'Please enter valid request type.'
-	                           )
-	        	));
+	                           ]
+	        	]);
 	        $servicedeskrequest->addValidator(new Zend_Validate_Db_NoRecordExists(
-		                                            array(  'table'=>'main_sd_reqtypes',
+		                                            [  'table'=>'main_sd_reqtypes',
 		                                                     'field'=>'service_request_name',
 		                                                     'exclude'=>'id!="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('id').'" AND service_desk_id="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('service_desk_id').'" AND isactive=1',    
 		
-		                                                      ) ) );
+		                                                      ] ) );
 			$servicedeskrequest->getValidator('Db_NoRecordExists')->setMessage('Request type already exists for the category.');	
 	   	
 			$description = new Zend_Form_Element_Textarea('description');
@@ -79,9 +79,9 @@ class Default_Form_servicedeskrequest extends Zend_Form
 		$submitadd->setLabel('Save');
 		
 		if($postid !='')
-			 $this->addElements(array($id,$servicedeskdepartment,$servicedeskrequest,$description,$submit));
+			 $this->addElements([$id,$servicedeskdepartment,$servicedeskrequest,$description,$submit]);
 	    else		 
-		 	$this->addElements(array($id,$servicedeskdepartment,$submitadd));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 	$this->addElements([$id,$servicedeskdepartment,$submitadd]);
+         $this->setElementDecorators(['ViewHelper']); 
 	}
 }

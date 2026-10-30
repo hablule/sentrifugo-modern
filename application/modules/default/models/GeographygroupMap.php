@@ -73,7 +73,7 @@ class Default_Model_GeographygroupMap extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $groupId = null)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -94,18 +94,18 @@ class Default_Model_GeographygroupMap extends Zend_Db_Table_Abstract
         }
 
         // Must match exact column aliases defined in getGridData()
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'                => 'Action',
             'geographygroup_name'   => 'Group Name',
             'entity_type'           => 'Entity Level',
             'entity_name'           => 'Mapped Entity Name',
             'description'           => 'Description',
             'status_text'           => 'Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery, $groupId);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
@@ -113,7 +113,7 @@ class Default_Model_GeographygroupMap extends Zend_Db_Table_Abstract
             'tablecontent'   => $tableContent,
             'objectname'     => 'geographygroupmap',
             'tableheader'    => $tableHeaders,
-            'extra'          => array(),
+            'extra'          => [],
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
             'searchArray'    => $searchArray,
@@ -121,11 +121,11 @@ class Default_Model_GeographygroupMap extends Zend_Db_Table_Abstract
             'menuName'       => 'Mapped Geographies',
             'call'           => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => array(
-                'status_text' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive')),
-                'entity_type' => array('type' => 'select', 'filter_data' => array('' => 'All Levels', 'Country' => 'Country', 'State' => 'State', 'City' => 'City', 'PostalCode' => 'Postal Code'))
-            )
-        );
+            'search_filters' => [
+                'status_text' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']],
+                'entity_type' => ['type' => 'select', 'filter_data' => ['' => 'All Levels', 'Country' => 'Country', 'State' => 'State', 'City' => 'City', 'PostalCode' => 'Postal Code']]
+            ]
+        ];
     }
 
     /**
@@ -150,7 +150,7 @@ class Default_Model_GeographygroupMap extends Zend_Db_Table_Abstract
 
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('mge' => $this->_name), array(
+            ->from(['mge' => $this->_name], [
                 'id' => 'mge.id',
                 'entity_type',
                 'description',
@@ -165,8 +165,8 @@ class Default_Model_GeographygroupMap extends Zend_Db_Table_Abstract
                         ELSE 'Unknown Entity'
                     END
                 ")
-            ))
-            ->joinInner(array('g' => 'main_geographygroup'), 'mge.geographygroup_id = g.id', array('geographygroup_name' => 'g.name'))
+            ])
+            ->joinInner(['g' => 'main_geographygroup'], 'mge.geographygroup_id = g.id', ['geographygroup_name' => 'g.name'])
             ->where('mge.isactive != 5');
 
         if (!empty($groupId)) {
@@ -192,7 +192,7 @@ class Default_Model_GeographygroupMap extends Zend_Db_Table_Abstract
     public function getPairs($activeOnly = true)
     {
         // Not typically used for polymorphic tables, returning empty to prevent misuse.
-        return array();
+        return [];
     }
 
     /**
@@ -204,7 +204,7 @@ class Default_Model_GeographygroupMap extends Zend_Db_Table_Abstract
     public function getRecordById($id)
     {
         $select = $this->select()
-            ->from($this->_name, array('*'))
+            ->from($this->_name, ['*'])
             ->where('id = ?', (int)$id)
             ->where('isactive != 5');
 
@@ -231,7 +231,7 @@ class Default_Model_GeographygroupMap extends Zend_Db_Table_Abstract
         if (!empty($id)) {
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = gmdate("Y-m-d H:i:s");
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return 'update';
         }
 
@@ -261,12 +261,12 @@ class Default_Model_GeographygroupMap extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => 5,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
-        return $this->update($data, array('id = ?' => (int)$id));
+        ];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /**
@@ -281,12 +281,12 @@ class Default_Model_GeographygroupMap extends Zend_Db_Table_Abstract
         $auth = Zend_Auth::getInstance();
         $userId = $auth->hasIdentity() ? $auth->getStorage()->read()->id : 0;
 
-        $data = array(
+        $data = [
             'isactive'     => (int)$status,
             'modifiedby'   => $userId,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
-        return $this->update($data, array('id = ?' => (int)$id));
+        ];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* =================================================================================

@@ -25,8 +25,8 @@ class Default_LogmanagerController extends Zend_Controller_Action
 	private $options;
 	private $activitylog_model;
 	private $logJsonCount;
-	private $modArray = array();
-	private $userNameArray = array();
+	private $modArray = [];
+	private $userNameArray = [];
 
 
 	/**
@@ -47,7 +47,7 @@ class Default_LogmanagerController extends Zend_Controller_Action
 		{
 			if($this->getRequest()->isXmlHttpRequest())
 			{
-				echo Zend_Json::encode( array('login' => 'failed') );
+				echo Zend_Json::encode( ['login' => 'failed'] );
 				die();
 			}
 			else
@@ -81,9 +81,9 @@ class Default_LogmanagerController extends Zend_Controller_Action
 		$objname = $this->_getParam('objname');
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 			
 		if($refresh == 'refresh')
 		{
@@ -92,7 +92,7 @@ class Default_LogmanagerController extends Zend_Controller_Action
 			else
 			$perPage = PERPAGE;
 			$sort = 'DESC';$by = 'r.last_modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';
-			$searchArray = array();
+			$searchArray = [];
 		}
 		else
 		{
@@ -138,7 +138,7 @@ class Default_LogmanagerController extends Zend_Controller_Action
         $this->view->managemodule = 0; 
 		if($this->getRequest()){
 			$id = $this->_request->getParam('id');
-			$viewLinkArray = array('101','102');// menu with view links
+			$viewLinkArray = ['101','102'];// menu with view links
 
 			$logManagarRecord = $logmanager_model->getLogManagerDataByID($id);
 
@@ -160,7 +160,7 @@ class Default_LogmanagerController extends Zend_Controller_Action
 
 				if(!empty($logarr))
 				{
-					$userArray = array();
+					$userArray = [];
 					$logarr['testjson'] = array_reverse($logarr['testjson']);
 					$this->logJsonCount = count($logarr['testjson']);
 					foreach($logarr['testjson'] as $key =>$curr)
@@ -218,7 +218,7 @@ class Default_LogmanagerController extends Zend_Controller_Action
 	public function empnamewithidautoAction(){
 		$logmanager_model = new Default_Model_Logmanager();
 		$term = $this->_getParam('term',null);
-		$output = array(array('id' => '','value' => 'No records','label' => 'No records'));
+		$output = [['id' => '','value' => 'No records','label' => 'No records']];
 
 		if($term != ''	)
 		{
@@ -226,10 +226,10 @@ class Default_LogmanagerController extends Zend_Controller_Action
 
 			if(count($emp_arr)>0)
 			{
-				$output = array();
+				$output = [];
 				foreach($emp_arr as $emp)
 				{
-					$output[] = array('id' => $emp['id'],'value' => $emp['emp_name'],'label' => $emp['emp_name'],'profile_img' => $emp['profileimg']);
+					$output[] = ['id' => $emp['id'],'value' => $emp['emp_name'],'label' => $emp['emp_name'],'profile_img' => $emp['profileimg']];
 				}
 			}
 		}

@@ -34,11 +34,11 @@ class Default_Form_Multiplepolicydocs extends Zend_Form
 		$documentName->setAttrib('maxlength','250');
 		$documentName->addFilter(new Zend_Filter_StringTrim());
 		$documentName->setRequired(true);
-		$documentName->addValidator('NotEmpty',false,array("messages"=>'Please enter document'));
-		$documentName->addValidator('regex',true,array(
+		$documentName->addValidator('NotEmpty',false,["messages"=>'Please enter document']);
+		$documentName->addValidator('regex',true,[
 			'pattern'=> '/^[a-zA-Z\-0-9\s]*$/',					
-			'messages'=>array('regexNotMatch'=>'Please enter valid category')
-		));
+			'messages'=>['regexNotMatch'=>'Please enter valid category']
+		]);
 
 
 		$category_id = new Zend_Form_Element_Select('category_id');
@@ -46,7 +46,7 @@ class Default_Form_Multiplepolicydocs extends Zend_Form
 		$category_id->setAttrib('name','category_id');
 		$category_id->setLabel('Category');	
 		$category_id->setRequired(true);
-		$category_id->addValidator('NotEmpty',false,array('messages'=>'Please select category'));
+		$category_id->addValidator('NotEmpty',false,['messages'=>'Please select category']);
 		$category_id->setRegisterInArrayValidator(false);			
 
 		$documentDesc = new Zend_Form_Element_Textarea('description');
@@ -60,10 +60,10 @@ class Default_Form_Multiplepolicydocs extends Zend_Form
 		$documentVersion->setAttrib('id','document_version');
 		$documentVersion->setAttrib('name','document_version[]');
 		$documentVersion->setAttrib('maxlength','7');
-		$documentVersion->addValidator('regex',true,array(
+		$documentVersion->addValidator('regex',true,[
 			'pattern'=>'/^[0-9]{1,7}(?:\.[0-9]{1,2})?$/',					
-			'messages'=>array('regexNotMatch'=>'Please enter valid version')
-		));
+			'messages'=>['regexNotMatch'=>'Please enter valid version']
+		]);
 		$documentVersion->addFilter(new Zend_Filter_StringTrim());
 
 		$submitBtn = new Zend_Form_Element_Submit('submit');
@@ -71,8 +71,8 @@ class Default_Form_Multiplepolicydocs extends Zend_Form
 		$submitBtn->setLabel('Add');
 		//$submitBtn->setAttrib('onclick','validateUploadDoc()');
 
-		$this->addElements(array($documentName, $category_id, $documentDesc, $documentVersion, $submitBtn));
-		$this->setElementDecorators(array('ViewHelper'));
+		$this->addElements([$documentName, $category_id, $documentDesc, $documentVersion, $submitBtn]);
+		$this->setElementDecorators(['ViewHelper']);
 	}
 }
 ?>

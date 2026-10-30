@@ -23,12 +23,12 @@ class Default_Model_Rejectedrequisitions extends Zend_Db_Table_Abstract
 {
     protected $_name = 'main_requisition';
     protected $_primary = 'id';
-        	
+
     public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$statusid,$a1,$a2,$a3)
     {
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 	$requi_model = new Default_Model_Requisition();	
         $auth = Zend_Auth::getInstance();
      	if($auth->hasIdentity())
@@ -56,7 +56,7 @@ class Default_Model_Rejectedrequisitions extends Zend_Db_Table_Abstract
         }
         $objName = 'rejectedrequisitions';
 
-        $tableFields = array('action'=>'Action',
+        $tableFields = ['action'=>'Action',
                              'requisition_code' => 'Requisition Code',                             
                             'jobtitle_name' => 'Job Title',  
                              'createdby_name'	=> 'Raised By',
@@ -65,19 +65,19 @@ class Default_Model_Rejectedrequisitions extends Zend_Db_Table_Abstract
                             'filled_positions' => 'Filled Positions',			 
                           //  'r.createdon'=> 'Raised On',
                          //  'onboard_date' => 'Due Date',
-							
-                            );
+
+                            ];
 
         $tablecontent = $requi_model->getRequisitionData($sort, $by, $pageNo, $perPage,$searchQuery,$loginUserId,$loginuserGroup,3);     
 
-        $dataTmp = array(
+        $dataTmp = [
                 'sort' => $sort,
                 'by' => $by,
                 'pageNo' => $pageNo,
                 'perPage' => $perPage,				
                 'tablecontent' => $tablecontent,
                 'objectname' => $objName,
-                'extra' => array(),
+                'extra' => [],
                 'tableheader' => $tableFields,
                 'jsGridFnName' => 'getAjaxgridData',
                 'jsFillFnName' => '',
@@ -86,11 +86,11 @@ class Default_Model_Rejectedrequisitions extends Zend_Db_Table_Abstract
                 'menuName'=>'Rejected Requisitions',
                 'call'=>$call,
 				'dashboardcall'=>$dashboardcall,
-                'search_filters' => array(
-                    'r.createdon' =>array('type'=>'datepicker'),
-                    'onboard_date'=>array('type'=>'datepicker'),                    
-                ),
-        );
+                'search_filters' => [
+                    'r.createdon' =>['type'=>'datepicker'],
+                    'onboard_date'=>['type'=>'datepicker'],                    
+                ],
+        ];
         return $dataTmp;
     }            
 }//end of class

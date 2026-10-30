@@ -13,8 +13,8 @@ class Default_Model_empiddocument extends Zend_Db_Table_Abstract{
         
         $bank = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('empidd'=>'main_empiddocument'),array('empidd.*','empidd.empiddocument_id as id'))
-            ->join(array('idd'=>'main_iddocument'),'idd.iddocument_id = empidd.iddocument_id',array('idd.name as Dname'))
+            ->from(['empidd'=>'main_empiddocument'],['empidd.*','empidd.empiddocument_id as id'])
+            ->join(['idd'=>'main_iddocument'],'idd.iddocument_id = empidd.iddocument_id',['idd.name as Dname'])
             ->order("$by $sort")
             ->where($where)
             ->limitPage($pageNo, $perPage);
@@ -24,7 +24,7 @@ class Default_Model_empiddocument extends Zend_Db_Table_Abstract{
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $exParam1='',$exParam2='',$exParam3='',$exParam4='')
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData);
             foreach ($searchValues as $key => $val) {
@@ -34,7 +34,7 @@ class Default_Model_empiddocument extends Zend_Db_Table_Abstract{
             $searchQuery = rtrim($searchQuery, " AND");
         }
         $objName = 'empiddocument';
-        $tableFields = array(
+        $tableFields = [
             'action' => 'Action',
             'idnumber' => 'ID',
             'Dname' => 'Document',
@@ -42,17 +42,17 @@ class Default_Model_empiddocument extends Zend_Db_Table_Abstract{
             'issuedate' => 'Issue Date',
             'expirydate' => 'Expire Date',
             'iddocumentstatus_id'=>'Status'
-        );
+        ];
 
         $tablecontent = $this->getData($sort, $by, $pageNo, $perPage, $searchQuery,$exParam1);
-        $dataTmp = array(
+        $dataTmp = [
             'sort' => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
             'perPage' => $perPage,
             'tablecontent' => $tablecontent,
             'objectname' => $objName,
-            'extra' => array(),
+            'extra' => [],
             'tableheader' => $tableFields,
             'jsGridFnName' => 'getAjaxgridData',
             'jsFillFnName' => '',
@@ -64,7 +64,7 @@ class Default_Model_empiddocument extends Zend_Db_Table_Abstract{
             'searchArray' => $searchArray,
             'call' => $call,
             'dashboardcall' => $dashboardcall
-        );
+        ];
         return $dataTmp;
     }
 
@@ -85,10 +85,10 @@ class Default_Model_empiddocument extends Zend_Db_Table_Abstract{
     {
         $select = $this->select()
                        ->setIntegrityCheck(false)
-                       ->from(array('eidd'=>'main_empiddocument'))
-                       ->join(array('idp'=>'main_iddocumentprovider'),'idp.iddocumentprovider_id = eidd.iddocumentprovider_id',array('idp.name as Pname'))
-                       ->join(array('ids'=>'main_iddocumentstatuslist'),'ids.iddocumentstatuslist_id = eidd.iddocumentstatuslist_id',array('ids.value as Sname'))
-                       ->join(array('idd'=>'main_iddocument'),'idd.iddocument_id = eidd.iddocument_id',array('idd.name as Iname'))
+                       ->from(['eidd'=>'main_empiddocument'])
+                       ->join(['idp'=>'main_iddocumentprovider'],'idp.iddocumentprovider_id = eidd.iddocumentprovider_id',['idp.name as Pname'])
+                       ->join(['ids'=>'main_iddocumentstatuslist'],'ids.iddocumentstatuslist_id = eidd.iddocumentstatuslist_id',['ids.value as Sname'])
+                       ->join(['idd'=>'main_iddocument'],'idd.iddocument_id = eidd.iddocument_id',['idd.name as Iname'])
                        ->where('eidd.empiddocument_id='.$id);
         return $this->fetchAll($select)->toArray();
     }
@@ -97,10 +97,10 @@ class Default_Model_empiddocument extends Zend_Db_Table_Abstract{
     {
         $select = $this->select()
                        ->setIntegrityCheck(false)
-                       ->from(array('eidd'=>'main_empiddocument'))
-                       ->join(array('idp'=>'main_iddocumentprovider'),'idp.iddocumentprovider_id = eidd.iddocumentprovider_id',array('idp.name as Pname'))
-                       ->join(array('ids'=>'main_iddocumentstatuslist'),'ids.iddocumentstatuslist_id = eidd.iddocumentstatuslist_id',array('ids.value as Sname'))
-                       ->join(array('idd'=>'main_iddocument'),'idd.iddocument_id = eidd.iddocument_id',array('idd.name as Iname'))
+                       ->from(['eidd'=>'main_empiddocument'])
+                       ->join(['idp'=>'main_iddocumentprovider'],'idp.iddocumentprovider_id = eidd.iddocumentprovider_id',['idp.name as Pname'])
+                       ->join(['ids'=>'main_iddocumentstatuslist'],'ids.iddocumentstatuslist_id = eidd.iddocumentstatuslist_id',['ids.value as Sname'])
+                       ->join(['idd'=>'main_iddocument'],'idd.iddocument_id = eidd.iddocument_id',['idd.name as Iname'])
                        ->where('eidd.empid='.$id);
         return $this->fetchAll($select)->toArray();
     }

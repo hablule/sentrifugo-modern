@@ -75,8 +75,8 @@ class Default_Form_performancereport extends Zend_Form
 		$submit->setAttrib('id','submitbutton');
 		$submit->setLabel('Save');
 
-		$this->addElements(array($employeename,$reporting_manager,$department_id,$businessunit_id,$fromyear,$toyear,$submit));
-		$this->setElementDecorators(array('ViewHelper'));
+		$this->addElements([$employeename,$reporting_manager,$department_id,$businessunit_id,$fromyear,$toyear,$submit]);
+		$this->setElementDecorators(['ViewHelper']);
 		
 	}
 }

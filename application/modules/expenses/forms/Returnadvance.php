@@ -48,7 +48,7 @@ class Expenses_Form_Returnadvance extends Zend_Form
 					$employeess->addMultiOption($data['from_id'],utf8_encode($data['userfullname']));
 			}
 		$employeess->setRegisterInArrayValidator(false);
-        $employeess->addValidator('NotEmpty', false, array('messages' => 'Please select employee.')); 
+        $employeess->addValidator('NotEmpty', false, ['messages' => 'Please select employee.']); 
 		
 		
 		
@@ -58,13 +58,13 @@ class Expenses_Form_Returnadvance extends Zend_Form
 		$currency->setAttrib('onchange', 'getCurrencyAdvances();');
 		$currency->setRegisterInArrayValidator(false);	
         $currency->setRequired(true);
-        $currency->addValidator('NotEmpty', false, array('messages' => 'Please select currency.'));
+        $currency->addValidator('NotEmpty', false, ['messages' => 'Please select currency.']);
          
 		$currency->addValidator(new Zend_Validate_Db_RecordExists(
-										array('table' => 'main_currency',
+										['table' => 'main_currency',
                                         		'field' => 'id',
                                                 'exclude'=>'isactive = 1',
-										)));
+										]));
 		$currency->getValidator('Db_RecordExists')->setMessage('Selected currency is inactivated.');
 		
         $amount = new Zend_Form_Element_Text('amount');
@@ -72,20 +72,20 @@ class Expenses_Form_Returnadvance extends Zend_Form
         $amount->setLabel("Advance amount");
 		$amount->setRequired(true);
         $amount->addFilter(new Zend_Filter_StringTrim());
-		$amount->addValidator('NotEmpty', false, array('messages' => 'Please enter amount.'));
-          $amount->addValidator("regex",true,array(
+		$amount->addValidator('NotEmpty', false, ['messages' => 'Please enter amount.']);
+          $amount->addValidator("regex",true,[
 						 'pattern'=>'/^[0-9]*\.?[0-9]+$/',
-                           'messages'=>array(
+                           'messages'=>[
                                'regexNotMatch'=>'Please enter only numbers.'
-                           )
-        	));
+                           ]
+        	]);
 		
 			
 		$payment_mode = new Zend_Form_Element_Select('payment_mode_id');
 		$payment_mode ->addMultiOption('','Select payment');
 		$payment_mode ->setRegisterInArrayValidator(false);	
         $payment_mode ->setRequired(true);
-        $payment_mode ->addValidator('NotEmpty', false, array('messages' => 'Please select payment mode.'));
+        $payment_mode ->addValidator('NotEmpty', false, ['messages' => 'Please select payment mode.']);
 		
 		$paymentref = new Zend_Form_Element_Text('payment_ref_number');
 		$paymentref->setLabel("Payment Ref#");
@@ -104,10 +104,10 @@ class Expenses_Form_Returnadvance extends Zend_Form
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 		
-		$this->addElements(array($id,$employeess,$currency,$amount,$payment_mode,$paymentref,$description,$submit));
+		$this->addElements([$id,$employeess,$currency,$amount,$payment_mode,$paymentref,$description,$submit]);
 		
 		
-        $this->setElementDecorators(array('ViewHelper')); 
+        $this->setElementDecorators(['ViewHelper']); 
 	}
 }
 ?>

@@ -38,7 +38,7 @@ class Default_Model_Paratingoption extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -55,18 +55,18 @@ class Default_Model_Paratingoption extends Zend_Db_Table_Abstract
             $searchQuery = rtrim($searchQuery, " AND");
         }
 
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'           => 'Action',
             'parent_scale'     => 'Parent Scale',
             'name'             => 'Text Label',
             'value'            => 'Raw Value',
             'normalized_value' => 'Math Weight (%)',
             'status_text'      => 'Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by' => $by,
             'pageNo' => $pageNo,
@@ -74,17 +74,17 @@ class Default_Model_Paratingoption extends Zend_Db_Table_Abstract
             'tablecontent'   => $tableContent,
             'objectname' => 'paratingoption',
             'tableheader'    => $tableHeaders,
-            'extra'          => array(),
+            'extra'          => [],
             'jsGridFnName' => 'getAjaxgridData',
             'jsFillFnName'   => '',
             'searchArray'    => $searchArray,
             'menuName'       => 'Rating Options',
             'call' => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => array(
-                'status_text' => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive'))
-            )
-        );
+            'search_filters' => [
+                'status_text' => ['type' => 'select', 'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']]
+            ]
+        ];
     }
 
     public function getGridData($sort, $by, $pageNo, $perPage, $searchQuery = '')
@@ -94,15 +94,15 @@ class Default_Model_Paratingoption extends Zend_Db_Table_Abstract
 
         $select = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('pro' => $this->_name), array(
+            ->from(['pro' => $this->_name], [
                 'id' => 'pro.id',
                 'value' => 'pro.value',
                 'name' => 'pro.name',
                 'icon_class' => 'pro.icon_class',
                 'normalized_value' => new Zend_Db_Expr("CONCAT(pro.normalized_value, '%')"), // Format as percentage for grid
                 'status_text' => new Zend_Db_Expr("CASE WHEN pro.isactive = 1 THEN 'Active' ELSE 'Inactive' END")
-            ))
-            ->joinInner(array('pr' => 'main_pa_rating'), 'pro.rating_id = pr.id', array('parent_scale' => 'pr.name'))
+            ])
+            ->joinInner(['pr' => 'main_pa_rating'], 'pro.rating_id = pr.id', ['parent_scale' => 'pr.name'])
             ->where('pro.isactive != 5');
 
         if (!empty($searchQuery)) $select->where($searchQuery);
@@ -112,7 +112,7 @@ class Default_Model_Paratingoption extends Zend_Db_Table_Abstract
 
     public function getPairs($activeOnly = true)
     {
-        $select = $this->select()->from($this->_name, array('id', 'name'))->order('name ASC');
+        $select = $this->select()->from($this->_name, ['id', 'name'])->order('name ASC');
         if ($activeOnly) $select->where("isactive = 1");
         return $this->getAdapter()->fetchPairs($select);
     }
@@ -126,7 +126,7 @@ class Default_Model_Paratingoption extends Zend_Db_Table_Abstract
     public function getPairsByRating($ratingId, $activeOnly = true)
     {
         $select = $this->select()
-            ->from($this->_name, array('id', 'name'))
+            ->from($this->_name, ['id', 'name'])
             ->where('rating_id = ?', (int)$ratingId)
             ->order('value ASC');
         if ($activeOnly) $select->where("isactive = 1");
@@ -178,7 +178,7 @@ class Default_Model_Paratingoption extends Zend_Db_Table_Abstract
 
             $data['modifiedby']   = $userId;
             $data['modifieddate'] = gmdate("Y-m-d H:i:s");
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
 
             $this->autoCalibrateScale($ratingId); // Trigger auto-math
             return 'update';
@@ -205,8 +205,8 @@ class Default_Model_Paratingoption extends Zend_Db_Table_Abstract
         $userId = Zend_Auth::getInstance()->getStorage()->read()->id ?? 0;
         $ratingId = $this->getAdapter()->fetchOne($this->select()->from($this->_name, 'rating_id')->where('id = ?', (int)$id));
 
-        $data = array('isactive' => 5, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s"));
-        $result = $this->update($data, array('id = ?' => (int)$id));
+        $data = ['isactive' => 5, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s")];
+        $result = $this->update($data, ['id = ?' => (int)$id]);
 
         $this->autoCalibrateScale($ratingId); // Recalibrate the scale after removing an option
         return $result;
@@ -215,8 +215,8 @@ class Default_Model_Paratingoption extends Zend_Db_Table_Abstract
     public function toggleStatus($id, $status)
     {
         $userId = Zend_Auth::getInstance()->getStorage()->read()->id ?? 0;
-        $data = array('isactive' => (int)$status, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s"));
-        return $this->update($data, array('id = ?' => (int)$id));
+        $data = ['isactive' => (int)$status, 'modifiedby' => $userId, 'modifieddate' => gmdate("Y-m-d H:i:s")];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /* =================================================================================
@@ -242,7 +242,7 @@ class Default_Model_Paratingoption extends Zend_Db_Table_Abstract
         $uiWidget = $db->fetchOne($db->select()->from('main_pa_rating', 'ui_widget')->where('id = ?', (int)$ratingId));
 
         $select = $db->select()
-            ->from($this->_name, array('id', 'value'))
+            ->from($this->_name, ['id', 'value'])
             ->where('rating_id = ?', (int)$ratingId)
             ->where('isactive != 5')
             ->order('value ASC');
@@ -257,7 +257,7 @@ class Default_Model_Paratingoption extends Zend_Db_Table_Abstract
             // Force the lowest value to 0% and the highest to 100%
             foreach ($options as $index => $opt) {
                 $normalized = ($index === 0) ? 1.00 : 100.00;
-                $db->update($this->_name, array('normalized_value' => $normalized), array('id = ?' => (int)$opt['id']));
+                $db->update($this->_name, ['normalized_value' => $normalized], ['id = ?' => (int)$opt['id']]);
             }
             return; // Exit early
         }
@@ -274,8 +274,8 @@ class Default_Model_Paratingoption extends Zend_Db_Table_Abstract
 
             $db->update(
                 $this->_name,
-                array('normalized_value' => round($normalized, 2)),
-                array('id = ?' => (int)$opt['id'])
+                ['normalized_value' => round($normalized, 2)],
+                ['id = ?' => (int)$opt['id']]
             );
         }
     }

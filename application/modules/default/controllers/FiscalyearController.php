@@ -50,7 +50,7 @@ class Default_FiscalyearController extends Zend_Controller_Action
         $session = sapp_Global::_readSession();
         if (!isset($session)) {
             if ($this->getRequest()->isXmlHttpRequest()) {
-                echo Zend_Json::encode(array('login' => 'failed'));
+                echo Zend_Json::encode(['login' => 'failed']);
                 exit;
             } else {
                 $this->_redirect('');
@@ -101,12 +101,12 @@ class Default_FiscalyearController extends Zend_Controller_Action
             $dataTmp = $this->_model->getGrid($sort, $by, $perPage, $page, rtrim($searchData, ','), $call, $dashboardcall);
 
             // Add custom action button linking to the Period Locks dashboard
-            $dataTmp['extra']['action'] = array(
+            $dataTmp['extra']['action'] = [
                 'name' => 'manage_locks',
                 'value' => '<a href="' . BASE_URL . 'period/index/fiscalyear_id/{{id}}" class="fa fa-lock" title="Manage Period Locks for this Year" style="color: #f39c12; margin-left: 5px; cursor: pointer;"></a>'
-            );
+            ];
 
-            $this->view->dataArray = array($dataTmp);
+            $this->view->dataArray = [$dataTmp];
             $this->view->call      = $call;
 
             $this->view->messages  = $this->_helper->flashMessenger->getMessages();
@@ -148,7 +148,7 @@ class Default_FiscalyearController extends Zend_Controller_Action
         $this->view->form = $this->_prepareForm();
 
         // Pass empty array for JS grid initialization
-        $this->view->existingPeriods = json_encode(array());
+        $this->view->existingPeriods = json_encode([]);
 
         $this->render('save');
     }
@@ -206,14 +206,14 @@ class Default_FiscalyearController extends Zend_Controller_Action
                     $calendarIdToSave = (int) $request->getParam('calendar_id');
                 }
 
-                $data = array(
+                $data = [
                     'name'        => trim((string) $request->getParam('name', '')),
                     'calendar_id' => $calendarIdToSave,
                     'start_date'  => $request->getParam('start_date'),
                     'end_date'    => $request->getParam('end_date'),
                     'description' => trim((string) $request->getParam('description', '')),
                     'isactive'    => (int) $request->getParam('isactive', 1)
-                );
+                ];
 
                 $actionFlag = 2;
                 $saveMode   = 'updated';
@@ -244,24 +244,24 @@ class Default_FiscalyearController extends Zend_Controller_Action
                 $db->commit();
 
                 // FlashMessenger for standard redirect
-                $this->_helper->flashMessenger->addMessage(array('success' => "Fiscal Year and Periods {$saveMode} successfully."));
+                $this->_helper->flashMessenger->addMessage(['success' => "Fiscal Year and Periods {$saveMode} successfully."]);
 
                 // SSOT Strict AJAX JSON Response (Success with Redirect)
-                $this->_helper->json(array(
+                $this->_helper->json([
                     'result'    => 'saved',
                     'nomessage' => 'yes'
-                ));
+                ]);
             } catch (\Throwable $e) {
                 $db->rollBack();
                 error_log("FiscalYear Save Error: " . $e->getMessage());
 
                 // Exception returned in specific structure. 
                 // Passed directly so user sees the specific generation error (e.g. "Overlapping Dates").
-                $this->_helper->json(array(
+                $this->_helper->json([
                     'result'  => 'exception',
                     'message' => $e->getMessage(),
                     'msgtype' => 'error'
-                ));
+                ]);
             }
         } else {
             // Validation Error - Raw Array output directly
@@ -280,7 +280,7 @@ class Default_FiscalyearController extends Zend_Controller_Action
 
         if ($id) {
             if (sapp_Global::_checkprivileges(CALENDERYEAR, $this->_loginuserGroup, $this->_loginuserRole, 'delete') !== 'Yes') {
-                return $this->_helper->json(array('result' => 'error', 'message' => 'Permission Denied.'));
+                return $this->_helper->json(['result' => 'error', 'message' => 'Permission Denied.']);
             }
 
             try {
@@ -292,14 +292,14 @@ class Default_FiscalyearController extends Zend_Controller_Action
                 $this->_model->deleteRecord($id);
                 sapp_Global::logManager(CALENDERYEAR, 3, $this->_loginUserId, $id);
 
-                return $this->_helper->json(array('result' => 'saved', 'nomessage' => 'no', 'message' => 'Record deleted successfully.', 'msgtype' => 'success'));
+                return $this->_helper->json(['result' => 'saved', 'nomessage' => 'no', 'message' => 'Record deleted successfully.', 'msgtype' => 'success']);
             } catch (\Throwable $e) {
                 error_log("FiscalYear Delete Error: " . $e->getMessage());
-                return $this->_helper->json(array('result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error'));
+                return $this->_helper->json(['result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error']);
             }
         }
 
-        return $this->_helper->json(array('result' => 'error', 'message' => 'Invalid request'));
+        return $this->_helper->json(['result' => 'error', 'message' => 'Invalid request']);
     }
 
     public function makeactiveinactiveAction()
@@ -311,10 +311,10 @@ class Default_FiscalyearController extends Zend_Controller_Action
             $this->_model->toggleStatus($id, $status);
             sapp_Global::logManager(CALENDERYEAR, 4, $this->_loginUserId, $id);
 
-            $this->_helper->json(array('result' => 'saved', 'nomessage' => 'no', 'msgtype' => 'success', 'message' => 'Status updated successfully.'));
+            $this->_helper->json(['result' => 'saved', 'nomessage' => 'no', 'msgtype' => 'success', 'message' => 'Status updated successfully.']);
         } catch (\Throwable $e) {
             error_log("FiscalYear Toggle Error: " . $e->getMessage());
-            $this->_helper->json(array('result' => 'exception', 'msgtype' => 'error', 'message' => 'System error occurred.'));
+            $this->_helper->json(['result' => 'exception', 'msgtype' => 'error', 'message' => 'System error occurred.']);
         }
     }
 

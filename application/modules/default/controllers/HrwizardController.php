@@ -70,7 +70,7 @@ class Default_HrwizardController extends Zend_Controller_Action
 				 $loginuserGroup = $auth->getStorage()->read()->group_id;
 		} 
 	    $employeeLeaveTypesModel = new Default_Model_Employeeleavetypes();	
-		$msgarray = array();
+		$msgarray = [];
 		$errorflag = 'true';
 		$service_desk_id = $this->_request->getParam('category_id');
 		$leaveTypeArr = $this->_request->getParam('leavetype');
@@ -128,7 +128,7 @@ class Default_HrwizardController extends Zend_Controller_Action
 			   		$leaveCode = strtoupper(substr(trim($leaveTypeArr[$i]), 0, 4));
 		    	else		 		
 		   			$leaveCode = strtoupper(trim($leaveTypeArr[$i]));		
-			   $data = array('leavetype'=>$leaveTypeArr[$i],
+			   $data = ['leavetype'=>$leaveTypeArr[$i],
 			                 'numberofdays'=>$numberOfDaysArr[$i], 
 							 'leavecode'=> $leaveCode,
 			   				  'leavepreallocated'=>1,
@@ -138,7 +138,7 @@ class Default_HrwizardController extends Zend_Controller_Action
 							  'modifiedby'=>$loginUserId,
 							  'modifieddate'=>gmdate("Y-m-d H:i:s"),
 			   				  'isactive' =>1 	
-				);
+				];
 				
 				$Id = $employeeLeaveTypesModel->SaveorUpdateEmployeeLeaveTypeData($data, $where);
 				$tableid = $Id; 	
@@ -148,10 +148,10 @@ class Default_HrwizardController extends Zend_Controller_Action
 			
 			 $hrWizardModel = new Default_Model_Hrwizard();
 			
-					$hrwizardarray = array('leavetypes' => 2,
+					$hrwizardarray = ['leavetypes' => 2,
                   						 'modifiedby'=>$loginUserId,
                   						'modifieddate'=>gmdate("Y-m-d H:i:s")
-                  					);
+                  					];
 					 if($hrWizardData['holidays'] == 2 && $hrWizardData['perf_appraisal'] == 2)
 					 {
 					 	$hrwizardarray['iscomplete'] = 2;
@@ -184,7 +184,7 @@ class Default_HrwizardController extends Zend_Controller_Action
         $hrWizardModel = new Default_Model_Hrwizard();
         $holidaygroupsmodel = new Default_Model_Holidaygroups();
         $hrWizardData = $hrWizardModel->getHrwizardData();
-        $msgarray = array();
+        $msgarray = [];
         
         $holidayGroupdata = $holidaygroupsmodel->getAllGroupData();
         if(empty($holidayGroupdata)) {
@@ -208,12 +208,12 @@ class Default_HrwizardController extends Zend_Controller_Action
 				 $loginuserGroup = $auth->getStorage()->read()->group_id;
 		} 
 	    $holidaydatesmodel = new Default_Model_Holidaydates();	
-		$msgarray = array();
+		$msgarray = [];
 		$errorflag = 'true';
 		$groupnameId = $this->_request->getParam('groupname');
 		$holidayname_arr = $this->_request->getParam('holidayname');
 		$holidaydate_arr = $this->_request->getParam('holidaydate');
-		$holidayyears=array();
+		$holidayyears=[];
 		if(!empty($holidaydate_arr))
 		{
 			for($i=0;$i<sizeof($holidaydate_arr);$i++)
@@ -287,7 +287,7 @@ class Default_HrwizardController extends Zend_Controller_Action
 			$date = new Zend_Date();
 			for($i=0;$i<sizeof($holidayname_arr);$i++)
 			{
-			   $data = array('groupid'=>$groupnameId,
+			   $data = ['groupid'=>$groupnameId,
 			   				 'holidayname'=>trim($holidayname_arr[$i]),
 			                 'holidaydate'=>sapp_Global::change_date($holidaydate_arr[$i], 'database'), 
 							 'holidayyear'=>date('Y',strtotime(sapp_Global::change_date($holidaydate_arr[$i], 'database'))),
@@ -296,7 +296,7 @@ class Default_HrwizardController extends Zend_Controller_Action
 							  'modifiedby'=>$loginUserId,
 							  'modifieddate'=>gmdate("Y-m-d H:i:s"),
 			   				  'isactive' =>1 	
-				);
+				];
 				
 				$Id = $holidaydatesmodel->SaveorUpdateHolidayDates($data, $where);	
 				$tableid = $Id; 	
@@ -307,10 +307,10 @@ class Default_HrwizardController extends Zend_Controller_Action
 			 $hrWizardModel = new Default_Model_Hrwizard();
 			 $hrWizardData = $hrWizardModel->getHrwizardData();
 			
-			$hrwizardarray = array('holidays' => 2,
+			$hrwizardarray = ['holidays' => 2,
                   				   'modifiedby'=>$loginUserId,
                   				    'modifieddate'=>gmdate("Y-m-d H:i:s")
-                  				   );
+                  				   ];
 			 if($hrWizardData['leavetypes'] == 2 && $hrWizardData['perf_appraisal'] == 2)
 			 {
 			 	$hrwizardarray['iscomplete'] = 2;
@@ -365,13 +365,13 @@ class Default_HrwizardController extends Zend_Controller_Action
 				{
 				$actionflag = '';
 				$tableid  = ''; 
-			   	$data = array(	 'groupname'=>$holidaygroup, 
+			   	$data = [	 'groupname'=>$holidaygroup, 
 								 'description'=>($description!=''?trim($description):NULL),
 			   					 'createdby'=>$loginUserId,
 							     'createddate'=>$date->get('yyyy-MM-dd HH:mm:ss'),
 								 'modifiedby'=>$loginUserId,
 								 'modifieddate'=>gmdate("Y-m-d H:i:s")
-						);
+						];
 				
 					$where = '';
 					$actionflag = 1;
@@ -420,7 +420,7 @@ class Default_HrwizardController extends Zend_Controller_Action
         $hrWizardModel = new Default_Model_Hrwizard();
        	$appraisalCategoryModel = new Default_Model_Appraisalcategory();
         $hrWizardData = $hrWizardModel->getHrwizardData();
-        $msgarray = array();
+        $msgarray = [];
         
         $appraisalCategoriesData = $appraisalCategoryModel->getAppraisalCategorysData();
         if(empty($appraisalCategoriesData)) {
@@ -444,7 +444,7 @@ class Default_HrwizardController extends Zend_Controller_Action
 				 $loginuserGroup = $auth->getStorage()->read()->group_id;
 		} 
 	    $appraisalquestionsmodel = new Default_Model_Appraisalquestions();	
-		$msgarray = array();
+		$msgarray = [];
 		$errorflag = 'true';
 		$categoryNameId = $this->_request->getParam('category_name_id');
 		$questionarr = $this->_request->getParam('question');
@@ -477,7 +477,7 @@ class Default_HrwizardController extends Zend_Controller_Action
 			$date = new Zend_Date();
 			for($i=0;$i<sizeof($questionarr);$i++)
 			{
-			   $data = array('pa_category_id'=>$categoryNameId,
+			   $data = ['pa_category_id'=>$categoryNameId,
 			                 'question'=>trim($questionarr[$i]), 
 							 'description'=>($descriptionarr[$i]!=''?trim($descriptionarr[$i]):NULL),
 							  'modifiedby'=>$loginUserId,
@@ -490,7 +490,7 @@ class Default_HrwizardController extends Zend_Controller_Action
 							  'module_flag'=>1, 
 							  'createddate'=> gmdate("Y-m-d H:i:s"),
 							  'isactive'=> 1
-					);
+					];
 				
 				$Id = $appraisalquestionsmodel->SaveorUpdateAppraisalQuestionData($data, $where);
 				$tableid = $Id; 	
@@ -500,10 +500,10 @@ class Default_HrwizardController extends Zend_Controller_Action
 			
 			 $hrWizardModel = new Default_Model_Hrwizard();
 			
-			$hrwizardarray = array('perf_appraisal' => 2,
+			$hrwizardarray = ['perf_appraisal' => 2,
                   				   'modifiedby'=>$loginUserId,
                   				    'modifieddate'=>gmdate("Y-m-d H:i:s")
-                  				   );
+                  				   ];
 			 if($hrWizardData['leavetypes'] == 2 && $hrWizardData['holidays'] == 2)
 			 {
 			 	$hrwizardarray['iscomplete'] = 2;
@@ -557,13 +557,13 @@ public function savecategoryAction()
                 {
 				$actionflag = '';
 				$tableid  = ''; 
-			   	$data = array(	 'category_name'=>$categoryName, 
+			   	$data = [	 'category_name'=>$categoryName, 
 								 'description'=>($description!=''?trim($description):NULL),
 			   					 'createdby'=>$loginUserId,
 							     'createddate'=>gmdate("Y-m-d H:i:s"),
 								 'modifiedby'=>$loginUserId,
 								 'modifieddate'=>gmdate("Y-m-d H:i:s")
-						);
+						];
 				
 					$where = '';
 					$actionflag = 1;
@@ -614,10 +614,10 @@ public function savecategoryAction()
 		$db->beginTransaction();
 		try
 		{
-	    	$Completion_data = array( 'iscomplete'=>0,
+	    	$Completion_data = [ 'iscomplete'=>0,
 	                 				'modifiedby'=>$loginUserId,
 									'modifieddate'=>gmdate("Y-m-d H:i:s"),
-						);
+						];
 			$CompleteId = $hrWizardModel->SaveorUpdateHrWizardData($Completion_data, '');
 			$db->commit();
 			$result['result'] = 'success';

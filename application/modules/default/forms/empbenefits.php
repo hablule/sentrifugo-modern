@@ -9,12 +9,12 @@ class Default_Form_empbenefits extends Zend_Form{
         $id = new Zend_Form_Element_Hidden('id');
         $perk = new Zend_Form_Element_Select('perk');
 		$perk->setLabel('Perk');
-        $perk->addValidator('NotEmpty', false, array('messages' => 'Please select Perk.')); 
-        $perk->addValidator(new Zend_Validate_Db_NoRecordExists(array(
+        $perk->addValidator('NotEmpty', false, ['messages' => 'Please select Perk.']); 
+        $perk->addValidator(new Zend_Validate_Db_NoRecordExists([
             'table'=>'main_employeeperk',
             'field'=>'perk_id',
             'exclude'=>'emp_id='.Zend_Controller_Front::getInstance()->getRequest()->getParam('id')
-        )));
+        ]));
         $perk->getValidator('Db_NoRecordExists')->setMessage('Perk already Assigned.');
         $perk->setRequired('true');
        
@@ -24,12 +24,12 @@ class Default_Form_empbenefits extends Zend_Form{
         $amount->setLabel('Amount');
         $amount->setRequired(true);
 
-        $amount->addValidator('NotEmpty', false, array('messages' => 'Please enter Amount.')); 
+        $amount->addValidator('NotEmpty', false, ['messages' => 'Please enter Amount.']); 
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save');
 
-        $this->addElements(array($id,$perk,$amount,$submit,$isactive));
-        $this->setElementDecorators(array('ViewHelper')); 
+        $this->addElements([$id,$perk,$amount,$submit,$isactive]);
+        $this->setElementDecorators(['ViewHelper']); 
 
     }
 }

@@ -23,7 +23,7 @@ class Default_DisabilityController extends Zend_Controller_Action
       $refresh = $this->_getParam('refresh');
       $dashboradcall = $this->_getParam('dashboradcall');
 
-      $data = array();
+      $data = [];
 
       if ($refresh == 'refresh') {
           if ($dashboradcall == 'Yes') {
@@ -81,7 +81,7 @@ try {
        $msgarray['disabilitytype_id'] = 'Disability Type  is not configured yet.';
    } else {
        foreach ($add as $adds) {
-           $form->disabilitytype_id->addMultiOptions(array($adds['disabilitytype_id'] => $adds['name']));
+           $form->disabilitytype_id->addMultiOptions([$adds['disabilitytype_id'] => $adds['name']]);
        }
    }
 
@@ -94,7 +94,7 @@ try {
           $msgarray['disabilitycategory_id'] = 'Disability Category  is not configured yet.';
       } else {
           foreach ($addc as $addcs) {
-              $form->disabilitycategory_id->addMultiOptions(array($addcs['disabilitycategory_id'] => $addcs['name']));
+              $form->disabilitycategory_id->addMultiOptions([$addcs['disabilitycategory_id'] => $addcs['name']]);
           }
       }
 
@@ -105,7 +105,7 @@ try {
                 if ($auth->hasIdentity()) {
                     $loginUserId = $auth->getStorage()->read()->id;
                 }
-                $data = array(
+                $data = [
                     'name'=>$this->_request->getParam('name'),
                     'code'=>$this->_request->getParam('code'),
                     'disabilitycategory_id'=>$this->_request->getParam('disabilitycategory_id'),
@@ -113,7 +113,7 @@ try {
                     'description'=>$this->_request->getParam('description'),
                     'createdby'=>$loginUserId,
                     'createddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
 
                 $tableid=$dmtmodel->SaveorUpdateData($data, '');
                 sapp_Global::logManager(332,1,$loginUserId,$tableid);
@@ -161,7 +161,7 @@ try {
        $msgarray['disabilitytype_id'] = 'Disability Type  is not configured yet.';
    } else {
        foreach ($add as $adds) {
-           $form->disabilitytype_id->addMultiOptions(array($adds['disabilitytype_id'] => $adds['name']));
+           $form->disabilitytype_id->addMultiOptions([$adds['disabilitytype_id'] => $adds['name']]);
        }
    }
 
@@ -174,7 +174,7 @@ try {
           $msgarray['disabilitycategory_id'] = 'Disability Category  is not configured yet.';
       } else {
           foreach ($addc as $addcs) {
-              $form->disabilitycategory_id->addMultiOptions(array($addcs['disabilitycategory_id'] => $addcs['name']));
+              $form->disabilitycategory_id->addMultiOptions([$addcs['disabilitycategory_id'] => $addcs['name']]);
           }
       }
 
@@ -186,7 +186,7 @@ try {
                 if ($auth->hasIdentity()) {
                     $loginUserId = $auth->getStorage()->read()->id;
                 }
-                $data = array(
+                $data = [
                     'name'=>$this->_request->getParam('name'),
                     'code'=>$this->_request->getParam('code'),
                     'disabilitycategory_id'=>$this->_request->getParam('disabilitycategory_id'),
@@ -194,7 +194,7 @@ try {
                     'description'=>$this->_request->getParam('description'),
                     'createdby'=>$loginUserId,
                     'createddate'=>gmdate('Y-m-d H:i:s')
-                );
+                ];
 
                 $tableid=$dmtmodel->SaveorUpdateData($data, '');
                 sapp_Global::logManager(332,1,$loginUserId,$tableid);
@@ -291,7 +291,7 @@ Zend_Debug::dump($th->getMessage());    }
         
                         $date = gmdate("Y-m-d H:i:s");
         
-                        $data = array(
+                        $data = [
                             'name'=>$this->_request->getParam('name'),
                                        'code'=>$this->_request->getParam('code'),
                                        'disabilitycategory_id'=>$this->_request->getParam('disabilitycategory_id'),
@@ -299,12 +299,12 @@ Zend_Debug::dump($th->getMessage());    }
                                        'description'=>$this->_request->getParam('description'),
                                         'isactive'=>utlis::getcheckboxvalue($this->_request->getParam('isactive')),
         
-                                    );
+                                    ];
                         if($id!=''){
         
                             $data['modifiedby'] = $loginUserId;
                             $data['modifieddate'] = $date;
-                            $where = array('disability_id=?'=>$id);
+                            $where = ['disability_id=?'=>$id];
                         }
                         else
                         {
@@ -317,11 +317,11 @@ Zend_Debug::dump($th->getMessage());    }
                         
                         if($Id == 'update')
                         {
-                            $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Disability  updated successfully."));
+                            $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Disability  updated successfully."]);
                         }
                         else
                         {
-                         $this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Disability  added successfully."));
+                         $this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Disability  added successfully."]);
                         }
                             
                         $this->_redirect('disability');

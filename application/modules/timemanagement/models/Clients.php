@@ -49,8 +49,8 @@ class Timemanagement_Model_Clients extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{
 		$searchQuery = '';
-		$searchArray = array();
-		$data = array();
+		$searchArray = [];
+		$data = [];
 		
 		if($searchData != '' && $searchData!='undefined')
 		{
@@ -66,24 +66,24 @@ class Timemanagement_Model_Clients extends Zend_Db_Table_Abstract
 		$objName = 'clients';
 
 		//email,phone_no,poc,address,country_id,state_id,created_by
-		$tableFields = array(
+		$tableFields = [
 					'action'=>'Action',
 					'client_name' => 'Client',
 					'email' => 'Email',
 					'phone_no' => 'Phone Number',
 					'poc' => 'Point of Contact',
-		);
+		];
 
 		$tablecontent = $this->getClientsData($sort, $by, $pageNo, $perPage,$searchQuery);
 
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -91,7 +91,7 @@ class Timemanagement_Model_Clients extends Zend_Db_Table_Abstract
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall,
 			'menuName' => 'Clients'
-			);
+			];
 			return $dataTmp;
 	}
 
@@ -149,9 +149,9 @@ class Timemanagement_Model_Clients extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('c'=>$this->_name),array('c.*','cn.country_name','s.state_name'))
-						->joinLeft(array('cn'=>'tbl_countries'),"c.country_id = cn.id",array())
-						->joinLeft(array('s'=>'tbl_states'),"s.id = c.state_id",array())
+						->from(['c'=>$this->_name],['c.*','cn.country_name','s.state_name'])
+						->joinLeft(['cn'=>'tbl_countries'],"c.country_id = cn.id",[])
+						->joinLeft(['s'=>'tbl_states'],"s.id = c.state_id",[])
 						->where('c.is_active = 1 AND c.id='.$id.' ');
 						
 		return $this->fetchAll($select)->toArray();
@@ -166,7 +166,7 @@ class Timemanagement_Model_Clients extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('c'=>$this->_name),array('c.id','c.client_name'))
+		->from(['c'=>$this->_name],['c.id','c.client_name'])
 		->where('c.is_active = 1 ')
 		->order('c.client_name');
 		return $this->fetchAll($select)->toArray();

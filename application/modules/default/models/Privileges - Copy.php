@@ -23,7 +23,7 @@ class Default_Model_Privileges extends Zend_Db_Table_Abstract
 {
     protected $_name = 'main_privileges';
     protected $_primary = 'id';
-   
+
     /*
      * This function is used for saving and updating privileges data.
      */
@@ -72,10 +72,10 @@ class Default_Model_Privileges extends Zend_Db_Table_Abstract
      */
     public function getMenuItemsByGroupId($groupid='')
     { 
-        $$result = array();
+        ${$result} = [];
 
         if(!empty($groupid)){
-            $$result = $this->fetchAll('group_id='.$groupid." and isactive = 1 ")->toArray();
+            ${$result} = $this->fetchAll('group_id='.$groupid." and isactive = 1 ")->toArray();
         }
 
         return $result;
@@ -83,11 +83,11 @@ class Default_Model_Privileges extends Zend_Db_Table_Abstract
 	/*
 		This function is to get privileges of a particular menu of particular group.
 	*/
-	public function getObjPrivileges($objId, $groupId = "", $role_id, $idCsv=0)
+	public function getObjPrivileges($objId, $groupId = "", $role_id = null, $idCsv=0)
 	{
-       
 
-		$privilege_arr=array();
+
+		$privilege_arr=[];
 		$db = Zend_Db_Table::getDefaultAdapter();
         if($objId !="" && $role_id != "" && $idCsv == 0)
 		{
@@ -99,18 +99,18 @@ class Default_Model_Privileges extends Zend_Db_Table_Abstract
 			$result = $db->query($query);
 
 			$privilege_arr = $result->fetch();
-			
-			
+
+
 		}
 		else if($objId !="" && $role_id != "" && $idCsv == 1)
 		{
 			$query = "select object,addpermission,viewpermission,viewattachments,isactive from main_privileges where isactive = 1  and object in(".$objId.") and role =".$role_id;
 			$result = $db->query($query); 
 			$privilege_arr = $result->fetchAll();
-			
-			
+
+
 		}
-       
+
         return $privilege_arr;
 	}
 }//end of class

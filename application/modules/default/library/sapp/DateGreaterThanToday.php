@@ -23,9 +23,9 @@ class sapp_DateGreaterThanToday extends Zend_Validate_Abstract
 {
     const DATE_INVALID = 'dateInvalid';
 
-    protected $_messageTemplates = array(
+    protected $_messageTemplates = [
         self::DATE_INVALID => "Date should be greater than current date."
-    );
+    ];
 
     public function isValid($value)
     {

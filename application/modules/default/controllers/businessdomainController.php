@@ -50,7 +50,7 @@ class Default_BusinessdomainController extends Zend_Controller_Action
         $session = sapp_Global::_readSession();
         if (!isset($session)) {
             if ($this->getRequest()->isXmlHttpRequest()) {
-                echo Zend_Json::encode(array('login' => 'failed'));
+                echo Zend_Json::encode(['login' => 'failed']);
                 exit;
             } else {
                 $this->_redirect('');
@@ -97,7 +97,7 @@ class Default_BusinessdomainController extends Zend_Controller_Action
 
             $dataTmp = $this->_model->getGrid($sort, $by, $perPage, $page, rtrim($searchData, ','), $call, $dashboardcall);
             
-            $this->view->dataArray = array($dataTmp);
+            $this->view->dataArray = [$dataTmp];
             $this->view->call      = $call;
 
             $this->view->messages  = $this->_helper->flashMessenger->getMessages();
@@ -170,12 +170,12 @@ class Default_BusinessdomainController extends Zend_Controller_Action
             $db->beginTransaction();
 
             try {
-                $data = array(
+                $data = [
                     'code'         => trim((string) $request->getParam('code', '')),
                     'name'         => trim((string) $request->getParam('name', '')),
                     'description'  => trim((string) $request->getParam('description', '')),
                     'isactive'     => (int) $request->getParam('isactive', 1)
-                );
+                ];
 
                 $actionFlag = 2; // Edit
                 $saveMode   = 'updated';
@@ -194,24 +194,24 @@ class Default_BusinessdomainController extends Zend_Controller_Action
                 $db->commit();
 
                 // Set FlashMessenger for the redirect page
-                $this->_helper->flashMessenger->addMessage(array('success' => "Business Domain {$saveMode} successfully."));
+                $this->_helper->flashMessenger->addMessage(['success' => "Business Domain {$saveMode} successfully."]);
 
                 // SSOT v6.3 Strict AJAX JSON Response (Success with Redirect)
-                $this->_helper->json(array(
+                $this->_helper->json([
                     'result'    => 'saved',
                     'nomessage' => 'yes'
-                ));
+                ]);
 
             } catch (\Throwable $e) {
                 $db->rollBack();
                 error_log("BusinessDomain Save Error: " . $e->getMessage()); 
                 
                 // SSOT v6.3 Strict AJAX JSON Response (Exception)
-                $this->_helper->json(array(
+                $this->_helper->json([
                     'result'  => 'exception', 
                     'message' => 'System error occurred.',
                     'msgtype' => 'error'
-                ));
+                ]);
             }
         } else {
             // SSOT v6.3 Strict AJAX JSON Response (Validation Error - Raw Array)
@@ -230,7 +230,7 @@ class Default_BusinessdomainController extends Zend_Controller_Action
         
         if ($id) {
             if (sapp_Global::_checkprivileges(BUSINESSDOMAIN, $this->_loginuserGroup, $this->_loginuserRole, 'delete') !== 'Yes') {
-                return $this->_helper->json(array('result' => 'error', 'message' => 'Permission Denied.'));
+                return $this->_helper->json(['result' => 'error', 'message' => 'Permission Denied.']);
             }
 
             try {
@@ -243,15 +243,15 @@ class Default_BusinessdomainController extends Zend_Controller_Action
                 sapp_Global::logManager(BUSINESSDOMAIN, 3, $this->_loginUserId, $id);
                 
                 // Standard Success Response
-                return $this->_helper->json(array('result' => 'saved', 'nomessage' => 'no', 'message' => 'Record deleted successfully.', 'msgtype' => 'success'));
+                return $this->_helper->json(['result' => 'saved', 'nomessage' => 'no', 'message' => 'Record deleted successfully.', 'msgtype' => 'success']);
                 
             } catch (\Throwable $e) {
                 error_log("BusinessDomain Delete Error: " . $e->getMessage());
-                return $this->_helper->json(array('result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error'));
+                return $this->_helper->json(['result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error']);
             }
         }
         
-        return $this->_helper->json(array('result' => 'error', 'message' => 'Invalid request'));
+        return $this->_helper->json(['result' => 'error', 'message' => 'Invalid request']);
     }
 
     public function makeactiveinactiveAction()
@@ -263,10 +263,10 @@ class Default_BusinessdomainController extends Zend_Controller_Action
             $this->_model->toggleStatus($id, $status);
             sapp_Global::logManager(BUSINESSDOMAIN, 4, $this->_loginUserId, $id);
             
-            $this->_helper->json(array('result' => 'saved', 'nomessage' => 'no', 'msgtype' => 'success', 'message' => 'Status updated successfully.'));
+            $this->_helper->json(['result' => 'saved', 'nomessage' => 'no', 'msgtype' => 'success', 'message' => 'Status updated successfully.']);
         } catch (\Throwable $e) {
             error_log("BusinessDomain Toggle Error: " . $e->getMessage());
-            $this->_helper->json(array('result' => 'exception', 'msgtype' => 'error', 'message' => 'System error occurred.'));
+            $this->_helper->json(['result' => 'exception', 'msgtype' => 'error', 'message' => 'System error occurred.']);
         }
     }
 

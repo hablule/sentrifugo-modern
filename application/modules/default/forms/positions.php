@@ -34,19 +34,19 @@ class Default_Form_positions extends Zend_Form
 		$name = new Zend_Form_Element_Text('name');
         $name->setAttrib('maxLength', 50);
         $name->setRequired(true);
-        $name->addValidator('NotEmpty', false, array('messages' => 'Please enter position.')); 
-		$name->addValidators(array(
-						 array(
+        $name->addValidator('NotEmpty', false, ['messages' => 'Please enter position.']); 
+		$name->addValidators([
+						 [
 							 'validator'   => 'Regex',
 							 'breakChainOnFailure' => true,
-							 'options'     => array( 
+							 'options'     => [ 
 							 'pattern' =>'/^[a-zA-Z][a-zA-Z0-9\-\s]*$/i',
-							 'messages' => array(
+							 'messages' => [
 							 'regexNotMatch'=>'Please enter valid position.'
-								 )
-							 )
-						 )
-					 )); 
+								 ]
+							 ]
+						 ]
+					 ]); 
 		// $positionname->addValidator(new Zend_Validate_Db_NoRecordExists(
         //                                       array('table'=>'main_positions',
         //                                                 'field'=>'positionname',
@@ -57,7 +57,7 @@ class Default_Form_positions extends Zend_Form
 		
         $code = new Zend_Form_Element_Text('code');
         $code->setRequired(true);
-		$code->addValidator('NotEmpty', false, array('messages' => 'Please fill the field.'));		
+		$code->addValidator('NotEmpty', false, ['messages' => 'Please fill the field.']);		
    	
 		$description = new Zend_Form_Element_Textarea('description');
 		$description->setLabel('Description');
@@ -67,7 +67,7 @@ class Default_Form_positions extends Zend_Form
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 
-		 $this->addElements(array($id,$name,$code,$description,$emptyflag,$isactive,$submit));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 $this->addElements([$id,$name,$code,$description,$emptyflag,$isactive,$submit]);
+         $this->setElementDecorators(['ViewHelper']); 
 	}
 }

@@ -12,18 +12,18 @@ class Default_Form_Empaddress extends Zend_Form{
         $name = new Zend_Form_Element_Text('name');
         $name->setAttrib('maxLength', 255);
         $name->setLabel('Name');      
-        $name->addValidator('NotEmpty', false, array('messages' => 'Name is required')); 
+        $name->addValidator('NotEmpty', false, ['messages' => 'Name is required']); 
         $name->setRequired('true');
         $code = new Zend_Form_Element_Text('code');
         $code->setLabel('Code');
-        $code->addValidator('NotEmpty',false,array('messages'=>'Code is required'));
+        $code->addValidator('NotEmpty',false,['messages'=>'Code is required']);
         $description = new Zend_Form_Element_Text('description');
         $description->setLabel('Description');
         $postal = new Zend_Form_Element_Text('postal');
         $postal->setLabel('Postal');
         $location= new Zend_Form_Element_Text('location');
         $location->setLabel('Location');      
-        $location->addValidator('NotEmpty', false, array('messages' => 'Please fill Location.')); 
+        $location->addValidator('NotEmpty', false, ['messages' => 'Please fill Location.']); 
         $location->setAttrib('readonly',true);
         $location->setRequired(true);
         $addresstype = new Zend_Form_Element_Select('address_type_id');
@@ -66,10 +66,10 @@ class Default_Form_Empaddress extends Zend_Form{
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save');
         $code->addValidator(new Zend_Validate_Db_NoRecordExists(
-            array('table'=>'main_address',
+            ['table'=>'main_address',
                       'field'=>'code',
                     'exclude'=>'address_id!="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('id').'"',    
-               ) )  
+               ] )  
   );
 
 $code->getValidator('Db_NoRecordExists')->setMessage('Code already exists.');
@@ -77,8 +77,8 @@ $code ->setAttrib('maxlength', '60');
 $name ->setAttrib('maxlength', '100');
 
 
-        $this->addElements(array($id,$name,$code,$description,$location,$addresstype,$permanent,$iscurrent,$companyid,$sbunit,$divisionid,$departmentid,$divisionid,$sectionid,$projectid,$postal,$empid,$isactive,$submit));
-        $this->setElementDecorators(array('ViewHelper')); 
+        $this->addElements([$id,$name,$code,$description,$location,$addresstype,$permanent,$iscurrent,$companyid,$sbunit,$divisionid,$departmentid,$divisionid,$sectionid,$projectid,$postal,$empid,$isactive,$submit]);
+        $this->setElementDecorators(['ViewHelper']); 
     }
 }
 ?>

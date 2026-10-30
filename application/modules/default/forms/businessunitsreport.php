@@ -43,23 +43,23 @@ class Default_Form_businessunitsreport extends Zend_Form
 		$startdate = new ZendX_JQuery_Form_Element_DatePicker('startdate');
 		$startdate->setLabel('Started On');
 		$startdate->setAttrib('readonly', 'true');	        
-		$startdate->setOptions(array('class' => 'brdr_none'));	
+		$startdate->setOptions(['class' => 'brdr_none']);	
 		
 		$start_date = new ZendX_JQuery_Form_Element_DatePicker('start_date');
 		
 		$start_date->setAttrib('readonly', 'true');	
         $start_date->setAttrib('onfocus', 'this.blur()'); 		
-		$start_date->setOptions(array('class' => 'brdr_none'));	
+		$start_date->setOptions(['class' => 'brdr_none']);	
 		
 		$country = new Zend_Form_Element_Select('country');
         $country->setLabel('Country');			
 		   		       
 
-		$this->addElements(array($bunitname,$bunitcode,$startdate,$country));
-        $this->setElementDecorators(array('ViewHelper')); 
-		$this->setElementDecorators(array(
+		$this->addElements([$bunitname,$bunitcode,$startdate,$country]);
+        $this->setElementDecorators(['ViewHelper']); 
+		$this->setElementDecorators([
                     'UiWidgetElement',
-        ),array('startdate'));		 
+        ],['startdate']);		 
 	}
 }
 

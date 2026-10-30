@@ -30,7 +30,7 @@ class Default_Model_Hrwizard extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('w'=>'main_hr_wizard'),array('w.*'));
+						->from(['w'=>'main_hr_wizard'],['w.*']);
 		return $this->fetchRow($select)->toArray();
 	
 	}

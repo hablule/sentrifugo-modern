@@ -13,8 +13,8 @@ class Default_Model_emphealthissue extends Zend_Db_Table_Abstract{
 
         $bank = $this->select()
             ->setIntegrityCheck(false)
-            ->from(array('ehi'=>'main_emphealthissue'),array('emphealthissue_id as id','description','diagnosedon','attention'))
-            ->join(array('hi'=>'main_healthissue'),'hi.healthissue_id = ehi.healthissue_id',array('hi.name as hi_name'))
+            ->from(['ehi'=>'main_emphealthissue'],['emphealthissue_id as id','description','diagnosedon','attention'])
+            ->join(['hi'=>'main_healthissue'],'hi.healthissue_id = ehi.healthissue_id',['hi.name as hi_name'])
             ->order("$by $sort")
             ->where($where)
             ->limitPage($pageNo, $perPage);
@@ -25,9 +25,9 @@ class Default_Model_emphealthissue extends Zend_Db_Table_Abstract{
     {
         $searchQuery = '';
 		$tablecontent = '';
-		$searchArray = array();
-		$data = array(); 
-		$dataTmp = array();
+		$searchArray = [];
+		$data = []; 
+		$dataTmp = [];
        
 		/** search from grid - START **/
 		if($searchData != '' && $searchData!='undefined')
@@ -53,20 +53,20 @@ class Default_Model_emphealthissue extends Zend_Db_Table_Abstract{
 		
 		$objName = 'emphealthissue';
 
-		$tableFields = array('action'=>'Action','hi_name'=>'Name','description'=>'Description','diagnosedon'=>'Diagnosed on');
+		$tableFields = ['action'=>'Action','hi_name'=>'Name','description'=>'Description','diagnosedon'=>'Diagnosed on'];
 			
 		$tablecontent = $this->getData($sort,$by,$pageNo,$perPage,$searchQuery,$exParam1);
 
-		$bool_arr = array('' => 'All',1 => 'Yes',2 => 'No');
+		$bool_arr = ['' => 'All',1 => 'Yes',2 => 'No'];
 		
-		$dataTmp = array('userid'=>$exParam1,
+		$dataTmp = ['userid'=>$exParam1,
 						'sort' => $sort,
 						'by' => $by,
 						'pageNo' => $pageNo,
 						'perPage' => $perPage,				
 						'tablecontent' => $tablecontent,
 						'objectname' => $objName,
-						'extra' => array(),
+						'extra' => [],
 						'tableheader' => $tableFields,
 						'jsGridFnName' => 'getEmployeeAjaxgridData',
 						'jsFillFnName' => '',
@@ -80,7 +80,7 @@ class Default_Model_emphealthissue extends Zend_Db_Table_Abstract{
 						'dashboardcall'=>$dashboardcall,
 						'call'=>$call,
 						'context'=>$exParam2
-		);
+		];
 		return $dataTmp;
     }
 
@@ -101,10 +101,10 @@ class Default_Model_emphealthissue extends Zend_Db_Table_Abstract{
     {
         $select = $this->select()
                        ->setIntegrityCheck(false)
-					   ->from(array('eh'=>'main_emphealthissue'),array('eh.*'))
-					   ->joinLeft(array('e'=>'main_employees'),'e.id = eh.emp_id',array('e.userfullname'))
-					   ->joinLeft(array('hi'=>'main_healthissue'),'hi.healthissue_id = eh.healthissue_id',array('hi.name as hiname'))
-					   ->joinLeft(array('hsl'=>'main_healthseveritylevel'),'hsl.severitylevel_id = eh.severitylevel_id',array('hsl.value as hslname'))
+					   ->from(['eh'=>'main_emphealthissue'],['eh.*'])
+					   ->joinLeft(['e'=>'main_employees'],'e.id = eh.emp_id',['e.userfullname'])
+					   ->joinLeft(['hi'=>'main_healthissue'],'hi.healthissue_id = eh.healthissue_id',['hi.name as hiname'])
+					   ->joinLeft(['hsl'=>'main_healthseveritylevel'],'hsl.severitylevel_id = eh.severitylevel_id',['hsl.value as hslname'])
                        ->where('emphealthissue_id='.$id);
 					
         return $this->fetchAll($select)->toArray();
@@ -113,10 +113,10 @@ class Default_Model_emphealthissue extends Zend_Db_Table_Abstract{
     {
         $select = $this->select()
                        ->setIntegrityCheck(false)
-					   ->from(array('eh'=>'main_emphealthissue'),array('eh.*,if(eh.isactive="Y","Yes","No") as isactive'))
-					   ->joinLeft(array('e'=>'main_employees'),'e.id = eh.emp_id',array('e.userfullname'))
-					   ->joinLeft(array('hi'=>'main_healthissue'),'hi.healthissue_id = eh.healthissue_id',array('hi.name as hiname'))
-					   ->joinLeft(array('hsl'=>'main_healthseveritylevel'),'hsl.severitylevel_id = eh.severitylevel_id',array('hsl.value as hslname'))
+					   ->from(['eh'=>'main_emphealthissue'],['eh.*,if(eh.isactive="Y","Yes","No") as isactive'])
+					   ->joinLeft(['e'=>'main_employees'],'e.id = eh.emp_id',['e.userfullname'])
+					   ->joinLeft(['hi'=>'main_healthissue'],'hi.healthissue_id = eh.healthissue_id',['hi.name as hiname'])
+					   ->joinLeft(['hsl'=>'main_healthseveritylevel'],'hsl.severitylevel_id = eh.severitylevel_id',['hsl.value as hslname'])
                        ->where('emphealthissue_id='.$id);
 					
         return $this->fetchAll($select)->toArray();

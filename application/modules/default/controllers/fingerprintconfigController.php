@@ -15,7 +15,7 @@ class Default_fingerprintconfigController extends Zend_Controller_Action
         }
         $refresh = $this->_getParam('refresh');
         $dashboardcall = $this->_getParam('dashboardcall');
-        $data = array();
+        $data = [];
         if ($refresh == 'refresh') {
             if ($dashboardcall == 'Yes') {
                 $perPage = DASHBOARD_PERPAGE;
@@ -104,7 +104,7 @@ class Default_fingerprintconfigController extends Zend_Controller_Action
                     $checkDuplicate = $this->_request->getParam('check_duplicate');
                     $actionflag = '';
                     $tableid  = '';
-                    $data = array(
+                    $data = [
                         'security_level' => $securityLevel,
                         'fast_mode' => $fastMode,
                         'sensitivity' => $sensitivity,
@@ -114,10 +114,10 @@ class Default_fingerprintconfigController extends Zend_Controller_Action
                         'show_image' => $showImage,
                         'ifd_level' => $LFDLevel,
                         'check_duplicate' => $checkDuplicate,
-                    );
+                    ];
 
                     if ($id != '') {
-                        $where = array('id=?' => $id);
+                        $where = ['id=?' => $id];
                         $actionflag = 2;
                     } else {
                         $where = '';
@@ -126,10 +126,10 @@ class Default_fingerprintconfigController extends Zend_Controller_Action
                     $Id = $fingerprintconfig_Model->SaveorUpdateData($data, $where);
                     if ($Id == 'update') {
                         $tableid = $id;
-                        $this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Configuration updated successfully."));
+                        $this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Configuration updated successfully."]);
                     } else {
                         $tableid = $Id;
-                        $this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Configuration  added successfully."));
+                        $this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Configuration  added successfully."]);
                     }
                     $menuID = GENDER;
                     $result = sapp_Global::logManager($menuID, $actionflag, $loginUserId, $tableid);

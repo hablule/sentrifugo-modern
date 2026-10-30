@@ -68,7 +68,7 @@ class Default_DisabilitydetailsController extends Zend_Controller_Action
 			
 			//---------------
 			$disabilitylevelArr = $disabilityModel->getalldisability();
-			$msgarray = array();
+			$msgarray = [];
 			$form->disability_id->addMultiOption('', 'Select Disablity');
 			if (!empty($disabilitylevelArr)) {
 
@@ -126,7 +126,7 @@ class Default_DisabilitydetailsController extends Zend_Controller_Action
 			
 			//---------------
 			$disabilitylevelArr = $disabilityModel->getalldisability();
-			$msgarray = array();
+			$msgarray = [];
 			$form->disability_id->addMultiOption('', 'Select Disablity');
 			if (!empty($disabilitylevelArr)) {
 
@@ -174,8 +174,8 @@ class Default_DisabilitydetailsController extends Zend_Controller_Action
 				$usersModel = new Default_Model_Users();
 
 					$userID = "";
-					$levelsArr = array();
-					$empcompetencyLevelsArr = array();
+					$levelsArr = [];
+					$empcompetencyLevelsArr = [];
 					$auth = Zend_Auth::getInstance();
 					if ($auth->hasIdentity()) {
 						$loginUserId = $auth->getStorage()->read()->id;
@@ -192,7 +192,7 @@ class Default_DisabilitydetailsController extends Zend_Controller_Action
 					}
 
 					if ($id == '')		$id = $userID;
-					$Uid = ($id) ? $id : $userID;
+					$Uid = $id ?: $userID;
 					if ($Uid != "") {
 						$employeeData = $usersModel->getUserDetailsByIDandFlag($Uid);
 					}
@@ -213,9 +213,9 @@ class Default_DisabilitydetailsController extends Zend_Controller_Action
 									$objname = $this->_getParam('objname');
 									$refresh = $this->_getParam('refresh');
 									$dashboardcall = $this->_getParam('dashboardcall', null);
-									$data = array();
+									$data = [];
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 									$tablecontent = '';
 									if ($refresh == 'refresh') {
 										if ($dashboardcall == 'Yes')
@@ -291,18 +291,18 @@ class Default_DisabilitydetailsController extends Zend_Controller_Action
 			$description =$this->_request->getParam('description');
 			$onsetdate1 = $this->_request->getParam('onsetdate');
 			$onsetdate = sapp_Global::change_date($onsetdate1, 'database');
-			$data = array(  'disability_id'=>$disability_id,
+			$data = [  'disability_id'=>$disability_id,
 								'onsetdate'=>$onsetdate,
 								'description'=>$description,
 								'emp_id'=>$unitid,
 								'modifiedby'=>$loginUserId,
 			                    'modifieddate'=>gmdate("Y-m-d H:i:s"),
 
-			);
+			];
 			if($id!='')
 			{
 				$data['isactive'] = $util::getcheckboxvalue($this->_getParam('isactive'));
-				$where = array('empdisability_id=?'=>$id);
+				$where = ['empdisability_id=?'=>$id];
 				$actionflag = 2;
 			}
 			else
@@ -395,8 +395,8 @@ die(Zend_Debug::dump($th->getMessage()));		}
 				$usersModel = new Default_Model_Users();
 
 					$userID = "";
-					$levelsArr = array();
-					$empcompetencyLevelsArr = array();
+					$levelsArr = [];
+					$empcompetencyLevelsArr = [];
 					$auth = Zend_Auth::getInstance();
 					if ($auth->hasIdentity()) {
 						$loginUserId = $auth->getStorage()->read()->id;
@@ -413,7 +413,7 @@ die(Zend_Debug::dump($th->getMessage()));		}
 					}
 
 					if ($id == '')		$id = $userID;
-					$Uid = ($id) ? $id : $userID;
+					$Uid = $id ?: $userID;
 					if ($Uid != "") {
 						$employeeData = $usersModel->getUserDetailsByIDandFlag($Uid);
 					}
@@ -434,9 +434,9 @@ die(Zend_Debug::dump($th->getMessage()));		}
 									$objname = $this->_getParam('objname');
 									$refresh = $this->_getParam('refresh');
 									$dashboardcall = $this->_getParam('dashboardcall', null);
-									$data = array();
+									$data = [];
 									$searchQuery = '';
-									$searchArray = array();
+									$searchArray = [];
 									$tablecontent = '';
 									if ($refresh == 'refresh') {
 										if ($dashboardcall == 'Yes')

@@ -77,9 +77,9 @@ class Timemanagement_ClientsController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 
 		if($refresh == 'refresh')
@@ -196,7 +196,7 @@ class Timemanagement_ClientsController extends Zend_Controller_Action
 				}
 				$date = gmdate("Y-m-d H:i:s");
 
-				$data = array(
+				$data = [
 							'address'  => $address,
 							'client_name'  => $client_name,
 							'country_id'  => $country_id,
@@ -205,11 +205,11 @@ class Timemanagement_ClientsController extends Zend_Controller_Action
 							'poc'  => $poc,
 							'fax'  => $fax,
 							'state_id'  => $state_id,
-				);
+				];
 				if($id!=''){
 					$data['modified_by'] = $loginUserId;
 					$data['modified'] = $date;
-					$where = array('id=?'=>$id);
+					$where = ['id=?'=>$id];
 				}
 				else
 				{
@@ -222,11 +222,11 @@ class Timemanagement_ClientsController extends Zend_Controller_Action
 				$Id = $clientsModel->saveOrUpdateClientsData($data, $where);
 				if($Id == 'update')
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Client updated successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Client updated successfully."]);
 				}
 				else
 				{
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Client added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Client added successfully."]);
 				}
 					
 				$this->_redirect('timemanagement/clients');
@@ -311,9 +311,9 @@ class Timemanagement_ClientsController extends Zend_Controller_Action
 			$clientsModel = new Timemanagement_Model_Clients();
 			$checkProjects = $clientsModel->checkProjectClients($id);
 			if($checkProjects == 0){
-				$data = array('is_active'=>0,'modified'=>gmdate("Y-m-d H:i:s"));
+				$data = ['is_active'=>0,'modified'=>gmdate("Y-m-d H:i:s")];
 				$data['modified_by'] = $loginUserId;
-				$where = array('id=?'=>$id);
+				$where = ['id=?'=>$id];
 				$id = $clientsModel->saveOrUpdateClientsData($data, $where);
 				if($id == 'update')
 				{
@@ -338,11 +338,11 @@ class Timemanagement_ClientsController extends Zend_Controller_Action
 		{
 			if(	$messages['msgtype'] == 'error')
 			{
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["error"=>$messages['message'],"msgtype"=>$messages['msgtype'] ,'deleteflag'=>$deleteflag]);
 			}
 			if(	$messages['msgtype'] == 'success')
 			{
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>$messages['message'],"msgtype"=>$messages['msgtype'],'deleteflag'=>$deleteflag]);
 			}
 			
 		}
@@ -352,7 +352,7 @@ class Timemanagement_ClientsController extends Zend_Controller_Action
 
 	public function addpopupAction()
 	{
-		$msgarray = array();
+		$msgarray = [];
 		$emptyFlag = '';
 		Zend_Layout::getMvcInstance()->setLayoutPath(APPLICATION_PATH."/layouts/scripts/popup/");
 		$auth = Zend_Auth::getInstance();
@@ -386,7 +386,7 @@ class Timemanagement_ClientsController extends Zend_Controller_Action
 				}
 				$date = gmdate("Y-m-d H:i:s");
 
-				$data = array(
+				$data = [
 							'address'  => $address,
 							'client_name'  => $client_name,
 							'country_id'  => $country_id,
@@ -395,7 +395,7 @@ class Timemanagement_ClientsController extends Zend_Controller_Action
 							'poc'  => $poc,
 							'fax'  => $fax,
 							'state_id'  => $state_id,
-				);
+				];
 
 				$data['created_by'] = $loginUserId;
 				$data['created'] = gmdate("Y-m-d H:i:s");

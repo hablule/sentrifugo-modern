@@ -37,7 +37,7 @@ class Default_Form_Appraisalquestions extends Zend_Form
         $category->addMultiOption('','Select parameter');
         $category->setRegisterInArrayValidator(false);
         $category->setRequired(true);
-		$category->addValidator('NotEmpty', false, array('messages' => 'Please select parameter.'));
+		$category->addValidator('NotEmpty', false, ['messages' => 'Please select parameter.']);
 		
 		$postid = Zend_Controller_Front::getInstance()->getRequest()->getParam('id');
 		if($postid !='')
@@ -47,19 +47,19 @@ class Default_Form_Appraisalquestions extends Zend_Form
 			$question->setAttrib('maxLength', 100);
 			$question->addFilter(new Zend_Filter_StringTrim());
 			$question->setRequired(true);
-	        $question->addValidator('NotEmpty', false, array('messages' => 'Please enter question.'));
-			$question->addValidator("regex",true,array(                           
+	        $question->addValidator('NotEmpty', false, ['messages' => 'Please enter question.']);
+			$question->addValidator("regex",true,[                           
 	                           'pattern'=>'/^[a-zA-Z0-9.\- ?\',\/#@$&*()!]+$/',
-	                           'messages'=>array(
+	                           'messages'=>[
 	                               'regexNotMatch'=>'Please enter valid question.'
-	                           )
-	        	));
+	                           ]
+	        	]);
 	        $question->addValidator(new Zend_Validate_Db_NoRecordExists(
-		                                            array(  'table'=>'main_pa_questions',
+		                                            [  'table'=>'main_pa_questions',
 		                                                     'field'=>'question',
 		                                                     'exclude'=>'id!="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('id').'" AND pa_category_id="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('pa_category_id').'" AND isactive=1',    
 		
-		                                                      ) ) );
+		                                                      ] ) );
 			$question->getValidator('Db_NoRecordExists')->setMessage('Question already exists for the parameter.');	
 	   	
 			$description = new Zend_Form_Element_Textarea('description');
@@ -79,9 +79,9 @@ class Default_Form_Appraisalquestions extends Zend_Form
 		$submitadd->setLabel('Save');
 		
 		if($postid !='')
-			 $this->addElements(array($id,$category,$question,$description,$submit));
+			 $this->addElements([$id,$category,$question,$description,$submit]);
 	    else		 
-		 	$this->addElements(array($id,$category,$submitadd));
-         $this->setElementDecorators(array('ViewHelper')); 
+		 	$this->addElements([$id,$category,$submitadd]);
+         $this->setElementDecorators(['ViewHelper']); 
 	}
 }

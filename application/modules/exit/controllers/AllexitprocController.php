@@ -84,9 +84,9 @@ class Exit_AllexitprocController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 		$context = $this->_getParam('context');
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 		
 		// based on parameter diffrentiate grid display
@@ -223,7 +223,7 @@ class Exit_AllexitprocController extends Zend_Controller_Action
 				//get employee reporting_manager
 				$emp_reporting_manager = $exitProcDetails['reporting_manager'];
 				
-				$configured_manager_arr = array('L2 manager'=>$exitProcDetails['l2_manager'],'Hr manager'=>$exitProcDetails['hr_manager'],'System admin'=>$exitProcDetails['sys_admin'],'General admin'=>$exitProcDetails['general_admin'],'Finance manager'=>$exitProcDetails['finance_manager']);
+				$configured_manager_arr = ['L2 manager'=>$exitProcDetails['l2_manager'],'Hr manager'=>$exitProcDetails['hr_manager'],'System admin'=>$exitProcDetails['sys_admin'],'General admin'=>$exitProcDetails['general_admin'],'Finance manager'=>$exitProcDetails['finance_manager']];
 				
 				
 				if(in_array($emp_reporting_manager, $configured_manager_arr))
@@ -302,7 +302,7 @@ class Exit_AllexitprocController extends Zend_Controller_Action
 			if(in_array($this->loggedInUser,$empIdsArr) || ($this->loggedInUserGroup == MANAGEMENT_GROUP || $this->loggedInUserGroup == HR_GROUP) || $this->loggedInUserRole == SUPERADMINROLE)
 			{
 				$managersDataObj_tmp = $this->exitProcModel->getEmployeeDetails($empIdsStr,'multiple');
-				$managersDataObj = array();
+				$managersDataObj = [];
 
 				if(!empty($managersDataObj_tmp))
 				{
@@ -340,11 +340,11 @@ class Exit_AllexitprocController extends Zend_Controller_Action
 
 		if(!empty($this->loggedInUser))
 		{
-			$data = $msgarray = array(); 
-			$where = array('id=?' => $id);
+			$data = $msgarray = []; 
+			$where = ['id=?' => $id];
 			
 			//array to set post values
-			$post_array = array();
+			$post_array = [];
 			
 			/**
 			** capture form data, check validations and return error / success messages - START
@@ -354,7 +354,7 @@ class Exit_AllexitprocController extends Zend_Controller_Action
 			$status = '';
 			
 			//check if l1 manager is matching with any other configured managers, if same update both statuses
-			$configured_manager_arr = array('l2_manager'=>$exitProcDetails['l2_manager'],'hr_manager'=>$exitProcDetails['hr_manager'],'sys_admin'=>$exitProcDetails['sys_admin'],'general_admin'=>$exitProcDetails['general_admin'],'finance_manager'=>$exitProcDetails['finance_manager']);
+			$configured_manager_arr = ['l2_manager'=>$exitProcDetails['l2_manager'],'hr_manager'=>$exitProcDetails['hr_manager'],'sys_admin'=>$exitProcDetails['sys_admin'],'general_admin'=>$exitProcDetails['general_admin'],'finance_manager'=>$exitProcDetails['finance_manager']];
 				
 			$other_manager='';	
 			if(in_array($exitProcDetails['reporting_manager'], $configured_manager_arr))
@@ -541,19 +541,19 @@ class Exit_AllexitprocController extends Zend_Controller_Action
 
 				if($res == 'update')
 				{
-					$this->_helper->getHelper('FlashMessenger')->addMessage(array('success' => 'Exit procedure has been updated successfully.'));
+					$this->_helper->getHelper('FlashMessenger')->addMessage(['success' => 'Exit procedure has been updated successfully.']);
 					
 					/** insert into log manager table **/
 					$result = sapp_Global::logManager(ALL_EXIT_PROCS,2,$this->loggedInUser,$id);
 
 					/** insert into exit proc history - START **/
-					$history_data = array(
+					$history_data = [
 						"exit_request_id" =>  $id ,
 						//"user_id" => $this->loggedInUser ,
 						"description" => "<name> has updated exit procedure on <createddate>",	
 						"createdby" => $this->loggedInUser ,
 						"createddate" => gmdate("Y-m-d H:i:s")
-					);
+					];
 					
 					$this->exitProcModel->exitProcHistory($history_data);
 					/** insert into exit proc history - END **/
@@ -612,7 +612,7 @@ class Exit_AllexitprocController extends Zend_Controller_Action
 				}
 				else
 				{
-					$this->_helper->getHelper('FlashMessenger')->addMessage(array('error' => 'Failed to update exit procedure. Please try again.'));
+					$this->_helper->getHelper('FlashMessenger')->addMessage(['error' => 'Failed to update exit procedure. Please try again.']);
 				}
 				
 				$this->_redirect('exit/allexitproc');
@@ -677,7 +677,7 @@ class Exit_AllexitprocController extends Zend_Controller_Action
 			if(in_array($this->loggedInUser,$empIdsArr) || ($this->loggedInUserGroup == MANAGEMENT_GROUP || $this->loggedInUserGroup == HR_GROUP) || $this->loggedInUserRole == SUPERADMINROLE)
 			{
 				$managersDataObj_tmp = $this->exitProcModel->getEmployeeDetails($empIdsStr,'multiple');
-				$managersDataObj = array();
+				$managersDataObj = [];
 
 				if(!empty($managersDataObj_tmp))
 				{
@@ -710,7 +710,7 @@ class Exit_AllexitprocController extends Zend_Controller_Action
 			$loginUserId = $auth->getStorage()->read()->id;
 		}
 		$id = $this->getRequest()->getParam('id');
-		$exitProcDetails=array();
+		$exitProcDetails=[];
 		$exitProcDetails = $this->allExitProcsModel->getExitProcDetails($id);
 		if(!empty($exitProcDetails))
 		{
@@ -725,8 +725,8 @@ class Exit_AllexitprocController extends Zend_Controller_Action
 	{
 		$result_array['result'] = '';
 		$result_array['msg'] = '';
-		$data = array();
-		$msgarray = array();
+		$data = [];
+		$msgarray = [];
 		$this->_helper->layout->disableLayout();
 		$id = $this->_request->getParam('id');
 		$status = $this->_request->getParam('status');
@@ -737,10 +737,10 @@ class Exit_AllexitprocController extends Zend_Controller_Action
 		if(empty($comments))
 			$msgarray['hrmcomments'] = 'Please enter comments.';	
 		if(!empty($status) && !empty($comments)){
-			$data = array(
+			$data = [
 					'overall_status' =>   $status,
 					'overall_comments' => $comments			
-			);
+			];
 		}
 		$relieving_date = sapp_Global::change_date($relieving_date,'database');
 		$data['relieving_date'] = $relieving_date;		
@@ -748,7 +748,7 @@ class Exit_AllexitprocController extends Zend_Controller_Action
 		if(!empty($data) && empty($msgarray)){
 			$data['modifiedby'] = $this->loggedInUser;
 			$data['modifieddate'] = gmdate("Y-m-d H:i:s");
-			$where = array('id=?' => $id);
+			$where = ['id=?' => $id];
 			$res = $this->allExitProcsModel->updateExitProc($data,$where,$id);
 			if($res == 'update')
 			{
@@ -758,13 +758,13 @@ class Exit_AllexitprocController extends Zend_Controller_Action
 				$result = sapp_Global::logManager(ALL_EXIT_PROCS,2,$this->loggedInUser,$id);
 
 				/** insert into exit proc history - START **/
-				$history_data = array(
+				$history_data = [
 					"exit_request_id" =>  $id ,
 					//"user_id" => $this->loggedInUser ,
 					"description" => "<name> has updated exit procedure on <createddate>",	
 					"createdby" => $this->loggedInUser ,
 					"createddate" => gmdate("Y-m-d H:i:s")
-				);
+				];
 				
 				
 				/** notification mail - START **/
@@ -845,7 +845,7 @@ class Exit_AllexitprocController extends Zend_Controller_Action
 		$id = $this->_request->getParam('id');
 		// based on process id get data
 		$exitProcDetails = $this->allExitProcsModel->getExitProcDetails($id);
-		$questionsArr=array();
+		$questionsArr=[];
 		if(!empty($exitProcDetails))
 		{
 			$exitProcDetails = $exitProcDetails[0];
@@ -854,10 +854,10 @@ class Exit_AllexitprocController extends Zend_Controller_Action
 			$questionsArr =$this->exitquestionsmodel->getExitQuestionsByexitId($exitProcDetails['exit_type_id']);
 			
 		}
-		$question_response=array();
-		$assigned_ques = array();
-		$emp_response_array =array();
-		$assignedques_array=array();
+		$question_response=[];
+		$assigned_ques = [];
+		$emp_response_array =[];
+		$assignedques_array=[];
 		if(!empty($exitProcDetails))
 		{
 			//based on user_id and process id get the data
@@ -884,11 +884,11 @@ class Exit_AllexitprocController extends Zend_Controller_Action
 				foreach($selectedquestions  as $key=>$val)
 				{
 
-					$update_data = array("isused"=>1,
+					$update_data = ["isused"=>1,
 										"modifieddate"=>gmdate("Y-m-d H:i:s"),
 										"modifiedby"=>$loginUserId 
-										);
-					$update_where = array('id=?' => $val);	
+										];
+					$update_where = ['id=?' => $val];	
 					$this->exitquestionsmodel->SaveorUpdateExitQuestionData($update_data,$update_where);
 				} 
 				// check record exits or not in main_exit_question_response table if exist update the record 
@@ -896,12 +896,12 @@ class Exit_AllexitprocController extends Zend_Controller_Action
 				if(count($question_response) == 0)
 				{
 
-					$data = array('user_id'=>$exitProcDetails['employee_id'],
+					$data = ['user_id'=>$exitProcDetails['employee_id'],
 								 'exit_initiation_id'=>$id, 
 								 'hr_qs'=>$qs_Arr ,	
 								'createdby'=>$loginUserId,	
 								'createddate'=>gmdate("Y-m-d H:i:s")						
-						);
+						];
 					$where = '';  
 				}
 				else
@@ -911,29 +911,29 @@ class Exit_AllexitprocController extends Zend_Controller_Action
 					{
 						 if (!in_array($val,$selectedquestions ))
 						 {							
-							 $update_data = array("isused"=>0,
+							 $update_data = ["isused"=>0,
 										"modifieddate"=>gmdate("Y-m-d H:i:s"),
 										"modifiedby"=>$loginUserId 
-										);
-							$update_where = array('id=?' => $val);								 
+										];
+							$update_where = ['id=?' => $val];								 
 							$this->exitquestionsmodel->SaveorUpdateExitQuestionData($update_data,$update_where);
 						 }
 						 
 						 
 					}
 					
-					$data = array(
+					$data = [
 								 'hr_qs'=>$qs_Arr ,	
 								'modifiedby'=>$loginUserId,	
 								'modifieddate'=>gmdate("Y-m-d H:i:s")						
-						);
+						];
 					 $where = " user_id = '".$exitProcDetails['employee_id']."' and exit_initiation_id='".$id."' and isactive= 1 ";
 					
 				}
 				 
 				
 				$result=$this->exitquesresponse->SaveorUpdateQuestionsData($data,$where);
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Questions have been configured successfully."));	
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Questions have been configured successfully."]);	
 				
 				$this->_redirect('exit/allexitproc');	
 				

@@ -30,7 +30,7 @@ class Default_ApprreqcandidatesController extends Zend_Controller_Action
         {
             if($this->getRequest()->isXmlHttpRequest())
             {
-                echo Zend_Json::encode( array('login' => 'failed') );
+                echo Zend_Json::encode( ['login' => 'failed'] );
                 die();	
             }
             else
@@ -57,15 +57,15 @@ class Default_ApprreqcandidatesController extends Zend_Controller_Action
 		} 
 		$id = $this->_request->getParam('unitId',null);
         $refresh = $this->_getParam('refresh');
-        $data = array();
+        $data = [];
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
         $tablecontent='';
 
         if($refresh == 'refresh')
         {
             $sort = 'DESC';$by = 'c.createddate';$perPage = 10;$pageNo = 1;$searchData = '';$searchQuery = '';$searchQuery = '';$searchArray='';
-            $searchArray = array();
+            $searchArray = [];
         }
         else 
         {
@@ -93,24 +93,24 @@ class Default_ApprreqcandidatesController extends Zend_Controller_Action
 
         $objName = 'apprreqcandidates';
 
-                        $tableFields = array('action'=>'Action',
+                        $tableFields = ['action'=>'Action',
                                              'candidate_name' => 'Candidate Name',
                                              'cand_status' => 'Candidate Status',
-                                            );
+                                            ];
                         $candidate_model = new Default_Model_Candidatedetails();
                         $tablecontent = $candidate_model->getCandidatesData_requisition($sort, $by, $pageNo, $perPage,$searchQuery,$id);     
-                        $cand_status_opt = array('' => 'All','Shortlisted' => 'Shortlisted','Selected' => 'Selected','Rejected' => 'Rejected',
+                        $cand_status_opt = ['' => 'All','Shortlisted' => 'Shortlisted','Selected' => 'Selected','Rejected' => 'Rejected',
                                                 'On hold' => 'On hold','Disqualified' => 'Disqualified','Scheduled' => 'Scheduled',
-                                                'Not Scheduled' => 'Not Scheduled','Recruited' => 'Recruited','Requisition Closed/Completed' => 'Requisition Closed/Completed');
+                                                'Not Scheduled' => 'Not Scheduled','Recruited' => 'Recruited','Requisition Closed/Completed' => 'Requisition Closed/Completed'];
                         
-                        $dataTmp = array(
+                        $dataTmp = [
                                 'sort' => $sort,
                                 'by' => $by,
                                 'pageNo' => $pageNo,
                                 'perPage' => $perPage,				
                                 'tablecontent' => $tablecontent,
                                 'objectname' => $objName,
-                                'extra' => array(),
+                                'extra' => [],
                                 'tableheader' => $tableFields,
                                 'jsGridFnName' => 'getAjaxgridData',
                                 'jsFillFnName' => '',
@@ -118,13 +118,13 @@ class Default_ApprreqcandidatesController extends Zend_Controller_Action
                                 'searchArray' => $searchArray,
                                 'menuName' => 'Candidate details',								
                                 'unitId'=>$id,
-                                'search_filters' => array(
-                                    'cand_status' => array(
+                                'search_filters' => [
+                                    'cand_status' => [
                                         'type' => 'select',
                                         'filter_data' => $cand_status_opt,
-                                    ),
-                                ),
-                        );			
+                                    ],
+                                ],
+                        ];			
                         array_push($data,$dataTmp);
                         $this->view->dataArray = $dataTmp;
                 $this->view->call = $call ;		

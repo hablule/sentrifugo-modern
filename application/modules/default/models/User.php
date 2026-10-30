@@ -23,7 +23,7 @@ class Default_Model_User extends Zend_Db_Table_Abstract
     public function saveRecord($data, $id = null)
     {
         if (!empty($id)) {
-            $this->update($data, array('id = ?' => (int)$id));
+            $this->update($data, ['id = ?' => (int)$id]);
             return 'update';
         } else {
             $this->insert($data);
@@ -36,12 +36,12 @@ class Default_Model_User extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from(
-                array('u' => $this->_name)
+                ['u' => $this->_name]
             )
             ->joinLeft(
-                array('e' => 'main_employees'),
+                ['e' => 'main_employees'],
                 'u.empid = e.id',
-                array('employee_id' => 'id', 'userfullname', 'profileimg' => 'e.profileimg')
+                ['employee_id' => 'id', 'userfullname', 'profileimg' => 'e.profileimg']
             )->where('u.id = ?', (int)$id);
 
         $row = $this->fetchRow($select);
@@ -53,11 +53,11 @@ class Default_Model_User extends Zend_Db_Table_Abstract
      */
     public function deleteRecord($id)
     {
-        $data = array(
+        $data = [
             'isactive'     => 5,
             'modifieddate' => gmdate("Y-m-d H:i:s")
-        );
-        return $this->update($data, array('id = ?' => (int)$id));
+        ];
+        return $this->update($data, ['id = ?' => (int)$id]);
     }
 
     /**
@@ -65,7 +65,7 @@ class Default_Model_User extends Zend_Db_Table_Abstract
      */
     public function distroyRecord($id)
     {
-        return $this->delete(array('id = ?' => (int)$id));
+        return $this->delete(['id = ?' => (int)$id]);
     }
 
     /* --------------------------------------------------------------
@@ -75,7 +75,7 @@ class Default_Model_User extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = array();
+        $searchArray = [];
 
         if ($searchData != '' && $searchData != 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -94,24 +94,24 @@ class Default_Model_User extends Zend_Db_Table_Abstract
             }
         }
 
-        $tableHeaders = array(
+        $tableHeaders = [
             'action'        => 'Action',
             'username'      => 'User Name',
             'userfullname'  => 'Employee Name',
             'emailaddress'  => 'Email',
             'status_text'   => 'Status'
-        );
+        ];
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return array(
+        return [
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
             'perPage'        => $perPage,
             'tablecontent'   => $tableContent, // Returns Zend_Db_Select
             'objectname'     => 'user',
-            'extra'          => array(),
+            'extra'          => [],
             'tableheader'    => $tableHeaders,
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
@@ -119,13 +119,13 @@ class Default_Model_User extends Zend_Db_Table_Abstract
             'menuName'       => 'System Users',
             'dashboardcall'  => $dashboardcall,
             'call'           => $call,
-            'search_filters' => array(
-                'status_text' => array(
+            'search_filters' => [
+                'status_text' => [
                     'type'        => 'select',
-                    'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive')
-                )
-            )
-        );
+                    'filter_data' => ['' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive']
+                ]
+            ]
+        ];
     }
 
     public function getGridData($sort, $by, $pageNo, $perPage, $searchQuery = '')
@@ -142,20 +142,20 @@ class Default_Model_User extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from(
-                array('u' => $this->_name),
-                array(
+                ['u' => $this->_name],
+                [
                     'id',
                     'username',
                     'emailaddress',
                     'isactive',
                     // Logic to show Active/Inactive based on 1/0
                     'status_text' => new Zend_Db_Expr("CASE WHEN u.isactive = 1 THEN 'Active' ELSE 'Inactive' END")
-                )
+                ]
             )
             ->joinLeft(
-                array('e' => 'main_employees'),
+                ['e' => 'main_employees'],
                 'u.empid = e.id',
-                array('userfullname', 'profileimg' => 'e.profileimg')
+                ['userfullname', 'profileimg' => 'e.profileimg']
             )
             ->where($where)
             ->order("$by $sort")
@@ -183,20 +183,20 @@ class Default_Model_User extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from(
-                array('u' => $this->_name),
-                array(
+                ['u' => $this->_name],
+                [
                     'id',
                     'username',
                     'emailaddress',
                     'isactive',
                     // Logic to show Active/Inactive based on 1/0
                     'status_text' => new Zend_Db_Expr("CASE WHEN u.isactive = 1 THEN 'Active' ELSE 'Inactive' END")
-                )
+                ]
             )
             ->joinLeft(
-                array('e' => 'main_employees'),
+                ['e' => 'main_employees'],
                 'u.empid = e.id',
-                array('userfullname', 'profileimg' => 'e.profileimg')
+                ['userfullname', 'profileimg' => 'e.profileimg']
             )
             ->where($where)
             ->order("$by $sort");
@@ -219,14 +219,14 @@ class Default_Model_User extends Zend_Db_Table_Abstract
 
     public function getPairs($activeOnly = true)
     {
-        $select = $this->select()->from($this->_name, array('id', 'username'));
+        $select = $this->select()->from($this->_name, ['id', 'username']);
         if ($activeOnly) {
             $select->where('isactive = ?', 1);
         }
         $select->order('username ASC');
 
         $results = $this->fetchAll($select);
-        $data = array();
+        $data = [];
         foreach ($results as $row) {
             $data[$row['id']] = $row['username'];
         }
@@ -267,7 +267,7 @@ class Default_Model_User extends Zend_Db_Table_Abstract
         }
 
         $row = $this->fetchRow($select);
-        return ($row) ? $row->toArray() : array();
+        return ($row) ? $row->toArray() : [];
     }
 
     /**
@@ -285,7 +285,7 @@ class Default_Model_User extends Zend_Db_Table_Abstract
         }
 
         $row = $this->fetchRow($select);
-        return ($row) ? $row->toArray() : array();
+        return ($row) ? $row->toArray() : [];
     }
 
     /**
@@ -303,7 +303,7 @@ class Default_Model_User extends Zend_Db_Table_Abstract
         }
 
         $row = $this->fetchRow($select);
-        return ($row) ? $row->toArray() : array();
+        return ($row) ? $row->toArray() : [];
     }
 
 
@@ -322,7 +322,7 @@ class Default_Model_User extends Zend_Db_Table_Abstract
         }
 
         $row = $this->fetchRow($select);
-        return ($row) ? $row->toArray() : array();
+        return ($row) ? $row->toArray() : [];
     }
 
     /* --------------------------------------------------------------
@@ -366,7 +366,7 @@ class Default_Model_User extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->from(
                 $this->_name,
-                array('cnt' => new Zend_Db_Expr('COUNT(id)'))
+                ['cnt' => new Zend_Db_Expr('COUNT(id)')]
             );
 
         if ($activeOnly) {

@@ -37,19 +37,19 @@ class Default_Form_wizardpreference extends Zend_Form
         $dateformatid->setAttrib('class', 'selectoption');
         $dateformatid->setRegisterInArrayValidator(false);
         $dateformatid->setRequired(true);
-		$dateformatid->addValidator('NotEmpty', false, array('messages' => 'Please select date format.'));
+		$dateformatid->addValidator('NotEmpty', false, ['messages' => 'Please select date format.']);
 		
 		$timeformatid = new Zend_Form_Element_Select('timeformatid');
         $timeformatid->setAttrib('class', 'selectoption');
         $timeformatid->setRegisterInArrayValidator(false);
         $timeformatid->setRequired(true);
-        $timeformatid->addValidator('NotEmpty', false, array('messages' => 'Please select time format.')); 
+        $timeformatid->addValidator('NotEmpty', false, ['messages' => 'Please select time format.']); 
 
         $timezoneid = new Zend_Form_Element_Select('timezoneid');
         $timezoneid->setAttrib('class', 'selectoption');
         $timezoneid->setRegisterInArrayValidator(false);
         $timezoneid->setRequired(true);
-        $timezoneid->addValidator('NotEmpty', false, array('messages' => 'Please select time zone preference.'));	
+        $timezoneid->addValidator('NotEmpty', false, ['messages' => 'Please select time zone preference.']);	
 		$timezoneid->addMultiOption('','Select Time zone');
 		
 		$timezoneModal = new Default_Model_Timezone();
@@ -77,7 +77,7 @@ class Default_Form_wizardpreference extends Zend_Form
 	    	}
 	    	$currencyname->setAttrib('onchange', 'displayOtherCurrency(this)');
 	    	$currencyname->setRequired(true);
-	    	$currencyname->addValidator('NotEmpty', false, array('messages' => 'Please select currency.'));
+	    	$currencyname->addValidator('NotEmpty', false, ['messages' => 'Please select currency.']);
 
 	    	
 	    	
@@ -86,21 +86,21 @@ class Default_Form_wizardpreference extends Zend_Form
 	      
 	    	$othercurrencyname->addFilter(new Zend_Filter_StringTrim());
 	    	$othercurrencyname->setRequired(true);
-	    	$othercurrencyname->addValidator('NotEmpty', false, array('messages' => 'Please enter currency name.'));
-	     	$othercurrencyname->addValidator("regex",true,array(
+	    	$othercurrencyname->addValidator('NotEmpty', false, ['messages' => 'Please enter currency name.']);
+	     	$othercurrencyname->addValidator("regex",true,[
 	    			'pattern'=>'/^[a-zA-Z][a-zA-Z0-9\s]*$/',
 	    	
-	    			'messages'=>array(
+	    			'messages'=>[
 	    					'regexNotMatch'=>'Please enter valid currency name.'
-	    			)
-	    	));
+	    			]
+	    	]);
 	    	
 	    	
 	       $othercurrencyname->addValidator(new Zend_Validate_Db_NoRecordExists(
-	    			array('table'=>'main_currency',
+	    			['table'=>'main_currency',
 	    					'field'=>'currencyname'
 
-	    			))
+	    			])
 	    	);
 	    	
 	    $othercurrencyname->getValidator('Db_NoRecordExists')->setMessage('Currency name already exists.');
@@ -110,21 +110,21 @@ class Default_Form_wizardpreference extends Zend_Form
 	    
 	    $othercurrencycode->addFilter(new Zend_Filter_StringTrim());
 	    $othercurrencycode->setRequired(true);
-	    $othercurrencycode->addValidator('NotEmpty', false, array('messages' => 'Please enter currency code.'));
+	    $othercurrencycode->addValidator('NotEmpty', false, ['messages' => 'Please enter currency code.']);
 	    	
-	    $othercurrencycode->addValidator("regex",true,array(
+	    $othercurrencycode->addValidator("regex",true,[
 	    			'pattern'=>'/^[a-zA-Z][a-zA-Z0-9\s]*$/',
 	    	
-	    			'messages'=>array(
+	    			'messages'=>[
 	    					'regexNotMatch'=>'Please enter valid currency code.'
-	    			)
-	    	));
+	    			]
+	    	]);
 
 
 	     $othercurrencycode->addValidator(new Zend_Validate_Db_NoRecordExists(
-	    			array('table'=>'main_currency',
+	    			['table'=>'main_currency',
 	    					'field'=>'currencycode',
-	    			) )
+	    			] )
 	       		
 	    	);
 	     
@@ -136,7 +136,7 @@ class Default_Form_wizardpreference extends Zend_Form
 		$passwordid->setAttrib('onchange', 'displayPasswordDesc(this)');
         $passwordid->setRegisterInArrayValidator(false);
         $passwordid->setRequired(true);
-		$passwordid->addValidator('NotEmpty', false, array('messages' => 'Please select default password.'));  		
+		$passwordid->addValidator('NotEmpty', false, ['messages' => 'Please select default password.']);  		
 		
 		$perm_country = new Zend_Form_Element_Select('perm_country');
 		$perm_country->setAttrib('onchange', 'displayParticularState(this,"","perm_state","")');
@@ -153,62 +153,62 @@ class Default_Form_wizardpreference extends Zend_Form
                 }
            }
         $perm_country->setRequired(true);
-		$perm_country->addValidator('NotEmpty', false, array('messages' => 'Please select country.'));   
+		$perm_country->addValidator('NotEmpty', false, ['messages' => 'Please select country.']);   
         
         $perm_state = new Zend_Form_Element_Select('perm_state');
 		$perm_state->setAttrib('onchange', 'displayParticularCity(this,"","perm_city","")');
         $perm_state->setRegisterInArrayValidator(false);
         $perm_state->addMultiOption('','Select State');
         $perm_state->setRequired(true);
-		$perm_state->addValidator('NotEmpty', false, array('messages' => 'Please select state.')); 
+		$perm_state->addValidator('NotEmpty', false, ['messages' => 'Please select state.']); 
 		
         $perm_city = new Zend_Form_Element_Select('perm_city');
         $perm_city->setRegisterInArrayValidator(false);
         $perm_city->addMultiOption('','Select City');
         $perm_city->setRequired(true);
-		$perm_city->addValidator('NotEmpty', false, array('messages' => 'Please select city.'));
+		$perm_city->addValidator('NotEmpty', false, ['messages' => 'Please select city.']);
 
 		$workcodename = new Zend_Form_Element_Multiselect('workcodename');
         $workcodename->setRegisterInArrayValidator(false);
         $workcodename->setRequired(true);
-		$workcodename->addValidator('NotEmpty', false, array('messages' => 'Please select employment status.'));
+		$workcodename->addValidator('NotEmpty', false, ['messages' => 'Please select employment status.']);
 		
         
         $empCode = new Zend_Form_Element_Text('employee_code');
         $empCode->addFilter(new Zend_Filter_StringTrim());
 		$empCode->setAttrib('maxLength', 5);
 		$empCode->setRequired(true);
-        $empCode->addValidator('NotEmpty', false, array('messages' => 'Please enter employee code.')); 
-		$empCode->addValidators(array(array('StringLength',false,
-								array('min' => 1,
+        $empCode->addValidator('NotEmpty', false, ['messages' => 'Please enter employee code.']); 
+		$empCode->addValidators([['StringLength',false,
+								['min' => 1,
 									  'max' => 5,
-									  'messages' => array(
+									  'messages' => [
 									   Zend_Validate_StringLength::TOO_LONG =>
 									  'Employee code must contain at most %max% characters.',
 									  Zend_Validate_StringLength::TOO_SHORT =>
-									  'Employee code must contain at least %min% characters.')))));
-		$empCode->addValidators(array(
-			         array(
+									  'Employee code must contain at least %min% characters.']]]]);
+		$empCode->addValidators([
+			         [
 			             'validator'   => 'Regex',
 			             'breakChainOnFailure' => true,
-			             'options'     => array( 
+			             'options'     => [ 
 			             //'pattern' => '/^[A-Za-z]+$/',
 			         	 'pattern'=> '/^[A-Za-z][a-zA-Z@\-]*$/',	
-			                 'messages' => array(
+			                 'messages' => [
 			                     Zend_Validate_Regex::NOT_MATCH =>'Please enter valid employee code.'
-			                 )
-			             )
-			         )
-			     ));
+			                 ]
+			             ]
+			         ]
+			     ]);
    	
 
         $submit = new Zend_Form_Element_Submit('submit');
 		$submit->setAttrib('id', 'submitbutton');
 		$submit->setLabel('Save');
 
-   $this->addElements(array($timezoneid,$id,$currencyid,$organisationid,$empcodeid,$dateformatid,$timeformatid,	  $othercurrencycode,  $othercurrencyname,
-	    	$currencyname,$passwordid,$perm_country,$perm_state,$perm_city,$workcodename,$empCode,$submit));
-         $this->setElementDecorators(array('ViewHelper')); 
+   $this->addElements([$timezoneid,$id,$currencyid,$organisationid,$empcodeid,$dateformatid,$timeformatid,	  $othercurrencycode,  $othercurrencyname,
+	    	$currencyname,$passwordid,$perm_country,$perm_state,$perm_city,$workcodename,$empCode,$submit]);
+         $this->setElementDecorators(['ViewHelper']); 
 	}
 	public function isValid($data)
 	{

@@ -32,8 +32,8 @@ class Exit_Model_Exitprocsettings extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{
 		$searchQuery = '';
-		$searchArray = array();
-		$data = array();
+		$searchArray = [];
+		$data = [];
 		if($searchData != '' && $searchData!='undefined')
 			{
 				$searchValues = json_decode($searchData);
@@ -46,7 +46,7 @@ class Exit_Model_Exitprocsettings extends Zend_Db_Table_Abstract
 			
 		$objName = 'exitprocsettings';
 		
-		$tableFields = array('action'=>'Action','businessunit_id'=>'Business Unit','department_id'=>'Department','l2_manager'=>'L2 Manager','hr_manager'=>'HR Manager','sys_admin'=>'System Admin','general_admin'=>'General Admin','finance_manager'=>'Finance Manager');
+		$tableFields = ['action'=>'Action','businessunit_id'=>'Business Unit','department_id'=>'Department','l2_manager'=>'L2 Manager','hr_manager'=>'HR Manager','sys_admin'=>'System Admin','general_admin'=>'General Admin','finance_manager'=>'Finance Manager'];
 
 		$tablecontent = $this->getExitprocSettings('grid',$sort, $by, $pageNo, $perPage,$searchQuery,$a,$searchArray);     
 
@@ -83,7 +83,7 @@ class Exit_Model_Exitprocsettings extends Zend_Db_Table_Abstract
 
 				$empDetailsQuery = $this->select()
 								->setIntegrityCheck(false)
-								->from(array('emp' => 'employees_summary'),array('emp.user_id','emp.userfullname','emp.profileimg', 'emp.jobtitle_name'))
+								->from(['emp' => 'employees_summary'],['emp.user_id','emp.userfullname','emp.profileimg', 'emp.jobtitle_name'])
 								->where('emp.user_id IN ('.$employeesStr.') AND emp.isactive = 1 ')
 								->order("emp.userfullname");
 
@@ -100,7 +100,7 @@ class Exit_Model_Exitprocsettings extends Zend_Db_Table_Abstract
 
 				$buDetailsQuery = $this->select()
 								->setIntegrityCheck(false)
-								->from(array('bu' => 'main_businessunits'),array('bu.id','bu.unitname'))
+								->from(['bu' => 'main_businessunits'],['bu.id','bu.unitname'])
 								->where('bu.id IN ('.$businessUnitsStr.') AND bu.isactive = 1 ')
 								->order("bu.unitname");
 
@@ -115,7 +115,7 @@ class Exit_Model_Exitprocsettings extends Zend_Db_Table_Abstract
 
 				$deptDetailsQuery = $this->select()
 								->setIntegrityCheck(false)
-								->from(array('d' => ''),array('d.department_id','d.name'))
+								->from(['d' => ''],['d.department_id','d.name'])
 								->where('d.department_id IN ('.$departmentsStr.') AND d.isactive ="Y" ')
 								->order("d.name");
 
@@ -125,14 +125,14 @@ class Exit_Model_Exitprocsettings extends Zend_Db_Table_Abstract
 				}
 			}			
 		}
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -143,11 +143,11 @@ class Exit_Model_Exitprocsettings extends Zend_Db_Table_Abstract
 			'empDetailsObj' => $empDetailsObj,
 			'buDetailsObj' => $buDetailsObj,
 			'deptDetailsObj' => $deptDetailsObj,
-		);
+		];
 		return $dataTmp;
 	}
 
-	public function getExitprocSettings($con,$sort='', $by='', $pageNo='', $perPage='',$searchQuery='',$conText = '',$searchArray=array())
+	public function getExitprocSettings($con,$sort='', $by='', $pageNo='', $perPage='',$searchQuery='',$conText = '',$searchArray=[])
 	{
 	
 		try
@@ -200,36 +200,36 @@ class Exit_Model_Exitprocsettings extends Zend_Db_Table_Abstract
 			
 			 $res = $this->select()
 					 ->setIntegrityCheck(false)
-					 ->from(array('e' => $this->_name),array($columns));
+					 ->from(['e' => $this->_name],[$columns]);
 					
 				if(!empty($searchQuery1))
 				{
 				
-					$res = $res->joinInner(array('b' => 'main_businessunits'),$searchQuery1,array());
+					$res = $res->joinInner(['b' => 'main_businessunits'],$searchQuery1,[]);
 				}
 				if(!empty($searchQuery2))
 				{
-					$res = $res->joinInner(array('d' => 'main_department'),$searchQuery2,array());
+					$res = $res->joinInner(['d' => 'main_department'],$searchQuery2,[]);
 				}
 				if(!empty($searchQuery3))
 				{
-					$res = $res->joinInner(array('hr' => 'employees_summary'),$searchQuery3,array());
+					$res = $res->joinInner(['hr' => 'employees_summary'],$searchQuery3,[]);
 				}
 				if(!empty($searchQuery7))
 				{
-					$res = $res->joinInner(array('l2' => 'employees_summary'),$searchQuery7,array());
+					$res = $res->joinInner(['l2' => 'employees_summary'],$searchQuery7,[]);
 				}
 				if(!empty($searchQuery4))
 				{
-					$res = $res->joinInner(array('sy' => 'employees_summary'),$searchQuery4,array());
+					$res = $res->joinInner(['sy' => 'employees_summary'],$searchQuery4,[]);
 				}
 				if(!empty($searchQuery5))
 				{
-					$res = $res->joinInner(array('ga' => 'employees_summary'),$searchQuery5,array());
+					$res = $res->joinInner(['ga' => 'employees_summary'],$searchQuery5,[]);
 				}
 				if(!empty($searchQuery6))
 				{
-					$res = $res->joinInner(array('fm' => 'employees_summary'),$searchQuery6,array());
+					$res = $res->joinInner(['fm' => 'employees_summary'],$searchQuery6,[]);
 				}
 				
 				 $res = $res->where($where)
@@ -241,7 +241,7 @@ class Exit_Model_Exitprocsettings extends Zend_Db_Table_Abstract
 			
 			 $res = $this->select()
 					->setIntegrityCheck(false)
-					->from(array('e' => $this->_name),array('e.id',$columns))
+					->from(['e' => $this->_name],['e.id',$columns])
 					->where($where)
 					->order("$by $sort")
 					->limitPage($pageNo, $perPage);
@@ -273,7 +273,7 @@ class Exit_Model_Exitprocsettings extends Zend_Db_Table_Abstract
 		{
 			$res = $this->select()
 				->setIntegrityCheck(false)
-				->from(array('e' => $this->_name),array('e.*'))
+				->from(['e' => $this->_name],['e.*'])
 				->where('e.id=?',$id);
 
 			return $this->fetchAll($res)->toArray();
@@ -287,14 +287,14 @@ class Exit_Model_Exitprocsettings extends Zend_Db_Table_Abstract
 		{
 			$res = $this->select()
 				->setIntegrityCheck(false)
-				->from(array('e' => $this->_name),array('e.*'))
-				->joinLeft(array('b' => 'main_businessunits'),'b.id=e.businessunit_id',array('b.unitname as unitname'))
-				->joinLeft(array('d' => 'main_department'),'d.department_id=e.department_id',array('d.deptname as deptname'))
-				->joinLeft(array('esl' => 'employees_summary'),'esl.user_id=e.l2_manager',array('esl.userfullname as l2manager_userfullname'))
-				->joinLeft(array('esh' => 'employees_summary'),'esh.user_id=e.hr_manager',array('esh.userfullname as hrmanager_userfullname'))
-				->joinLeft(array('esa' => 'employees_summary'),'esa.user_id=e.sys_admin',array('esa.userfullname as sysadmin_userfullname'))
-				->joinLeft(array('esg' => 'employees_summary'),'esg.user_id=e.general_admin',array('esg.userfullname as generaladmin_userfullname'))
-				->joinLeft(array('esf' => 'employees_summary'),'esf.user_id=e.finance_manager',array('esf.userfullname as finacemanager_userfullname'))
+				->from(['e' => $this->_name],['e.*'])
+				->joinLeft(['b' => 'main_businessunits'],'b.id=e.businessunit_id',['b.unitname as unitname'])
+				->joinLeft(['d' => 'main_department'],'d.department_id=e.department_id',['d.deptname as deptname'])
+				->joinLeft(['esl' => 'employees_summary'],'esl.user_id=e.l2_manager',['esl.userfullname as l2manager_userfullname'])
+				->joinLeft(['esh' => 'employees_summary'],'esh.user_id=e.hr_manager',['esh.userfullname as hrmanager_userfullname'])
+				->joinLeft(['esa' => 'employees_summary'],'esa.user_id=e.sys_admin',['esa.userfullname as sysadmin_userfullname'])
+				->joinLeft(['esg' => 'employees_summary'],'esg.user_id=e.general_admin',['esg.userfullname as generaladmin_userfullname'])
+				->joinLeft(['esf' => 'employees_summary'],'esf.user_id=e.finance_manager',['esf.userfullname as finacemanager_userfullname'])
 				->where('e.id=?',$id);
 
 			return $this->fetchAll($res)->toArray();
@@ -311,7 +311,7 @@ class Exit_Model_Exitprocsettings extends Zend_Db_Table_Abstract
 		$res = $this->select()
 				->distinct()
 				->setIntegrityCheck(false)
-				->from(array('b' => 'main_businessunits'),array('b.id','b.unitname'))
+				->from(['b' => 'main_businessunits'],['b.id','b.unitname'])
 				->where($where);
 
 		return $this->fetchAll($res)->toArray();
@@ -325,7 +325,7 @@ class Exit_Model_Exitprocsettings extends Zend_Db_Table_Abstract
 			$where = (!empty($deptId)) ? ' AND d.id = '.$deptId :"";
 			$res = $this->select()
 				->setIntegrityCheck(false)
-				->from(array('d' => 'main_department'),array('d.*'))
+				->from(['d' => 'main_department'],['d.*'])
 				->where('d.isactive = "Y"'.$where);
 			return $this->fetchAll($res)->toArray();
 		}
@@ -354,8 +354,8 @@ class Exit_Model_Exitprocsettings extends Zend_Db_Table_Abstract
 
 		$res = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('e' => 'employees_summary'),array('e.user_id','e.userfullname','e.profileimg', 'e.jobtitle_name'))
-			->joinInner(array('r' => ROLE_ARRAY['tablename']),'r.'.ROLE_ARRAY['colid'].' = e.empRole',array())
+			->from(['e' => 'employees_summary'],['e.user_id','e.userfullname','e.profileimg', 'e.jobtitle_name'])
+			->joinInner(['r' => ROLE_ARRAY['tablename']],'r.'.ROLE_ARRAY['colid'].' = e.empRole',[])
 			->where($where.' AND e.businessunit_id = '.$bunitId);
 		
 		return $this->fetchAll($res)->toArray();
@@ -377,7 +377,7 @@ class Exit_Model_Exitprocsettings extends Zend_Db_Table_Abstract
 
 		$res = $this->select()
 			->setIntegrityCheck(false)
-			->from(array('e' => 'employees_summary'),array('e.user_id','e.userfullname','e.profileimg', 'e.jobtitle_name'))
+			->from(['e' => 'employees_summary'],['e.user_id','e.userfullname','e.profileimg', 'e.jobtitle_name'])
 			->where($where);
 		
 		return $this->fetchAll($res)->toArray();
@@ -401,7 +401,7 @@ class Exit_Model_Exitprocsettings extends Zend_Db_Table_Abstract
 	{
 	  $select = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('l'=>'main_exit_settings'),array('deptid'=>'l.department_id'))
+                           ->from(['l'=>'main_exit_settings'],['deptid'=>'l.department_id'])
 						   ->where('l.isactive = 1');  		   					   				
 		return $this->fetchAll($select)->toArray(); 
 	}

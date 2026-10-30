@@ -54,7 +54,7 @@ class Expenses_EmployeeadvancesController extends Zend_Controller_Action
 		$objname = $this->_getParam('objname');
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall',null);
-		$data = array();		$searchQuery = '';		$searchArray = array();		$tablecontent='';
+		$data = [];		$searchQuery = '';		$searchArray = [];		$tablecontent='';
 
 		if($refresh == 'refresh')
 		{
@@ -64,7 +64,7 @@ class Expenses_EmployeeadvancesController extends Zend_Controller_Action
 			$perPage = PERPAGE;
 
 			$sort = 'DESC';$by = 'c.modifieddate';$pageNo = 1;$searchData = '';$searchQuery = '';
-			$searchArray = array();
+			$searchArray = [];
 		}
 		else
 		{
@@ -120,7 +120,7 @@ Zend_Debug::dump($th->getMessage());		}
 
 
 		$usersModel = new Expenses_Model_Advances();
-		$msgarray = array();
+		$msgarray = [];
 	    $usersData = $usersModel->getUserList($loginUserId );
 
 		if(sizeof($usersData) > 0)
@@ -221,7 +221,7 @@ Zend_Debug::dump($th->getMessage());		}
 						
 				$projectModel = new Timemanagement_Model_Projects();
 				$projectData = $projectModel->getEmployeeProjects(intval($data['to_id']));
-				$project_array = array();
+				$project_array = [];
 				if(count($projectData) > 0)
 				{
 					foreach($projectData as $project)
@@ -293,7 +293,7 @@ Zend_Debug::dump($th->getMessage());		}
 			{
 				$projectsmodel = new Timemanagement_Model_Projects();
 				$projects = $projectsmodel->getEmployeeProjects(intval($_POST['to_id']));
-				$project_array = array();
+				$project_array = [];
 				if(count($projects) > 0)
 				{
 					
@@ -302,7 +302,7 @@ Zend_Debug::dump($th->getMessage());		}
 						$project_array[$dstate['id']] = $dstate['project_name'];
 					}
 				}
-				$advancesForm->project_id->addMultiOptions(array(''=>'Select State')+$project_array);
+				$advancesForm->project_id->addMultiOptions([''=>'Select State']+$project_array);
 			}
 			if(isset($_POST['cal_amount']) && $_POST['cal_amount']!='')
 			{
@@ -364,7 +364,7 @@ Zend_Debug::dump($th->getMessage());		}
 				
 				//echo $application_amount;exit;
 				$date = new Zend_Date();
-				$data = array('to_id'=>$to_id,
+				$data = ['to_id'=>$to_id,
 							  'project_id'=>$project_id,
 				              'currency_id'=>$currency,
 							  'amount'=>$amount,
@@ -379,14 +379,14 @@ Zend_Debug::dump($th->getMessage());		}
 							  'createddate' => gmdate("Y-m-d H:i:s"),
 							  'isactive'=>1
 							
-				);
+				];
 
                    
 						if($id!=''){
 							
 									$data['modifiedby'] = $loginUserId;
 									$data['modifieddate'] = gmdate("Y-m-d H:i:s");
-									$where = array('id=?'=>$id);  
+									$where = ['id=?'=>$id];  
 									
 								}
 								else
@@ -415,7 +415,7 @@ Zend_Debug::dump($th->getMessage());		}
 					$advancesummary = new Expenses_Model_Advancesummary();
 					$isRecordExist = $advancesummary->getAdvanceDetailsById($to_id);
 					
-					$summerydata = array();
+					$summerydata = [];
 					if(count($isRecordExist)>0)
 					{
 						$totalsum = $isRecordExist[0]['total'];
@@ -430,22 +430,22 @@ Zend_Debug::dump($th->getMessage());		}
 							$balence = $isRecordExist[0]['balance']+($application_amount - $app_amount);
 						}
 						
-						$summerydata = array('total'=>$totalsum,
+						$summerydata = ['total'=>$totalsum,
 						'balance'=>$balence,
 									 'modifiedby'=> $loginUserId,
 									 'modifieddate' =>gmdate("Y-m-d H:i:s")
-								   );
-						$summeryWhere = array('employee_id=?'=>$to_id); 
+								   ];
+						$summeryWhere = ['employee_id=?'=>$to_id]; 
 							
 					}else
 					{
 						$totalsum  = $application_amount;
-						$summerydata = array('total'=>$totalsum,
+						$summerydata = ['total'=>$totalsum,
 						'balance'=>$totalsum,
 									 'createdby'=> $loginUserId,
 									 'employee_id'=>$to_id,
 									 'createddate' =>gmdate("Y-m-d H:i:s")
-								   );
+								   ];
 						$summeryWhere  = "";
 					}	
 					$insertSummey = $advancesummary->SaveAdvanceData($summerydata, $summeryWhere);
@@ -455,12 +455,12 @@ Zend_Debug::dump($th->getMessage());		}
 				if($insertedId == 'update')
 				{
 				
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"advance  updated successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"advance  updated successfully."]);
 				}
 				else
 				{
 
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success"=>"Advance added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success"=>"Advance added successfully."]);
 				}
 
 				$this->_redirect('expenses/employeeadvances');
@@ -520,9 +520,9 @@ Zend_Debug::dump($th->getMessage());		}
 			
 			if($total >= $employeebalance) //if employee has suffiecient amount to delete advance
 			{
-				$data = array('isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s"));
+				$data = ['isactive'=>0,'modifieddate'=>gmdate("Y-m-d H:i:s")];
 				$data['modifiedby'] = $loginUserId;
-				$where = array('id=?'=>$id);
+				$where = ['id=?'=>$id];
 				$id = $employeeadvancesModel->saveOrUpdateAdvanceData($data, $where);
 				if($id == 'update')
 				{
@@ -531,12 +531,12 @@ Zend_Debug::dump($th->getMessage());		}
 					$emp_advance_summery = $advancesummary->getAdvanceDetailsById($emp_id);
 					$totalsum = $emp_advance_summery[0]['total']-$employeebalance;
 					$balence = $emp_advance_summery[0]['balance']-$employeebalance;
-					$summerydata = array('total'=>$totalsum,
+					$summerydata = ['total'=>$totalsum,
 									'balance'=>$balence,
 									 'modifiedby'=> $loginUserId,
 									 'modifieddate' =>gmdate("Y-m-d H:i:s")
-								   );
-					$summeryWhere = array('employee_id=?'=>$emp_id); 
+								   ];
+					$summeryWhere = ['employee_id=?'=>$emp_id]; 
 					$insertSummey = $advancesummary->SaveAdvanceData($summerydata, $summeryWhere);
 					
 					$messages['message'] = 'advance deleted successfully.';

@@ -51,9 +51,9 @@ class Default_ActivitylogController extends Zend_Controller_Action
 	{
 		$tablecontent = $this->activitylog_model->getLogManagerData();
 		$logManagerCount = $this->activitylog_model->getLogManagerCount();
-		$menuArray = array();
-		$userArray = array();
-		$logArray = array();
+		$menuArray = [];
+		$userArray = [];
+		$logArray = [];
 		$pageNo = 1;
 		
 		if(!empty($tablecontent))
@@ -70,19 +70,19 @@ class Default_ActivitylogController extends Zend_Controller_Action
 				$logarr = @get_object_vars(json_decode($logdetails));
 				$lastModRecord = @get_object_vars(array_pop($logarr['testjson']));
 
-				$logArray[$key]['userId'] = isset($lastModRecord['userid'])? $lastModRecord['userid'] : '1';
+				$logArray[$key]['userId'] = $lastModRecord['userid'] ?? '1';
 				if (!in_array($logArray[$key]['userId'], $userArray)) {
 					array_push($userArray,$logArray[$key]['userId']);
 				}
 
-				$logArray[$key]['recordId'] = isset($lastModRecord['recordid'])? $lastModRecord['recordid'] : '';
-				$logArray[$key]['date'] = isset($lastModRecord['date'])? $lastModRecord['date'] : '';
+				$logArray[$key]['recordId'] = $lastModRecord['recordid'] ?? '';
+				$logArray[$key]['date'] = $lastModRecord['date'] ?? '';
 			}
 		}
 
 		$menuNameArray = $this->activitylog_model->getMenuNamesByIds($menuArray);
 		$userNameArray = $this->activitylog_model->getuserNamesByIds($userArray);
-		$userActionArray = array('1'=> 'Add','2' => 'Edit','3' => 'Delete');
+		$userActionArray = ['1'=> 'Add','2' => 'Edit','3' => 'Delete'];
 
 		$this->view->activityLogArray = $logArray;
 		$this->view->menuNameArray = $menuNameArray ;
@@ -101,9 +101,9 @@ class Default_ActivitylogController extends Zend_Controller_Action
 			
 			$tablecontent = $this->activitylog_model->getLogManagerDataSort($pageNo,$this->perPage,$sortfield,$order);
 
-			$menuArray = array();
-			$userArray = array();
-			$logArray = array();
+			$menuArray = [];
+			$userArray = [];
+			$logArray = [];
 
 			if(!empty($tablecontent))
 			{
@@ -119,25 +119,25 @@ class Default_ActivitylogController extends Zend_Controller_Action
 					$logarr = @get_object_vars(json_decode($logdetails));
 					$lastModRecord = @get_object_vars(array_pop($logarr['testjson']));
 
-					$logArray[$key]['userId'] = isset($lastModRecord['userid'])? $lastModRecord['userid'] : '1';
+					$logArray[$key]['userId'] = $lastModRecord['userid'] ?? '1';
 					if (!in_array($logArray[$key]['userId'], $userArray)) {
 						array_push($userArray,$logArray[$key]['userId']);
 					}
 
-					$logArray[$key]['recordId'] = isset($lastModRecord['recordid'])? $lastModRecord['recordid'] : '';
-					$logArray[$key]['date'] = isset($lastModRecord['date'])? $lastModRecord['date'] : '';
+					$logArray[$key]['recordId'] = $lastModRecord['recordid'] ?? '';
+					$logArray[$key]['date'] = $lastModRecord['date'] ?? '';
 				}
 
 				$menuNameArray = $this->activitylog_model->getMenuNamesByIds($menuArray);
 				$userNameArray = $this->activitylog_model->getuserNamesByIds($userArray);
-				$userActionArray = array('1'=> 'Add','2' => 'Edit','3' => 'Delete');
+				$userActionArray = ['1'=> 'Add','2' => 'Edit','3' => 'Delete'];
 
 				$html = '';
 				foreach($logArray as $log){
 
 					$recordUrl = '';
-					$userName = isset($userNameArray[$log['userId']])?$userNameArray[$log['userId']]:"";
-					$userAction = isset($userActionArray[$log['userAction']])?$userActionArray[$log['userAction']]:'';
+					$userName = $userNameArray[$log['userId']] ?? "";
+					$userAction = $userActionArray[$log['userAction']] ?? '';
 					$menuName = isset($menuNameArray[$log['menuId']])?$menuNameArray[$log['menuId']]['name']:'';
 					if(isset($menuNameArray[$log['menuId']]) && $log['userAction'] != 3){
 						$path = ltrim($menuNameArray[$log['menuId']]['url'],'/');
@@ -162,9 +162,9 @@ class Default_ActivitylogController extends Zend_Controller_Action
 		$userlog = $this->activitylog_model->getUserLogManagerData();
 		$userlogCount = $this->activitylog_model->getUserLogCount();
 
-		$userArray = array();
-		$empRoleArray = array();
-		$groupArray = array();
+		$userArray = [];
+		$empRoleArray = [];
+		$groupArray = [];
 		$pageNo = 1;
 
 		if(!empty($userlog))
@@ -211,9 +211,9 @@ class Default_ActivitylogController extends Zend_Controller_Action
 	  $userlog = $this->activitylog_model->getUserLogManagerSort($pageNo,$this->perPage,$sortfield,$order);
 
 
-	  $userArray = array();
-	  $empRoleArray = array();
-	  $groupArray = array();
+	  $userArray = [];
+	  $empRoleArray = [];
+	  $groupArray = [];
 
 	  if(!empty($userlog))
 	  {
@@ -240,9 +240,9 @@ class Default_ActivitylogController extends Zend_Controller_Action
 	  	$html = '';
 	  	foreach($userlog as $user){
 
-	  		$userName = isset($userNameArray[$user['userid']])?$userNameArray[$user['userid']]:"";
-	  		$groupName = isset($groupNameArray[$user['group_id']])?$groupNameArray[$user['group_id']]:"";
-	  		$roleName = isset($roleNameArray[$user['emprole']])?$roleNameArray[$user['emprole']]:"";
+	  		$userName = $userNameArray[$user['userid']] ?? "";
+	  		$groupName = $groupNameArray[$user['group_id']] ?? "";
+	  		$roleName = $roleNameArray[$user['emprole']] ?? "";
 
 	  		$imageUrl = '';
 	  		$imagetag = '';
@@ -290,9 +290,9 @@ class Default_ActivitylogController extends Zend_Controller_Action
 			$userlog = $this->activitylog_model->getUserLogManagerDataSearch(1,$this->perPage,$where);
 			
 
-	  $userArray = array();
-	  $empRoleArray = array();
-	  $groupArray = array();
+	  $userArray = [];
+	  $empRoleArray = [];
+	  $groupArray = [];
 
 	  if(!empty($userlog))
 	  {
@@ -319,9 +319,9 @@ class Default_ActivitylogController extends Zend_Controller_Action
 	  	$html = '';
 	  	foreach($userlog as $user){
 
-	  		$userName = isset($userNameArray[$user['userid']])?$userNameArray[$user['userid']]:"";
-	  		$groupName = isset($groupNameArray[$user['group_id']])?$groupNameArray[$user['group_id']]:"";
-	  		$roleName = isset($roleNameArray[$user['emprole']])?$roleNameArray[$user['emprole']]:"";
+	  		$userName = $userNameArray[$user['userid']] ?? "";
+	  		$groupName = $groupNameArray[$user['group_id']] ?? "";
+	  		$roleName = $roleNameArray[$user['emprole']] ?? "";
 
 	  		$imageUrl = '';
 	  		$imagetag = '';

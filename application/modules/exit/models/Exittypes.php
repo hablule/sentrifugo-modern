@@ -43,7 +43,7 @@ class Exit_Model_Exittypes extends Zend_Db_Table_Abstract
 		
 		$res = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('et'=>'main_exit_types'),array('et.*'))
+                           ->from(['et'=>'main_exit_types'],['et.*'])
                            ->where($where)
     					   ->order("$by $sort") 
     					   ->limitPage($pageNo, $perPage);
@@ -54,8 +54,8 @@ class Exit_Model_Exittypes extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{
 		$searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		
 		if($searchData != '' && $searchData!='undefined')
 			{
@@ -72,17 +72,17 @@ class Exit_Model_Exittypes extends Zend_Db_Table_Abstract
 			
 		$objName = 'exittypes';
 		
-		$tableFields = array('action'=>'Action','exit_type'=>'Exit Type','description'=>'Description');
+		$tableFields = ['action'=>'Action','exit_type'=>'Exit Type','description'=>'Description'];
 		
 		$tablecontent = $this->getExittypes('grid',$sort, $by, $pageNo, $perPage,$searchQuery);     
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -90,7 +90,7 @@ class Exit_Model_Exittypes extends Zend_Db_Table_Abstract
 			'add' =>'add',
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall,
-		);
+		];
 		return $dataTmp;
 	}
  
@@ -99,7 +99,7 @@ class Exit_Model_Exittypes extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('ac'=> $this->_name),array('ac.*'))
+						->from(['ac'=> $this->_name],['ac.*'])
 					    ->where('ac.isactive = 1');
 		return $this->fetchAll($select)->toArray();
 	
@@ -109,7 +109,7 @@ class Exit_Model_Exittypes extends Zend_Db_Table_Abstract
 	{
 	    $select = $this->select()
 						->setIntegrityCheck(false)
-						->from(array('ac'=>'main_exit_types'),array('ac.*'))
+						->from(['ac'=>'main_exit_types'],['ac.*'])
 					    ->where('ac.isactive = 1 AND ac.id='.$id.' ');
 		return $this->fetchAll($select)->toArray();
 	

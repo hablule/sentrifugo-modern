@@ -83,14 +83,14 @@ class Payroll_CronjobController extends Zend_Controller_Action
         } else {
             $docno = $lastinserted['docno'] + 1;
         }
-        $data = array(
+        $data = [
             'docment_no' => $docno,
             'period_id' => $period['period_id'],
             'paydate' => $period['end_date'],
             'approved' => sapp_Global::change_date(date('Y-M-d'), 'database'),
             'approvedby' => 0,
             'autogenrerated' => 'Y'
-        );
+        ];
 
         $lastinsertedid = $payrollmodel->saveorupdate($data, '');
         //  die($period['start_date']." :startdate-end date: ".$period['end_date']);
@@ -107,9 +107,9 @@ class Payroll_CronjobController extends Zend_Controller_Action
 
         $perioddata = $this->getPeriod($paydate['paydate'], '');
         if (!empty($perioddata)) {
-            $data = array(
+            $data = [
                 'period_id' => $perioddata['period_id']
-            );
+            ];
             $payrollmodel->saveorupdate($data, 'id = ' . $paydate['id']);
 
             $this->payroll_line($paydate['paydate'], $paydate['id'], $period['start_date'], $period['end_date']);
@@ -138,19 +138,19 @@ class Payroll_CronjobController extends Zend_Controller_Action
         $i = 0;
         foreach ($empids as $value) {
             $salaries = $period->getempsalary($value['user_id'], $from, $to);
-            $ids = array();
+            $ids = [];
             Zend_Debug::dump($salaries);
             //die();
             if (count($salaries) <= 1) {
                 foreach ($salaries as  $salary) {
                     $i++;
-                    $data = array(
+                    $data = [
                         'payroll_id' => $id,
                         'line' => $line,
                         'emp_id' => $value['user_id'],
                         'salary_id' => $salary['empsalary_id'],
                         'basicsalary' => $salary['amount']
-                    );
+                    ];
                     $line = $line + 1;
 
                     Zend_Debug::dump($data);
@@ -203,7 +203,7 @@ class Payroll_CronjobController extends Zend_Controller_Action
         $missed = $cronmodel->getmisshours($empid);
         $linelist = $cronmodel->lineautoinc('main_payroll_detail', 'line', 'id');
         $line = $linelist['line'] + 1;
-        $maxdata = max(array(count($addundum), count($ot), count($missed))); //select the max count from the given array
+        $maxdata = max([count($addundum), count($ot), count($missed)]); //select the max count from the given array
         Zend_Debug::dump($maxdata, 'max');
         $total_amount = 0;
         $payline = $cronmodel->getpayline($payrolllineid);
@@ -229,41 +229,41 @@ class Payroll_CronjobController extends Zend_Controller_Action
             }
 
 
-            $data = array(
+            $data = [
                 'pay_line_id' => $payrolllineid,
                 'line' => $line,
                 'addundm_id' => $addundum[$i]['addundum_id'],
                 'ot_approval_id' => $ot[$i]['OT_approval_id'],
                 'absent_approval_id' => $missed[$i]['missed_hours_id'],
                 'amount' => $total_amount
-            );
+            ];
             $line = $line + 1;
             if ($addundum[$i]['addundum_id'] != null) {
-                $addata = array(
+                $addata = [
                     'paydate' => $date,
                     'processed' => 'Y'
-                );
+                ];
                 $addundummodel->saveorupdate($addata, 'addundum_id = ' . $addundum[$i]['addundum_id']);
             }
             if ($ot[$i]['OT_approval_id'] != null) {
-                $otdata = array(
+                $otdata = [
                     'processed' => 'Y'
-                );
+                ];
                 $otmodel->saveORupdateApproval($otdata, 'OT_approval_id = ' . $ot[$i]['OT_approval_id']);
             }
             if ($missed[$i]['missed_hours_id'] != null) {
-                $missedata = array(
+                $missedata = [
                     'processed' => 'Y'
-                );
+                ];
                 $missmodel->editmissedhours($missedata, 'missed_hours_id = ' . $missed[$i]['missed_hours_id']);
             }
             Zend_Debug::dump($data);
             $netsalary = $netsalary + $total_amount;
             $cronmodel->saveorupdatepdetail($data, '');
         }
-        $data = array(
+        $data = [
             'netpay' => $netsalary
-        );
+        ];
         Zend_Debug::dump($data, 'netpay');
 
         $cronmodel->saveorupdatepline($data, 'id = ' . $payrolllineid);

@@ -34,7 +34,7 @@ class Default_EmpscheduleController extends Zend_Controller_Action
 
 			$id = $this->getRequest()->getParam('unitId');
 
-			$Uid = ($id) ? $id : $userID;
+			$Uid = $id ?: $userID;
 			if ($Uid != "") {
 				$employeeData = $usersModel->getUserDetailsByIDandFlag($Uid);
 			}
@@ -58,9 +58,9 @@ class Default_EmpscheduleController extends Zend_Controller_Action
 				$objname = $this->_getParam('objname');
 				$refresh = $this->_getParam('refresh');
 				$dashboardcall = $this->_getParam('dashboardcall', null);
-				$data = array();
+				$data = [];
 				$searchQuery = '';
-				$searchArray = array();
+				$searchArray = [];
 				$tablecontent = '';
 				if ($refresh == 'refresh') {
 					if ($dashboardcall == 'Yes')
@@ -73,7 +73,7 @@ class Default_EmpscheduleController extends Zend_Controller_Action
 					$pageNo = 1;
 					$searchData = '';
 					$searchQuery = '';
-					$searchArray = array();
+					$searchArray = [];
 				} else {
 					$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 					$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'l.emp_id';
@@ -143,7 +143,7 @@ class Default_EmpscheduleController extends Zend_Controller_Action
 				$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 			}
 			if ($id == '')		$id = $userID;
-			$Uid = ($id) ? $id : $userID;
+			$Uid = $id ?: $userID;
 
 			if ($Uid != "") {
 				$employeeData = $usersModel->getUserDetailsByIDandFlag($Uid);
@@ -165,9 +165,9 @@ class Default_EmpscheduleController extends Zend_Controller_Action
 				$objname = $this->_getParam('objname');
 				$refresh = $this->_getParam('refresh');
 				$dashboardcall = $this->_getParam('dashboardcall', null);
-				$data = array();
+				$data = [];
 				$searchQuery = '';
-				$searchArray = array();
+				$searchArray = [];
 				$tablecontent = '';
 				if ($refresh == 'refresh') {
 					if ($dashboardcall == 'Yes')
@@ -180,7 +180,7 @@ class Default_EmpscheduleController extends Zend_Controller_Action
 					$pageNo = 1;
 					$searchData = '';
 					$searchQuery = '';
-					$searchArray = array();
+					$searchArray = [];
 				} else {
 					$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 					$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'l.emp_id';
@@ -238,7 +238,7 @@ class Default_EmpscheduleController extends Zend_Controller_Action
 			$conText = ($this->_getParam('context') != '') ? $this->_getParam('context') : $this->getRequest()->getParam('context');
 		}
 		if ($id == '')		$id = $userID;
-		$Uid = ($id) ? $id : $userID;
+		$Uid = $id ?: $userID;
 		if ($Uid != "") {
 			$employeeData = $usersModel->getUserDetailsByIDandFlag($Uid);
 		}
@@ -259,9 +259,9 @@ class Default_EmpscheduleController extends Zend_Controller_Action
 			$objname = $this->_getParam('objname');
 			$refresh = $this->_getParam('refresh');
 			$dashboardcall = $this->_getParam('dashboardcall', null);
-			$data = array();
+			$data = [];
 			$searchQuery = '';
-			$searchArray = array();
+			$searchArray = [];
 			$tablecontent = '';
 			if ($refresh == 'refresh') {
 				if ($dashboardcall == 'Yes')
@@ -274,7 +274,7 @@ class Default_EmpscheduleController extends Zend_Controller_Action
 				$pageNo = 1;
 				$searchData = '';
 				$searchQuery = '';
-				$searchArray = array();
+				$searchArray = [];
 			} else {
 				$sort = ($this->_getParam('sort') != '') ? $this->_getParam('sort') : 'DESC';
 				$by = ($this->_getParam('by') != '') ? $this->_getParam('by') : 'l.emp_id';
@@ -467,7 +467,7 @@ class Default_EmpscheduleController extends Zend_Controller_Action
 
 						$shift = '';
 
-						$emp_sch_data = array(
+						$emp_sch_data = [
 							'schedule_id' => $schedules,
 							'emp_id' => $emp_id,
 							'description' => $this->_getParam('description'),
@@ -476,7 +476,7 @@ class Default_EmpscheduleController extends Zend_Controller_Action
 							'createddate' => gmdate("Y-m-d H:i:s"),
 							'createdby' => $loginUserId
 
-						);
+						];
 						try {
 							$empschedulemodel->saveOrUpdate($emp_sch_data, '');
 							$this->view->successmessage = 'Employee Schedule Assign updated successfully.';
@@ -488,7 +488,7 @@ class Default_EmpscheduleController extends Zend_Controller_Action
 								$this->view->msgarray = $msgarray;
 							} else {
 								$this->view->successmessage = 'Employee Schedule Assign updated successfully.';
-								$this->_helper->getHelper("FlashMessenger")->addMessage(array('success' => 'Assign Successfuly'));
+								$this->_helper->getHelper("FlashMessenger")->addMessage(['success' => 'Assign Successfuly']);
 							}
 						}
 					} else {
@@ -629,7 +629,7 @@ class Default_EmpscheduleController extends Zend_Controller_Action
 
 						$shift = '';
 
-						$emp_sch_data = array(
+						$emp_sch_data = [
 							'schedule_id' => $schedules,
 							'description' => $this->_request->getParam('description'),
 							'start_date' => $this->_request->getParam('start_date'),
@@ -637,7 +637,7 @@ class Default_EmpscheduleController extends Zend_Controller_Action
 							'isactive' => $isactive,
 							'modifiedby' => $loginUserId,
 							'modifieddate' => gmdate("Y-m-d H:i:s")
-						);
+						];
 						
 						$empschedulemodel->saveOrUpdate($emp_sch_data, $pes);
 						$this->view->successmessage = 'Employee Schedule Assign updated successfully.';

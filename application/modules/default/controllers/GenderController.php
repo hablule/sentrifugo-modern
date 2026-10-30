@@ -91,7 +91,7 @@ class Default_GenderController extends Zend_Controller_Action
         $session = sapp_Global::_readSession();
         if (!isset($session)) {
             if ($this->getRequest()->isXmlHttpRequest()) {
-                die(Zend_Json::encode(array('login' => 'failed')));
+                die(Zend_Json::encode(['login' => 'failed']));
             } else {
                 $this->_redirect('');
             }
@@ -145,7 +145,7 @@ class Default_GenderController extends Zend_Controller_Action
 
             $dataTmp = $this->_model->getGrid($sort, $by, $perPage, $page, rtrim($searchData, ','), $call, $dashboardcall);
 
-            $this->view->dataArray = array($dataTmp);
+            $this->view->dataArray = [$dataTmp];
             $this->view->call      = $call;
             $this->view->messages  = $this->_helper->flashMessenger->getMessages();
             
@@ -204,7 +204,7 @@ class Default_GenderController extends Zend_Controller_Action
     {
         $form = new Default_Form_Gender();
         $request = $this->getRequest();
-        $response = array('result' => 'error', 'message' => 'Invalid data');
+        $response = ['result' => 'error', 'message' => 'Invalid data'];
         
         if ($request->isPost()) {
             if ($form->isValid($request->getPost())) {
@@ -214,12 +214,12 @@ class Default_GenderController extends Zend_Controller_Action
                 $db->beginTransaction(); // SSOT V: Transactions Mandatory
                 
                 try {
-                    $data = array(
+                    $data = [
                         'name'        => trim($request->getParam('name')),
                         'code'        => trim($request->getParam('code')),
                         'description' => trim($request->getParam('description')),
                         'isactive'    => (int)$request->getParam('isactive')
-                    );
+                    ];
                     
                     $actionFlag = ($id > 0) ? 2 : 1; // 2=Edit, 1=Add
                     $savedId = $this->_model->saveRecord($data, $id);
@@ -232,23 +232,23 @@ class Default_GenderController extends Zend_Controller_Action
                     $db->commit();
                     
                     $msg = ($actionFlag == 1) ? 'Added' : 'Updated';
-                    $this->_helper->flashMessenger->addMessage(array('success' => "Gender $msg successfully."));
+                    $this->_helper->flashMessenger->addMessage(['success' => "Gender $msg successfully."]);
                     
                     // SSOT V: Strict JSON Response
-                    $response = array('result' => 'saved', 'nomessage' => 'no', 'msgtype' => 'success');
+                    $response = ['result' => 'saved', 'nomessage' => 'no', 'msgtype' => 'success'];
                     
                 } catch (\Throwable $e) {
                     $db->rollBack();
                     error_log("Gender Save Error: " . $e->getMessage());
-                    $response = array('result' => 'exception', 'message' => 'System error occurred.', 'msgtype' => 'error');
+                    $response = ['result' => 'exception', 'message' => 'System error occurred.', 'msgtype' => 'error'];
                 }
             } else {
                 // SSOT V: Validation Error Extraction
-                $msgarray = array();
+                $msgarray = [];
                 foreach ($form->getMessages() as $field => $errors) {
                     $msgarray[$field] = current($errors);
                 }
-                $response = array('result' => 'error', 'message' => $msgarray);
+                $response = ['result' => 'error', 'message' => $msgarray];
             }
         }
         $this->_helper->json($response);
@@ -275,7 +275,7 @@ class Default_GenderController extends Zend_Controller_Action
             $form->getElement('submit')->setAttrib('onclick', null);
 
             $request = $this->getRequest();
-            $msgarray = array();
+            $msgarray = [];
         	$controllername = 'gender';
             
             // Initialize popup state to prevent view rendering notices
@@ -287,27 +287,27 @@ class Default_GenderController extends Zend_Controller_Action
                     $db->beginTransaction();
                     
                     try {
-                        $data = array(
+                        $data = [
                             'name'        => trim($request->getParam('name')),
                             'code'        => trim($request->getParam('code')),
                             'description' => trim($request->getParam('description')),
                             'isactive'    => (int)$request->getParam('isactive', 1)
-                        );
-                        
+                        ];
+
                         $newId = $this->_model->saveRecord($data);
-                        
+
                         $menuId = defined('GENDER_MENU_ID') ? GENDER_MENU_ID : 86;
                         sapp_Global::logManager($menuId, 1, $this->_loginUserId, $newId);
-                        
+
                         $db->commit();
-                        
+
                         // Generate new dropdown options string for the parent window
                         $activeRecords = $this->_model->getPairs(true);
                         $optionsHtml = '';
                         foreach ($activeRecords as $valId => $valName) {
                             $optionsHtml .= sapp_Global::selectOptionBuilder($valId, $valName);
                         }
-                        
+
                         $this->view->optionsHtml = $optionsHtml;
                         $this->view->eventact    = 'added';
                         $this->view->popup       = 'close'; // Triggers View success state
@@ -356,13 +356,13 @@ class Default_GenderController extends Zend_Controller_Action
                 $menuId = defined('GENDER_MENU_ID') ? GENDER_MENU_ID : 86;
                 sapp_Global::logManager($menuId, 3, $this->_loginUserId, $id);
                 
-                $this->_helper->json(array('msgtype' => 'success', 'message' => 'Gender deleted successfully.'));
+                $this->_helper->json(['msgtype' => 'success', 'message' => 'Gender deleted successfully.']);
             } catch (\Throwable $e) {
                 // Catch the model exception (e.g., Record is in use)
-                $this->_helper->json(array('msgtype' => 'error', 'message' => $e->getMessage()));
+                $this->_helper->json(['msgtype' => 'error', 'message' => $e->getMessage()]);
             }
         } else {
-            $this->_helper->json(array('msgtype' => 'error', 'message' => 'Invalid Request.'));
+            $this->_helper->json(['msgtype' => 'error', 'message' => 'Invalid Request.']);
         }
     }
     
@@ -382,9 +382,9 @@ class Default_GenderController extends Zend_Controller_Action
             $menuId = defined('GENDER_MENU_ID') ? GENDER_MENU_ID : 86;
             sapp_Global::logManager($menuId, 4, $this->_loginUserId, $id);
             
-            $this->_helper->json(array('result' => 'yes'));
+            $this->_helper->json(['result' => 'yes']);
         } catch (\Throwable $e) {
-            $this->_helper->json(array('result' => 'no'));
+            $this->_helper->json(['result' => 'no']);
         }
     }
 

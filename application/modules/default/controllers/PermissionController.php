@@ -80,12 +80,12 @@ class Default_PermissionController extends Zend_Controller_Action
         $mappedPerms = $permModel->getAllRecords(null, null, null, null, 1);
 
         // 2. Build the Matrix [ControllerID][ActionID] => [Permissions]
-        $matrix = array();
+        $matrix = [];
         
         // Group Actions by Controller
         foreach ($allActions as $act) {
             $matrix[$act['controller_id']]['actions'][$act['id']] = $act;
-            $matrix[$act['controller_id']]['actions'][$act['id']]['permissions'] = array();
+            $matrix[$act['controller_id']]['actions'][$act['id']]['permissions'] = [];
         }
         
         // Attach Permissions
@@ -105,7 +105,7 @@ class Default_PermissionController extends Zend_Controller_Action
         }
 
         $this->view->matrix = $matrix;
-        $this->view->standardPerms = array('add', 'edit', 'delete', 'view', 'upload', 'viewupload');
+        $this->view->standardPerms = ['add', 'edit', 'delete', 'view', 'upload', 'viewupload'];
     }
 
     /* =================================================================================
@@ -119,12 +119,12 @@ class Default_PermissionController extends Zend_Controller_Action
             $scanner = new Sentrifugo_System_Scanner();
             $results = $scanner->scan();
             
-            $this->_helper->json(array(
+            $this->_helper->json([
                 'status'  => 'success', 
                 'message' => "Scan Complete. New: {$results['new']}, Updated: {$results['updated']}, Obsolete: {$results['obsolete']}."
-            ));
+            ]);
         } catch (Exception $e) {
-            $this->_helper->json(array('status' => 'error', 'message' => $e->getMessage()));
+            $this->_helper->json(['status' => 'error', 'message' => $e->getMessage()]);
         }
     }
 
@@ -138,7 +138,7 @@ class Default_PermissionController extends Zend_Controller_Action
         $request = $this->getRequest();
         
         if (!$request->isPost()) {
-            $this->_helper->json(array('status' => 'error', 'message' => 'Invalid Request Method.'));
+            $this->_helper->json(['status' => 'error', 'message' => 'Invalid Request Method.']);
             return;
         }
 
@@ -146,7 +146,7 @@ class Default_PermissionController extends Zend_Controller_Action
         $mappings = json_decode($jsonRaw, true);
 
         if (!is_array($mappings)) {
-            $this->_helper->json(array('status' => 'error', 'message' => 'Invalid data format received.'));
+            $this->_helper->json(['status' => 'error', 'message' => 'Invalid data format received.']);
             return;
         }
 
@@ -168,18 +168,18 @@ class Default_PermissionController extends Zend_Controller_Action
                 if (!empty($selectedPerms)) {
                     foreach ($selectedPerms as $perm) {
                         // Use the standard saveRecord method
-                        $permModel->saveRecord(array(
+                        $permModel->saveRecord([
                             'action_id'  => (int)$actionId,
                             'permission' => $perm,
                             'isactive'   => 1
-                        ));
+                        ]);
                     }
                     // Mark Action as Active (Mapped)
-                    $actionModel->saveRecord(array('status' => 'Active'), (int)$actionId);
+                    $actionModel->saveRecord(['status' => 'Active'], (int)$actionId);
                     $actionsUpdated++;
                 } else {
                     // If no perms selected, it reverts to 'New' (Unmapped) state
-                    $actionModel->saveRecord(array('status' => 'New'), (int)$actionId);
+                    $actionModel->saveRecord(['status' => 'New'], (int)$actionId);
                 }
             }
 
@@ -194,10 +194,10 @@ class Default_PermissionController extends Zend_Controller_Action
 
             $db->commit();
             
-            $this->_helper->json(array(
+            $this->_helper->json([
                 'status'  => 'success', 
                 'message' => "Successfully updated mappings for {$actionsUpdated} actions and regenerated ACL cache."
-            ));
+            ]);
 
         } catch (Exception $e) {
             $db->rollBack();
@@ -205,10 +205,10 @@ class Default_PermissionController extends Zend_Controller_Action
             // Log the actual error for debugging, but return a safe message to the UI
             error_log("Sentrifugo ACL Mapping Error: " . $e->getMessage());
             
-            $this->_helper->json(array(
+            $this->_helper->json([
                 'status'  => 'error', 
                 'message' => 'Error saving mappings: ' . $e->getMessage()
-            ));
+            ]);
         }
     }
 }

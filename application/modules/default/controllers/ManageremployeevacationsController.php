@@ -42,7 +42,7 @@ class Default_ManageremployeevacationsController extends Zend_Controller_Action
 			//code...
 	
 		$auth = Zend_Auth::getInstance();
-        $popConfigPermission = array();
+        $popConfigPermission = [];
         if($auth->hasIdentity()){
             $loginUserId = $auth->getStorage()->read()->id;
             $loginuserRole = $auth->getStorage()->read()->emprole;
@@ -64,9 +64,9 @@ class Default_ManageremployeevacationsController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 		
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 		
 		if($refresh == 'refresh')
@@ -350,13 +350,13 @@ Zend_Debug::dump($th->getMessage());	}
 				  
 				  if($managerstatus == 1 || $managerstatus == 2 || $managerstatus == 3)
 				  {
-				   $data = array( 'leavestatus'=>$status,
+				   $data = [ 'leavestatus'=>$status,
 				   				  'approver_comments'=> $comments,	
 				                  'modifiedby'=>$loginUserId,
 								  'modifieddate'=>gmdate("Y-m-d H:i:s")
-						);
+						];
 						if($id!=''){
-							$where = array('id=?'=>$id);  
+							$where = ['id=?'=>$id];  
 							$actionflag = 2;
 						}
 						else
@@ -399,7 +399,7 @@ Zend_Debug::dump($th->getMessage());	}
 						}
 						$history = 'Leave Request has been '.$leavestatus.' by ';
 						$leaverequesthistory_model = new Default_Model_Leaverequesthistory();
-						$leave_history = array(											
+						$leave_history = [											
 										'leaverequest_id' =>$id ,
 										'description' => $history,
 										'createdby' => $loginUserId,
@@ -407,7 +407,7 @@ Zend_Debug::dump($th->getMessage());	}
 										'isactive' => 1,
 										'createddate' =>gmdate("Y-m-d H:i:s"),
 										'modifieddate'=>gmdate("Y-m-d H:i:s"),
-									   );
+									   ];
 					    $where = '';
 						$leavehistory = $leaverequesthistory_model->saveOrUpdateLeaveRequestHistory($leave_history,$where); 
 					}		
@@ -589,7 +589,7 @@ Zend_Debug::dump($th->getMessage());	}
 			$model = new Default_Model_Leaverequest();
 
 		
-			$where = array('leaverequest_id=?' => $id);
+			$where = ['leaverequest_id=?' => $id];
 			$Id = $model->DeleteData($where);
 			if ($Id == 'delete') {
 				$messages['message'] = 'Leave Request deleted successfully.';
@@ -604,10 +604,10 @@ Zend_Debug::dump($th->getMessage());	}
 		}
 		if ($deleteflag == 1) {
 			if ($messages['msgtype'] == 'error') {
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("error" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["error" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag]);
 			}
 			if ($messages['msgtype'] == 'success') {
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => $messages['message'], "msgtype" => $messages['msgtype'], 'deleteflag' => $deleteflag]);
 			}
 		}
 		$this->_helper->json($messages);

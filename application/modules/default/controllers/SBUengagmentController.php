@@ -32,9 +32,9 @@ class Default_sbuengagmentController extends Zend_Controller_Action
 		$refresh = $this->_getParam('refresh');
 		$dashboardcall = $this->_getParam('dashboardcall');
 
-		$data = array();
+		$data = [];
 		$searchQuery = '';
-		$searchArray = array();
+		$searchArray = [];
 		$tablecontent='';
 
 		if($refresh == 'refresh')
@@ -76,7 +76,7 @@ class Default_sbuengagmentController extends Zend_Controller_Action
 			$loginUserId = $auth->getStorage()->read()->id;
 		}
 
-		$msgarray = array();
+		$msgarray = [];
 		$controllername = 'sbuengagment';
 		$form = new Default_Form_sbuengagment();
 		$model = new Default_Model_sbuengagment();
@@ -97,7 +97,7 @@ class Default_sbuengagmentController extends Zend_Controller_Action
 			$msgarray['sbunit_id'] = 'Business Unit is not configured yet.';
 		} else {
 			foreach($add as $adds){
-				$form->sbunit_id->addMultiOptions(array($adds['sbunit_id'] => $adds['name']));
+				$form->sbunit_id->addMultiOptions([$adds['sbunit_id'] => $adds['name']]);
 
 			}
 
@@ -108,7 +108,7 @@ class Default_sbuengagmentController extends Zend_Controller_Action
 			$msgarray['businessdomain_id'] = 'Business Domain is not configured yet.';
 		} else {
 			foreach($bdd as $bdds){
-				$form->businessdomain_id->addMultiOptions(array($bdds['businessdomain_id'] => $bdds['name']));
+				$form->businessdomain_id->addMultiOptions([$bdds['businessdomain_id'] => $bdds['name']]);
 			}
 		}
 		// if(isset($_POST['sbunit_id']) && $_POST['sbunit_id']!='')
@@ -135,10 +135,10 @@ class Default_sbuengagmentController extends Zend_Controller_Action
 					$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = '';
-				$data = array(
+				$data = [
 					'businessdomain_id' =>$businessdomain_id[$i],
 					'sbunit_id' => $sbunit_id
-				);
+				];
 
 				$data['createdby'] = $loginUserId;
 				$data['createddate'] = gmdate("Y-m-d H:i:s");
@@ -146,7 +146,7 @@ class Default_sbuengagmentController extends Zend_Controller_Action
 				$actionflag = 1;
 		try{
 				$Id = $model->SaveorUpdateData($data, $where);
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Business Unit Engagment   added successfully."));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Business Unit Engagment   added successfully."]);
 
 				$this->_redirect('sbuengagment');
 
@@ -157,7 +157,7 @@ class Default_sbuengagmentController extends Zend_Controller_Action
 					$this->view->msgarray = $msgarray;
 				}else{
 					$tableid = $Id;
-					$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Business Unit Engagment   added successfully."));
+					$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Business Unit Engagment   added successfully."]);
 	
 	
 					$this->_redirect('sbuengagment');
@@ -192,7 +192,7 @@ class Default_sbuengagmentController extends Zend_Controller_Action
 			$loginUserId = $auth->getStorage()->read()->id;
 		}
 
-		$msgarray = array();
+		$msgarray = [];
 		$controllername = 'sbuengagment';
 		$form = new Default_Form_sbuengagment();
 		$model = new Default_Model_sbuengagment();
@@ -211,7 +211,7 @@ class Default_sbuengagmentController extends Zend_Controller_Action
 			$msgarray['sbunit_id'] = 'Business Unit is not configured yet.';
 		} else {
 			foreach($add as $adds){
-				$form->sbunit_id->addMultiOptions(array($adds['sbunit_id'] => $adds['name']));
+				$form->sbunit_id->addMultiOptions([$adds['sbunit_id'] => $adds['name']]);
 
 			}
 
@@ -222,7 +222,7 @@ class Default_sbuengagmentController extends Zend_Controller_Action
 			$msgarray['businessdomain_id'] = 'Business Domain is not configured yet.';
 		} else {
 			foreach($bdd as $bdds){
-				$form->businessdomain_id2->addMultiOptions(array($bdds['businessdomain_id'] => $bdds['name']));
+				$form->businessdomain_id2->addMultiOptions([$bdds['businessdomain_id'] => $bdds['name']]);
 			}
 		}
 
@@ -243,10 +243,10 @@ class Default_sbuengagmentController extends Zend_Controller_Action
 					$date = new Zend_Date();
 				$actionflag = '';
 				$tableid  = '';
-				$data = array(
+				$data = [
 					'businessdomain_id' =>$businessdomain_id2,
 					'sbunit_id' => $sbunit_id
-				);
+				];
 
 				$data['createdby'] = $loginUserId;
 				$data['createddate'] = gmdate("Y-m-d H:i:s");
@@ -255,7 +255,7 @@ class Default_sbuengagmentController extends Zend_Controller_Action
 				$actionflag = 1;
 try{
 				$Id = $model->SaveorUpdateData($data, $where);
-				$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Business Unit Engagment   Edit successfully."));
+				$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Business Unit Engagment   Edit successfully."]);
 
 				$this->_redirect('sbuengagment');
 
@@ -266,7 +266,7 @@ try{
 							$this->view->msgarray = $msgarray;
 						}	else{
 							$tableid = $Id;
-							$this->_helper->getHelper("FlashMessenger")->addMessage(array("success" => "Business Unit Engagment   added successfully."));
+							$this->_helper->getHelper("FlashMessenger")->addMessage(["success" => "Business Unit Engagment   added successfully."]);
 			
 			
 							$this->_redirect('sbuengagment');

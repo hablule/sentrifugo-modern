@@ -30,8 +30,8 @@ class Default_Model_Leaverequest extends Zend_Db_Table_Abstract
 	{
 	 	$select = $this->select()
     					   ->setIntegrityCheck(false)	
-                           ->from(array('e'=>'main_leavesetting'),array('leavelimit'=>'e.alloteddays','remainingleaves'=>'e.alloteddays'))
-						   ->joinInner(array('u'=>'main_users'),'e.emp_id=u.empid')
+                           ->from(['e'=>'main_leavesetting'],['leavelimit'=>'e.alloteddays','remainingleaves'=>'e.alloteddays'])
+						   ->joinInner(['u'=>'main_users'],'e.emp_id=u.empid')
 						   ->where('u.id='.$loginUserId);
 		return $this->fetchAll($select)->toArray();   
 	
@@ -41,7 +41,7 @@ class Default_Model_Leaverequest extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 					   ->setIntegrityCheck(false)
-					   ->from(array('e'=>'main_leave'),array('leavetype'=>'e.name','numberofdays'=>'e.alloteddays','durationtype'=>'e.durationtype'))
+					   ->from(['e'=>'main_leave'],['leavetype'=>'e.name','numberofdays'=>'e.alloteddays','durationtype'=>'e.durationtype'])
 					   ->where("e.isactive = 'Y' AND e.leave_id=".$leaveid);
 		return $this->fetchAll($select)->toArray();
 	}
@@ -50,7 +50,7 @@ class Default_Model_Leaverequest extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 					   ->setIntegrityCheck(false)
-					   ->from(array('e'=>'main_leave'),array('leavelimit'=>'e.alloteddays','remainingleaves'=>'e.alloteddays'))
+					   ->from(['e'=>'main_leave'],['leavelimit'=>'e.alloteddays','remainingleaves'=>'e.alloteddays'])
 					   ->where('e.leave_id = '.$leaveid);
 		return $this->fetchAll($select)->toArray();
 	}
@@ -58,7 +58,7 @@ class Default_Model_Leaverequest extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 					   ->setIntegrityCheck(false)
-					   ->from(array('e'=>'main_leave'),'e.durationtype')
+					   ->from(['e'=>'main_leave'],'e.durationtype')
 					   ->where('e.leave_id = '.$leaveid);
 					   //die($select);
 		return $this->fetchRow($select)->toArray();
@@ -66,10 +66,10 @@ class Default_Model_Leaverequest extends Zend_Db_Table_Abstract
 	public function SaveorUpdateLeaveRequest($data, $where)
 	{
 		//ie(json_encode($data));
-		$config = array(
+		$config = [
 			'name'=>'main_leave_request',
 			'primary'=>'leaverequest_id'
-		);
+		];
 		$table = new Zend_Db_Table($config);
 	    if($where != '')
 		{
@@ -86,10 +86,10 @@ class Default_Model_Leaverequest extends Zend_Db_Table_Abstract
 	public function DeleteData($where)
 	{
 		//ie(json_encode($data));
-		$config = array(
+		$config = [
 			'name'=>'main_leave_request',
 			'primary'=>'leaverequest_id'
-		);
+		];
 		$table = new Zend_Db_Table($config);
 	   
 			$table->delete($where);
@@ -100,10 +100,10 @@ class Default_Model_Leaverequest extends Zend_Db_Table_Abstract
 	{
 		$result =  $this->select()
     				->setIntegrityCheck(false) 	
-    				->from(array('l'=>'main_leave_request'),array('l.*'))
-					->joinInner(array('ml'=>'main_leave'), 'ml.leave_id=l.leave_id',array('leavename'=>'ml.name'))
-					->joinLeft(array('u'=>'main_employees'), 'l.emp_id=u.id',array('userfullname'=>'u.userfullname','useremail'=>'u.emailaddress'))
-					->joinLeft(array('mu'=>'main_employees'), 'l.approvedby=mu.id',array('approvedname'=>'mu.userfullname'))
+    				->from(['l'=>'main_leave_request'],['l.*'])
+					->joinInner(['ml'=>'main_leave'], 'ml.leave_id=l.leave_id',['leavename'=>'ml.name'])
+					->joinLeft(['u'=>'main_employees'], 'l.emp_id=u.id',['userfullname'=>'u.userfullname','useremail'=>'u.emailaddress'])
+					->joinLeft(['mu'=>'main_employees'], 'l.approvedby=mu.id',['approvedname'=>'mu.userfullname'])
  	  				->where(" l.leaverequest_id = ".$id);
     	return $this->fetchAll($result)->toArray();
 	}
@@ -111,10 +111,10 @@ class Default_Model_Leaverequest extends Zend_Db_Table_Abstract
 	{
 		$result =  $this->select()
     				->setIntegrityCheck(false) 	
-    				->from(array('l'=>'main_leave_request'),array('l.*'))
-					->joinInner(array('ml'=>'main_leave'), 'ml.leave_id=l.leave_id',array('leavename'=>'ml.name'))
-					->joinLeft(array('u'=>'main_employees'), 'l.emp_id=u.id',array('userfullname'=>'u.userfullname','useremail'=>'u.emailaddress'))
-					->joinLeft(array('mu'=>'main_employees'), 'l.approvedby=mu.id',array('approvedname'=>'mu.userfullname'))
+    				->from(['l'=>'main_leave_request'],['l.*'])
+					->joinInner(['ml'=>'main_leave'], 'ml.leave_id=l.leave_id',['leavename'=>'ml.name'])
+					->joinLeft(['u'=>'main_employees'], 'l.emp_id=u.id',['userfullname'=>'u.userfullname','useremail'=>'u.emailaddress'])
+					->joinLeft(['mu'=>'main_employees'], 'l.approvedby=mu.id',['approvedname'=>'mu.userfullname'])
  	  				->where(" l.emp_id = ".$id);
     	return $this->fetchAll($result)->toArray();
 	}
@@ -122,7 +122,7 @@ class Default_Model_Leaverequest extends Zend_Db_Table_Abstract
 	{
 		$result =  $this->select()
     				->setIntegrityCheck(false) 	
-    				->from(array('l'=>'empleave_summary'),array('l.*'))
+    				->from(['l'=>'empleave_summary'],['l.*'])
  	  				->where("l.emp_id = ".$id);
     	return $this->fetchAll($result)->toArray();
 	}
@@ -130,7 +130,7 @@ class Default_Model_Leaverequest extends Zend_Db_Table_Abstract
 	{
 		$result =  $this->select()
     				->setIntegrityCheck(false) 	
-    				->from(array('l'=>'main_leavesetting'),array('l.*'))
+    				->from(['l'=>'main_leavesetting'],['l.*'])
  	  				->where("l.emp_id = ".$id);
     	return $this->fetchAll($result)->toArray();
 	}
@@ -139,8 +139,8 @@ class Default_Model_Leaverequest extends Zend_Db_Table_Abstract
 	{
 		$result =  $this->select()
     				->setIntegrityCheck(false) 	
-    				->from(array('ml'=>'main_leave'),array('ml.*','approvedrequired'=>'if(ml.approvedrequired="N","No","Yes")','ispreset'=>'if(ml.ispreset="N","No","Yes")','isactive'=>'if(ml.isactive="N","No","Yes")'))
-					->joinInner(array('lc'=>'main_leavecategory'), 'ml.leavecategory_id=lc.leavecategory_id',array('categoryname'=>'lc.name'))
+    				->from(['ml'=>'main_leave'],['ml.*','approvedrequired'=>'if(ml.approvedrequired="N","No","Yes")','ispreset'=>'if(ml.ispreset="N","No","Yes")','isactive'=>'if(ml.isactive="N","No","Yes")'])
+					->joinInner(['lc'=>'main_leavecategory'], 'ml.leavecategory_id=lc.leavecategory_id',['categoryname'=>'lc.name'])
  	  				->where(" ml.leave_id not in ( ".$leavesid.") and ml.isactive='Y'");
     	return $this->fetchAll($result)->toArray();
 	}
@@ -149,7 +149,7 @@ class Default_Model_Leaverequest extends Zend_Db_Table_Abstract
 	{
 		$result =  $this->select()
     				->setIntegrityCheck(false) 	
-    				->from(array('l'=>'main_leaverequest'),array('l.*'))
+    				->from(['l'=>'main_leaverequest'],['l.*'])
  	  				->where("l.isactive = 1 AND l.user_id = ".$id);
     	return $this->fetchAll($result)->toArray();
 	}
@@ -182,7 +182,7 @@ class Default_Model_Leaverequest extends Zend_Db_Table_Abstract
 	{
 	    $result =  $this->select()
     				->setIntegrityCheck(false) 	
-    				->from(array('l'=>'main_leaverequest'),array('repmanager'=>'l.rep_mang_id','hrmanager'=>'l.hr_id'))
+    				->from(['l'=>'main_leaverequest'],['repmanager'=>'l.rep_mang_id','hrmanager'=>'l.hr_id'])
  	  				->where("l.isactive = 1 AND l.id = ".$id);
 	
     	return $this->fetchAll($result)->toArray();
@@ -232,7 +232,7 @@ class Default_Model_Leaverequest extends Zend_Db_Table_Abstract
 		$db = Zend_Db_Table::getDefaultAdapter();		
 		$leaveStatusData =  $this->select()
     				->setIntegrityCheck(false) 	
-    				->from(array('l'=>'empleave_summary'),array('l.*'))
+    				->from(['l'=>'empleave_summary'],['l.*'])
 		           ->where($where)
 		            ->order("$by $sort") 
                     ->limitPage($pageNo, $perPage);
@@ -269,8 +269,8 @@ class Default_Model_Leaverequest extends Zend_Db_Table_Abstract
 		
 	   $employeeleaveData = $this->select()
 	   ->setIntegrityCheck(false)	
-	   ->from(array('l'=>'main_leave_request'),
-			  array( 'l.*','id'=>'leaverequest_id','from_date'=>'DATE_FORMAT(l.leave_from,"'.DATEFORMAT_MYSQL.'")',
+	   ->from(['l'=>'main_leave_request'],
+			  [ 'l.*','id'=>'leaverequest_id','from_date'=>'DATE_FORMAT(l.leave_from,"'.DATEFORMAT_MYSQL.'")',
 					 'to_date'=>'DATE_FORMAT(l.leave_to,"'.DATEFORMAT_MYSQL.'")',
 					 'applieddate'=>'DATE_FORMAT(l.createddate,"'.DATEFORMAT_MYSQL.'")',
 					 'staus'=>'l.status',
@@ -283,10 +283,10 @@ class Default_Model_Leaverequest extends Zend_Db_Table_Abstract
 
 
 
-				   ))
-				   ->joinLeft(array('ml'=>'main_leave'), 'ml.leave_id=l.leave_id',array('leavename'=>'ml.name'))
-	   ->joinLeft(array('u'=>'main_employees'), 'u.id=l.approvedby',array('approvedname'=>'u.userfullname'))
-	   ->joinLeft(array('mu'=>'main_employees'), 'mu.id=l.emp_id',array('userfullname'=>'mu.userfullname','profileimg'=>'mu.profileimg'))						                 			   						   
+				   ])
+				   ->joinLeft(['ml'=>'main_leave'], 'ml.leave_id=l.leave_id',['leavename'=>'ml.name'])
+	   ->joinLeft(['u'=>'main_employees'], 'u.id=l.approvedby',['approvedname'=>'u.userfullname'])
+	   ->joinLeft(['mu'=>'main_employees'], 'mu.id=l.emp_id',['userfullname'=>'mu.userfullname','profileimg'=>'mu.profileimg'])						                 			   						   
 	   ->where($where)
 	   ->order("$by $sort") 
 	   ->limitPage($pageNo, $perPage);			 
@@ -314,7 +314,7 @@ class Default_Model_Leaverequest extends Zend_Db_Table_Abstract
     {
     	$result =  $this->select()
     				->setIntegrityCheck(false) 	
-    				->from(array('l'=>'main_leave_request'),array('l.emp_id'))
+    				->from(['l'=>'main_leave_request'],['l.emp_id'])
  	  				->where(" l.leaverequest_id = ".$id);
 	
     	return $this->fetchAll($result)->toArray();
@@ -324,7 +324,7 @@ class Default_Model_Leaverequest extends Zend_Db_Table_Abstract
     {
 		$result =  $this->select()
     				->setIntegrityCheck(false) 	
-    				->from(array('l'=>'empleave_summary'),array('l.*'))
+    				->from(['l'=>'empleave_summary'],['l.*'])
  	  				->where(" l.id = ".$id);
     	return $this->fetchAll($result)->toArray();
     	// $result =  $this->select()
@@ -360,8 +360,8 @@ class Default_Model_Leaverequest extends Zend_Db_Table_Abstract
 					// $loginUserId = $auth->getStorage()->read()->id;
 		}	
         $searchQuery = '';
-        $searchArray = array();
-        $data = array();
+        $searchArray = [];
+        $data = [];
 		if($objName == 'manageremployeevacations')
 		{
 			if($searchData != '' && $searchData!='undefined')
@@ -403,19 +403,19 @@ class Default_Model_Leaverequest extends Zend_Db_Table_Abstract
 				//die($searchQuery);				
 			}
 				
-			$tableFields = array('action'=>'Action','leavename' => 'Leave ','userfullname'=>'Employee Name','status' => 'Status','remark' => 'Reason',
+			$tableFields = ['action'=>'Action','leavename' => 'Leave ','userfullname'=>'Employee Name','status' => 'Status','remark' => 'Reason',
 			'from_date' => 'From Date','to_date' => 'To Date',
-			'applieddate' => 'Applied On','processed' => 'Processed');
+			'applieddate' => 'Applied On','processed' => 'Processed'];
 
                 $tablecontent = $this->getEmployeeLeaveRequest($sort, $by, $pageNo, $perPage,$searchQuery,$loginUserId,$empids,$perm);      				
-				$dataTmp = array(
+				$dataTmp = [
 					'sort' => $sort,
 					'by' => $by,
 					'pageNo' => $pageNo,
 					'perPage' => $perPage,				
 					'tablecontent' => $tablecontent,
 					'objectname' => $objName,
-					'extra' => array(),
+					'extra' => [],
 					'tableheader' => $tableFields,
 					'jsGridFnName' => 'getAjaxgridData',
 					'jsFillFnName' => '',
@@ -424,21 +424,21 @@ class Default_Model_Leaverequest extends Zend_Db_Table_Abstract
 					'perm'=>$perm,
 					'call'=>$call,
 					'dashboardcall'=>$dashboardcall,
-								'search_filters' => array(
-									'from_date' =>array('type'=>'datepicker'),
-									'to_date' =>array('type'=>'datepicker'),
-									'applieddate'=>array('type'=>'datepicker'),
-									'approved' => array(
+								'search_filters' => [
+									'from_date' =>['type'=>'datepicker'],
+									'to_date' =>['type'=>'datepicker'],
+									'applieddate'=>['type'=>'datepicker'],
+									'approved' => [
 										'type' => 'select',
-										'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-										'processed' => array(
+										'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+										'processed' => [
 											'type' => 'select',
-											'filter_data' => array(''=>'All','Y'=>'Yes','N'=>'No')),
-											'status' => array(
+											'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+											'status' => [
 												'type' => 'select',
-												'filter_data' => array(''=>'All','Pending'=>'Pending','Approved'=>'Approved','Rejected'=>'Rejected','Cancelled'=>'Cancelled')),
-								)
-				);
+												'filter_data' => [''=>'All','Pending'=>'Pending','Approved'=>'Approved','Rejected'=>'Rejected','Cancelled'=>'Cancelled']],
+								]
+				];
 		}
 		else if($objName == 'empleavesummary')
 		{
@@ -492,20 +492,20 @@ class Default_Model_Leaverequest extends Zend_Db_Table_Abstract
 					
 
             //$tableFields = array('action'=>'Action','employeename' => 'Leave Applied By','leavetype' => 'Leave Type','leaveday' => 'Leave Duration','from_date' => 'From Date','to_date' => 'To Date','reason' => 'Reason','approver_comments' => 'Comments','reportingmanagername'=>'Reporting Manager','appliedleavescount' => 'Leave Count','applieddate' => 'Applied On');
-            $tableFields = array('action'=>'Action','userfullname' => 'Employee','leavefrom' => 'From Date','leaveto' => 'To Date',
-            'leave' => 'Leave', 'status' => 'Status','leavecategory' => 'Leave Category','requested' => 'Applied On');						 
+            $tableFields = ['action'=>'Action','userfullname' => 'Employee','leavefrom' => 'From Date','leaveto' => 'To Date',
+            'leave' => 'Leave', 'status' => 'Status','leavecategory' => 'Leave Category','requested' => 'Applied On'];						 
 				 
-			$leave_arr = array('' => 'All',1 =>'Full Day',2 => 'Half Day');	 
+			$leave_arr = ['' => 'All',1 =>'Full Day',2 => 'Half Day'];	 
 			
-			$search_filters = array(
-										'leavefrom' =>array('type'=>'datepicker'),
-										'leaveto' =>array('type'=>'datepicker'),
-										'requested'=>array('type'=>'datepicker'),
+			$search_filters = [
+										'leavefrom' =>['type'=>'datepicker'],
+										'leaveto' =>['type'=>'datepicker'],
+										'requested'=>['type'=>'datepicker'],
 										// 'leaveday' => array(
 										// 					'type' => 'select',
 										// 					'filter_data' => $leave_arr,
 										// 				),
-										);
+										];
 										
 			
             /* This is for dashboard call.
@@ -514,10 +514,10 @@ class Default_Model_Leaverequest extends Zend_Db_Table_Abstract
 			if($dashboardcall == 'Yes')
             {
 					$tableFields['status'] = "Status";
-					$search_filters['status'] = array(
+					$search_filters['status'] = [
 					'type' => 'select',
-					'filter_data' => array('pending' => 'Pending for approval','approved'=>'Approved','rejected'=>'Rejected','cancel'=>'Cancelled',),
-				);
+					'filter_data' => ['pending' => 'Pending for approval','approved'=>'Approved','rejected'=>'Rejected','cancel'=>'Cancelled',],
+				];
 				if(isset($searchArray['status']))
 				{
 					$queryflag = $searchArray['status'];
@@ -537,14 +537,14 @@ class Default_Model_Leaverequest extends Zend_Db_Table_Abstract
 			else 
 		      $formgrid = '';  
 			  
-			$dataTmp = array(
+			$dataTmp = [
 				'sort' => $sort,
 				'by' => $by,
 				'pageNo' => $pageNo,
 				'perPage' => $perPage,				
 				'tablecontent' => $tablecontent,
 				'objectname' => $objName,
-				'extra' => array(),
+				'extra' => [],
 				'tableheader' => $tableFields,
 				'jsGridFnName' => 'getAjaxgridData',
 				'jsFillFnName' => '',
@@ -555,7 +555,7 @@ class Default_Model_Leaverequest extends Zend_Db_Table_Abstract
 				'call'=>$call,
 				'dashboardcall'=>$dashboardcall,
 				'search_filters' => $search_filters
-			);
+			];
 		
 		 }
 		else
@@ -604,26 +604,26 @@ class Default_Model_Leaverequest extends Zend_Db_Table_Abstract
 							"reportingmanagername"=>"Reporting Manager",'appliedleavescount' => 'Leave Count',
 							'applieddate' => 'Applied On','action'=>'Action',);*/
 				if($objName=='pendingleaves' || $objName=='cancelleaves') {	
-					$tableFields = array('action'=>'Action','leavename' => 'Leave ','userfullname'=>'Employee Name','status' => 'Status','remark' => 'Reason',
+					$tableFields = ['action'=>'Action','leavename' => 'Leave ','userfullname'=>'Employee Name','status' => 'Status','remark' => 'Reason',
 							'from_date' => 'From Date','to_date' => 'To Date',
-							'applieddate' => 'Applied On');
+							'applieddate' => 'Applied On'];
 				}else{
-					$tableFields = array('action'=>'Action','leavename' => 'Leave','userfullname'=>'Employee Name','reason' => 'Reason',
+					$tableFields = ['action'=>'Action','leavename' => 'Leave','userfullname'=>'Employee Name','reason' => 'Reason',
 							'from_date' => 'From Date','to_date' => 'To Date','appliedleavescount' => 'Days',
-							'applieddate' => 'Applied On','modifieddate' => 'Approved/Rejected On');
+							'applieddate' => 'Applied On','modifieddate' => 'Approved/Rejected On'];
 				}	
-				$leave_arr = array('' => 'All',1 =>'Full Day',2 => 'Half Day');	
+				$leave_arr = ['' => 'All',1 =>'Full Day',2 => 'Half Day'];	
 				
 				$tablecontent = $this->getLeaveStatusHistory($sort, $by, $pageNo, $perPage,$searchQuery,$queryflag,$loginUserId,$empids,$perm);    
 				
-				$dataTmp = array(
+				$dataTmp = [
 					'sort' => $sort,
 					'by' => $by,
 					'pageNo' => $pageNo,
 					'perPage' => $perPage,				
 					'tablecontent' => $tablecontent,
 					'objectname' => $objName,
-					'extra' => array(),
+					'extra' => [],
 					'tableheader' => $tableFields,
 					'jsGridFnName' => 'getAjaxgridData',
 					'jsFillFnName' => '',
@@ -631,16 +631,16 @@ class Default_Model_Leaverequest extends Zend_Db_Table_Abstract
 					'add' =>'add',
 					'call'=> $call,
 					'dashboardcall'=>$dashboardcall,
-					'search_filters' => array(
-									'from_date' =>array('type'=>'datepicker'),
-									'to_date' =>array('type'=>'datepicker'),
-									'applieddate'=>array('type'=>'datepicker'),
-									'leaveday' => array(
+					'search_filters' => [
+									'from_date' =>['type'=>'datepicker'],
+									'to_date' =>['type'=>'datepicker'],
+									'applieddate'=>['type'=>'datepicker'],
+									'leaveday' => [
 										'type' => 'select',
 										'filter_data' => $leave_arr,
-									),
-								)
-				);
+									],
+								]
+				];
         }
 		
 		return $dataTmp;
@@ -650,7 +650,7 @@ class Default_Model_Leaverequest extends Zend_Db_Table_Abstract
 	{
 		$result =  $this->select()
     				->setIntegrityCheck(false) 	
-    				->from(array('l'=>'main_leaverequest'),array('l.from_date','l.to_date'))
+    				->from(['l'=>'main_leaverequest'],['l.from_date','l.to_date'])
  	  				->where("l.isactive = 1 AND l.user_id = ".$userId." AND l.leavestatus IN(1,2)");
 		
     	return $this->fetchAll($result)->toArray();
@@ -673,10 +673,10 @@ public function getLeaveDetails($id)
 	{
 		$result =  $this->select()
     				->setIntegrityCheck(false) 	
-    				->from(array('l'=>'main_leave_request'),array('l.*','emp_idb'=>'l.emp_id'))
-					->joinInner(array('ml'=>'main_leave'), 'ml.leave_id=l.leave_id',array('leavename'=>'ml.name'))
-					->joinLeft(array('u'=>'main_employees'), 'l.emp_id=u.id',array('userfullname'=>'u.userfullname','useremail'=>'u.emailaddress'))
-					->joinLeft(array('mu'=>'main_employees'), 'l.approvedby=mu.id',array('approvedname'=>'mu.userfullname'))
+    				->from(['l'=>'main_leave_request'],['l.*','emp_idb'=>'l.emp_id'])
+					->joinInner(['ml'=>'main_leave'], 'ml.leave_id=l.leave_id',['leavename'=>'ml.name'])
+					->joinLeft(['u'=>'main_employees'], 'l.emp_id=u.id',['userfullname'=>'u.userfullname','useremail'=>'u.emailaddress'])
+					->joinLeft(['mu'=>'main_employees'], 'l.approvedby=mu.id',['approvedname'=>'mu.userfullname'])
  	  				->where(" l.leaverequest_id = ".$id);
     	return $this->fetchAll($result)->toArray();
 	}

@@ -14,8 +14,8 @@ class Assets_Model_Assetinstant extends Zend_Db_Table_Abstract
 				
 		   $AssetsData = $this->select()
                        ->setIntegrityCheck(false)
-                       ->from(array('ai'=>'main_assetinstant'), array('ai.*','id'=>'ai.assetinstant_id','asset_name'=>'a.name','isactive'=>'if(ai.isactive="Y","Yes","No")'))
-                       ->joinLeft(array('a'=>'main_asset'),"ai.asset_id = a.asset_id ",array())
+                       ->from(['ai'=>'main_assetinstant'], ['ai.*','id'=>'ai.assetinstant_id','asset_name'=>'a.name','isactive'=>'if(ai.isactive="Y","Yes","No")'])
+                       ->joinLeft(['a'=>'main_asset'],"ai.asset_id = a.asset_id ",[])
                        ->where($where)
                        ->order("$by $sort")
                        ->limitPage($pageNo, $perPage);
@@ -26,8 +26,8 @@ class Assets_Model_Assetinstant extends Zend_Db_Table_Abstract
 	public function getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboardcall,$a='',$b='',$c='',$d='')
 	{
 		$searchQuery = '';
-		$searchArray = array();
-		$data = array();
+		$searchArray = [];
+		$data = [];
 
 		if($searchData != '' && $searchData!='undefined')
 		{
@@ -52,7 +52,7 @@ class Assets_Model_Assetinstant extends Zend_Db_Table_Abstract
 			
 		$objName = 'assetinstant';
 
-		$tableFields = array(
+		$tableFields = [
 		
 					'action'=>'Action',
 							'asset_name'  => 'Asset',
@@ -61,18 +61,18 @@ class Assets_Model_Assetinstant extends Zend_Db_Table_Abstract
 				            'isactive'  => 'Active',
 							
 						
-		);
+		];
 
 		$tablecontent = $this->getAssetsData($sort, $by, $pageNo, $perPage,$searchQuery);
 
-		$dataTmp = array(
+		$dataTmp = [
 			'sort' => $sort,
 			'by' => $by,
 			'pageNo' => $pageNo,
 			'perPage' => $perPage,				
 			'tablecontent' => $tablecontent,
 			'objectname' => $objName,
-			'extra' => array(),
+			'extra' => [],
 			'tableheader' => $tableFields,
 			'jsGridFnName' => 'getAjaxgridData',
 			'jsFillFnName' => '',
@@ -80,7 +80,7 @@ class Assets_Model_Assetinstant extends Zend_Db_Table_Abstract
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall,
 			'menuName' => 'Asset Instant'
-			);
+			];
 			return $dataTmp;
 	}
 	
@@ -121,7 +121,7 @@ class Assets_Model_Assetinstant extends Zend_Db_Table_Abstract
 	
 		 $select = $this->select()
 					->setIntegrityCheck(false)
-						->from(array('a'=>'main_assetinstant'),array('a.*','id'=>'a.assetinstant_id'))
+						->from(['a'=>'main_assetinstant'],['a.*','id'=>'a.assetinstant_id'])
 						->where('a.assetinstant_id='.$id.' '); 
 		return $this->fetchAll($select)->toArray();	
 	}
@@ -130,7 +130,7 @@ class Assets_Model_Assetinstant extends Zend_Db_Table_Abstract
 	
 		 $select = $this->select()
 					->setIntegrityCheck(false)
-						->from(array('a'=>'main_assetinstant'),array('a.*',))
+						->from(['a'=>'main_assetinstant'],['a.*',])
 						->where('a.asset_id='.$id.' '); 
 		return $this->fetchAll($select)->toArray();	
 	}
@@ -139,7 +139,7 @@ class Assets_Model_Assetinstant extends Zend_Db_Table_Abstract
 	
 		 $select = $this->select()
 					->setIntegrityCheck(false)
-						->from(array('a'=>'main_assetinstant'),array('a.*',))
+						->from(['a'=>'main_assetinstant'],['a.*',])
 						->where('a.isactive="Y"'); 
 		return $this->fetchAll($select)->toArray();	
 	}
@@ -147,7 +147,7 @@ class Assets_Model_Assetinstant extends Zend_Db_Table_Abstract
     {
         $year = $this->select()
             ->setIntegrityCheck(false)
-			->from(array('a'=>'main_assetinstant'),array('a.*'))
+			->from(['a'=>'main_assetinstant'],['a.*'])
             ->where('a.isactive="Y" and a.assetinstant_id  in ('.$ids.')');
 
         return $this->fetchAll($year)->toArray();
@@ -157,8 +157,8 @@ class Assets_Model_Assetinstant extends Zend_Db_Table_Abstract
 	
 		 $select = $this->select()
 		 ->setIntegrityCheck(false)
-         ->from(array('ai'=>'main_assetinstant'), array('ai.*','id'=>'ai.assetinstant_id','asset_name'=>'a.name','isactive'=>'if(ai.isactive="Y","Yes","No")'))
-         ->joinLeft(array('a'=>'main_asset'),"ai.asset_id = a.asset_id ",array())
+         ->from(['ai'=>'main_assetinstant'], ['ai.*','id'=>'ai.assetinstant_id','asset_name'=>'a.name','isactive'=>'if(ai.isactive="Y","Yes","No")'])
+         ->joinLeft(['a'=>'main_asset'],"ai.asset_id = a.asset_id ",[])
 						->where('ai.assetinstant_id='.$id.' '); 
 		return $this->fetchAll($select)->toArray();	
 	}
@@ -167,7 +167,7 @@ class Assets_Model_Assetinstant extends Zend_Db_Table_Abstract
 		
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('c'=>$this->_name),array('c.id','c.client_name'))
+		->from(['c'=>$this->_name],['c.id','c.client_name'])
 		->where('c.is_active = 1 ')
 		->order('c.client_name');
 		return $this->fetchAll($select)->toArray();
@@ -207,8 +207,8 @@ class Assets_Model_Assetinstant extends Zend_Db_Table_Abstract
 	{
 		$select = $this->select()
 		->setIntegrityCheck(false)
-		->from(array('c'=>'assets_history'),array('c.*'))
-		->joinLeft(array('mc'=>'main_employees'),"mc.id = c.createdby ",array('userfullname'=>'mc.userfullname'))
+		->from(['c'=>'assets_history'],['c.*'])
+		->joinLeft(['mc'=>'main_employees'],"mc.id = c.createdby ",['userfullname'=>'mc.userfullname'])
 		->where('c.isactive = 1 and asset_id = '.$id);
 		return $this->fetchAll($select)->toArray();
 	}
@@ -223,7 +223,7 @@ public function	isAssetExistForSetting($id){
 public function getAllAssetForCategory($assetcategory_id){
  $assetsData = $this->select()
 					->setIntegrityCheck(false)
-					->from(array('c'=>$this->_name),array('c.id','c.name'))
+					->from(['c'=>$this->_name],['c.id','c.name'])
 					->where('c.isactive = 1 AND c.category='.$assetcategory_id.' ');
 		return $this->fetchAll($assetsData)->toArray();
  } 

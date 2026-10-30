@@ -63,8 +63,8 @@ class Default_Form_fingerprintconfig extends Zend_Form{
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setAttrib('id', 'submitbutton');
         $submit->setLabel('Save');
-        $this->addElements(array($id,$securityLevel,$fastMode,$sensitivity,$sensorMode,$templateFormat,$scanTimeout,$showImage,$LFDLevel,$checkDuplicate,$submit));
-        $this->setElementDecorators(array('ViewHelper'));
+        $this->addElements([$id,$securityLevel,$fastMode,$sensitivity,$sensorMode,$templateFormat,$scanTimeout,$showImage,$LFDLevel,$checkDuplicate,$submit]);
+        $this->setElementDecorators(['ViewHelper']);
         
     }
 }
