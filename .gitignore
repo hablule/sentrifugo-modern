@@ -3,3 +3,7 @@ rector-upgrade.log
 .env
 *.sql
 /public/uploads/
+test_ldap.php
+test_LDAP.php
+rector-upgrade.log
+php83-modernization.patch

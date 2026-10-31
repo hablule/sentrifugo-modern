@@ -222,7 +222,7 @@ class Default_EmpdeviceController extends Zend_Controller_Action
                 if ($this->_request->getParam('num_of_fingers') < 0 && $this->_request->getParam('num_of_fingers') > 10) {
                     $configForm->num_of_fingers->addError('Number of fingers should be between 1 and 10');
                 } else {
-                    if ($configForm->valid($this->_request->getPost())) {
+                    if ($configForm->valid()) {
                         $fingerPrint->delete('empid = ' . $this->_request->getParam('unitId'));
                         $device_ids = $this->_request->getParam('device_id');
                         $device_ids = implode(',', $device_ids);
@@ -306,7 +306,7 @@ class Default_EmpdeviceController extends Zend_Controller_Action
                 $configForm->device_to_scan->addMultiOption($value['device_id'], $value['device_model']);
             }
             if ($this->getRequest()->isPost()) {
-                if ($configForm->valid($this->getRequest()->getPost())) {
+                if ($configForm->valid()) {
                     
                     foreach ($this->fingermap as $key => $value) {
                         $fingerprintData = json_decode($this->_request->getParam($value));

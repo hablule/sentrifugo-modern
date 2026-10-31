@@ -517,8 +517,8 @@ if (isset($_SERVER['HTTP_HOST'])) {
     // Base URI 
     $base_uri = parse_url($domainurl, PHP_URL_PATH);
 
-    if (substr($base_uri, 0, 1) != '/') $base_uri = '/' . $base_uri;
-    if (substr($base_uri, -1, 1) != '/') $base_uri .= '/';
+    if (substr((string)$base_uri, 0, 1) != '/') $base_uri = '/' . $base_uri;
+    if (substr((string)$base_uri, -1, 1) != '/') $base_uri .= '/';
 } else {
     $domainurl = 'http://localhost';
     $base_uri = '/';

@@ -9,10 +9,7 @@
             "name": "Listen for Xdebug",
             "type": "php",
             "request": "launch",
-            "port": 9003,
-            "pathMappings": {
-                "C:\\xampp\\htdocs\\sentrifugo_3.2": "${workspaceFolder}"
-            }
+            "port": 9003            
         },
         {
             "name": "Launch currently open script",

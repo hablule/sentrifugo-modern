@@ -8,6 +8,7 @@ return RectorConfig::configure()
     // 1. Tell Rector which folders to scan and modernize
     ->withPaths([
         __DIR__ . '/application',
+		__DIR__ . '/Zend',
     ])
     // 2. Ignore vendor, tests, and bundled legacy libraries
     ->withSkip([
