@@ -526,11 +526,11 @@ function parseMozGradient($bg) {
 		$col = $this->mpdf->ConvertColor($el[0]);
 		if ($col) { $stop['col'] = $col; }
 		else { $stop['col'] = $col = $this->mpdf->ConvertColor(255); }
-		if ($col{0}==1) $g['colorspace'] = 'Gray';
-		else if ($col{0}==4 || $col{0}==6) $g['colorspace'] = 'CMYK';
-		if ($col{0}==5) { $stop['opacity'] = ord($col{4})/100; }	// transparency from rgba()
-		else if ($col{0}==6) { $stop['opacity'] = ord($col{5})/100; }	// transparency from cmyka()
-		else if ($col{0}==1 && $col{2}==1) { $stop['opacity'] = ord($col{3})/100; }	// transparency converted from rgba or cmyka()
+		if ($col[0]==1) $g['colorspace'] = 'Gray';
+		else if ($col[0]==4 || $col[0]==6) $g['colorspace'] = 'CMYK';
+		if ($col[0]==5) { $stop['opacity'] = ord($col[4])/100; }	// transparency from rgba()
+		else if ($col[0]==6) { $stop['opacity'] = ord($col[5])/100; }	// transparency from cmyka()
+		else if ($col[0]==1 && $col[2]==1) { $stop['opacity'] = ord($col[3])/100; }	// transparency converted from rgba or cmyka()
 
 		if (isset($el[1]) && preg_match('/(\d+)[%]/',$el[1],$m)) { 
 			$stop['offset'] = $m[1]/100;
@@ -656,11 +656,11 @@ function parseMozGradient($bg) {
 		$col = $this->mpdf->ConvertColor($el[0]);
 		if ($col) { $stop['col'] = $col; }
 		else { $stop['col'] = $col = $this->mpdf->ConvertColor(255); }
-		if ($col{0}==1) $g['colorspace'] = 'Gray';
-		else if ($col{0}==4 || $col{0}==6) $g['colorspace'] = 'CMYK';
-		if ($col{0}==5) { $stop['opacity'] = ord($col{4})/100; }	// transparency from rgba()
-		else if ($col{0}==6) { $stop['opacity'] = ord($col{5})/100; }	// transparency from cmyka()
-		else if ($col{0}==1 && $col{2}==1) { $stop['opacity'] = ord($col{3})/100; }	// transparency converted from rgba or cmyka()
+		if ($col[0]==1) $g['colorspace'] = 'Gray';
+		else if ($col[0]==4 || $col[0]==6) $g['colorspace'] = 'CMYK';
+		if ($col[0]==5) { $stop['opacity'] = ord($col[4])/100; }	// transparency from rgba()
+		else if ($col[0]==6) { $stop['opacity'] = ord($col[5])/100; }	// transparency from cmyka()
+		else if ($col[0]==1 && $col[2]==1) { $stop['opacity'] = ord($col[3])/100; }	// transparency converted from rgba or cmyka()
 
 		if (isset($el[1]) && preg_match('/(\d+)[%]/',$el[1],$m)) { 
 			$stop['offset'] = $m[1]/100;
@@ -702,8 +702,8 @@ function parseBackgroundGradient($bg) {
 		$g['colorspace'] = 'RGB';
 		// mPDF 5.3.74
 		$cor = $this->mpdf->ConvertColor($bgr[1]);
-		if ($cor{0}==1) $g['colorspace'] = 'Gray';
-		else if ($cor{0}==4 || $cor{0}==6) $g['colorspace'] = 'CMYK';
+		if ($cor[0]==1) $g['colorspace'] = 'Gray';
+		else if ($cor[0]==4 || $cor[0]==6) $g['colorspace'] = 'CMYK';
 		if ($cor) { $g['col'] = $cor; }
 		else { $g['col'] = $this->mpdf->ConvertColor(255); }
 		$cor = $this->mpdf->ConvertColor($bgr[2]);

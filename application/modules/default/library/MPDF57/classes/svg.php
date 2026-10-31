@@ -5,7 +5,7 @@
 //	http://www.godisaduck.com/svg2pdf_with_fpdf
 //	http://rhodopsin.blogspot.com
 //	
-//	cette class etendue est open source, toute modification devra cependant etre repertoriée~
+//	cette class etendue est open source, toute modification devra cependant etre repertoriï¿½e~
 
 
 // NB UNITS - Works in pixels as main units - converting to PDF units when outputing to PDF string
@@ -13,12 +13,12 @@
 
 class SVG {
 
-	var $svg_gradient;	//	array - contient les infos sur les gradient fill du svg classé par id du svg
+	var $svg_gradient;	//	array - contient les infos sur les gradient fill du svg classï¿½ par id du svg
 	var $svg_shadinglist;	//	array - contient les ids des objet shading
 	var $svg_info;		//	array contenant les infos du svg voulue par l'utilisateur
 	var $svg_attribs;		//	array - holds all attributes of root <svg> tag
 	var $svg_style;		//	array contenant les style de groupes du svg
-	var $svg_string;		//	String contenant le tracage du svg en lui même.
+	var $svg_string;		//	String contenant le tracage du svg en lui mï¿½me.
 	var $txt_data;		//    array - holds string info to write txt to image
 	var $txt_style;		// 	array - current text style
 	var $mpdf_ref;
@@ -911,7 +911,7 @@ $md = $sy * cos($t);
 		$path_style = '';
 		if (substr_count($critere_style['fill'],'url')>0){
 			//
-			// couleur degradé
+			// couleur degradï¿½
 			$id_gradient = preg_replace("/url\(#([\w_]*)\)/i","$1",$critere_style['fill']);
 			if ($id_gradient != $critere_style['fill']) {
 			   if (isset($this->svg_gradient[$id_gradient])) {
@@ -931,8 +931,8 @@ $md = $sy * cos($t);
 			if ($col) {
 				// mPDF 5.0.051
 				// mPDF 5.3.74
-				if ($col{0}==5) {	$critere_style['fill-opacity'] = ord($col{4}/100); }	// RGBa
-				if ($col{0}==6) {	$critere_style['fill-opacity'] = ord($col{5}/100); }	// CMYKa
+				if ($col[0]==5) {	$critere_style['fill-opacity'] = ord($col[4]/100); }	// RGBa
+				if ($col[0]==6) {	$critere_style['fill-opacity'] = ord($col[5]/100); }	// CMYKa
 				$path_style .= $this->mpdf_ref->SetFColor($col, true).' ';	// mPDF 5.0.051
 				$style .= 'F';
 			}
@@ -942,8 +942,8 @@ $md = $sy * cos($t);
 			if ($col) {
 				// mPDF 5.0.051
 				// mPDF 5.3.74
-				if ($col{0}==5) {	$critere_style['fill-opacity'] = ord($col{4}/100); }	// RGBa
-				if ($col{0}==6) {	$critere_style['fill-opacity'] = ord($col{5}/100); }	// CMYKa
+				if ($col[0]==5) {	$critere_style['fill-opacity'] = ord($col[4]/100); }	// RGBa
+				if ($col[0]==6) {	$critere_style['fill-opacity'] = ord($col[5]/100); }	// CMYKa
 				$path_style .= $this->mpdf_ref->SetFColor($col, true).' ';	// mPDF 5.0.051
 				$style .= 'F';
 			}
@@ -972,8 +972,8 @@ $md = $sy * cos($t);
 			if ($col) {
 				// mPDF 5.0.051
 				// mPDF 5.3.74
-				if ($col{0}==5) {	$critere_style['stroke-opacity'] = ord($col{4}/100); }	// RGBa
-				if ($col{0}==6) {	$critere_style['stroke-opacity'] = ord($col{5}/100); }	// CMYKa
+				if ($col[0]==5) {	$critere_style['stroke-opacity'] = ord($col[4]/100); }	// RGBa
+				if ($col[0]==6) {	$critere_style['stroke-opacity'] = ord($col[5]/100); }	// CMYKa
 				$path_style .= $this->mpdf_ref->SetDColor($col, true).' ';	// mPDF 5.0.051
 				$style .= 'D';
 				$lw = $this->ConvertSVGSizePixels($critere_style['stroke-width']);
@@ -985,8 +985,8 @@ $md = $sy * cos($t);
 			if ($col) {
 				// mPDF 5.0.051
 				// mPDF 5.3.74
-				if ($col{0}==5) {	$critere_style['stroke-opacity'] = ord($col{4}/100); }	// RGBa
-				if ($col{0}==6) {	$critere_style['stroke-opacity'] = ord($col{5}/100); }	// CMYKa
+				if ($col[0]==5) {	$critere_style['stroke-opacity'] = ord($col[4]/100); }	// RGBa
+				if ($col[0]==6) {	$critere_style['stroke-opacity'] = ord($col[5]/100); }	// CMYKa
 				$path_style .= $this->mpdf_ref->SetDColor($col, true).' ';	// mPDF 5.0.051
 				$style .= 'D';
 				$lw = $this->ConvertSVGSizePixels($critere_style['stroke-width']);	// mPDF 4.4.003 
@@ -1713,7 +1713,7 @@ function Arcto($x1, $y1, $x2, $y2, $rx, $ry, $angle, $largeArcFlag, $sweepFlag) 
 
 	//
 	//	fonction retracant les <ellipse /> et <circle />
-	//	 le cercle est tracé grave a 4 bezier cubic, les poitn de controles
+	//	 le cercle est tracï¿½ grave a 4 bezier cubic, les poitn de controles
 	//	sont deduis grace a la constante kappa * rayon
 	function svgEllipse($arguments){
 		if ($arguments['rx']==0 || $arguments['ry']==0) { return ''; }	// mPDF 4.4.003
@@ -2346,16 +2346,16 @@ function svgDefineTxtStyle($critere_style)
 
 						// mPDF 5.0.051
 						// mPDF 5.3.74
-						if ($col{0}==3 || $col{0}==5) {	// RGB
-							$color_final = sprintf('%.3F %.3F %.3F',ord($col{1})/255,ord($col{2})/255,ord($col{3})/255);
+						if ($col[0]==3 || $col[0]==5) {	// RGB
+							$color_final = sprintf('%.3F %.3F %.3F',ord($col[1])/255,ord($col[2])/255,ord($col[3])/255);
 							$svg_class->svg_gradient[$last_gradid]['colorspace']='RGB';
 						}
-						else if ($col{0}==4 || $col{0}==6) {	// CMYK
-							$color_final = sprintf('%.3F %.3F %.3F %.3F',ord($col{1})/100,ord($col{2})/100,ord($col{3})/100,ord($col{4})/100);
+						else if ($col[0]==4 || $col[0]==6) {	// CMYK
+							$color_final = sprintf('%.3F %.3F %.3F %.3F',ord($col[1])/100,ord($col[2])/100,ord($col[3])/100,ord($col[4])/100);
 							$svg_class->svg_gradient[$last_gradid]['colorspace']='CMYK';
 						}
-						else if ($col{0}==1) {	// Grayscale
-							$color_final = sprintf('%.3F',ord($col{1})/255);
+						else if ($col[0]==1) {	// Grayscale
+							$color_final = sprintf('%.3F',ord($col[1])/255);
 							$svg_class->svg_gradient[$last_gradid]['colorspace']='Gray';
 						}
 
@@ -2370,11 +2370,11 @@ function svgDefineTxtStyle($critere_style)
 						}
 						// mPDF 5.0.051
 						// mPDF 5.3.74
-						else if ($col{0}==5) {	// RGBa
-							$stop_opacity = ord($col{4}/100);
+						else if ($col[0]==5) {	// RGBa
+							$stop_opacity = ord($col[4]/100);
 						}
-						else if ($col{0}==6) {	// CMYKa
-							$stop_opacity = ord($col{5}/100);
+						else if ($col[0]==6) {	// CMYKa
+							$stop_opacity = ord($col[5]/100);
 						}
 
 						$tmp_color = array(
@@ -2420,7 +2420,7 @@ function svgDefineTxtStyle($critere_style)
 				}
 
 				//
-				//insertion des path et du style dans le flux de donné general.
+				//insertion des path et du style dans le flux de donnï¿½ general.
 				if (isset($path_cmd) && $path_cmd) {	// mPDF 4.4.003
 					// mPDF 5.0
 					list($prestyle,$poststyle) = $svg_class->svgStyle($path_style, $attribs, strtolower($name));
