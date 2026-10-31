@@ -37,11 +37,11 @@ class Zend_Barcode_Renderer_Image extends Zend_Barcode_Renderer_RendererAbstract
      * List of authorized output format
      * @var array
      */
-    protected $_allowedImageType = array(
+    protected $_allowedImageType = [
         'png',
         'jpeg',
         'gif',
-    );
+    ];
 
     /**
      * Image format
@@ -355,7 +355,7 @@ class Zend_Barcode_Renderer_Image extends Zend_Barcode_Renderer_RendererAbstract
      */
     protected function _drawPolygon($points, $color, $filled = true)
     {
-        $newPoints = array(
+        $newPoints = [
             $points[0][0] + $this->_leftOffset,
             $points[0][1] + $this->_topOffset,
             $points[1][0] + $this->_leftOffset,
@@ -364,7 +364,7 @@ class Zend_Barcode_Renderer_Image extends Zend_Barcode_Renderer_RendererAbstract
             $points[2][1] + $this->_topOffset,
             $points[3][0] + $this->_leftOffset,
             $points[3][1] + $this->_topOffset,
-        );
+        ];
 
         $allocatedColor = imagecolorallocate(
             $this->_resource,

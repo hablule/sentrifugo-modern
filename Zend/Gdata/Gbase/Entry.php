@@ -57,7 +57,7 @@ class Zend_Gdata_Gbase_Entry extends Zend_Gdata_Entry
      *
      * @var array
      */
-    protected $_baseAttributes = array();
+    protected $_baseAttributes = [];
 
     /**
      * Constructs a new Zend_Gdata_Gbase_ItemEntry object.
@@ -137,7 +137,7 @@ class Zend_Gdata_Gbase_Entry extends Zend_Gdata_Entry
      */
     public function getGbaseAttribute($name)
     {
-        $matches = array();
+        $matches = [];
         for ($i = 0; $i < count($this->_baseAttributes); $i++) {
             $baseAttribute = $this->_baseAttributes[$i];
             if ($baseAttribute->rootElement == $name &&

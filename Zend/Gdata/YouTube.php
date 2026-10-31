@@ -182,12 +182,12 @@ class Zend_Gdata_YouTube extends Zend_Gdata_Media
      *
      * @var array
      */
-    public static $namespaces = array(
-        array('yt', 'http://gdata.youtube.com/schemas/2007', 1, 0),
-        array('georss', 'http://www.georss.org/georss', 1, 0),
-        array('gml', 'http://www.opengis.net/gml', 1, 0),
-        array('media', 'http://search.yahoo.com/mrss/', 1, 0)
-    );
+    public static $namespaces = [
+        ['yt', 'http://gdata.youtube.com/schemas/2007', 1, 0],
+        ['georss', 'http://www.georss.org/georss', 1, 0],
+        ['gml', 'http://www.opengis.net/gml', 1, 0],
+        ['media', 'http://search.yahoo.com/mrss/', 1, 0]
+    ];
 
     /**
      * Create Zend_Gdata_YouTube object
@@ -223,9 +223,7 @@ class Zend_Gdata_YouTube extends Zend_Gdata_Media
         $applicationId = 'MyCompany-MyApp-1.0', $clientId = null,
         $developerKey = null)
     {
-        if ($client === null) {
-            $client = new Zend_Http_Client();
-        }
+        $client ??= new Zend_Http_Client();
         if (!$client instanceof Zend_Http_Client) {
             require_once 'Zend/Gdata/App/HttpException.php';
             throw new Zend_Gdata_App_HttpException(
@@ -680,7 +678,7 @@ class Zend_Gdata_YouTube extends Zend_Gdata_Media
         }
 
         if ($tokenText != null && $urlText != null) {
-            return array('token' => $tokenText, 'url' => $urlText);
+            return ['token' => $tokenText, 'url' => $urlText];
         } else {
             require_once 'Zend/Gdata/App/Exception.php';
             throw new Zend_Gdata_App_Exception(
@@ -798,7 +796,7 @@ class Zend_Gdata_YouTube extends Zend_Gdata_Media
      *
      */
     public function sendVideoMessage($body, $videoEntry = null,
-        $videoId = null, $recipientUserName)
+        $videoId = null, $recipientUserName = null)
     {
         if (!$videoId && !$videoEntry) {
             require_once 'Zend/Gdata/App/InvalidArgumentException.php';

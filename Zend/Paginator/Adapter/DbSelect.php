@@ -111,7 +111,7 @@ class Zend_Paginator_Adapter_DbSelect implements Zend_Paginator_Adapter_Interfac
             $rowCountColumn = $this->_select->getAdapter()->foldCase(self::ROW_COUNT_COLUMN);
 
             // The select query can contain only one column, which should be the row count column
-            if (false === strpos($countColumnPart, $rowCountColumn)) {
+            if (!str_contains($countColumnPart, $rowCountColumn)) {
                 /**
                  * @see Zend_Paginator_Exception
                  */

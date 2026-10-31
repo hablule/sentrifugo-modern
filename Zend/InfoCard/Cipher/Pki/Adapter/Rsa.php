@@ -75,7 +75,7 @@ class Zend_InfoCard_Cipher_Pki_Adapter_Rsa
      */
     public function decrypt($encryptedData, $privateKey, $password = null, $padding = null)
     {
-        $private_key = openssl_pkey_get_private(array($privateKey, $password));
+        $private_key = openssl_pkey_get_private([$privateKey, $password]);
 
         if(!$private_key) {
             require_once 'Zend/InfoCard/Cipher/Exception.php';
@@ -111,7 +111,7 @@ class Zend_InfoCard_Cipher_Pki_Adapter_Rsa
 
         if($this->getPadding() == self::NO_PADDING) {
             $decryptedData = substr($decryptedData, 2);
-            $start = strpos($decryptedData, 0) + 1;
+            $start = strpos($decryptedData, (string) 0) + 1;
             $decryptedData = substr($decryptedData, $start);
         }
 

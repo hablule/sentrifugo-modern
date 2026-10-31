@@ -29,7 +29,7 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 {
 
 	public $view = null;
-	public $extra = array();
+	public $extra = [];
 	private $output; // Container to d the Grid
 	private $encrypt_status = "no";
 	public $pd_category_id = '';
@@ -48,7 +48,7 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 		$role_id = $data['emprole'];
 		$menunamestr = '';
 		$sortStr = '';
-		$actnArr = array();
+		$actnArr = [];
 		$sortStr = $dataArray['by'];
 		$controllers_arr = $menu_model->getControllersByRole($role_id);
 
@@ -61,11 +61,11 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 
 			$menuName = $actions_arr[sizeof($actions_arr) - 1];
 		} else {
-			$actions_arr = array();
+			$actions_arr = [];
 		}
 
-		$gridFieldsArr = array();
-		$tmpActionsArr = array();
+		$gridFieldsArr = [];
+		$tmpActionsArr = [];
 		$tmpActionsArr = $actions_arr;
 		array_pop($tmpActionsArr);	//last element of actions array is menuname so delete that & check the privileges are empty or not...
 
@@ -131,30 +131,30 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 			if (!in_array('view', $actions_arr) && !in_array('edit', $actions_arr) && !in_array('delete', $actions_arr)) {
 				if ($dataArray['objectname'] == 'processes') {
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 								<a onclick="displaydeptform(\'' . BASE_URL . $dataArray['objectname'] . '/' . $viewaction . '/id/{{id}}' . $con . '/popup/1\',\'' . $menunamestr . '\')" name="{{id}}" class="sprite view"  title=\'View\'></a>
 								<a onclick="displaydeptform(\'' . BASE_URL . $dataArray['objectname'] . '/' . $editaction . '/id/{{id}}' . $con . '/popup/1\',\'' . $menunamestr . '\')" name="{{id}}" class="sprite edit"  title=\'Edit\' ></a>
 								<a name="{{id}}" id="{{id}}" onclick= changestatus(\'' . $dataArray['objectname'] . '\',\'{{id}}\',\'' . $msgdta . '\')	href= javascript:void(0) title=\'Delete\' class="sprite delete" ></a>
-							</div>');
+							</div>'];
 				} else
-					$extra['action'] = array();
+					$extra['action'] = [];
 			} else {
 
 				if ($dataArray['objectname'] ==  'empleavesummary' || $dataArray['objectname'] ==  'empscreening') {
 					$view_str = '<a href= "' . BASE_URL . $dataArray['objectname'] . '/view/id/{{id}}" name="{{id}}" class="sprite view"  title=\'View\'></a>';
 					$edit_str = '<a href= "' . BASE_URL . $dataArray['objectname'] . '/edit/id/{{id}}" name="{{id}}" class="sprite edit"  title=\'Edit\'></a>';
 					$delete_str = '<a name="{{id}}" onclick= changestatus(\'' . $dataArray['objectname'] . '\',\'{{id}}\',\'' . $msgdta . '\')	href= javascript:void(0) title=\'Delete\' class="sprite delete" ></a>';
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 										' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 										' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 										' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
-									</div>');
+									</div>'];
 				} else {
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 									' . ((in_array('view', $actions_arr) ? $viewpopup_str : '')) . '
 									' . ((in_array('edit', $actions_arr) ? $editpopup_str : '')) . '
 									' . ((in_array('delete', $actions_arr) ? $deletepopup_str : '')) . '
-								</div>');
+								</div>'];
 				}
 			}
 		} else {
@@ -172,11 +172,11 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 				$view_str = '<a href= "' . BASE_URL . $dataArray['objectname'] . '/view/id/{{mid}}" name="{{mid}}" class="sprite view"  title=\'View\'></a>';
 
 
-				$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 										' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 										' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 										' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
-									</div>');
+									</div>'];
 			}
 
 			elseif ($dataArray['objectname'] == 'manageremployeevacations') {
@@ -202,15 +202,15 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 				$delete_str = '<a  id="del{{id}}" name="{{id}}" onclick= changestatus(\'' . $dataArray['objectname'] . '\',\'{{id}}\',\'' . $msgdta . '\')	href= javascript:void(0) title=\'Delete\' class="sprite delete" ></a>';
 
 			if (!in_array('view', $actions_arr) && !in_array('edit', $actions_arr) && !in_array('delete', $actions_arr)) {
-				$extra['action'] = array();
+				$extra['action'] = [];
 			} else {
 				//$delete_str = '<a id="del{{id}}"  name="{{id}}" onclick= changestatus(\'' . $dataArray['objectname'] . '\',\'{{id}}\',\'' . $msgdta . '\')	href= javascript:void(0) title=\'Delete\' class="sprite delete" ></a>';
-				$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 										' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 										' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
 
 										' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
-									</div>'); //onclick ="javascript:editlocdata(\'{{id}}\')" 
+									</div>']; //onclick ="javascript:editlocdata(\'{{id}}\')" 
 			}
 			if ($dataArray['objectname'] == 'candidatedetails') {
 
@@ -224,20 +224,20 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 				if ($loginuserRole == SUPERADMINROLE || $loginuserGroup == HR_GROUP || $loginuserGroup == MANAGEMENT_GROUP) {
 					$schedule_str = '<a href= "' . BASE_URL . 'scheduleinterviews' . '/add/cid/{{id}}" name="{{id}}" class="sprite schedule_interview" id="cv{{id}}" title=\'Schedule interview\'></a>';
 					$checkbox = '<a><input type="checkbox" value="{{id}}" class="check1" id="cv{{id}}"/></a>';
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 											' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 											' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 											' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
 											  ' . ((in_array('schedule', $actions_arr) ? '' : $schedule_str)) . '
 											  ' . ((in_array('view', $actions_arr) ? $checkbox : '')) . '
-										</div>');
+										</div>'];
 				} else {
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 											' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 											' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 											' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
-										</div>');
+										</div>'];
 				}
 			}
 		
@@ -284,19 +284,19 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 				}
 				if ($loginuserRole == SUPERADMINROLE || $loginuserGroup == HR_GROUP || $loginuserGroup == MANAGEMENT_GROUP) {
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 											' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 											' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 											' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
 										
-										</div>');
+										</div>'];
 				} else {
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 											' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 											' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 											' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
-										</div>');
+										</div>'];
 				}
 			}
 			if ($dataArray['objectname'] == 'perkapprove' and $dataArray['objectId'] == 'perkapprove') {
@@ -305,33 +305,33 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 				$edit_str = '<a id="edit{{id}}" name="{{id}}" onclick= displaydeptform(\'' . BASE_URL . 'perkapprove/editpopup/id/{{id}}' . '\',\'\')	href= javascript:void(0) title=\'Approve or Reject \' class="fa fa-ellipsis-v" ></a>';
 				$delete_str = '<a id="del{{id}}" name="{{id}}" onclick= changestatus(\'' . $dataArray['objectname'] . '\',\'{{id}}\',\'' . $msgdta . '\')	href= javascript:void(0) title=\'Delete\' class="sprite delete" ></a>';
 
-				$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 					' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 					' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 					' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
 
 				
 			
-				</div>');
+				</div>'];
 			}
 			
 			if ($dataArray['objectname'] == 'missedhoursapprove' and $dataArray['objectId'] == 'missedhoursapprove') {
 				$view_str = '<a href= "' . BASE_URL . 'missedhoursapprove' . '/view/id/{{id}}" name="{{id}}" class="sprite view"  title=\'View\'></a>';
 				$edit_str = '<a id="edit{{id}}" name="{{missed_hours_id}}" onclick= displaydeptform(\'' . BASE_URL . 'missedhoursapprove/editpopup/id/{{id}}' . '\',\'missedhoursapprove\')	href= javascript:void(0) title=\'Approve or Reject or Cancel Overtime\' class="fa fa-ellipsis-v" ></a>';
-				$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 					' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 					' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
-				</div>');
+				</div>'];
 			}
 	
 			if ($dataArray['objectname'] == 'addundum' and $dataArray['objectId'] == 'addundum') {
 				$view_str = '<a href= "' . BASE_URL . 'addundum' . '/view/id/{{id}}" name="{{id}}" class="sprite view"  title=\'View\'></a>';
 				$edit_str = '<a name="{{id}}" onclick= displaydeptform(\'' . BASE_URL . 'addundum/editpopup/id/{{id}}' . '\',\'\')	href= javascript:void(0) title=\'Approve or Reject or Cancel Overtime\' class="fa fa-ellipsis-v" ></a>';
 
-				$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 					' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 					' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
-				</div>');
+				</div>'];
 			}
 
 			
@@ -341,14 +341,14 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 				$edit_str = '<a  id="edit{{id}}" name="{{id}}" onclick= displaydeptform(\'' . BASE_URL . 'loadapprove/editpopup/id/{{id}}' . '\',\'\')	href= javascript:void(0) title=\'Approve or Reject or Cancel Overtime\' class="fa fa-ellipsis-v" ></a>';
 				$delete_str = '<a id="del{{id}}" name="{{id}}" onclick= changestatus(\'' . $dataArray['objectname'] . '\',\'{{id}}\',\'' . $msgdta . '\')	href= javascript:void(0) title=\'Delete\' class="sprite delete" ></a>';
 
-				$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 					' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 					' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 					' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
 
 				
 			
-				</div>');
+				</div>'];
 			}
 
 
@@ -357,10 +357,10 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 
 				$delete_str = '<a id="del{{perkcategory_id}}" name="{{perkcategory_id}}" onclick= changestatus(\'' . $dataArray['objectname'] . '\',\'{{perkcategory_id}}\',\'' . $msgdta . '\')	href= javascript:void(0) title=\'Delete\' class="sprite delete" ></a>';
 
-				$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 													' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 													
-												</div>');
+												</div>'];
 			}
 
 			if ($dataArray['objectname'] == 'deductivecategory') {
@@ -368,10 +368,10 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 
 				$delete_str = '<a id="del{{load_category_id}}" name="{{load_category_id}}" onclick= changestatus(\'' . $dataArray['objectname'] . '\',\'{{load_category_id}}\',\'' . $msgdta . '\')	href= javascript:void(0) title=\'Delete\' class="sprite delete" ></a>';
 
-				$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 													' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 													
-												</div>');
+												</div>'];
 			}
 
 			if ($dataArray['objectname'] == 'addperk' and  $dataArray['objectId'] == 'add') {
@@ -389,22 +389,22 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 					$delete_str = '<a id="del{{perk_id}}" name="{{perk_id}}" onclick= changestatus(\'' . $dataArray['objectname'] . '\',\'{{perk_id}}\',\'' . $msgdta . '\')	href= javascript:void(0) title=\'Delete\' class="sprite delete" ></a>';
 
 					$checkbox = '<a><input type="checkbox"  id="check{{perk_id}}" value="{{perk_id}}" name="{{auto_approved}}" class="check2" id="perk{{perk_id}}" onclick="oncheck({{perk_id}},\'addperk\')"/></a>';
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 								' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 								' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 							
 								' . ((in_array('view', $actions_arr) ? $checkbox : '')) . '
 
-							</div>');
+							</div>'];
 				} else {
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 											' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 											' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 											' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
 											' . ((in_array('view', $actions_arr) ? $checkbox : '')) . '
 
-										</div>');
+										</div>'];
 				}
 			}
 
@@ -423,22 +423,22 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 					$delete_str = '<a id="del{{id}}" name="{{perk_id}}" onclick= changestatus(\'' . $dataArray['objectname'] . '\',\'{{id}}\',\'' . $msgdta . '\')	href= javascript:void(0) title=\'Delete\' class="sprite delete" ></a>';
 
 					$checkbox = '<a><input type="checkbox"  id="check{{perk_id}}" value="{{perk_id}}" name="{{auto_approved}}" class="check2" id="perk{{perk_id}}"/></a>';
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 								' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 								' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 							
 								' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
 
-							</div>');
+							</div>'];
 				} else {
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 											' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 											' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 											' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
 											' . ((in_array('view', $actions_arr) ? $checkbox : '')) . '
 
-										</div>');
+										</div>'];
 				}
 			}
 
@@ -457,19 +457,19 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 					$view_str = '<a href= "' . BASE_URL . 'branch/view/id/{{emp_branch_id}}" class="sprite view"  title=\'View\'></a>';
 					$delete_str = '<a id="del{{emp_branch_id}}" name="{{emp_branch_id}}" onclick= changestatus(\'' . $dataArray['objectname'] . '\',\'{{emp_branch_id}}\',\'' . $msgdta . '\')	href= javascript:void(0) title=\'Delete\' class="sprite delete" ></a>';
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 								' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 								' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 							
-							</div>');
+							</div>'];
 				} else {
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 											' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 											' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 											' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
 
-										</div>');
+										</div>'];
 				}
 			}
 			if ($dataArray['objectname'] == 'location') {
@@ -485,19 +485,19 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 					$edit_str = '<a href= "' . BASE_URL . 'location/edit/id/{{location_id}}" name="{{location_id}}" class="sprite edit"  title=\'Edit\'></a>';
 					$view_str = '<a href= "' . BASE_URL . 'location/view/id/{{location_id}}" class="sprite view"  title=\'View\'></a>';
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 								' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 								' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 
-							</div>');
+							</div>'];
 				} else {
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 											' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 											' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 											' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
 
-										</div>');
+										</div>'];
 				}
 			}
 			if ($dataArray['objectname'] == 'theme') {
@@ -514,19 +514,19 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 					//$view_str = '<a href= "' . BASE_URL . 'theme/view/id/{{theme_id}}" class="sprite view"  title=\'View\'></a>';
 					//$delete_str = '<a id="del{{theme_id}}" name="{{theme_id}}" onclick= changestatus(\'' . $dataArray['objectname'] . '\',\'{{theme_id}}\',\'' . $msgdta . '\')	href= javascript:void(0) title=\'Delete\' class="sprite delete" ></a>';
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 								' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 								
 
 
-							</div>');
+							</div>'];
 				} else {
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 									
 											' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 
-										</div>');
+										</div>'];
 				}
 			}
 			if ($dataArray['objectname'] == 'addresstype') {
@@ -541,17 +541,17 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 					// Zend_Debug::dump($dataArray);
 					$edit_str = '<a href= "' . BASE_URL . 'addresstype/edit/id/{{address_type_id}}" name="{{address_type_id}}" class="sprite edit"  title=\'Edit\'></a>';
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 								' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 
-							</div>');
+							</div>'];
 				} else {
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 											' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 											' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
 
-										</div>');
+										</div>'];
 				}
 			}
 			if ($dataArray['objectname'] == 'leavecategory') {
@@ -567,17 +567,17 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 					// Zend_Debug::dump($dataArray);
 					$edit_str = '<a href= "' . BASE_URL . 'leavecategory/edit/id/{{leavecategory_id}}" name="{{leavecategory_id}}" class="sprite edit"  title=\'Edit\'></a>';
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 								' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 
-							</div>');
+							</div>'];
 				} else {
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 											' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 											' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
 
-										</div>');
+										</div>'];
 				}
 			}
 			if ($dataArray['objectname'] == 'leave') {
@@ -593,18 +593,18 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 					$edit_str = '<a href= "' . BASE_URL . 'leave/edit/id/{{leave_id}}" name="{{leave_id}}" class="sprite edit"  title=\'Edit\'></a>';
 					$view_str = '<a href= "' . BASE_URL . 'leave/view/id/{{leave_id}}" class="sprite view"  title=\'View\'></a>';
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 								' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 								' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 
-							</div>');
+							</div>'];
 				} else {
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 											' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 											' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
 
-										</div>');
+										</div>'];
 				}
 			}
 			if ($dataArray['objectname'] == 'division') {
@@ -620,18 +620,18 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 					$edit_str = '<a href= "' . BASE_URL . 'division/edit/id/{{id}}" name="{{id}}" class="sprite edit"  title=\'Edit\'></a>';
 					$view_str = '<a href= "' . BASE_URL . 'division/view/id/{{id}}" class="sprite view"  title=\'View\'></a>';
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 								' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 								' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 
-							</div>');
+							</div>'];
 				} else {
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 											' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 											' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
 
-										</div>');
+										</div>'];
 				}
 			}
 			if ($dataArray['objectname'] == 'empposition') {
@@ -647,18 +647,18 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 					$edit_str = '<a href= "' . BASE_URL . 'empposition/edit/emp_id/{{emp_id}}/pos_id/{{jobposition_id}}" name="{{id}}" class="sprite edit"  title=\'Edit\'></a>';
 					$view_str = '<a href= "' . BASE_URL . 'empposition/view/emp_id/{{emp_id}}/pos_id/{{jobposition_id}}" class="sprite view"  title=\'View\'></a>';
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 								' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 								' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 
-							</div>');
+							</div>'];
 				} else {
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 											' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 											' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
 
-										</div>');
+										</div>'];
 				}
 			}
 
@@ -676,17 +676,17 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 					$edit_str = '<a href= "' . BASE_URL . 'jobtitles/edit/id/{{jobtitle_id}}" name="{{jobtitile_id}}" class="sprite edit"  title=\'Edit\'></a>';
 					$view_str = '<a href= "' . BASE_URL . 'jobtitles/view/id/{{jobtitle_id}}" class="sprite view"  title=\'View\'></a>';
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 								' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 
-							</div>');
+							</div>'];
 				} else {
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 											' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 											' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
 
-										</div>');
+										</div>'];
 				}
 			}
 			if ($dataArray['objectname'] == 'positions') {
@@ -702,17 +702,17 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 					$edit_str = '<a href= "' . BASE_URL . 'positions/edit/id/{{position_id}}" name="{{position_id}}" class="sprite edit"  title=\'Edit\'></a>';
 					$view_str = '<a href= "' . BASE_URL . 'positions/view/id/{{position_id}}" class="sprite view"  title=\'View\'></a>';
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 								' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 
-							</div>');
+							</div>'];
 				} else {
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 											' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 											' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
 
-										</div>');
+										</div>'];
 				}
 			}
 			if ($dataArray['objectname'] == 'departments') {
@@ -728,18 +728,18 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 					$edit_str = '<a href= "' . BASE_URL . 'departments/edit/id/{{id}}" name="{{id}}" class="sprite edit"  title=\'Edit\'></a>';
 					$view_str = '<a href= "' . BASE_URL . 'departments/view/id/{{id}}" class="sprite view"  title=\'View\'></a>';
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 								' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 								' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 
-							</div>');
+							</div>'];
 				} else {
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 											' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 											' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
 
-										</div>');
+										</div>'];
 				}
 			}
 			if ($dataArray['objectname'] == 'section') {
@@ -755,18 +755,18 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 					$edit_str = '<a href= "' . BASE_URL . 'section/edit/id/{{id}}" name="{{id}}" class="sprite edit"  title=\'Edit\'></a>';
 					$view_str = '<a href= "' . BASE_URL . 'section/view/id/{{id}}" class="sprite view"  title=\'View\'></a>';
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 								' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 								' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 
-							</div>');
+							</div>'];
 				} else {
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 											' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 											' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
 
-										</div>');
+										</div>'];
 				}
 			}
 			if ($dataArray['objectname'] == 'team') {
@@ -782,18 +782,18 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 					$edit_str = '<a href= "' . BASE_URL . 'team/edit/id/{{id}}" name="{{id}}" class="sprite edit"  title=\'Edit\'></a>';
 					$view_str = '<a href= "' . BASE_URL . 'team/view/id/{{id}}" class="sprite view"  title=\'View\'></a>';
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 								' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 								' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 
-							</div>');
+							</div>'];
 				} else {
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 											' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 											' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
 
-										</div>');
+										</div>'];
 				}
 			}
 			if ($dataArray['objectname'] == 'businessunits') {
@@ -809,18 +809,18 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 					$edit_str = '<a href= "' . BASE_URL . 'businessunits/edit/id/{{id}}" name="{{id}}" class="sprite edit"  title=\'Edit\'></a>';
 					$view_str = '<a href= "' . BASE_URL . 'businessunits/view/id/{{id}}" class="sprite view"  title=\'View\'></a>';
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 								' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 								' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 
-							</div>');
+							</div>'];
 				} else {
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 											' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 											' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
 
-										</div>');
+										</div>'];
 				}
 			}
 			if ($dataArray['objectname'] == 'project') {
@@ -836,17 +836,17 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 					$edit_str = '<a href= "' . BASE_URL . 'project/edit/id/{{id}}" name="{{id}}" class="sprite edit"  title=\'Edit\'></a>';
 					$view_str = '<a href= "' . BASE_URL . 'project/view/id/{{id}}" class="sprite view"  title=\'View\'></a>';
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 								' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 
-							</div>');
+							</div>'];
 				} else {
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 											' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 											' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
 
-										</div>');
+										</div>'];
 				}
 			}
 			if ($dataArray['objectname'] == 'projectco') {
@@ -862,17 +862,17 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 					$edit_str = '<a href= "' . BASE_URL . 'projectco/edit/id/{{id}}" name="{{id}}" class="sprite edit"  title=\'Edit\'></a>';
 					$view_str = '<a href= "' . BASE_URL . 'projectco/view/id/{{id}}" class="sprite view"  title=\'View\'></a>';
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 								' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 
-							</div>');
+							</div>'];
 				} else {
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 											' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 											' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
 
-										</div>');
+										</div>'];
 				}
 			}
 			if ($dataArray['objectname'] == 'sbuengagment') {
@@ -888,17 +888,17 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 					$edit_str = '<a href= "' . BASE_URL . 'sbuengagment/edit/bu_id/{{id}}/bd_id/{{bd_id}}" name="{{id}}" class="sprite edit"  title=\'Edit\'></a>';
 					// $view_str = '<a href= "' . BASE_URL . 'sbuengagment/view/bu_id/{{id}}/bd_id/{{bd_id}}" class="sprite view"  title=\'View\'></a>';
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 								' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 
-							</div>');
+							</div>'];
 				} else {
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 											' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 											' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
 
-										</div>');
+										</div>'];
 				}
 			}
 			
@@ -915,17 +915,17 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 					$edit_str = '<a href= "' . BASE_URL . 'companyengagment/edit/comp_id/{{comp_id}}/bd_id/{{bd_id}}" name="{{id}}" class="sprite edit"  title=\'Edit\'></a>';
 					// $view_str = '<a href= "' . BASE_URL . 'sbuengagment/view/bu_id/{{id}}/bd_id/{{bd_id}}" class="sprite view"  title=\'View\'></a>';
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 								' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 
-							</div>');
+							</div>'];
 				} else {
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 											' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 											' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
 
-										</div>');
+										</div>'];
 				}
 			}
 
@@ -942,17 +942,17 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 					$edit_str = '<a href= "' . BASE_URL . 'businessdomain/edit/id/{{id}}" name="{{id}}" class="sprite edit"  title=\'Edit\'></a>';
 					// $view_str = '<a href= "' . BASE_URL . 'sbuengagment/view/bu_id/{{id}}/bd_id/{{bd_id}}" class="sprite view"  title=\'View\'></a>';
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 								' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 
-							</div>');
+							</div>'];
 				} else {
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 											' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 											' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
 
-										</div>');
+										</div>'];
 				}
 			}
 			if ($dataArray['objectname'] == 'address') {
@@ -968,18 +968,18 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 					$edit_str = '<a href= "' . BASE_URL . 'address/edit/id/{{address_id}}" name="{{address_id}}" class="sprite edit"  title=\'Edit\'></a>';
 					$view_str = '<a href= "' . BASE_URL . 'address/view/id/{{address_id}}" class="sprite view"  title=\'View\'></a>';
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 								' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 								' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 
-							</div>');
+							</div>'];
 				} else {
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 											' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 											' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
 
-										</div>');
+										</div>'];
 				}
 			}
 
@@ -997,20 +997,20 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 					$edit_str = '<a href= "' . BASE_URL . 'overtime/edit/id/{{overtime_id}}" name="{{overtime_id}}" class="sprite edit"  title=\'Edit\'></a>';
 					$view_str = '<a href= "' . BASE_URL . 'overtime/view/id/{{overtime_id}}" class="sprite view"  title=\'View\'></a>';
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 								' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 								' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 								' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
 
-							</div>');
+							</div>'];
 				} else {
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 											' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 											' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 											' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
 
-										</div>');
+										</div>'];
 				}
 			}
 
@@ -1025,11 +1025,11 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 					$edit_str = '<a  id="edit{{id}}" href= "' . BASE_URL . 'employee/edit/id/{{id}}" name="{{id}}" class="sprite edit"  title=\'Edit\'></a>';
 					$view_str = '<a  id="view{{id}}" href= "' . BASE_URL . 'employee/view/id/{{id}}" class="sprite view"  title=\'View\'></a>';
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 								' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 								' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 
-							</div>');
+							</div>'];
 				
 			}
 			if ($dataArray['objectname'] == 'title') {
@@ -1044,29 +1044,29 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 					$view_str = '<a href= "' . BASE_URL . 'title/view/id/{{id}}" class="sprite view"  title=\'View\'></a>';
 					// $delete_str = '<a id="del{{id}}" name="{{id}}" onclick= changestatus(\'' . $dataArray['objectname'] . '\',\'{{id}}\',\'' . $msgdta . '\')	href= javascript:void(0) title=\'Delete\' class="sprite delete" ></a>';
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 								' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 								' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 
-							</div>');
+							</div>'];
 			
 			}
 			if ($dataArray['objectname'] == 'bank' ) {
 				$actions_arr = $controllers_arr[$actionsobjname . "controller.php"]['actions'];
 				$edit_str = '<a id="edit{{bank_id}}" href= "' . BASE_URL . $dataArray['objectname'] . '/edit/id/{{bank_id}}" name="{{bank_id}}" class="sprite edit"  title=\'Edit\'></a>';
 				$delete_str = '<a id="del{{bank_id}}" name="{{bank_id}}" onclick= changestatus(\'' . $dataArray['objectname'] . '\',\'{{bank_id}}\',\'' . $msgdta . '\')	href= javascript:void(0) title=\'Delete\' class="sprite delete" ></a>';
-				$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 										' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 										' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
-									</div>');
+									</div>'];
 			}
 			if ($dataArray['objectname'] == 'doctype' ) {
 				$actions_arr = $controllers_arr[$actionsobjname . "controller.php"]['actions'];
 				$edit_str = '<a id="edit{{doctype_id}}" href= "' . BASE_URL . $dataArray['objectname'] . '/edit/id/{{doctype_id}}" name="{{doctype_id}}" class="sprite edit"  title=\'Edit\'></a>';
 				$delete_str = '<a id="del{{id}}" name="{{id}}" onclick= changestatus(\'' . $dataArray['objectname'] . '\',\'{{doctype_id}}\',\'' . $msgdta . '\')	href= javascript:void(0) title=\'Delete\' class="sprite delete" ></a>';
-				$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 										' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
-									</div>');
+									</div>'];
 			}
 				
 			if ($dataArray['objectname'] == 'adddeductive' and  $dataArray['objectId'] == 'add') {
@@ -1083,13 +1083,13 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 					$checkbox = '<a><input  id="check{{load_id}}" type="checkbox" value="{{load_id}}" name="{{autoapprove}}"  class="check2" id="dedductive{{load_id}}" onclick="oncheck({{load_id}},\'adddeductive\')"/></a>';
 					$delete_str = '<a id="del{{load_id}}" name="{{load_id}}" onclick= changestatus(\'' . $dataArray['objectname'] . '\',\'{{load_id}}\',\'' . $msgdta . '\')	href= javascript:void(0) title=\'Delete\' class="sprite delete" ></a>';
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 								' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 								' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 								
 								' . ((in_array('view', $actions_arr) ? $checkbox : '')) . '
 
-							</div>');
+							</div>'];
 		
 			}
 
@@ -1104,11 +1104,11 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 					// Zend_Debug::dump($dataArray);
 					$checkbox = '<a><input type="checkbox" value="{{id}}"  class="check1"  id="emp{{id}}"/></a>';
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 							
 								' . ((in_array('view', $actions_arr) ? $checkbox : '')) . '
 
-							</div>');
+							</div>'];
 			
 			}
 			if ($dataArray['objectname'] == 'employee' and  $dataArray['objectId'] == 'emp') {
@@ -1121,11 +1121,11 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 					// Zend_Debug::dump($dataArray);
 					$checkbox = '<a><input type="checkbox" value="{{id}}"  class="check1"  /></a>';
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 							
 								' . ((in_array('view', $actions_arr) ? $checkbox : '')) . '
 
-							</div>');
+							</div>'];
 				
 			}
 			if ($dataArray['objectname'] == 'manageremployeeovertime' and $dataArray['objectId'] == 'manageremployeeovertime') {
@@ -1134,14 +1134,14 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 				$edit_str = '<a id="edit{{id}}" name="{{id}}" onclick= displaydeptform(\'' . BASE_URL . 'manageremployeeovertime/editpopup/id/{{id}}' . '\',\'\')	href= javascript:void(0) title=\'Approve or Reject or Cancel Overtime\' class="fa fa-ellipsis-v" ></a>';
 				$delete_str = '<a id="del{{id}}" name="{{id}}" onclick= changestatus(\'' . $dataArray['objectId'] . '\',\'{{id}}\',\'' . $msgdta . '\')	href= javascript:void(0) title=\'Delete\' class="sprite delete" ></a>';
 
-				$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 		' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 		' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 		' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
 
 	
 
-	</div>');
+	</div>'];
 			}
 			if ($dataArray['objectname'] == 'schedule' and  $dataArray['objectId'] == 'emp') {
 				$auth = Zend_Auth::getInstance();
@@ -1154,11 +1154,11 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 					// Zend_Debug::dump($dataArray);
 					$checkbox = '<a><input type="checkbox"  value="{{id}}" class="check1" id="emp{{id}}" /></a>';
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 							
 								' . ((in_array('view', $actions_arr) ? $checkbox : '')) . '
 
-							</div>');
+							</div>'];
 				
 			}
 			//
@@ -1176,11 +1176,11 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 				$view_str = '<a href= "' . BASE_URL . $dataArray['objectname'] . '/view/id/{{id}}" name="{{id}}" class="sprite view"  title=\'View\'></a>';
 
 
-				$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 										' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 										' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 										
-									</div>');
+									</div>'];
 			}
 
 			if ($dataArray['objectname'] == 'periodcontroltype') {
@@ -1188,10 +1188,10 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 				$actions_arr = $controllers_arr[$actionsobjname . "controller.php"]['actions'];
 				$edit_str = '<a id="edit{{periodcontrol_id}}" href= "' . BASE_URL . $dataArray['objectname'] . '/edit/id/{{periodcontrol_id}}" name="{{periodcontrol_id}}" class="sprite edit"  title=\'Edit\'></a>';
 				$delete_str = '<a id="del{{id}}" name="{{id}}" onclick= changestatus(\'' . $dataArray['objectname'] . '\',\'{{id}}\',\'' . $msgdta . '\')	href= javascript:void(0) title=\'Delete\' class="sprite delete" ></a>';
-				$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 										' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 										' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
-									</div>');
+									</div>'];
 			}
 			if ($dataArray['objectname'] == 'period') {
 				$actions_arr = $controllers_arr[$actionsobjname . "controller.php"]['actions'];
@@ -1203,10 +1203,10 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 				$view_str = '<a href= "' . BASE_URL . $dataArray['objectname'] . '/view/id/{{id}}" name="{{id}}" class="sprite view"  title=\'View\'></a>';
 
 
-				$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 													' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 													' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
-												</div>');
+												</div>'];
 			}
 			if ($dataArray['objectname'] == 'year') {
 				$actions_arr = $controllers_arr[$actionsobjname . "controller.php"]['actions'];
@@ -1218,10 +1218,10 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 				$view_str = '<a href= "' . BASE_URL . $dataArray['objectname'] . '/view/id/{{id}}" name="{{id}}" class="sprite view"  title=\'View\'></a>';
 
 
-				$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 										' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 										' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
-									</div>');
+									</div>'];
 			}
 
 			if ($dataArray['objectname'] == 'schedule') {
@@ -1232,11 +1232,11 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 					$loginuserRole = $auth->getStorage()->read()->emprole;
 				}
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 							
 								' . ((in_array('view', $actions_arr) ? $checkbox : '')) . '
 
-							</div>');
+							</div>'];
 				
 			}
 
@@ -1251,11 +1251,11 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 					$loginuserRole = $auth->getStorage()->read()->emprole;
 				}
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 							
 								' . ((in_array('view', $actions_arr) ? $checkbox : '')) . '
 
-							</div>');
+							</div>'];
 				
 			}
 
@@ -1269,11 +1269,11 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 					$loginuserRole = $auth->getStorage()->read()->emprole;
 				}
 
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 							
 								' . ((in_array('view', $actions_arr) ? $checkbox : '')) . '
 
-							</div>');
+							</div>'];
 				
 			}
 
@@ -1285,11 +1285,11 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 
 				$delete_str = '<a id="del{{id}}" name="{{id}}" onclick= changestatus(\'' . $dataArray['objectname'] . '\',\'{{id}}\',\'' . $msgdta . '\')	href= javascript:void(0) title=\'Delete\' class="sprite delete" ></a>';
 
-				$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 											' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 											' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 											' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
-										</div>');
+										</div>'];
 			}
 			
 
@@ -1300,23 +1300,23 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 
 				$delete_str = '<a id="del{{id}}" name="{{id}}" onclick= changestatus(\'' . $dataArray['objectname'] . '\',\'{{id}}\',\'' . $msgdta . '\')	href= javascript:void(0) title=\'Delete\' class="sprite delete" ></a>';
 
-				$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 											' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 											' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 											' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
-										</div>');
+										</div>'];
 			}
 
 			if ($dataArray['objectname']=='payroll') {
 				$edit_str = '<a href= "' . BASE_URL  . $dataArray['objectname'] . '/edit/id/{{id}}" name="{{id}}" id="edit{{id}}" class="sprite edit"  title=\'Edit\'></a>';
 				$approval_str = '<a name="{{id}}" href= '.BASE_URL. $dataArray['objectname'] .'/editpopup/id/{{id}} title=\'Approve or Reject Payroll\' class="fa fa-ellipsis-v" ></a>';
-				$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 					'.((in_array('edit',$actions_arr)? $edit_str:'')).'
 					' . ((in_array('edit', $actions_arr) ? $approval_str : '')) . '
 				
 				
 			
-				</div>');
+				</div>'];
 			}
 
 			if ($dataArray['objectname'] == 'listcandidates') {
@@ -1326,11 +1326,11 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 
 				//	$delete_str = '<a id="del{{id}}" name="{{id}}" onclick= changestatus(\''.$dataArray['objectname'].'\',\'{{id}}\',\''.$msgdta.'\')	href= javascript:void(0) title=\'Delete\' class="sprite delete" ></a>';
 				$checkbox = '<a id="del{{id}}" name="{{id}}" href="#" ><input type="checkbox" value={{id}} class="check" /></a>';
-				$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 											
 											' . ((in_array('view', $actions_arr) ? $checkbox : '')) . '
 											
-										</div>');
+										</div>'];
 			}
 			//Zend_Debug::dump($dataArray['objectId']);
 			
@@ -1378,16 +1378,16 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 
 				if ($dataArray['objectname'] == 'exitproc')
 					$delete_str = '';
-				$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 											' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 											' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 											' . ((in_array('assign', $actions_arr) ? '' : $assign_questions_str)) . '
 											' . ((in_array('update', $actions_arr) ? '' : $delete_str)) . '
 											
-										</div>');
+										</div>'];
 			}
 		}
-		$extra['options'] = array();
+		$extra['options'] = [];
 		$addaction = '';
 		if (isset($dataArray['add']) && $dataArray['add'] != '') {
 			$addaction = $dataArray['add'];
@@ -1410,7 +1410,7 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 		if (isset($dataArray['categoryName'])) $this->pd_category_name = $dataArray['categoryName'];
 
 		
-		return $this->generateGrid($dataArray['objectId'], $dataArray['objectname'], $dataArray['tableheader'], $paginator, $extra, true, $dataArray['jsGridFnName'], $dataArray['perPage'], $dataArray['pageNo'], $dataArray['jsFillFnName'], $dataArray['searchArray'], $formgridVal, $addaction, $menuName, $unitId, $addpermission, $menunamestr, isset($dataArray['call']) ? $dataArray['call'] : "", $sortStr, isset($dataArray['search_filters']) ? $dataArray['search_filters'] : "", isset($dataArray['dashboardcall']) ? $dataArray['dashboardcall'] : "No", isset($dataArray['empstatus']) ? $dataArray['empstatus'] : "", $actnArr, isset($dataArray['empscreentotalcount']) ? $dataArray['empscreentotalcount'] : "", isset($dataArray['sort']) ? $dataArray['sort'] : "", isset($dataArray['by']) ? $dataArray['by'] : "",isset($dataArray['perm']) ? $dataArray['perm'] : "");
+		return $this->generateGrid($dataArray['objectId'], $dataArray['objectname'], $dataArray['tableheader'], $paginator, $extra, true, $dataArray['jsGridFnName'], $dataArray['perPage'], $dataArray['pageNo'], $dataArray['jsFillFnName'], $dataArray['searchArray'], $formgridVal, $addaction, $menuName, $unitId, $addpermission, $menunamestr, $dataArray['call'] ?? "", $sortStr, $dataArray['search_filters'] ?? "", $dataArray['dashboardcall'] ?? "No", $dataArray['empstatus'] ?? "", $actnArr, $dataArray['empscreentotalcount'] ?? "", $dataArray['sort'] ?? "", $dataArray['by'] ?? "",$dataArray['perm'] ?? "");
 	}
 
 	/**
@@ -1424,7 +1424,7 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 	 * @return string
 	 */
 
-	public function generateGrid($objectId = null, $name, $fields = null, $paginator = null, $extracolumn = array(), $sorting = false, $jsGridFnname = '', $perPage = '5', $page = '1', $jsFillFnName = '', $searchArray = '', $formgrid = 'false', $addaction = '', $menuName = '', $unitId, $addpermission, $menunamestr, $call = '', $sortStr = '', $search_filters = '', $dashboardCall = 'No', $empstatus = '', $actnArr, $empscreenTotalCount = '', $sortname = '', $by = '',$perm='')
+	public function generateGrid($objectId = null, $name = null, $fields = null, $paginator = null, $extracolumn = [], $sorting = false, $jsGridFnname = '', $perPage = '5', $page = '1', $jsFillFnName = '', $searchArray = '', $formgrid = 'false', $addaction = '', $menuName = '', $unitId = null, $addpermission = null, $menunamestr = null, $call = '', $sortStr = '', $search_filters = '', $dashboardCall = 'No', $empstatus = '', $actnArr = null, $empscreenTotalCount = '', $sortname = '', $by = '',$perm='')
 	{
 		
 		$request = Zend_Controller_Front::getInstance();
@@ -1613,7 +1613,7 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 						}
 						$welcome = 'false';
 						$urlString = $_SERVER['REQUEST_URI'];
-						if (strpos($urlString, 'welcome') !== false || strpos($urlString, 'pendingleaves') !== false) {
+						if (str_contains($urlString, 'welcome') || str_contains($urlString, 'pendingleaves')) {
 							$welcome = 'true';
 						}
 						if ($formgrid == 'true') {
@@ -1641,7 +1641,7 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 								$output .= $sortIconStr;
 						} else {
 
-							$output .= "<a href='javascript:void(0);' onclick=javascript:paginationndsorting('" . $this->view->url(array('sort' => $sort, 'by' => $key, 'objname' => $name, 'page' => $page, 'per_page' => $perPage)) . "');>" . $value . "</a>";
+							$output .= "<a href='javascript:void(0);' onclick=javascript:paginationndsorting('" . $this->view->url(['sort' => $sort, 'by' => $key, 'objname' => $name, 'page' => $page, 'per_page' => $perPage]) . "');>" . $value . "</a>";
 							//For Sort Icons....
 							if ($key == $sortStr)
 								$output .= $sortIconStr;
@@ -2194,7 +2194,7 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 		// Attach Pagination
 		if ($paginator) {
 
-			$params = array();
+			$params = [];
 			$params['jsGridFnName'] = $jsGridFnname;
 			$params['perPage'] = $perPage;
 			/* if ($objectId=='overtime') {

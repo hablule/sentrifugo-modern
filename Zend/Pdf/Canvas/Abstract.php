@@ -218,7 +218,7 @@ abstract class Zend_Pdf_Canvas_Abstract implements Zend_Pdf_Canvas_Interface
 
         require_once 'Zend/Pdf/Page.php';
         if ($pattern === Zend_Pdf_Page::LINE_DASHING_SOLID) {
-            $pattern = array();
+            $pattern = [];
             $phase   = 0;
         }
 
@@ -271,7 +271,7 @@ abstract class Zend_Pdf_Canvas_Abstract implements Zend_Pdf_Canvas_Interface
         if ($style->getFont() !== null) {
             $this->setFont($style->getFont(), $style->getFontSize());
         }
-        $this->_contents .= $style->instructions($this->_dictionary->Resources);
+        $this->_contents .= $style->instructions();
 
         $this->_style = $style;
 
@@ -910,12 +910,10 @@ abstract class Zend_Pdf_Canvas_Abstract implements Zend_Pdf_Canvas_Interface
         $this->_addProcSet('PDF');
 
         if(!is_array($radius)) {
-            $radius = array($radius, $radius, $radius, $radius);
+            $radius = [$radius, $radius, $radius, $radius];
         } else {
             for ($i = 0; $i < 4; $i++) {
-                if(!isset($radius[$i])) {
-                    $radius[$i] = 0;
-                }
+                $radius[$i] ??= 0;
             }
         }
 

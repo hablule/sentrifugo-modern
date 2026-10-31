@@ -89,7 +89,7 @@ class Zend_Auth_Result
      * @param  array   $messages
      * @return void
      */
-    public function __construct($code, $identity, array $messages = array())
+    public function __construct($code, $identity, array $messages = [])
     {
         $code = (int) $code;
 

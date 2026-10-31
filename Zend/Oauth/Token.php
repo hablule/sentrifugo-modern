@@ -43,7 +43,7 @@ abstract class Zend_Oauth_Token
      *
      * @var array
      */
-    protected $_params = array();
+    protected $_params = [];
 
     /**
      * OAuth response object
@@ -170,10 +170,7 @@ abstract class Zend_Oauth_Token
      */
     public function getParam($key)
     {
-        if (isset($this->_params[$key])) {
-            return $this->_params[$key];
-        }
-        return null;
+        return $this->_params[$key] ?? null;
     }
 
     /**
@@ -250,7 +247,7 @@ abstract class Zend_Oauth_Token
      */
     protected function _parseParameters(Zend_Http_Response $response)
     {
-        $params = array();
+        $params = [];
         $body   = $response->getBody();
         if (empty($body)) {
             return;
@@ -270,7 +267,7 @@ abstract class Zend_Oauth_Token
      */
     public function __sleep()
     {
-        return array('_params');
+        return ['_params'];
     }
 
     /**

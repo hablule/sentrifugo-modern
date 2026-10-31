@@ -109,7 +109,7 @@ class Zend_Gdata_Gbase_ItemEntry extends Zend_Gdata_Gbase_Entry
     public function save($dryRun = false,
                          $uri = null,
                          $className = null,
-                         $extraHeaders = array())
+                         $extraHeaders = [])
     {
         if ($dryRun == true) {
             $editLink = $this->getEditLink();

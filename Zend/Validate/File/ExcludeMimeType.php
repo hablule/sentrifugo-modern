@@ -51,12 +51,10 @@ class Zend_Validate_File_ExcludeMimeType extends Zend_Validate_File_MimeType
      */
     public function isValid($value, $file = null)
     {
-        if ($file === null) {
-            $file = array(
-                'type' => null,
-                'name' => $value
-            );
-        }
+        $file ??= [
+            'type' => null,
+            'name' => $value
+        ];
 
         // Is file readable ?
         require_once 'Zend/Loader.php';

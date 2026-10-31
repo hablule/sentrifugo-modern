@@ -121,7 +121,7 @@ abstract class Zend_Mail_Protocol_Abstract
      * Log of mail requests and server responses for a session
      * @var array
      */
-    private $_log = array();
+    private $_log = [];
 
 
     /**
@@ -231,7 +231,7 @@ abstract class Zend_Mail_Protocol_Abstract
      */
     public function resetLog()
     {
-        $this->_log = array();
+        $this->_log = [];
     }
 
     /**
@@ -401,19 +401,19 @@ abstract class Zend_Mail_Protocol_Abstract
      */
     protected function _expect($code, $timeout = null)
     {
-        $this->_response = array();
+        $this->_response = [];
         $cmd  = '';
         $more = '';
         $msg  = '';
         $errMsg = '';
 
         if (!is_array($code)) {
-            $code = array($code);
+            $code = [$code];
         }
 
         do {
             $this->_response[] = $result = $this->_receive($timeout);
-            list($cmd, $more, $msg) = preg_split('/([\s-]+)/', $result, 2, PREG_SPLIT_DELIM_CAPTURE);
+            [$cmd, $more, $msg] = preg_split('/([\s-]+)/', $result, 2, PREG_SPLIT_DELIM_CAPTURE);
 
             if ($errMsg !== '') {
                 $errMsg .= ' ' . $msg;
@@ -421,7 +421,7 @@ abstract class Zend_Mail_Protocol_Abstract
                 $errMsg =  $msg;
             }
 
-        } while (strpos($more, '-') === 0); // The '-' message prefix indicates an information string instead of a response string.
+        } while (str_starts_with($more, '-')); // The '-' message prefix indicates an information string instead of a response string.
 
         if ($errMsg !== '') {
             /**

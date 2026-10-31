@@ -100,7 +100,7 @@ class Zend_InfoCard
      */
     public function __construct()
     {
-        $this->_keyPairs = array();
+        $this->_keyPairs = [];
 
         if(!extension_loaded('mcrypt')) {
             require_once 'Zend/InfoCard/Exception.php';
@@ -239,9 +239,9 @@ class Zend_InfoCard
         switch($type) {
             case Zend_InfoCard_Cipher::ENC_RSA:
             case Zend_InfoCard_Cipher::ENC_RSA_OAEP_MGF1P:
-                $this->_keyPairs[$key_id] = array('private' => $private_key_file,
+                $this->_keyPairs[$key_id] = ['private' => $private_key_file,
                                 'public'      => $public_key_file,
-                                'type_uri'    => $type);
+                                'type_uri'    => $type];
 
                 if($password !== null) {
                     $this->_keyPairs[$key_id]['password'] = $password;

@@ -68,7 +68,7 @@ class Zend_View_Helper_Recentlyviewed extends Zend_View_Helper_Abstract
         $pageName = $controllerName;
         $pageLink = $burl;
                                 
-        $reportsArr = array('leavesreport'=>'-'.TAB_EMP_LEAVES,
+        $reportsArr = ['leavesreport'=>'-'.TAB_EMP_LEAVES,
                             'leavemanagementreport'=>'-Leave Management',
                             'holidaygroupreports'=>'-'.TAB_EMP_HOLIDAYS,
                             'activeuser'=>'-Active Users',
@@ -86,8 +86,8 @@ class Zend_View_Helper_Recentlyviewed extends Zend_View_Helper_Abstract
                             'departments'=>'-Departments',
         					'servicedeskreport'=>'-Requests',
         					'performancereport'=>'-Appraisals'
-                );
-        $emptabarr = array(
+                ];
+        $emptabarr = [
                         'dependencydetails'=> TAB_EMP_DEPENDENCY,
                         'creditcarddetails'=> TAB_EMP_CORPORATE_CARD,
                         'visaandimmigrationdetails'=> TAB_EMP_VISA_EMIGRATION,
@@ -115,9 +115,9 @@ class Zend_View_Helper_Recentlyviewed extends Zend_View_Helper_Abstract
                         "userloginlog" => "User Log",
                         "logmanager" => "Activity Log",
                         "empconfiguration" => "Employee Tabs",                                                                
-            );	
+            ];	
            							
-        $myemployees_arr = array(
+        $myemployees_arr = [
                     'view'=> '-View',
                     'trainingview'=> '-'.TAB_EMP_TRAINING_CERTIFY,
                     'comview'=> '-'.TAB_EMP_CONTACT,
@@ -127,9 +127,9 @@ class Zend_View_Helper_Recentlyviewed extends Zend_View_Helper_Abstract
                     'perview'=> '-'.TAB_EMP_PERSONAL,
                     'additionaldetailsview'=> '-'.TAB_EMP_ADDITIONAL,
                     'jobhistoryview'=> '-'.TAB_EMP_JOB_HISTORY,                                                                
-                );
+                ];
                 
-                $myemployeesedit_arr = array(
+                $myemployeesedit_arr = [
                     'edit'=> '-Edit',
                     'trainingedit'=> '-'.TAB_EMP_TRAINING_CERTIFY,
                     'comedit'=> '-'.TAB_EMP_CONTACT,
@@ -139,10 +139,10 @@ class Zend_View_Helper_Recentlyviewed extends Zend_View_Helper_Abstract
                     'peredit'=> '-'.TAB_EMP_PERSONAL,
                     'additionaldetailsedit'=> '-'.TAB_EMP_ADDITIONAL,
                     'jobhistoryedit'=> '-'.TAB_EMP_JOB_HISTORY,                                                                
-                );
+                ];
         
-               	$myDetailsEmployeesarr = array('mydetails','myemployees');																																																																																																																																																																	
-                $mydetails_arr = array(
+               	$myDetailsEmployeesarr = ['mydetails','myemployees'];																																																																																																																																																																	
+                $mydetails_arr = [
                     'communicationdetailsview'=> TAB_EMP_CONTACT.'-View',
                     'communication'=> TAB_EMP_CONTACT.'-Edit',
                     'disabilitydetailsview'=> TAB_EMP_DISABILITY.'-View',
@@ -169,7 +169,7 @@ class Zend_View_Helper_Recentlyviewed extends Zend_View_Helper_Abstract
                     "dependency" => TAB_EMP_DEPENDENCY,
                     "index" => TAB_EMP_OFFICIAL."-View",
                     "edit" => TAB_EMP_OFFICIAL."-Edit",                                                    
-                );
+                ];
 		    	
 		//The Logic used behind this functionality is we are using the object of zend session to store the action
 		$recentlyViewed = new Zend_Session_Namespace('recentlyViewed'); // Creating a new session with namespace
@@ -192,11 +192,11 @@ class Zend_View_Helper_Recentlyviewed extends Zend_View_Helper_Abstract
                     {
                         $pagesplit = $recentlyViewed->recentlyViewedObject[$i];
                         
-                        $pagesplitName = isset($pagesplit['controller_name'])?$pagesplit['controller_name']:"";
-                        $pagesplitLink = isset($pagesplit['url'])?$pagesplit['url']:"";
-                        $pagesplit_action = isset($pagesplit['action_name'])?$pagesplit['action_name']:"";
-                        $pagesplit_idname = isset($pagesplit['id_name'])?$pagesplit['id_name']:"";
-                        $pagesplit_module = isset($pagesplit['module_name'])?$pagesplit['module_name']:"";
+                        $pagesplitName = $pagesplit['controller_name'] ?? "";
+                        $pagesplitLink = $pagesplit['url'] ?? "";
+                        $pagesplit_action = $pagesplit['action_name'] ?? "";
+                        $pagesplit_idname = $pagesplit['id_name'] ?? "";
+                        $pagesplit_module = $pagesplit['module_name'] ?? "";
 						
                         if($pagesplit_module !='timemanagement') 
                         {
@@ -210,8 +210,8 @@ class Zend_View_Helper_Recentlyviewed extends Zend_View_Helper_Abstract
 	                            }
 								else if($pagesplitName == 'policydocuments') //for policy documents
 								{
-									$pagesplit_id = isset($pagesplit['id'])?$pagesplit['id']:"";
-									$pagesplit_cat = isset($pagesplit['cat'])?$pagesplit['cat']:"";
+									$pagesplit_id = $pagesplit['id'] ?? "";
+									$pagesplit_cat = $pagesplit['cat'] ?? "";
 									
 									if($pagesplit_action == 'index')
 									{
@@ -464,11 +464,11 @@ class Zend_View_Helper_Recentlyviewed extends Zend_View_Helper_Abstract
                         if($this->recentlyviewed_helper($pageLink, $recentlyViewed->recentlyViewedObject) === true)
                         {
                             if($controllerName == 'servicerequests')
-                                array_push($recentlyViewed->recentlyViewedObject,array('url' => $burl,'controller_name' => $controllerName,'action_name' => $actionName,'id_name' => $id_name,'t'=> isset($params['t'])?$params['t']:"",'v'=> isset($params['v'])?$params['v']:""));
+                                array_push($recentlyViewed->recentlyViewedObject,['url' => $burl,'controller_name' => $controllerName,'action_name' => $actionName,'id_name' => $id_name,'t'=> $params['t'] ?? "",'v'=> $params['v'] ?? ""]);
                             else if($controllerName == 'policydocuments')
-								array_push($recentlyViewed->recentlyViewedObject,array('url' => $burl,'controller_name' => $controllerName,'action_name' => $actionName,'id_name' => $id_name,'id'=> isset($params['cat'])?$params['cat']:"",'id'=> isset($params['id'])?$params['id']:""));
+								array_push($recentlyViewed->recentlyViewedObject,['url' => $burl,'controller_name' => $controllerName,'action_name' => $actionName,'id_name' => $id_name,'id'=> $params['cat'] ?? "",'id'=> $params['id'] ?? ""]);
 							else 
-                                array_push($recentlyViewed->recentlyViewedObject,array('url' => $burl,'controller_name' => $controllerName,'action_name' => $actionName,'id_name' => $id_name,'module_name'=>$moduleName));
+                                array_push($recentlyViewed->recentlyViewedObject,['url' => $burl,'controller_name' => $controllerName,'action_name' => $actionName,'id_name' => $id_name,'module_name'=>$moduleName]);
                         }
                     }
                 }
@@ -476,17 +476,17 @@ class Zend_View_Helper_Recentlyviewed extends Zend_View_Helper_Abstract
         }
         else
         {
-            $recentlyViewed->recentlyViewedObject = array();                                                
+            $recentlyViewed->recentlyViewedObject = [];                                                
             if($pageLink != BASE_URL && $controllerName !='index' && $actionName != 'welcome'  && $controllerName !='error' && !in_array('PIE.htc', $tmpPageLink))    
             {
                 if($this->recentlyviewed_helper($pageLink, $recentlyViewed->recentlyViewedObject) === true)
                 {
                     if($controllerName == 'servicerequests')
-                        array_push($recentlyViewed->recentlyViewedObject,array('url' => $burl,'controller_name' => $controllerName,'action_name' => $actionName,'id_name' => $id_name,'t'=> isset($params['t'])?$params['t']:"",'v'=> isset($params['v'])?$params['v']:""));
+                        array_push($recentlyViewed->recentlyViewedObject,['url' => $burl,'controller_name' => $controllerName,'action_name' => $actionName,'id_name' => $id_name,'t'=> $params['t'] ?? "",'v'=> $params['v'] ?? ""]);
                     else if($controllerName == 'policydocuments')
-						array_push($recentlyViewed->recentlyViewedObject,array('url' => $burl,'controller_name' => $controllerName,'action_name' => $actionName,'id_name' => $id_name,'id'=> isset($params['cat'])?$params['cat']:"",'id'=> isset($params['id'])?$params['id']:"",'module_name'=>$moduleName));
+						array_push($recentlyViewed->recentlyViewedObject,['url' => $burl,'controller_name' => $controllerName,'action_name' => $actionName,'id_name' => $id_name,'id'=> $params['cat'] ?? "",'id'=> $params['id'] ?? "",'module_name'=>$moduleName]);
 					else 
-                        array_push($recentlyViewed->recentlyViewedObject,array('url' => $burl,'controller_name' => $controllerName,'action_name' => $actionName,'id_name' => $id_name,'module_name'=>$moduleName));
+                        array_push($recentlyViewed->recentlyViewedObject,['url' => $burl,'controller_name' => $controllerName,'action_name' => $actionName,'id_name' => $id_name,'module_name'=>$moduleName]);
                 }
             }
         }

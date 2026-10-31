@@ -79,7 +79,7 @@ class Zend_Search_Lucene_Search_QueryParserContext
      *
      * @var arrays
      */
-    private $_signs = array();
+    private $_signs = [];
 
     /**
      * Query entries
@@ -88,7 +88,7 @@ class Zend_Search_Lucene_Search_QueryParserContext
      *
      * @var array
      */
-    private $_entries = array();
+    private $_entries = [];
 
     /**
      * Query string encoding
@@ -118,7 +118,7 @@ class Zend_Search_Lucene_Search_QueryParserContext
      */
     public function getField()
     {
-        return ($this->_nextEntryField !== null)  ?  $this->_nextEntryField : $this->_defaultField;
+        return $this->_nextEntryField ?? $this->_defaultField;
     }
 
     /**
@@ -266,7 +266,7 @@ class Zend_Search_Lucene_Search_QueryParserContext
         }
 
         foreach ($this->_entries as $entryId => $entry) {
-            $sign = ($this->_signs[$entryId] !== null) ?  $this->_signs[$entryId] : $defaultSign;
+            $sign = $this->_signs[$entryId] ?? $defaultSign;
             $query->addSubquery($entry->getQuery($this->_encoding), $sign);
         }
 
@@ -347,7 +347,7 @@ class Zend_Search_Lucene_Search_QueryParserContext
         }
 
 
-        $subqueries = array();
+        $subqueries = [];
         foreach ($conjuctions as  $conjuction) {
             // Check, if it's a one term conjuction
             if (count($conjuction) == 1) {

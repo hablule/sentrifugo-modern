@@ -76,7 +76,7 @@ class Zend_InfoCard_Xml_SecurityTokenReference extends Zend_InfoCard_Xml_Element
     protected function _getKeyIdentifier()
     {
         $this->registerXPathNamespace('o', 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd');
-        list($keyident) = $this->xpath('//o:KeyIdentifier');
+        [$keyident] = $this->xpath('//o:KeyIdentifier');
 
         if(!($keyident instanceof Zend_InfoCard_Xml_Element)) {
             throw new Zend_InfoCard_Xml_Exception("Failed to retrieve Key Identifier");

@@ -44,7 +44,7 @@ class Zend_Filter_Encrypt_Mcrypt implements Zend_Filter_Encrypt_Interface
      *     'modedirectory' => directory where to find the mode
      * )
      */
-    protected $_encryption = array(
+    protected $_encryption = [
         'key'                 => 'ZendFramework',
         'algorithm'           => 'blowfish',
         'algorithm_directory' => '',
@@ -52,7 +52,7 @@ class Zend_Filter_Encrypt_Mcrypt implements Zend_Filter_Encrypt_Interface
         'mode_directory'      => '',
         'vector'              => null,
         'salt'                => false
-    );
+    ];
 
     /**
      * Internal compression
@@ -78,7 +78,7 @@ class Zend_Filter_Encrypt_Mcrypt implements Zend_Filter_Encrypt_Interface
         if ($options instanceof Zend_Config) {
             $options = $options->toArray();
         } elseif (is_string($options)) {
-            $options = array('key' => $options);
+            $options = ['key' => $options];
         } elseif (!is_array($options)) {
             require_once 'Zend/Filter/Exception.php';
             throw new Zend_Filter_Exception('Invalid options argument provided to filter');
@@ -111,7 +111,7 @@ class Zend_Filter_Encrypt_Mcrypt implements Zend_Filter_Encrypt_Interface
     public function setEncryption($options)
     {
         if (is_string($options)) {
-            $options = array('key' => $options);
+            $options = ['key' => $options];
         }
 
         if (!is_array($options)) {
@@ -137,9 +137,7 @@ class Zend_Filter_Encrypt_Mcrypt implements Zend_Filter_Encrypt_Interface
             throw new Zend_Filter_Exception('The given algorithm can not be used due an internal mcrypt problem');
         }
 
-        if (!isset($options['vector'])) {
-            $options['vector'] = null;
-        }
+        $options['vector'] ??= null;
 
         $this->_encryption = $options;
         $this->setVector($options['vector']);
@@ -211,7 +209,7 @@ class Zend_Filter_Encrypt_Mcrypt implements Zend_Filter_Encrypt_Interface
     public function setCompression($compression)
     {
         if (is_string($this->_compression)) {
-            $compression = array('adapter' => $compression);
+            $compression = ['adapter' => $compression];
         }
 
         $this->_compression = $compression;
@@ -357,7 +355,7 @@ class Zend_Filter_Encrypt_Mcrypt implements Zend_Filter_Encrypt_Interface
         }
 
         if (!self::$_srandCalled) {
-            srand((double) microtime() * 1000000);
+            mt_srand((double) microtime() * 1000000);
             self::$_srandCalled = true;
         }
     }

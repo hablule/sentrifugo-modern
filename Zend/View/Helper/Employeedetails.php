@@ -262,7 +262,7 @@ class Zend_View_Helper_Employeedetails extends Zend_View_Helper_Abstract
 
 	public  function employeetabs($conText, $userId)
 	{
-		$tabconfig = array();
+		$tabconfig = [];
 		$tabHeightClass = "";
 		$session = new Zend_Auth_Storage_Session();
 		$data = $session->read();

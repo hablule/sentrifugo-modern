@@ -88,7 +88,7 @@ class Zend_Pdf_Element_Reference extends Zend_Pdf_Element
      * @param Zend_Pdf_ElementFactory $factory
      * @throws Zend_Pdf_Exception
      */
-    public function __construct($objNum, $genNum = 0, Zend_Pdf_Element_Reference_Context $context, Zend_Pdf_ElementFactory $factory)
+    public function __construct($objNum, $genNum = 0, ?Zend_Pdf_Element_Reference_Context $context = null, ?Zend_Pdf_ElementFactory $factory = null)
     {
         if ( !(is_integer($objNum) && $objNum > 0) ) {
             require_once 'Zend/Pdf/Exception.php';
@@ -198,13 +198,8 @@ class Zend_Pdf_Element_Reference extends Zend_Pdf_Element
         // This code duplicates code in Zend_Pdf_Element_Object class,
         // but allows to avoid unnecessary method call in most cases
         $id = spl_object_hash($this->_ref);
-        if (isset($processed[$id])) {
-            // Do nothing if object is already processed
-            // return it
-            return $processed[$id];
-        }
 
-        return $this->_ref->makeClone($factory, $processed, $mode);
+        return $processed[$id] ?? $this->_ref->makeClone($factory, $processed, $mode);
     }
 
     /**
@@ -276,7 +271,7 @@ class Zend_Pdf_Element_Reference extends Zend_Pdf_Element
             $this->_dereference();
         }
 
-        return call_user_func_array(array($this->_ref, $method), $args);
+        return call_user_func_array([$this->_ref, $method], $args);
     }
 
     /**

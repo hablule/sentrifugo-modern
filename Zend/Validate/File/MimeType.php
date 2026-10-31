@@ -45,18 +45,18 @@ class Zend_Validate_File_MimeType extends Zend_Validate_Abstract
     /**
      * @var array Error message templates
      */
-    protected $_messageTemplates = array(
+    protected $_messageTemplates = [
         self::FALSE_TYPE   => "File '%value%' has a false mimetype of '%type%'",
         self::NOT_DETECTED => "The mimetype of file '%value%' could not be detected",
         self::NOT_READABLE => "File '%value%' is not readable or does not exist",
-    );
+    ];
 
     /**
      * @var array
      */
-    protected $_messageVariables = array(
+    protected $_messageVariables = [
         'type' => '_type'
-    );
+    ];
 
     /**
      * @var string
@@ -90,7 +90,7 @@ class Zend_Validate_File_MimeType extends Zend_Validate_Abstract
      * If no $_ENV['MAGIC'] is set, try and autodiscover it based on common locations
      * @var array
      */
-    protected $_magicFiles = array(
+    protected $_magicFiles = [
         '/usr/share/misc/magic',
         '/usr/share/misc/magic.mime',
         '/usr/share/misc/magic.mgc',
@@ -100,7 +100,7 @@ class Zend_Validate_File_MimeType extends Zend_Validate_Abstract
         '/usr/share/file/magic',
         '/usr/share/file/magic.mime',
         '/usr/share/file/magic.mgc',
-    );
+    ];
 
     /**
      * Option to allow header check
@@ -166,9 +166,7 @@ class Zend_Validate_File_MimeType extends Zend_Validate_Abstract
                 }
             }
 
-            if ($this->_magicfile === null) {
-                $this->_magicfile = false;
-            }
+            $this->_magicfile ??= false;
         }
 
         return $this->_magicfile;
@@ -316,12 +314,10 @@ class Zend_Validate_File_MimeType extends Zend_Validate_Abstract
      */
     public function isValid($value, $file = null)
     {
-        if ($file === null) {
-            $file = array(
-                'type' => null,
-                'name' => $value
-            );
-        }
+        $file ??= [
+            'type' => null,
+            'name' => $value
+        ];
 
         // Is file readable ?
         require_once 'Zend/Loader.php';

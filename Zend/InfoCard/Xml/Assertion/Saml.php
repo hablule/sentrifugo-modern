@@ -104,7 +104,7 @@ class Zend_InfoCard_Xml_Assertion_Saml
                         }
 
                         if(!$found) {
-                            return array($condition, 'Could not find self in allowed audience list');
+                            return [$condition, 'Could not find self in allowed audience list'];
                         }
 
                         break;
@@ -113,7 +113,7 @@ class Zend_InfoCard_Xml_Assertion_Saml
 
                         if($currentTime < $notbeforetime) {
                             if($currentTime + self::CONDITION_TIME_ADJ < $notbeforetime) {
-                                return array($condition, 'Current time is before specified window');
+                                return [$condition, 'Current time is before specified window'];
                             }
                         }
 
@@ -123,7 +123,7 @@ class Zend_InfoCard_Xml_Assertion_Saml
 
                         if($currentTime >= $notonoraftertime) {
                             if($currentTime - self::CONDITION_TIME_ADJ >= $notonoraftertime) {
-                                return array($condition, 'Current time is after specified window');
+                                return [$condition, 'Current time is after specified window'];
                             }
                         }
 
@@ -204,13 +204,13 @@ class Zend_InfoCard_Xml_Assertion_Saml
     public function getConditions()
     {
 
-        list($conditions) = $this->xpath("//saml:Conditions");
+        [$conditions] = $this->xpath("//saml:Conditions");
 
         if(!($conditions instanceof Zend_InfoCard_Xml_Element)) {
             throw new Zend_InfoCard_Xml_Exception("Unable to find the saml:Conditions block");
         }
 
-        $retval = array();
+        $retval = [];
 
         foreach($conditions->children('urn:oasis:names:tc:SAML:1.0:assertion') as $key => $value) {
             switch($key) {
@@ -254,7 +254,7 @@ class Zend_InfoCard_Xml_Assertion_Saml
      */
     public function getConfirmationMethod()
     {
-        list($confirmation) = $this->xPath("//saml:ConfirmationMethod");
+        [$confirmation] = $this->xPath("//saml:ConfirmationMethod");
         return (string)$confirmation;
     }
 
@@ -267,7 +267,7 @@ class Zend_InfoCard_Xml_Assertion_Saml
     {
         $attributes = $this->xPath('//saml:Attribute');
 
-        $retval = array();
+        $retval = [];
         foreach($attributes as $key => $value) {
 
             $retkey = (string)$value['AttributeNamespace'].'/'.(string)$value['AttributeName'];
@@ -275,7 +275,7 @@ class Zend_InfoCard_Xml_Assertion_Saml
             $retval[$retkey]['name'] = (string)$value['AttributeName'];
             $retval[$retkey]['namespace'] = (string)$value['AttributeNamespace'];
 
-            list($aValue) = $value->children('urn:oasis:names:tc:SAML:1.0:assertion');
+            [$aValue] = $value->children('urn:oasis:names:tc:SAML:1.0:assertion');
             $retval[$retkey]['value'] = (string)$aValue;
         }
 

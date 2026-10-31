@@ -91,10 +91,10 @@ abstract class Zend_Test_PHPUnit_DatabaseTestCase extends PHPUnit_Extensions_Dat
      */
     protected function getSetUpOperation()
     {
-        return new PHPUnit_Extensions_Database_Operation_Composite(array(
+        return new PHPUnit_Extensions_Database_Operation_Composite([
             new Zend_Test_PHPUnit_Db_Operation_Truncate(),
             new Zend_Test_PHPUnit_Db_Operation_Insert(),
-        ));
+        ]);
     }
 
     /**
@@ -113,7 +113,7 @@ abstract class Zend_Test_PHPUnit_DatabaseTestCase extends PHPUnit_Extensions_Dat
      * @param  array $tables
      * @return Zend_Test_PHPUnit_Db_DataSet_DbTableDataSet
      */
-    protected function createDbTableDataSet(array $tables=array())
+    protected function createDbTableDataSet(array $tables=[])
     {
         $dataSet = new Zend_Test_PHPUnit_Db_DataSet_DbTableDataSet();
         foreach($tables AS $table) {

@@ -40,7 +40,7 @@ require_once 'Zend/Mime/Part.php';
 class Zend_Mime_Message
 {
 
-    protected $_parts = array();
+    protected $_parts = [];
     protected $_mime = null;
 
     /**
@@ -110,9 +110,7 @@ class Zend_Mime_Message
      */
     public function getMime()
     {
-        if ($this->_mime === null) {
-            $this->_mime = new Zend_Mime();
-        }
+        $this->_mime ??= new Zend_Mime();
 
         return $this->_mime;
     }
@@ -202,14 +200,14 @@ class Zend_Mime_Message
     protected static function _disassembleMime($body, $boundary)
     {
         $start = 0;
-        $res = array();
+        $res = [];
         // find every mime part limiter and cut out the
         // string before it.
         // the part before the first boundary string is discarded:
         $p = strpos($body, '--'.$boundary."\n", $start);
         if ($p === false) {
             // no parts found!
-            return array();
+            return [];
         }
 
         // position after first boundary line

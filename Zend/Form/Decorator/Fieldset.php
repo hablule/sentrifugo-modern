@@ -40,13 +40,13 @@ class Zend_Form_Decorator_Fieldset extends Zend_Form_Decorator_Abstract
      * Attribs that should be removed prior to rendering
      * @var array
      */
-    public $stripAttribs = array(
+    public $stripAttribs = [
         'action',
         'enctype',
         'helper',
         'method',
         'name',
-    );
+    ];
 
     /**
      * Fieldset legend

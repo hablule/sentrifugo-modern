@@ -27,7 +27,7 @@
 class Zend_View_Helper_Gridtm extends Zend_View_Helper_Abstract {
 
 	public $view = null;
-	public $extra = array();
+	public $extra = [];
 	private $output; // Container to hold the Grid
 	private $encrypt_status = "no";
 	private $moduleName;
@@ -57,7 +57,7 @@ class Zend_View_Helper_Gridtm extends Zend_View_Helper_Abstract {
 		$session=new Zend_Auth_Storage_Session();
 		$data=$session->read();
 		
-		$menunamestr = '';$sortStr ='';$actnArr = array();
+		$menunamestr = '';$sortStr ='';$actnArr = [];
 		$sortStr = $dataArray['by'];
 		
 		
@@ -69,9 +69,9 @@ class Zend_View_Helper_Gridtm extends Zend_View_Helper_Abstract {
 		if($this->moduleName=='expenses/')
 			$actions_arr = $controllers_arr[$actionsobjname."controller.php"]['actions'];
 		else 
-			$actions_arr = array('add','edit','delete','view');//$controllers_arr[$actionsobjname."controller.php"]['actions'];
+			$actions_arr = ['add','edit','delete','view'];//$controllers_arr[$actionsobjname."controller.php"]['actions'];
 
-		$gridFieldsArr=array();$tmpActionsArr=array();
+		$gridFieldsArr=[];$tmpActionsArr=[];
 		$tmpActionsArr = $actions_arr;
 		array_pop($tmpActionsArr);	//last element of actions array is menuname so delete that & check the privileges are empty or not...
 
@@ -134,14 +134,14 @@ class Zend_View_Helper_Gridtm extends Zend_View_Helper_Abstract {
 
 			if(!in_array('view',$actions_arr) && !in_array('edit',$actions_arr) && !in_array('delete',$actions_arr))
 			{
-				$extra['action'] =array();
+				$extra['action'] =[];
 			}else
 			{
-				$extra['action'] = array('name' => 'edit', 'value' =>'<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' =>'<div class="grid-action-align">
 									'.((in_array('view',$actions_arr)?$viewpopup_str:'')).'
 									'.((in_array('edit',$actions_arr)?$editpopup_str:'')).'
 									'.((in_array('delete',$actions_arr)?$deletepopup_str:'')).'
-								</div>'); 
+								</div>']; 
 			}
 
 
@@ -181,16 +181,16 @@ if($dataArray['objectname']=='employeeadvances')
 
 			if(!in_array('view',$actions_arr) && !in_array('edit',$actions_arr) && !in_array('delete',$actions_arr))
 			{
-				$extra['action'] =array();
+				$extra['action'] =[];
 			}else
 			{
 			
 			
-				$extra['action'] = array('name' => 'edit', 'value' =>'<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' =>'<div class="grid-action-align">
 										'.((in_array('view',$actions_arr)?$view_str:'')).'
 										'.((in_array('edit',$actions_arr)?$edit_str:'')).'
 										'.((in_array('delete',$actions_arr)?$delete_str:'')).'
-									</div>');
+									</div>'];
 			
 				if($dataArray['objectname']=="assettype" || $dataArray['objectname']=="assets" || $dataArray['objectname']=="assetcategory" || $dataArray['objectname']=="uom" || $dataArray['objectname']=="assetinstant")		
 				{
@@ -198,9 +198,9 @@ if($dataArray['objectname']=='employeeadvances')
 					$view_str = '<a href= "'.BASE_URL.$this->moduleName.$dataArray['objectname'].'/view/id/{{id}}" name="{{id}}" class="sprite view"  title=\'View\'></a>';
 					$edit_str = '<a href= "'.BASE_URL.$this->moduleName.$dataArray['objectname'].'/edit/id/{{id}}" name="{{id}}" class="sprite edit"  title=\'Edit\'></a>';
 
-                   $extra['action'] = array('name' => 'edit', 'value' =>'<div class="grid-action-align">
+                   $extra['action'] = ['name' => 'edit', 'value' =>'<div class="grid-action-align">
 										'.((in_array('edit',$actions_arr)?$edit_str:'')).'
-									</div>');
+									</div>'];
 				}
 				// if($dataArray['objectname']=="assets")		
 				// {
@@ -226,18 +226,18 @@ if($dataArray['objectname']=='employeeadvances')
 				{
 						
 				 // $view_str='';
-					$extra['action'] = array('name' => 'edit', 'value' =>'<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' =>'<div class="grid-action-align">
 										'.((in_array('view',$actions_arr)?$view_str:'' )).'
 										'.((in_array('edit',$actions_arr)?$edit_str:'')).'
 										'.((in_array('delete',$actions_arr)?$delete_str:'')).'
-									</div>');
+									</div>'];
 				}
 	
 //onclick ="javascript:editlocdata(\'{{id}}\')" 
 				$sub = '';
 				if($dataArray['objectname']=='expenses' && $menuName == 'Expenses')
 				$sub = '<span id=\'expense_status-{{id}}\' onclick="submitExpense(\'{{id}}\')" class="submitexpense">Sub</span>&nbsp;';
-				$extra['att'] = array('name'=>'Options','value'=>$sub.'
+				$extra['att'] = ['name'=>'Options','value'=>$sub.'
 																<span id=\'attachment-{{id}}\' onclick="downloadAttachment(\'{{id}}\')" class="attachment">Att</span>&nbsp;
 																<span id=\'note-{{id}}\' onclick= "openNotes(\'{{note}}\')" class="notes">Notes</span>
 																<script> if(\'{{receipt_file}}\' == \'\') $("#attachment-{{id}}").attr("style","visibility:hidden;");
@@ -245,13 +245,13 @@ if($dataArray['objectname']=='employeeadvances')
 																		if(\'{{expense_status}}\' != \'saved\') $("#expense_status-{{id}}").attr("style","visibility:hidden;");
 																</script>
 																
-																');
-				$extra['acc'] = array('name'=>'Options','value'=>'<span id=\'acc_expense_status-{{id}}\' class="{{expense_status}} capitalize"><span class="expense_approve" onclick="updateExpenseStatus(\'{{id}}\',1)">Appr</span>   <span class="expense_reject" onclick="updateExpenseStatusPopup(\'{{id}}\',0)">Rej</span></span>&nbsp;
+																'];
+				$extra['acc'] = ['name'=>'Options','value'=>'<span id=\'acc_expense_status-{{id}}\' class="{{expense_status}} capitalize"><span class="expense_approve" onclick="updateExpenseStatus(\'{{id}}\',1)">Appr</span>   <span class="expense_reject" onclick="updateExpenseStatusPopup(\'{{id}}\',0)">Rej</span></span>&nbsp;
 																<script> 
 																		if(\'{{expense_status}}\' != \'submitted\') $("#acc_expense_status-{{id}}").html("{{expense_status}}");
 																</script>
 																
-																');				
+																'];				
 			}
 		}
 
@@ -270,11 +270,11 @@ if($dataArray['objectname']=='employeeadvances')
 					$view_str = '<a href= "'.BASE_URL.$dataArray['objectname'].'/view/id/{{id}}" name="{{id}}" class="sprite view"  title=\'View\'></a>';
 					
 					
-					$extra['action'] = array('name' => 'edit', 'value' =>'<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' =>'<div class="grid-action-align">
 										'.((in_array('view',$actions_arr)?$view_str:'')).'
 										'.((in_array('edit',$actions_arr)?$edit_str:'')).'
 										'.((in_array('delete',$actions_arr)?$delete_str:'')).'
-									</div>');
+									</div>'];
 					
 					
 					
@@ -296,11 +296,11 @@ if($dataArray['objectname']=='employeeadvances')
 					$view_str = '<a href= "'.BASE_URL.$dataArray['objectname'].'/view/id/{{id}}" name="{{id}}" class="sprite view"  title=\'View\'></a>';
 					
 					
-					$extra['action'] = array('name' => 'edit', 'value' =>'<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' =>'<div class="grid-action-align">
 										'.((in_array('view',$actions_arr)?$view_str:'')).'
 										'.((in_array('edit',$actions_arr)?$edit_str:'')).'
 										'.((in_array('delete',$actions_arr)?$delete_str:'')).'
-									</div>');
+									</div>'];
 					
 					
 					
@@ -309,7 +309,7 @@ if($dataArray['objectname']=='employeeadvances')
 				
 			} 
 
-		$extra['options'] = array();
+		$extra['options'] = [];
 		$addaction= '';
 		if(isset($dataArray['add']) && $dataArray['add'] !='')
 		{
@@ -335,16 +335,16 @@ if($dataArray['objectname']=='employeeadvances')
 		
 		return $this->generateGridTm($dataArray['objectname'],$dataArray['tableheader'],$paginator,$extra,true,$dataArray['jsGridFnName'], 
 		$dataArray['perPage'],$dataArray['pageNo'],$dataArray['jsFillFnName'],$dataArray['searchArray'],$formgridVal,$addaction,$menuName,$unitId,$addpermission,$menunamestr,
-		isset($dataArray['call'])?$dataArray['call']:"",$sortStr,
-		isset($dataArray['search_filters'])?$dataArray['search_filters']:"",
-		isset($dataArray['dashboardcall'])?$dataArray['dashboardcall']:"No",
-		isset($dataArray['empstatus'])?$dataArray['empstatus']:"",$actnArr,
-		isset($dataArray['empscreentotalcount'])?$dataArray['empscreentotalcount']:"",
-		isset($dataArray['sort'])?$dataArray['sort']:"",isset($dataArray['by'])?$dataArray['by']:"",
-		isset($dataArray['projectId'])?$dataArray['projectId']:"",$otherAction,
-		isset($dataArray['start_date'])?$dataArray['start_date']:"",
-		isset($dataArray['end_date'])?$dataArray['end_date']:"",
-		isset($dataArray['emp_id'])?$dataArray['emp_id']:"");
+		$dataArray['call'] ?? "",$sortStr,
+		$dataArray['search_filters'] ?? "",
+		$dataArray['dashboardcall'] ?? "No",
+		$dataArray['empstatus'] ?? "",$actnArr,
+		$dataArray['empscreentotalcount'] ?? "",
+		$dataArray['sort'] ?? "",$dataArray['by'] ?? "",
+		$dataArray['projectId'] ?? "",$otherAction,
+		$dataArray['start_date'] ?? "",
+		$dataArray['end_date'] ?? "",
+		$dataArray['emp_id'] ?? "");
 
 	}
 
@@ -359,9 +359,9 @@ if($dataArray['objectname']=='employeeadvances')
 	 * @return string
 	 */
 //,$start_date,$end_date,$emp_id
-	public function generateGridTm ($name, $fields = null,$paginator=null,$extracolumn=array(),$sorting=false,$jsGridFnname='', $perPage='5',
-		$page='1', $jsFillFnName='',$searchArray='',$formgrid='false',$addaction='',$menuName='',$unitId,$addpermission,$menunamestr,$call='',
-		$sortStr='',$search_filters = '',$dashboardCall = 'No',$empstatus = '',$actnArr,$empscreenTotalCount = '',$sortname='',$by='',
+	public function generateGridTm ($name, $fields = null,$paginator=null,$extracolumn=[],$sorting=false,$jsGridFnname='', $perPage='5',
+		$page='1', $jsFillFnName='',$searchArray='',$formgrid='false',$addaction='',$menuName='',$unitId = null,$addpermission = null,$menunamestr = null,$call='',
+		$sortStr='',$search_filters = '',$dashboardCall = 'No',$empstatus = '',$actnArr = null,$empscreenTotalCount = '',$sortname='',$by='',
 		$projectId = '',$otherAction = '',$start_date = '',$end_date = '',$emp_id = '') {
 			
 		$request = Zend_Controller_Front::getInstance();
@@ -522,7 +522,7 @@ if($dataArray['objectname']=='employeeadvances')
 						$welcome = 'false';
 						$urlString = $_SERVER['REQUEST_URI'];
 						
-						if (strpos($urlString,'projects') !== false && $otherAction != 'projectsreports') {
+						if (str_contains($urlString,'projects') && $otherAction != 'projectsreports') {
 							$welcome = 'true';
 						}
 						
@@ -543,7 +543,7 @@ if($dataArray['objectname']=='employeeadvances')
 						}
 						else
 						{ 
-							$output .= "<a href='javascript:void(0);' onclick=javascript:paginationndsorting('".$this->view->url(array('sort'=>$sort,'by'=>$key,'objname'=> $name,'page' => $page,'per_page'=>$perPage))."',\"$projectId\",\"$otherAction\",\"$start_date\",\"$end_date\",\"$emp_id\");>".$value."</a>";
+							$output .= "<a href='javascript:void(0);' onclick=javascript:paginationndsorting('".$this->view->url(['sort'=>$sort,'by'=>$key,'objname'=> $name,'page' => $page,'per_page'=>$perPage])."',\"$projectId\",\"$otherAction\",\"$start_date\",\"$end_date\",\"$emp_id\");>".$value."</a>";
 							//For Sort Icons....
 							if($key == $sortStr)
 							$output .= $sortIconStr;
@@ -913,7 +913,7 @@ if($dataArray['objectname']=='employeeadvances')
 		// Attach Pagination
 		if($paginator) {
 
-			$params = array();
+			$params = [];
 			$params['jsGridFnName'] = $jsGridFnname;
 			$params['perPage'] = $perPage;
 			$params['objname'] = $name;

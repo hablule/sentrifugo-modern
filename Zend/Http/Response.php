@@ -39,7 +39,7 @@ class Zend_Http_Response
      *
      * @var array
      */
-    protected static $messages = array(
+    protected static $messages = [
         // Informational 1xx
         100 => 'Continue',
         101 => 'Switching Protocols',
@@ -91,7 +91,7 @@ class Zend_Http_Response
         504 => 'Gateway Timeout',
         505 => 'HTTP Version Not Supported',
         509 => 'Bandwidth Limit Exceeded'
-    );
+    ];
 
     /**
      * The HTTP version (1.0, 1.1)
@@ -120,7 +120,7 @@ class Zend_Http_Response
      *
      * @var array
      */
-    protected $headers = array();
+    protected $headers = [];
 
     /**
      * The HTTP response body
@@ -494,7 +494,7 @@ class Zend_Http_Response
      */
     public static function extractHeaders($response_str)
     {
-        $headers = array();
+        $headers = [];
 
         // First, split body and headers
         $parts = preg_split('|(?:\r?\n){2}|m', $response_str, 2);
@@ -517,7 +517,7 @@ class Zend_Http_Response
 
                 if (isset($headers[$h_name])) {
                     if (! is_array($headers[$h_name])) {
-                        $headers[$h_name] = array($headers[$h_name]);
+                        $headers[$h_name] = [$headers[$h_name]];
                     }
 
                     $headers[$h_name][] = $h_value;
@@ -527,8 +527,7 @@ class Zend_Http_Response
                 $last_header = $h_name;
             } elseif (preg_match("|^\s+(.+)$|", $line, $m) && $last_header !== null) {
                 if (is_array($headers[$last_header])) {
-                    end($headers[$last_header]);
-                    $last_header_key = key($headers[$last_header]);
+                    $last_header_key = array_key_last($headers[$last_header]);
                     $headers[$last_header][$last_header_key] .= $m[1];
                 } else {
                     $headers[$last_header] .= $m[1];
@@ -548,10 +547,7 @@ class Zend_Http_Response
     public static function extractBody($response_str)
     {
         $parts = preg_split('|(?:\r?\n){2}|m', $response_str, 2);
-        if (isset($parts[1])) {
-            return $parts[1];
-        }
-        return '';
+        return $parts[1] ?? '';
     }
 
     /**

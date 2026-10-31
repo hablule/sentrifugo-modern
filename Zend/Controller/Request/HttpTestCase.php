@@ -39,7 +39,7 @@ class Zend_Controller_Request_HttpTestCase extends Zend_Controller_Request_Http
      * Request headers
      * @var array
      */
-    protected $_headers = array();
+    protected $_headers = [];
 
     /**
      * Request method
@@ -57,14 +57,14 @@ class Zend_Controller_Request_HttpTestCase extends Zend_Controller_Request_Http
      * Valid request method types
      * @var array
      */
-    protected $_validMethodTypes = array(
+    protected $_validMethodTypes = [
         'DELETE',
         'GET',
         'HEAD',
         'OPTIONS',
         'POST',
         'PUT',
-    );
+    ];
 
     /**
      * Clear GET values
@@ -73,7 +73,7 @@ class Zend_Controller_Request_HttpTestCase extends Zend_Controller_Request_Http
      */
     public function clearQuery()
     {
-        $_GET = array();
+        $_GET = [];
         return $this;
     }
 
@@ -84,7 +84,7 @@ class Zend_Controller_Request_HttpTestCase extends Zend_Controller_Request_Http
      */
     public function clearPost()
     {
-        $_POST = array();
+        $_POST = [];
         return $this;
     }
 
@@ -155,7 +155,7 @@ class Zend_Controller_Request_HttpTestCase extends Zend_Controller_Request_Http
      */
     public function clearCookies()
     {
-        $_COOKIE = array();
+        $_COOKIE = [];
         return $this;
     }
 
@@ -247,7 +247,7 @@ class Zend_Controller_Request_HttpTestCase extends Zend_Controller_Request_Http
      */
     public function clearHeaders()
     {
-        $this->_headers = array();
+        $this->_headers = [];
         return $this;
     }
 

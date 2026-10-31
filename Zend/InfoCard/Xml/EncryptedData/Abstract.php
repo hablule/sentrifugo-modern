@@ -68,7 +68,7 @@ abstract class Zend_InfoCard_Xml_EncryptedData_Abstract extends Zend_InfoCard_Xm
          * EncryptionMethod block is the correct one (the AES or compariable symetric algorithm)..
          * the second is the PK method if provided.
          */
-        list($encryption_method) = $this->xpath("//enc:EncryptionMethod");
+        [$encryption_method] = $this->xpath("//enc:EncryptionMethod");
 
         if(!($encryption_method instanceof Zend_InfoCard_Xml_Element)) {
             throw new Zend_InfoCard_Xml_Exception("Unable to find the enc:EncryptionMethod symmetric encryption block");
@@ -88,5 +88,5 @@ abstract class Zend_InfoCard_Xml_EncryptedData_Abstract extends Zend_InfoCard_Xm
      *
      * @return string the value of the encrypted CipherValue block
      */
-    abstract function getCipherValue();
+    abstract public function getCipherValue();
 }

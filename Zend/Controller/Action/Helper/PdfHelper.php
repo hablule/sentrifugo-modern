@@ -1,7 +1,7 @@
 <?php
 class Zend_Controller_Action_Helper_PdfHelper extends Zend_Controller_Action_Helper_Abstract{
 
-	public function generateReport($field_names, $field_data, $field_widths, $data=array()){
+	public function generateReport($field_names, $field_data, $field_widths, $data=[]){
 		try{
 			$main_heading = '';
 			//require('mc_table.php');
@@ -16,7 +16,7 @@ class Zend_Controller_Action_Helper_PdfHelper extends Zend_Controller_Action_Hel
 
 				if(!empty($data['project_name'])){
 					$main_heading .= $data['project_name'];
-					$pdf->Row(array($main_heading), $data);
+					$pdf->Row([$main_heading], $data);
 				}
 
 			}elseif(isset($data['pdf_object'])){
@@ -42,7 +42,7 @@ class Zend_Controller_Action_Helper_PdfHelper extends Zend_Controller_Action_Hel
 			$pdf->SetFont('Arial','',9);
 			//Table with 20 rows and 4 columns
 			$pdf->SetWidths($field_widths);
-			srand(microtime()*1000000);
+			mt_srand(microtime()*1000000);
 
 			// Header
 			// Colors, line width and bold font
@@ -72,7 +72,7 @@ class Zend_Controller_Action_Helper_PdfHelper extends Zend_Controller_Action_Hel
 
 			if($field_data){
 				foreach($field_data as $rec){
-					$row_values = array();
+					$row_values = [];
 					foreach($field_names as $field_name){
 						if(isset($field_name['field_name'])){
 							if(isset($data['field_value_align'])){
@@ -138,16 +138,16 @@ require_once('FPDF/fpdf.php');
 
 class PDF_MC_Table extends FPDF
 {
-	var $widths;
-	var $aligns;
+	public $widths;
+	public $aligns;
 
 	// Custom code
-	var $fill='D';
+	public $fill='D';
 	public $field_names;
-	public $field_name_align = array();
-	public $field_value_align = array();
+	public $field_name_align = [];
+	public $field_value_align = [];
 	
-	function Header()
+	public function Header()
 	{
 		if(isset($this->field_names)){
 			// Reset values for table header
@@ -166,20 +166,20 @@ class PDF_MC_Table extends FPDF
 		}
 	}
 
-	function SetWidths($w)
+	public function SetWidths($w)
 	{
 		//Set the array of column widths
 		$this->widths=$w;
 	}
 
-	function SetAligns($a)
+	public function SetAligns($a)
 	{
 		//Set the array of column alignments
 		$this->aligns=$a;
 	}
 
 	//function Row($data) - Original definition
-	function Row($data, $style=array())
+	public function Row($data, $style=[])
 	{
 		//Calculate the height of the row
 		$nb=0;
@@ -194,7 +194,7 @@ class PDF_MC_Table extends FPDF
 		{
 			$w=$this->widths[$i];
 
-			$a=isset($this->aligns[$i]) ? $this->aligns[$i] : 'L';
+			$a=$this->aligns[$i] ?? 'L';
 
 			//Save the current position
 			$x=$this->GetX();
@@ -216,14 +216,14 @@ class PDF_MC_Table extends FPDF
 		$this->Ln($h);
 	}
 
-	function CheckPageBreak($h)
+	public function CheckPageBreak($h)
 	{
 		//If the height h would cause an overflow, add a new page immediately
 		if($this->GetY()+$h>$this->PageBreakTrigger)
 		$this->AddPage($this->CurOrientation);
 	}
 
-	function NbLines($w,$txt)
+	public function NbLines($w,$txt)
 	{
 		//Computes the number of lines a MultiCell of width w will take
 		$cw=&$this->CurrentFont['cw'];

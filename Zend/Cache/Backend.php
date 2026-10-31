@@ -41,18 +41,18 @@ class Zend_Cache_Backend
      *
      * @var array directives
      */
-    protected $_directives = array(
+    protected $_directives = [
         'lifetime' => 3600,
         'logging'  => false,
         'logger'   => null
-    );
+    ];
 
     /**
      * Available options
      *
      * @var array available options
      */
-    protected $_options = array();
+    protected $_options = [];
 
     /**
      * Constructor
@@ -61,9 +61,9 @@ class Zend_Cache_Backend
      * @throws Zend_Cache_Exception
      * @return void
      */
-    public function __construct(array $options = array())
+    public function __construct(array $options = [])
     {
-        while (list($name, $value) = each($options)) {
+        foreach ($options as $name => $value) {
             $this->setOption($name, $value);
         }
     }
@@ -78,7 +78,7 @@ class Zend_Cache_Backend
     public function setDirectives($directives)
     {
         if (!is_array($directives)) Zend_Cache::throwException('Directives parameter must be an array');
-        while (list($name, $value) = each($directives)) {
+        foreach ($directives as $name => $value) {
             if (!is_string($name)) {
                 Zend_Cache::throwException("Incorrect option name : $name");
             }
@@ -86,7 +86,6 @@ class Zend_Cache_Backend
             if (array_key_exists($name, $this->_directives)) {
                 $this->_directives[$name] = $value;
             }
-
         }
 
         $this->_loggerSanity();
@@ -151,9 +150,9 @@ class Zend_Cache_Backend
      */
     public function getTmpDir()
     {
-        $tmpdir = array();
-        foreach (array($_ENV, $_SERVER) as $tab) {
-            foreach (array('TMPDIR', 'TEMP', 'TMP', 'windir', 'SystemRoot') as $key) {
+        $tmpdir = [];
+        foreach ([$_ENV, $_SERVER] as $tab) {
+            foreach (['TMPDIR', 'TEMP', 'TMP', 'windir', 'SystemRoot'] as $key) {
                 if (isset($tab[$key])) {
                     if (($key == 'windir') or ($key == 'SystemRoot')) {
                         $dir = realpath($tab[$key] . '\\temp');
@@ -180,7 +179,7 @@ class Zend_Cache_Backend
             }
         }
         // Attemp to detect by creating a temporary file
-        $tempFile = tempnam(md5(uniqid(rand(), TRUE)), '');
+        $tempFile = tempnam(md5(uniqid(random_int(0, mt_getrandmax()), TRUE)), '');
         if ($tempFile) {
             $dir = realpath(dirname($tempFile));
             unlink($tempFile);

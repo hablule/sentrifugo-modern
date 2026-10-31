@@ -38,10 +38,10 @@ class Zend_View_Helper_Menubuilder extends Zend_View_Helper_Abstract
 	public $strMenuName = '';
 	public $src = '';
 	public $menu_name = '';
-	public $tmpMenuDataArr = array();
+	public $tmpMenuDataArr = [];
 	public $view = null;
 
-	public $extra = array();
+	public $extra = [];
 
 	private $output; // Container to hold the Grid
 
@@ -57,7 +57,7 @@ class Zend_View_Helper_Menubuilder extends Zend_View_Helper_Abstract
 	 **	3. builds the menu tree html
 	 **	4. con = settings for settings menu
 	 **/
-	public function menubuilder($con = "", $userRole = 2, $flag = "", $usergroup, $style)
+	public function menubuilder($con = "", $userRole = 2, $flag = "", $usergroup = null, $style = null)
 	{
 
 		$uploadPath = BASE_URL . 'public/media/images/menuIcons/';
@@ -86,7 +86,7 @@ class Zend_View_Helper_Menubuilder extends Zend_View_Helper_Abstract
 		$active_menus = $menu_model->getisactivemenus();
 		//Zend_Debug::dump($active_menus);
 
-		$act_menus = array();
+		$act_menus = [];
 		if (!empty($active_menus)) {
 			foreach ($active_menus as $act) {
 				$act_menus[$act['id']] = $act;
@@ -123,7 +123,7 @@ class Zend_View_Helper_Menubuilder extends Zend_View_Helper_Abstract
 
 		 ******* removing icons in the menu 07-08-2015 - END - ***/
 
-		$parent_menu_class = array(
+		$parent_menu_class = [
 			SITECONFIGURATION => '',
 			EMPLOYEECONFIGURATION => "",
 			SITEPREFERENCE => "",
@@ -148,8 +148,8 @@ class Zend_View_Helper_Menubuilder extends Zend_View_Helper_Abstract
 			EXPENSES => "",
 			ASSETS => "",
 			DISCIPLINARY => ""
-		);
-		$parent_menu_selected_class = array(
+		];
+		$parent_menu_selected_class = [
 			SITECONFIGURATION => '',
 			EMPLOYEECONFIGURATION => "",
 			SITEPREFERENCE => "",
@@ -174,9 +174,9 @@ class Zend_View_Helper_Menubuilder extends Zend_View_Helper_Abstract
 			ASSETS => "",
 			DISCIPLINARY => "",
 			SCHEDULE => ""
-		);
+		];
 
-		$tour_menu_class = array(
+		$tour_menu_class = [
 			SITECONFIGURATION => 'tour_siteconfiguration',
 			EMPLOYEECONFIGURATION => "tour_employeeconfigurations",
 			SITEPREFERENCE => "tour_sitepreferences",
@@ -200,7 +200,7 @@ class Zend_View_Helper_Menubuilder extends Zend_View_Helper_Abstract
 			RESUME => "tour_resume",
 			PAYROLL => "tour_payroll",
 			ATTENDANCE => "tour_attendance"
-		);
+		];
 
 
 		$childs_menu = "<div class='hovermenudiv'>";
@@ -560,7 +560,7 @@ class Zend_View_Helper_Menubuilder extends Zend_View_Helper_Abstract
 		//Zend_Debug::dump($childs_menu);
 		//$this->menubuilders($menuarr);
 
-		return array('parent_menu' => $parent_menu, 'parent_menu2' => $parent_menu2, 'childs_menu' => $childs_menu, 'testmenu' => $testmenu, 'dropdownstyle' => $dropdownstyle);
+		return ['parent_menu' => $parent_menu, 'parent_menu2' => $parent_menu2, 'childs_menu' => $childs_menu, 'testmenu' => $testmenu, 'dropdownstyle' => $dropdownstyle];
 	}
 
 	public function menubuilders($menuarr)
@@ -659,12 +659,12 @@ class Zend_View_Helper_Menubuilder extends Zend_View_Helper_Abstract
 	}
 	public  function getMenuIdsByRole($userRole)
 	{
-		$privelegesMenuIds = array();
+		$privelegesMenuIds = [];
 		$selectQuery = "select p.object from main_privileges p where p.isactive =1 and p.role = " . $userRole;
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$sql = $db->query($selectQuery);
 		$result = $sql->fetchAll();
-		$tmpArr = array();
+		$tmpArr = [];
 		foreach ($result as $sub) {
 			$tmpArr[] = implode(',', $sub);
 		}
@@ -711,7 +711,7 @@ class Zend_View_Helper_Menubuilder extends Zend_View_Helper_Abstract
 					$menuName = $menuDetailsArr[$s]['menuName'];
 					$tmpMenuUrl = $menuDetailsArr[$s]['url'];
 
-					if ($tmpMenuUrl && (strpos($tmpMenuUrl, 'http://') === false || strpos($tmpMenuUrl, 'http://') === false  || strpos($tmpMenuUrl, 'http://') === false)) {
+					if ($tmpMenuUrl && (!str_contains($tmpMenuUrl, 'http://') || !str_contains($tmpMenuUrl, 'http://')  || !str_contains($tmpMenuUrl, 'http://'))) {
 						$menuUrl = BASE_URL . substr($tmpMenuUrl, 1, strlen($tmpMenuUrl));
 					} else if (strpos($tmpMenuUrl, 'http://') === true || strpos($tmpMenuUrl, 'http://') === true  || strpos($tmpMenuUrl, 'http://') === true)
 						$menuUrl = $tmpMenuUrl;
@@ -886,7 +886,7 @@ class Zend_View_Helper_Menubuilder extends Zend_View_Helper_Abstract
 				}
 			}
 		} else {
-			$recentlyViewed->recentlyViewedObject = array();
+			$recentlyViewed->recentlyViewedObject = [];
 
 			if ($pageLink != BASE_URL && !in_array($pageName . "!@#" . $pageLink, $recentlyViewed->recentlyViewedObject))
 

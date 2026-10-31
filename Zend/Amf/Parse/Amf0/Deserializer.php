@@ -42,7 +42,7 @@ class Zend_Amf_Parse_Amf0_Deserializer extends Zend_Amf_Parse_Deserializer
      * An array of objects used for recursively deserializing an object.
      * @var array
      */
-    protected $_reference = array();
+    protected $_reference = [];
 
     /**
      * If AMF3 serialization occurs, update to AMF0 0x03
@@ -64,9 +64,7 @@ class Zend_Amf_Parse_Amf0_Deserializer extends Zend_Amf_Parse_Deserializer
      */
     public function readTypeMarker($typeMarker = null)
     {
-        if ($typeMarker === null) {
-            $typeMarker = $this->_stream->readByte();
-        }
+        $typeMarker ??= $this->_stream->readByte();
 
         switch($typeMarker) {
             // number
@@ -148,9 +146,7 @@ class Zend_Amf_Parse_Amf0_Deserializer extends Zend_Amf_Parse_Deserializer
      */
     public function readObject($object = null)
     {
-        if ($object === null) {
-            $object = array();
-        }
+        $object ??= [];
 
         while (true) {
             $key        = $this->_stream->readUTF();
@@ -212,7 +208,7 @@ class Zend_Amf_Parse_Amf0_Deserializer extends Zend_Amf_Parse_Deserializer
     public function readArray()
     {
         $length = $this->_stream->readLong();
-        $array = array();
+        $array = [];
         while ($length--) {
             $array[] = $this->readTypeMarker();
         }

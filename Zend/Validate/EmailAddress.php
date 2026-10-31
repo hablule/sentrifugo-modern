@@ -50,7 +50,7 @@ class Zend_Validate_EmailAddress extends Zend_Validate_Abstract
     /**
      * @var array
      */
-    protected $_messageTemplates = array(
+    protected $_messageTemplates = [
         self::INVALID            => "Invalid type given. String expected",
         self::INVALID_FORMAT     => "'%value%' is no valid email address in the basic format local-part@hostname",
         self::INVALID_HOSTNAME   => "'%hostname%' is no valid hostname for email address '%value%'",
@@ -60,13 +60,13 @@ class Zend_Validate_EmailAddress extends Zend_Validate_Abstract
         self::QUOTED_STRING      => "'%localPart%' can not be matched against quoted-string format",
         self::INVALID_LOCAL_PART => "'%localPart%' is no valid local part for email address '%value%'",
         self::LENGTH_EXCEEDED    => "'%value%' exceeds the allowed length",
-    );
+    ];
 
     /**
      * @see http://en.wikipedia.org/wiki/IPv4
      * @var array
      */
-    protected $_invalidIp = array(
+    protected $_invalidIp = [
         '0'   => '0.0.0.0/8',
         '10'  => '10.0.0.0/8',
         '127' => '127.0.0.0/8',
@@ -74,25 +74,25 @@ class Zend_Validate_EmailAddress extends Zend_Validate_Abstract
         '169' => '169.254.0.0/16',
         '172' => '172.16.0.0/12',
         '191' => '191.255.0.0/16',
-        '192' => array(
+        '192' => [
             '192.0.0.0/24',
             '192.0.2.0/24',
             '192.88.99.0/24',
             '192.168.0.0/16'
-        ),
+        ],
         '198' => '198.18.0.0/15',
         '223' => '223.255.255.0/24',
         '224' => '224.0.0.0/4',
         '240' => '240.0.0.0/4'
-    );
+    ];
 
     /**
      * @var array
      */
-    protected $_messageVariables = array(
+    protected $_messageVariables = [
         'hostname'  => '_hostname',
         'localPart' => '_localPart'
-    );
+    ];
 
     /**
      * @var string
@@ -107,13 +107,13 @@ class Zend_Validate_EmailAddress extends Zend_Validate_Abstract
     /**
      * Internal options array
      */
-    protected $_options = array(
+    protected $_options = [
         'mx'       => false,
         'deep'     => false,
         'domain'   => true,
         'allow'    => Zend_Validate_Hostname::ALLOW_DNS,
         'hostname' => null
-    );
+    ];
 
     /**
      * Instantiates hostname validator for local use
@@ -127,7 +127,7 @@ class Zend_Validate_EmailAddress extends Zend_Validate_Abstract
      * @param array|Zend_Config $options OPTIONAL
      * @return void
      */
-    public function __construct($options = array())
+    public function __construct($options = [])
     {
         if ($options instanceof Zend_Config) {
             $options = $options->toArray();
@@ -165,7 +165,7 @@ class Zend_Validate_EmailAddress extends Zend_Validate_Abstract
      * @param array $options
      * @return Zend_Validate_EmailAddress fluid interface
      */
-    public function setOptions(array $options = array())
+    public function setOptions(array $options = [])
     {
         if (array_key_exists('messages', $options)) {
             $this->setMessages($options['messages']);
@@ -361,10 +361,10 @@ class Zend_Validate_EmailAddress extends Zend_Validate_Abstract
                     $binaryHost .= str_pad(decbin($tmp[$i]), 8, "0", STR_PAD_LEFT);
                 }
 
-                $segmentData = array(
+                $segmentData = [
                     'network'   => (int)$this->_toIp(str_pad(substr($binaryHost, 0, $host[1]), 32, 0)),
                     'broadcast' => (int)$this->_toIp(str_pad(substr($binaryHost, 0, $host[1]), 32, 1))
-                );
+                ];
 
                 for ($j = $i; $j < 4; $j++) {
                     if ((int)$octet[$j] < $segmentData['network'][$j] ||
@@ -388,7 +388,7 @@ class Zend_Validate_EmailAddress extends Zend_Validate_Abstract
      */
     private function _toIp($binary)
     {
-        $ip  = array();
+        $ip  = [];
         $tmp = explode(".", chunk_split($binary, 8, "."));
         for ($i = 0; $i < 4 ; $i++) {
             $ip[$i] = bindec($tmp[$i]);
@@ -441,7 +441,7 @@ class Zend_Validate_EmailAddress extends Zend_Validate_Abstract
      */
     private function _validateMXRecords()
     {
-        $mxHosts = array();
+        $mxHosts = [];
         $result = getmxrr($this->_hostname, $mxHosts);
         if (!$result) {
             $this->_error(self::INVALID_MX_RECORD);
@@ -522,12 +522,12 @@ class Zend_Validate_EmailAddress extends Zend_Validate_Abstract
             return false;
         }
 
-        $matches = array();
+        $matches = [];
         $length  = true;
         $this->_setValue($value);
 
         // Split email address up and disallow '..'
-        if ((strpos($value, '..') !== false) or
+        if ((str_contains($value, '..')) or
             (!preg_match('/^(.+)@([^@]+)$/', $value, $matches))) {
             $this->_error(self::INVALID_FORMAT);
             return false;

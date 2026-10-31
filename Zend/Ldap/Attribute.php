@@ -52,8 +52,8 @@ class Zend_Ldap_Attribute
     public static function setAttribute(array &$data, $attribName, $value, $append = false)
     {
         $attribName = strtolower($attribName);
-        $valArray = array();
-        if (is_array($value) || ($value instanceof Traversable))
+        $valArray = [];
+        if (is_iterable($value))
         {
             foreach ($value as $v)
             {
@@ -69,7 +69,7 @@ class Zend_Ldap_Attribute
 
         if ($append === true && isset($data[$attribName]))
         {
-            if (is_string($data[$attribName])) $data[$attribName] = array($data[$attribName]);
+            if (is_string($data[$attribName])) $data[$attribName] = [$data[$attribName]];
             $data[$attribName] = array_merge($data[$attribName], $valArray);
         }
         else
@@ -90,8 +90,8 @@ class Zend_Ldap_Attribute
     {
         $attribName = strtolower($attribName);
         if ($index === null) {
-            if (!isset($data[$attribName])) return array();
-            $retArray = array();
+            if (!isset($data[$attribName])) return [];
+            $retArray = [];
             foreach ($data[$attribName] as $v)
             {
                 $retArray[] = self::_valueFromLdap($v);
@@ -123,7 +123,7 @@ class Zend_Ldap_Attribute
         if (!isset($data[$attribName])) return false;
 
         if (is_scalar($value)) {
-            $value = array($value);
+            $value = [$value];
         }
 
         foreach ($value as $v) {
@@ -163,10 +163,10 @@ class Zend_Ldap_Attribute
         if (!isset($data[$attribName])) return;
 
         if (is_scalar($value)) {
-            $value = array($value);
+            $value = [$value];
         }
 
-        $valArray = array();
+        $valArray = [];
         foreach ($value as $v)
         {
             $v = self::_valueToLdap($v);
@@ -346,8 +346,8 @@ class Zend_Ldap_Attribute
     public static function setDateTimeAttribute(array &$data, $attribName, $value, $utc = false,
         $append = false)
     {
-        $convertedValues = array();
-        if (is_array($value) || ($value instanceof Traversable))
+        $convertedValues = [];
+        if (is_iterable($value))
         {
             foreach ($value as $v) {
                 $v = self::_valueToLdapDateTime($v, $utc);

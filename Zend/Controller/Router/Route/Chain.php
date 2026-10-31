@@ -33,8 +33,8 @@ require_once 'Zend/Controller/Router/Route/Abstract.php';
  */
 class Zend_Controller_Router_Route_Chain extends Zend_Controller_Router_Route_Abstract
 {
-    protected $_routes = array();
-    protected $_separators = array();
+    protected $_routes = [];
+    protected $_separators = [];
 
     /**
      * Instantiates route based on passed Zend_Config structure
@@ -43,7 +43,7 @@ class Zend_Controller_Router_Route_Chain extends Zend_Controller_Router_Route_Ab
      */
     public static function getInstance(Zend_Config $config)
     {
-        $defs = ($config->defaults instanceof Zend_Config) ? $config->defaults->toArray() : array();
+        $defs = ($config->defaults instanceof Zend_Config) ? $config->defaults->toArray() : [];
         return new self($config->route, $defs);
     }
 
@@ -74,7 +74,7 @@ class Zend_Controller_Router_Route_Chain extends Zend_Controller_Router_Route_Ab
     {
         $path    = trim($request->getPathInfo(), self::URI_DELIMITER);
         $subPath = $path;
-        $values  = array();
+        $values  = [];
 
         foreach ($this->_routes as $key => $route) {
             if ($key > 0
@@ -129,7 +129,7 @@ class Zend_Controller_Router_Route_Chain extends Zend_Controller_Router_Route_Ab
      * @param array $data An array of variable and value pairs used as parameters
      * @return string Route path with user submitted parameters
      */
-    public function assemble($data = array(), $reset = false, $encode = false)
+    public function assemble($data = [], $reset = false, $encode = false)
     {
         $value     = '';
         $numRoutes = count($this->_routes);

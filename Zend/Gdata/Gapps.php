@@ -122,9 +122,9 @@ class Zend_Gdata_Gapps extends Zend_Gdata
      *
      * @var array
      */
-    public static $namespaces = array(
-        array('apps', 'http://schemas.google.com/apps/2006', 1, 0)
-    );
+    public static $namespaces = [
+        ['apps', 'http://schemas.google.com/apps/2006', 1, 0]
+    ];
 
     /**
      * Create Gdata_Gapps object
@@ -216,7 +216,7 @@ class Zend_Gdata_Gapps extends Zend_Gdata
      * @throws Zend_Gdata_Gapps_ServiceException
      * @return Zend_Http_Response
      */
-    public function get($uri, $extraHeaders = array())
+    public function get($uri, $extraHeaders = [])
     {
         try {
             return parent::get($uri, $extraHeaders);
@@ -688,9 +688,7 @@ class Zend_Gdata_Gapps extends Zend_Gdata
      */
     public function insertUser($user, $uri = null)
     {
-        if ($uri === null) {
-            $uri = $this->getBaseUrl() . self::APPS_USER_PATH;
-        }
+        $uri ??= $this->getBaseUrl() . self::APPS_USER_PATH;
         $newEntry = $this->insertEntry($user, $uri, 'Zend_Gdata_Gapps_UserEntry');
         return $newEntry;
     }
@@ -711,9 +709,7 @@ class Zend_Gdata_Gapps extends Zend_Gdata
      */
     public function insertNickname($nickname, $uri = null)
     {
-        if ($uri === null) {
-            $uri = $this->getBaseUrl() . self::APPS_NICKNAME_PATH;
-        }
+        $uri ??= $this->getBaseUrl() . self::APPS_NICKNAME_PATH;
         $newEntry = $this->insertEntry($nickname, $uri, 'Zend_Gdata_Gapps_NicknameEntry');
         return $newEntry;
     }
@@ -805,9 +801,7 @@ class Zend_Gdata_Gapps extends Zend_Gdata
      */
     public function insertEmailList($emailList, $uri = null)
     {
-        if ($uri === null) {
-            $uri = $this->getBaseUrl() . self::APPS_EMAIL_LIST_PATH;
-        }
+        $uri ??= $this->getBaseUrl() . self::APPS_EMAIL_LIST_PATH;
         $newEntry = $this->insertEntry($emailList, $uri, 'Zend_Gdata_Gapps_EmailListEntry');
         return $newEntry;
     }
@@ -874,7 +868,7 @@ class Zend_Gdata_Gapps extends Zend_Gdata
             if ($foundClassName != null) {
                 $reflectionObj = new ReflectionClass($foundClassName);
                 // Prepend the domain to the query
-                $args = array_merge(array($this->getDomain()), $args);
+                $args = array_merge([$this->getDomain()], $args);
                 return $reflectionObj->newInstanceArgs($args);
             } else {
                 require_once 'Zend/Gdata/App/Exception.php';

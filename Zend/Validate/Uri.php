@@ -8,10 +8,10 @@ class Zend_Validate_Uri extends Zend_Validate_Abstract
     
 		const INVALID_URL = '';
      
-        protected $_messageTemplates = array(
+        protected $_messageTemplates = [
             //self::INVALID_URL => 'Invalid URL'
             self::INVALID_URL => 'Please enter valid URL.' // custom message to maintain uniform
-        );
+        ];
      
         public function isValid($value, $context = null)
         {

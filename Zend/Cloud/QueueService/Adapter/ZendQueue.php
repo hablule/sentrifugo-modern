@@ -48,7 +48,7 @@ class Zend_Cloud_QueueService_Adapter_ZendQueue
     /**
      * @var array All queues
      */
-    protected $_queues = array();
+    protected $_queues = [];
 
     /**
      * Constructor
@@ -56,7 +56,7 @@ class Zend_Cloud_QueueService_Adapter_ZendQueue
      * @param  array|Zend_Config $options
      * @return void
      */
-    public function __construct ($options = array())
+    public function __construct ($options = [])
     {
         if ($options instanceof Zend_Config) {
             $options = $options->toArray();
@@ -100,7 +100,7 @@ class Zend_Cloud_QueueService_Adapter_ZendQueue
     public function createQueue($name, $options = null)
     {
         try {
-            $this->_queues[$name] = $this->_queue->createQueue($name, isset($options[Zend_Queue::TIMEOUT])?$options[Zend_Queue::TIMEOUT]:null);
+            $this->_queues[$name] = $this->_queue->createQueue($name, $options[Zend_Queue::TIMEOUT] ?? null);
             return $name;
         } catch (Zend_Queue_Exception $e) {
             throw new Zend_Cloud_QueueService_Exception('Error on queue creation: '.$e->getFile(), $e->getCode(), $e);
@@ -220,11 +220,11 @@ class Zend_Cloud_QueueService_Adapter_ZendQueue
             throw new Zend_Cloud_QueueService_Exception("No such queue: $queueId");
         }
         try {
-            $res = $this->_queues[$queueId]->receive($max, isset($options[Zend_Queue::TIMEOUT])?$options[Zend_Queue::TIMEOUT]:null);
+            $res = $this->_queues[$queueId]->receive($max, $options[Zend_Queue::TIMEOUT] ?? null);
             if ($res instanceof Iterator) {
                 return $this->_makeMessages($res);
             } else {
-                return $this->_makeMessages(array($res));
+                return $this->_makeMessages([$res]);
             }
         } catch (Zend_Queue_Exception $e) {
             throw new Zend_Cloud_QueueService_Exception('Error on recieving messages: '.$e->getFile(), $e->getCode(), $e);
@@ -242,7 +242,7 @@ class Zend_Cloud_QueueService_Adapter_ZendQueue
     {
         $messageClass = $this->getMessageClass();
         $setClass     = $this->getMessageSetClass();
-        $result = array();
+        $result = [];
         foreach ($messages as $message) {
             $result[] = new $messageClass($message->body, $message);
         }

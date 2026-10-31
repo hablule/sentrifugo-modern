@@ -68,11 +68,7 @@ class Zend_Feed_Reader_Extension_Atom_Entry
     {
         $authors = $this->getAuthors();
 
-        if (isset($authors[$index])) {
-            return $authors[$index];
-        }
-
-        return null;
+        return $authors[$index] ?? null;
     }
 
     /**
@@ -86,7 +82,7 @@ class Zend_Feed_Reader_Extension_Atom_Entry
             return $this->_data['authors'];
         }
 
-        $authors = array();
+        $authors = [];
         $list = $this->getXpath()->query($this->getXpathPrefix() . '//atom:author');
 
         if (!$list->length) {
@@ -176,10 +172,10 @@ class Zend_Feed_Reader_Extension_Atom_Entry
     protected function _collectXhtml($xhtml, $prefix)
     {
         if (!empty($prefix)) $prefix = $prefix . ':';
-        $matches = array(
+        $matches = [
             "/<\?xml[^<]*>[^<]*<" . $prefix . "div[^<]*/",
             "/<\/" . $prefix . "div>\s*$/"
-        );
+        ];
         $xhtml = preg_replace($matches, '', $xhtml);
         if (!empty($prefix)) {
             $xhtml = preg_replace("/(<[\/]?)" . $prefix . "([a-zA-Z]+)/", '$1$2', $xhtml);
@@ -362,11 +358,7 @@ class Zend_Feed_Reader_Extension_Atom_Entry
             $this->getLinks();
         }
 
-        if (isset($this->_data['links'][$index])) {
-            return $this->_data['links'][$index];
-        }
-
-        return null;
+        return $this->_data['links'][$index] ?? null;
     }
 
     /**
@@ -380,7 +372,7 @@ class Zend_Feed_Reader_Extension_Atom_Entry
             return $this->_data['links'];
         }
 
-        $links = array();
+        $links = [];
 
         $list = $this->getXpath()->query(
             $this->getXpathPrefix() . '//atom:link[@rel="alternate"]/@href' . '|' .
@@ -537,11 +529,11 @@ class Zend_Feed_Reader_Extension_Atom_Entry
         if ($list->length) {
             $categoryCollection = new Zend_Feed_Reader_Collection_Category;
             foreach ($list as $category) {
-                $categoryCollection[] = array(
+                $categoryCollection[] = [
                     'term' => $category->getAttribute('term'),
                     'scheme' => $category->getAttribute('scheme'),
                     'label' => $category->getAttribute('label')
-                );
+                ];
             }
         } else {
             return new Zend_Feed_Reader_Collection_Category;
@@ -602,7 +594,7 @@ class Zend_Feed_Reader_Extension_Atom_Entry
      */
     protected function _getAuthor(DOMElement $element)
     {
-        $author = array();
+        $author = [];
 
         $emailNode = $element->getElementsByTagName('email');
         $nameNode  = $element->getElementsByTagName('name');

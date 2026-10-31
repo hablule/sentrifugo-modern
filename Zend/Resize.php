@@ -25,7 +25,7 @@
 		    private $height;
 			private $imageResized;
 
-			function __construct($fileName)
+			public function __construct($fileName)
 			{
 				// *** Open up the file
 				$this->image = $this->openImage($fileName);
@@ -113,7 +113,7 @@
 						$optimalHeight = $optionArray['optimalHeight'];
 						break;
 				}
-				return array('optimalWidth' => $optimalWidth, 'optimalHeight' => $optimalHeight);
+				return ['optimalWidth' => $optimalWidth, 'optimalHeight' => $optimalHeight];
 			}
 
 			## --------------------------------------------------------
@@ -162,7 +162,7 @@
 					}
 				}
 
-				return array('optimalWidth' => $optimalWidth, 'optimalHeight' => $optimalHeight);
+				return ['optimalWidth' => $optimalWidth, 'optimalHeight' => $optimalHeight];
 			}
 
 			## --------------------------------------------------------
@@ -182,7 +182,7 @@
 				$optimalHeight = $this->height / $optimalRatio;
 				$optimalWidth  = $this->width  / $optimalRatio;
 
-				return array('optimalWidth' => $optimalWidth, 'optimalHeight' => $optimalHeight);
+				return ['optimalWidth' => $optimalWidth, 'optimalHeight' => $optimalHeight];
 			}
 
 			## --------------------------------------------------------

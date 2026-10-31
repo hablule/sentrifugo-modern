@@ -126,7 +126,7 @@ class Zend_Search_Lucene_Storage_Directory_Filesystem extends Zend_Search_Lucene
             }
         }
         $this->_dirPath = $path;
-        $this->_fileHandlers = array();
+        $this->_fileHandlers = [];
     }
 
 
@@ -141,7 +141,7 @@ class Zend_Search_Lucene_Storage_Directory_Filesystem extends Zend_Search_Lucene
             $fileObject->close();
         }
 
-        $this->_fileHandlers = array();
+        $this->_fileHandlers = [];
     }
 
 
@@ -152,7 +152,7 @@ class Zend_Search_Lucene_Storage_Directory_Filesystem extends Zend_Search_Lucene
      */
     public function fileList()
     {
-        $result = array();
+        $result = [];
 
         $dirContent = opendir( $this->_dirPath );
         while (($file = readdir($dirContent)) !== false) {

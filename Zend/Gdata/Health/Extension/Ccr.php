@@ -77,9 +77,7 @@ class Zend_Gdata_Health_Extension_Ccr extends Zend_Gdata_App_Extension_Element
      */
     public function getDOM($doc = null, $majorVersion = 1, $minorVersion = null)
     {
-        if ($doc === null) {
-            $doc = new DOMDocument('1.0', 'utf-8');
-        }
+        $doc ??= new DOMDocument('1.0', 'utf-8');
         $domElement = $doc->importNode($this->_ccrDom, true);
         return $domElement;
     }
@@ -97,7 +95,7 @@ class Zend_Gdata_Health_Extension_Ccr extends Zend_Gdata_App_Extension_Element
      */
     public function __call($name, $args)
     {
-        if (substr($name, 0, 3) === 'get') {
+        if (str_starts_with($name, 'get')) {
             $category = substr($name, 3);
 
             switch ($category) {

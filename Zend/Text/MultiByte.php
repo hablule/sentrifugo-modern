@@ -41,7 +41,7 @@ class Zend_Text_MultiByte
      */
     public static function wordWrap($string, $width = 75, $break = "\n", $cut = false, $charset = 'UTF-8')
     {
-        $result     = array();
+        $result     = [];
         $breakWidth = iconv_strlen($break, $charset);
 
         while (($stringLength = iconv_strlen($string, $charset)) > 0) {

@@ -55,8 +55,8 @@ class Zend_Gdata_Gbase_Extension_BaseAttribute extends Zend_Gdata_App_Extension_
     {
         $this->registerAllNamespaces(Zend_Gdata_Gbase::$namespaces);
         if ($type !== null) {
-          $attr = array('name' => 'type', 'value' => $type);
-          $typeAttr = array('type' => $attr);
+          $attr = ['name' => 'type', 'value' => $type];
+          $typeAttr = ['type' => $attr];
           $this->setExtensionAttributes($typeAttr);
         }
         parent::__construct($name,
@@ -106,8 +106,8 @@ class Zend_Gdata_Gbase_Extension_BaseAttribute extends Zend_Gdata_App_Extension_
      * @return Zend_Gdata_Extension_ItemEntry Provides a fluent interface
      */
     public function setType($type) {
-      $attr = array('name' => 'type', 'value' => $type);
-      $typeAttr = array('type' => $attr);
+      $attr = ['name' => 'type', 'value' => $type];
+      $typeAttr = ['type' => $attr];
       $this->setExtensionAttributes($typeAttr);
       return $this;
     }

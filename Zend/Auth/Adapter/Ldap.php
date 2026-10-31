@@ -78,7 +78,7 @@ class Zend_Auth_Adapter_Ldap implements Zend_Auth_Adapter_Interface
      * @param  string $password The password of the account being authenticated
      * @return void
      */
-    public function __construct(array $options = array(), $username = null, $password = null)
+    public function __construct(array $options = [], $username = null, $password = null)
     {
         $this->setOptions($options);
         if ($username !== null) {
@@ -108,7 +108,7 @@ class Zend_Auth_Adapter_Ldap implements Zend_Auth_Adapter_Interface
      */
     public function setOptions($options)
     {
-        $this->_options = is_array($options) ? $options : array();
+        $this->_options = is_array($options) ? $options : [];
         return $this;
     }
 
@@ -216,7 +216,7 @@ class Zend_Auth_Adapter_Ldap implements Zend_Auth_Adapter_Interface
     {
         $this->_ldap = $ldap;
 
-        $this->setOptions(array($ldap->getOptions()));
+        $this->setOptions([$ldap->getOptions()]);
 
         return $this;
     }
@@ -233,7 +233,7 @@ class Zend_Auth_Adapter_Ldap implements Zend_Auth_Adapter_Interface
         $name = $options['accountDomainName'];
         if (!$name)
             $name = $options['accountDomainNameShort'];
-        return $name ? $name : '';
+        return $name ?: '';
     }
 
     /**
@@ -249,7 +249,7 @@ class Zend_Auth_Adapter_Ldap implements Zend_Auth_Adapter_Interface
          */
         require_once 'Zend/Ldap/Exception.php';
 
-        $messages = array();
+        $messages = [];
         $messages[0] = ''; // reserved
         $messages[1] = ''; // reserved
 
@@ -274,7 +274,7 @@ class Zend_Auth_Adapter_Ldap implements Zend_Auth_Adapter_Interface
 
         $code = Zend_Auth_Result::FAILURE;
         $messages[0] = "Authority not found: $username";
-        $failedAuthorities = array();
+        $failedAuthorities = [];
 
         /* Iterate through each server and try to authenticate the supplied
          * credentials against it.
@@ -378,7 +378,7 @@ class Zend_Auth_Adapter_Ldap implements Zend_Auth_Adapter_Interface
             }
         }
 
-        $msg = isset($messages[1]) ? $messages[1] : $messages[0];
+        $msg = $messages[1] ?? $messages[0];
         $messages[] = "$username authentication failed: $msg";
 
         return new Zend_Auth_Result($code, $username, $messages);
@@ -393,7 +393,7 @@ class Zend_Auth_Adapter_Ldap implements Zend_Auth_Adapter_Interface
      */
     protected function _prepareOptions(Zend_Ldap $ldap, array $options)
     {
-        $adapterOptions = array(
+        $adapterOptions = [
             'group'       => null,
             'groupDn'     => $ldap->getBaseDn(),
             'groupScope'  => Zend_Ldap::SEARCH_SCOPE_SUB,
@@ -401,7 +401,7 @@ class Zend_Auth_Adapter_Ldap implements Zend_Auth_Adapter_Interface
             'groupFilter' => 'objectClass=groupOfUniqueNames',
             'memberAttr'  => 'uniqueMember',
             'memberIsDn'  => true
-        );
+        ];
         foreach ($adapterOptions as $key => $value) {
             if (array_key_exists($key, $options)) {
                 $value = $options[$key];
@@ -409,8 +409,8 @@ class Zend_Auth_Adapter_Ldap implements Zend_Auth_Adapter_Interface
                 switch ($key) {
                     case 'groupScope':
                         $value = (int)$value;
-                        if (in_array($value, array(Zend_Ldap::SEARCH_SCOPE_BASE,
-                                Zend_Ldap::SEARCH_SCOPE_ONE, Zend_Ldap::SEARCH_SCOPE_SUB), true)) {
+                        if (in_array($value, [Zend_Ldap::SEARCH_SCOPE_BASE,
+                                Zend_Ldap::SEARCH_SCOPE_ONE, Zend_Ldap::SEARCH_SCOPE_SUB], true)) {
                            $adapterOptions[$key] = $value;
                         }
                         break;
@@ -480,7 +480,7 @@ class Zend_Auth_Adapter_Ldap implements Zend_Auth_Adapter_Interface
      * @param  array $omitAttribs
      * @return stdClass|boolean
      */
-    public function getAccountObject(array $returnAttribs = array(), array $omitAttribs = array())
+    public function getAccountObject(array $returnAttribs = [], array $omitAttribs = [])
     {
         if (!$this->_authenticatedDn) {
             return false;

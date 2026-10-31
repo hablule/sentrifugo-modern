@@ -54,7 +54,7 @@ class Zend_Cloud_StorageService_Adapter_Nirvanix
      * @param  array|Zend_Config $options
      * @return void
      */
-    function __construct($options = array())
+    public function __construct($options = [])
     {
         if ($options instanceof Zend_Config) {
             $options = $options->toArray();
@@ -64,12 +64,12 @@ class Zend_Cloud_StorageService_Adapter_Nirvanix
             throw new Zend_Cloud_StorageService_Exception('Invalid options provided');
         }
 
-        $auth = array(
+        $auth = [
             'username' => $options[self::USERNAME],
             'password' => $options[self::PASSWORD],
             'appKey'   => $options[self::APP_KEY],
-        );
-        $nirvanix_options = array();
+        ];
+        $nirvanix_options = [];
         if (isset($options[self::HTTP_ADAPTER])) {
             $httpc = new Zend_Http_Client();
             $httpc->setAdapter($options[self::HTTP_ADAPTER]);
@@ -157,8 +157,8 @@ class Zend_Cloud_StorageService_Adapter_Nirvanix
         try {
             $sourcePath = $this->_getFullPath($sourcePath);
             $destinationPath = $this->_getFullPath($destinationPath);
-            $this->_imfNs->CopyFiles(array('srcFilePath' => $sourcePath,
-                                            'destFolderPath' => $destinationPath));
+            $this->_imfNs->CopyFiles(['srcFilePath' => $sourcePath,
+                                            'destFolderPath' => $destinationPath]);
         } catch (Zend_Service_Nirvanix_Exception $e) {
             throw new Zend_Cloud_StorageService_Exception('Error on copy: '.$e->getFile(), $e->getCode(), $e);
         }
@@ -179,8 +179,8 @@ class Zend_Cloud_StorageService_Adapter_Nirvanix
         try {
             $sourcePath = $this->_getFullPath($sourcePath);
             $destinationPath = $this->_getFullPath($destinationPath);
-            $this->_imfNs->RenameFile(array('filePath' => $sourcePath,
-                                             'newFileName' => $destinationPath));
+            $this->_imfNs->RenameFile(['filePath' => $sourcePath,
+                                             'newFileName' => $destinationPath]);
     //        $this->_imfNs->MoveFiles(array('srcFilePath' => $sourcePath,
     //                                         'destFolderPath' => $destinationPath));
         } catch (Zend_Service_Nirvanix_Exception $e) {
@@ -215,12 +215,12 @@ class Zend_Cloud_StorageService_Adapter_Nirvanix
     {
         $path = $this->_getFullPath($path);
         try {
-            $metadataNode = $this->_metadataNs->getMetadata(array('path' => $path));
+            $metadataNode = $this->_metadataNs->getMetadata(['path' => $path]);
         } catch (Zend_Service_Nirvanix_Exception $e) {
             throw new Zend_Cloud_StorageService_Exception('Error on fetching metadata: '.$e->getFile(), $e->getCode(), $e);
         }
 
-        $metadata = array();
+        $metadata = [];
         $length = count($metadataNode->Metadata);
 
         // Need to special case this as Nirvanix returns an array if there is
@@ -256,10 +256,10 @@ class Zend_Cloud_StorageService_Adapter_Nirvanix
             try {
                 foreach ($metadata AS $key=>$value) {
                     $metadataString = $key . ":" . $value;
-                    $this->_metadataNs->SetMetadata(array(
+                    $this->_metadataNs->SetMetadata([
                         'path'     => $destinationPath,
                         'metadata' => $metadataString,
-                    ));
+                    ]);
                 }
             } catch (Zend_Service_Nirvanix_Exception $e) {
                 throw new Zend_Cloud_StorageService_Exception('Error on storing metadata: '.$e->getFile(), $e->getCode(), $e);
@@ -282,13 +282,13 @@ class Zend_Cloud_StorageService_Adapter_Nirvanix
         $path = $this->_getFullPath($path);
         try {
             if ($metadata == null) {
-                $this->_metadataNs->DeleteAllMetadata(array('path' => $path));
+                $this->_metadataNs->DeleteAllMetadata(['path' => $path]);
             } else {
                 foreach ($metadata AS $key=>$value) {
-                    $this->_metadataNs->DeleteMetadata(array(
+                    $this->_metadataNs->DeleteMetadata([
                         'path'     => $path,
                         'metadata' => $key,
-                    ));
+                    ]);
                     }
             }
         } catch (Zend_Service_Nirvanix_Exception $e) {
@@ -306,11 +306,11 @@ class Zend_Cloud_StorageService_Adapter_Nirvanix
      */
     private function getAllFolders($path, &$resultArray)
     {
-        $response = $this->_imfNs->ListFolder(array(
+        $response = $this->_imfNs->ListFolder([
             'folderPath' => $path,
                'pageNumber' => 1,
             'pageSize'   => $this->maxPageSize,
-        ));
+        ]);
            $numFolders = $response->ListFolder->TotalFolderCount;
            if ($numFolders == 0) {
                return;
@@ -342,17 +342,17 @@ class Zend_Cloud_StorageService_Adapter_Nirvanix
     public function listItems($path, $options = null)
     {
         $path = $this->_getFullPath($path);
-        $resultArray = array();
+        $resultArray = [];
 
         if (!isset($path)) {
             return false;
         } else {
             try {
-                $response = $this->_imfNs->ListFolder(array(
+                $response = $this->_imfNs->ListFolder([
                     'folderPath' => $path,
                     'pageNumber' => 1,
                     'pageSize'   => $this->maxPageSize,
-                ));
+                ]);
             } catch (Zend_Service_Nirvanix_Exception $e) {
                 throw new Zend_Cloud_StorageService_Exception('Error on list: '.$e->getFile(), $e->getCode(), $e);
             }

@@ -84,7 +84,7 @@ abstract class Zend_Test_PHPUnit_ControllerTestCase extends PHPUnit_Framework_Te
      * XPath namespaces
      * @var array
      */
-    protected $_xpathNamespaces = array();
+    protected $_xpathNamespaces = [];
 
     /**
      * Overloading: prevent overloading to special properties
@@ -95,7 +95,7 @@ abstract class Zend_Test_PHPUnit_ControllerTestCase extends PHPUnit_Framework_Te
      */
     public function __set($name, $value)
     {
-        if (in_array($name, array('request', 'response', 'frontController'))) {
+        if (in_array($name, ['request', 'response', 'frontController'])) {
             require_once 'Zend/Exception.php';
             throw new Zend_Exception(sprintf('Setting %s object manually is not allowed', $name));
         }
@@ -220,10 +220,10 @@ abstract class Zend_Test_PHPUnit_ControllerTestCase extends PHPUnit_Framework_Te
      */
     public function reset()
     {
-        $_SESSION = array();
-        $_GET     = array();
-        $_POST    = array();
-        $_COOKIE  = array();
+        $_SESSION = [];
+        $_GET     = [];
+        $_POST    = [];
+        $_COOKIE  = [];
         $this->resetRequest();
         $this->resetResponse();
         Zend_Layout::resetMvcInstance();
@@ -240,7 +240,7 @@ abstract class Zend_Test_PHPUnit_ControllerTestCase extends PHPUnit_Framework_Te
     protected function _resetPlaceholders()
     {
         $registry = Zend_Registry::getInstance();
-        $remove   = array();
+        $remove   = [];
         foreach ($registry as $key => $value) {
             if (strstr($key, '_View_')) {
                 $remove[] = $key;
@@ -1167,7 +1167,7 @@ abstract class Zend_Test_PHPUnit_ControllerTestCase extends PHPUnit_Framework_Te
      * @param bool $reset
      * @param bool $encode
      */
-    public function url($urlOptions = array(), $name = null, $reset = false, $encode = true)
+    public function url($urlOptions = [], $name = null, $reset = false, $encode = true)
     {
         $frontController = $this->getFrontController();
         $router = $frontController->getRouter();
@@ -1184,7 +1184,7 @@ abstract class Zend_Test_PHPUnit_ControllerTestCase extends PHPUnit_Framework_Te
     {
         $ccToDash = new Zend_Filter_Word_CamelCaseToDash();
         foreach ($urlOptions as $n => $v) {
-            if (in_array($n, array('action', 'controller', 'module'))) {
+            if (in_array($n, ['action', 'controller', 'module'])) {
                 $urlOptions[$n] = $ccToDash->filter($v);
             }
         }

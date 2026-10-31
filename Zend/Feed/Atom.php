@@ -137,7 +137,7 @@ class Zend_Feed_Atom extends Zend_Feed_Abstract
         $links = parent::__get('link');
         if (!is_array($links)) {
             if ($links instanceof Zend_Feed_Element) {
-                $links = array($links);
+                $links = [$links];
             } else {
                 return $links;
             }
@@ -209,7 +209,7 @@ class Zend_Feed_Atom extends Zend_Feed_Abstract
             $feed->appendChild($author);
         }
 
-        $updated = isset($array->lastUpdate) ? $array->lastUpdate : time();
+        $updated = $array->lastUpdate ?? time();
         $updated = $this->_element->createElement('updated', date(DATE_ATOM, $updated));
         $feed->appendChild($updated);
 
@@ -271,14 +271,14 @@ class Zend_Feed_Atom extends Zend_Feed_Abstract
         foreach ($array as $dataentry) {
             $entry = $this->_element->createElement('entry');
 
-            $id = $this->_element->createElement('id', isset($dataentry->guid) ? $dataentry->guid : $dataentry->link);
+            $id = $this->_element->createElement('id', $dataentry->guid ?? $dataentry->link);
             $entry->appendChild($id);
 
             $title = $this->_element->createElement('title');
             $title->appendChild($this->_element->createCDATASection($dataentry->title));
             $entry->appendChild($title);
 
-            $updated = isset($dataentry->lastUpdate) ? $dataentry->lastUpdate : time();
+            $updated = $dataentry->lastUpdate ?? time();
             $updated = $this->_element->createElement('updated', date(DATE_ATOM, $updated));
             $entry->appendChild($updated);
 

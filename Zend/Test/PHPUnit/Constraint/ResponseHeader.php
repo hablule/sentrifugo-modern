@@ -54,12 +54,12 @@ class Zend_Test_PHPUnit_Constraint_ResponseHeader extends PHPUnit_Framework_Cons
      * Available assertion types
      * @var array
      */
-    protected $_assertTypes     = array(
+    protected $_assertTypes     = [
         self::ASSERT_RESPONSE_CODE,
         self::ASSERT_HEADER,
         self::ASSERT_HEADER_CONTAINS,
         self::ASSERT_HEADER_REGEX,
-    );
+    ];
 
     /**
      * @var int Response code
@@ -123,7 +123,7 @@ class Zend_Test_PHPUnit_Constraint_ResponseHeader extends PHPUnit_Framework_Cons
 
         if (!in_array($assertType, $this->_assertTypes)) {
             require_once 'Zend/Test/PHPUnit/Constraint/Exception.php';
-            throw new Zend_Test_PHPUnit_Constraint_Exception(sprintf('Invalid assertion type "%s" provided to %s constraint', $assertType, __CLASS__));
+            throw new Zend_Test_PHPUnit_Constraint_Exception(sprintf('Invalid assertion type "%s" provided to %s constraint', $assertType, self::class));
         }
 
         $this->_assertType = $assertType;
@@ -275,9 +275,7 @@ class Zend_Test_PHPUnit_Constraint_ResponseHeader extends PHPUnit_Framework_Cons
     protected function _getCode(Zend_Controller_Response_Abstract $response)
     {
         $test = $response->getHttpResponseCode();
-        if (null === $test) {
-            $test = 200;
-        }
+        $test ??= 200;
         return $test;
     }
 
@@ -316,7 +314,7 @@ class Zend_Test_PHPUnit_Constraint_ResponseHeader extends PHPUnit_Framework_Cons
     {
         $headers = $response->sendHeaders();
         $header  = strtolower($header);
-        if (array_key_exists($header, $headers)) {
+        if (property_exists($headers, $header)) {
             return $headers[$header];
         }
         return null;

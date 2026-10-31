@@ -126,7 +126,7 @@ class Zend_Http_Cookie
 
         $this->value = (string) $value;
         $this->expires = ($expires === null ? null : (int) $expires);
-        $this->path = ($path ? $path : '/');
+        $this->path = ($path ?: '/');
         $this->secure = $secure;
     }
 
@@ -200,7 +200,7 @@ class Zend_Http_Cookie
      */
     public function isExpired($now = null)
     {
-        if ($now === null) $now = time();
+        $now ??= time();
         if (is_int($this->expires) && $this->expires < $now) {
             return true;
         } else {
@@ -297,10 +297,10 @@ class Zend_Http_Cookie
         $parts   = explode(';', $cookieStr);
 
         // If first part does not include '=', fail
-        if (strpos($parts[0], '=') === false) return false;
+        if (!str_contains($parts[0], '=')) return false;
 
         // Get the name and value of the cookie
-        list($name, $value) = explode('=', trim(array_shift($parts)), 2);
+        [$name, $value] = explode('=', trim(array_shift($parts)), 2);
         $name  = trim($name);
         if ($encodeValue) {
             $value = urldecode(trim($value));
@@ -323,7 +323,7 @@ class Zend_Http_Cookie
 
             $keyValue = explode('=', $part, 2);
             if (count($keyValue) == 2) {
-                list($k, $v) = $keyValue;
+                [$k, $v] = $keyValue;
                 switch (strtolower($k))    {
                     case 'expires':
                         if(($expires = strtotime($v)) === false) {
@@ -419,6 +419,6 @@ class Zend_Http_Cookie
             throw new Zend_Http_Exception("\$path is expected to be a host name");
         }
 
-        return (strpos($path, $cookiePath) === 0);
+        return (str_starts_with($path, $cookiePath));
     }
 }

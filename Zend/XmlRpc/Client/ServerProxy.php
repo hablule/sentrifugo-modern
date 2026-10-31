@@ -48,7 +48,7 @@ class Zend_XmlRpc_Client_ServerProxy
     /**
      * @var array of Zend_XmlRpc_Client_ServerProxy
      */
-    private $_cache = array();
+    private $_cache = [];
 
 
     /**
@@ -73,9 +73,7 @@ class Zend_XmlRpc_Client_ServerProxy
     public function __get($namespace)
     {
         $namespace = ltrim("$this->_namespace.$namespace", '.');
-        if (!isset($this->_cache[$namespace])) {
-            $this->_cache[$namespace] = new $this($this->_client, $namespace);
-        }
+        $this->_cache[$namespace] ??= new $this($this->_client, $namespace);
         return $this->_cache[$namespace];
     }
 

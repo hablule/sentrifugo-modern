@@ -212,10 +212,10 @@ class Zend_Auth_Adapter_InfoCard implements Zend_Auth_Adapter_Interface
         try {
             $claims = $this->_infoCard->process($this->getXmlToken());
         } catch(Exception $e) {
-            return new Zend_Auth_Result(Zend_Auth_Result::FAILURE , null, array('Exception Thrown',
+            return new Zend_Auth_Result(Zend_Auth_Result::FAILURE , null, ['Exception Thrown',
                                                                                 $e->getFile(),
                                                                                 $e->getTraceAsString(),
-                                                                                serialize($e)));
+                                                                                serialize($e)]);
         }
 
         if(!$claims->isValid()) {
@@ -224,30 +224,30 @@ class Zend_Auth_Adapter_InfoCard implements Zend_Auth_Adapter_Interface
                     return new Zend_Auth_Result(
                         Zend_Auth_Result::FAILURE,
                         $claims,
-                        array(
+                        [
                             'Processing Failure',
                             $claims->getErrorMsg()
-                        )
+                        ]
                     );
                     break;
                 case Zend_InfoCard_Claims::RESULT_VALIDATION_FAILURE:
                     return new Zend_Auth_Result(
                         Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID,
                         $claims,
-                        array(
+                        [
                             'Validation Failure',
                             $claims->getErrorMsg()
-                        )
+                        ]
                     );
                     break;
                 default:
                     return new Zend_Auth_Result(
                         Zend_Auth_Result::FAILURE,
                         $claims,
-                        array(
+                        [
                             'Unknown Failure',
                             $claims->getErrorMsg()
-                        )
+                        ]
                     );
                     break;
             }

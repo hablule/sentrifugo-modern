@@ -98,7 +98,7 @@ class Zend_Markup_Parser_Textile implements Zend_Markup_Parser_ParserInterface
      *
      * @var array
      */
-    protected $_simpleTags = array(
+    protected $_simpleTags = [
         '*'  => 'strong',
         '**' => 'bold',
         '_'  => 'emphasized',
@@ -112,14 +112,14 @@ class Zend_Markup_Parser_Textile implements Zend_Markup_Parser_ParserInterface
         // these are a little more complicated
         '@'  => 'code',
         '!'  => 'img',
-    );
+    ];
 
     /**
      * Token array
      *
      * @var array
      */
-    protected $_tokens = array();
+    protected $_tokens = [];
 
 
     /**
@@ -147,15 +147,15 @@ class Zend_Markup_Parser_Textile implements Zend_Markup_Parser_ParserInterface
         }
 
         // first make we only have LF newlines, also trim the value
-        $this->_value = str_replace(array("\r\n", "\r"), "\n", $value);
+        $this->_value = str_replace(["\r\n", "\r"], "\n", $value);
         $this->_value = trim($this->_value);
 
         // initialize variables and tokenize
         $this->_valueLen = iconv_strlen($this->_value, 'UTF-8');
         $this->_pointer  = 0;
         $this->_buffer   = '';
-        $this->_temp     = array();
-        $this->_tokens   = array();
+        $this->_temp     = [];
+        $this->_tokens   = [];
 
         $this->_tokenize();
 
@@ -179,19 +179,19 @@ class Zend_Markup_Parser_Textile implements Zend_Markup_Parser_ParserInterface
     {
         $state    = self::STATE_NEW_PARAGRAPH;
 
-        $attrsMatch = implode('|', array(
+        $attrsMatch = implode('|', [
             self::MATCH_ATTR_CLASSID,
             self::MATCH_ATTR_STYLE,
             self::MATCH_ATTR_LANG,
             self::MATCH_ATTR_ALIGN
-        ));
+        ]);
 
         $paragraph = '';
 
         while ($this->_pointer < $this->_valueLen) {
             switch ($state) {
                 case self::STATE_SCAN:
-                    $matches = array(); //[^\n*_?+~%@!-]
+                    $matches = []; //[^\n*_?+~%@!-]
                     $acronym = '(?<acronym>[A-Z]{2,})\((?<title>[^\)]+)\)';
                     $regex   = '#\G(?<text>.*?)(?:'
                              . "(?:(?<nl_paragraph>\n{2,})|(?<nl_break>\n))|"
@@ -210,40 +210,40 @@ class Zend_Markup_Parser_Textile implements Zend_Markup_Parser_ParserInterface
 
                     // first add the buffer
                     if (!empty($this->_buffer)) {
-                        $this->_tokens[] = array(
+                        $this->_tokens[] = [
                             'tag'  => $this->_buffer,
                             'type' => Zend_Markup_Token::TYPE_NONE
-                        );
+                        ];
                         $this->_buffer = '';
                     }
 
                     if (!empty($matches['nl_paragraph'])) {
-                        $this->_temp = array(
+                        $this->_temp = [
                             'tag'        => $matches['nl_paragraph'],
                             'name'       => 'p',
                             'type'       => Zend_Markup_Token::TYPE_TAG,
-                            'attributes' => array()
-                        );
+                            'attributes' => []
+                        ];
 
                         $state = self::STATE_NEW_PARAGRAPH;
                     } elseif (!empty($matches['nl_break'])) {
-                        $this->_tokens[] = array(
+                        $this->_tokens[] = [
                             'tag'        => $matches['nl_break'],
                             'name'       => 'break',
                             'type'       => Zend_Markup_Token::TYPE_TAG,
-                            'attributes' => array()
-                        );
+                            'attributes' => []
+                        ];
 
                         $state   = self::STATE_NEWLINE;
                     } elseif (!empty($matches['tag'])) {
                         if (isset($this->_simpleTags[$matches['name']])) {
                             // now add the new token
-                            $this->_tokens[] = array(
+                            $this->_tokens[] = [
                                 'tag'        => $matches['tag'],
                                 'type'       => Zend_Markup_Token::TYPE_TAG,
                                 'name'       => $this->_simpleTags[$matches['name']],
                                 'attributes' => $this->_extractAttributes($matches)
-                            );
+                            ];
                         } else {
                             $attributes = $this->_extractAttributes($matches);
                             if ($matches['tag'][0] == '"') {
@@ -251,32 +251,32 @@ class Zend_Markup_Parser_Textile implements Zend_Markup_Parser_ParserInterface
                                 if (isset($matches['url'])) {
                                     $attributes['url'] = $matches['url'];
                                 }
-                                $this->_tokens[] = array(
+                                $this->_tokens[] = [
                                     'tag'        => $matches['tag'],
                                     'type'       => Zend_Markup_Token::TYPE_TAG,
                                     'name'       => $name,
                                     'attributes' => $attributes
-                                );
+                                ];
                             } else {
                                 $name = 'acronym';
-                                $this->_tokens[] = array(
+                                $this->_tokens[] = [
                                     'tag'        => '',
                                     'type'       => Zend_Markup_Token::TYPE_TAG,
                                     'name'       => 'acronym',
-                                    'attributes' => array(
+                                    'attributes' => [
                                         'title' => $matches['title']
-                                    )
-                                );
-                                $this->_tokens[] = array(
+                                    ]
+                                ];
+                                $this->_tokens[] = [
                                     'tag'  => $matches['acronym'],
                                     'type' => Zend_Markup_Token::TYPE_NONE
-                                );
-                                $this->_tokens[] = array(
+                                ];
+                                $this->_tokens[] = [
                                     'tag'        => '(' . $matches['title'] . ')',
                                     'type'       => Zend_Markup_Token::TYPE_TAG,
                                     'name'       => 'acronym',
-                                    'attributes' => array()
-                                );
+                                    'attributes' => []
+                                ];
                             }
                         }
                         $state = self::STATE_SCAN;
@@ -285,23 +285,23 @@ class Zend_Markup_Parser_Textile implements Zend_Markup_Parser_ParserInterface
                     break;
                 case self::STATE_NEW_PARAGRAPH:
                     if (empty($this->_temp)) {
-                        $this->_temp = array(
+                        $this->_temp = [
                             'tag'        => '',
                             'name'       => 'p',
                             'type'       => Zend_Markup_Token::TYPE_TAG,
-                            'attributes' => array()
-                        );
+                            'attributes' => []
+                        ];
                     } else {
-                        $this->_tokens[] = array(
+                        $this->_tokens[] = [
                             'tag'        => "\n",
                             'name'       => 'p',
                             'type'       => Zend_Markup_Token::TYPE_TAG,
-                            'attributes' => array()
-                        );
+                            'attributes' => []
+                        ];
                         $this->_temp['tag'] = substr($this->_temp['tag'], 1);
                     }
 
-                    $matches = array(); //[^\n*_?+~%@!-] (\()? [^()]+ (?(1)\))
+                    $matches = []; //[^\n*_?+~%@!-] (\()? [^()]+ (?(1)\))
                     $regex   = "#\G(?<name>(h[1-6]|p)|(?:\#|\*))(?:{$attrsMatch})*(?(2)\.\s|\s)#i";
                     if (!preg_match($regex, $this->_value, $matches, null, $this->_pointer)) {
                         $this->_tokens[] = $this->_temp;
@@ -316,10 +316,10 @@ class Zend_Markup_Parser_Textile implements Zend_Markup_Parser_ParserInterface
                         $this->_temp['attributes'] = $this->_extractAttributes($matches);
 
                         $this->_tokens[]    = $this->_temp;
-                        $this->_temp = array();
+                        $this->_temp = [];
                     } else {
                         $this->_tokens[] = $this->_temp;
-                        $this->_temp = array();
+                        $this->_temp = [];
 
                         $name       = $matches['name'];
                         $attributes = $this->_extractAttributes($matches);
@@ -331,18 +331,18 @@ class Zend_Markup_Parser_Textile implements Zend_Markup_Parser_ParserInterface
                             $name = 'list';
                         }
 
-                        $this->_tokens[] = array(
+                        $this->_tokens[] = [
                             'tag'        => $matches[0],
                             'name'       => $name,
                             'type'       => Zend_Markup_Token::TYPE_TAG,
                             'attributes' => $attributes
-                        );
+                        ];
                     }
 
                     $state = self::STATE_SCAN;
                     break;
                 case self::STATE_NEWLINE:
-                    $matches = array(); //[^\n*_?+~%@!-]
+                    $matches = []; //[^\n*_?+~%@!-]
                     $regex   = "#\G(?<name>(h[1-6])|(?:\#|\*))(?:{$attrsMatch})*(?(2)\.\s|\s)#si";
                     if (!preg_match($regex, $this->_value, $matches, null, $this->_pointer)) {
                         $state = self::STATE_SCAN;
@@ -361,12 +361,12 @@ class Zend_Markup_Parser_Textile implements Zend_Markup_Parser_ParserInterface
                         $name = 'list';
                     }
 
-                    $this->_tokens[] = array(
+                    $this->_tokens[] = [
                         'tag'        => $matches[0],
                         'name'       => $name,
                         'type'       => Zend_Markup_Token::TYPE_TAG,
                         'attributes' => $attributes
-                    );
+                    ];
                     break;
             }
         }
@@ -429,13 +429,13 @@ class Zend_Markup_Parser_Textile implements Zend_Markup_Parser_ParserInterface
                         $token['tag'],
                         Zend_Markup_Token::TYPE_NONE,
                         '',
-                        array(),
+                        [],
                         $this->_current
                     ));
                 } else {
                     // handle a list item
                     if ($token['name'] == 'list') {
-                        $attributes = array();
+                        $attributes = [];
                         if (isset($token['attributes']['list'])) {
                             $attributes['list'] = $token['attributes']['list'];
                             unset($token['attributes']['list']);
@@ -479,7 +479,7 @@ class Zend_Markup_Parser_Textile implements Zend_Markup_Parser_ParserInterface
                     $token['tag'],
                     Zend_Markup_Token::TYPE_NONE,
                     '',
-                    array(),
+                    [],
                     $this->_current
                 ));
             }
@@ -532,7 +532,7 @@ class Zend_Markup_Parser_Textile implements Zend_Markup_Parser_ParserInterface
      */
     protected function _extractAttributes(array $matches)
     {
-        $attributes = array();
+        $attributes = [];
 
         if (!empty($matches['attr_class'])) {
             $attributes['class'] = $matches['attr_class'];

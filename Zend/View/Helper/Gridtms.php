@@ -4,7 +4,7 @@
 class Zend_View_Helper_Gridtms extends Zend_View_Helper_Abstract
 {
 	public $view = null;
-	public $extra = array();
+	public $extra = [];
 	private $output; // Container to hold the Grid
 	private $encrypt_status = "no";
 	private $moduleName;
@@ -33,7 +33,7 @@ class Zend_View_Helper_Gridtms extends Zend_View_Helper_Abstract
 
 		$menunamestr = '';
 		$sortStr = '';
-		$actnArr = array();
+		$actnArr = [];
 		$sortStr = $dataArray['by'];
 
 
@@ -45,11 +45,11 @@ class Zend_View_Helper_Gridtms extends Zend_View_Helper_Abstract
 		if ($this->moduleName == 'expenses/')
 			$actions_arr = $controllers_arr[$actionsobjname . "controller.php"]['actions'];
 		else
-			$actions_arr = array('add', 'edit', 'delete', 'view');
+			$actions_arr = ['add', 'edit', 'delete', 'view'];
 		//$controllers_arr[$actionsobjname."controller.php"]['actions'];
 		
-		$gridFieldsArr = array();
-		$tmpActionsArr = array();
+		$gridFieldsArr = [];
+		$tmpActionsArr = [];
 		$tmpActionsArr = $actions_arr;
 		array_pop($tmpActionsArr);	//last element of actions array is menuname so delete that & check the privileges are empty or not...
 
@@ -111,13 +111,13 @@ class Zend_View_Helper_Gridtms extends Zend_View_Helper_Abstract
 
 
 			if (!in_array('view', $actions_arr) && !in_array('edit', $actions_arr) && !in_array('delete', $actions_arr)) {
-				$extra['action'] = array();
+				$extra['action'] = [];
 			} else {
-				$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 									' . ((in_array('view', $actions_arr) ? $viewpopup_str : '')) . '
 									' . ((in_array('edit', $actions_arr) ? $editpopup_str : '')) . '
 									' . ((in_array('delete', $actions_arr) ? $deletepopup_str : '')) . '
-								</div>');
+								</div>'];
 			}
 		} else {
 			$formgridVal = '';
@@ -150,41 +150,41 @@ class Zend_View_Helper_Gridtms extends Zend_View_Helper_Abstract
 			}
 
 			if (!in_array('view', $actions_arr) && !in_array('edit', $actions_arr) && !in_array('delete', $actions_arr)) {
-				$extra['action'] = array();
+				$extra['action'] = [];
 			} else {
 
 
-				$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 										' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 										' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 										' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
-									</div>');
+									</div>'];
 				if ($dataArray['objectname'] == "assets") {
 					$delete_str = '<a id="del{{id}}" name="{{id}}" onclick= changestatus(\'' . $dataArray['objectname'] . '\',\'{{id}}\',\'' . $msgdta . '\',\'{{allocated_to}}\')	href= javascript:void(0) title=\'Delete\' class="sprite delete" ></a>';
 					//	$view_str_assets = '<a href= "'.BASE_URL.$this->moduleName.$dataArray['objectname'].'/view/id/{{id}}" name="{{id}}" class="sprite view"  title=\'View\'></a>';
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 										' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 										' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 										' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
-									</div>');
+									</div>'];
 				}
 				if ($dataArray['objectname'] == "logreport") {
 					$delete_str = '<a id="del{{id}}" name="{{id}}" onclick= changestatus(\'' . $dataArray['objectname'] . '\',\'{{id}}\',\'' . $msgdta . '\',\'{{allocated_to}}\')	href= javascript:void(0) title=\'Delete\' class="sprite delete" ></a>';
 					//	$view_str_assets = '<a href= "'.BASE_URL.$this->moduleName.$dataArray['objectname'].'/view/id/{{id}}" name="{{id}}" class="sprite view"  title=\'View\'></a>';
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 										' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 										' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 										' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
-									</div>');
+									</div>'];
 				}
 				if ($dataArray['objectname'] == "assetcategories") {
 
 					// $view_str='';
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 										' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 										' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 										' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
-									</div>');
+									</div>'];
 				}
 
 				//onclick ="javascript:editlocdata(\'{{id}}\')" 
@@ -192,15 +192,15 @@ class Zend_View_Helper_Gridtms extends Zend_View_Helper_Abstract
 
 				if ($dataArray['objectname'] == 'report') {
 					$view_str = '<a href= "' . BASE_URL . 'payroll/' .  $dataArray['objectname'] . '/view/id/{{id}}" name="{{id}}" class="sprite view"  title=\'View\'></a>';
-					$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+					$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 												
 												' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 												
-											</div>');
+											</div>'];
 				}
 				if ($dataArray['objectname'] == 'expenses' && $menuName == 'Expenses')
 					$sub = '<span id=\'expense_status-{{id}}\' onclick="submitExpense(\'{{id}}\')" class="submitexpense">Sub</span>&nbsp;';
-				$extra['att'] = array('name' => 'Options', 'value' => $sub . '
+				$extra['att'] = ['name' => 'Options', 'value' => $sub . '
 																<span id=\'attachment-{{id}}\' onclick="downloadAttachment(\'{{id}}\')" class="attachment">Att</span>&nbsp;
 																<span id=\'note-{{id}}\' onclick= "openNotes(\'{{note}}\')" class="notes">Notes</span>
 																<script> if(\'{{receipt_file}}\' == \'\') $("#attachment-{{id}}").attr("style","visibility:hidden;");
@@ -208,13 +208,13 @@ class Zend_View_Helper_Gridtms extends Zend_View_Helper_Abstract
 																		if(\'{{expense_status}}\' != \'saved\') $("#expense_status-{{id}}").attr("style","visibility:hidden;");
 																</script>
 																
-																');
-				$extra['acc'] = array('name' => 'Options', 'value' => '<span id=\'acc_expense_status-{{id}}\' class="{{expense_status}} capitalize"><span class="expense_approve" onclick="updateExpenseStatus(\'{{id}}\',1)">Appr</span>   <span class="expense_reject" onclick="updateExpenseStatusPopup(\'{{id}}\',0)">Rej</span></span>&nbsp;
+																'];
+				$extra['acc'] = ['name' => 'Options', 'value' => '<span id=\'acc_expense_status-{{id}}\' class="{{expense_status}} capitalize"><span class="expense_approve" onclick="updateExpenseStatus(\'{{id}}\',1)">Appr</span>   <span class="expense_reject" onclick="updateExpenseStatusPopup(\'{{id}}\',0)">Rej</span></span>&nbsp;
 																<script> 
 																		if(\'{{expense_status}}\' != \'submitted\') $("#acc_expense_status-{{id}}").html("{{expense_status}}");
 																</script>
 																
-																');
+																'];
 			}
 		}
 
@@ -225,13 +225,13 @@ class Zend_View_Helper_Gridtms extends Zend_View_Helper_Abstract
 				$view_str = '<a href= "' . BASE_URL . 'missedhoursapprove' . '/view/id/{{missed_hours_id}}" name="{{missed_hours_id}}" class="sprite view"  title=\'View\'></a>';
 				$edit_str = '<a name="{{missed_hours_id}}" onclick= displaydeptform(\'' . BASE_URL . 'missedhoursapprove/editpopup/id/{{missed_hours_id}}' . '\',\'missedhoursapprove\')	href= javascript:void(0) title=\'Approve or Reject or Cancel Overtime\' class="fa fa-ellipsis-v" ></a>';
 
-				$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 		' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 		' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 	
 	
 
-	</div>');
+	</div>'];
 			}
 			if ($dataArray['objectname'] == 'clients') {
 
@@ -244,11 +244,11 @@ class Zend_View_Helper_Gridtms extends Zend_View_Helper_Abstract
 				$view_str = '<a href= "' . BASE_URL . $dataArray['objectname'] . '/view/id/{{id}}" name="{{id}}" class="sprite view"  title=\'View\'></a>';
 
 
-				$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 										' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 										' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 										' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
-									</div>');
+									</div>'];
 			}
 		}
 
@@ -264,11 +264,11 @@ class Zend_View_Helper_Gridtms extends Zend_View_Helper_Abstract
 				$view_str = '<a href= "' . BASE_URL . $dataArray['objectname'] . '/view/id/{{id}}" name="{{id}}" class="sprite view"  title=\'View\'></a>';
 
 
-				$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 										' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 										' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 										' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
-									</div>');
+									</div>'];
 			}
 
 			if ($dataArray['objectname'] == 'perkcategory') {
@@ -278,10 +278,10 @@ class Zend_View_Helper_Gridtms extends Zend_View_Helper_Abstract
 
 				$delete_str = '<a id="pc{{perkcategory_id}}" name="{{perkcategory_id}}" onclick= changestatus(\'' . $dataArray['objectname'] . '\',\'{{perkcategory_id}}\',\'' . $msgdta . '\')	href= javascript:void(0) title=\'Delete\' class="sprite delete" ></a>';
 
-				$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 										' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 										' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
-									</div>');
+									</div>'];
 			}
 		}
 
@@ -296,11 +296,11 @@ class Zend_View_Helper_Gridtms extends Zend_View_Helper_Abstract
 				$view_str = '<a href= "' . BASE_URL.'schedule/' . $dataArray['objectname'] . '/view/id/{{id}}" name="{{id}}" class="sprite view"  title=\'View\'></a>';
 
 
-				$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 										' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 										' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 										'. ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
-									</div>');
+									</div>'];
 			}
 			if ($dataArray['objectname'] == 'timetable' and $dataArray['menuName'] == 'Time Table') {
 				$actions_arr = $controllers_arr[$actionsobjname . "controller.php"]['actions'];
@@ -314,22 +314,22 @@ class Zend_View_Helper_Gridtms extends Zend_View_Helper_Abstract
 
 
 
-				$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 										' /*. ((in_array('view', $actions_arr) ? $view_str : '')) */ . '
 										' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 										' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
-									</div>');
+									</div>'];
 			}
 
 			
 			if ($dataArray['objectname'] == "logreport") {
 				$delete_str = '<a id="del{{id}}" name="{{id}}" onclick= changestatus(\'' . $dataArray['objectname'] . '\',\'{{id}}\',\'' . $msgdta . '\',\'{{allocated_to}}\')	href= javascript:void(0) title=\'Delete\' class="sprite delete" ></a>';
 				//	$view_str_assets = '<a href= "'.BASE_URL.$this->moduleName.$dataArray['objectname'].'/view/id/{{id}}" name="{{id}}" class="sprite view"  title=\'View\'></a>';
-				$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 										' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 										' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 										' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
-									</div>');
+									</div>'];
 			}
 			if ($dataArray['objectname'] == "overtimecategory") {
 				$actions_arr = $controllers_arr[$actionsobjname . "controller.php"]['actions'];
@@ -343,11 +343,11 @@ class Zend_View_Helper_Gridtms extends Zend_View_Helper_Abstract
 
 
 
-				$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 										' /*. ((in_array('view', $actions_arr) ? $view_str : '')) */ . '
 										' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 										' /*. ((in_array('delete', $actions_arr) ? $delete_str : '')) */. '
-									</div>');
+									</div>'];
 			}
 
 			if ($dataArray['objectname'] == "timecategory") {
@@ -362,11 +362,11 @@ class Zend_View_Helper_Gridtms extends Zend_View_Helper_Abstract
 
 
 
-				$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 										' . ((in_array('view', $actions_arr) ? $view_str : ''))  . '
 										' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 										' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
-									</div>');
+									</div>'];
 			}
 
 			if ($dataArray['objectname'] == 'attendancereport') {
@@ -378,11 +378,11 @@ class Zend_View_Helper_Gridtms extends Zend_View_Helper_Abstract
 				$view_str = '<a href= "' . BASE_URL . $dataArray['objectname'] . '/view/id/{{mid}}" name="{{mid}}" class="sprite view"  title=\'View\'></a>';
 
 
-				$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 										' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 										' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 										' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
-									</div>');
+									</div>'];
 			}
 			if ($dataArray['objectId'] == 'overtime') {
 				$actions_arr = $controllers_arr[$actionsobjname . "controller.php"]['actions'];
@@ -397,12 +397,12 @@ class Zend_View_Helper_Gridtms extends Zend_View_Helper_Abstract
 
 				//' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
 
-				$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 					' /* . ((in_array('view', $actions_arr) ? $checkbox : '')) */ . '
 										' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 										' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 
-									</div>');
+									</div>'];
 			}
 
 			if ($dataArray['objectname'] == 'manageremployeeovertime' and $dataArray['objectId'] == 'manageremployeeovertime') {
@@ -411,19 +411,19 @@ class Zend_View_Helper_Gridtms extends Zend_View_Helper_Abstract
 				$edit_str = '<a id="edit{{id}}" name="{{id}}" onclick= displaydeptform(\'' . BASE_URL . 'manageremployeeovertime/editpopup/id/{{id}}' . '\',\'\')	href= javascript:void(0) title=\'Approve or Reject or Cancel Overtime\' class="fa fa-ellipsis-v" ></a>';
 				$delete_str = '<a id="del{{id}}" name="{{id}}" onclick= changestatus(\'' . $dataArray['objectId'] . '\',\'{{id}}\',\'' . $msgdta . '\')	href= javascript:void(0) title=\'Delete\' class="sprite delete" ></a>';
 
-				$extra['action'] = array('name' => 'edit', 'value' => '<div class="grid-action-align">
+				$extra['action'] = ['name' => 'edit', 'value' => '<div class="grid-action-align">
 		' . ((in_array('view', $actions_arr) ? $view_str : '')) . '
 		' . ((in_array('edit', $actions_arr) ? $edit_str : '')) . '
 		' . ((in_array('delete', $actions_arr) ? $delete_str : '')) . '
 
 	
 
-	</div>');
+	</div>'];
 			}
 		}
 
 
-		$extra['options'] = array();
+		$extra['options'] = [];
 		$addaction = '';
 		if (isset($dataArray['add']) && $dataArray['add'] != '') {
 			$addaction = $dataArray['add'];
@@ -441,9 +441,9 @@ class Zend_View_Helper_Gridtms extends Zend_View_Helper_Abstract
 		$otherAction = 'index';
 		if (isset($dataArray['otheraction'])) $otherAction = $dataArray['otheraction'];
 
-		return $this->generateGridTms($dataArray['objectId'], $dataArray['objectname'], $dataArray['tableheader'], $paginator, $extra, true, $dataArray['jsGridFnName'], $dataArray['perPage'], $dataArray['pageNo'], $dataArray['jsFillFnName'], $dataArray['searchArray'], $formgridVal, $addaction, $menuName, $unitId, $addpermission, $menunamestr, isset($dataArray['call']) ? $dataArray['call'] : "", $sortStr, isset($dataArray['search_filters']) ? $dataArray['search_filters'] : "", isset($dataArray['dashboardcall']) ? $dataArray['dashboardcall'] : "No", isset($dataArray['empstatus']) ? $dataArray['empstatus'] : "", $actnArr, isset($dataArray['empscreentotalcount']) ? $dataArray['empscreentotalcount'] : "", isset($dataArray['sort']) ? $dataArray['sort'] : "", isset($dataArray['by']) ? $dataArray['by'] : "");
+		return $this->generateGridTms($dataArray['objectId'], $dataArray['objectname'], $dataArray['tableheader'], $paginator, $extra, true, $dataArray['jsGridFnName'], $dataArray['perPage'], $dataArray['pageNo'], $dataArray['jsFillFnName'], $dataArray['searchArray'], $formgridVal, $addaction, $menuName, $unitId, $addpermission, $menunamestr, $dataArray['call'] ?? "", $sortStr, $dataArray['search_filters'] ?? "", $dataArray['dashboardcall'] ?? "No", $dataArray['empstatus'] ?? "", $actnArr, $dataArray['empscreentotalcount'] ?? "", $dataArray['sort'] ?? "", $dataArray['by'] ?? "");
 	}
-	public function generateGridTms($objectId = null, $name, $fields = null, $paginator = null, $extracolumn = array(), $sorting = false, $jsGridFnname = '', $perPage = '5', $page = '1', $jsFillFnName = '', $searchArray = '', $formgrid = 'false', $addaction = '', $menuName = '', $unitId, $addpermission, $menunamestr, $call = '', $sortStr = '', $search_filters = '', $dashboardCall = 'No', $empstatus = '', $actnArr, $empscreenTotalCount = '', $sortname = '', $by = '',$perm='')
+	public function generateGridTms($objectId = null, $name = null, $fields = null, $paginator = null, $extracolumn = [], $sorting = false, $jsGridFnname = '', $perPage = '5', $page = '1', $jsFillFnName = '', $searchArray = '', $formgrid = 'false', $addaction = '', $menuName = '', $unitId = null, $addpermission = null, $menunamestr = null, $call = '', $sortStr = '', $search_filters = '', $dashboardCall = 'No', $empstatus = '', $actnArr = null, $empscreenTotalCount = '', $sortname = '', $by = '',$perm='')
 	{
 		
 	$request = Zend_Controller_Front::getInstance();
@@ -638,7 +638,7 @@ class Zend_View_Helper_Gridtms extends Zend_View_Helper_Abstract
 					}
 					$welcome = 'false';
 					$urlString = $_SERVER['REQUEST_URI'];
-					if (strpos($urlString, 'welcome') !== false || strpos($urlString, 'pendingleaves') !== false) {
+					if (str_contains($urlString, 'welcome') || str_contains($urlString, 'pendingleaves')) {
 						$welcome = 'true';
 					}
 					if ($formgrid == 'true') {
@@ -666,7 +666,7 @@ class Zend_View_Helper_Gridtms extends Zend_View_Helper_Abstract
 							$output .= $sortIconStr;
 					} else {
 
-						$output .= "<a href='javascript:void(0);' onclick=javascript:paginationndsorting('" . $this->view->url(array('sort' => $sort, 'by' => $key, 'objname' => $name, 'page' => $page, 'per_page' => $perPage)) . "');>" . $value . "</a>";
+						$output .= "<a href='javascript:void(0);' onclick=javascript:paginationndsorting('" . $this->view->url(['sort' => $sort, 'by' => $key, 'objname' => $name, 'page' => $page, 'per_page' => $perPage]) . "');>" . $value . "</a>";
 						//For Sort Icons....
 						if ($key == $sortStr)
 							$output .= $sortIconStr;
@@ -1197,7 +1197,7 @@ class Zend_View_Helper_Gridtms extends Zend_View_Helper_Abstract
 	// Attach Pagination
 	if ($paginator) {
 
-		$params = array();
+		$params = [];
 		$params['jsGridFnName'] = $jsGridFnname;
 		$params['perPage'] = $perPage;
 		/* if ($objectId=='overtime') {

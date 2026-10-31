@@ -83,9 +83,9 @@ class Zend_Form_Element_File extends Zend_Form_Element_Xhtml
         if (empty($decorators)) {
             $this->addDecorator('File')
                  ->addDecorator('Errors')
-                 ->addDecorator('Description', array('tag' => 'p', 'class' => 'description'))
-                 ->addDecorator('HtmlTag', array('tag' => 'dd'))
-                 ->addDecorator('Label', array('tag' => 'dt'));
+                 ->addDecorator('Description', ['tag' => 'p', 'class' => 'description'])
+                 ->addDecorator('HtmlTag', ['tag' => 'dd'])
+                 ->addDecorator('Label', ['tag' => 'dt']);
         }
         return $this;
     }
@@ -125,9 +125,9 @@ class Zend_Form_Element_File extends Zend_Form_Element_Xhtml
 
         if (!array_key_exists($type, $this->_loaders)) {
             require_once 'Zend/Loader/PluginLoader.php';
-            $loader = new Zend_Loader_PluginLoader(array(
+            $loader = new Zend_Loader_PluginLoader([
                 'Zend_File_Transfer_Adapter' => 'Zend/File/Transfer/Adapter/',
-            ));
+            ]);
             $this->setPluginLoader($loader, self::TRANSFER_ADAPTER);
         }
 
@@ -181,7 +181,7 @@ class Zend_Form_Element_File extends Zend_Form_Element_Xhtml
             throw new Zend_Form_Element_Exception('Invalid adapter specified');
         }
 
-        foreach (array('filter', 'validate') as $type) {
+        foreach (['filter', 'validate'] as $type) {
             $loader = $this->getPluginLoader($type);
             $this->_adapter->setPluginLoader($loader, $type);
         }
@@ -212,7 +212,7 @@ class Zend_Form_Element_File extends Zend_Form_Element_Xhtml
      * @param  mixed $options
      * @return Zend_Form_Element_File
      */
-    public function addValidator($validator, $breakChainOnFailure = false, $options = array())
+    public function addValidator($validator, $breakChainOnFailure = false, $options = [])
     {
         $adapter = $this->getTransferAdapter();
         $adapter->addValidator($validator, $breakChainOnFailure, $options, $this->getName());
@@ -272,9 +272,7 @@ class Zend_Form_Element_File extends Zend_Form_Element_Xhtml
     {
         $adapter = $this->getTransferAdapter();
         $validators = $adapter->getValidators($this->getName());
-        if ($validators === null) {
-            $validators = array();
-        }
+        $validators ??= [];
 
         return $validators;
     }
@@ -373,9 +371,7 @@ class Zend_Form_Element_File extends Zend_Form_Element_Xhtml
         $adapter = $this->getTransferAdapter();
         $filters = $adapter->getFilters($this->getName());
 
-        if ($filters === null) {
-            $filters = array();
-        }
+        $filters ??= [];
         return $filters;
     }
 
@@ -426,11 +422,11 @@ class Zend_Form_Element_File extends Zend_Form_Element_Xhtml
         }
 
         if (!$this->isRequired()) {
-            $adapter->setOptions(array('ignoreNoFile' => true), $this->getName());
+            $adapter->setOptions(['ignoreNoFile' => true], $this->getName());
         } else {
-            $adapter->setOptions(array('ignoreNoFile' => false), $this->getName());
+            $adapter->setOptions(['ignoreNoFile' => false], $this->getName());
             if ($this->autoInsertNotEmptyValidator() && !$this->getValidator('NotEmpty')) {
-                $this->addValidator = array('validator' => 'NotEmpty', 'breakChainOnFailure' => true);
+                $this->addValidator = ['validator' => 'NotEmpty', 'breakChainOnFailure' => true];
             }
         }
 
@@ -889,7 +885,7 @@ class Zend_Form_Element_File extends Zend_Form_Element_Xhtml
             }
 
             if ($this->isArray() || is_array($value)) {
-                $aggregateMessages = array();
+                $aggregateMessages = [];
                 foreach ($value as $val) {
                     $aggregateMessages[] = str_replace('%value%', $val, $message);
                 }

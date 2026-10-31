@@ -75,7 +75,7 @@ class Zend_Test_PHPUnit_Db_Operation_Truncate implements PHPUnit_Extensions_Data
                 $tableName = $table->getTableMetaData()->getTableName();
                 $this->_truncate($connection->getConnection(), $tableName);
             } catch (Exception $e) {
-                throw new PHPUnit_Extensions_Database_Operation_Exception('TRUNCATE', 'TRUNCATE '.$tableName.'', array(), $table, $e->getFile());
+                throw new PHPUnit_Extensions_Database_Operation_Exception('TRUNCATE', 'TRUNCATE '.$tableName.'', [], $table, $e->getFile());
             }
         }
     }

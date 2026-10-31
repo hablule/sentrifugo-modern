@@ -66,7 +66,7 @@ class Zend_Currency
      * @var array
      * @see Zend_Locale
      */
-    protected $_options = array(
+    protected $_options = [
         'position'  => self::STANDARD,
         'script'    => null,
         'format'    => null,
@@ -79,7 +79,7 @@ class Zend_Currency
         'value'     => 0,
         'service'   => null,
         'tag'       => 'Zend_Locale'
-    );
+    ];
 
     /**
      * Creates a currency instance. Every supressed parameter is used from the actual or the given locale.
@@ -135,7 +135,7 @@ class Zend_Currency
      * @throws Zend_Currency_Exception When the value is not a number
      * @return string
      */
-    public function toCurrency($value = null, array $options = array())
+    public function toCurrency($value = null, array $options = [])
     {
         if ($value === null) {
             if (is_array($options) && isset($options['value'])) {
@@ -159,9 +159,7 @@ class Zend_Currency
         }
 
         if (isset($options['currency'])) {
-            if (!isset($options['locale'])) {
-                $options['locale'] = $this->_options['locale'];
-            }
+            $options['locale'] ??= $this->_options['locale'];
 
             $options['currency'] = self::getShortName($options['currency'], $options['locale']);
             $options['name']     = self::getName($options['currency'], $options['locale']);
@@ -181,9 +179,9 @@ class Zend_Currency
         }
 
         $original = $value;
-        $value    = Zend_Locale_Format::toNumber($value, array('locale'        => $locale,
+        $value    = Zend_Locale_Format::toNumber($value, ['locale'        => $locale,
                                                                'number_format' => $format,
-                                                               'precision'     => $options['precision']));
+                                                               'precision'     => $options['precision']]);
 
         if ($options['position'] !== self::STANDARD) {
             $value = str_replace('¤', '', $value);
@@ -243,7 +241,7 @@ class Zend_Currency
      */
     private function _extractPattern($pattern, $value)
     {
-        if (strpos($pattern, '|') === false) {
+        if (!str_contains($pattern, '|')) {
             return $pattern;
         }
 
@@ -252,7 +250,7 @@ class Zend_Currency
         $value    = trim(str_replace('¤', '', $value));
         krsort($patterns);
         foreach($patterns as $content) {
-            if (strpos($content, '<') !== false) {
+            if (str_contains($content, '<')) {
                 $check = iconv_substr($content, 0, iconv_strpos($content, '<'));
                 $token = iconv_substr($content, iconv_strpos($content, '<') + 1);
                 if ($check < $value) {
@@ -279,7 +277,7 @@ class Zend_Currency
      * @param  array $options (Optional) Options to set
      * @return Zend_Currency
      */
-    public function setFormat(array $options = array())
+    public function setFormat(array $options = [])
     {
         $this->_options = $this->_checkOptions($options) + $this->_options;
         return $this;
@@ -319,7 +317,7 @@ class Zend_Currency
             $abbreviation = $data;
         }
 
-        return array('locale' => $locale, 'currency' => $currency, 'name' => $abbreviation, 'country' => $country);
+        return ['locale' => $locale, 'currency' => $currency, 'name' => $abbreviation, 'country' => $country];
     }
 
     /**
@@ -423,9 +421,7 @@ class Zend_Currency
      */
     public function getRegionList($currency = null)
     {
-        if ($currency === null) {
-            $currency = $this->_options['currency'];
-        }
+        $currency ??= $this->_options['currency'];
 
         if (empty($currency) === true) {
             require_once 'Zend/Currency/Exception.php';
@@ -529,7 +525,7 @@ class Zend_Currency
      */
     public static function clearCache($tag = null)
     {
-        Zend_Locale_Data::clearCache($tag);
+        Zend_Locale_Data::clearCache();
     }
 
     /**
@@ -822,7 +818,7 @@ class Zend_Currency
      * @throws Zend_Currency_Exception On unknown options
      * @return array
      */
-    protected function _checkOptions(array $options = array())
+    protected function _checkOptions(array $options = [])
     {
         if (count($options) === 0) {
             return $this->_options;
@@ -847,7 +843,7 @@ class Zend_Currency
 
                 case 'format':
                     if ((empty($value) === false) and (Zend_Locale::isLocale($value, null, false) === false)) {
-                        if (!is_string($value) || (strpos($value, '0') === false)) {
+                        if (!is_string($value) || (!str_contains($value, '0'))) {
                             require_once 'Zend/Currency/Exception.php';
                             throw new Zend_Currency_Exception("'" .
                                 ((gettype($value) === 'object') ? get_class($value) : $value)
@@ -865,9 +861,7 @@ class Zend_Currency
                     break;
 
                 case 'precision':
-                    if ($value === null) {
-                        $value = -1;
-                    }
+                    $value ??= -1;
 
                     if (($value < -1) or ($value > 30)) {
                         require_once 'Zend/Currency/Exception.php';

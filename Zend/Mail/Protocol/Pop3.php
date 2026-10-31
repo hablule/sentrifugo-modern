@@ -94,9 +94,7 @@ class Zend_Mail_Protocol_Pop3
             $host = 'ssl://' . $host;
         }
 
-        if ($port === null) {
-            $port = $ssl == 'SSL' ? 995 : 110;
-        }
+        $port ??= $ssl == 'SSL' ? 995 : 110;
 
         $errno  =  0;
         $errstr = '';
@@ -176,7 +174,7 @@ class Zend_Mail_Protocol_Pop3
 
         $result = trim($result);
         if (strpos($result, ' ')) {
-            list($status, $message) = explode(' ', $result, 2);
+            [$status, $message] = explode(' ', $result, 2);
         } else {
             $status = $result;
             $message = '';
@@ -297,7 +295,7 @@ class Zend_Mail_Protocol_Pop3
         $octets = 0;
         $result = $this->request('STAT');
 
-        list($messages, $octets) = explode(' ', $result);
+        [$messages, $octets] = explode(' ', $result);
     }
 
 
@@ -318,10 +316,10 @@ class Zend_Mail_Protocol_Pop3
         }
 
         $result = $this->request('LIST', true);
-        $messages = array();
+        $messages = [];
         $line = strtok($result, "\n");
         while ($line) {
-            list($no, $size) = explode(' ', trim($line));
+            [$no, $size] = explode(' ', trim($line));
             $messages[(int)$no] = (int)$size;
             $line = strtok("\n");
         }
@@ -349,12 +347,12 @@ class Zend_Mail_Protocol_Pop3
         $result = $this->request('UIDL', true);
 
         $result = explode("\n", $result);
-        $messages = array();
+        $messages = [];
         foreach ($result as $line) {
             if (!$line) {
                 continue;
             }
-            list($no, $id) = explode(' ', trim($line), 2);
+            [$no, $id] = explode(' ', trim($line), 2);
             $messages[(int)$no] = $id;
         }
 

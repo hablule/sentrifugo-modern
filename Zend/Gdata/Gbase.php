@@ -87,10 +87,10 @@ class Zend_Gdata_Gbase extends Zend_Gdata
      *
      * @var array
      */
-    public static $namespaces = array(
-        array('g', 'http://base.google.com/ns/1.0', 1, 0),
-        array('batch', 'http://schemas.google.com/gdata/batch', 1, 0)
-    );
+    public static $namespaces = [
+        ['g', 'http://base.google.com/ns/1.0', 1, 0],
+        ['batch', 'http://schemas.google.com/gdata/batch', 1, 0]
+    ];
 
     /**
      * Create Zend_Gdata_Gbase object

@@ -103,10 +103,10 @@ class Zend_Mime_Part {
                     $this->_content,
                     'convert.quoted-printable-encode',
                     STREAM_FILTER_READ,
-                    array(
+                    [
                         'line-length'      => 76,
                         'line-break-chars' => Zend_Mime::LINEEND
-                    )
+                    ]
                 );
                 if (!is_resource($filter)) {
                     require_once 'Zend/Mime/Exception.php';
@@ -118,10 +118,10 @@ class Zend_Mime_Part {
                     $this->_content,
                     'convert.base64-encode',
                     STREAM_FILTER_READ,
-                    array(
+                    [
                         'line-length'      => 76,
                         'line-break-chars' => Zend_Mime::LINEEND
-                    )
+                    ]
                 );
                 if (!is_resource($filter)) {
                     require_once 'Zend/Mime/Exception.php';
@@ -168,7 +168,7 @@ class Zend_Mime_Part {
      */
     public function getHeadersArray($EOL = Zend_Mime::LINEEND)
     {
-        $headers = array();
+        $headers = [];
 
         $contentType = $this->type;
         if ($this->charset) {
@@ -180,14 +180,14 @@ class Zend_Mime_Part {
                           . " boundary=\"" . $this->boundary . '"';
         }
 
-        $headers[] = array('Content-Type', $contentType);
+        $headers[] = ['Content-Type', $contentType];
 
         if ($this->encoding) {
-            $headers[] = array('Content-Transfer-Encoding', $this->encoding);
+            $headers[] = ['Content-Transfer-Encoding', $this->encoding];
         }
 
         if ($this->id) {
-            $headers[]  = array('Content-ID', '<' . $this->id . '>');
+            $headers[]  = ['Content-ID', '<' . $this->id . '>'];
         }
 
         if ($this->disposition) {
@@ -195,19 +195,19 @@ class Zend_Mime_Part {
             if ($this->filename) {
                 $disposition .= '; filename="' . $this->filename . '"';
             }
-            $headers[] = array('Content-Disposition', $disposition);
+            $headers[] = ['Content-Disposition', $disposition];
         }
 
         if ($this->description) {
-            $headers[] = array('Content-Description', $this->description);
+            $headers[] = ['Content-Description', $this->description];
         }
 
         if ($this->location) {
-            $headers[] = array('Content-Location', $this->location);
+            $headers[] = ['Content-Location', $this->location];
         }
 
         if ($this->language){
-            $headers[] = array('Content-Language', $this->language);
+            $headers[] = ['Content-Language', $this->language];
         }
 
         return $headers;

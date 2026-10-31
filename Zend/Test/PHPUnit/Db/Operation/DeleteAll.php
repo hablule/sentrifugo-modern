@@ -74,7 +74,7 @@ class Zend_Test_PHPUnit_Db_Operation_DeleteAll implements PHPUnit_Extensions_Dat
                 $connection->getConnection()->delete($tableName);
             } catch (Exception $e) {
                 require_once "PHPUnit/Extensions/Database/Operation/Exception.php";
-                throw new PHPUnit_Extensions_Database_Operation_Exception('DELETEALL', 'DELETE FROM '.$tableName.'', array(), $table, $e->getFile());
+                throw new PHPUnit_Extensions_Database_Operation_Exception('DELETEALL', 'DELETE FROM '.$tableName.'', [], $table, $e->getFile());
             }
         }
     }

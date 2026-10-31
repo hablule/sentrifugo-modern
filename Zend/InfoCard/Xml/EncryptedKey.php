@@ -84,7 +84,7 @@ class Zend_InfoCard_Xml_EncryptedKey
     {
 
         $this->registerXPathNamespace('e', 'http://www.w3.org/2001/04/xmlenc#');
-        list($encryption_method) = $this->xpath("//e:EncryptionMethod");
+        [$encryption_method] = $this->xpath("//e:EncryptionMethod");
 
         if(!($encryption_method instanceof Zend_InfoCard_Xml_Element)) {
             throw new Zend_InfoCard_Xml_Exception("Unable to find the e:EncryptionMethod KeyInfo encryption block");
@@ -109,7 +109,7 @@ class Zend_InfoCard_Xml_EncryptedKey
     public function getDigestMethod()
     {
         $this->registerXPathNamespace('e', 'http://www.w3.org/2001/04/xmlenc#');
-        list($encryption_method) = $this->xpath("//e:EncryptionMethod");
+        [$encryption_method] = $this->xpath("//e:EncryptionMethod");
 
         if(!($encryption_method instanceof Zend_InfoCard_Xml_Element)) {
             throw new Zend_InfoCard_Xml_Exception("Unable to find the e:EncryptionMethod KeyInfo encryption block");
@@ -156,14 +156,14 @@ class Zend_InfoCard_Xml_EncryptedKey
 
         $this->registerXPathNamespace('e', 'http://www.w3.org/2001/04/xmlenc#');
 
-        list($cipherdata) = $this->xpath("//e:CipherData");
+        [$cipherdata] = $this->xpath("//e:CipherData");
 
         if(!($cipherdata instanceof Zend_InfoCard_Xml_Element)) {
             throw new Zend_InfoCard_Xml_Exception("Unable to find the e:CipherData block");
         }
 
         $cipherdata->registerXPathNameSpace('enc', 'http://www.w3.org/2001/04/xmlenc#');
-        list($ciphervalue) = $cipherdata->xpath("//enc:CipherValue");
+        [$ciphervalue] = $cipherdata->xpath("//enc:CipherValue");
 
         if(!($ciphervalue instanceof Zend_InfoCard_Xml_Element)) {
             throw new Zend_InfoCard_Xml_Exception("Unable to fidn the enc:CipherValue block");

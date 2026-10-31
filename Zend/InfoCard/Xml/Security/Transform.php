@@ -37,7 +37,7 @@ class Zend_InfoCard_Xml_Security_Transform
      *
      * @var array
      */
-    protected $_transformList = array();
+    protected $_transformList = [];
 
     /**
      * Returns the name of the transform class based on a given URI
@@ -69,8 +69,8 @@ class Zend_InfoCard_Xml_Security_Transform
     {
         $class = $this->_findClassbyURI($uri);
 
-        $this->_transformList[] = array('uri' => $uri,
-                                        'class' => $class);
+        $this->_transformList[] = ['uri' => $uri,
+                                        'class' => $class];
         return $this;
     }
 

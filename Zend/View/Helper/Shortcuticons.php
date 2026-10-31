@@ -31,7 +31,7 @@ class Zend_View_Helper_Shortcuticons extends Zend_View_Helper_Abstract {
 
 	public  function shortcuticons($userId)
 	{
-		$role_id ="";$privilegedmenuIdsArr=array();$privilegedmenuIdsCsv="";
+		$role_id ="";$privilegedmenuIdsArr=[];$privilegedmenuIdsCsv="";
 		
 		$settingsModel = new Default_Model_Settings();
 		$session=new Zend_Auth_Storage_Session();
@@ -59,7 +59,7 @@ class Zend_View_Helper_Shortcuticons extends Zend_View_Helper_Abstract {
 				
 				$privilege_model = new Default_Model_Privileges();
 				$privilegesofObj = $privilege_model->getObjPrivileges($menuIdsStr,"",$role_id,$idCsv);
-				$menuwithaddprivilegeArr = array(SITEPREFERENCE,LEAVEREQUEST,IDENTITYCODES,IDENTITYDOCUMENTS);
+				$menuwithaddprivilegeArr = [SITEPREFERENCE,LEAVEREQUEST,IDENTITYCODES,IDENTITYDOCUMENTS];
 				/* This condition is to check whether the menu is active. If active then only the shortcut will be displayed.*/
 				if(!empty($privilegesofObj) && isset($privilegesofObj))
 				{
@@ -84,7 +84,7 @@ class Zend_View_Helper_Shortcuticons extends Zend_View_Helper_Abstract {
 
 						//echo $s." >> ".(strpos($tmpMenuUrl,'http://') === false)."<br/>";
 
-						if($tmpMenuUrl && (strpos($tmpMenuUrl,'http://') === false || strpos($tmpMenuUrl,'http://') === false  || strpos($tmpMenuUrl,'http://') === false))
+						if($tmpMenuUrl && (!str_contains($tmpMenuUrl,'http://') || !str_contains($tmpMenuUrl,'http://')  || !str_contains($tmpMenuUrl,'http://')))
 						{
 							$menuUrl = BASE_URL.substr($tmpMenuUrl,1,strlen($tmpMenuUrl));
 						}

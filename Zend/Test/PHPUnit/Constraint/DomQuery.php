@@ -59,14 +59,14 @@ class Zend_Test_PHPUnit_Constraint_DomQuery extends PHPUnit_Framework_Constraint
      * Available assertion types
      * @var array
      */
-    protected $_assertTypes       = array(
+    protected $_assertTypes       = [
         self::ASSERT_QUERY,
         self::ASSERT_CONTENT_CONTAINS,
         self::ASSERT_CONTENT_REGEX,
         self::ASSERT_CONTENT_COUNT,
         self::ASSERT_CONTENT_COUNT_MIN,
         self::ASSERT_CONTENT_COUNT_MAX,
-    );
+    ];
 
     /**
      * Content being matched
@@ -96,7 +96,7 @@ class Zend_Test_PHPUnit_Constraint_DomQuery extends PHPUnit_Framework_Constraint
      * XPath namespaces
      * @var array
      */
-    protected $_xpathNamespaces = array();
+    protected $_xpathNamespaces = [];
 
     /**
      * Constructor; setup constraint state
@@ -153,7 +153,7 @@ class Zend_Test_PHPUnit_Constraint_DomQuery extends PHPUnit_Framework_Constraint
 
         if (!in_array($assertType, $this->_assertTypes)) {
             require_once 'Zend/Test/PHPUnit/Constraint/Exception.php';
-            throw new Zend_Test_PHPUnit_Constraint_Exception(sprintf('Invalid assertion type "%s" provided to %s constraint', $assertType, __CLASS__));
+            throw new Zend_Test_PHPUnit_Constraint_Exception(sprintf('Invalid assertion type "%s" provided to %s constraint', $assertType, self::class));
         }
 
         $this->_assertType = $assertType;

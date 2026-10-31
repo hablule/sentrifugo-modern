@@ -83,7 +83,7 @@ class Zend_Mail extends Zend_Mime_Message
      * Mail headers
      * @var array
      */
-    protected $_headers = array();
+    protected $_headers = [];
 
     /**
      * Encoding of Mail headers
@@ -101,13 +101,13 @@ class Zend_Mail extends Zend_Mime_Message
      * To: addresses
      * @var array
      */
-    protected $_to = array();
+    protected $_to = [];
 
     /**
      * Array of all recipients
      * @var array
      */
-    protected $_recipients = array();
+    protected $_recipients = [];
 
     /**
      * Reply-To header
@@ -239,11 +239,11 @@ class Zend_Mail extends Zend_Mime_Message
      */
     public function setType($type)
     {
-        $allowed = array(
+        $allowed = [
             Zend_Mime::MULTIPART_ALTERNATIVE,
             Zend_Mime::MULTIPART_MIXED,
             Zend_Mime::MULTIPART_RELATED,
-        );
+        ];
         if (!in_array($type, $allowed)) {
             /**
              * @see Zend_Mail_Exception
@@ -334,10 +334,10 @@ class Zend_Mail extends Zend_Mime_Message
      */
     public function setHeaderEncoding($encoding)
     {
-        $allowed = array(
+        $allowed = [
             Zend_Mime::ENCODING_BASE64,
             Zend_Mime::ENCODING_QUOTEDPRINTABLE
-        );
+        ];
         if (!in_array($encoding, $allowed)) {
             /**
              * @see Zend_Mail_Exception
@@ -360,9 +360,7 @@ class Zend_Mail extends Zend_Mime_Message
     */
     public function setBodyText($txt, $charset = null, $encoding = Zend_Mime::ENCODING_QUOTEDPRINTABLE)
     {
-        if ($charset === null) {
-            $charset = $this->_charset;
-        }
+        $charset ??= $this->_charset;
 
         $mp = new Zend_Mime_Part($txt);
         $mp->encoding = $encoding;
@@ -401,9 +399,7 @@ class Zend_Mail extends Zend_Mime_Message
      */
     public function setBodyHtml($html, $charset = null, $encoding = Zend_Mime::ENCODING_QUOTEDPRINTABLE)
     {
-        if ($charset === null) {
-            $charset = $this->_charset;
-        }
+        $charset ??= $this->_charset;
 
         $mp = new Zend_Mime_Part($html);
         $mp->encoding = $encoding;
@@ -525,7 +521,7 @@ class Zend_Mail extends Zend_Mime_Message
         if (isset($this->_headers[$headerName])) {
             $this->_headers[$headerName][] = $value;
         } else {
-            $this->_headers[$headerName] = array($value);
+            $this->_headers[$headerName] = [$value];
         }
 
         if ($append) {
@@ -571,7 +567,7 @@ class Zend_Mail extends Zend_Mime_Message
     public function addTo($email, $name='')
     {
         if (!is_array($email)) {
-            $email = array($name => $email);
+            $email = [$name => $email];
         }
 
         foreach ($email as $n => $recipient) {
@@ -592,7 +588,7 @@ class Zend_Mail extends Zend_Mime_Message
     public function addCc($email, $name='')
     {
         if (!is_array($email)) {
-            $email = array($name => $email);
+            $email = [$name => $email];
         }
 
         foreach ($email as $n => $recipient) {
@@ -611,7 +607,7 @@ class Zend_Mail extends Zend_Mime_Message
     public function addBcc($email)
     {
         if (!is_array($email)) {
-            $email = array($email);
+            $email = [$email];
         }
 
         foreach ($email as $recipient) {
@@ -652,8 +648,8 @@ class Zend_Mail extends Zend_Mime_Message
      */
     public function clearRecipients()
     {
-        $this->_recipients = array();
-        $this->_to = array();
+        $this->_recipients = [];
+        $this->_to = [];
 
         $this->clearHeader('To');
         $this->clearHeader('Cc');
@@ -769,7 +765,7 @@ class Zend_Mail extends Zend_Mime_Message
      */
     public static function setDefaultFrom($email, $name = null)
     {
-        self::$_defaultFrom = array('email' => $email, 'name' => $name);
+        self::$_defaultFrom = ['email' => $email, 'name' => $name];
     }
 
     /**
@@ -819,7 +815,7 @@ class Zend_Mail extends Zend_Mime_Message
      */
     public static function setDefaultReplyTo($email, $name = null)
     {
-        self::$_defaultReplyTo = array('email' => $email, 'name' => $name);
+        self::$_defaultReplyTo = ['email' => $email, 'name' => $name];
     }
 
     /**
@@ -1105,7 +1101,7 @@ class Zend_Mail extends Zend_Mime_Message
 
         $rand = mt_rand();
 
-        if ($this->_recipients !== array()) {
+        if ($this->_recipients !== []) {
             $recipient = array_rand($this->_recipients);
         } else {
             $recipient = 'unknown';
@@ -1131,10 +1127,10 @@ class Zend_Mail extends Zend_Mime_Message
      */
     public function addHeader($name, $value, $append = false)
     {
-        $prohibit = array('to', 'cc', 'bcc', 'from', 'subject',
+        $prohibit = ['to', 'cc', 'bcc', 'from', 'subject',
                           'reply-to', 'return-path',
                           'date', 'message-id',
-                         );
+                         ];
         if (in_array(strtolower($name), $prohibit)) {
             /**
              * @see Zend_Mail_Exception
@@ -1204,14 +1200,14 @@ class Zend_Mail extends Zend_Mime_Message
      */
     protected function _filterEmail($email)
     {
-        $rule = array("\r" => '',
+        $rule = ["\r" => '',
                       "\n" => '',
                       "\t" => '',
                       '"'  => '',
                       ','  => '',
                       '<'  => '',
                       '>'  => '',
-        );
+        ];
 
         return strtr($email, $rule);
     }
@@ -1224,13 +1220,13 @@ class Zend_Mail extends Zend_Mime_Message
      */
     protected function _filterName($name)
     {
-        $rule = array("\r" => '',
+        $rule = ["\r" => '',
                       "\n" => '',
                       "\t" => '',
                       '"'  => "'",
                       '<'  => '[',
                       '>'  => ']',
-        );
+        ];
 
         return trim(strtr($name, $rule));
     }
@@ -1243,10 +1239,10 @@ class Zend_Mail extends Zend_Mime_Message
      */
     protected function _filterOther($data)
     {
-        $rule = array("\r" => '',
+        $rule = ["\r" => '',
                       "\n" => '',
                       "\t" => '',
-        );
+        ];
 
         return strtr($data, $rule);
     }

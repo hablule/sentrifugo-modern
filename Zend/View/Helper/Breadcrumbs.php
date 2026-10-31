@@ -118,7 +118,7 @@ class Zend_View_Helper_Breadcrumbs extends Zend_View_Helper_Abstract
         $actionName = $action_Name; 
         $breadCrumbsData = '';
 								   
-        $mydetails_arr = array(	'jobhistory'=>'Employee Job History','certification'=>'Training & Certification Details',
+        $mydetails_arr = [	'jobhistory'=>'Employee Job History','certification'=>'Training & Certification Details',
 				'experience'=>'Experience Details','education'=>'Education Details',
 				'medicalclaims'=>'Medical Claims','leaves'=>'Employee Leaves',
 				'skills'=>'Employee Skills','communication'=>'Contact Details',
@@ -131,31 +131,31 @@ class Zend_View_Helper_Breadcrumbs extends Zend_View_Helper_Abstract
 				'personaldetailsview'=>'Personal Details','creditcard'=>'Corporate Card Details',
 				
 				'creditcarddetailsview'=>'Corporate Card Details','dependency'=>'Dependency Details','edit'=>'Edit',
-                        );	
+                        ];	
 				
-        $myemployees_arr = array(
+        $myemployees_arr = [
 				'additionaldetailsview'=>'Additional Details','jobhistoryview'=>'Job History',
 				'perview'=>'Personal Details','expview'=>'Experience Details','eduview'=>'Education Details',
 				'skillsview'=>'Employee Skills','comview'=>'Contact Details','trainingview'=>'Training & Certification Details',
 				'view'=>'View',	'employeereport' => 'My Team Report'		
-                            );
+                            ];
 									   
-        $myemployeesedit_arr = array(
+        $myemployeesedit_arr = [
 				'additionaldetailsedit'=>'Additional Details','jobhistoryedit'=>'Job History','peredit'=>'Personal3 Details',
 				'expedit'=>'Experience Details','eduedit'=>'Education Details',	'skillsedit'=>'Employee Skills',
 				'comedit'=>'Contact Details','trainingedit'=>'Training & Certification Details','edit'=>'Edit',			
-                            );	
+                            ];	
         
-        $dashboard_actions = array(
+        $dashboard_actions = [
             'viewsettings' => $this->dashboard_actions_html($baseUrlString, 'Settings'),
             'viewprofile' => $this->dashboard_actions_html($baseUrlString, 'Profile'),
             'changepassword' => $this->dashboard_actions_html($baseUrlString, 'Change Password'),
             'emailsettings' => $this->dashboard_actions_html($baseUrlString, 'Email Settings'),
             'upgradeapplication' => $this->dashboard_actions_html($baseUrlString, 'Upgrade Application'),
 			'changemenucolor'=>$this->dashboard_actions_html($baseUrlString,'Manage Theme')
-        );
+        ];
         
-         $emptabarr = array('dependencydetails','creditcarddetails','visaandimmigrationdetails','workeligibilitydetails','disabilitydetails','empcommunicationdetails','empskills','empleaves','empholidays','medicalclaims','educationdetails','experiencedetails','trainingandcertificationdetails','emppersonaldetails','empperformanceappraisal','emppayslips','empbenefits','emprenumerationdetails','emprequisitiondetails','empadditionaldetails','empsecuritycredentials','empsalarydetails','empjobhistory','employeedocs','empremunerationdetails');
+         $emptabarr = ['dependencydetails','creditcarddetails','visaandimmigrationdetails','workeligibilitydetails','disabilitydetails','empcommunicationdetails','empskills','empleaves','empholidays','medicalclaims','educationdetails','experiencedetails','trainingandcertificationdetails','emppersonaldetails','empperformanceappraisal','emppayslips','empbenefits','emprenumerationdetails','emprequisitiondetails','empadditionaldetails','empsecuritycredentials','empsalarydetails','empjobhistory','employeedocs','empremunerationdetails'];
 
         if($pageName == '' || $pageName == 'welcome')
         {
@@ -288,7 +288,7 @@ class Zend_View_Helper_Breadcrumbs extends Zend_View_Helper_Abstract
 			}
 			$breadCrumIds = $this->getBreadCrumDetails($url);
 			
-			$breadCrumNames = array();	
+			$breadCrumNames = [];	
 			if(!empty($breadCrumIds))
 			{
 				
@@ -421,7 +421,7 @@ class Zend_View_Helper_Breadcrumbs extends Zend_View_Helper_Abstract
 					if(in_array('id',$pageUrl) || in_array('userid',$pageUrl))
 					{						
 						$idval = intval($pageUrl[$idvalindex]);
-						if($idval != '')
+						if($idval != 0)
 						$breadCrumbsData .= ' <span class="arrows">&rsaquo;</span> <span>Edit</span>';
 						else
 						$breadCrumbsData .= ' <span class="arrows">&rsaquo;</span> <span>Add</span>';
@@ -504,11 +504,11 @@ class Zend_View_Helper_Breadcrumbs extends Zend_View_Helper_Abstract
     }
     public  function getBreadCrumDetails($url)
     {	
-        $output = array();
+        $output = [];
         $selectQuery = "select mm.nav_ids FROM main_menu mm where mm.url = '".$url."'";	
         try
         {
-            $menu_arr = $nav_ids_arr = array();
+            $menu_arr = $nav_ids_arr = [];
             $db = Zend_Db_Table::getDefaultAdapter();
             $sql = $db->query($selectQuery);
             $result = $sql->fetchAll();
@@ -527,7 +527,7 @@ class Zend_View_Helper_Breadcrumbs extends Zend_View_Helper_Abstract
                         $menu_arr[$bdata['id']]['url'] = $bdata['url'];
                     }
                 }
-                $output = array('nav_ids_arr' => $nav_ids_arr,'menu_arr' => $menu_arr);
+                $output = ['nav_ids_arr' => $nav_ids_arr,'menu_arr' => $menu_arr];
             }                
         }
         catch(Exception $e)

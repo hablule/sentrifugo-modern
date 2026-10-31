@@ -179,15 +179,15 @@ class Zend_TimeSync_Ntp extends Zend_TimeSync_Protocol
      */
     protected function _getTimestamp($input)
     {
-        $f1  = (ord($input[0]) * pow(256, 3));
-        $f1 += (ord($input[1]) * pow(256, 2));
-        $f1 += (ord($input[2]) * pow(256, 1));
+        $f1  = (ord($input[0]) * 256 ** 3);
+        $f1 += (ord($input[1]) * 256 ** 2);
+        $f1 += (ord($input[2]) * 256 ** 1);
         $f1 += (ord($input[3]));
         $f1 -= 2208988800;
 
-        $f2  = (ord($input[4]) * pow(256, 3));
-        $f2 += (ord($input[5]) * pow(256, 2));
-        $f2 += (ord($input[6]) * pow(256, 1));
+        $f2  = (ord($input[4]) * 256 ** 3);
+        $f2 += (ord($input[5]) * 256 ** 2);
+        $f2 += (ord($input[6]) * 256 ** 1);
         $f2 += (ord($input[7]));
 
         return (float) ($f1 . "." . $f2);
@@ -212,7 +212,7 @@ class Zend_TimeSync_Ntp extends Zend_TimeSync_Protocol
                 "'$this->_timeserver' on port '$this->_port', reason: 'server timed out'");
         }
 
-        $result = array(
+        $result = [
             'flags'          => $flags,
             'stratum'        => ord(fread($this->_socket, 1)),
             'poll'           => ord(fread($this->_socket, 1)),
@@ -225,7 +225,7 @@ class Zend_TimeSync_Ntp extends Zend_TimeSync_Protocol
             'receivestamp'   => $this->_getTimestamp(fread($this->_socket, 8)),
             'transmitstamp'  => $this->_getTimestamp(fread($this->_socket, 8)),
             'clientreceived' => microtime(true)
-        );
+        ];
 
         $this->_disconnect();
         return $result;
@@ -329,29 +329,29 @@ class Zend_TimeSync_Ntp extends Zend_TimeSync_Protocol
         $refid = strtoupper($binary['referenceid']);
         switch($binary['stratum']) {
             case 0:
-                if (substr($refid, 0, 3) === 'DCN') {
+                if (str_starts_with($refid, 'DCN')) {
                     $ntpserviceid = 'DCN routing protocol';
-                } else if (substr($refid, 0, 4) === 'NIST') {
+                } else if (str_starts_with($refid, 'NIST')) {
                     $ntpserviceid = 'NIST public modem';
-                } else if (substr($refid, 0, 3) === 'TSP') {
+                } else if (str_starts_with($refid, 'TSP')) {
                     $ntpserviceid = 'TSP time protocol';
-                } else if (substr($refid, 0, 3) === 'DTS') {
+                } else if (str_starts_with($refid, 'DTS')) {
                     $ntpserviceid = 'Digital Time Service';
                 }
                 break;
 
             case 1:
-                if (substr($refid, 0, 4) === 'ATOM') {
+                if (str_starts_with($refid, 'ATOM')) {
                     $ntpserviceid = 'Atomic Clock (calibrated)';
-                } else if (substr($refid, 0, 3) === 'VLF') {
+                } else if (str_starts_with($refid, 'VLF')) {
                     $ntpserviceid = 'VLF radio';
                 } else if ($refid === 'CALLSIGN') {
                     $ntpserviceid = 'Generic radio';
-                } else if (substr($refid, 0, 4) === 'LORC') {
+                } else if (str_starts_with($refid, 'LORC')) {
                     $ntpserviceid = 'LORAN-C radionavigation';
-                } else if (substr($refid, 0, 4) === 'GOES') {
+                } else if (str_starts_with($refid, 'GOES')) {
                     $ntpserviceid = 'GOES UHF environment satellite';
-                } else if (substr($refid, 0, 3) === 'GPS') {
+                } else if (str_starts_with($refid, 'GPS')) {
                     $ntpserviceid = 'GPS UHF satellite positioning';
                 }
                 break;

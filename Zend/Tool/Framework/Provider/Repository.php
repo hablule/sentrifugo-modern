@@ -53,17 +53,17 @@ class Zend_Tool_Framework_Provider_Repository
     /**
      * @var Zend_Tool_Framework_Provider_Interface[]
      */
-    protected $_unprocessedProviders = array();
+    protected $_unprocessedProviders = [];
 
     /**
      * @var Zend_Tool_Framework_Provider_Signature[]
      */
-    protected $_providerSignatures = array();
+    protected $_providerSignatures = [];
 
     /**
      * @var array Array of Zend_Tool_Framework_Provider_Inteface
      */
-    protected $_providers = array();
+    protected $_providers = [];
 
     /**
      * setRegistry()
@@ -159,12 +159,9 @@ class Zend_Tool_Framework_Provider_Repository
     public function process()
     {
 
-        // process all providers in the unprocessedProviders array
-        //foreach ($this->_unprocessedProviders as $providerName => $provider) {
-        reset($this->_unprocessedProviders);
         while ($this->_unprocessedProviders) {
 
-            $providerName = key($this->_unprocessedProviders);
+            $providerName = array_key_first($this->_unprocessedProviders);
             $provider = array_shift($this->_unprocessedProviders);
 
             // create a signature for the provided provider
@@ -263,10 +260,10 @@ class Zend_Tool_Framework_Provider_Repository
     {
         $className = get_class($provider);
         $providerName = $className;
-        if (strpos($providerName, '_') !== false) {
+        if (str_contains($providerName, '_')) {
             $providerName = substr($providerName, strrpos($providerName, '_')+1);
         }
-        if (substr($providerName, -8) == 'Provider') {
+        if (str_ends_with($providerName, 'Provider')) {
             $providerName = substr($providerName, 0, strlen($providerName)-8);
         }
         return $providerName;

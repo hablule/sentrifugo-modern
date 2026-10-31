@@ -128,7 +128,7 @@ class Zend_Form_Element_Hash extends Zend_Form_Element_Xhtml
             $rightHash = null;
         }
 
-        $this->addValidator('Identical', true, array($rightHash));
+        $this->addValidator('Identical', true, [$rightHash]);
         return $this;
     }
 
@@ -178,7 +178,7 @@ class Zend_Form_Element_Hash extends Zend_Form_Element_Xhtml
      */
     public function getSessionName()
     {
-        return __CLASS__ . '_' . $this->getSalt() . '_' . $this->getName();
+        return self::class . '_' . $this->getSalt() . '_' . $this->getName();
     }
 
     /**

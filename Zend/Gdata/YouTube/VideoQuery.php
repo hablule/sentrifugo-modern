@@ -139,7 +139,7 @@ class Zend_Gdata_YouTube_VideoQuery extends Zend_Gdata_Query
                 foreach($parameters as $param) {
                     $temp = trim($param);
                     // strip off the optional exclamation mark for numeric check
-                    if (substr($temp, -1) == '!') {
+                    if (str_ends_with($temp, '!')) {
                         $temp = substr($temp, 0, -1);
                     }
                     if (!is_numeric($temp)) {
@@ -454,10 +454,10 @@ class Zend_Gdata_YouTube_VideoQuery extends Zend_Gdata_Query
     public function getQueryString($majorProtocolVersion = null,
         $minorProtocolVersion = null)
     {
-        $queryArray = array();
+        $queryArray = [];
 
         foreach ($this->_params as $name => $value) {
-            if (substr($name, 0, 1) == '_') {
+            if (str_starts_with($name, '_')) {
                 continue;
             }
 

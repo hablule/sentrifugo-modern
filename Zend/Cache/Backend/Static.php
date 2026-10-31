@@ -46,7 +46,7 @@ class Zend_Cache_Backend_Static
      * Static backend options
      * @var array
      */
-    protected $_options = array(
+    protected $_options = [
         'public_dir'            => null,
         'sub_dir'               => 'html',
         'file_extension'        => '.html',
@@ -57,7 +57,7 @@ class Zend_Cache_Backend_Static
         'debug_header'          => false,
         'tag_cache'             => null,
         'disable_caching'       => false
-    );
+    ];
 
     /**
      * Cache for handling tags
@@ -198,7 +198,7 @@ class Zend_Cache_Backend_Static
      * @param  int   $specificLifetime If != false, set a specific lifetime for this cache record (null => infinite lifetime)
      * @return boolean true if no problem
      */
-    public function save($data, $id, $tags = array(), $specificLifetime = false)
+    public function save($data, $id, $tags = [], $specificLifetime = false)
     {
         if ($this->_options['disable_caching']) {
             return true;
@@ -242,14 +242,10 @@ class Zend_Cache_Backend_Static
         if ($this->_tagged === null && $tagged = $this->getInnerCache()->load(self::INNER_CACHE_NAME)) {
             $this->_tagged = $tagged;
         } elseif ($this->_tagged === null) {
-            $this->_tagged = array();
+            $this->_tagged = [];
         }
-        if (!isset($this->_tagged[$id])) {
-            $this->_tagged[$id] = array();
-        }
-        if (!isset($this->_tagged[$id]['tags'])) {
-            $this->_tagged[$id]['tags'] = array();
-        }
+        $this->_tagged[$id] ??= [];
+        $this->_tagged[$id]['tags'] ??= [];
         $this->_tagged[$id]['tags'] = array_unique(array_merge($this->_tagged[$id]['tags'], $tags));
         $this->_tagged[$id]['extension'] = $ext;
         $this->getInnerCache()->save($this->_tagged, self::INNER_CACHE_NAME);
@@ -380,7 +376,7 @@ class Zend_Cache_Backend_Static
      * @param  array  $tags Array of tags
      * @return boolean true if no problem
      */
-    public function clean($mode = Zend_Cache::CLEANING_MODE_ALL, $tags = array())
+    public function clean($mode = Zend_Cache::CLEANING_MODE_ALL, $tags = [])
     {
         $result = false;
         switch ($mode) {
@@ -492,7 +488,7 @@ class Zend_Cache_Backend_Static
     {
         $path = realpath($path);
         $base = realpath($this->_options['public_dir']);
-        return strncmp($path, $base, strlen($base)) !== 0;
+        return !str_starts_with($path, $base);
     }
 
     /**
@@ -522,7 +518,7 @@ class Zend_Cache_Backend_Static
         }
 
         // Internal only checked in Frontend - not here!
-        if (substr($string, 0, 9) == 'internal-') {
+        if (str_starts_with($string, 'internal-')) {
             return;
         }
 

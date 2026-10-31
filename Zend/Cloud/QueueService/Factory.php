@@ -53,7 +53,7 @@ class Zend_Cloud_QueueService_Factory extends Zend_Cloud_AbstractFactory
      * @param  array $options
      * @return void
      */
-    public static function getAdapter($options = array())
+    public static function getAdapter($options = [])
     {
         $adapter = parent::_getAdapter(self::QUEUE_ADAPTER_KEY, $options);
         if (!$adapter) {

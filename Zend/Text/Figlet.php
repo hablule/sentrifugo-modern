@@ -71,7 +71,7 @@ class Zend_Text_Figlet
      *
      * @var array
      */
-    protected $_charList = array();
+    protected $_charList = [];
 
     /**
      * Indicates if a font was loaded yet
@@ -93,7 +93,7 @@ class Zend_Text_Figlet
      *
      * @var array
      */
-    protected $_germanChars = array(196, 214, 220, 228, 246, 252, 223);
+    protected $_germanChars = [196, 214, 220, 228, 246, 252, 223];
 
     /**
      * Output width, defaults to 80.
@@ -183,7 +183,7 @@ class Zend_Text_Figlet
      *
      * @var array
      */
-    protected $_fontOptions = array();
+    protected $_fontOptions = [];
 
     /**
      * Previous character width
@@ -260,10 +260,10 @@ class Zend_Text_Figlet
      *
      * @var array
      */
-    protected $_skipOptions = array(
+    protected $_skipOptions = [
         'options',
         'config',
-    );
+    ];
 
     /**
      * Instantiate the FIGlet with a specific font. If no font is given, the
@@ -284,7 +284,7 @@ class Zend_Text_Figlet
 
         // If no font was defined, load default font
         if (!$this->_fontLoaded) {
-            $this->_loadFont(dirname(__FILE__) . '/Figlet/zend-framework.flf');
+            $this->_loadFont(__DIR__ . '/Figlet/zend-framework.flf');
         }
     }
 
@@ -435,7 +435,7 @@ class Zend_Text_Figlet
         }
 
         $this->_output     = '';
-        $this->_outputLine = array();
+        $this->_outputLine = [];
 
         $this->_clearLine();
 
@@ -973,7 +973,7 @@ class Zend_Text_Figlet
         }
 
         // Check if gzip support is required
-        if (substr($fontFile, -3) === '.gz') {
+        if (str_ends_with($fontFile, '.gz')) {
             if (!function_exists('gzcompress')) {
                 require_once 'Zend/Text/Figlet/Exception.php';
                 throw new Zend_Text_Figlet_Exception('GZIP library is required for '
@@ -1080,18 +1080,18 @@ class Zend_Text_Figlet
         // At the end fetch all extended characters
         while (!feof($fp)) {
             // Get the Unicode
-            list($uniCode) = explode(' ', fgets($fp, 2048));
+            [$uniCode] = explode(' ', fgets($fp, 2048));
 
             if (empty($uniCode)) {
                 continue;
             }
 
             // Convert it if required
-            if (substr($uniCode, 0, 2) === '0x') {
+            if (str_starts_with($uniCode, '0x')) {
                 $uniCode = hexdec(substr($uniCode, 2));
-            } else if (substr($uniCode, 0, 1) === '0' and
+            } else if (str_starts_with($uniCode, '0') and
                        $uniCode !== '0' or
-                       substr($uniCode, 0, 2) === '-0') {
+                       str_starts_with($uniCode, '-0')) {
                 $uniCode = octdec($uniCode);
             } else {
                 $uniCode = (int) $uniCode;
@@ -1183,7 +1183,7 @@ class Zend_Text_Figlet
      */
     protected function _loadChar($fp)
     {
-        $char = array();
+        $char = [];
 
         for ($i = 0; $i < $this->_charHeight; $i++) {
             if (feof($fp)) {

@@ -76,10 +76,10 @@ class Zend_Form_Decorator_FormElements extends Zend_Form_Decorator_Abstract
 
         $belongsTo      = ($form instanceof Zend_Form) ? $form->getElementsBelongTo() : null;
         $elementContent = '';
-        $displayGroups  = ($form instanceof Zend_Form) ? $form->getDisplayGroups() : array();
+        $displayGroups  = ($form instanceof Zend_Form) ? $form->getDisplayGroups() : [];
         $separator      = $this->getSeparator();
         $translator     = $form->getTranslator();
-        $items          = array();
+        $items          = [];
         $view           = $form->getView();
         foreach ($form as $item) {
             $item->setView($view)
@@ -98,9 +98,9 @@ class Zend_Form_Decorator_FormElements extends Zend_Form_Decorator_Abstract
             } elseif (!empty($belongsTo) && ($item instanceof Zend_Form)) {
                 if ($item->isArray()) {
                     $name = $this->mergeBelongsTo($belongsTo, $item->getElementsBelongTo());
-                    $item->setElementsBelongTo($name, true);
+                    $item->setElementsBelongTo($name);
                 } else {
-                    $item->setElementsBelongTo($belongsTo, true);
+                    $item->setElementsBelongTo($belongsTo);
                 }
             } elseif (!empty($belongsTo) && ($item instanceof Zend_Form_DisplayGroup)) {
                 foreach ($item as $element) {

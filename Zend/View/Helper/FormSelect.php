@@ -74,7 +74,7 @@ class Zend_View_Helper_FormSelect extends Zend_View_Helper_FormElement
         // check if element may have multiple values
         $multiple = '';
 
-        if (substr($name, -2) == '[]') {
+        if (str_ends_with($name, '[]')) {
             // multiple implied by the name
             $multiple = ' multiple="multiple"';
         }
@@ -86,7 +86,7 @@ class Zend_View_Helper_FormSelect extends Zend_View_Helper_FormElement
                 $multiple = ' multiple="multiple"';
 
                 // Make sure name indicates multiple values are allowed
-                if (!empty($multiple) && (substr($name, -2) != '[]')) {
+                if (!empty($multiple) && (!str_ends_with($name, '[]'))) {
                     $name .= '[]';
                 }
             } else {
@@ -112,7 +112,7 @@ class Zend_View_Helper_FormSelect extends Zend_View_Helper_FormElement
                 . ">\n    ";
 
         // build the list of options
-        $list       = array();
+        $list       = [];
         $translator = $this->getTranslator();
         foreach ((array) $options as $opt_value => $opt_label) {
             if (is_array($opt_label)) {
@@ -156,7 +156,7 @@ class Zend_View_Helper_FormSelect extends Zend_View_Helper_FormElement
     protected function _build($value, $label, $selected, $disable)
     {
         if (is_bool($disable)) {
-            $disable = array();
+            $disable = [];
         }
 
         $opt = '<option'

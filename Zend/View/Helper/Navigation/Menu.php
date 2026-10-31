@@ -223,11 +223,11 @@ class Zend_View_Helper_Navigation_Menu
         }
 
         // get attribs for element
-        $attribs = array(
+        $attribs = [
             'id'     => $page->getId(),
             'title'  => $title,
             'class'  => $page->getClass()
-        );
+        ];
 
         // does page have a href?
         if ($href = $page->getHref()) {
@@ -250,7 +250,7 @@ class Zend_View_Helper_Navigation_Menu
      * @param  array $options  [optional] options to normalize
      * @return array           normalized options
      */
-    protected function _normalizeOptions(array $options = array())
+    protected function _normalizeOptions(array $options = [])
     {
         if (isset($options['indent'])) {
             $options['indent'] = $this->_getWhitespace($options['indent']);
@@ -284,13 +284,9 @@ class Zend_View_Helper_Navigation_Menu
             $options['maxDepth'] = $this->getMaxDepth();
         }
 
-        if (!isset($options['onlyActiveBranch'])) {
-            $options['onlyActiveBranch'] = $this->getOnlyActiveBranch();
-        }
+        $options['onlyActiveBranch'] ??= $this->getOnlyActiveBranch();
 
-        if (!isset($options['renderParents'])) {
-            $options['renderParents'] = $this->getRenderParents();
-        }
+        $options['renderParents'] ??= $this->getRenderParents();
 
         return $options;
     }
@@ -483,11 +479,9 @@ class Zend_View_Helper_Navigation_Menu
      * @return string                                rendered menu
      */
     public function renderMenu(Zend_Navigation_Container $container = null,
-                               array $options = array())
+                               array $options = [])
     {
-        if (null === $container) {
-            $container = $this->getContainer();
-        }
+        $container ??= $this->getContainer();
 
         $options = $this->_normalizeOptions($options);
 
@@ -543,14 +537,14 @@ class Zend_View_Helper_Navigation_Menu
                                   $ulClass = null,
                                   $indent = null)
     {
-        return $this->renderMenu($container, array(
+        return $this->renderMenu($container, [
             'indent'           => $indent,
             'ulClass'          => $ulClass,
             'minDepth'         => null,
             'maxDepth'         => null,
             'onlyActiveBranch' => true,
             'renderParents'    => false
-        ));
+        ]);
     }
 
     /**
@@ -578,13 +572,9 @@ class Zend_View_Helper_Navigation_Menu
     public function renderPartial(Zend_Navigation_Container $container = null,
                                   $partial = null)
     {
-        if (null === $container) {
-            $container = $this->getContainer();
-        }
+        $container ??= $this->getContainer();
 
-        if (null === $partial) {
-            $partial = $this->getPartial();
-        }
+        $partial ??= $this->getPartial();
 
         if (empty($partial)) {
             require_once 'Zend/View/Exception.php';
@@ -595,9 +585,9 @@ class Zend_View_Helper_Navigation_Menu
             throw $e;
         }
 
-        $model = array(
+        $model = [
             'container' => $container
-        );
+        ];
 
         if (is_array($partial)) {
             if (count($partial) != 2) {

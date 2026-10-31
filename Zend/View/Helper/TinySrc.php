@@ -79,13 +79,13 @@ class Zend_View_Helper_TinySrc extends Zend_View_Helper_HtmlElement
      *
      * @var array
      */
-    protected $_defaultOptions = array(
+    protected $_defaultOptions = [
         'base_url'   => null,
         'format'     => null,
         'width'      => false,
         'height'     => false,
         'create_tag' => true,
-    );
+    ];
 
     /**
      * @var string Default image format to use
@@ -99,7 +99,7 @@ class Zend_View_Helper_TinySrc extends Zend_View_Helper_HtmlElement
      * @param array $options
      * @return void
      */
-    public function tinySrc($image = null, array $options = array())
+    public function tinySrc($image = null, array $options = [])
     {
         if (null === $image) {
             return $this;
@@ -185,7 +185,7 @@ class Zend_View_Helper_TinySrc extends Zend_View_Helper_HtmlElement
         }
 
         $format = strtolower($format);
-        if (!in_array($format, array('png', 'jpeg'))) {
+        if (!in_array($format, ['png', 'jpeg'])) {
             require_once 'Zend/View/Exception.php';
             throw new Zend_View_Exception('Invalid format; must be one of "jpeg" or "png"');
         }
@@ -290,7 +290,7 @@ class Zend_View_Helper_TinySrc extends Zend_View_Helper_HtmlElement
      */
     protected function _mergeFormat(array $options)
     {
-        if (in_array($options['format'], array('png', 'jpeg'))) {
+        if (in_array($options['format'], ['png', 'jpeg'])) {
             return '/' . $options['format'];
         }
         return $this->_format;

@@ -69,7 +69,7 @@ class Zend_Markup_Token
      *
      * @var array
      */
-    protected $_attributes = array();
+    protected $_attributes = [];
 
     /**
      * The used tag stopper (empty when none is found)
@@ -100,7 +100,7 @@ class Zend_Markup_Token
         $tag,
         $type,
         $name = '',
-        array $attributes = array(),
+        array $attributes = [],
         Zend_Markup_Token $parent = null
     ) {
         $this->_tag        = $tag;
@@ -174,7 +174,7 @@ class Zend_Markup_Token
      */
     public function getAttribute($name)
     {
-        return isset($this->_attributes[$name]) ? $this->_attributes[$name] : null;
+        return $this->_attributes[$name] ?? null;
     }
 
     /**

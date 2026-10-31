@@ -102,7 +102,7 @@ abstract class Zend_Navigation_Page extends Zend_Navigation_Container
      *
      * @var array
      */
-    protected $_rel = array();
+    protected $_rel = [];
 
     /**
      * Reverse links to other pages
@@ -111,7 +111,7 @@ abstract class Zend_Navigation_Page extends Zend_Navigation_Container
      *
      * @var array
      */
-    protected $_rev = array();
+    protected $_rev = [];
 
     /**
      * Page order used by parent container
@@ -160,7 +160,7 @@ abstract class Zend_Navigation_Page extends Zend_Navigation_Container
      *
      * @var array
      */
-    protected $_properties = array();
+    protected $_properties = [];
 
     /**
      * The type of page to use when it wasn't set
@@ -553,7 +553,7 @@ abstract class Zend_Navigation_Page extends Zend_Navigation_Container
      */
     public function setRel($relations = null)
     {
-        $this->_rel = array();
+        $this->_rel = [];
 
         if (null !== $relations) {
             if ($relations instanceof Zend_Config) {
@@ -594,9 +594,7 @@ abstract class Zend_Navigation_Page extends Zend_Navigation_Container
     public function getRel($relation = null)
     {
         if (null !== $relation) {
-            return isset($this->_rel[$relation]) ?
-                   $this->_rel[$relation] :
-                   null;
+            return $this->_rel[$relation] ?? null;
         }
 
         return $this->_rel;
@@ -616,7 +614,7 @@ abstract class Zend_Navigation_Page extends Zend_Navigation_Container
      */
     public function setRev($relations = null)
     {
-        $this->_rev = array();
+        $this->_rev = [];
 
         if (null !== $relations) {
             if ($relations instanceof Zend_Config) {
@@ -657,9 +655,7 @@ abstract class Zend_Navigation_Page extends Zend_Navigation_Container
     public function getRev($relation = null)
     {
         if (null !== $relation) {
-            return isset($this->_rev[$relation]) ?
-                   $this->_rev[$relation] :
-                   null;
+            return $this->_rev[$relation] ?? null;
         }
 
         return $this->_rev;
@@ -1181,7 +1177,7 @@ abstract class Zend_Navigation_Page extends Zend_Navigation_Container
     {
         return array_merge(
             $this->getCustomProperties(),
-            array(
+            [
                 'label'     => $this->getlabel(),
                 'fragment' => $this->getFragment(),
                 'id'        => $this->getId(),
@@ -1198,7 +1194,7 @@ abstract class Zend_Navigation_Page extends Zend_Navigation_Container
                 'visible'   => $this->isVisible(),
                 'type'      => get_class($this),
                 'pages'     => parent::toArray()
-            ));
+            ]);
     }
 
     // Internal methods:

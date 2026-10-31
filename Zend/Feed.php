@@ -52,11 +52,11 @@ class Zend_Feed
     /**
      * @var array
      */
-    protected static $_namespaces = array(
+    protected static $_namespaces = [
         'opensearch' => 'http://a9.com/-/spec/opensearchrss/1.0/',
         'atom'       => 'http://www.w3.org/2005/Atom',
         'rss'        => 'http://blogs.law.harvard.edu/tech/rss',
-    );
+    ];
 
 
     /**
@@ -134,9 +134,7 @@ class Zend_Feed
      */
     public static function lookupNamespace($prefix)
     {
-        return isset(self::$_namespaces[$prefix]) ?
-            self::$_namespaces[$prefix] :
-            $prefix;
+        return self::$_namespaces[$prefix] ?? $prefix;
     }
 
 
@@ -312,7 +310,7 @@ class Zend_Feed
         }
 
         // Try to fetch a feed for each link tag that appears to refer to a feed
-        $feeds = array();
+        $feeds = [];
         if (isset($matches[1]) && count($matches[1]) > 0) {
             foreach ($matches[1] as $link) {
                 // force string to be an utf-8 one
@@ -342,15 +340,15 @@ class Zend_Feed
                         // canonize the uri
                         $path = (string) $attributes['href'];
                         $query = $fragment = '';
-                        if (substr($path, 0, 1) != '/') {
+                        if (!str_starts_with($path, '/')) {
                             // add the current root path to this one
                             $path = rtrim($client->getUri()->getPath(), '/') . '/' . $path;
                         }
-                        if (strpos($path, '?') !== false) {
-                            list($path, $query) = explode('?', $path, 2);
+                        if (str_contains($path, '?')) {
+                            [$path, $query] = explode('?', $path, 2);
                         }
-                        if (strpos($query, '#') !== false) {
-                            list($query, $fragment) = explode('#', $query, 2);
+                        if (str_contains($query, '#')) {
+                            [$query, $fragment] = explode('#', $query, 2);
                         }
                         $uri = Zend_Uri::factory($client->getUri(true));
                         $uri->setPath($path);

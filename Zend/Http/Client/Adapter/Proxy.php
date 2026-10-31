@@ -56,7 +56,7 @@ class Zend_Http_Client_Adapter_Proxy extends Zend_Http_Client_Adapter_Socket
      *
      * @var array
      */
-    protected $config = array(
+    protected $config = [
         'ssltransport'  => 'ssl',
         'sslcert'       => null,
         'sslpassphrase' => null,
@@ -67,7 +67,7 @@ class Zend_Http_Client_Adapter_Proxy extends Zend_Http_Client_Adapter_Socket
         'proxy_pass'    => '',
         'proxy_auth'    => Zend_Http_Client::AUTH_BASIC,
         'persistent'    => false
-    );
+    ];
 
     /**
      * Whether HTTPS CONNECT was already negotiated with the proxy or not
@@ -116,7 +116,7 @@ class Zend_Http_Client_Adapter_Proxy extends Zend_Http_Client_Adapter_Socket
      * @param string        $body
      * @return string Request as string
      */
-    public function write($method, $uri, $http_ver = '1.1', $headers = array(), $body = '')
+    public function write($method, $uri, $http_ver = '1.1', $headers = [], $body = '')
     {
         // If no proxy is set, fall back to default Socket adapter
         if (! $this->config['proxy_host']) return parent::write($method, $uri, $http_ver, $headers, $body);
@@ -199,7 +199,7 @@ class Zend_Http_Client_Adapter_Proxy extends Zend_Http_Client_Adapter_Socket
      * @param string  $http_ver
      * @param array   $headers
      */
-    protected function connectHandshake($host, $port = 443, $http_ver = '1.1', array &$headers = array())
+    protected function connectHandshake($host, $port = 443, $http_ver = '1.1', array &$headers = [])
     {
         $request = "CONNECT $host:$port HTTP/$http_ver\r\n" .
                    "Host: " . $this->config['proxy_host'] . "\r\n";
@@ -228,7 +228,7 @@ class Zend_Http_Client_Adapter_Proxy extends Zend_Http_Client_Adapter_Socket
         $response = '';
         $gotStatus = false;
         while ($line = @fgets($this->socket)) {
-            $gotStatus = $gotStatus || (strpos($line, 'HTTP') !== false);
+            $gotStatus = $gotStatus || (str_contains($line, 'HTTP'));
             if ($gotStatus) {
                 $response .= $line;
                 if (!chop($line)) break;
@@ -243,12 +243,12 @@ class Zend_Http_Client_Adapter_Proxy extends Zend_Http_Client_Adapter_Socket
 
         // If all is good, switch socket to secure mode. We have to fall back
         // through the different modes
-        $modes = array(
+        $modes = [
             STREAM_CRYPTO_METHOD_TLS_CLIENT,
             STREAM_CRYPTO_METHOD_SSLv3_CLIENT,
             STREAM_CRYPTO_METHOD_SSLv23_CLIENT,
             STREAM_CRYPTO_METHOD_SSLv2_CLIENT
-        );
+        ];
 
         $success = false;
         foreach($modes as $mode) {

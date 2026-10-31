@@ -27,7 +27,7 @@
 class Zend_View_Helper_Gridep extends Zend_View_Helper_Abstract {
 
 	public $view = null;
-	public $extra = array();
+	public $extra = [];
 	private $output; // Container to hold the Grid
 	private $encrypt_status = "no";
 	private $empDetailsObj;
@@ -46,7 +46,7 @@ class Zend_View_Helper_Gridep extends Zend_View_Helper_Abstract {
 		$session=new Zend_Auth_Storage_Session();
 		$data=$session->read();
 		$role_id = $data['emprole'];
-		$menunamestr = '';$sortStr ='';$actnArr = array();
+		$menunamestr = '';$sortStr ='';$actnArr = [];
 		$sortStr = $dataArray['by'];
 		$controllers_arr = $menu_model->getControllersByRole($role_id);
 		$menuName = '';
@@ -60,9 +60,9 @@ class Zend_View_Helper_Gridep extends Zend_View_Helper_Abstract {
 		}
 		else
 		{ 
-			$actions_arr = array();
+			$actions_arr = [];
 		}
-		$gridFieldsArr=array();$tmpActionsArr=array();
+		$gridFieldsArr=[];$tmpActionsArr=[];
 		$tmpActionsArr = $actions_arr;
 		array_pop($tmpActionsArr);	//last element of actions array is menuname so delete that & check the privileges are empty or not...
 		
@@ -121,15 +121,15 @@ class Zend_View_Helper_Gridep extends Zend_View_Helper_Abstract {
 			
 			if(!in_array('view',$actions_arr) && !in_array('edit',$actions_arr) && !in_array('delete',$actions_arr))
 			{
-				$extra['action'] =array(); 				  
+				$extra['action'] =[]; 				  
 			}
 			else
 			{
-				  $extra['action'] = array('name' => 'edit', 'value' =>'<div class="grid-action-align">
+				  $extra['action'] = ['name' => 'edit', 'value' =>'<div class="grid-action-align">
 								'.((in_array('view',$actions_arr)?$viewpopup_str:'')).'
 								'.((in_array('edit',$actions_arr)?$editpopup_str:'')).'
 								'.((in_array('delete',$actions_arr)?$deletepopup_str:'')).'
-							</div>'); 
+							</div>']; 
 			}	
 		}
 		else
@@ -141,17 +141,17 @@ class Zend_View_Helper_Gridep extends Zend_View_Helper_Abstract {
 
 			if(!in_array('view',$actions_arr) && !in_array('edit',$actions_arr) && !in_array('delete',$actions_arr))
 			{
-			  $extra['action'] =array(); 
+			  $extra['action'] =[]; 
 			}else
 			{
-			  $extra['action'] = array('name' => 'edit', 'value' =>'<div class="grid-action-align">
+			  $extra['action'] = ['name' => 'edit', 'value' =>'<div class="grid-action-align">
 							'.((in_array('view',$actions_arr)?$view_str:'')).'
 							'.((in_array('edit',$actions_arr)?$edit_str:'')).'
 							'.((in_array('delete',$actions_arr)?$delete_str:'')).'
-						</div>'); //onclick ="javascript:editlocdata(\'{{id}}\')" 
+						</div>']; //onclick ="javascript:editlocdata(\'{{id}}\')" 
 			}		
 		}
-		$extra['options'] = array(); 
+		$extra['options'] = []; 
         $addaction= '';  		
 		if(isset($dataArray['add']) && $dataArray['add'] !='')
 		{
@@ -179,7 +179,7 @@ class Zend_View_Helper_Gridep extends Zend_View_Helper_Abstract {
 		$this->buDetailsObj = $dataArray['buDetailsObj'];
 		$this->deptDetailsObj = $dataArray['deptDetailsObj'];
 
-		return $this->generateGrid($dataArray['objectname'],$dataArray['tableheader'],$paginator,$extra,true,$dataArray['jsGridFnName'], $dataArray['perPage'],$dataArray['pageNo'],$dataArray['jsFillFnName'],$dataArray['searchArray'],$formgridVal,$addaction,$menuName,$unitId,$addpermission,$menunamestr,isset($dataArray['call'])?$dataArray['call']:"",$sortStr,isset($dataArray['search_filters'])?$dataArray['search_filters']:"",isset($dataArray['dashboardcall'])?$dataArray['dashboardcall']:"No",isset($dataArray['empstatus'])?$dataArray['empstatus']:"",$actnArr,isset($dataArray['empscreentotalcount'])?$dataArray['empscreentotalcount']:"",isset($dataArray['sort'])?$dataArray['sort']:"",isset($dataArray['by'])?$dataArray['by']:"");
+		return $this->generateGrid($dataArray['objectname'],$dataArray['tableheader'],$paginator,$extra,true,$dataArray['jsGridFnName'], $dataArray['perPage'],$dataArray['pageNo'],$dataArray['jsFillFnName'],$dataArray['searchArray'],$formgridVal,$addaction,$menuName,$unitId,$addpermission,$menunamestr,$dataArray['call'] ?? "",$sortStr,$dataArray['search_filters'] ?? "",$dataArray['dashboardcall'] ?? "No",$dataArray['empstatus'] ?? "",$actnArr,$dataArray['empscreentotalcount'] ?? "",$dataArray['sort'] ?? "",$dataArray['by'] ?? "");
 	}
 	
 	/**
@@ -191,7 +191,7 @@ class Zend_View_Helper_Gridep extends Zend_View_Helper_Abstract {
 	 *
 	 * @return string
 	 **/
-	public function generateGrid ($name, $fields = null,$paginator=null,$extracolumn=array(),$sorting=false,$jsGridFnname='', $perPage='5',$page='1', $jsFillFnName='',$searchArray='',$formgrid='false',$addaction='',$menuName='',$unitId,$addpermission,$menunamestr,$call='',$sortStr='',$search_filters = '',$dashboardCall = 'No',$empstatus = '',$actnArr,$empscreenTotalCount = '',$sortname='',$by='') {
+	public function generateGrid ($name, $fields = null,$paginator=null,$extracolumn=[],$sorting=false,$jsGridFnname='', $perPage='5',$page='1', $jsFillFnName='',$searchArray='',$formgrid='false',$addaction='',$menuName='',$unitId = null,$addpermission = null,$menunamestr = null,$call='',$sortStr='',$search_filters = '',$dashboardCall = 'No',$empstatus = '',$actnArr = null,$empscreenTotalCount = '',$sortname='',$by='') {
         $request = Zend_Controller_Front::getInstance();
         $params = $request->getRequest()->getParams();		
         $controllerName = $request->getRequest()->getControllerName();
@@ -298,7 +298,7 @@ class Zend_View_Helper_Gridep extends Zend_View_Helper_Abstract {
 						} 
 						$welcome = 'false';
 						$urlString = $_SERVER['REQUEST_URI'];
-						if (strpos($urlString,'welcome') !== false) {
+						if (str_contains($urlString,'welcome')) {
 							$welcome = 'true';
 						}
 					
@@ -311,7 +311,7 @@ class Zend_View_Helper_Gridep extends Zend_View_Helper_Abstract {
 						}
 						else 
 						{
-							$output .= "<a href='javascript:void(0);' onclick=javascript:paginationndsorting('".$this->view->url(array('sort'=>$sort,'by'=>$key,'objname'=> $name,'page' => $page,'per_page'=>$perPage))."');>".$value."</a>";
+							$output .= "<a href='javascript:void(0);' onclick=javascript:paginationndsorting('".$this->view->url(['sort'=>$sort,'by'=>$key,'objname'=> $name,'page' => $page,'per_page'=>$perPage])."');>".$value."</a>";
 							//For Sort Icons....
 							if($key == $sortStr)
 									$output .= $sortIconStr;
@@ -489,7 +489,7 @@ class Zend_View_Helper_Gridep extends Zend_View_Helper_Abstract {
 		// Attach Pagination
 		if($paginator) {
 		
-			$params = array();
+			$params = [];
 			$params['jsGridFnName'] = $jsGridFnname;
 			$params['perPage'] = $perPage;
 			$params['objname'] = $name;

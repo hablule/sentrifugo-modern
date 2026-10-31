@@ -114,7 +114,7 @@ class Zend_InfoCard_Claims
     public function getDefaultNamespace()
     {
         if($this->_defaultNamespace === null) {
-            $namespaces = array();
+            $namespaces = [];
             $leader = '';
             foreach($this->_claims as $claim) {
                 if(!isset($namespaces[$claim['namespace']])) {

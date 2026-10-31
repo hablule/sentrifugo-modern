@@ -39,10 +39,10 @@ abstract class Zend_Captcha_Word extends Zend_Captcha_Base
     /**#@+
      * @var array Character sets
      */
-    static $V  = array("a", "e", "i", "o", "u", "y");
-    static $VN = array("a", "e", "i", "o", "u", "y","2","3","4","5","6","7","8","9");
-    static $C  = array("b","c","d","f","g","h","j","k","m","n","p","q","r","s","t","u","v","w","x","z");
-    static $CN = array("b","c","d","f","g","h","j","k","m","n","p","q","r","s","t","u","v","w","x","z","2","3","4","5","6","7","8","9");
+    static $V  = ["a", "e", "i", "o", "u", "y"];
+    static $VN = ["a", "e", "i", "o", "u", "y","2","3","4","5","6","7","8","9"];
+    static $C  = ["b","c","d","f","g","h","j","k","m","n","p","q","r","s","t","u","v","w","x","z"];
+    static $CN = ["b","c","d","f","g","h","j","k","m","n","p","q","r","s","t","u","v","w","x","z","2","3","4","5","6","7","8","9"];
     /**#@-*/
 
     /**
@@ -113,11 +113,11 @@ abstract class Zend_Captcha_Word extends Zend_Captcha_Base
      * Error messages
      * @var array
      */
-    protected $_messageTemplates = array(
+    protected $_messageTemplates = [
         self::MISSING_VALUE => 'Empty captcha value',
         self::MISSING_ID    => 'Captcha ID field is missing',
         self::BAD_CAPTCHA   => 'Captcha value is wrong',
-    );
+    ];
 
     /**
      * Length of the word to generate

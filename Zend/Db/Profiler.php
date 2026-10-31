@@ -83,7 +83,7 @@ class Zend_Db_Profiler
      *
      * @var array
      */
-    protected $_queryProfiles = array();
+    protected $_queryProfiles = [];
 
     /**
      * Stores enabled state of the profiler.  If set to False, calls to
@@ -219,7 +219,7 @@ class Zend_Db_Profiler
      */
     public function clear()
     {
-        $this->_queryProfiles = array();
+        $this->_queryProfiles = [];
 
         return $this;
     }
@@ -232,9 +232,7 @@ class Zend_Db_Profiler
     {
         $this->_queryProfiles[] = clone $query;
 
-        end($this->_queryProfiles);
-
-        return key($this->_queryProfiles);
+        return array_key_last($this->_queryProfiles);
     }
 
     /**
@@ -281,9 +279,7 @@ class Zend_Db_Profiler
         require_once 'Zend/Db/Profiler/Query.php';
         $this->_queryProfiles[] = new Zend_Db_Profiler_Query($queryText, $queryType);
 
-        end($this->_queryProfiles);
-
-        return key($this->_queryProfiles);
+        return array_key_last($this->_queryProfiles);
     }
 
     /**
@@ -380,7 +376,7 @@ class Zend_Db_Profiler
      */
     public function getQueryProfiles($queryType = null, $showUnfinished = false)
     {
-        $queryProfiles = array();
+        $queryProfiles = [];
         foreach ($this->_queryProfiles as $key => $qp) {
             if ($queryType === null) {
                 $condition = true;
