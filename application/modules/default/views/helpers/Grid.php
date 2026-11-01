@@ -91,10 +91,9 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 			$columnData = $widgetsModel->getTableFields('/' . $dataArray['objectname']);
 			$dataArray['tableheader'] = json_decode($columnData['menufields'], true);
 		}
-		$msgtitle = $dataArray['objectname'] . '_delete';
-		$msgtitle = strtoupper($msgtitle);
-		$msgflag = constant($msgtitle);
-		$msgAr = explode(' ', $msgflag);
+		$msgtitle = strtoupper($dataArray['objectname'] . '_delete');
+		$msgflag = defined($msgtitle) ? constant($msgtitle) : $dataArray['objectname'];
+		$msgAr = explode(' ', (string)$msgflag);
 		$msgdta = implode('@#$', $msgAr);
 		/* Zend_Debug::dump($dataArray); */
 		if (isset($dataArray['formgrid']) && $dataArray['formgrid'] == 'true') {
@@ -2185,7 +2184,7 @@ class Zend_View_Helper_Grid extends Zend_View_Helper_Abstract
 			/** for policy documents **/
 			$params['pd_category_id'] = $this->pd_category_id;
 
-			if (isset($empscreenTotalCount) && $perPage != 0) {
+			if (!empty($empscreenTotalCount) && is_numeric($empscreenTotalCount) && (int)$perPage > 0) {
 				$empscreen_lastpage = ceil($empscreenTotalCount / $perPage);
 				$params['empscreen_lastpage'] = $empscreen_lastpage;
 			}

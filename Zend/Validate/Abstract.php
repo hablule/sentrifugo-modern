@@ -30,6 +30,7 @@ require_once 'Zend/Validate/Interface.php';
  * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
+#[\AllowDynamicProperties]
 abstract class Zend_Validate_Abstract implements Zend_Validate_Interface
 {
     /**
@@ -185,6 +186,11 @@ abstract class Zend_Validate_Abstract implements Zend_Validate_Interface
         if ($property == 'value') {
             return $this->_value;
         }
+
+        if ($property == 'zfBreakChainOnFailure') {
+            return false;
+        }
+
         if (array_key_exists($property, $this->_messageVariables)) {
             return $this->{$this->_messageVariables[$property]};
         }
@@ -193,6 +199,20 @@ abstract class Zend_Validate_Abstract implements Zend_Validate_Interface
          */
         require_once 'Zend/Validate/Exception.php';
         throw new Zend_Validate_Exception("No property exists by the name '$property'");
+    }
+
+    /**
+     * Support isset() overloading
+     *
+     * @param  string $property
+     * @return boolean
+     */
+    public function __isset($property)
+    {
+        if ($property == 'value' || $property == 'zfBreakChainOnFailure') {
+            return true;
+        }
+        return array_key_exists($property, $this->_messageVariables);
     }
 
     /**

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Zend Framework
  *
@@ -53,9 +54,17 @@ class Zend_Session_Exception extends Zend_Exception
      * @param  string $errstr
      * @return void
      */
-    static public function handleSessionStartError($errno, $errstr, $errfile, $errline, $errcontext)
+    static public function handleSessionStartError($errno, $errstr, $errfile = null, $errline = null, $errcontext = null)
     {
-        self::$sessionStartError = $errfile . '(Line:' . $errline . '): Error #' . $errno . ' ' . $errstr . ' ' . $errcontext;
+        // 🔒 Ignore deprecation notices during session startup so they don't break the session
+        if ($errno === E_DEPRECATED || $errno === E_USER_DEPRECATED || $errno === E_NOTICE || $errno === E_USER_NOTICE) {
+            return;
+        }
+
+        self::$sessionStartError = ($errfile === null ? '' : "$errfile ")
+            . ($errline === null ? '' : "(Line: $errline): ")
+            . 'Error #' . $errno . ': '
+            . $errstr;
     }
 
     /**
@@ -66,9 +75,12 @@ class Zend_Session_Exception extends Zend_Exception
      * @param  string $errstr
      * @return void
      */
-    static public function handleSilentWriteClose($errno, $errstr, $errfile, $errline, $errcontext)
+    static public function handleSilentWriteClose($errno, $errstr, $errfile = null, $errline = null, $errcontext = null)
     {
-        self::$sessionStartError .= PHP_EOL . $errfile . '(Line:' . $errline . '): Error #' . $errno . ' ' . $errstr . ' ' . $errcontext;
+        self::$sessionStartError .= PHP_EOL
+            . ($errfile === null ? '' : "$errfile ")
+            . ($errline === null ? '' : "(Line: $errline): ")
+            . 'Error #' . $errno . ': '
+            . $errstr;
     }
 }
-

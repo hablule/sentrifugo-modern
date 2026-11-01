@@ -1,7 +1,7 @@
 <?php
 /**
  * Auto-generated ACL Cache File
- * Generated on: 2026-10-25 20:40:40 GMT
+ * Generated on: 2026-11-01 00:02:17 GMT
  * DO NOT EDIT MANUALLY. Run Scanner and Save Mappings to regenerate.
  */
 return array (
@@ -104,12 +104,6 @@ return array (
         'indexaction' => true,
         'uploaddeleteaction' => true,
         'uploadsaveaction' => true,
-        'viewaction' => true,
-      ),
-      'approvedrequisitions' => 
-      array (
-        'editaction' => true,
-        'indexaction' => true,
         'viewaction' => true,
       ),
       'assignmentreason' => 
@@ -1258,6 +1252,17 @@ return array (
         'saveaction' => true,
         'viewaction' => true,
       ),
+      'paygroup' => 
+      array (
+        'addaction' => true,
+        'addpopupaction' => true,
+        'deleteaction' => true,
+        'editaction' => true,
+        'indexaction' => true,
+        'makeactiveinactiveaction' => true,
+        'saveaction' => true,
+        'viewaction' => true,
+      ),
       'paymentcard' => 
       array (
         'addaction' => true,
@@ -1278,6 +1283,15 @@ return array (
         'editaction' => true,
         'editpopupaction' => true,
         'indexaction' => true,
+      ),
+      'payrollrun' => 
+      array (
+        'addaction' => true,
+        'deleteaction' => true,
+        'editaction' => true,
+        'indexaction' => true,
+        'saveaction' => true,
+        'viewaction' => true,
       ),
       'pendingleaves' => 
       array (
@@ -1442,11 +1456,6 @@ return array (
       array (
         'addaction' => true,
         'editaction' => true,
-        'indexaction' => true,
-        'viewaction' => true,
-      ),
-      'rejectedrequisitions' => 
-      array (
         'indexaction' => true,
         'viewaction' => true,
       ),
