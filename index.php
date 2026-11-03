@@ -146,7 +146,8 @@ if(file_exists($filepath))
 	catch(Exception $e)
 	{    
 
-		die($e->getFile());
+		// die($e->getFile());
+		die("<h3>Error:</h3> " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine());
 		header("Location: error.php?param=".sapp_Global::_encrypt('error')."");exit;
 	}
 }	

@@ -1,10 +1,13 @@
-#Options +FollowSymLinks
-#RewriteEngine on
+RewriteEngine On
+RewriteBase /
 
-#RewriteRule !\.(htm|html|txt|swf|js|ico|gif|jpg|png|css|php|xml)$ index.php
+# If the requested file or folder physically exists, serve it directly
+RewriteCond %{REQUEST_FILENAME} -s [OR]
+RewriteCond %{REQUEST_FILENAME} -l [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^.*$ - [NC,L]
 
-#RewriteRule ^.*$ - [NC,L]
-#RewriteRule ^.*$ index.php [NC,L]
+# Route all other requests cleanly through index.php
+RewriteRule ^.*$ index.php [NC,L]
 
 SetEnv APPLICATION_ENV "production"
-

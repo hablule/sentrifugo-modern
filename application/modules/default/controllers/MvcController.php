@@ -14,7 +14,7 @@ class Default_MvcController extends Zend_Controller_Action
         $mvc_model = new Default_Model_Mvc();
         $mvc_form->setAttrib('action', BASE_URL . 'mvc/create');
         $path = __DIR__;
-        $path = substr($path, 0, strpos($path, 'default\\'));
+        $path = substr($path, 0, strpos($path, 'default/'));
 
         $modules = array_filter(glob($path . '*'), 'is_dir');
         if (!empty($modules)) {
@@ -45,12 +45,12 @@ class Default_MvcController extends Zend_Controller_Action
                 $controller_name = $this->getRequest()->getParam('controller_name');
 
                 // $abs_path = str_replace('controllers', '', __DIR__);
-                $abs_path = $path . $module_name . '\\';
+                $abs_path = $path . $module_name . '/';
 
-                $controller_path = $abs_path . 'controllers\\';
-                $form_path = $abs_path . 'forms\\';
-                $model_path = $abs_path . 'models\\';
-                $view_path = $abs_path . 'views\scripts\\';
+                $controller_path = $abs_path . 'controllers/';
+                $form_path = $abs_path . 'forms/';
+                $model_path = $abs_path . 'models/';
+                $view_path = $abs_path . 'views/scripts/';
 
                 if (!file_exists($controller_path)) {
                     mkdir($controller_path, 0777, true);
@@ -64,7 +64,7 @@ class Default_MvcController extends Zend_Controller_Action
                 if (!file_exists($view_path)) {
                     mkdir($view_path, 0777, true);
                 }
-                $temp_path = $abs_path . 'controllers\\' . $controller_name . 'Controller.php';
+                $temp_path = $abs_path . 'controllers/' . $controller_name . 'Controller.php';
 
                 if (is_file($temp_path)) {
                     $msgarray['controller_name'] = "Controller Exists";
@@ -83,8 +83,8 @@ class Default_MvcController extends Zend_Controller_Action
                     $view_edit_file = fopen($view_path . strtolower($controller_name) . '/edit.phtml', 'a') or $msgarray['controller_name'] .= "Can not open or create edit \n";
                     $view_view_file = fopen($view_path . strtolower($controller_name) . '/view.phtml', 'a') or $msgarray['controller_name'] .= "Can not open or create view \n";
 
-                    $abs_path = str_replace('default\\', '', $abs_path);
-                    $mvc_initializer_path = 'services\mvc_initializer\\';
+                    $abs_path = str_replace('default/', '', $abs_path);
+                    $mvc_initializer_path = 'services/mvc_initializer/';
 
                     /** 
                      * Intializing Controller with default data START 
@@ -202,7 +202,7 @@ class Default_MvcController extends Zend_Controller_Action
             if (!empty($this->getRequest()->getParam('new_module_name'))) {
 
                 $path = __DIR__;
-                $path = substr($path, 0, strpos($path, 'default\\'));
+                $path = substr($path, 0, strpos($path, 'default/'));
                 $module_name = $this->getRequest()->getParam('new_module_name');
                 mkdir($path . $module_name);
                 $this->view->successmessage = "Module Successfully Added!";
