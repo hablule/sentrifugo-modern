@@ -6,6 +6,7 @@ rector-upgrade.log
 /public/db_constants.php
 /public/application_constants.php
 /public/mail_settings_constants.php
+/public/email_constants.php
 test_ldap.php
 test_LDAP.php
 rector-upgrade.log
