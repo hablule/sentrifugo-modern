@@ -380,7 +380,7 @@ function tooltip_helper(div_id,links)
 
 $clients=CLIENTS;
 
-if(Zend_Registry::get( 'tm_role' ) == 'Employee')
+if(Zend_Registry::isRegistered('tm_role') && Zend_Registry::get('tm_role') == 'Employee')
 {
 	echo "<script type='text/javascript'>
 	$(document).ready(function() {
