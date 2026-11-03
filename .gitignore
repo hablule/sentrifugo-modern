@@ -3,6 +3,9 @@ rector-upgrade.log
 .env
 *.sql
 /public/uploads/
+/public/db_constants.php
+/public/application_constants.php
+/public/mail_settings_constants.php
 test_ldap.php
 test_LDAP.php
 rector-upgrade.log
