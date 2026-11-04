@@ -1,7 +1,8 @@
 <?php
 $directories = [
     'application/modules/default/models/',
-    'application/modules/default/controllers/'
+    'application/modules/default/controllers/',
+    'application/modules/default/forms/'
 ];
 
 echo "Auto-fixing Linux case mismatches with Git...\n\n";

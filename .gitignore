@@ -1,3 +1,4 @@
+/.vscode
 /vendor/
 rector-upgrade.log
 .env
