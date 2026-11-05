@@ -12,3 +12,4 @@ test_LDAP.php
 rector-upgrade.log
 php83-modernization.patch
 .vscode/
+export-demo-db.bat

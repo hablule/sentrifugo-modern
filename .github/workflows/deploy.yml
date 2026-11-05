@@ -16,7 +16,12 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /var/www/html/sentrifugo
-            sudo git fetch origin
+            # Fetch only the single latest commit (ignores past history bloat completely)
+            sudo git fetch --depth=1 origin main
             sudo git reset --hard origin/main
+            
+            # Run the clean restore with the new compressed database
+            sudo /home/ubuntu/reset_demo_db.sh
+
             sudo chown -R www-data:www-data /var/www/html/sentrifugo
             sudo chmod -R 775 /var/www/html/sentrifugo/data /var/www/html/sentrifugo/logs /var/www/html/sentrifugo/public/uploads
