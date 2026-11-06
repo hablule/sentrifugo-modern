@@ -40,3 +40,4 @@ Changelog
 Sentrifugo changelog maintains logs or records of changes made since the previous version to the current version of Sentrifugo.
 
 The changelog of Sentrifugo can be found in the CHANGELOG document in the same directory as this document.
+
