@@ -13,6 +13,8 @@ export-demo-db.bat
 download_avatars.php
 
 /public/test/
-/public/uploads/**/*
-!/public/uploads/**/.gitkeep
+/public/uploads/*
+!/public/uploads/*/
+/public/uploads/*/*
+!/public/uploads/*/.gitkeep
 
