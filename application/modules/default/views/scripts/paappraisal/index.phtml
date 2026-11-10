@@ -1,0 +1,148 @@
+<?php
+
+/**
+ * PA Appraisal Index View (Manage Campaigns)
+ * 
+ * Strictly adheres to SSOT v6.2. 
+ * Implements custom Javascript to handle the "Launch Campaign" action 
+ * from within the standard Sentrifugo DataGrid.
+ * 
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ * @version    Sentrifugo v3.2
+ */
+?>
+
+<!-- SSOT V.5 Standard Flash Messages -->
+<div id="message_container">
+    <?php if (!empty($this->messages)) : ?>
+        <div id="dispmsg" class="settingssuccess">
+            <?php foreach ($this->messages as $message) :
+                if (is_array($message)): $key = key($message); ?>
+                    <div class="ml-alert-1-<?php echo $this->escape($key); ?>">
+                        <div style="display:block;">
+                            <span class="style-1-icon <?php echo $this->escape($key); ?>"></span>
+                            <?php echo $this->escape($message[$key]); ?>
+                        </div>
+                    </div>
+            <?php endif;
+            endforeach; ?>
+        </div>
+    <?php endif; ?>
+</div>
+
+<div id="paappraisal_container" class="full-width">
+    <!-- Required hidden div for Sentrifugo Global JS logic -->
+    <div id="msg" style="display:none; font-style: oblique; font-weight: bold; color: green;"></div>
+
+    <div id="grid_paappraisal" class="all-grid-control">
+        <?php
+        // SSOT IX.3: Safe check to prevent PHP 8+ Array/Null crashes
+        if (isset($this->dataArray[0]['tablecontent']) && !empty($this->dataArray[0]['tablecontent'])) {
+            echo $this->grid($this->dataArray[0]);
+        } else if ($this->call != 'ajaxcall') {
+            echo "<div class='no-data' style='text-align: center; color: #7f8c8d; padding: 30px; border: 1px dashed #ccc; background: #f9f9f9; border-radius: 4px;'>";
+            echo "<i class='fa fa-rocket' style='font-size: 24px; margin-bottom: 10px;'></i><br>";
+            echo "No Appraisal Campaigns found. Click 'Add' to draft a new campaign.";
+            echo "</div>";
+        }
+        ?>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Auto-fade standard flash messages
+        setTimeout(function() {
+            $('#dispmsg').fadeOut('slow');
+        }, 4000);
+    });
+
+    /**
+     * Custom Action: Launch Campaign
+     * Binds to the custom icon injected into the grid. Triggers the heavy
+     * envelope generation process in the controller via AJAX.
+     * 
+     * @param int id The ID of the Appraisal Campaign
+     */
+    function launchCampaign(id) {
+        if (!confirm('Are you sure you want to launch this campaign? This will generate assessment tasks for all targeted employees and cannot be undone.')) {
+            return false;
+        }
+
+        // Block UI - Generation can take time for large companies
+        if ($.isFunction($.blockUI)) {
+            $.blockUI({
+                message: '<div style="padding: 10px;"><i class="fa fa-spinner fa-spin fa-2x"></i><br><br>Generating Assessment Tasks...<br>Please wait.</div>'
+            });
+        }
+
+        $.ajax({
+            url: base_url + '/paappraisal/launch/format/json',
+            type: 'POST',
+            data: {
+                objid: id
+            },
+            dataType: 'json',
+            success: function(res) {
+                if ($.isFunction($.unblockUI)) $.unblockUI();
+
+                if (res.msgtype === 'success') {
+                    $('#message_container').html('<div class="ml-alert-1-success"><div style="display:block;"><span class="style-1-icon success"></span>' + res.message + '</div></div>');
+
+                    // Reload the grid cleanly using Sentrifugo's global function to show status change
+                    if ($.isFunction(window.refreshgrid)) {
+                        refreshgrid('paappraisal');
+                    } else {
+                        window.location.reload();
+                    }
+
+                    setTimeout(function() {
+                        $('#message_container').empty();
+                    }, 5000);
+                } else {
+                    alert('Launch Failed: ' + res.message);
+                }
+            },
+            error: function() {
+                if ($.isFunction($.unblockUI)) $.unblockUI();
+                alert('A server error occurred during the launch process. Check system logs.');
+            }
+        });
+    }
+
+    /**
+     * Sentrifugo Grid Hook: Modify Row Rendering
+     * This function runs after the grid AJAX load. We use it to find campaigns
+     * that are in 'Draft' status and inject a Launch button into the Action column.
+     * 
+     * @note This requires the grid to return the 'status' column.
+     */
+    $(document).ajaxComplete(function(event, xhr, settings) {
+        // Ensure we only hook into the grid load for this specific module
+        if (settings.url && settings.url.indexOf('paappraisal/index/call/ajaxcall') !== -1) {
+
+            // Loop through each row in the standard grid table
+            $('#grid_paappraisal table.grid tbody tr').each(function() {
+                var $row = $(this);
+                // Look for the status column cell
+                var statusText = $row.find('td').eq(4).text().trim(); // 'Status' is the 5th column in getGrid()
+
+                if (statusText === 'Draft') {
+                    // Find the action column
+                    var $actionCol = $row.find('td').eq(0);
+                    // Extract the ID from an existing action link (e.g., Edit link)
+                    var idMatch = $actionCol.html().match(/\/id\/(\d+)/);
+
+                    if (idMatch && idMatch[1]) {
+                        var campaignId = idMatch[1];
+                        // Inject the Launch button (Rocket icon) before the standard View/Edit/Delete icons
+                        var launchHtml = '<a href="javascript:void(0);" onclick="launchCampaign(' + campaignId + ');" title="Launch Campaign" style="margin-right: 5px; color: #e67e22;"><i class="fa fa-rocket fa-lg"></i></a>';
+                        $actionCol.prepend(launchHtml);
+                    }
+                }
+            });
+        }
+    });
+</script>

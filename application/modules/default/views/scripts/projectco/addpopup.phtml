@@ -1,0 +1,148 @@
+<?php 
+?>
+<?php
+
+
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+<?php if($this->popup == 'close') { ?>	
+	<div class="ml-alert-1-success">
+	<div class="style-1-icon success"></div>
+	Section <?php echo $this->eventact; ?> successfully
+	</div>
+
+	<?php } 
+else
+{
+    
+    sapp_Global::generateClientValidations($this->form);?>
+    <div id="error_message" style="display:none;"></div>
+
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction();?>" method="<?php echo $this->form->getMethod(); ?>">
+		<?php echo $this->form->id; ?>
+        <div class="total-form-controller">
+		    <div class="new-form-ui clearb">
+			  <label class="required">Project</label>
+			<div class="division"><?php echo $this->form->project_id; ?></div>
+			<?php if(isset($this->msgarray['project_id'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->project_id->getId(); ?>"><?php echo $this->msgarray['project_id'];?></span>
+			<?php }?>
+			</div>
+						
+			<!-- <div class="new-form-ui clearb textareaheight">
+			  <label>Description</label>
+			<div class="division"><?php echo $this->form->description_cat; ?></div>
+			</div>
+            <br><br><br><br><br><br><br><br><br><br> -->
+
+            <div class="new-form-ui clearb">
+			  <label >Company</label>
+			<div class="division"><?php echo $this->form->company_id; ?></div>
+			<?php if(isset($this->msgarray['company_id'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->company_id->getId(); ?>"><?php echo $this->msgarray['company_id'];?></span>
+			<?php }?>
+			</div>
+
+            <div class="new-form-ui clearb">
+			  <label >Business unit</label>
+			<div class="division"><?php echo $this->form->sbunit_id; ?>
+            
+            </div>
+			<?php if(isset($this->msgarray['sbunit_id'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->sbunit_id->getId(); ?>"><?php echo $this->msgarray['sbunit_id'];?></span>
+			<?php }?>
+			</div>
+
+            <div class="new-form-ui clearb">
+			  <label>Division</label>
+			<div class="division"><?php echo $this->form->division_id; ?>
+            
+            </div>
+			<?php if(isset($this->msgarray['division_id'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->division_id->getId(); ?>"><?php echo $this->msgarray['division_id'];?></span>
+			<?php }?>
+			</div>
+
+            <div class="new-form-ui clearb">
+			  <label>Department</label>
+			<div class="division"><?php echo $this->form->departement_id; ?>
+            
+        </div>
+            
+			<?php if(isset($this->msgarray['departement_id'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->departement_id->getId(); ?>"><?php echo $this->msgarray['department_id'];?></span>
+			<?php }?>
+			</div>
+
+            <div class="new-form-ui clearb">
+			  <label>Section</label>
+			<div class="division"><?php echo $this->form->section_id; ?>
+        </div>
+            
+			<?php if(isset($this->msgarray['section_id'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->section_id->getId(); ?>"><?php echo $this->msgarray['section_id'];?></span>
+			<?php }?>
+			</div>
+
+            <div class="new-form-ui clearb">
+			  <label>Associate Project</label>
+			<div class="division"><?php echo $this->form->associateproject_id; ?>
+            
+            </div>
+			<?php if(isset($this->msgarray['associateproject_id'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->associateproject_id->getId(); ?>"><?php echo $this->msgarray['associateproject_id'];?></span>
+			<?php }?>
+			</div>
+			<?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description','', 'fck_editor_height','',array());?>
+            <?php if(isset($this->msgarray['generalerror'])){?>
+			   <span class="errors" id="errors-generalerror"><?php echo $this->msgarray['generalerror'];?></span>
+			<?php }?>
+		<div class="new-form-ui-submit">
+		<?php echo $this->form->submit; ?>
+        <button onclick="window.location.href='<?php echo BASE_URL; ?>digitalpresence';" type="button">Cancel</button>
+
+		</div>
+</div>
+</form>
+<?php } ?>
+
+<script>
+$('#description').jqte();
+<?php if ($this->popup != '') { ?>
+    setTimeout(function() {
+    closeiframeAddPopup("<?php echo $this->bData; ?>", '<?php echo $this->controllername; ?>', 'associateproject_id', 'Project');
+}, 2000);
+
+<?php } ?>
+    // function isValid(elements) {
+    //     var valid = true;
+    //     for (var key in elements) {
+    //         for (var key1 in elements[key]) {
+    //             if (key1 == 'isEmpty') {
+    //                 if (document.getElementById(key).value == '') {
+    //                     document.getElementById('errors-' + key).innerHTML = elements[key][key1];
+    //                     valid = false;
+    //                 }
+    //             } else if (key1 == 'onlyNumber') {
+
+    //                 var reg = /^\d+(\.\d+)?$/;
+    //                 if (!(reg.test(document.getElementById('rate').value))) {
+    //                     valid = false
+    //                     document.getElementById('errors-' + key).innerHTML = elements[key][key1];
+    //                 }
+
+    //             } else if (key1 == 'other') {
+    //                 for (var key2 in elements[key][key1]) {
+    //                     if (document.getElementById(key).value == key2) {
+    //                         document.getElementById('errors-' + key).innerHTML = elements[key][key1][key2];
+    //                         valid = false;
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     return valid;
+    // }
+
+</script>

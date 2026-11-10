@@ -1,0 +1,159 @@
+<?php 
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+$data=$this->data[0];
+?>
+
+<?php 
+if($this->ermsg !='')
+{
+?>
+     <div class="ml-alert-1-info m1-info-set">
+				<div class="style-1-icon info"></div>
+				No data found.
+	</div>
+<?php 
+}
+else
+{
+ sapp_Global::generateClientValidations($this->form);?>
+<div id="error_message" style="display:none;"></div>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction();?>" method="<?php echo $this->form->getMethod(); ?>">
+        <div class="total-form-controller">
+		    <div class="new-form-ui">
+			  <label class="required">Name <img class="tooltip" title="Ex:dark theme,white theme" src="<?php echo $this->baseUrl().'/public/media/';?>images/help.png"></label>
+			<div class="division"><?php echo $this->form->name; ?></div>
+			<?php if(isset($this->msgarray['name'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->name->getId(); ?>"><?php echo $this->msgarray['name'];?></span>
+			<?php }?>
+			</div>
+			<div class="new-form-ui">
+			  <label class="required">Menu Style <img class="tooltip" title="Ex:top,bottom" src="<?php echo $this->baseUrl().'/public/media/';?>images/help.png"></label>
+			<div class="division"><?php echo $this->form->menustyle; ?></div>
+			<?php if(isset($this->msgarray['menustyle'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->menustyle->getId(); ?>"><?php echo $this->msgarray['menustyle'];?></span>
+			<?php }?>
+			</div>
+			<div class="new-form-ui">
+			  <label class="required">Menu Orentation <img class="tooltip" title="Ex:top,bottom" src="<?php echo $this->baseUrl().'/public/media/';?>images/help.png"></label>
+			<div class="division"><?php echo $this->form->menuorentation; ?></div>
+			<?php if(isset($this->msgarray['menuorentation'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->menuorentation->getId(); ?>"><?php echo $this->msgarray['menuorentation'];?></span>
+			<?php }?>
+			</div>
+
+        	<div class="new-form-ui">
+				<label class="required">Font Style</label>
+				<div class="division"><?php echo $this->form->font; ?></div>
+				<?php if (isset($this->msgarray['font'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->font->getId(); ?>"><?php echo $this->msgarray['font']; ?></span>
+				<?php } ?>
+			</div>
+		
+            <div class="new-form-ui">
+			  <label >Menu Background Color </label>
+			<div class="division">
+            <input type="color" id="menubgcolor" name="menubgcolor" value="<?php echo $data['menucolor'] ?>"  >
+            </div></div>
+			<div class="new-form-ui">
+			  <label >Menu Forground Color </label>
+			<div class="division">
+            <input type="color" id="menufgcolor" name="menufgcolor" value="<?php echo $data['menufgcolor'] ?>"  >
+            </div></div>
+			<div class="new-form-ui">
+			  <label >Menu Hover Background Color </label>
+			<div class="division">
+            <input type="color" id="menuhocolor" name="menuhocolor" value="<?php echo $data['menuhocolor'] ?>"  >
+            </div></div>
+            <div class="new-form-ui">
+			  <label >Header Background Color </label>
+			<div class="division">
+            <input type="color" id="headerbgcolor" name="headerbgcolor" value="<?php echo $data['headercolor'] ?>" >
+            </div></div>
+            <div class="new-form-ui">
+			  <label >Body Background Color</label>
+			<div class="division">
+            <input type="color" id="bodybgcolor" name="bodybgcolor" value="<?php echo $data['bodycolor'] ?>"><br><br>
+            </div></div>
+            <div class="new-form-ui">
+			  <label >Table Background Color </label>
+			<div class="division">
+            <input type="color" id="tablebgcolor" name="tablebgcolor" value="<?php echo $data['tablebgcolor'] ?>" >    
+                </div></div>
+				<div class="new-form-ui">
+			  <label >Table Forground Color </label>
+			<div class="division">
+            <input type="color" id="tablebgcolor" name="tablefgcolor" value="<?php echo $data['tablefgcolor'] ?>" >    
+                </div></div>
+				<div class="new-form-ui">
+			  <label >Sidebar Background Color </label>
+			<div class="division">
+            <input type="color" id="sidebarbgcolor" name="sidebarbgcolor" value="<?php echo $data['sidebarcolor'] ?>" >    
+                </div></div>  
+				<div class="new-form-ui">
+			  <label >Sidebar Forground Color </label>
+			<div class="division">
+            <input type="color" id="sidebarfgcolor" name="sidebarfgcolor" value="<?php echo $data['sidebarfgcolor'] ?>" >    
+                </div></div> 
+				<div class="new-form-ui">
+			  <label >Sidebar Hover Background Color </label>
+			<div class="division">
+            <input type="color" id="sidebarhocolor" name="sidebarhocolor" value="<?php echo $data['sidebarhocolor'] ?>" >    
+                </div></div> 
+				<div class="new-form-ui">
+			  <label >Table Header Background Color </label>
+			<div class="division">
+            <input type="color" id="tableheaderbgcolor" name="tableheaderbgcolor" value="<?php echo $data['tableheadercolor'] ?>" >    
+                </div></div>
+				<div class="new-form-ui">
+			  <label >Table Header Forground Color </label>
+				<div class="division">
+            <input type="color" id="tableheaderfgcolor" name="tableheaderfgcolor" value="<?php echo $data['tableheaderfgcolor'] ?>" >    
+                </div></div>
+                <div class="new-form-ui">
+				<label>Active</label>
+				<div class="division"><?php echo $this->form->isactive; ?></div>
+				<?php if (isset($this->msgarray['isactive'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->isactive->getId(); ?>"><?php echo $this->msgarray['isactive']; ?></span>
+				<?php } ?>
+			</div>
+			<div class="new-form-ui">
+				<label>Is Default
+				</label>
+				<div class="division"><?php echo $this->form->isdefault; ?></div>
+				<?php if (isset($this->msgarray['isdefault'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->isdefault->getId(); ?>"><?php echo $this->msgarray['isdefault']; ?></span>
+				<?php } ?>
+			</div>
+		<div class="new-form-ui-submit">
+		<?php echo $this->form->submit; ?>
+		<button onclick="window.location.href='<?php echo BASE_URL; ?>theme';" type="button" >Cancel</button>
+		</div>
+</div>
+</form>
+<?php	}	?>
+<script>
+
+
+
+</script>

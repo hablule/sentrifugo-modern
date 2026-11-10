@@ -1,0 +1,95 @@
+<?php 
+?>
+<?php
+
+
+?>
+<?php if($this->popup == 'close') { ?>	
+	<div class="ml-alert-1-success">
+	<div class="style-1-icon success"></div>
+	Load category <?php echo $this->eventact; ?> successfully
+	</div>
+
+	<?php } 
+else
+{
+    sapp_Global::generateClientValidations($this->form);?>
+    <div id="error_message" style="display:none;"></div>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction();?>" method="<?php echo $this->form->getMethod(); ?>">
+		<?php echo $this->form->id; ?>
+        <div class="total-form-controller">
+		    <div class="new-form-ui clearb">
+			  <label class="required">Name</label>
+			<div class="division"><?php echo $this->form->name; ?></div>
+			<?php if(isset($this->msgarray['name'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->name->getId(); ?>"><?php echo $this->msgarray['name'];?></span>
+			<?php }?>
+			</div>
+            <div class="new-form-ui clearb">
+			  <label class="required">Code</label>
+			<div class="division"><?php echo $this->form->code; ?></div>
+			<?php if(isset($this->msgarray['code'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->code->getId(); ?>"><?php echo $this->msgarray['code'];?></span>
+			<?php }?>
+			</div>
+				<br>			
+			<!-- <div class="new-form-ui clearb textareaheight">
+			  <label>Description</label>
+			<div class="division"><?php echo $this->form->description_cat; ?></div>
+			</div>
+            <br><br><br><br><br><br><br><br><br><br> -->
+            <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description','', 'fck_editor_height','',array());?>
+
+            <div class="new-form-ui clearb">
+			  <label >Active</label>
+			<div class="division"><?php echo $this->form->isactive; ?></div>
+			<?php if(isset($this->msgarray['isactive'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->isactive->getId(); ?>"><?php echo $this->msgarray['isactive'];?></span>
+			<?php }?>
+			</div>
+		<div class="new-form-ui-submit">
+		<?php echo $this->form->submit; ?>
+        <button onclick="window.location.href='<?php echo BASE_URL; ?>linetype';" type="button">Cancel</button>
+
+		</div>
+</div>
+</form>
+<?php } ?>
+
+<script>
+$('#description').jqte();
+
+    
+    // function isValid(elements) {
+    //     var valid = true;
+    //     for (var key in elements) {
+    //         for (var key1 in elements[key]) {
+    //             if (key1 == 'isEmpty') {
+    //                 if (document.getElementById(key).value == '') {
+    //                     document.getElementById('errors-' + key).innerHTML = elements[key][key1];
+    //                     valid = false;
+    //                 }
+    //             } else if (key1 == 'onlyNumber') {
+
+    //                 var reg = /^\d+(\.\d+)?$/;
+    //                 if (!(reg.test(document.getElementById('rate').value))) {
+    //                     valid = false
+    //                     document.getElementById('errors-' + key).innerHTML = elements[key][key1];
+    //                 }
+
+    //             } else if (key1 == 'other') {
+    //                 for (var key2 in elements[key][key1]) {
+    //                     if (document.getElementById(key).value == key2) {
+    //                         document.getElementById('errors-' + key).innerHTML = elements[key][key1][key2];
+    //                         valid = false;
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     return valid;
+    // }
+
+</script>

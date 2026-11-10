@@ -1,0 +1,136 @@
+<?php
+
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+?>
+<?php
+/**
+ * Nationality Details View (Read-Only)
+ * 
+ * Displays the read-only input elements of a specific Nationality / Legal Status.
+ * Strictly adheres to SSOT v6.1: Clean layout, strict escaping, dynamic labels,
+ * direct rendering of disabled form elements, and strict DB schema alignment.
+ * 
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ * @author     Hablul Soft Solution < /hablul.in>
+ * @license    http://gnu.org GNU General Public License, version 3.0 (GPL-3.0)
+ * @version    Sentrifugo v3.2
+ */
+?>
+<!-- SSOT VII: Strict Asset Inclusions (No screen.css) -->
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<div class="row">
+	<div class="col s12">
+
+		<div id="message_container">
+			<?php if (isset($this->nodata)) : ?>
+				<div class="ml-alert-1-info">
+					<div style="display:block;">
+						<span class="style-1-icon info"></span>
+						No data found.
+					</div>
+				</div>
+			<?php endif; ?>
+		</div>
+
+		<?php if (!isset($this->nodata)) : ?>
+			<div class="total-form-controller">
+				<div class="division">
+
+					<!-- Nationality Name -->
+					<div class="new-form-ui clearb">
+						<label><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+						<div class="division">
+							<?php echo $this->form->name; ?>
+						</div>
+					</div>
+
+					<!-- Nationality Code -->
+					<div class="new-form-ui clearb">
+						<label><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+						<div class="division">
+							<?php echo $this->form->code; ?>
+						</div>
+					</div>
+					
+					<!-- Citizenship Flag -->
+					<div class="new-form-ui clearb">
+						<label><?php echo $this->escape($this->form->citizenship->getLabel()); ?></label>
+						<div class="division">
+							<?php echo $this->form->citizenship; ?>
+						</div>
+					</div>
+
+					<!-- Mapped Countries (Junction) -->
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->mapped_countries->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->mapped_countries; ?>
+                        </div>                       
+                    </div>
+
+					<!-- Description -->
+					<?php echo sapp_Helper::sd_form_helper($this->msgarray ?? array(), $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+					<!-- Active Status -->
+					<div class="new-form-ui clearb">
+						<label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+						<div class="division">
+							<?php echo $this->form->isactive; ?>
+						</div>
+					</div>
+
+					<!-- Navigation & Actions -->
+					<div class="new-form-ui-submit">
+						<div class="division">
+							<input onclick="window.location.href='<?php echo BASE_URL; ?>nationality';" value="Back to List" type="button" class="reset" />
+
+							<?php
+							$menuId = defined('NATIONALITY') ? NATIONALITY : 91;
+							if (sapp_Global::_checkprivileges($menuId, $this->loginuserGroup, $this->loginuserRole, 'edit') == 'Yes') :
+							?>
+								<input onclick="window.location.href='<?php echo BASE_URL; ?>nationality/edit/id/<?php echo $this->id; ?>';" value="Edit" type="button" class="reset" />
+							<?php endif; ?>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		<?php endif; ?>
+
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		if ($('#description').length) {
+			$('#description').jqte();
+			$('.jqte_editor').attr('contenteditable', 'false'); // Prevents typing in View mode
+		}
+	});
+</script>

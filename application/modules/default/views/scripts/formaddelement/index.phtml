@@ -1,0 +1,58 @@
+<?php
+die("kllkkk");
+$form = $this->form;
+sapp_Global::generateClientValidations($this->form);
+
+?>
+<div class="poc-ui-data-control">
+    <form name="<?php echo $form->getName(); ?>" id="<?php echo $form->getId(); ?>" method="POST" action="<?php echo $form->getAction(); ?>">
+
+        <div class="total-form-controller">
+            <div class="new-form-ui ">
+                <label id="injuredDate" class="required"><?php echo $this->form->formName->getLabel(); ?></label>
+                <div class="division loca_state_div"><?php echo $this->form->formName; ?></div>
+            </div>
+
+            <div class="new-form-ui ">
+                <label id="injuredDate" class="required"><?php echo $this->form->elementType->getLabel(); ?></label>
+                <div class="division loca_state_div"><?php echo $this->form->elementType; ?></div>
+            </div>
+
+            <div class="new-form-ui ">
+                <label id="injuredDate" class="required"><?php echo $this->form->elementName->getLabel(); ?></label>
+                <div class="division loca_state_div"><?php echo $this->form->elementName; ?></div>
+            </div>
+
+            <div class="new-form-ui ">
+                <label id="injuredDate" class="required"><?php echo $this->form->elementLabel->getLabel(); ?></label>
+                <div class="division loca_state_div"><?php echo $this->form->elementLabel; ?></div>
+            </div>
+
+            <div class="new-form-ui ">
+                <label id="injuredDate" class="required"><?php echo $this->form->startNewLine->getLabel(); ?></label>
+                <div class="division loca_state_div"><?php echo $this->form->startNewLine; ?></div>
+            </div>
+
+            <div class="new-form-ui ">
+                <label id="injuredDate" class="required"><?php echo $this->form->occupyWholeLine->getLabel(); ?></label>
+                <div class="division loca_state_div"><?php echo $this->form->occupyWholeLine; ?></div>
+            </div>
+
+            <div class="new-form-ui ">
+                <label id="injuredDate" class="required"><?php echo $this->form->getFrom->getLabel(); ?></label>
+                <div class="division loca_state_div"><?php echo $this->form->getFrom; ?></div>
+            </div>
+      
+            <div class="new-form-ui ">
+                <label id="injuredDate" class="required"><?php echo $this->form->get->getLabel(); ?></label>
+                <div class="division loca_state_div"><?php echo $this->form->get; ?></div>
+            </div>
+            <div class="new-form-ui ">
+                <label id="injuredDate" class="required"><?php echo $this->form->validators->getLabel(); ?></label>
+                <div class="division loca_state_div"><?php echo $this->form->validators; ?></div>
+            </div>
+            <div class="new-form-ui-submit ">
+                <div class="division"><?php echo $this->form->submit; ?></div>
+            </div>
+        </div>
+    </form>

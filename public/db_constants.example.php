@@ -1,0 +1,8 @@
+<?php
+
+	           defined('SENTRIFUGO_HOST') || define('SENTRIFUGO_HOST','YOUR_DATABASE_HOST_HERE');
+	           defined('SENTRIFUGO_USERNAME') || define('SENTRIFUGO_USERNAME','YOUR_DATABASE_USERNAME_HERE');
+	           defined('SENTRIFUGO_PASSWORD') || define('SENTRIFUGO_PASSWORD','YOUR_DATABASE_PASSWORD_HERE');
+	           defined('SENTRIFUGO_DBNAME') || define('SENTRIFUGO_DBNAME','YOUR_DATABASE_NAME_HERE');
+	           defined('SENTRIFUGO_PORT') || define('SENTRIFUGO_PORT',3306);
+	         ?>

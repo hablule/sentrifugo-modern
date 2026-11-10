@@ -1,0 +1,40 @@
+
+			<?php sapp_Helper::viewHeader();
+			if (!empty($this->empDeductives)) {
+				foreach ($this->empDeductives as $value) {
+
+					sapp_Helper::viewBody('nor', 'Load  Name', $value['deductive_name'], 'Description', $value['deductive_description']);
+					sapp_Helper::viewBody('alt', 'From', $value['deductive_start'], 'To', $value['deductive_end']);
+					sapp_Helper::viewBody('nor', 'Load Category', $value['category_name'], 'Type', $value['deductive_type']);
+					sapp_Helper::viewBody('alt', 'Is Penality', $value['ispenality'], 'Is Tax', $value['istax']);
+					sapp_Helper::viewBody('nor', 'Is Auto Approve', $value['autoapprove'],'','');
+					$amount = '....';
+					$amountValue = '....';
+					if ($value['deductive_type'] == 'Individual') {
+						$amount = 'Amount';
+						$amountValue = $value['deductive_amount'];
+					}
+					sapp_Helper::viewBody('alt','Active', $value['deductive_active'], $amount, $amountValue );
+					sapp_Helper::viewBody('nor', ' ', ' ', ' ', ' ');
+					sapp_Helper::viewBody('nor','code', $value['deductive_code'],'','');
+
+				}
+			}else{?>
+			<h6 style="text-align: center;"> No Load is Assigned Assigned</h6>
+			<?php
+				sapp_Helper::viewBody('nor', '----------', '----------', '----------', '----------');
+					
+			}
+
+			sapp_Helper::viewFooter();
+			?>
+		</div>
+        
+<form name="<?php echo $this->form->getName();?>" id="<?php echo $this->form->getId();?>" method="POST" action="<?php echo $this->form->getAction();?>">
+<div class="new-form-ui-previousBtn">
+    <div class="division">
+        <?php echo $this->form->back;?>
+    </div>
+
+</div>
+</form>

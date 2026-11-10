@@ -1,0 +1,100 @@
+<?php 
+?>
+<?php
+
+
+?>
+<?php if($this->popup == 'close') { ?>	
+	<div class="ml-alert-1-success">
+	<div class="style-1-icon success"></div>
+	Load category <?php echo $this->eventact; ?> successfully
+	</div>
+
+	<?php } 
+else
+{
+    sapp_Global::generateClientValidations($this->form);?>
+    <div id="error_message" style="display:none;"></div>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction();?>" method="<?php echo $this->form->getMethod(); ?>">
+		<?php echo $this->form->id; ?>
+        <div class="total-form-controller">
+		    <div class="new-form-ui clearb">
+			  <label class="required">Name</label>
+			<div class="division"><?php echo $this->form->name; ?></div>
+			<?php if(isset($this->msgarray['name'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->name->getId(); ?>"><?php echo $this->msgarray['name'];?></span>
+			<?php }?>
+			</div>
+            <div class="new-form-ui clearb">
+			  <label class="required">Code</label>
+			<div class="division"><?php echo $this->form->code; ?></div>
+			<?php if(isset($this->msgarray['code'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->code->getId(); ?>"><?php echo $this->msgarray['code'];?></span>
+			<?php }?>
+			</div>
+            <div class="new-form-ui clearb">
+			  <label class="required">Category</label>
+			<div class="division"><?php echo $this->form->category; ?>
+			<?php if($this->categorypermission == 'Yes'){?>
+				<span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL . 'digitalmediacategory/addpopup' ?>','digital Category');"> Add Digital Category</span>
+				<?php }?>
+
+		</div>
+			<?php if(isset($this->msgarray['category'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->category->getId(); ?>"><?php echo $this->msgarray['category'];?></span>
+			<?php }?>
+			</div>
+            <div class="new-form-ui clearb">
+			  <label class="required">Type</label>
+			<div class="division"><?php echo $this->form->type; ?>
+			<?php if($this->typepermission == 'Yes'){?>
+				<span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL . 'digitalmediatype/addpopup' ?>','digital Type');"> Add Digital Type</span>
+				<?php }?>
+
+		</div>
+			<?php if(isset($this->msgarray['type'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->type->getId(); ?>"><?php echo $this->msgarray['type'];?></span>
+			<?php }?>
+			</div>
+		
+            <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description','', 'fck_editor_height','',array());?>
+
+            <div class="new-form-ui clearb">
+			  <label >Active</label>
+			<div class="division"><?php echo $this->form->isactive; ?></div>
+			<?php if(isset($this->msgarray['isactive'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->isactive->getId(); ?>"><?php echo $this->msgarray['isactive'];?></span>
+			<?php }?>
+			</div>
+		<div class="new-form-ui-submit">
+		<?php echo $this->form->submit; ?>
+        <button onclick="window.location.href='<?php echo BASE_URL; ?>digitalmedia';" type="button">Cancel</button>
+
+		</div>
+</div>
+</form>
+<?php } ?>
+<div id="digitalmediatypeContainer" style="display: none; overflow: auto;">
+		<div class="heading">
+			<a href="javascript:void(0)">
+				<img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+		</div>
+
+		<iframe id="digitalmediatypeCont" class="business_units_iframe" frameborder="0"></iframe>
+	</div>
+	<div id="digitalmediacategoryContainer" style="display: none; overflow: auto;">
+		<div class="heading">
+			<a href="javascript:void(0)">
+				<img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+		</div>
+
+		<iframe id="digitalmediacategoryCont" class="business_units_iframe" frameborder="0"></iframe>
+	</div>
+<script>
+$('#description').jqte();
+
+   
+
+</script>

@@ -1,0 +1,136 @@
+<?php
+
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/ ?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH ?>css/custompopup.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH ?>js/custompopup.js"></script>
+<?php
+$form = $this->form;
+if ($this->popup == 'close') { ?>
+    <div class="ml-alert-1-success">
+        <div class="style-1-icon success"></div>
+        Location <?php echo $this->eventact; ?> successfully
+    </div>
+
+<?php } else {
+    sapp_Global::generateClientValidations($this->form); ?>
+    <div id="error_message" style="display:none;"></div>
+    <form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" method="POST" , action="<?php echo $this->fomr->getAction; ?>">
+        <?php echo $this->form->id; ?>
+        <div class="new-form-ui ">
+            <label class="required">Address One</Address></label>
+            <div class="division"><?php echo $this->form->address1; ?></div>
+            <?php if (isset($this->msgarray['address1'])) { ?>
+                <span class="errors" id="errors-<?php echo $this->form->address1->getId(); ?>"><?php echo $this->msgarray['address1']; ?></span>
+            <?php } ?>
+        </div>
+
+        <div class="new-form-ui ">
+            <label>Address Two</label>
+            <div class="division"><?php echo $this->form->address2; ?></div>
+            <?php if (isset($this->msgarray['address2'])) { ?>
+                <span class="errors" id="errors-<?php echo $this->form->address2->getId(); ?>"><?php echo $this->msgarray['address2']; ?></span>
+            <?php } ?>
+        </div>
+        <div class="new-form-ui ">
+            <label>Address Three</label>
+            <div class="division"><?php echo $this->form->address3; ?></div>
+            <?php if (isset($this->msgarray['address3'])) { ?>
+                <span class="errors" id="errors-<?php echo $this->form->address3->getId(); ?>"><?php echo $this->msgarray['address3']; ?></span>
+            <?php } ?>
+        </div>
+        <div class="new-form-ui ">
+            <label>Address Four</label>
+            <div class="division"><?php echo $this->form->address4; ?></div>
+            <?php if (isset($this->msgarray['address4'])) { ?>
+                <span class="errors" id="errors-<?php echo $this->form->address4->getId(); ?>"><?php echo $this->msgarray['address4']; ?></span>
+            <?php } ?>
+        </div>
+       
+        <div class="new-form-ui">
+            <label class="required">Country</label>
+            <div class="division"><?php echo $this->form->country; ?>
+                <?php if (isset($this->msgarray['country'])) { ?>
+                    <span class="errors" id="errors-country"><?php echo $this->msgarray['country']; ?></span>
+                <?php } ?>
+                <span class="add-coloum" onclick="displayNestedPopup('<?php echo BASE_URL . 'countries/addnewcountry' ?>','Country');"> Add Country</span>
+            </div>
+        </div>
+        <div class="new-form-ui">
+            <label class="required">State</label>
+            <div class="division"><?php echo $this->form->state; ?>
+                <?php if (isset($this->msgarray['state'])) { ?>
+                    <span class="errors" id="errors-state"><?php echo $this->msgarray['state']; ?></span>
+                <?php } ?>
+                <span class="add-coloum" onclick="displayNestedPopup('<?php echo BASE_URL . 'states/addnewstate' ?>','State');"> Add State</span>
+            </div>
+        </div>
+        <div class="new-form-ui">
+            <label class="required">City</label>
+            <div class="division"><?php echo $this->form->city; ?>
+                <?php if (isset($this->msgarray['city'])) { ?>
+                    <span class="errors" id="errors-city"><?php echo $this->msgarray['city']; ?></span>
+                <?php } ?>
+                <span class="add-coloum" onclick="displayNestedPopup('<?php echo BASE_URL . 'cities/addnewcity' ?>','City');"> Add City</span>
+            </div>
+        </div>
+
+        <div class="new-form-ui ">
+            <label class="required">Map Coordinate</label>
+            <div class="division"><?php echo $this->form->map_coordinate; ?><a id='mv' href="<?php echo BASE_URL . 'location/map' ?>" onclick="var popup=window.open(this.href, '_blank', 'left=600,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;"><img class="ui-datepicker-trigger" src="<?php echo MEDIA_PATH; ?>images/map2.png" height="20px" alt="" title=""></a></div>
+
+            <?php if (isset($this->msgarray['map_coordinate'])) { ?>
+                <span class="errors" id="errors-<?php echo $this->form->map_coordinate->getId(); ?>"><?php echo $this->msgarray['map_coordinate']; ?></span>
+            <?php } ?>
+
+        </div>
+        <!-- <div class="new-form-ui ">
+            <label class="required">To</label>
+            <div class="division">
+<input type="text" name="end_date" id="end_date" value="" class="hasDatepicker"><img class="ui-datepicker-trigger" src="/Sentrifugo_3.2/public/media/images/cal.jpg" alt="" title="">            </div>
+            <span class="errors" id="errors-end_date"></span>
+
+        </div> -->
+
+
+
+
+        <div class="new-form-ui-submit ">
+            <div class="division"><?php echo $this->form->submit; ?></div>
+            <button onclick="window.location.href='<?php echo BASE_URL; ?>location';" type="button">Cancel</button>
+
+        </div>
+    </form>
+<?php    }    ?>
+
+<script language='javascript' type='text/javascript'>
+    <?php if ($this->popup != '') { ?>
+	 closeiframeAddPopup("<?php echo $this->locationData; ?>", '<?php echo $this->controllername; ?>', 'location', 'a location', 'yes');
+	
+	<?php } ?>
+    $(document).ready(function() {
+        <?php if (count($this->messages)) { ?>
+            setTimeout(function() {
+                $('#popupmessage').fadeOut('slow');
+            }, 3000);
+
+        <?php } ?>
+    });
+</script>

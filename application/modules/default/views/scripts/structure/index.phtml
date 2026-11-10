@@ -1,0 +1,464 @@
+<?php
+
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+?>
+<?php
+//code...
+
+if (!empty($this->orgData)) {  ?>
+
+	<style>
+		#ifrDiv {
+			z-index: 1000;
+			position: absolute;
+			border: 1px solid red;
+			top: 200px;
+			left: 200px;
+		}
+
+		.jOrgChart .node .deptclass {
+			background-color: red !important;
+		}
+
+		.jOrgChart .node .gfclass {
+			background-color: green !important;
+		}
+	</style>
+	<div id="grayout"></div>
+
+	<ul id="org" style="display:none;">
+		<li class="orgunit">
+			<i></i>
+			<p><?php echo $this->orgData['name']; ?></p>
+			<?php if ((!empty($this->businessdata) && $this->businessdata[0]['sbunit_id'] != NULL) || (!empty($this->deptData))) { ?>
+				<ul>
+					<!-- /////start/////////// -->
+					<?php
+
+						for ($i = 0; $i < sizeof($this->divisionData); $i++) {
+							if ($this->divisionData[$i]['parent_name'] == 'company_id') {
+					?><li class="divclass">
+								<i></i>
+								<p><?php echo $this->divisionData[$i]['name']; ?></p>
+								<!-- /////start woow/////////// -->
+								<ul>
+									<?php for ($l = 0; $l < sizeof($this->sectionData); $l++) {
+										if ($this->sectionData[$l]['parent_name'] == 'division_id') {
+											if ($this->sectionData[$l]['parent_id'] == $this->divisionData[$i]['division_id']) { ?>
+												<li class="secclass">
+													<i></i>
+													<p><?php echo $this->sectionData[$l]['name']; ?></p>
+
+													<!-- // -->
+													<ul>
+														<?php for ($m = 0; $m < sizeof($this->projectData); $m++) {
+															if ($this->projectData[$m]['parent_name'] == 'section_id') {
+																if ($this->projectData[$m]['parent_id'] == $this->sectionData[$l]['section_id']) {  ?>
+																	<li class="proclass">
+																		<i></i>
+																		<p><?php echo $this->projectData[$m]['description']; ?></p>
+
+
+																	</li>
+
+
+														<?php
+																}
+															}
+														}   ?>
+													</ul>
+													<!-- // -->
+												</li>
+
+
+									<?php
+											}
+										}
+									}   ?>
+									<?php for ($j = 0; $j < sizeof($this->deptData); $j++) {
+										if ($this->deptData[$j]['parent_name'] == 'division_id') {
+											if ($this->deptData[$j]['parent_id'] == $this->divisionData[$i]['division_id']) {
+									?>
+												<li class="deptclass">
+													<i></i>
+													<p><?php echo $this->deptData[$j]['name']; ?></p>
+													<!-- // -->
+													<ul>
+														<?php for ($k = 0; $k < sizeof($this->sectionData); $k++) {
+															// die(Zend_Debug::dump($this->deptData[$j]['department_id']));
+															if ($this->sectionData[$k]['parent_name'] == 'departement_id') {
+																if ($this->sectionData[$k]['parent_id'] == $this->deptData[$j]['department_id']) { ?>
+																	<li class="secclass">
+																		<i></i>
+																		<p><?php echo $this->sectionData[$k]['name']; ?></p>
+
+																		<!-- // -->
+																		<ul>
+																			<?php for ($l = 0; $l < sizeof($this->projectData); $l++) {
+																				if ($this->projectData[$l]['parent_name'] == 'section_id') {
+																					if ($this->projectData[$l]['parent_id'] == $this->sectionData[$k]['section_id']) {  ?>
+																						<li class="proclass">
+																							<i></i>
+																							<p><?php echo $this->projectData[$l]['description']; ?></p>
+
+
+																						</li>
+
+
+																			<?php
+																					}
+																				}
+																			}   ?>
+																		</ul>
+																		<!-- // -->
+																	</li>
+
+
+														<?php
+																}
+															}
+														}   ?>
+													</ul>
+													<!-- // -->
+
+												</li>
+
+
+							<?php
+											}
+										}
+									}
+								}
+							} ?>
+								</ul>
+								<!-- ////////end/////// -->
+								<?php
+
+								for ($i = 0; $i < sizeof($this->deptData); $i++) {
+									if ($this->deptData[$i]['parent_name'] == 'company_id') {
+								?>
+							<li class="deptclass">
+								<i></i>
+								<p><?php echo $this->deptData[$i]['name']; ?></p>
+
+								<ul>
+									<?php for ($l = 0; $l < sizeof($this->sectionData); $l++) {
+											Zend_Debug::dump($this->sectionData);
+											if ($this->sectionData[$l]['parent_name'] == 'departement_id') {
+												if ($this->sectionData[$l]['parent_id'] == $this->deptData[$i]['department_id']) { ?>
+												<li class="secclass">
+													<i></i>
+													<p><?php echo $this->sectionData[$l]['name']; ?></p>
+
+													<!-- // -->
+													<ul>
+														<?php for ($m = 0; $m < sizeof($this->projectData); $m++) {
+															if ($this->projectData[$m]['parent_name'] == 'section_id') {
+																if ($this->projectData[$m]['parent_id'] == $this->sectionData[$l]['section_id']) {  ?>
+																	<li class="proclass">
+																		<i></i>
+																		<p><?php echo $this->projectData[$m]['description']; ?></p>
+
+
+
+
+
+															<?php
+																}
+															}
+														}   ?>
+													</ul>
+													<!-- // -->
+												</li>
+
+
+									<?php
+												}
+											}
+										}   ?>
+								</ul>
+							</li><?php
+									}
+								}
+									?>
+					<!-- /////start/////////// -->
+					<?php
+
+					for ($i = 0; $i < sizeof($this->sectionData); $i++) {
+						if ($this->sectionData[$i]['parent_name'] == 'company_id') {
+					?><li class="secclass">
+								<i></i>
+								<p><?php echo $this->sectionData[$i]['name']; ?></p>
+								<ul>
+									<?php for ($m = 0; $m < sizeof($this->projectData); $m++) {
+										if ($this->projectData[$m]['parent_name'] == 'section_id') {
+											if ($this->projectData[$m]['parent_id'] == $this->sectionData[$i]['section_id']) {  ?>
+												<li class="proclass">
+													<i></i>
+													<p><?php echo $this->projectData[$m]['description']; ?></p>
+
+
+
+
+
+										<?php
+											}
+										}
+									}   ?>
+								</ul>
+
+							</li><?php
+								}
+							}
+									?>
+					<!-- ////////end/////// -->
+					<!-- /////start/////////// -->
+					<?php
+					for ($i = 0; $i < sizeof($this->projectData); $i++) {
+						if ($this->projectData[$i]['parent_name'] == 'company_id') {
+
+					?><li class="proclass">
+								<i></i>
+								<p><?php echo $this->projectData[$i]['description']; ?></p>
+							</li><?php
+								}
+							}
+									?>
+					<!-- ////////end/////// -->
+
+					<?php for ($i = 0; $i < sizeof($this->businessdata); $i++) {
+
+						if ($this->businessdata[$i]['sbunit_id'] != NULL) {
+					?>
+							<li class="bunitclass">
+								<i></i>
+								<p><?php echo $this->businessdata[$i]['name']; ?></p>
+
+								<ul>
+									<!-- /////start/////////// -->
+									<?php
+									for ($j = 0; $j < sizeof($this->deptData); $j++) {
+										if ($this->deptData[$j]['parent_name'] == 'sbunit_id') {
+											if ($this->deptData[$j]['parent_id'] == $this->businessdata[$i]['sbunit_id']) {
+									?><li class="deptclass">
+													<i></i>
+													<p><?php echo $this->deptData[$j]['name']; ?></p>
+												</li><?php
+													}
+												}
+											}
+														?>
+									<!-- ////////end/////// -->
+									<!-- /////start/////////// -->
+									<?php
+									for ($j = 0; $j < sizeof($this->sectionData); $j++) {
+										if ($this->sectionData[$j]['parent_name'] == 'sbunit_id') {
+											if ($this->sectionData[$j]['parent_id'] == $this->businessdata[$i]['sbunit_id']) {
+									?><li class="secclass">
+													<i></i>
+													<p><?php echo $this->sectionData[$j]['name']; ?></p>
+												</li><?php
+													}
+												}
+											}
+														?>
+									<!-- ////////end/////// -->
+
+									<!-- /////start/////////// -->
+									<?php
+									for ($j = 0; $j < sizeof($this->projectData); $j++) {
+										if ($this->projectData[$j]['parent_name'] == 'sbunit_id') {
+											if ($this->projectData[$j]['parent_id'] == $this->businessdata[$i]['sbunit_id']) {
+									?><li class="proclass">
+													<i></i>
+													<p><?php echo $this->projectData[$j]['description']; ?></p>
+												</li><?php
+													}
+												}
+											}
+														?>
+									<!-- ////////end/////// -->
+
+
+									<?php for ($j = 0; $j < sizeof($this->divisionData); $j++) {
+										if ($this->divisionData[$j]['parent_name'] == 'sbunit_id') {
+											if ($this->divisionData[$j]['parent_id'] == $this->businessdata[$i]['sbunit_id']) {	 ?>
+												<li class="divclass">
+													<i></i>
+													<p><?php echo $this->divisionData[$j]['name']; ?></p>
+
+													<!-- // -->
+													<ul>
+
+														<!-- /////start/////////// -->
+														<?php
+														for ($k = 0; $k < sizeof($this->projectData); $k++) {
+															if ($this->projectData[$k]['parent_name'] == 'division_id') {
+																if ($this->projectData[$k]['parent_id'] == $this->divisionData[$j]['division_id']) {
+														?><li class="proclass">
+																		<i></i>
+																		<p><?php echo $this->projectData[$k]['description']; ?></p>
+																	</li><?php
+																		}
+																	}
+																}
+																			?>
+														<!-- ////////end/////// -->
+														<!-- /////start/////////// -->
+														<?php
+														for ($k = 0; $k < sizeof($this->sectionData); $k++) {
+															if ($this->sectionData[$k]['parent_name'] == 'division_id') {
+																if ($this->sectionData[$k]['parent_id'] == $this->divisionData[$j]['division_id']) {
+														?><li class="secclass">
+																		<i></i>
+																		<p><?php echo $this->sectionData[$k]['name']; ?></p>
+																	</li><?php
+																		}
+																	}
+																}
+																			?>
+														<!-- ////////end/////// -->
+
+														<?php for ($k = 0; $k < sizeof($this->deptData); $k++) {
+															if ($this->deptData[$k]['parent_name'] == 'division_id') {
+																if ($this->deptData[$k]['parent_id'] == $this->divisionData[$j]['division_id']) {	?>
+																	<li class="deptclass">
+																		<i></i>
+																		<p><?php echo $this->deptData[$k]['name']; ?></p>
+																		<!-- // -->
+																		<ul>
+																			<?php for ($l = 0; $l < sizeof($this->sectionData); $l++) {
+																				if ($this->sectionData[$l]['parent_name'] == 'departement_id') {
+																					if ($this->sectionData[$l]['parent_id'] == $this->deptData[$k]['department_id']) { ?>
+																						<li class="secclass">
+																							<i></i>
+																							<p><?php echo $this->sectionData[$l]['name']; ?></p>
+
+																							<!-- // -->
+																							<ul>
+																								<?php for ($m = 0; $m < sizeof($this->projectData); $m++) {
+																									if ($this->projectData[$m]['parent_name'] == 'section_id') {
+																										if ($this->projectData[$m]['parent_id'] == $this->sectionData[$l]['section_id']) {  ?>
+																											<li class="proclass">
+																												<i></i>
+																												<p><?php echo $this->projectData[$m]['description']; ?></p>
+
+
+																											</li>
+
+
+																								<?php
+																										}
+																									}
+																								}   ?>
+																							</ul>
+																							<!-- // -->
+																						</li>
+
+
+																			<?php
+																					}
+																				}
+																			}   ?>
+																		</ul>
+																		<!-- // -->
+
+																	</li>
+
+
+														<?php
+																}
+															}
+														}   ?>
+													</ul>
+													<!-- // -->
+												</li>
+
+
+									<?php
+											}
+										}
+									}   ?>
+								</ul>
+							</li>
+
+					<?php
+						}
+					}	?>
+					<?php if ($this->nobu == 'exists') {
+
+					?>
+
+						<li>
+							<ul>
+								<?php
+
+								for ($i = 0; $i < sizeof($this->businessdata); $i++) {
+									if ($this->businessdata[$i]['sbunit_id'] == NULL) {
+								?>
+										<?php for ($j = 0; $j < sizeof($this->divisionData); $j++) {
+											if ($this->divisionData[$j]['sbunit_id'] == $this->businessdata[$i]['sbunit_id']) {	?>
+												<li class="deptclass"><i></i>
+													<p><?php echo $this->divisionData[$j]['name']; ?></p>
+												</li>
+								<?php
+											}
+										}
+									}
+								}	?>
+							</ul>
+						</li>
+					<?php } ?>
+				</ul>
+			<?php 	} ?>
+		</li>
+	</ul>
+	<script type='text/javascript'>
+		jQuery(document).ready(function() {
+			$('#grayout').slimScrollHorizontal({
+				alwaysVisible: false,
+				start: 'left',
+				position: 'bottom',
+
+			}).css({
+				background: '#ccc',
+				paddingBottom: '10px'
+			});
+			$("div.node").each(function() {
+				var text = $(this).text();
+				text = $.trim(text);
+				var subtext = text.substring(0, 30);
+				$(this).html(subtext);
+				$(this).attr("title", $.trim(text));
+			});
+			// console.log($("div .node"));
+			$("#org").jOrgChart();
+		});
+	</script>
+
+<?php } else { ?>
+	<div class="ml-alert-1-info m1-info-set">
+		<div class="style-1-icon info"></div>Organization Information is not added yet.
+	</div>
+<?php }
+
+
+?>

@@ -1,0 +1,149 @@
+<?php
+
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+?>
+
+<?php
+
+/**
+ * Business Domain Add Popup View
+ *
+ * Modal interface for adding business domains "On-The-Fly".
+ * Refactored to comply with SSOT v6.3.
+ *
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ * @author     Hablul Soft Solution < /hablul.in>
+ * @license    http://gnu.org GNU General Public License, version 3.0 (GPL-3.0)
+ * @version    Sentrifugo v3.2
+ */
+?>
+
+<!-- Asset Inclusions -->
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/custompopup.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/custompopup.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<?php if (isset($this->popup) && $this->popup === 'close') : ?>
+
+	<!-- Success UI -->
+	<div class="ml-alert-1-success">
+		<div class="style-1-icon success"></div>
+		Business Domain added successfully. Closing...
+	</div>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			var optionsHtml = '<?php echo $this->escape(isset($this->optionsHtml) ? $this->optionsHtml : ''); ?>';
+			var prevCntrl = '<?php echo $this->escape(isset($this->prev_cntrl) ? $this->prev_cntrl : 'businessdomain'); ?>';
+
+			setTimeout(function() {
+				if (typeof parent.closeiframeAddPopup === 'function') {
+					// Update dropdown in parent window and close modal
+					parent.closeiframeAddPopup(optionsHtml, prevCntrl, 'businessdomain_id', 'Business Domain');
+				} else {
+					parent.$('#businessdomainContainer').dialog('close');
+				}
+			}, 1500);
+		});
+	</script>
+
+<?php else : ?>
+
+	<?php sapp_Global::generateClientValidations($this->form); ?>
+
+	<?php if (!empty($this->msgarray)) : ?>
+		<div class="ml-alert-1-error" style="margin: 10px;">
+			<div style="display:block;">
+				<span class="style-1-icon error"></span>
+				Please correct the errors highlighted below.
+			</div>
+		</div>
+	<?php endif; ?>
+
+	<form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" action="<?php echo $this->escape($this->form->getAction()); ?>" method="post">
+
+		<?php echo $this->form->id; ?>
+
+		<div class="total-form-controller" style="padding: 15px;">
+			<div class="division">
+
+				<!-- Code -->
+				<div class="new-form-ui clearb">
+					<label class="required"><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+					<div class="division">
+						<?php echo $this->form->code; ?>
+						<span class="errors" id="errors-<?php echo $this->escape($this->form->code->getId()); ?>">
+							<?php echo isset($this->msgarray['code']) ? $this->escape($this->msgarray['code']) : ''; ?>
+						</span>
+					</div>
+				</div>
+
+				<!-- Name -->
+				<div class="new-form-ui clearb">
+					<label class="required"><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+					<div class="division">
+						<?php echo $this->form->name; ?>
+						<span class="errors" id="errors-<?php echo $this->escape($this->form->name->getId()); ?>">
+							<?php echo isset($this->msgarray['name']) ? $this->escape($this->msgarray['name']) : ''; ?>
+						</span>
+					</div>
+				</div>
+
+				<!-- Description -->
+				<?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+				<!-- Active Status -->
+				<div class="new-form-ui clearb">
+					<label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+					<div class="division">
+						<?php echo $this->form->isactive; ?>
+					</div>
+				</div>
+
+				<!-- Actions -->
+				<div class="new-form-ui-submit">
+					<div class="division">
+						<?php echo $this->form->submit; ?>
+						<!-- Standard Parent Modal Close Hook -->
+						<input onclick="parent.$('#businessdomainContainer').dialog('close');" value="Cancel" type="button" class="reset" />
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</form>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('#description').jqte();
+
+			<?php if (!empty($this->msgarray)) : ?>
+				$('html, body').animate({
+					scrollTop: 0
+				}, 'slow');
+			<?php endif; ?>
+		});
+	</script>
+
+<?php endif; ?>

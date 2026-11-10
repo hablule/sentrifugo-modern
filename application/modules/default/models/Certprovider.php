@@ -1,0 +1,106 @@
+<?php
+class Default_Model_Certprovider extends Zend_Db_Table_Abstract{
+    protected $_name = 'main_certprovider';
+    protected $_primary = 'certprovider_id';
+
+    public function getData($sort, $by, $pageNo, $perPage, $searchQuery)
+    {
+        $where = "1";
+
+        if ($searchQuery)
+            $where .= " AND " . $searchQuery;
+
+
+        $bank = $this->select()
+            ->setIntegrityCheck(false)
+            ->from(['mc'=>'main_certprovider'],['mc.name as name', 'mc.code as code', 'mc.description as description', 'if(mc.isactive="Y","Yes","No") as isactive', 'mc.certprovider_id as id'])
+            ->joinLeft(['mcc'=>'main_certprovidercategory'],"mc.certprovidercategory_id = mcc.certprovidercategory_id",['category'=>'mcc.name'])
+            ->order("$by $sort")
+            ->where($where)
+            ->limitPage($pageNo, $perPage);
+       
+        return $bank;
+    }
+    public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $a = '', $b = '', $c = '', $d = '')
+    {
+        $searchQuery = '';
+        $searchArray = [];
+        if ($searchData != '' && $searchData != 'undefined') {
+            $searchValues = json_decode($searchData);
+            foreach ($searchValues as $key => $val) {
+                if($key=='category'){
+                    $searchQuery .= "mcc.name like '%" . $val . "%' AND ";
+
+                }
+                else
+                $searchQuery .= "mc." . $key . " like '%" . $val . "%' AND ";
+                $searchArray[$key] = $val;
+            }
+            $searchQuery = rtrim($searchQuery, " AND");
+        }
+        $objName = 'certprovider';
+        $tableFields = [
+            'action' => 'Action',
+            'code' => 'Code',
+            'name' => 'Name',
+            'category'=>'Provider Category',
+            'description' => 'Description',
+            'isactive' => 'Active',
+        ];
+
+        $tablecontent = $this->getData($sort, $by, $pageNo, $perPage, $searchQuery);
+        $dataTmp = [
+            'sort' => $sort,
+            'by' => $by,
+            'pageNo' => $pageNo,
+            'perPage' => $perPage,
+            'tablecontent' => $tablecontent,
+            'objectname' => $objName,
+            'extra' => [],
+            'add'=>'add',
+            'tableheader' => $tableFields,
+            'jsGridFnName' => 'getAjaxgridData',
+            'jsFillFnName' => '',
+            'searchArray' => $searchArray,
+            'call' => $call,
+            'dashboardcall' => $dashboardcall,
+            'search_filters' => [
+                'isactive' => [
+                    'type' => 'select',
+                    'filter_data' => [''=>'All','Y'=>'Yes','N'=>'No']],
+            ]
+        ];
+        return $dataTmp;
+    }
+
+    public function SaveorUpdateData($data, $where)
+	{
+	    if($where != ''){
+			$this->update($data, $where);
+			return 'update';
+		} else {
+			$this->insert($data);
+			$id=$this->getAdapter()->lastInsertId($this->_name);
+			return $id;
+		}
+		
+	}
+
+    public function getcertprovider($id)
+    {
+        $linecate = $this->select()
+                         ->setIntegrityCheck(false)
+                         ->where('certprovider_id='.$id);
+        return $this->fetchRow($linecate)->toArray();
+    }
+
+    public function getallcategory()
+    {
+        $linec = $this->select()
+                      ->setIntegrityCheck(false)
+                      ->where('isactive="Y"');
+        return $this->fetchAll($linec)->toArray();
+    }
+
+}
+?>

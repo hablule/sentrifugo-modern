@@ -1,0 +1,281 @@
+<?php
+
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+$form = $this->form;
+$method_form = $this->method_form;
+$classes = $this->classes;
+$params = $this->params;
+?>
+<script>
+	var classes = '<?php echo json_encode($classes); ?>';
+</script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH ?>js/UDFBuilder.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/UDFBuilder.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+<?php
+if ($this->ermsg != '') {
+?>
+	<div class="ml-alert-1-info m1-info-set">
+		<div class="style-1-icon info"></div>
+		No data found.
+	</div>
+<?php
+} else {
+	sapp_Global::generateClientValidations($this->form); ?>
+	<div id="error_message" style="display:none;"></div>
+
+	<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction(); ?>" method="<?php echo $this->form->getMethod(); ?>">
+		<?php echo $this->form->id;
+		echo $this->form->user_id;
+		?>
+		<div class="total-form-controller">
+
+			<div class="new-form-ui">
+				<label class='required'>Name</label>
+				<div class="division"><?php echo $this->form->name; ?></div>
+				<?php if (isset($this->msgarray['name'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->name->getId(); ?>"><?php echo $this->msgarray['name']; ?></span>
+				<?php } ?>
+			</div>
+
+
+			<div class="new-form-ui">
+				<label class='required'>Leave Category</label>
+				<div class="division"><?php echo $this->form->leavecategory; ?>
+					<span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL . 'leavecategory/addpopup' ?>','Leave Category');"> Add Leave Category </span>
+				</div>
+				<?php if (isset($this->msgarray['leavecategory'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->leavecategory->getId(); ?>"><?php echo $this->msgarray['leavecategory']; ?></span>
+				<?php } ?>
+			</div>
+			<div class="new-form-ui">
+				<label class='required'>Duaration Type</label>
+				<div class="division"><?php echo $this->form->duarationtype; ?></div>
+				<?php if (isset($this->msgarray['duarationtype'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->duarationtype->getId(); ?>"><?php echo $this->msgarray['duarationtype']; ?></span>
+				<?php } ?>
+			</div>
+
+			<div class="new-form-ui">
+				<label class='required'>Base Period </label>
+				<div class="division"><?php echo $this->form->baseperiod; ?></div>
+				<?php if (isset($this->msgarray['baseperiod'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->baseperiod->getId(); ?>"><?php echo $this->msgarray['baseperiod']; ?></span>
+				<?php } ?>
+			</div>
+			<div class="new-form-ui">
+				<label class='required'>Pay Type</label>
+				<div class="division"><?php echo $this->form->paytype; ?></div>
+				<?php if (isset($this->msgarray['paytype'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->paytype->getId(); ?>"><?php echo $this->msgarray['paytype']; ?></span>
+				<?php } ?>
+			</div>
+			<br>
+			<br>
+			<?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description','', 'fck_editor_height','',array());?>
+
+
+			<div class="new-form-ui">
+				<label>Approval Required</label>
+				<div class="division"><?php echo $this->form->approval; ?></div>
+				<?php if (isset($this->msgarray['approval'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->approval->getId(); ?>"><?php echo $this->msgarray['approval']; ?></span>
+				<?php } ?>
+			</div>
+			<div class="new-form-ui">
+				<label>Is Preset</label>
+				<div class="division"><?php echo $this->form->ispreset; ?></div>
+				<?php if (isset($this->msgarray['ispreset'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->ispreset->getId(); ?>"><?php echo $this->msgarray['ispreset']; ?></span>
+				<?php } ?>
+			</div>
+			<div class="new-form-ui">
+				<label>Active</label>
+				<div class="division"><?php echo $this->form->isactive; ?></div>
+				<?php if (isset($this->msgarray['isactive'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->isactive->getId(); ?>"><?php echo $this->msgarray['isactive']; ?></span>
+				<?php } ?>
+			</div>
+			<div class="new-form-ui" id="allowday_div" style="display: none;">
+				<label>Allowed Day </label>
+				<div class="division"><?php echo $this->form->allowday; ?></div>
+				<?php if (isset($this->msgarray['allowday'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->allowday->getId(); ?>"><?php echo $this->msgarray['allowday']; ?></span>
+				<?php } ?>
+			</div>
+			<div class="new-form-ui" id="classfun_div" style="display: none;">
+				<div class="division"><?php echo $method_form->classfun; ?>
+					<div><span style="color:red" id="classfun_error"></span></div>
+				</div>
+			</div>
+			<div id="para" style="display: none;">
+				<div class="division" style="display: none;"><?php echo $method_form->parameters; ?></div>
+				<div class="division" style="display: none;"><?php echo $method_form->classPath; ?></div>
+			</div>
+			<div class="total-form-controller" id="total-form-controller">
+			</div>
+			<div class="new-form-ui-submit ">
+				<div class="division"><?php echo $this->form->submit; ?></div>
+				<button onclick="window.location.href='<?php echo BASE_URL; ?>leave';" type="button" >Cancel</button>
+			</div>
+
+
+	</form>
+<?php	}	?>
+<div id="leavecategoryContainer" style="display: none; overflow: auto;">
+	<div class="heading">
+		<a href="javascript:void(0)">
+			<img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+	</div>
+
+	<iframe id="leavecategoryCont" class="business_units_iframe" frameborder="0"></iframe>
+</div>
+
+</div>
+
+<script>
+$(document).ready(function() {   
+	var selected = document.getElementById('duarationtype').value;
+		console.log(selected);
+
+		if (selected == 'Request') {
+			document.getElementById('classfun_div').style.display = 'none';
+			document.getElementById('allowday_div').style.display = 'none';
+			document.getElementById('para').style.display = 'none';
+
+		} else if (selected == 'Individual') {
+			document.getElementById('classfun_div').style.display = 'none';
+			document.getElementById('allowday_div').style.display = 'none';
+		} else if (selected == 'Calculated') {
+			document.getElementById('allowday_div').style.display = 'none';
+			document.getElementById('classfun_div').style.display = 'block';
+			getParams();
+			var params = [];
+			params = <?php echo json_encode(explode(',',$params))?>;
+			params.forEach((element, index)=>{
+				document.getElementById('selected_text_'+index).value = element;
+			})
+			console.log(params);
+		} else if (selected == 'Fixed') {
+			document.getElementById('classfun_div').style.display = 'none';
+			document.getElementById('allowday_div').style.display = 'block';
+		}
+});  
+
+
+$("#submit").click(function() {
+		if (!isValid()) {
+			return false;
+		} else {
+
+			var method = document.getElementById('classfun').value;
+			var selectedFun_Name = method.split(".");
+			var className = selectedFun_Name[0];
+			var methodName = selectedFun_Name[1];
+			
+			
+			if (className != 'empty') {
+				var no_parameters = classes[className]['methods'][methodName]['no_args'];
+				for (var i = 0; i < no_parameters; i++) {
+					document.getElementById('parameters').value += document.getElementById('selected_text_' + i).value + ","
+				}
+			}
+
+			return true;
+		}
+	});
+	document.getElementById('duarationtype').onchange = function() {
+		var selected = document.getElementById('duarationtype').value;
+		console.log(selected);
+
+		if (selected == 'Request') {
+			document.getElementById('classfun_div').style.display = 'none';
+			document.getElementById('allowday_div').style.display = 'none';
+			document.getElementById('para').style.display = 'none';
+
+		} else if (selected == 'Individual') {
+			document.getElementById('classfun_div').style.display = 'none';
+			document.getElementById('allowday_div').style.display = 'none';
+		} else if (selected == 'Calculated') {
+			document.getElementById('allowday_div').style.display = 'none';
+			document.getElementById('classfun_div').style.display = 'block';
+		} else if (selected == 'Fixed') {
+			document.getElementById('classfun_div').style.display = 'none';
+			document.getElementById('allowday_div').style.display = 'block';
+		}
+	}
+
+	function isValid() {
+		var valid = true;
+
+		if (document.getElementById('allowday_div').style.display == 'block') {
+
+			var reg = /[0-9]+([.])?[0-9]+/;
+			if (!reg.test(document.getElementById('allowday').value)) {
+				document.getElementById('amount_error').innerHTML = 'Use Only Numbers!';
+				valid = false;
+			} else {
+
+			}
+		}
+		if (document.getElementById('allowday_div').style.display == 'block') {
+            if (document.getElementById('allowday').value == '') {
+                valid = false;
+                document.getElementById('allowday_error').innerHTML = 'Field is required!';
+            } else {
+                var reg = /[0-9]+([.])?[0-9]+/;
+                if (!reg.test(document.getElementById('allowday').value)) {
+                    document.getElementById('allowday_error').innerHTML = 'Use Only Numbers!';
+                    valid = false;
+                } else {
+                   
+                }
+
+            }
+        }
+		if (document.getElementById('duarationtype').value == 'Calculated') {
+			var method = document.getElementById('classfun').value;
+			if (method == 'empty') {
+				document.getElementById('classfun_error').innerHTML = 'Please select a function!';
+				valid = false;
+			} else {
+				var selectedFun_Name = method.split(".");
+				var className = selectedFun_Name[0];
+				var methodName = selectedFun_Name[1];
+				var no_parameters = classes[className]['methods'][methodName]['no_args'];
+				for (var i = 0; i < no_parameters; i++) {
+					if (document.getElementById("selected_text_" + i).value == "") {
+						document.getElementById("error_" + i).innerHTML = "Field is required!";
+						valid = false;
+					} else {
+						document.getElementById("error_" + i).innerHTML = '';
+					}
+				}
+			}
+		}
+
+		return valid;
+
+	}
+	$('#description').jqte();
+
+</script>

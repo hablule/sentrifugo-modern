@@ -1,0 +1,79 @@
+<?php
+
+
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+<style>
+	.search-btn{
+		margin-left:10px;
+	}
+</style>
+<?php if($this->popup == 'close') { ?>	
+	<div class="ml-alert-1-success">
+	<div class="style-1-icon success"></div>
+	Device <?php echo $this->eventact; ?> successfully
+	</div>
+
+	<?php } 
+else
+{
+ sapp_Global::generateClientValidations($this->form);?>
+ <div id="error_message" style="display:none;"></div>
+
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction();?>" method="<?php echo $this->form->getMethod(); ?>">
+		<?php echo $this->form->id; ?>
+        <div class="total-form-controller">
+            <div class="new-form-ui clearb">
+			  <label class="required">Device IP<img class="tooltip"  src="<?php echo $this->baseUrl().'/public/media/';?>images/help.png"></label>
+			<div class="division"><?php echo $this->form->ip_address; ?></div>
+			<?php if(isset($this->msgarray['ip_address'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->ip_address->getId(); ?>"><?php echo $this->msgarray['ip_address'];?></span>
+			<?php }?>
+			</div>		
+		
+			<div class="new-form-ui ">
+			    <label >Device Port</label>
+				<div class="division"><?php echo $this->form->port; ?>
+				<?php if(isset($this->msgarray['port'])){?>
+				   <span class="errors" id="errors-<?php echo $this->form->port->getId(); ?>"><?php echo $this->msgarray['port'];?></span>
+				<?php }?>
+				
+				</div>
+				
+			</div>
+		<div class="new-form-ui-submit">
+			<?php echo $this->form->Search; ?>
+			<button class="cancel-btn" onclick="window.location.href='<?php echo BASE_URL; ?>schedule/device';" type="button" id="Cancel" name="Cancel">Cancel</button>
+		</div>
+</div>
+</form>
+<script type="text/javascript">
+	var searchDevice = function(){
+		let ip_address = $('#ip_address').val();
+		let port = $('#port').val();
+		if(port === ''){
+			port = 51211;
+		}
+		if(ip_address === '' || port === ''){
+			alert('Please enter IP Address and Port');
+			return false;
+		}
+		$.ajax({
+			url: `<?php echo DEVICE_API_URL; ?>ConnectDevice/connectViaIP?ipAddress=${ip_address}&port=${port}`,
+			type: 'GET',
+			success: function(data){
+				console.log(data);
+				if(data == 0){
+					window.location.href = '<?php echo BASE_URL; ?>schedule/device';
+				}else if(data == 1){
+					alert('Device found');
+				}
+				else{
+					alert('Device found and added to record');
+				}
+			}
+		});
+	}
+</script>
+<?php } ?>

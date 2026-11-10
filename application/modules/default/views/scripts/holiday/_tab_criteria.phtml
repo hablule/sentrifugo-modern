@@ -1,0 +1,248 @@
+<style>
+    /* Single-Row Balanced Criteria Toolbar */
+    .criteria-toolbar-card {
+        background: #fdfdfd;
+        padding: 15px;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        box-sizing: border-box;
+        width: 100%;
+        clear: both;
+    }
+
+    .criteria-toolbar-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        align-items: flex-end;
+        width: 100%;
+    }
+
+    .crit-col-group {
+        width: 100px;
+        flex-shrink: 0;
+    }
+
+    .crit-col-type {
+        flex: 1 1 200px;
+    }
+
+    .crit-col-value {
+        flex: 1 1 250px;
+    }
+
+    .crit-col-match {
+        flex: 1 1 180px;
+    }
+
+    .crit-col-btn {
+        width: 110px;
+        flex-shrink: 0;
+    }
+
+    .crit-input {
+        border: 1px solid #ccc;
+        padding: 6px 10px;
+        width: 100%;
+        height: 40px; /* Uniform line height across inputs and selects */
+        box-sizing: border-box;
+        border-radius: 4px;
+        font-size: 13px;
+        color: #333;
+        background-color: #fff;
+        vertical-align: middle;
+    }
+
+    
+
+    /* Table Styling */
+    .criteria-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+        clear: both;
+    }
+
+    .criteria-table th,
+    .criteria-table td {
+        border: 1px solid #ddd;
+        padding: 8px 12px;
+        text-align: left;
+    }
+
+    .criteria-table th {
+        background-color: #f9f9f9;
+        font-weight: bold;
+        font-size: 12px;
+        color: #333;
+    }
+
+    .btn-remove-criteria {
+        color: #e74c3c;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    .btn-remove-criteria:hover {
+        color: #c0392b;
+    }
+</style>
+
+<div class="criteria-toolbar-card">
+    <div style="font-weight: bold; color: #26a69a; font-size: 13px; margin-bottom: 10px;">
+        Add Targeting Rule (Group Homogeneity DNF Logic)
+    </div>
+
+    <div class="criteria-toolbar-row">
+        <!-- 1. Group ID -->
+        <div class="crit-col-group">
+            <label style="font-size: 11px; font-weight: bold; color: #666; display: block; margin-bottom: 4px;">Group (OR)</label>
+            <input type="number" id="input_group_id" value="1" min="1" class="crit-input browser-default">
+        </div>
+
+        <!-- 2. Target Criteria Type -->
+        <div class="crit-col-type">
+            <label style="font-size: 11px; font-weight: bold; color: #666; display: block; margin-bottom: 4px;">Target Criteria</label>
+            <select id="input_criteria_type" class="crit-input browser-default" onchange="updateDynamicValueDropdown();">
+                <option value="Country">Country</option>
+                <option value="Department">Department</option>
+                <option value="BusinessUnit">Business Unit</option>
+                <option value="Division">Division</option>
+                <option value="Gender">Gender</option>
+                <option value="Religion">Religion</option>
+                <option value="EmploymentType">Employment Type</option>
+            </select>
+        </div>
+
+        <!-- 3. Dynamic Target Value Dropdown -->
+        <div class="crit-col-value">
+            <label style="font-size: 11px; font-weight: bold; color: #666; display: block; margin-bottom: 4px;">Target Value</label>
+            <div id="wrapper_criteria_value">
+                <select id="input_criteria_value" class="crit-input browser-default">
+                    <option value="">Select Value...</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- 4. Match Logic -->
+        <div class="crit-col-match">
+            <label style="font-size: 11px; font-weight: bold; color: #666; display: block; margin-bottom: 4px;">Match Logic</label>
+            <select id="input_match_type" class="crit-input browser-default">
+                <option value="MANDATORY">MANDATORY (AND)</option>
+                <option value="OPTIONAL">OPTIONAL (OR)</option>
+            </select>
+        </div>
+
+        <!-- 5. Add Button -->
+        <div class="crit-col-btn">
+            <button type="button" class="actbtn_btn" onclick="addCriteriaRow();" style="width: 100%; height: 34px; line-height: 34px; margin: 0; padding: 0 10px;">
+                <i class="fa fa-plus"></i> Add Rule
+            </button>
+        </div>
+    </div>
+</div>
+
+<table class="criteria-table" id="tbl-criteria">
+    <thead>
+        <tr>
+            <th style="width: 90px;">Group</th>
+            <th style="width: 150px;">Criteria Type</th>
+            <th>Target Value</th>
+            <th style="width: 180px;">Match Logic</th>
+            <th style="width: 60px; text-align: center;">Action</th>
+        </tr>
+    </thead>
+    <tbody><!-- Injected by JavaScript --></tbody>
+</table>
+
+<script type="text/javascript">
+    var arrCriteria = <?php echo isset($this->existingCriteria) ? $this->existingCriteria : '[]'; ?>;
+    var criteriaLookups = <?php echo isset($this->criteriaLookups) ? $this->criteriaLookups : '{}'; ?>;
+
+    $(document).ready(function() {
+        updateDynamicValueDropdown();
+        renderCriteriaGrid();
+    });
+
+    // Dynamically populate the Value dropdown when Criteria Type changes
+    function updateDynamicValueDropdown() {
+        var type = $('#input_criteria_type').val();
+        var options = criteriaLookups[type] || {};
+        var $select = $('#input_criteria_value');
+
+        $select.empty();
+        $select.append('<option value="">Select ' + type + '...</option>');
+
+        if ($.isPlainObject(options) || $.isArray(options)) {
+            $.each(options, function(key, label) {
+                $select.append('<option value="' + key + '">' + label + '</option>');
+            });
+        }
+    }
+
+    function addCriteriaRow() {
+        var groupId = $('#input_group_id').val();
+        var type = $('#input_criteria_type').val();
+        var valueId = $('#input_criteria_value').val();
+        var valueText = $('#input_criteria_value option:selected').text();
+        var match = $('#input_match_type').val();
+
+        if (!groupId || !valueId) {
+            alert("Please select a valid Target Value.");
+            return;
+        }
+
+        arrCriteria.push({
+            id: 0,
+            group_id: parseInt(groupId),
+            criteria_type: type,
+            criteria_value: valueId,
+            display_label: valueText,
+            match_type: match,
+            action: 'new'
+        });
+
+        renderCriteriaGrid();
+    }
+
+    function removeCriteriaRow(idx) {
+        if (arrCriteria[idx].id > 0) {
+            arrCriteria[idx].action = 'delete';
+        } else {
+            arrCriteria.splice(idx, 1);
+        }
+        renderCriteriaGrid();
+    }
+
+    function renderCriteriaGrid() {
+        var html = '';
+        var activeCount = 0;
+
+        $.each(arrCriteria, function(idx, item) {
+            if (item.action === 'delete') return true;
+
+            activeCount++;
+            var matchBadge = (item.match_type === 'MANDATORY') ?
+                '<span style="color:green; font-weight:bold;">MANDATORY (AND)</span>' :
+                '<span style="color:#f39c12; font-weight:bold;">OPTIONAL (OR)</span>';
+
+            // Resolve display label if missing
+            var displayVal = item.display_label || (criteriaLookups[item.criteria_type] ? criteriaLookups[item.criteria_type][item.criteria_value] : null) || item.criteria_value;
+
+            html += '<tr>';
+            html += '<td><strong>Group ' + item.group_id + '</strong></td>';
+            html += '<td>' + item.criteria_type + '</td>';
+            html += '<td><strong>' + displayVal + '</strong></td>';
+            html += '<td>' + matchBadge + '</td>';
+            html += '<td style="text-align:center;"><a class="btn-remove-criteria" onclick="removeCriteriaRow(' + idx + ');" title="Delete Rule"><i class="fa fa-trash"></i></a></td>';
+            html += '</tr>';
+        });
+
+        if (activeCount === 0) {
+            html = '<tr><td colspan="5" style="text-align:center; color:#999; padding:15px;">No targeting rules defined. This policy applies globally to all employees.</td></tr>';
+        }
+
+        $('#tbl-criteria tbody').html(html);
+    }
+</script>

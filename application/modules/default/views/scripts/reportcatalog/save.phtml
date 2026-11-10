@@ -1,0 +1,446 @@
+<?php
+
+/**
+ * Report Catalog Save View
+ * 
+ * Merged Form handling Header + 3 Tabbed ACL Mappings.
+ * Strictly adheres to SSOT v6.7.4 (Section VII.10 & VII.17).
+ */
+$this->msgarray = isset($this->msgarray) ? $this->msgarray : array();
+
+// SSOT VII.4: Generate Client Validations
+sapp_Global::generateClientValidations($this->form);
+?>
+<!-- SSOT VII.2 & VII.3: Strict Asset Inclusions (No screen.css) -->
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<style>
+    /* SSOT VII.17: Custom Sentrifugo-Themed Tabs */
+    .sf-tabs-nav {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        border-bottom: 2px solid #ccc;
+        display: flex;
+        width: 100%;
+    }
+
+    .sf-tabs-nav li {
+        margin-bottom: -2px;
+    }
+
+    .sf-tabs-nav li a {
+        display: block;
+        padding: 10px 20px;
+        text-decoration: none;
+        color: #666;
+        font-weight: bold;
+        border-bottom: 2px solid transparent;
+        transition: all 0.3s;
+    }
+
+    .sf-tabs-nav li.active a {
+        color: #26a69a;
+        border-bottom: 2px solid #26a69a;
+    }
+
+    .sf-tabs-nav li a:hover {
+        color: #26a69a;
+    }
+
+    .sf-tab-panel {
+        padding: 20px 0;
+        display: none;
+    }
+
+    .sf-tab-panel.active {
+        display: block;
+    }
+
+    /* Mapping Table Styles */
+    .mapping-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+
+    .mapping-table th,
+    .mapping-table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+    }
+
+    .mapping-table th {
+        background-color: #f9f9f9;
+        color: #333;
+        font-weight: bold;
+    }
+
+    .remove-btn {
+        color: #e74c3c;
+        cursor: pointer;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .remove-btn:hover {
+        text-decoration: underline;
+    }
+
+    .select2-container {
+        width: 100% !important;
+        z-index: 1;
+    }
+</style>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container">
+            <?php if (!empty($this->msgarray)) : ?>
+                <div class="ml-alert-1-error">
+                    <div style="display:block;"><span class="style-1-icon error"></span>Please correct the highlighted errors below.</div>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" method="<?php echo $this->escape($this->form->getMethod()); ?>">
+            <!-- Hidden Elements -->
+            <?php echo $this->form->id; ?>
+            <?php echo $this->form->groups_payload; ?>
+            <?php echo $this->form->roles_payload; ?>
+            <?php echo $this->form->employees_payload; ?>
+
+            <!-- SSOT VII.1: Strict HTML Class Wrappers -->
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <!-- ================= HEADER SECTION ================= -->
+                    <h4 style="font-size: 14px; color: #26a69a; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 15px; margin-top: 0;">Report Definition</h4>
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->menugroup_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->menugroup_id; ?></div>
+                            <span class="errors" id="errors-menugroup_id"><?php echo $this->escape($this->msgarray['menugroup_id'] ?? ''); ?></span>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->category_id->getLabel()); ?></label>
+                            <div class="division">
+                                <?php echo $this->form->category_id; ?>
+                                <span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL . 'reportcategory/addpopup' ?>','Add Category');"> Add Category</span>
+                            </div>
+                            <span class="errors" id="errors-category_id"><?php echo $this->escape($this->msgarray['category_id'] ?? ''); ?></span>
+                        </div>
+                    </div>
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->code; ?></div>
+                            <span class="errors" id="errors-code"><?php echo $this->escape($this->msgarray['code'] ?? ''); ?></span>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->name; ?></div>
+                            <span class="errors" id="errors-name"><?php echo $this->escape($this->msgarray['name'] ?? ''); ?></span>
+                        </div>
+                    </div>
+
+                    <div style="clear: both; width: 100%; height: 20px;"></div>
+
+                    <!-- ================= ACCESS CONTROL TABS ================= -->
+                    <h4 style="font-size: 14px; color: #26a69a; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 15px;">Access Control List (ACL)</h4>
+                    <p style="font-size: 12px; color: #666; margin-bottom: 15px;">Specify who is authorized to view this report. If all lists are left blank, only Super Admins will have access.</p>
+
+                    <div id="acl-tabs" style="width: 100%; margin-bottom: 30px;">
+                        <ul class="sf-tabs-nav">
+                            <li class="active"><a href="#tab-groups" data-target="tab-groups"><i class="fa fa-users"></i> Groups</a></li>
+                            <li><a href="#tab-roles" data-target="tab-roles"><i class="fa fa-briefcase"></i> Roles</a></li>
+                            <li><a href="#tab-employees" data-target="tab-employees"><i class="fa fa-user"></i> Specific Employees</a></li>
+                        </ul>
+
+                        <!-- TAB 1: GROUPS -->
+                        <div id="tab-groups" class="sf-tab-panel active">
+                            <div class="row no-margin" style="background:#fcfcfc; padding:15px; border:1px solid #eee; border-radius: 4px;">
+                                <div class="new-form-ui clearb" style="width: 60%; margin-bottom: 0;">
+                                    <label>Select Group</label>
+                                    <div class="division">
+                                        <select id="ui_group_id" class="browser-default select2">
+                                            <option value="">Search and select...</option>
+                                            <?php foreach ($this->groupOptions as $k => $v) echo "<option value='$k'>" . $this->escape($v) . "</option>"; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="float:left; margin-top: 25px; margin-left: 15px;">
+                                    <button type="button" class="actbtn_btn" onclick="addAclRow('Group', 'ui_group_id', arrGroups);">Grant Group Access</button>
+                                </div>
+                                <div style="clear:both;"></div>
+                            </div>
+                            <table class="mapping-table" id="tbl-groups">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 100px;">Group ID</th>
+                                        <th>Group Name</th>
+                                        <th style="width: 100px;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody><!-- JS injected --></tbody>
+                            </table>
+                        </div>
+
+                        <!-- TAB 2: ROLES -->
+                        <div id="tab-roles" class="sf-tab-panel">
+                            <div class="row no-margin" style="background:#fcfcfc; padding:15px; border:1px solid #eee; border-radius: 4px;">
+                                <div class="new-form-ui clearb" style="width: 60%; margin-bottom: 0;">
+                                    <label>Select Role</label>
+                                    <div class="division">
+                                        <select id="ui_role_id" class="browser-default select2">
+                                            <option value="">Search and select...</option>
+                                            <?php foreach ($this->roleOptions as $k => $v) echo "<option value='$k'>" . $this->escape($v) . "</option>"; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="float:left; margin-top: 25px; margin-left: 15px;">
+                                    <button type="button" class="actbtn_btn" onclick="addAclRow('Role', 'ui_role_id', arrRoles);">Grant Role Access</button>
+                                </div>
+                                <div style="clear:both;"></div>
+                            </div>
+                            <table class="mapping-table" id="tbl-roles">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 100px;">Role ID</th>
+                                        <th>Role Name</th>
+                                        <th style="width: 100px;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody><!-- JS injected --></tbody>
+                            </table>
+                        </div>
+
+                        <!-- TAB 3: EMPLOYEES -->
+                        <div id="tab-employees" class="sf-tab-panel">
+                            <div class="row no-margin" style="background:#fcfcfc; padding:15px; border:1px solid #eee; border-radius: 4px;">
+                                <div class="new-form-ui clearb" style="width: 60%; margin-bottom: 0;">
+                                    <label>Select Employee</label>
+                                    <div class="division">
+                                        <select id="ui_employee_id" class="browser-default select2">
+                                            <option value="">Search and select...</option>
+                                            <?php foreach ($this->employeeOptions as $k => $v) echo "<option value='$k'>" . $this->escape($v) . "</option>"; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="float:left; margin-top: 25px; margin-left: 15px;">
+                                    <button type="button" class="actbtn_btn" onclick="addAclRow('Employee', 'ui_employee_id', arrEmployees);">Grant User Access</button>
+                                </div>
+                                <div style="clear:both;"></div>
+                            </div>
+                            <table class="mapping-table" id="tbl-employees">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 100px;">Emp ID</th>
+                                        <th>Employee Name</th>
+                                        <th style="width: 100px;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody><!-- JS injected --></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- ================= FOOTER SECTION ================= -->
+                    <div style="clear: both;"></div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                    </div>
+
+                    <div class="new-form-ui-submit" style="margin-top: 20px;">
+                        <div class="division">
+                            <?php echo $this->form->submit_btn; ?>
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>reportcatalog';" value="Cancel" type="button" class="reset" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Popup Container for "On-The-Fly" Category Addition -->
+<div id="reportcategoryContainer" style="display: none; overflow: auto;">
+    <div class="heading">
+        <a href="javascript:void(0)"><img src="<?php echo MEDIA_PATH; ?>images/close.png" class="closeAttachPopup" style="margin: -24px 8px 0 0;"></a>
+    </div>
+    <iframe id="reportcategoryCont" class="user_iframe" frameborder="0"></iframe>
+</div>
+
+<script type="text/javascript">
+    // State Arrays populated by Controller (if editing)
+    var arrGroups = <?php echo $this->existingGroups ?? '[]'; ?>;
+    var arrRoles = <?php echo $this->existingRoles ?? '[]'; ?>;
+    var arrEmployees = <?php echo $this->existingEmployees ?? '[]'; ?>;
+
+    $(document).ready(function() {
+
+        try {
+            $('#description').jqte();
+            if ($.isFunction($.fn.select2)) {
+                $('.select2').select2({
+                    width: '100%'
+                });
+            }
+        } catch (e) {
+            console.log(e);
+        }
+
+        // ==============================================================
+        // CUSTOM TAB LOGIC (SSOT VII.17)
+        // ==============================================================
+        $('.sf-tabs-nav a').on('click', function(e) {
+            e.preventDefault();
+            var targetPanelId = $(this).attr('href');
+
+            $('.sf-tabs-nav li').removeClass('active');
+            $(this).parent('li').addClass('active');
+
+            $('.sf-tab-panel').removeClass('active').hide();
+            $(targetPanelId).addClass('active').fadeIn('fast');
+        });
+
+        // Initial render
+        renderAllTables();
+
+        // ==============================================================
+        // MASTER SUBMIT HANDLER (The "One-Shot" Save)
+        // ==============================================================
+        $('#submitbutton').off('click').on('click', function(e) {
+            e.preventDefault();
+
+            var $form = $('#formid');
+            if ($.isFunction($form.valid) && !$form.valid()) return false;
+
+            // Pack JSON Payloads
+            $('#groups_payload').val(JSON.stringify(arrGroups));
+            $('#roles_payload').val(JSON.stringify(arrRoles));
+            $('#employees_payload').val(JSON.stringify(arrEmployees));
+
+            if ($.isFunction($.blockUI)) {
+                $.blockUI({
+                    message: '<img src="<?php echo MEDIA_PATH; ?>images/loader2.gif" />'
+                });
+            }
+
+            var formData = new FormData($form[0]);
+
+            $.ajax({
+                url: base_url + '/reportcatalog/save/format/json',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function(res) {
+                    if ($.isFunction($.unblockUI)) $.unblockUI();
+
+                    if (res.result === 'saved') {
+                        window.location.href = base_url + '/reportcatalog';
+                    } else if (res.result === 'exception') {
+                        $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>' + res.message + '</div>');
+                        $('html, body').animate({
+                            scrollTop: 0
+                        }, 'slow');
+                    } else {
+                        $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Please fix the highlighted errors.</div>');
+                        $('.errors').html('');
+
+                        $.each(res, function(key, val) {
+                            var errMsg = (typeof val === 'object') ? val[Object.keys(val)[0]] : val;
+                            var errorSpan = $('#errors-' + key);
+                            if (errorSpan.length > 0) {
+                                errorSpan.html(errMsg).show();
+                            } else {
+                                $('[name="' + key + '"]').after('<span class="errors" id="errors-' + key + '">' + errMsg + '</span>');
+                            }
+                        });
+                        $('html, body').animate({
+                            scrollTop: 0
+                        }, 'slow');
+                    }
+                },
+                error: function() {
+                    if ($.isFunction($.unblockUI)) $.unblockUI();
+                    $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Server Error occurred. Check logs.</div>');
+                    $('html, body').animate({
+                        scrollTop: 0
+                    }, 'slow');
+                }
+            });
+        });
+    });
+
+    // ==============================================================
+    // GENERIC ACL ARRAY MANAGEMENT
+    // ==============================================================
+    function addAclRow(type, selectId, targetArray) {
+        var id = $('#' + selectId).val();
+        var name = $.trim($('#' + selectId + ' option:selected').text());
+
+        if (!id || id === '') {
+            alert('Please select an option.');
+            return;
+        }
+
+        var exists = false;
+        $.each(targetArray, function(i, v) {
+            if (v.target_id == id) exists = true;
+        });
+        if (exists) {
+            alert('This ' + type + ' has already been authorized.');
+            return;
+        }
+
+        targetArray.push({
+            target_id: id,
+            target_name: name
+        });
+        $('#' + selectId).val('').trigger('change.select2');
+        renderAllTables();
+    }
+
+    function removeAclRow(index, type) {
+        if (type === 'Group') arrGroups.splice(index, 1);
+        if (type === 'Role') arrRoles.splice(index, 1);
+        if (type === 'Employee') arrEmployees.splice(index, 1);
+        renderAllTables();
+    }
+
+    function renderAllTables() {
+        _renderGeneric('tbl-groups', arrGroups, 'Group');
+        _renderGeneric('tbl-roles', arrRoles, 'Role');
+        _renderGeneric('tbl-employees', arrEmployees, 'Employee');
+    }
+
+    function _renderGeneric(tableId, arr, typeStr) {
+        var html = '';
+        if (arr.length === 0) {
+            html = '<tr><td colspan="3" style="text-align:center; color:#999; font-style:italic;">No ' + typeStr + 's assigned</td></tr>';
+        } else {
+            $.each(arr, function(idx, val) {
+                html += '<tr><td>#' + val.target_id + '</td><td>' + val.target_name + '</td>';
+                html += '<td><a class="remove-btn" onclick="removeAclRow(' + idx + ', \'' + typeStr + '\');"><i class="fa fa-trash"></i> Remove</a></td></tr>';
+            });
+        }
+        $('#' + tableId + ' tbody').html(html);
+    }
+</script>

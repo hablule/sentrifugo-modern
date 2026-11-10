@@ -1,0 +1,87 @@
+<?php
+
+/**
+ * Employment Type On-The-Fly Add Popup
+ */
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<?php if ($this->popup == 'close') { ?>
+    <div class="ml-alert-1-success">
+        <div class="style-1-icon success"></div>
+        Employment Type <?php echo $this->eventact; ?> successfully.
+    </div>
+<?php } else {
+    sapp_Global::generateClientValidations($this->form); ?>
+
+    <div id="error_message" style="display:none;"></div>
+
+    <?php if (isset($this->msgarray['error'])): ?>
+        <div class="ml-alert-1-error">
+            <span class="style-1-icon error"></span><?php echo $this->msgarray['error']; ?>
+        </div>
+    <?php endif; ?>
+
+    <form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction(); ?>" method="<?php echo $this->form->getMethod(); ?>">
+        <?php echo $this->form->id; ?>
+
+        <div class="total-form-controller">
+            <div class="division">
+                <div class="new-form-ui clearb">
+                    <label class="required"><?php echo $this->form->code->getLabel(); ?></label>
+                    <div class="division"><?php echo $this->form->code; ?></div>
+                    <?php if (isset($this->msgarray['code'])) { ?>
+                        <span class="errors" id="errors-<?php echo $this->form->code->getId(); ?>"><?php echo $this->msgarray['code']; ?></span>
+                    <?php } ?>
+                </div>
+
+                <div class="new-form-ui clearb">
+                    <label class="required"><?php echo $this->form->name->getLabel(); ?></label>
+                    <div class="division"><?php echo $this->form->name; ?></div>
+                    <?php if (isset($this->msgarray['name'])) { ?>
+                        <span class="errors" id="errors-<?php echo $this->form->name->getId(); ?>"><?php echo $this->msgarray['name']; ?></span>
+                    <?php } ?>
+                </div>
+
+                <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                <div class="new-form-ui clearb">
+                    <label><?php echo $this->form->isactive->getLabel(); ?></label>
+                    <div class="division"><?php echo $this->form->isactive; ?></div>
+                </div>
+
+                <div class="new-form-ui-submit">
+                    <?php echo $this->form->submit; ?>
+                    <button type="button" class="reset" onclick="parent.$('#employmentTypeContainer').dialog('close');">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </form>
+<?php } ?>
+
+<script>
+    $('#description').jqte();
+
+    <?php if ($this->popup == 'close') { ?>
+        $(document).ready(function() {
+            setTimeout(function() {
+                // Rescue Array logic is standard, though this is likely a single-select in the Employee form
+                var $parentSelect = parent.$('#employment_type_id');
+                var newId = "<?php echo $this->newInsertedId; ?>";
+
+                // Triggers Sentrifugo standard global helper for single-selects
+                parent.closeiframeAddPopup("<?php echo $this->optionsHtml; ?>", "employmenttype", "employment_type_id", "Employment Type");
+
+                if ($parentSelect.length) {
+                    $parentSelect.val(newId);
+                    if (parent.$.isFunction(parent.$.fn.select2)) {
+                        $parentSelect.select2();
+                    } else if (parent.$.isFunction(parent.$.fn.material_select)) {
+                        $parentSelect.material_select();
+                    }
+                }
+            }, 1500);
+        });
+    <?php } ?>
+</script>

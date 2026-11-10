@@ -1,0 +1,286 @@
+<?php
+
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+?>
+
+<?php
+
+/**
+ * Pay Frequency Save View (Add/Edit)
+ * Features SSOT VII.22 dynamic wrappers for Fixed Interval vs Calendar Anchor cadence modes.
+ * Complies with SSOT v6.7.7.
+ */
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<style>
+    .dynamic-cadence-wrapper {
+        clear: both;
+        width: 100%;
+        display: none;
+    }
+
+    .anchor-chip {
+        display: inline-block;
+        background: #e0f2f1;
+        color: #00796b;
+        padding: 4px 10px;
+        border-radius: 15px;
+        margin: 3px 5px 3px 0;
+        font-size: 12px;
+        font-weight: bold;
+        border: 1px solid #b2dfdb;
+    }
+
+    .anchor-chip i {
+        cursor: pointer;
+        margin-left: 6px;
+        color: #e57373;
+    }
+
+    .anchor-chip i:hover {
+        color: #d32f2f;
+    }
+</style>
+
+<?php sapp_Global::generateClientValidations($this->form); ?>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container"></div>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" method="post">
+            <?php echo $this->form->id; ?>
+            <?php echo $this->form->calendar_anchors_payload; ?>
+
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <h5 style="color:#26a69a; border-bottom:1px solid #ddd; padding-bottom:5px;">Frequency Identity</h5>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->code; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->code->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->name; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->name->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->frequency_type->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->frequency_type; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->frequency_type->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <!-- Explicit clear to stop the h4/h5 from floating right -->
+                    <div style="clear: both; width: 100%; height: 20px;"></div>
+
+                    <!-- ============================================================== -->
+                    <!-- DYNAMIC CADENCE SECTION                                        -->
+                    <!-- ============================================================== -->
+                    <h5 style="color:#26a69a; border-bottom:1px solid #ddd; padding-bottom:5px; margin-top:30px;">Cadence Rules</h5>
+
+                    <!-- Wrapper 1: Fixed Interval -->
+                    <div class="dynamic-cadence-wrapper" id="wrapper_FIXED_INTERVAL">
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->interval_count->getLabel()); ?></label>
+                            <div class="division">
+                                <?php echo $this->form->interval_count; ?>
+                                <span class="errors" id="errors-<?php echo $this->escape($this->form->interval_count->getId()); ?>"></span>
+                            </div>
+                        </div>
+
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->interval_unit->getLabel()); ?></label>
+                            <div class="division">
+                                <?php echo $this->form->interval_unit; ?>
+                                <span class="errors" id="errors-<?php echo $this->escape($this->form->interval_unit->getId()); ?>"></span>
+                            </div>
+                        </div>
+
+                        <!-- Weekly Anchor Day (Visible when Unit = WEEK) -->
+                        <div class="new-form-ui clearb" id="wrapper_unit_WEEK" style="display:none;">
+                            <label class="required"><?php echo $this->escape($this->form->weekly_anchor_day->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->weekly_anchor_day; ?><span class="errors" id="errors-weekly_anchor_day"></span></div>
+                        </div>
+
+                        <!-- Monthly Anchor Day (Visible when Unit = MONTH) -->
+                        <div class="new-form-ui clearb" id="wrapper_unit_MONTH" style="display:none;">
+                            <label class="required"><?php echo $this->escape($this->form->monthly_anchor_day->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->monthly_anchor_day; ?><span class="errors" id="errors-monthly_anchor_day"></span></div>
+                        </div>
+
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->global_reference_date->getLabel()); ?></label>
+                            <div class="division">
+                                <?php echo $this->form->global_reference_date; ?>
+                                <span style="font-size:11px; color:#888; display:block;">Reference date to align company-wide rolling cycles.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Wrapper 2: Calendar Based -->
+                    <div class="dynamic-cadence-wrapper" id="wrapper_CALENDAR_BASED">
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->missing_date_policy->getLabel()); ?></label>
+                            <div class="division">
+                                <?php echo $this->form->missing_date_policy; ?>
+                            </div>
+                        </div>
+
+                        <div style="clear: both; width: 100%; height: 20px;"></div>
+
+                        <div class="new-form-ui clearb">
+                            <label class="required">Anchor Days (1 - 31)</label>
+                            <div class="division">
+                                <div style="display:flex; gap:10px; align-items:center;">
+                                    <input type="number" id="txt_anchor_input" min="1" max="31" placeholder="Day (1-31)" style="width:120px;" />
+                                    <button type="button" class="actbtn_btn" onclick="addAnchorDay();" style="margin:0; height:34px; line-height:34px;">+ Add Day</button>
+                                </div>
+                                <div id="anchors_container" style="margin-top:10px; min-height:30px;"></div>
+                                <span style="font-size:11px; color:#888;">Day 31 dynamically resolves to End of Month. At least 1 anchor required.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="clear: both; width: 100%; height: 20px;"></div>
+
+                    <div style="clear:both; margin-top:20px;"></div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->isactive; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->isactive->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui-submit">
+                        <div class="division">
+                            <?php echo $this->form->submit; ?>
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>payfrequency/index';" value="Cancel" type="button" class="reset" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var arrAnchors = <?php echo isset($this->existingAnchors) ? $this->existingAnchors : '[]'; ?>;
+
+    $(document).ready(function() {
+        $('#description').jqte();
+        
+        $('#interval_unit').change(toggleUnitQualifiers);
+        toggleUnitQualifiers();
+        toggleCadenceFields();
+        renderAnchors();
+
+        $('#global_reference_date').datepicker({
+            dateFormat: '<?php echo DATEFORMAT_JS; ?>',
+            changeMonth: true,
+            changeYear: true
+        });
+
+        // Pack payload before submit
+        $('#submitbutton').click(function() {
+            $('#calendar_anchors_payload').val(JSON.stringify(arrAnchors));
+        });
+    });
+
+    function toggleCadenceFields() {
+        var mode = $('#frequency_type').val();
+        $('.dynamic-cadence-wrapper').hide();
+        if (mode) {
+            $('#wrapper_' + mode).fadeIn(150);
+        }
+        toggleUnitQualifiers();
+    }
+
+    function toggleUnitQualifiers() {
+        var unit = $('#interval_unit').val();
+        $('#wrapper_unit_WEEK').hide();
+        $('#wrapper_unit_MONTH').hide();
+
+        if (unit === 'WEEK') {
+            $('#wrapper_unit_WEEK').fadeIn(150);
+        } else if (unit === 'MONTH') {
+            $('#wrapper_unit_MONTH').fadeIn(150);
+        }
+    }
+
+    function addAnchorDay() {
+        var val = parseInt($('#txt_anchor_input').val());
+        if (isNaN(val) || val < 1 || val > 31) {
+            alert("Please enter a valid day of the month between 1 and 31.");
+            return;
+        }
+
+        if ($.inArray(val, arrAnchors) !== -1) {
+            alert("This anchor day is already added.");
+            return;
+        }
+
+        arrAnchors.push(val);
+        arrAnchors.sort(function(a, b) {
+            return a - b;
+        });
+        $('#txt_anchor_input').val('');
+        renderAnchors();
+    }
+
+    function removeAnchorDay(day) {
+        arrAnchors = $.grep(arrAnchors, function(value) {
+            return value != day;
+        });
+        renderAnchors();
+    }
+
+    function renderAnchors() {
+        var html = '';
+        $.each(arrAnchors, function(idx, day) {
+            var label = 'Day ' + day + (day === 31 ? ' (EOM)' : '');
+            html += '<span class="anchor-chip">' + label + ' <i class="fa fa-times" onclick="removeAnchorDay(' + day + ');"></i></span>';
+        });
+        $('#anchors_container').html(html);
+        $('#calendar_anchors_payload').val(JSON.stringify(arrAnchors));
+    }
+</script>

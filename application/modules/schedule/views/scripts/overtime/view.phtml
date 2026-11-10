@@ -1,0 +1,28 @@
+<?php
+//die(json_encode($this->data));
+sapp_Helper::viewHeader();
+sapp_Helper::viewBody('alt', 'Name', $this->data[0]['name'], 'Base', $this->data[0]['base']);
+if ($this->data[0]['base'] == "Time") {
+    sapp_Helper::viewBody('alt', 'Start Time', $this->data[0]['s_start_time'], 'End Time', $this->data[0]['s_end_time']);
+} else if ($this->data[0]['base'] == "Period") {
+    sapp_Helper::viewBody('alt', 'Peroid Start Date', $this->data[0]['s_start_date'], 'Peroid End Time', $this->data[0]['s_end_date']);
+    sapp_Helper::viewBody('alt', 'Start Time', $this->data[0]['s_start_time'], 'End Time', $this->data[0]['s_end_time']);
+} else if ($this->data[0]['base'] == "Date") {
+    sapp_Helper::viewBody('alt', 'Date', $this->data[0]['s_start_date'], '...', '...');
+}else if($this->data[0]['base']=="Day"){
+    sapp_Helper::viewBody('alt','Day',$this->data[0]['s_day'],'...','...');
+}
+sapp_Helper::viewBody('alt', 'Category', $this->data[0]['category_name'], 'Description', $this->data[0]['description']);
+sapp_Helper::viewBody('nor', 'Begining', $this->data[0]['begining'], 'Ending', $this->data[0]['ending']);
+sapp_Helper::viewBody('nor', 'Rate', $this->data[0]['s_rate'], '...', '...');
+sapp_Helper::viewFooter();
+?>
+
+<form name="<?php echo $this->form->getName();?>" id="<?php echo $this->form->getId();?>" method="POST" action="<?php echo $this->form->getAction();?>">
+<div class="new-form-ui-previousBtn">
+    <div class="division">
+        <?php echo $this->form->back;?>
+    </div>
+
+</div>
+</form>

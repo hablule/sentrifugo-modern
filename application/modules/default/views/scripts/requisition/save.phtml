@@ -1,0 +1,621 @@
+<?php
+
+/**
+ * Requisition Save View (The Merged Campaign Form)
+ *
+ * Implements SSOT VII.24 Master Header with child seat targeting grid.
+ * Uses prefixed elements (seat_*) on the child form to prevent namespace collisions.
+ * Complies with SSOT v6.7.7.
+ *
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ * @author     Hablul Soft Solution < /hablul.in>
+ * @license    http://gnu.org GNU General Public License, version 3.0 (GPL-3.0)
+ * @version    Sentrifugo v3.2
+ */
+?>
+<?php
+
+/**
+ * Requisition Save View (The Merged Campaign Form)
+ *
+ * Implements SSOT VII.24 Master Header with child seat targeting grid and transition modal.
+ * Complies with SSOT v6.7.7.
+ */
+?>
+
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/custompopup.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/custompopup.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<style>
+    .add-coloum {
+        color: #26a69a;
+        cursor: pointer;
+        font-size: 11px;
+        margin-top: 4px;
+        display: inline-block;
+        font-weight: bold;
+    }
+
+    .add-coloum:hover {
+        text-decoration: underline;
+    }
+
+    .seat-toolbar-card {
+        background: #fdfdfd;
+        padding: 15px;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        margin-top: 15px;
+        box-sizing: border-box;
+    }
+
+    .seat-toolbar-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        align-items: flex-end;
+    }
+
+    .seats-grid {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+
+    .seats-grid th,
+    .seats-grid td {
+        border: 1px solid #ddd;
+        padding: 8px 12px;
+        text-align: left;
+    }
+
+    .seats-grid th {
+        background: #f9f9f9;
+        font-weight: bold;
+        font-size: 12px;
+    }
+
+    .btn-table-action {
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 14px;
+        margin: 0 5px;
+    }
+
+    .btn-table-action.delete {
+        color: #e74c3c;
+    }
+
+    .btn-table-action.delete:hover {
+        color: #c0392b;
+    }
+
+    .btn-table-action.status {
+        color: #26a69a;
+    }
+
+    .btn-table-action.status:hover {
+        color: #1e8276;
+    }
+</style>
+
+<?php sapp_Global::generateClientValidations($this->form); ?>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container"></div>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" method="post">
+            <?php echo $this->form->id; ?>
+            <?php echo $this->form->positions_payload; ?>
+
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <!-- ============================================================== -->
+                    <!-- 1. MASTER HEADER SECTION (Campaign Details)                    -->
+                    <!-- ============================================================== -->
+                    <h5 style="color:#26a69a; border-bottom:1px solid #ddd; padding-bottom:5px;">Campaign Authorization Header</h5>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->code; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->code->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->requested_by_employee_id->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->requested_by_employee_id; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->requested_by_employee_id->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->assigned_recruiter_id->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->assigned_recruiter_id; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->assigned_recruiter_id->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->requested_fte->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->requested_fte; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->requested_fte->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->status->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->status; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->status->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <!-- Explicit clear to stop the h4/h5 from floating right -->
+                    <div style="clear: both; width: 100%; height: 20px;"></div>
+
+                    <!-- ============================================================== -->
+                    <!-- 2. CHILD SECTION: TARGETED SEATS (The Pipeline)                -->
+                    <!-- ============================================================== -->
+                    <h5 style="color:#26a69a; border-bottom:1px solid #ddd; padding-bottom:5px; margin-top:30px;">Targeted Position Seats</h5>
+
+                    <!-- Inline Seat Creator Toolbar (Prefixed elements to avoid collision) -->
+                    <div class="seat-toolbar-card">
+                        <div class="seat-toolbar-row">
+                            <div style="flex: 2 1 240px;">
+                                <label style="font-size: 11px; font-weight: bold; color: #555;">Position Seat *</label>
+                                <?php echo $this->childForm->seat_position_id; ?>
+                                <span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL; ?>position/addpopup', 'Add Position');">+ Add Position</span>
+                            </div>
+
+                            <div style="flex: 1 1 100px;">
+                                <label style="font-size: 11px; font-weight: bold; color: #555;">Target FTE *</label>
+                                <?php echo $this->childForm->seat_target_fte; ?>
+                            </div>
+
+                            <div style="flex: 1 1 140px;">
+                                <label style="font-size: 11px; font-weight: bold; color: #555;">Target Onboard *</label>
+                                <?php echo $this->childForm->seat_target_hire_date; ?>
+                            </div>
+
+                            <div style="flex: 1 1 140px;">
+                                <label style="font-size: 11px; font-weight: bold; color: #555;">Initial Status *</label>
+                                <?php echo $this->childForm->seat_pipeline_status; ?>
+                            </div>
+
+                            <div style="width: 110px; flex-shrink: 0;">
+                                <button type="button" class="actbtn_btn" onclick="addPositionRow();" style="width: 100%; height: 32px; line-height: 32px; margin: 0;">
+                                    <i class="fa fa-plus"></i> Add Seat
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- The Dynamic Positions Grid -->
+                    <table class="seats-grid" id="tbl-seats">
+                        <thead>
+                            <tr>
+                                <th>Position Code / Name</th>
+                                <th style="width: 100px;">FTE</th>
+                                <th style="width: 140px;">Target Onboard</th>
+                                <th style="width: 140px;">Pipeline Status</th>
+                                <th style="width: 120px; text-align: center;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody><!-- Injected via JavaScript --></tbody>
+                    </table>
+
+                    <!-- ============================================================== -->
+                    <!-- 3. FOOTER SECTION                                              -->
+                    <!-- ============================================================== -->
+                    <div style="clear:both; margin-top: 25px;">
+                        <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                    </div>
+
+                    <div class="new-form-ui-submit">
+                        <div class="division">
+                            <?php echo $this->form->submit; ?>
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>requisition/index';" value="Cancel" type="button" class="reset" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ============================================================================== -->
+<!-- POLISHED MODAL: Update Seat Pipeline Status Form                              -->
+<!-- ============================================================================== -->
+<style>
+    .modal-box-wrap {
+        padding: 5px 10px;
+        font-family: inherit;
+    }
+
+    .modal-seat-banner {
+        background: #e8f5e9;
+        border-left: 4px solid #26a69a;
+        padding: 10px 14px;
+        margin-bottom: 18px;
+        border-radius: 2px;
+    }
+
+    .modal-seat-banner span {
+        font-size: 13px;
+        color: #2e7d32;
+        font-weight: bold;
+    }
+
+    .modal-field-group {
+        margin-bottom: 14px;
+        clear: both;
+        width: 100%;
+    }
+
+    .modal-field-group label {
+        display: block;
+        font-size: 12px;
+        font-weight: 600;
+        color: #444;
+        margin-bottom: 5px;
+    }
+
+    .modal-field-group label .req {
+        color: #e74c3c;
+        font-weight: bold;
+    }
+
+    .modal-field-group select {
+        width: 100%;
+        height: 35px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        padding: 0 8px;
+        box-sizing: border-box;
+        background: #fff;
+    }
+
+    .modal-field-group textarea {
+        width: 100%;
+        height: 65px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        padding: 8px;
+        box-sizing: border-box;
+        resize: vertical;
+        font-family: inherit;
+        font-size: 12px;
+    }
+
+    .modal-footer-btns {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 20px;
+        padding-top: 15px;
+        border-top: 1px solid #eee;
+    }
+
+    .btn-modal-save {
+        background: #26a69a;
+        color: #fff;
+        border: none;
+        padding: 8px 18px;
+        border-radius: 3px;
+        font-weight: bold;
+        font-size: 12px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .btn-modal-save:hover {
+        background: #1e8276;
+    }
+
+    .btn-modal-cancel {
+        background: #f1f2f6;
+        color: #555;
+        border: 1px solid #dcdde1;
+        padding: 8px 16px;
+        border-radius: 3px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .btn-modal-cancel:hover {
+        background: #e4e7ea;
+    }
+</style>
+
+<div id="statusModalContainer" style="display: none;">
+    <div class="modal-box-wrap">
+
+        <!-- Context Banner -->
+        <div class="modal-seat-banner">
+            Targeted Seat: <span id="modal_seat_name">Loading...</span>
+        </div>
+
+        <form id="frm_seat_status">
+            <?php echo $this->statusForm->map_req_pos_id; ?>
+
+            <!-- 1. New Status -->
+            <div class="modal-field-group">
+                <label>New Pipeline Status <span class="req">*</span></label>
+                <?php echo $this->statusForm->status; ?>
+            </div>
+
+            <!-- 2. Transition Reason -->
+            <div class="modal-field-group">
+                <label>Transition Reason <span class="req">*</span></label>
+                <?php echo $this->statusForm->status_reason_id; ?>
+            </div>
+
+            <!-- 3. Hired Employee (Conditional) -->
+            <div class="modal-field-group" id="wrapper_filled_emp" style="display: none;">
+                <label>Hired Candidate <span class="req">*</span></label>
+                <?php echo $this->statusForm->filled_by_employee_id; ?>
+            </div>
+
+            <!-- 4. Compact Notes -->
+            <div class="modal-field-group">
+                <label>Audit Notes (Optional)</label>
+                <textarea name="notes" id="notes" placeholder="Brief notes explaining this status change..."></textarea>
+            </div>
+
+            <!-- Footer Buttons -->
+            <div class="modal-footer-btns">
+                <button type="button" class="btn-modal-cancel" onclick="$('#statusModalContainer').dialog('close');">Cancel</button>
+                <button type="button" id="btn_submit_status" class="btn-modal-save">Update Seat Status</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- SSOT VIII: Modal Iframe Container for Position Add-on -->
+<div id="positionContainer" style="display: none; overflow: auto;">
+    <div class="heading"><a href="javascript:void(0)"><img src="<?php echo MEDIA_PATH; ?>images/close.png" class="closeAttachPopup" align="right" border="0" style="margin: -24px 8px 0 0;"></a></div>
+    <iframe id="positionCont" class="user_iframe" frameborder="0"></iframe>
+</div>
+
+<script type="text/javascript">
+    var arrPositions = <?php echo isset($this->existingPositions) ? $this->existingPositions : '[]'; ?>;
+    var activeSeatIdx = null;
+
+    $(document).ready(function() {
+        $('#description').jqte();
+        renderSeatsGrid();
+
+        // Initialize DatePicker
+        $('#seat_target_hire_date').datepicker({
+            dateFormat: '<?php echo DATEFORMAT_JS; ?>',
+            changeMonth: true,
+            changeYear: true
+        });
+
+        // Initialize Status Dialog
+        $("#statusModalContainer").dialog({
+            autoOpen: false,
+            width: 520, // Clean, comfortable width
+            modal: true,
+            resizable: false,
+            title: "Update Seat Pipeline Status"
+        });
+
+        // Handle Seat Status Transition Submission via AJAX
+        $('#btn_submit_status').click(function(e) {
+            e.preventDefault();
+
+            var mapId = $('#map_req_pos_id').val();
+            var status = $('#statusModalContainer #status').val();
+            var reasonId = $('#status_reason_id').val();
+            var empId = $('#filled_by_employee_id').val();
+            var notes = $('#notes').val();
+
+            if (!status || !reasonId) {
+                alert("Please select a Status and a Transition Reason.");
+                return;
+            }
+
+            if (status === 'Filled' && !empId) {
+                alert("Please select the candidate who was hired for this seat.");
+                return;
+            }
+
+            $.ajax({
+                url: base_url + '/requisition/updatestatus/format/json',
+                type: 'POST',
+                data: {
+                    map_req_pos_id: mapId,
+                    status: status,
+                    status_reason_id: reasonId,
+                    filled_by_employee_id: empId,
+                    notes: notes
+                },
+                dataType: 'json',
+                success: function(res) {
+                    if (res.result === 'saved') {
+                        // Update state in memory & refresh grid
+                        arrPositions[activeSeatIdx].status = status;
+                        renderSeatsGrid();
+                        $("#statusModalContainer").dialog('close');
+                    } else {
+                        alert(res.message || "Error updating status.");
+                    }
+                },
+                error: function() {
+                    alert("Server error during status update.");
+                }
+            });
+        });
+
+        // Master Form AJAX Submission
+        $('#submitbutton').off('click').on('click', function(e) {
+            e.preventDefault();
+
+            var $form = $('#formid');
+            $('.errors').text('');
+            $('#message_container').empty();
+
+            if (!$form.valid()) {
+                return false;
+            }
+
+            $('#positions_payload').val(JSON.stringify(arrPositions));
+
+            if (typeof $.blockUI === "function") {
+                $.blockUI({
+                    message: '<img src="<?php echo MEDIA_PATH; ?>images/loader2.gif" alt="Saving..." />'
+                });
+            }
+
+            var formData = new FormData($form[0]);
+
+            $.ajax({
+                url: base_url + '/requisition/save/format/json',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function(response) {
+                    if (typeof $.unblockUI === "function") $.unblockUI();
+
+                    if (response && response.result === 'saved') {
+                        window.location.href = base_url + '/requisition';
+                    } else if (response && response.result === 'exception') {
+                        $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>' + response.message + '</div>');
+                        $('html, body').animate({
+                            scrollTop: 0
+                        }, 'slow');
+                    } else if (response && typeof response === 'object') {
+                        $.each(response, function(fieldId, errorMsg) {
+                            $('#errors-' + fieldId).text(errorMsg);
+                        });
+                        $('html, body').animate({
+                            scrollTop: 0
+                        }, 'slow');
+                    }
+                },
+                error: function() {
+                    if (typeof $.unblockUI === "function") $.unblockUI();
+                    $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Server error occurred.</div>');
+                }
+            });
+        });
+    });
+
+    function openStatusModal(idx) {
+        activeSeatIdx = idx;
+        var item = arrPositions[idx];
+
+        // 1. Populate Header Context Banner
+        $('#modal_seat_name').text(item.position_code);
+
+        // 2. Populate form fields
+        $('#map_req_pos_id').val(item.id);
+        $('#statusModalContainer #status').val(item.status);
+        $('#status_reason_id').val('');
+        $('#filled_by_employee_id').val('');
+        $('#notes').val('');
+
+        toggleFilledEmployeeField();
+        $("#statusModalContainer").dialog('open');
+    }
+
+    function toggleFilledEmployeeField() {
+        var status = $('#statusModalContainer #status').val();
+        if (status === 'Filled') {
+            $('#wrapper_filled_emp').slideDown();
+        } else {
+            $('#wrapper_filled_emp').slideUp();
+        }
+    }
+
+    function addPositionRow() {
+        var posId = $('#seat_position_id').val();
+        var posText = $('#seat_position_id option:selected').text();
+        var fte = $('#seat_target_fte').val();
+        var date = $('#seat_target_hire_date').val();
+        var status = $('#seat_pipeline_status').val() || 'Targeted';
+
+        if (!posId || !fte || !date) {
+            alert("Please select a Position Seat, specify Target FTE, and select a Target Onboard Date.");
+            return;
+        }
+
+        arrPositions.push({
+            id: 0,
+            position_id: parseInt(posId),
+            position_code: posText,
+            target_fte: parseFloat(fte),
+            target_hire_date: date,
+            status: status,
+            action: 'new'
+        });
+
+        renderSeatsGrid();
+    }
+
+    function removePositionRow(idx) {
+        if (arrPositions[idx].id > 0) {
+            arrPositions[idx].action = 'delete';
+        } else {
+            arrPositions.splice(idx, 1);
+        }
+        renderSeatsGrid();
+    }
+
+    function renderSeatsGrid() {
+        var html = '';
+        var activeCount = 0;
+
+        $.each(arrPositions, function(idx, item) {
+            if (item.action === 'delete') return true;
+
+            activeCount++;
+            html += '<tr>';
+            html += '<td><strong>' + item.position_code + '</strong></td>';
+            html += '<td>' + item.target_fte + '</td>';
+            html += '<td>' + item.target_hire_date + '</td>';
+            html += '<td><span class="badge" style="background:#26a69a; color:#fff; border-radius:3px; padding:3px 8px; font-size:11px;">' + item.status + '</span></td>';
+
+            html += '<td style="text-align:center;">';
+            // Only allow status transition modal if the seat has already been persisted to DB (id > 0)
+            if (item.id > 0) {
+                html += '<a class="btn-table-action status" onclick="openStatusModal(' + idx + ');" title="Update Pipeline Status"><i class="fa fa-pencil-square-o"></i></a>';
+            }
+            html += '<a class="btn-table-action delete" onclick="removePositionRow(' + idx + ');" title="Remove Seat"><i class="fa fa-trash"></i></a>';
+            html += '</td>';
+
+            html += '</tr>';
+        });
+
+        if (activeCount === 0) {
+            html = '<tr><td colspan="5" style="text-align:center; color:#999; padding:15px;">No position seats attached to this campaign yet. Use the tool above to add seats.</td></tr>';
+        }
+
+        $('#tbl-seats tbody').html(html);
+    }
+</script>

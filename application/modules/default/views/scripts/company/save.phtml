@@ -1,0 +1,261 @@
+<?php
+
+/**
+ * Company Save View (Add/Edit)
+ *
+ * Provides the user interface for adding or modifying top-level companies.
+ * Refactored to comply with SSOT v6.4 (File Uploads via AJAX, Multicheckbox UI).
+ *
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ * @author     Hablul Soft Solution < /hablul.in>
+ * @license    http://gnu.org GNU General Public License, version 3.0 (GPL-3.0)
+ * @version    Sentrifugo v3.2
+ */
+?>
+
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<!-- Custom Styles for Form Elements -->
+<style>
+    .multicheckbox-container label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: normal;
+    }
+
+    .multicheckbox-container input[type="checkbox"] {
+        margin-right: 10px;
+    }
+</style>
+
+<?php sapp_Global::generateClientValidations($this->form); ?>
+
+<div class="row">
+    <div class="col s12">
+
+        <!-- Error Message Container (For standard POST fallbacks) -->
+        <div id="message_container">
+            <?php if (!empty($this->msgarray)) : ?>
+                <div class="ml-alert-1-error">
+                    <div style="display:block;">
+                        <span class="style-1-icon error"></span>
+                        Please correct the errors highlighted below.
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" action="<?php echo $this->escape($this->form->getAction()); ?>" method="<?php echo $this->escape($this->form->getMethod()); ?>" enctype="multipart/form-data">
+
+            <?php echo $this->form->id; ?>
+
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <!-- Code -->
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->code; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->code->getId()); ?>">
+                                <?php echo isset($this->msgarray['code']) ? $this->escape($this->msgarray['code']) : ''; ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Name -->
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->name; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->name->getId()); ?>">
+                                <?php echo isset($this->msgarray['name']) ? $this->escape($this->msgarray['name']) : ''; ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Registration Number -->
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->registration_number->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->registration_number; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->registration_number->getId()); ?>">
+                                <?php echo isset($this->msgarray['registration_number']) ? $this->escape($this->msgarray['registration_number']) : ''; ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Website -->
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->website->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->website; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->website->getId()); ?>">
+                                <?php echo isset($this->msgarray['website']) ? $this->escape($this->msgarray['website']) : ''; ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Representative -->
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->representative_id->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->representative_id; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->representative_id->getId()); ?>">
+                                <?php echo isset($this->msgarray['representative_id']) ? $this->escape($this->msgarray['representative_id']) : ''; ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Start Date -->
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->org_start_date->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->org_start_date; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->org_start_date->getId()); ?>">
+                                <?php echo isset($this->msgarray['org_start_date']) ? $this->escape($this->msgarray['org_start_date']) : ''; ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Mapped Business Domains (Multicheckbox) -->
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->businessdomain->getLabel()); ?></label>
+                        <div class="division multicheckbox-container">
+                            <?php echo $this->form->businessdomain; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->businessdomain->getId()); ?>">
+                                <?php echo isset($this->msgarray['businessdomain']) ? $this->escape($this->msgarray['businessdomain']) : ''; ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Company Logo (File Upload) -->
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->org_image->getLabel()); ?>
+                            <i class="fa fa-info-circle" title="<?php echo $this->escape($this->form->org_image->getAttrib('title')); ?>" style="color: #26a69a; margin-left: 5px; cursor: help;"></i>
+                        </label>
+                        <div class="division">
+                            <?php echo $this->form->org_image; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->org_image->getId()); ?>">
+                                <?php echo isset($this->msgarray['org_image']) ? $this->escape($this->msgarray['org_image']) : ''; ?>
+                            </span>
+
+                            <!-- Existing Image Preview -->
+                            <?php if (!empty($this->currentImage)): ?>
+                                <div style="margin-top: 10px;">
+                                    <p style="margin: 0 0 5px 0; font-size: 12px; color: #666;">Current Logo:</p>
+                                    <img src="<?php echo BASE_URL . 'public/uploads/organization/' . $this->escape($this->currentImage); ?>"
+                                        style="max-width: 150px; border: 1px solid #ccc; border-radius: 4px; padding: 2px; background: #fff;"
+                                        onerror="this.style.display='none'" />
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <!-- Active Status -->
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->isactive; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->isactive->getId()); ?>">
+                                <?php echo isset($this->msgarray['isactive']) ? $this->escape($this->msgarray['isactive']) : ''; ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="new-form-ui-submit">
+                        <div class="division">
+                            <?php echo $this->form->submit; ?>
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>company/index';" value="Cancel" type="button" class="reset" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Initialize WYSIWYG
+        $('#description').jqte();
+
+        // Initialize DatePicker
+        $('#org_start_date').datepicker({
+            showOn: 'both',
+            buttonImage: "<?php echo MEDIA_PATH; ?>images/cal.jpg",
+            buttonImageOnly: true,
+            dateFormat: '<?php echo DATEFORMAT_JS; ?>',
+            changeMonth: true,
+            changeYear: true
+        });
+
+        // SSOT v6.4 Custom AJAX File Upload Binding
+        // Intercepts the default saveDetails click to handle FormData
+        $('#submitbutton').off('click').on('click', function(e) {
+            e.preventDefault(); 
+
+            var $form = $('#formid');
+            if (!$form.valid()) { return false; }
+
+            if (typeof $.blockUI === "function") {
+                $.blockUI({ message: '<img src="<?php echo MEDIA_PATH; ?>images/loader2.gif" alt="Loading" />' });
+            }
+
+            var formData = new FormData($form[0]);
+
+            $.ajax({
+                url: base_url + '/company/save/format/json',
+                type: 'POST',
+                data: formData,
+                processData: false, 
+                contentType: false, 
+                dataType: 'json',
+                success: function(response) {
+                    if (typeof $.unblockUI === "function") $.unblockUI();
+
+                    // 1. Check for explicit success
+                    if (response && response.result === 'saved') {
+                        window.location.href = base_url + '/company';
+                    } 
+                    // 2. Check for explicit exception
+                    else if (response && response.result === 'exception') {
+                        $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>' + response.message + '</div>');
+                        $('html, body').animate({ scrollTop: 0 }, 'slow');
+                    } 
+                    // 3. Otherwise, treat the response as a raw Zend_Form validation error array
+                    else if (response && typeof response === 'object') {
+                        $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Please fix the highlighted errors.</div>');
+                        $('.errors').empty(); // Clear old errors
+                        
+                        $.each(response, function(fieldId, errorObj) {
+                            // Extract the first error message string from the nested object
+                            var errMsg = (typeof errorObj === 'object') ? errorObj[Object.keys(errorObj)[0]] : errorObj;
+                            
+                            // Inject error next to the corresponding field
+                            $('#errors-' + fieldId).text(errMsg);
+                        });
+                        
+                        $('html, body').animate({ scrollTop: 0 }, 'slow');
+                    }
+                },
+                error: function() {
+                    if (typeof $.unblockUI === "function") $.unblockUI();
+                    $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Server error occurred.</div>');
+                }
+            });
+        });
+    });
+</script>

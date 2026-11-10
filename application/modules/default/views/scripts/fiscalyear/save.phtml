@@ -1,0 +1,679 @@
+<?php
+
+/**
+ * Fiscal Year Save View (The Merged Form)
+ * 
+ * Implements SSOT v6.8 Master-Detail JSON array builders via Custom Tabs.
+ * Features Client-Side Period Auto-Generation, Inline Grid Editing, and Goto Navigation.
+ */
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<style>
+    /* Custom Sentrifugo-Themed Tabs */
+    .sf-tabs-nav {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        border-bottom: 2px solid #ccc;
+        display: flex;
+        width: 100%;
+    }
+
+    .sf-tabs-nav li {
+        margin-bottom: -2px;
+    }
+
+    .sf-tabs-nav li a {
+        display: block;
+        padding: 10px 20px;
+        text-decoration: none;
+        color: #666;
+        font-weight: bold;
+        border-bottom: 2px solid transparent;
+        transition: all 0.3s;
+    }
+
+    .sf-tabs-nav li.active a {
+        color: #26a69a;
+        border-bottom: 2px solid #26a69a;
+    }
+
+    .sf-tabs-nav li a:hover {
+        color: #26a69a;
+    }
+
+    .sf-tab-panel {
+        padding: 20px 0;
+    }
+
+    /* Mapping Table Styles (Consistent with parulebook) */
+    .mapping-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+        background-color: #fff;
+    }
+
+    .mapping-table th,
+    .mapping-table td {
+        border: 1px solid #e0e0e0;
+        padding: 10px;
+        text-align: left;
+        vertical-align: middle;
+    }
+
+    .mapping-table th {
+        background-color: #f5f5f5;
+        color: #333;
+        font-weight: bold;
+        font-size: 13px;
+        text-transform: uppercase;
+    }
+
+    .mapping-table input[type="text"] {
+        width: 100%;
+        padding: 6px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        height: 32px;
+    }
+
+    .mapping-table input[type="text"][readonly] {
+        background-color: #f9f9f9;
+        color: #666;
+        cursor: not-allowed;
+        border: 1px dashed #ccc;
+    }
+
+    .mapping-table input[type="checkbox"] {
+        margin: 0 auto;
+        display: block;
+    }
+
+    .grid-btn {
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 16px;
+        transition: color 0.2s;
+        padding: 0 5px;
+    }
+
+    .grid-btn-edit {
+        color: #f39c12;
+    }
+
+    .grid-btn-edit:hover {
+        color: #d68910;
+    }
+
+    .grid-btn-remove {
+        color: #e74c3c;
+    }
+
+    .grid-btn-remove:hover {
+        color: #c0392b;
+    }
+
+    .grid-btn-goto {
+        color: #26a69a;
+    }
+
+    .grid-btn-goto:hover {
+        color: #16a085;
+    }
+
+    .staged-row {
+        background-color: #f0fbf9;
+        border-left: 3px solid #26a69a;
+    }
+
+    .deleted-row {
+        display: none;
+    }
+</style>
+
+<?php sapp_Global::generateClientValidations($this->form); ?>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container"></div>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" method="post">
+            <?php echo $this->form->id; ?>
+            <?php echo $this->form->periods_payload; ?> <!-- Hidden JSON container -->
+            <?php if ($this->form->getElement('calendar_id_hidden')): ?>
+                <?php echo $this->form->calendar_id_hidden; ?>
+            <?php endif; ?>
+
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <!-- ================= HEADER SECTION (Core Entity) ================= -->
+                    <h5 style="margin-bottom: 20px; color: #26a69a; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Fiscal Year Details</h5>
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                            <div class="division">
+                                <?php echo $this->form->name; ?>
+                                <span class="errors" id="errors-<?php echo $this->escape($this->form->name->getId()); ?>"></span>
+                            </div>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->calendar_id->getLabel()); ?></label>
+                            <div class="division">
+                                <?php echo $this->form->calendar_id; ?>
+                                <span class="errors" id="errors-<?php echo $this->escape($this->form->calendar_id->getId()); ?>"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <div class="new-form-ui">
+                                <label class="required"><?php echo $this->escape($this->form->start_date->getLabel()); ?></label>
+                                <div class="division">
+                                    <?php echo $this->form->start_date; ?>
+                                    <span class="errors" id="errors-<?php echo $this->escape($this->form->start_date->getId()); ?>"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <div class="new-form-ui">
+                                <label class="required"><?php echo $this->escape($this->form->end_date->getLabel()); ?></label>
+                                <div class="division">
+                                    <?php echo $this->form->end_date; ?>
+                                    <span class="errors" id="errors-<?php echo $this->escape($this->form->end_date->getId()); ?>"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->isactive; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->isactive->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div style="clear: both; width: 100%; height: 20px;"></div>
+
+                    <!-- ================= TABBED DETAILS SECTION ================= -->
+                    <h5 style="margin-bottom: 15px; color: #26a69a; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Period Management</h5>
+
+                    <div id="rulebook-tabs" style="width: 100%; margin-bottom: 30px;">
+
+                        <!-- Tab Navigation -->
+                        <ul class="sf-tabs-nav">
+                            <li class="active"><a href="#tab-periods" data-target="tab-periods"><i class="fa fa-calendar"></i> Define Periods</a></li>
+                        </ul>
+
+                        <!-- TAB 1: PERIODS -->
+                        <div id="tab-periods" class="sf-tab-panel active">
+
+                            <!-- Generation Tools -->
+                            <div class="row no-margin" style="background:#fcfcfc; padding:15px; border:1px solid #eee; border-radius: 4px;">
+                                <div class="new-form-ui clearb" style="width: 40%;">
+                                    <div class="division">
+                                        <?php echo $this->form->period_generation; ?>
+                                    </div>
+                                </div>
+                                <div style="float:center; margin-top: 5px; margin-left: 15px;">
+                                    <button type="button" class="actbtn_btn" onclick="generatePeriods();" 
+                                        style="background-color: #208bbd; 
+                                                border: 1px solid #208bbd; 
+                                                height: 52px;
+                                                font-family: 'Roboto Regular', sans-serif; color: #ffffff;
+                                                padding: 3px 10px 4px 10px; 
+                                                font-weight: bold; 
+                                                border-radius: 4px; 
+                                                box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                            <i class="fa fa-cogs"></i> Generate Periods</button>
+                                </div>
+
+                                <div style="clear:both; margin-bottom: 15px; border-bottom: 1px dashed #ccc;"></div>
+
+                                <!-- Manual Add Tools -->
+                                <div class="new-form-ui clearb" style="width: 15%;">
+                                    <label>Sequence</label>
+                                    <div class="division"><input type="text" id="manual_seq" class="browser-default" style="border: 1px solid #ccc; padding: 5px; width: 100%;"></div>
+                                </div>
+                                <div class="new-form-ui clearb" style="width: 25%; margin-left: 2%;">
+                                    <label>Period Name</label>
+                                    <div class="division"><input type="text" id="manual_name" class="browser-default" style="border: 1px solid #ccc; padding: 5px; width: 100%;"></div>
+                                </div>
+                                <div class="new-form-ui clearb" style="width: 20%; margin-left: 2%;">
+                                    <label>Start Date</label>
+                                    <div class="division"><input type="text" id="manual_start" class="datepicker browser-default" style="border: 1px solid #ccc; padding: 5px; width: 100%;"></div>
+                                </div>
+                                <div class="new-form-ui clearb" style="width: 20%; margin-left: 2%;">
+                                    <label>End Date</label>
+                                    <div class="division"><input type="text" id="manual_end" class="datepicker browser-default" style="border: 1px solid #ccc; padding: 5px; width: 100%;"></div>
+                                </div>
+
+                                <div style="float:right; margin-top: 25px;">
+                                    <button type="button" class="actbtn_btn" onclick="addManualPeriod();"><i class="fa fa-plus"></i> Add Row</button>
+                                </div>
+                                <div style="clear:both;"></div>
+                            </div>
+
+                            <!-- The Dynamic Staging Grid -->
+                            <div style="width: 100%; overflow-x: auto; margin-top: 15px;">
+                                <table class="mapping-table" id="tbl-periods">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 50px;">Seq</th>
+                                            <th>Period Name</th>
+                                            <th style="width: 130px;">Start Date</th>
+                                            <th style="width: 130px;">End Date</th>
+                                            <th style="width: 70px; text-align:center;">Active</th>
+                                            <th style="width: 120px; text-align:center;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody><!-- JS injected --></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div> <!-- End Tabs -->
+
+                    <!-- ================= FOOTER SECTION ================= -->
+                    <div class="new-form-ui-submit">
+                        <div class="division">
+                            <?php echo $this->form->submit; ?>
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>fiscalyear';" value="Cancel" type="button" class="reset" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    // State Array populated by Controller (if editing)
+    var arrPeriods = <?php echo isset($this->existingPeriods) ? $this->existingPeriods : '[]'; ?>;
+
+    $(document).ready(function() {
+        $('#description').jqte();
+
+        // --- BRUTE FORCE TAB LOGIC ---
+        $('.sf-tabs-nav a').on('click', function(e) {
+            e.preventDefault();
+            var targetPanelId = $(this).attr('href');
+            $('.sf-tabs-nav li').removeClass('active');
+            $(this).parent('li').addClass('active');
+            $('.sf-tab-panel').hide();
+            $(targetPanelId).fadeIn('fast');
+        });
+
+        // --- LINKED DATEPICKERS (Fiscal Year) ---
+        $('#start_date').datepicker({
+            showOn: 'both',
+            dateFormat: '<?php echo DATEFORMAT_JS; ?>',
+            buttonImage: "<?php echo MEDIA_PATH; ?>images/cal.jpg",
+            buttonImageOnly: true,
+            changeMonth: true,
+            changeYear: true,
+            onClose: function(selectedDate) {
+                $(this).trigger('blur');
+                $("#end_date").datepicker("option", "minDate", selectedDate);
+            }
+        });
+        $('#end_date').datepicker({
+            showOn: 'both',
+            dateFormat: '<?php echo DATEFORMAT_JS; ?>',
+            buttonImage: "<?php echo MEDIA_PATH; ?>images/cal.jpg",
+            buttonImageOnly: true,
+            changeMonth: true,
+            changeYear: true,
+            onClose: function(selectedDate) {
+                $(this).trigger('blur');
+                $("#start_date").datepicker("option", "maxDate", selectedDate);
+            }
+        });
+
+        if ($('#start_date').val() != '') $("#end_date").datepicker("option", "minDate", $('#start_date').val());
+        if ($('#end_date').val() != '') $("#start_date").datepicker("option", "maxDate", $('#end_date').val());
+
+        // Initialize manual entry datepickers
+        $('.datepicker').datepicker({
+            dateFormat: '<?php echo DATEFORMAT_JS; ?>',
+            changeMonth: true,
+            changeYear: true
+        });
+
+        // Initial Render of the Grid
+        renderPeriods();
+
+        // --- MASTER SUBMIT HANDLER ---
+        $('#submitbutton').off('click').on('click', function(e) {
+            e.preventDefault();
+            var $form = $('#formid');
+            $('.errors').text('');
+            $('#message_container').empty();
+
+            if ($.isFunction($form.valid) && !$form.valid()) return false;
+
+            var sDate = new Date($('#start_date').val());
+            var eDate = new Date($('#end_date').val());
+            if (sDate > eDate) {
+                $('#errors-start_date').text("Start date cannot be after end date.");
+                $('html, body').animate({
+                    scrollTop: 0
+                }, 'slow');
+                return false;
+            }
+
+            // Sync grid input fields back to the Javascript array before saving
+            syncGridInputsToArray();
+
+            // Client-Side Overlap Validation
+            if (!validatePeriodDates(sDate, eDate)) return false;
+
+            // Pack Array into JSON hidden input
+            $('#periods_payload').val(JSON.stringify(arrPeriods));
+
+            if (typeof $.blockUI === "function") $.blockUI({
+                message: '<img src="<?php echo MEDIA_PATH; ?>images/loader2.gif" />'
+            });
+
+            var formData = new FormData($form[0]);
+
+            $.ajax({
+                url: base_url + '/fiscalyear/save/format/json',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function(res) {
+                    if (typeof $.unblockUI === "function") $.unblockUI();
+
+                    if (res.result === 'saved') {
+                        window.location.href = base_url + '/fiscalyear';
+                    } else if (res.result === 'exception') {
+                        $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>' + res.message + '</div>');
+                        $('html, body').animate({
+                            scrollTop: 0
+                        }, 'slow');
+                    } else {
+                        $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Please fix the highlighted errors.</div>');
+                        $.each(res, function(key, val) {
+                            var errMsg = (typeof val === 'object') ? val[Object.keys(val)[0]] : val;
+                            $('#errors-' + key).text(errMsg);
+                        });
+                        $('html, body').animate({
+                            scrollTop: 0
+                        }, 'slow');
+                    }
+                },
+                error: function() {
+                    if (typeof $.unblockUI === "function") $.unblockUI();
+                    $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Server error occurred. Check logs.</div>');
+                    $('html, body').animate({
+                        scrollTop: 0
+                    }, 'slow');
+                }
+            });
+        });
+    });
+
+    // ==============================================================
+    // PERIOD GRID LOGIC
+    // ==============================================================
+
+    function addManualPeriod() {
+        var seq = $('#manual_seq').val();
+        var name = $('#manual_name').val();
+        var start = $('#manual_start').val();
+        var end = $('#manual_end').val();
+
+        if (!seq || !name || !start || !end) {
+            alert("Please fill out all manual entry fields.");
+            return;
+        }
+
+        arrPeriods.push({
+            id: 0,
+            sequence: seq,
+            name: name,
+            start_date: start,
+            end_date: end,
+            isactive: 1,
+            action: 'new'
+        });
+
+        $('#manual_seq, #manual_name, #manual_start, #manual_end').val('');
+        renderPeriods();
+    }
+
+    function removePeriodRow(index) {
+        if (confirm("Are you sure you want to remove this period?")) {
+            var p = arrPeriods[index];
+            if (p.id > 0) {
+                p.action = 'delete';
+            } else {
+                arrPeriods.splice(index, 1);
+            }
+            renderPeriods();
+        }
+    }
+
+    // Toggles the readonly state of the inputs in a specific row
+    function toggleEditRow(index) {
+        var $row = $('#row_' + index);
+        var isReadOnly = $('#p_name_' + index).prop('readonly');
+
+        if (isReadOnly) {
+            // Unlock fields
+            $('#p_seq_' + index + ', #p_name_' + index + ', #p_start_' + index + ', #p_end_' + index).prop('readonly', false);
+            $('#p_active_' + index).prop('disabled', false);
+            // Visually indicate edit mode
+            $row.css('background-color', '#fffbcc'); // Light yellow
+        } else {
+            // Lock fields
+            $('#p_seq_' + index + ', #p_name_' + index + ', #p_start_' + index + ', #p_end_' + index).prop('readonly', true);
+            $('#p_active_' + index).prop('disabled', true);
+            // Restore background
+            $row.css('background-color', '');
+
+            // If it's an existing record, ensure action flag is updated
+            if (arrPeriods[index].id > 0) {
+                $('#p_action_' + index).val('update');
+            }
+            syncGridInputsToArray(); // Save changes to memory immediately
+        }
+    }
+
+    function renderPeriods() {
+        var html = '';
+        $.each(arrPeriods, function(idx, val) {
+            if (val.action === 'delete') {
+                html += '<tr class="deleted-row"><td colspan="6"><input type="hidden" id="p_action_' + idx + '" value="delete"></td></tr>';
+                return true;
+            }
+
+            var isNew = (val.id == 0);
+            var rowClass = isNew ? 'staged-row' : '';
+            var activeCheck = (val.isactive == 1) ? 'checked' : '';
+
+            // Existing DB records are readonly by default to prevent accidental edits. 
+            // Staged/New records are editable immediately.
+            var readOnlyAttr = !isNew ? 'readonly="readonly"' : '';
+            var disabledAttr = !isNew ? 'disabled="disabled"' : '';
+
+            html += '<tr id="row_' + idx + '" class="' + rowClass + '">';
+            var seqVal = val.sequence !== undefined ? val.sequence : (val.period_sequence || '');
+            html += '<td><input type="text" id="p_seq_' + idx + '" value="' + seqVal + '" ' + readOnlyAttr + '></td>';
+            html += '<td><input type="text" id="p_name_' + idx + '" value="' + val.name + '" ' + readOnlyAttr + '></td>';
+            html += '<td><input type="text" id="p_start_' + idx + '" class="grid-date" value="' + val.start_date + '" ' + readOnlyAttr + '></td>';
+            html += '<td><input type="text" id="p_end_' + idx + '" class="grid-date" value="' + val.end_date + '" ' + readOnlyAttr + '></td>';
+            html += '<td style="text-align:center;"><input type="checkbox" id="p_active_' + idx + '" ' + activeCheck + ' ' + disabledAttr + '></td>';
+
+            html += '<td style="text-align:center;">';
+            html += '<input type="hidden" id="p_id_' + idx + '" value="' + val.id + '">';
+            var actionFlag = isNew ? 'new' : 'update'; // Default to update if saved, even if unmodified
+            html += '<input type="hidden" id="p_action_' + idx + '" value="' + actionFlag + '">';
+
+            html += '<div style="display: flex; gap: 10px; justify-content: center; align-items: center;">';
+
+            // Edit Toggle Button
+            html += '<a class="grid-btn grid-btn-edit" onclick="toggleEditRow(' + idx + ');" title="Toggle Edit"><i class="fa fa-pencil"></i></a>';
+            // Remove Button
+            html += '<a class="grid-btn grid-btn-remove" onclick="removePeriodRow(' + idx + ');" title="Remove"><i class="fa fa-trash"></i></a>';
+
+            // Goto Button (Only for saved DB records)
+            if (val.id > 0) {
+                html += '<a href="' + base_url + '/period/edit/id/' + val.id + '" target="_blank" class="grid-btn grid-btn-goto" title="Manage Period Controls/Locks"><i class="fa fa-external-link"></i></a>';
+            }
+
+            html += '</div>';
+            html += '</td></tr>';
+        });
+
+        $('#tbl-periods tbody').html(html);
+
+        // Re-bind datepickers. Note: We bind even to readonly fields so when 'toggleEditRow' removes readonly, the widget works.
+        $('.grid-date').datepicker({
+            dateFormat: '<?php echo DATEFORMAT_JS; ?>',
+            changeMonth: true,
+            changeYear: true
+        });
+    }
+
+    function syncGridInputsToArray() {
+        $.each(arrPeriods, function(idx, val) {
+            if (val.action === 'delete') return true;
+
+            val.sequence = $('#p_seq_' + idx).val();
+            val.name = $('#p_name_' + idx).val();
+            val.start_date = $('#p_start_' + idx).val();
+            val.end_date = $('#p_end_' + idx).val();
+            val.isactive = $('#p_active_' + idx).is(':checked') ? 1 : 0;
+            val.action = $('#p_action_' + idx).val();
+        });
+    }
+
+    // ==============================================================
+    // AUTO-GENERATOR ENGINE (Client-Side)
+    // ==============================================================
+    function generatePeriods() {
+        var strategy = $('#period_generation').val();
+        if (strategy === 'Manual') return;
+
+        var startStr = $('#start_date').val();
+        var endStr = $('#end_date').val();
+
+        if (!startStr || !endStr) {
+            alert("You must define the Fiscal Year Start and End dates before auto-generating periods.");
+            return;
+        }
+
+        var startDate = new Date(startStr);
+        var endDate = new Date(endStr);
+
+        if (startDate > endDate) {
+            alert("Start Date must be before End Date.");
+            return;
+        }
+
+        if (!confirm("This will replace all currently staged, unsaved periods in the grid. Proceed?")) {
+            return;
+        }
+
+        var newArr = [];
+        $.each(arrPeriods, function(i, v) {
+            if (v.id > 0) newArr.push(v); // Preserve existing DB records
+        });
+        arrPeriods = newArr;
+
+        if (strategy === 'Monthly') {
+            var curr = new Date(startDate.getTime());
+            var seq = 1;
+
+            while (curr <= endDate) {
+                var endOfPeriod = new Date(curr.getFullYear(), curr.getMonth() + 1, 0);
+                if (endOfPeriod > endDate) endOfPeriod = endDate;
+
+                var sFmt = (curr.getMonth() + 1).toString().padStart(2, '0') + '/' + curr.getDate().toString().padStart(2, '0') + '/' + curr.getFullYear();
+                var eFmt = (endOfPeriod.getMonth() + 1).toString().padStart(2, '0') + '/' + endOfPeriod.getDate().toString().padStart(2, '0') + '/' + endOfPeriod.getFullYear();
+                var monthName = curr.toLocaleString('default', {
+                    month: 'short'
+                });
+
+                arrPeriods.push({
+                    id: 0,
+                    sequence: seq,
+                    name: 'Period ' + seq + ': ' + monthName,
+                    start_date: sFmt,
+                    end_date: eFmt,
+                    isactive: 1,
+                    action: 'new'
+                });
+
+                curr = new Date(curr.getFullYear(), curr.getMonth() + 1, 1);
+                seq++;
+            }
+        }
+
+        renderPeriods();
+    }
+
+    function validatePeriodDates(fyStart, fyEnd) {
+        var valid = true;
+        var activeDates = [];
+
+        $.each(arrPeriods, function(idx, val) {
+            if (val.action === 'delete') return true;
+
+            var pStart = new Date(val.start_date);
+            var pEnd = new Date(val.end_date);
+
+            if (pStart < fyStart || pEnd > fyEnd) {
+                alert("Period '" + val.name + "' falls outside the boundaries of the Fiscal Year.");
+                valid = false;
+                return false;
+            }
+
+            if (pStart > pEnd) {
+                alert("Period '" + val.name + "' has a Start Date after its End Date.");
+                valid = false;
+                return false;
+            }
+
+            activeDates.push({
+                name: val.name,
+                start: pStart,
+                end: pEnd
+            });
+        });
+
+        if (!valid) return false;
+
+        for (var i = 0; i < activeDates.length; i++) {
+            for (var j = i + 1; j < activeDates.length; j++) {
+                var d1 = activeDates[i];
+                var d2 = activeDates[j];
+
+                if (d1.start <= d2.end && d1.end >= d2.start) {
+                    alert("Date Overlap Detected: '" + d1.name + "' overlaps with '" + d2.name + "'.");
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+</script>

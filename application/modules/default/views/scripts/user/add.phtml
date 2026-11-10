@@ -1,0 +1,126 @@
+<?php
+?>
+<?php
+
+?>
+<?php if ($this->popup == 'close') { ?>
+	<div class="ml-alert-1-success">
+		<div class="style-1-icon success"></div>
+		Load category <?php echo $this->eventact; ?> successfully
+	</div>
+
+<?php } else {
+	sapp_Global::generateClientValidations($this->form); ?>
+	<div id="error_message" style="display:none;"></div>
+	<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+	<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+	<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction(); ?>" method="<?php echo $this->form->getMethod(); ?>">
+		<?php echo $this->form->id; ?>
+		<div class="total-form-controller">
+
+			<!-- Code -->
+			<div class="new-form-ui clearb">
+				<label class="required"><?php echo $this->form->code->getLabel(); ?></label>
+				<div class="division"><?php echo $this->form->code; ?></div>
+				<?php if (isset($this->msgarray['code'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->code->getId(); ?>"><?php echo $this->msgarray['code']; ?></span>
+				<?php } ?>
+			</div>
+
+			<!-- User Nmae -->
+			<div class="new-form-ui clearb">
+				<label class="required"><?php echo $this->form->username->getLabel(); ?></label>
+				<div class="division"><?php echo $this->form->username; ?></div>
+				<?php if (isset($this->msgarray['username'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->username->getId(); ?>"><?php echo $this->msgarray['username']; ?></span>
+				<?php } ?>
+			</div>
+
+			<!-- Email -->
+			<div class="new-form-ui clearb">
+				<label class="required"><?php echo $this->form->emailaddress->getLabel(); ?></label>
+				<div class="division"><?php echo $this->form->emailaddress; ?></div>
+				<?php if (isset($this->msgarray['emailaddress'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->emailaddress->getId(); ?>"><?php echo $this->msgarray['emailaddress']; ?></span>
+				<?php } ?>
+			</div>
+
+			<br>
+
+			<!-- LADAP -->
+			<div class="new-form-ui clearb">
+				<label><?php echo $this->form->ldapUserName->getLabel(); ?></label>
+				<div class="division"><?php echo $this->form->ldapUserName; ?></div>
+				<?php if (isset($this->msgarray['ldapUserName'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->ldapUserName->getId(); ?>"><?php echo $this->msgarray['ldapUserName']; ?></span>
+				<?php } ?>
+			</div>
+
+			<!-- Is LDAP User -->
+			<div class="new-form-ui clearb">
+				<label><?php echo $this->form->isLdapUser->getLabel(); ?></label>
+				<div class="division"><?php echo $this->form->isLdapUser; ?></div>
+				<?php if (isset($this->msgarray['isLdapUser'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->isLdapUser->getId(); ?>"><?php echo $this->msgarray['isLdapUser']; ?></span>
+				<?php } ?>
+			</div>
+
+			<br>
+
+			<!-- Password -->
+			<div class="new-form-ui clearb">
+				<label class="required"><?php echo $this->form->password->getLabel(); ?></label>
+				<div class="division"><?php echo $this->form->password; ?></div>
+				<?php if (isset($this->msgarray['password'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->password->getId(); ?>"><?php echo $this->msgarray['password']; ?></span>
+				<?php } ?>
+			</div>
+
+			<!-- Confirm PassWord -->
+			<div class="new-form-ui clearb">
+				<label class="required"><?php echo $this->form->confirmpassword->getLabel(); ?></label>
+				<div class="division"><?php echo $this->form->confirmpassword; ?></div>
+				<?php if (isset($this->msgarray['confirmpassword'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->confirmpassword->getId(); ?>"><?php echo $this->msgarray['confirmpassword']; ?></span>
+				<?php } ?>
+			</div>
+
+			<br>
+
+			<!-- Linked Employee -->
+			<div class="new-form-ui clearb">
+				<label><?php echo $this->form->employee_id->getLabel(); ?></label>
+				<div class="division"><?php echo $this->form->employee_id; ?></div>
+				<?php if (isset($this->msgarray['employee_id'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->employee_id->getId(); ?>"><?php echo $this->msgarray['employee_id']; ?></span>
+				<?php } ?>
+			</div>
+			<br>
+
+			<!-- Description -->
+			<?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+			<!-- Is Active -->
+			<div class="new-form-ui clearb">
+				<label><?php echo $this->form->isactive->getLabel(); ?></label>
+				<div class="division"><?php echo $this->form->isactive; ?></div>
+				<?php if (isset($this->msgarray['isactive'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->isactive->getId(); ?>"><?php echo $this->msgarray['isactive']; ?></span>
+				<?php } ?>
+			</div>
+
+			<?php if (isset($this->msgarray['allfk'])) { ?>
+				<span class="errors" id="errors-allfk"><?php echo $this->msgarray['allfk']; ?></span>
+			<?php } ?>
+			<div class="new-form-ui-submit">
+				<?php echo $this->form->submit; ?>
+				<button onclick="window.location.href='<?php echo BASE_URL; ?>user';" type="button">Cancel</button>
+
+			</div>
+		</div>
+	</form>
+<?php } ?>
+
+<script>
+	$('#description').jqte();
+</script>

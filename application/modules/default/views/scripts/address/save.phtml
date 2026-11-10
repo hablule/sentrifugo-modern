@@ -1,0 +1,288 @@
+<?php
+
+/**
+ * Address Save View (Add/Edit)
+ *
+ * Provides the user interface for adding or modifying physical addresses and their owners.
+ * Refactored to comply with SSOT v6.6.
+ *
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ * @author     Hablul Soft Solution < /hablul.in>
+ * @license    http://gnu.org GNU General Public License, version 3.0 (GPL-3.0)
+ * @version    Sentrifugo v3.2
+ */
+?>
+
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<style>
+    .multicheckbox-container label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: normal;
+        color: #555;
+    }
+
+    .multicheckbox-container input[type="checkbox"] {
+        margin-right: 10px;
+    }
+
+    .mapping-section-header {
+        width: 100%;
+        border-bottom: 1px solid #26a69a;
+        color: #26a69a;
+        margin: 20px 0 10px 0;
+        padding-bottom: 5px;
+        font-size: 16px;
+    }
+</style>
+
+<?php sapp_Global::generateClientValidations($this->form); ?>
+
+<div class="row">
+    <div class="col s12">
+
+        <div id="message_container"></div>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" method="post">
+
+            <?php echo $this->form->id; ?>
+
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <div class="new-form-ui clearb"><label class="required"><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->code; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->code->getId()); ?>"></span></div>
+                    </div>
+                    <div class="new-form-ui clearb"><label class="required"><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->name; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->name->getId()); ?>"></span></div>
+                    </div>
+                    <div class="new-form-ui clearb"><label class="required"><?php echo $this->escape($this->form->address_type_id->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->address_type_id; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->address_type_id->getId()); ?>"></span></div>
+                    </div>
+
+                    <!-- Physical Address -->
+                    <div class="new-form-ui clearb"><label class="required"><?php echo $this->escape($this->form->address_line_1->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->address_line_1; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->address_line_1->getId()); ?>"></span></div>
+                    </div>
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->address_line_2->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->address_line_2; ?></div>
+                    </div>
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->address_line_3->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->address_line_3; ?></div>
+                    </div>
+
+                    <!-- Cascading Geography -->
+                    <div class="new-form-ui clearb"><label class="required"><?php echo $this->escape($this->form->country_id->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->country_id; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->country_id->getId()); ?>"></span></div>
+                    </div>
+                    <div class="new-form-ui clearb"><label class="required"><?php echo $this->escape($this->form->state_id->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->state_id; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->state_id->getId()); ?>"></span></div>
+                    </div>
+                    <div class="new-form-ui clearb"><label class="required"><?php echo $this->escape($this->form->city_id->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->city_id; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->city_id->getId()); ?>"></span></div>
+                    </div>
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->postal_code_id->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->postal_code_id; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->postal_code_id->getId()); ?>"></span></div>
+                    </div>
+
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->map_coordinate->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->map_coordinate; ?></div>
+                    </div>
+
+                    <div style="clear: both; width: 100%; height: 20px;"></div>
+
+                    <!-- Mapped Owners -->
+                    <div class="mapping-section-header">Assign Address to Owners (Optional)</div>
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->owners_company->getLabel()); ?></label>
+                        <div class="division multicheckbox-container"><?php echo $this->form->owners_company; ?></div>
+                    </div>
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->owners_sbunit->getLabel()); ?></label>
+                        <div class="division multicheckbox-container"><?php echo $this->form->owners_sbunit; ?></div>
+                    </div>
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->owners_division->getLabel()); ?></label>
+                        <div class="division multicheckbox-container"><?php echo $this->form->owners_division; ?></div>
+                    </div>
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->owners_department->getLabel()); ?></label>
+                        <div class="division multicheckbox-container"><?php echo $this->form->owners_department; ?></div>
+                    </div>
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->owners_section->getLabel()); ?></label>
+                        <div class="division multicheckbox-container"><?php echo $this->form->owners_section; ?></div>
+                    </div>
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->owners_team->getLabel()); ?></label>
+                        <div class="division multicheckbox-container"><?php echo $this->form->owners_team; ?></div>
+                    </div>
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->owners_employee->getLabel()); ?></label>
+                        <div class="division multicheckbox-container" style="max-height: 150px; overflow-y: auto; border: 1px solid #ddd; padding: 5px;"><?php echo $this->form->owners_employee; ?></div>
+                    </div>
+
+                    <div class="mapping-section-header" style="border-bottom: none; margin-top: 10px;"></div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                    </div>
+
+                    <div class="new-form-ui-submit">
+                        <div class="division">
+                            <?php echo $this->form->submit; ?>
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>address/index';" value="Cancel" type="button" class="reset" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#description').jqte();
+
+        // --- SSOT v6.6 CASCADING DROPDOWNS ---
+        $('#country_id').change(function() {
+            var countryId = $(this).val();
+            $('#state_id, #city_id, #postal_code_id').html('<option value="">Loading...</option>'); // Reset children
+
+            if (countryId) {
+                $.ajax({
+                    url: base_url + '/address/getstatesbycountry',
+                    type: 'POST',
+                    data: {
+                        country_id: countryId
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        var options = '<option value="">Select State / Province</option>';
+                        if (response && !$.isEmptyObject(response)) {
+                            $.each(response, function(key, value) {
+                                options += '<option value="' + key + '">' + value + '</option>';
+                            });
+                        }
+                        $('#state_id').html(options);
+                        $('#city_id, #postal_code_id').html('<option value="">Select State First</option>');
+                    }
+                });
+            } else {
+                $('#state_id, #city_id, #postal_code_id').html('<option value="">Select Country First</option>');
+            }
+        });
+
+        $('#state_id').change(function() {
+            var stateId = $(this).val();
+            $('#city_id, #postal_code_id').html('<option value="">Loading...</option>');
+
+            if (stateId) {
+                $.ajax({
+                    url: base_url + '/address/getcitiesbystate',
+                    type: 'POST',
+                    data: {
+                        state_id: stateId
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        var options = '<option value="">Select City</option>';
+                        if (response && !$.isEmptyObject(response)) {
+                            $.each(response, function(key, value) {
+                                options += '<option value="' + key + '">' + value + '</option>';
+                            });
+                        }
+                        $('#city_id').html(options);
+                        $('#postal_code_id').html('<option value="">Select City First</option>');
+                    }
+                });
+            } else {
+                $('#city_id, #postal_code_id').html('<option value="">Select State First</option>');
+            }
+        });
+
+        $('#city_id').change(function() {
+            var cityId = $(this).val();
+            $('#postal_code_id').html('<option value="">Loading...</option>');
+
+            if (cityId) {
+                $.ajax({
+                    url: base_url + '/address/getpostalcodesbycity',
+                    type: 'POST',
+                    data: {
+                        city_id: cityId
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        var options = '<option value="">Select Postal / ZIP Code</option>';
+                        if (response && !$.isEmptyObject(response)) {
+                            $.each(response, function(key, value) {
+                                options += '<option value="' + key + '">' + value + '</option>';
+                            });
+                        }
+                        $('#postal_code_id').html(options);
+                    }
+                });
+            } else {
+                $('#postal_code_id').html('<option value="">Select City First</option>');
+            }
+        });
+        // --- END CASCADING ---
+
+        // SSOT v6.6 Explicit AJAX Submit Handler
+        $('#submitbutton').off('click').on('click', function(e) {
+            e.preventDefault();
+            var $form = $('#formid');
+            $('.errors').text('');
+            $('#message_container').empty();
+
+            if (!$form.valid()) {
+                return false;
+            }
+
+            if (typeof $.blockUI === "function") $.blockUI({
+                message: '<img src="<?php echo MEDIA_PATH; ?>images/loader2.gif" alt="Loading" />'
+            });
+
+            var formData = new FormData($form[0]);
+
+            $.ajax({
+                url: base_url + '/address/save/format/json',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function(response) {
+                    if (typeof $.unblockUI === "function") $.unblockUI();
+                    if (response && response.result === 'saved') {
+                        window.location.href = base_url + '/address';
+                    } else if (response && response.result === 'exception') {
+                        $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>' + response.message + '</div>');
+                        $('html, body').animate({
+                            scrollTop: 0
+                        }, 'slow');
+                    } else if (response && typeof response === 'object') {
+                        $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Please fix the highlighted errors.</div>');
+                        $.each(response, function(fieldId, errorObj) {
+                            var errMsg = (typeof errorObj === 'object') ? errorObj[Object.keys(errorObj)[0]] : errorObj;
+                            $('#errors-' + fieldId).text(errMsg);
+                        });
+                        $('html, body').animate({
+                            scrollTop: 0
+                        }, 'slow');
+                    }
+                },
+                error: function() {
+                    if (typeof $.unblockUI === "function") $.unblockUI();
+                    $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Server error occurred.</div>');
+                    $('html, body').animate({
+                        scrollTop: 0
+                    }, 'slow');
+                }
+            });
+        });
+    });
+</script>

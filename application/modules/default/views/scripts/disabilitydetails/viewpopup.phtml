@@ -1,0 +1,37 @@
+<?php 
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+?>
+
+<?php echo $this->form->id; 
+		echo $this->form->user_id;
+		?>
+<?php 
+sapp_Helper::viewHeader();
+sapp_Helper::viewBody('alt','Disability',(!empty($this->data['disabilityname']))?$this->data['disabilityname']:"...",'Disability Category',(!empty($this->data['categoryname']))?$this->data['categoryname']:"...");
+sapp_Helper::viewBody('nor','Disability Type',(!empty($this->data['typename']))?$this->data['typename']:"...",'Description ',(!empty($this->data['description']))?$this->data['description']:"...");
+sapp_Helper::viewBody('alt','Onset Date',(!empty($this->data['onsetdate']))?$this->data['onsetdate']:"...",'Active',(!empty($this->data['isactive']))?$this->data['isactive']:"...");
+sapp_Helper::viewFooter();
+?>
+		 <div class="new-form-ui-submit" id="formSubmit">
+         <input onclick="closeiframepopup('disabilitydetails','cancel');" type="button" value="Close"  />
+        </div>
+     
+        

@@ -1,0 +1,173 @@
+<?php
+
+/**
+ * Digital Presence Save View
+ * 
+ * Handles Add/Edit rendering. Integrates the required "On-The-Fly" Popup (SSOT VIII).
+ * Organizes the 9 dropdowns cleanly.
+ * 
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ */
+$this->msgarray = isset($this->msgarray) ? $this->msgarray : array();
+
+// SSOT VII.3: Generate Client Validations
+sapp_Global::generateClientValidations($this->form);
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container">
+            <?php if (!empty($this->msgarray)) : ?>
+                <?php if (isset($this->msgarray['error'])) : ?>
+                    <div class="ml-alert-1-error">
+                        <div style="display:block;"><span class="style-1-icon error"></span><?php echo $this->escape($this->msgarray['error']); ?></div>
+                    </div>
+                <?php else : ?>
+                    <div class="ml-alert-1-error">
+                        <div style="display:block;"><span class="style-1-icon error"></span>Please correct the highlighted errors below.</div>
+                    </div>
+                <?php endif; ?>
+            <?php endif; ?>
+        </div>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" method="<?php echo $this->escape($this->form->getMethod()); ?>">
+            <?php echo $this->form->id; ?>
+
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <h4 style="font-size: 14px; color: #26a69a; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 15px;">Media Details</h4>
+
+                    <!-- SSOT VIII: On-The-Fly Popup for Media Platform -->
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->digitalmedia_id->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->digitalmedia_id; ?>
+                            <span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL . 'digitalmedia/addpopup' ?>','Add Digital Media');"> Add Media</span>
+                        </div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->digitalmedia_id->getId()); ?>"><?php echo $this->escape($this->msgarray['digitalmedia_id'] ?? ''); ?></span>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->digitaladdress->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->digitaladdress; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->digitaladdress->getId()); ?>"><?php echo $this->escape($this->msgarray['digitaladdress'] ?? ''); ?></span>
+                    </div>
+
+                    <h4 style="font-size: 14px; color: #26a69a; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 20px; margin-bottom: 15px;">Assign Owner (Select Exactly One)</h4>
+
+                    <!-- Ownership Row 1 -->
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->company_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->company_id; ?></div>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->sbunit_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->sbunit_id; ?></div>
+                        </div>
+                    </div>
+
+                    <!-- Ownership Row 2 -->
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->division_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->division_id; ?></div>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->department_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->department_id; ?></div>
+                        </div>
+                    </div>
+
+                    <!-- Ownership Row 3 -->
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->section_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->section_id; ?></div>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->project_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->project_id; ?></div>
+                        </div>
+                    </div>
+
+                    <!-- Ownership Row 4 -->
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->team_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->team_id; ?></div>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->employee_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->employee_id; ?></div>
+                        </div>
+                    </div>
+
+                    <h4 style="font-size: 14px; color: #26a69a; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 20px; margin-bottom: 15px;">Additional Info</h4>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->isactive->getId()); ?>"><?php echo $this->escape($this->msgarray['isactive'] ?? ''); ?></span>
+                    </div>
+
+                    <div class="new-form-ui-submit" style="margin-top: 20px;">
+                        <div class="division">
+                            <?php echo $this->form->submit; ?>
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>digitalpresence';" value="Cancel" type="button" class="reset" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- SSOT VIII.1: Hidden Container for Iframe Modal -->
+<div id="digitalmediaContainer" style="display: none; overflow: auto;">
+    <div class="heading">
+        <a href="javascript:void(0)">
+            <img src="<?php echo MEDIA_PATH; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;">
+        </a>
+    </div>
+    <iframe id="digitalmediaCont" class="user_iframe" frameborder="0"></iframe>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#description').jqte();
+
+        if ($.isFunction($.fn.select2)) {
+            $('select').select2({
+                width: '100%'
+            });
+        }
+
+        // UX Enhancement: Auto-clear other owner dropdowns if one is selected
+        // This helps users comply with the "Exactly One Owner" integrity rule
+        var ownerDropdowns = ['#company_id', '#sbunit_id', '#division_id', '#department_id', '#section_id', '#project_id', '#team_id', '#employee_id'];
+
+        $(ownerDropdowns.join(', ')).on('change', function() {
+            var selectedId = $(this).attr('id');
+            if ($(this).val() !== '') {
+                $.each(ownerDropdowns, function(index, value) {
+                    if (value !== '#' + selectedId) {
+                        $(value).val('').trigger('change.select2'); // clear others
+                    }
+                });
+            }
+        });
+    });
+</script>

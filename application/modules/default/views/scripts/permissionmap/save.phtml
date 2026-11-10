@@ -1,0 +1,72 @@
+<?php
+/**
+ * Permission Mapping Save View
+ */
+?>
+
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+
+
+<?php sapp_Global::generateClientValidations($this->form); ?>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container"></div>
+
+        <form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" method="POST">
+            <?php echo $this->form->id; ?>
+
+            <div class="total-form-controller">
+                <div class="division">
+                    
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->form->display_module->getLabel(); ?></label>
+                        <div class="division"><?php echo $this->form->display_module; ?></div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->form->display_controller->getLabel(); ?></label>
+                        <div class="division"><?php echo $this->form->display_controller; ?></div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->form->display_action->getLabel(); ?></label>
+                        <div class="division"><?php echo $this->form->display_action; ?></div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->form->permission->getLabel(); ?></label>
+                        <div class="division"><?php echo $this->form->permission; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->form->permission->getId(); ?>"></span>
+                    </div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->form->isactive->getLabel(); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                    </div>
+
+                    <div class="new-form-ui-submit">
+                        <div class="division">
+                            <?php echo $this->form->submit; ?>
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>permissionmap';" value="Cancel" type="button" class="reset" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#description').jqte();
+});
+</script>

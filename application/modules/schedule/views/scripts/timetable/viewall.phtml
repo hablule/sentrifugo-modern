@@ -1,0 +1,14 @@
+<?php
+
+sapp_Helper::viewHeader();
+foreach ($this->timetables as $value) {
+ 
+    sapp_Helper::viewBody('nor','Shift name',$value['name'],'Shift start time',$value['start_time']);
+    sapp_Helper::viewBody('alt','...','...','Shift end time',$value['end_time']);
+    
+}
+sapp_Helper::viewFooter();
+
+
+
+?>

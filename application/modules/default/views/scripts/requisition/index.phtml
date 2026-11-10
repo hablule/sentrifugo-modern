@@ -1,0 +1,137 @@
+<?php
+
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+?>
+<?php
+/**
+ * Requisition Index View
+ * Features modern Contextual Dashboard Tabs (Active, Action Required, Concluded).
+ * Complies with SSOT v6.7.7.
+ */
+$activeTab = isset($this->activeTab) ? $this->activeTab : 'active_pipelines';
+?>
+<style>
+	.summary-dashboard-tabs {
+		display: flex;
+		gap: 10px;
+		margin-bottom: 20px;
+	}
+
+	.summary-tab-card {
+		flex: 1;
+		padding: 15px 20px;
+		border-radius: 4px;
+		text-decoration: none;
+		border: 1px solid #eee;
+		background: #fff;
+		transition: 0.2s;
+		position: relative;
+	}
+
+	.summary-tab-card:hover {
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+	}
+
+	.summary-tab-card.active {
+		border-top: 3px solid #26a69a;
+		background: #fdfdfd;
+	}
+
+	.summary-tab-card.action-tab.active {
+		border-top-color: #e67e22;
+	}
+
+	.summary-tab-card.archive-tab.active {
+		border-top-color: #7f8c8d;
+	}
+
+	.tab-title {
+		font-size: 13px;
+		font-weight: bold;
+		color: #555;
+		display: block;
+		margin-bottom: 5px;
+	}
+
+	.tab-desc {
+		font-size: 11px;
+		color: #888;
+	}
+</style>
+
+<!-- Dashboard Summary Tabs -->
+<?php if ($this->call !== 'ajaxcall') : ?>
+    <div class="summary-dashboard-tabs">
+        <a href="<?php echo BASE_URL; ?>requisition/index/status_filter/active_pipelines" class="summary-tab-card <?php echo ($activeTab === 'active_pipelines') ? 'active' : ''; ?>">
+            <span class="tab-title" style="color: #26a69a;">
+                <i class="fa fa-briefcase"></i> Active Pipelines 
+                <span class="badge" style="background:#26a69a; color:#fff; float:right; border-radius:50%; padding:2px 8px;"><?php echo $this->tabCounts['active_pipelines']; ?></span>
+            </span>
+            <span class="tab-desc">Approved campaigns open for sourcing and interviews.</span>
+        </a>
+        <a href="<?php echo BASE_URL; ?>requisition/index/status_filter/action_required" class="summary-tab-card action-tab <?php echo ($activeTab === 'action_required') ? 'active' : ''; ?>">
+            <span class="tab-title" style="color: #e67e22;">
+                <i class="fa fa-clock-o"></i> Action Required
+                <span class="badge" style="background:#e67e22; color:#fff; float:right; border-radius:50%; padding:2px 8px;"><?php echo $this->tabCounts['action_required']; ?></span>
+            </span>
+            <span class="tab-desc">Drafts being constructed and requests awaiting sign-off.</span>
+        </a>
+        <a href="<?php echo BASE_URL; ?>requisition/index/status_filter/concluded" class="summary-tab-card archive-tab <?php echo ($activeTab === 'concluded') ? 'active' : ''; ?>">
+            <span class="tab-title" style="color: #7f8c8d;">
+                <i class="fa fa-archive"></i> Concluded Archive
+                <span class="badge" style="background:#7f8c8d; color:#fff; float:right; border-radius:50%; padding:2px 8px;"><?php echo $this->tabCounts['concluded']; ?></span>
+            </span>
+            <span class="tab-desc">Historical record of filled campaigns and rejected requests.</span>
+        </a>
+    </div>
+<?php endif; ?>
+
+<!-- Flash Messages -->
+<div id="message_container">
+	<?php if (isset($this->messages) && !empty($this->messages)) : ?>
+		<div id="dispmsg" class="settingssuccess">
+			<?php foreach ($this->messages as $message) : $key = key($message); ?>
+				<div class="ml-alert-1-<?php echo $key; ?>">
+					<div style="display:block;"><span class="style-1-icon <?php echo $key; ?>"></span><?php echo $this->escape($message[$key]); ?></div>
+				</div>
+			<?php endforeach; ?>
+		</div>
+	<?php endif; ?>
+</div>
+
+<div id="error_message" style="display:none;"></div>
+
+<?php if (isset($this->call) && $this->call === 'ajaxcall') : ?>
+	<?php echo $this->grid($this->dataArray[0]); ?>
+<?php else : ?>
+	<div id="grid_<?php echo $this->escape($this->dataArray[0]['objectname']); ?>" class="all-grid-control">
+		<div id="msg" style="display:none; font-style: oblique; font-weight: bold; color: green;"></div>
+		<?php echo $this->grid($this->dataArray[0]); ?>
+	</div>
+<?php endif; ?>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		setTimeout(function() {
+			$('#dispmsg').fadeOut('slow');
+		}, 4000);
+	});
+</script>

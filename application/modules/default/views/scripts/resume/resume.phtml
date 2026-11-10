@@ -1,0 +1,157 @@
+<?php 
+$form = $this->form;
+$data = $this->data;
+sapp_Global::generateClientValidations($this->form);
+?>
+<script type="text/javascript" src="<?php echo MEDIA_PATH ?>/js/hrms.js"></script>
+ <form name="<?php echo $form->getName();?>" id="<?php echo $form->getId();?>" method="POST" action="<?php echo $form->getAction();?>">
+    <?php //echo $form->id; 
+    ?>
+<div class="separetor-heading">Candidate Details</div>
+    <?php //echo $data;?>
+    <div class="new-form-ui">
+        <label class="required">Candidate First cName</label>
+        <div class="division"><?php echo $form->candidatefirstname;?>
+        <span class="errors" id="errors-<?php echo $this->form->candidatefirstname->getId(); ?>"><?php echo $this->msgarray['candidatefirstname'];?></span>
+        <?php var_dump($this->form);?>
+    </div></div>
+    <div class="new-form-ui">
+        <label class="required">Candidate Middle Name</label>
+        <div class="division"><?php echo $form->candidatemiddlename;?>
+    </div></div>
+
+    <div class="new-form-ui">
+        <label class="required">Candidate Last Name</label>
+        <div class="division"><?php echo $form->candidatelastname;?>
+    </div></div>
+    <div class="new-form-ui">
+        <label class="required">Street Address 1</label>
+        <div class="division"><?php echo $form->streetaddress1;?>
+    </div></div>
+    <div class="new-form-ui">
+        <label class="required">Street Address 2</label>
+        <div class="division"><?php echo $form->streetaddress2 ;?>
+    </div></div>
+   
+    <div class="new-form-ui">
+        <label class="required">Place of Resident</label>
+        <div class="division"><?php echo $form->placeofresidence;?>
+    </div></div>
+    <div class="new-form-ui">
+        <label class="required">Country</label>
+        <div class="division"><?php echo $form->country;?>
+    </div></div>
+    <div class="new-form-ui">
+        <label class="required">State/Province</label>
+        <div class="division"><?php echo $form->state;?>
+    </div></div>
+   
+    <div class="new-form-ui">
+        <label class="required">City</label>
+        <div class="division"><?php echo $form->city;?>
+    </div></div>
+    <div class="new-form-ui">
+        <label class="required">Zip / Postal Code</label>
+        <div class="division"><?php echo $form->zipcode;?>
+    </div></div>
+    <div class="new-form-ui">
+        <label class="required">Email</label>
+        <div class="division"><?php echo $form->email;?>
+    </div></div>
+    <div class="new-form-ui">
+        <label class="required">Contact Preferences</label>
+        <div class="division"><?php echo $form->contactpref;?>
+         
+    </div></div>
+   
+    <div class="new-form-ui">
+        <label class="required">Country Code</label>
+        <div class="division"><?php echo $form->countrycode;?>
+        
+    </div></div>
+    
+    <div class="new-form-ui">
+        <label class="required">Mobile Number</label>
+        <div class="division"><?php echo $form->mobilenumber;?>
+        
+        
+    </div></div>
+    <div class="new-form-ui">
+        <label class="required">Home Number</label>
+        <div class="division"><?php echo $form->homenumber;?>
+    </div></div>
+
+    <div class="new-form-ui">
+        <label class="required">Nationality</label>
+        <div class="division"><?php echo $form->nationality;?>
+    </div></div>
+
+    <div class="new-form-ui">
+        <label >Dual Nationality</label>
+        <div class="division"><?php echo $form->dualnationality;?>
+    </div></div>
+<br>
+    <div class="new-form-ui">
+        <label class="required">Native Language</label>
+        <div class="division"><?php echo $form->nativelang;?>
+    </div></div>
+    <br>
+    <div class="new-form-ui">
+        <label class="required">Reading </label>
+        <div class="division"><?php echo $form->nativelangread;?>
+    </div></div>
+    <div class="new-form-ui">
+        <label class="required">writing </label>
+        <div class="division"><?php echo $form->nativelangwrite;?>
+    </div></div>
+    <div class="new-form-ui">
+        <label class="required">Listing</label>
+        <div class="division"><?php echo $form->nativelanglisten;?>
+    </div></div>
+    <div class="new-form-ui">
+        <label class="required">Speaking</label>
+        <div class="division"><?php echo $form->nativelangspeak;?>
+    </div></div>
+<br>
+    <div class="new-form-ui">
+        <label class="required">Fluent Language</label>
+        <div class="division"><?php echo $form->fluentlang;?>
+    </div></div>
+    <br>
+    <div class="new-form-ui">
+        <label class="required">Reading</label>
+        <div class="division"><?php echo $form->fluentlangread; ?>
+        </div>
+    </div>
+    <div class="new-form-ui">
+        <label class="required">Writing</label>
+        <div class="division"><?php echo $form->fluentlangwrite; ?>
+        </div>
+    </div>
+    <div class="new-form-ui">
+        <label class="required">Listing</label>
+        <div class="division"><?php echo $form->fluentlanglisten; ?>
+        </div>
+    </div>
+    <div class="new-form-ui">
+        <label class="required">Speaking</label>
+        <div class="division"><?php echo $form->fluentlangspeak; ?>
+        </div>
+    </div>
+    <br>
+    <div class="new-form-ui">
+        <label class="required">Employee Notice Period</label>
+        <div class="division"><?php echo $form->employeenoticeperiod;?>
+    </div></div>
+  <br>
+    <div class="new-form-ui-submit">
+        <?php echo $form->submit;?>
+    </div>
+</form> 
+<script>
+function test()
+{
+    console.log(document.getElementById('nationality').value)
+}
+
+</script>

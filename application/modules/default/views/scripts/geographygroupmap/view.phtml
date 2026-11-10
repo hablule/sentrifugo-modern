@@ -1,0 +1,111 @@
+<?php
+
+/**
+ * Geography Group Mapping Details View (Read-Only)
+ * Strictly adheres to SSOT v6.1.
+ */
+?>
+<!-- SSOT VII: Strict Asset Inclusions (No screen.css) -->
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container">
+            <?php if (isset($this->nodata)) : ?>
+                <div class="ml-alert-1-info">
+                    <div style="display:block;"><span class="style-1-icon info"></span>No data found.</div>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <?php if (!isset($this->nodata)) : ?>
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <!-- Target Geography Group -->
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->geographygroup_id->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->geographygroup_id; ?>
+                        </div>                        
+                    </div>
+
+                    <!-- Mapping Level -->
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->entity_type->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->entity_type; ?></div>
+                    </div>
+
+                    <?php
+                    // Determine which fields to show based on the entity_type saved in the DB
+                    $type = $this->form->entity_type->getValue();
+                    ?>
+
+                    <?php if (in_array($type, array('Country', 'State', 'City', 'PostalCode'))) : ?>
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->country_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->country_id; ?></div>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (in_array($type, array('State', 'City', 'PostalCode'))) : ?>
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->state_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->state_id; ?></div>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (in_array($type, array('City', 'PostalCode'))) : ?>
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->city_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->city_id; ?></div>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if ($type == 'PostalCode') : ?>
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->postalcode_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->postalcode_id; ?></div>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray ?? array(), $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                    </div>
+
+                    <div class="new-form-ui-submit">
+                        <div class="division">
+                            <!-- Redirect back to the parent Geography Group View -->
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>geographygroup/view/id/<?php echo $this->escape($this->form->geographygroup_id->getValue()); ?>';" value="Back to Group" type="button" class="reset" />
+
+                            <?php
+                            $menuId = defined('GEOGRAPHY_GROUP_MENU_ID') ? GEOGRAPHY_GROUP_MENU_ID : 103;
+                            if (sapp_Global::_checkprivileges($menuId, $this->loginuserGroup, $this->loginuserRole, 'edit') == 'Yes') :
+                            ?>
+                                <input onclick="window.location.href='<?php echo BASE_URL; ?>geographygroupmap/edit/id/<?php echo $this->id; ?>';" value="Edit" type="button" class="reset" />
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        if ($('#description').length) {
+            $('#description').jqte();
+            $('.jqte_editor').attr('contenteditable', 'false');
+        }
+    });
+</script>

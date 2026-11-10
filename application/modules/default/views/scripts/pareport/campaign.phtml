@@ -1,0 +1,302 @@
+<?php
+
+/**
+ * PA Report Campaign Dashboard View
+ * 
+ * The main BI Canvas. Uses AJAX to fetch data from the Controller APIs.
+ * Adapts visible tabs based on the user's $this->accessLevel.
+ */
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+
+<style>
+    /* Dashboard Layout Styles */
+    .dashboard-header {
+        background: #fdfdfd;
+        border: 1px solid #eee;
+        padding: 15px 20px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .kpi-row {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .kpi-card {
+        flex: 1;
+        background: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    }
+
+    .kpi-value {
+        font-size: 28px;
+        font-weight: bold;
+        color: #26a69a;
+        margin: 10px 0 5px 0;
+    }
+
+    .kpi-label {
+        font-size: 12px;
+        color: #666;
+        text-transform: uppercase;
+        font-weight: bold;
+        letter-spacing: 0.5px;
+    }
+
+    /* Custom Tabs */
+    .sf-tabs-nav {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        border-bottom: 2px solid #ccc;
+        display: flex;
+        width: 100%;
+    }
+
+    .sf-tabs-nav li {
+        margin-bottom: -2px;
+    }
+
+    .sf-tabs-nav li a {
+        display: block;
+        padding: 10px 20px;
+        text-decoration: none;
+        color: #666;
+        font-weight: bold;
+        border-bottom: 2px solid transparent;
+        transition: all 0.3s;
+    }
+
+    .sf-tabs-nav li.active a {
+        color: #26a69a;
+        border-bottom: 2px solid #26a69a;
+    }
+
+    .sf-tab-panel {
+        padding: 20px 0;
+        display: none;
+    }
+
+    .sf-tab-panel.active {
+        display: block;
+    }
+
+    /* Simple CSS Bar Chart for Status */
+    .css-bar-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .css-bar-label {
+        width: 120px;
+        font-size: 13px;
+        color: #555;
+    }
+
+    .css-bar-track {
+        flex: 1;
+        height: 20px;
+        background: #eee;
+        border-radius: 3px;
+        overflow: hidden;
+        margin: 0 15px;
+    }
+
+    .css-bar-fill {
+        height: 100%;
+        background: #26a69a;
+    }
+
+    .css-bar-val {
+        width: 40px;
+        font-size: 13px;
+        font-weight: bold;
+        text-align: right;
+    }
+</style>
+
+<div class="row">
+    <div class="col s12">
+
+        <!-- DASHBOARD HEADER -->
+        <div class="dashboard-header">
+            <div>
+                <h4 style="margin: 0; font-size: 18px; color: #333;"><?php echo $this->escape($this->campaignName); ?></h4>
+                <div style="font-size: 12px; color: #888; margin-top: 5px;">Campaign Analytics Dashboard</div>
+            </div>
+            <div>
+                <a href="<?php echo BASE_URL; ?>pareport" class="actbtn_btn" style="text-decoration: none; padding: 8px 15px; background: #7f8c8d;"><i class="fa fa-arrow-left"></i> Back to Campaigns</a>
+            </div>
+        </div>
+
+        <!-- DASHBOARD TABS -->
+        <div id="report-tabs" style="width: 100%;">
+            <ul class="sf-tabs-nav">
+                <!-- Tab 1: Always visible (The scope adjusts automatically via the Model) -->
+                <li class="active"><a href="#tab-summary" data-target="tab-summary"><i class="fa fa-dashboard"></i> Executive Summary</a></li>
+
+                <?php if ($this->accessLevel > 1): ?>
+                    <!-- Tabs 2 & 3: Only visible to Managers (L2) and above -->
+                    <li><a href="#tab-matrix" data-target="tab-matrix"><i class="fa fa-exchange"></i> 360 Gap Matrix</a></li>
+                    <li><a href="#tab-skills" data-target="tab-skills"><i class="fa fa-crosshairs"></i> Skill Diagnostics</a></li>
+                <?php endif; ?>
+            </ul>
+
+            <!-- ================= TAB 1: EXECUTIVE SUMMARY ================= -->
+            <div id="tab-summary" class="sf-tab-panel active">
+
+                <!-- KPI CARDS -->
+                <div class="kpi-row">
+                    <div class="kpi-card">
+                        <div class="kpi-label">Total Assessments</div>
+                        <div class="kpi-value" id="kpi_total"><i class="fa fa-spinner fa-spin"></i></div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label">Completion Rate</div>
+                        <div class="kpi-value" id="kpi_completion"><i class="fa fa-spinner fa-spin"></i></div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label">Average Score</div>
+                        <div class="kpi-value" id="kpi_score"><i class="fa fa-spinner fa-spin"></i></div>
+                    </div>
+                </div>
+
+                <!-- CHARTS ROW -->
+                <div style="display: flex; gap: 20px;">
+                    <div style="flex: 1; background: #fff; border: 1px solid #eee; border-radius: 4px; padding: 20px;">
+                        <h5 style="margin-top: 0; font-size: 14px; color: #555; border-bottom: 1px solid #f0f0f0; padding-bottom: 10px; margin-bottom: 15px;">Workflow Status Breakdown</h5>
+                        <div id="chart_status_container">
+                            <div style="text-align: center; color: #999; padding: 20px;"><i class="fa fa-spinner fa-spin fa-2x"></i></div>
+                        </div>
+                    </div>
+
+                    <?php if ($this->accessLevel > 2): ?>
+                        <div style="flex: 1; background: #fff; border: 1px solid #eee; border-radius: 4px; padding: 20px;">
+                            <h5 style="margin-top: 0; font-size: 14px; color: #555; border-bottom: 1px solid #f0f0f0; padding-bottom: 10px; margin-bottom: 15px;">Organizational Averages</h5>
+                            <div id="chart_org_container">
+                                <div style="text-align: center; color: #999; padding: 20px;">(Pending Future Development)</div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                </div>
+
+            </div>
+
+            <!-- ================= TAB 2: 360 GAP MATRIX ================= -->
+            <?php if ($this->accessLevel > 1): ?>
+                <div id="tab-matrix" class="sf-tab-panel">
+                    <div style="background: #fff; border: 1px solid #eee; border-radius: 4px; padding: 20px; text-align: center; color: #777;">
+                        <i class="fa fa-wrench fa-3x" style="color: #ccc; margin-bottom: 15px;"></i><br>
+                        <strong>360 Gap Matrix Report</strong><br>
+                        This report requires advanced SQL pivots and will be implemented in the next phase.
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <!-- ================= TAB 3: SKILL DIAGNOSTICS ================= -->
+            <?php if ($this->accessLevel > 1): ?>
+                <div id="tab-skills" class="sf-tab-panel">
+                    <div style="background: #fff; border: 1px solid #eee; border-radius: 4px; padding: 20px; text-align: center; color: #777;">
+                        <i class="fa fa-wrench fa-3x" style="color: #ccc; margin-bottom: 15px;"></i><br>
+                        <strong>Skill & Competency Diagnostics</strong><br>
+                        This report will be implemented in the next phase.
+                    </div>
+                </div>
+            <?php endif; ?>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var campaignId = <?php echo $this->campaignId; ?>;
+
+    $(document).ready(function() {
+
+        // 1. CUSTOM TAB LOGIC
+        $('.sf-tabs-nav a').on('click', function(e) {
+            e.preventDefault();
+            var targetPanelId = $(this).attr('href');
+            $('.sf-tabs-nav li').removeClass('active');
+            $(this).parent('li').addClass('active');
+            $('.sf-tab-panel').removeClass('active').hide();
+            $(targetPanelId).addClass('active').fadeIn('fast');
+        });
+
+        // 2. FETCH DATA: Executive Summary KPIs
+        $.getJSON(base_url + '/pareport/getdashboarddata', {
+            campaign_id: campaignId
+        }, function(res) {
+            if (res.status === 'success' && res.data) {
+                var d = res.data;
+                $('#kpi_total').text(d.total_assessments || 0);
+
+                // Calculate Completion %
+                var total = parseInt(d.total_assessments) || 0;
+                var completed = parseInt(d.completed_assessments) || 0;
+                var rate = (total > 0) ? Math.round((completed / total) * 100) : 0;
+                $('#kpi_completion').text(rate + '%');
+
+                // Format Average Score
+                var avg = parseFloat(d.average_score);
+                $('#kpi_score').text(!isNaN(avg) ? avg.toFixed(2) : 'N/A');
+            } else {
+                $('.kpi-value').text('Error');
+            }
+        });
+
+        // 3. FETCH DATA: Status Breakdown Chart (CSS Rendered)
+        $.getJSON(base_url + '/pareport/getchartdata', {
+            campaign_id: campaignId,
+            type: 'status_breakdown'
+        }, function(res) {
+            if (res.status === 'success') {
+
+                // Find the max value to scale the CSS bars
+                var maxCount = 0;
+                $.each(res.data, function(i, val) {
+                    if (parseInt(val) > maxCount) maxCount = parseInt(val);
+                });
+
+                if (maxCount === 0) {
+                    $('#chart_status_container').html('<div style="text-align:center; color:#999; padding:20px;">No data available.</div>');
+                    return;
+                }
+
+                var html = '';
+                $.each(res.labels, function(i, label) {
+                    var count = parseInt(res.data[i]);
+                    var widthPct = Math.round((count / maxCount) * 100);
+
+                    // Color coding logic
+                    var color = '#95a5a6'; // Default Gray
+                    if (label === 'Completed' || label === 'Acknowledged') color = '#27ae60'; // Green
+                    if (label === 'Pending') color = '#e74c3c'; // Red
+                    if (label === 'In Progress') color = '#f39c12'; // Orange
+
+                    html += '<div class="css-bar-row">';
+                    html += '  <div class="css-bar-label">' + label + '</div>';
+                    html += '  <div class="css-bar-track"><div class="css-bar-fill" style="width: ' + widthPct + '%; background-color: ' + color + ';"></div></div>';
+                    html += '  <div class="css-bar-val">' + count + '</div>';
+                    html += '</div>';
+                });
+
+                $('#chart_status_container').html(html);
+            } else {
+                $('#chart_status_container').html('<div style="color:red;">Failed to load chart data.</div>');
+            }
+        });
+    });
+</script>

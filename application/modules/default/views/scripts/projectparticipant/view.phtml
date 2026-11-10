@@ -1,0 +1,80 @@
+<?php
+
+/**
+ * Project Participant View (Read-Only)
+ * Refactored to comply with SSOT v6.5.
+ */
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container">
+            <?php if (isset($this->nodata) && $this->nodata === 'nodata') : ?>
+                <div class="ml-alert-1-info">
+                    <div style="display:block;"><span class="style-1-icon info"></span>No data found.</div>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <?php if (isset($this->form)) : ?>
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->project_id->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->project_id; ?></div>
+                    </div>
+
+                    <!-- Poly-Hierarchical Targets -->
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->employee_id->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->employee_id; ?></div>
+                    </div>
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->company_id->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->company_id; ?></div>
+                    </div>
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->sbunit_id->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->sbunit_id; ?></div>
+                    </div>
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->division_id->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->division_id; ?></div>
+                    </div>
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->department_id->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->department_id; ?></div>
+                    </div>
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->section_id->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->section_id; ?></div>
+                    </div>
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->team_id->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->team_id; ?></div>
+                    </div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                    </div>
+
+                    <div class="new-form-ui-submit">
+                        <div class="division">
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>projectparticipant/index';" value="Back to List" type="button" class="reset" />
+                            <?php if (sapp_Global::_checkprivileges(PROJECTCO, $this->loginuserGroup, $this->loginuserRole, 'edit') === 'Yes') : ?>
+                                <input onclick="window.location.href='<?php echo BASE_URL; ?>projectparticipant/edit/id/<?php echo $this->id; ?>';" value="Edit" type="button" class="reset" />
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#description').jqte();
+        $('.jqte_editor').attr('contenteditable', 'false');
+    });
+</script>

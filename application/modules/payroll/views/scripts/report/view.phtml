@@ -1,0 +1,85 @@
+<?php
+$payroll = $this->payroll;
+$payroll_line = $this->payroll_line;
+$paydetail = $this->payroll_detail;
+$empname = $this->empname;
+?>
+<div id="error_message" style="display:none;"></div>
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" method="POST" action="<?php echo $this->form->getAction(); ?>">
+	<div class="new-form-ui ">
+		<label class="required">Employee</label>
+		<div class="division"><?php echo $this->form->empid; ?>
+			<span class="errors" id="errors-<?php echo $this->form->empid->getId(); ?>"><?php echo $this->msgarray['empid']; ?></span>
+		</div>
+		
+	</div>
+	<div class="new-form-ui-submit" style="margin-bottom: 50px;">
+		<?php echo $this->form->submit;?>
+	</div>
+	
+</form>
+<div>
+	<?php
+	if (!empty($payroll)) {
+		foreach ($payroll as $value) {
+			if ($value['autogenrerated'] == 'Y') {
+				sapp_Helper::viewHeader();
+				
+				sapp_Helper::viewBody('nor', 'Document No.', $value['docment_no'], 'Pay Date', $value['paydate']);
+				sapp_Helper::viewBody('nor', 'Auto Generated', $value['autogenrerated'], 'Generate By', 'System');
+
+				
+			} else {
+				sapp_Helper::viewBody('nor', 'Document No.', $value['docment_no'], 'Pay Date', $value['paydate']);
+				sapp_Helper::viewBody('nor', 'Approved By', $value['Approvedbyuser'], '', '');
+				sapp_Helper::viewFooter();
+			}
+		}
+		 ?>
+		
+		<?php
+		sapp_Helper::viewBody('alt', 'Employee id', $empname['id'], 'Full name', $empname['userfullname']);
+		sapp_Helper::viewBody('alt', 'Basic salary','',' ',$payroll_line['basicsalary']);
+		sapp_Helper::viewFooter();
+		?>
+		<?php sapp_Helper::viewHeader(); ?>
+		<h1 style="text-align: center;">Add/Deductable</h1>
+		<?php
+		foreach ($this->ot as $value) {
+			sapp_Helper::viewBody('nor', 'Overtime', '', ' ', '+'.$value[0]['approved_amount']);
+		}
+		?>
+		<?php
+
+		foreach ($this->addundum as $value) {
+			if ($value[0]['perk_id'] != null) {
+				$addundumtype = 'Perk';
+				$sign = '+';
+			} else {
+				$addundumtype = 'Load';
+				$sign = '-';
+			}
+
+			sapp_Helper::viewBody('alt', $addundumtype, '', ' ', $sign.$value[0]['adamount']);
+		}
+		
+		?>
+		
+	
+		<?php
+
+		foreach ($this->missedhours as $value) {
+			sapp_Helper::viewBody('nor', $value[0]['submitted_date'], '', ' ', '-'.$value[0]['approved_amount']);
+		}
+		sapp_Helper::viewBody('alt','Total','',' ',$this->subtotal);
+		sapp_Helper::viewFooter();
+		?>
+		<?php
+			sapp_Helper::viewHeader();
+			sapp_Helper::viewBody('nor','Net salary','',' ',$payroll_line['netpay']);
+			sapp_Helper::viewFooter();
+		?>
+	<?php }?> 
+	
+</div>
+</div>

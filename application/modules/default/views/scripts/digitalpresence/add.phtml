@@ -1,0 +1,204 @@
+<?php 
+?>
+<?php
+
+
+?>
+<?php if($this->popup == 'close') { ?>	
+	<div class="ml-alert-1-success">
+	<div class="style-1-icon success"></div>
+	Load category <?php echo $this->eventact; ?> successfully
+	</div>
+
+	<?php } 
+else
+{
+    
+    sapp_Global::generateClientValidations($this->form);?>
+    <div id="error_message" style="display:none;"></div>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction();?>" method="<?php echo $this->form->getMethod(); ?>">
+		<?php echo $this->form->id; ?>
+        <div class="total-form-controller">
+		    <div class="new-form-ui clearb">
+			  <label class="required">Digital Address</label>
+			<div class="division"><?php echo $this->form->digitaladdress; ?></div>
+			<?php if(isset($this->msgarray['digitaladdress'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->digitaladdress->getId(); ?>"><?php echo $this->msgarray['digitaladdress'];?></span>
+			<?php }?>
+			</div>
+						
+			<!-- <div class="new-form-ui clearb textareaheight">
+			  <label>Description</label>
+			<div class="division"><?php echo $this->form->description_cat; ?></div>
+			</div>
+            <br><br><br><br><br><br><br><br><br><br> -->
+          
+
+            <div class="new-form-ui clearb">
+			  <label >Digital Media</label>
+			<div class="division"><?php echo $this->form->digitalmedia_id; ?>
+			<span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL . 'digitalmedia/addpopup' ?>','digital');"> Add Digital Media</span>
+
+		</div>
+			<?php if(isset($this->msgarray['digitalmedia_id'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->digitalmedia_id->getId(); ?>"><?php echo $this->msgarray['digitalmedia_id'];?></span>
+			<?php }?>
+			</div>
+
+            
+            <div class="new-form-ui clearb">
+			  <label >Company</label>
+			<div class="division"><?php echo $this->form->company_id; ?></div>
+			<?php if(isset($this->msgarray['company_id'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->company_id->getId(); ?>"><?php echo $this->msgarray['company_id'];?></span>
+			<?php }?>
+			</div>
+			<div class="new-form-ui">
+				<label >Strategic Bussiness Unit</label>
+				<div class="division"><?php echo $this->form->sbunit_id; ?>
+				<?php if($this->bupermission == 'Yes'){?>
+					<span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL . 'businessunits/addpopup' ?>','Division');"> Add Business Unit </span>
+				<?php }?>
+			</div>
+				<?php if (isset($this->msgarray['sbunit_id'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->sbunit_id->getId(); ?>"><?php echo $this->msgarray['sbunit_id']; ?></span>
+				<?php } ?>
+			</div>
+			<div class="new-form-ui">
+				<label > Division</label>
+				<div class="division"><?php echo $this->form->division_id; ?>
+				<?php if($this->divpermission == 'Yes'){?>
+					<span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL . 'division/addpopup' ?>','Division');"> Add Division </span>
+				<?php }?>
+
+			</div>
+				<?php if (isset($this->msgarray['division_id'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->division_id->getId(); ?>"><?php echo $this->msgarray['division_id']; ?></span>
+				<?php } ?>
+			</div>
+			<div class="new-form-ui">
+				<label >Department</label>
+				<div class="division"><?php echo $this->form->departement_id; ?>
+				<?php if($this->deppermission == 'Yes'){?>
+					<span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL . 'departments/addpopup' ?>','Department');"> Add Department </span>
+				<?php }?>
+				</div>
+				<?php if (isset($this->msgarray['departement_id'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->departement_id->getId(); ?>"><?php echo $this->msgarray['departement_id']; ?></span>
+				<?php } ?>
+			</div>
+			<div class="new-form-ui">
+				<label >Section</label>
+				<div class="division"><?php echo $this->form->section_id; ?>
+				<?php if($this->secpermission == 'Yes'){?>
+					<span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL . 'section/addpopup' ?>','Section');"> Add Section </span>
+				<?php }?>
+				</div>
+				<?php if (isset($this->msgarray['section_id'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->section_id->getId(); ?>"><?php echo $this->msgarray['section_id']; ?></span>
+				<?php } ?>
+			</div>
+            <div class="new-form-ui clearb">
+			  <label>Project</label>
+			<div class="division"><?php echo $this->form->project_id; ?>
+			<?php if($this->propermission == 'Yes'){?>
+				<span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL . 'project/addpopup' ?>','project');"> Add Project</span>
+				<?php }?>
+
+		</div>
+			<?php if(isset($this->msgarray['project_id'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->project_id->getId(); ?>"><?php echo $this->msgarray['project_id'];?></span>
+			<?php }?>
+			</div>
+
+            <div class="new-form-ui clearb">
+			  <label>Employee</label>
+			<div class="division"><?php echo $this->form->employee_id; ?></div>
+			<?php if(isset($this->msgarray['employee_id'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->employee_id->getId(); ?>"><?php echo $this->msgarray['employee_id'];?></span>
+			<?php }?>
+			</div>
+			<?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description','', 'fck_editor_height','',array());?>
+            <?php if(isset($this->msgarray['generalerror'])){?>
+			   <span class="errors" id="errors-generalerror"><?php echo $this->msgarray['generalerror'];?></span>
+			<?php }?>
+		<div class="new-form-ui-submit">
+		<?php echo $this->form->submit; ?>
+        <button onclick="window.location.href='<?php echo BASE_URL; ?>digitalpresence';" type="button">Cancel</button>
+
+		</div>
+</div>
+</form>
+<?php } ?>
+<div id="digitalpresenceContainer" style="display: none; overflow: auto;">
+		<div class="heading">
+			<a href="javascript:void(0)">
+				<img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+		</div>
+
+		<iframe id="digitalpresenceCont" class="business_units_iframe" frameborder="0"></iframe>
+	</div>
+	<div id="digitalmediaContainer" style="display: none; overflow: auto;">
+		<div class="heading">
+			<a href="javascript:void(0)">
+				<img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+		</div>
+
+		<iframe id="digitalmediaCont" class="business_units_iframe" frameborder="0"></iframe>
+	</div>
+<div id="businessunitsContainer" style="display: none; overflow: auto;">
+		<div class="heading">
+			<a href="javascript:void(0)">
+				<img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+		</div>
+
+		<iframe id="businessunitsCont" class="business_units_iframe" frameborder="0"></iframe>
+	</div>
+
+    <div id="divisionContainer" style="display: none; overflow: auto;">
+		<div class="heading">
+			<a href="javascript:void(0)">
+				<img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+		</div>
+
+		<iframe id="divisionCont" class="business_units_iframe" frameborder="0"></iframe>
+	</div>
+	<div id="sectionContainer" style="display: none; overflow: auto;">
+		<div class="heading">
+			<a href="javascript:void(0)">
+				<img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+		</div>
+
+		<iframe id="sectionCont" class="business_units_iframe" frameborder="0"></iframe>
+	</div>
+    <div id="departmentsContainer" style="display: none; overflow: auto;">
+		<div class="heading">
+			<a href="javascript:void(0)">
+				<img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+		</div>
+
+		<iframe id="departmentsCont" class="business_units_iframe" frameborder="0"></iframe>
+	</div>
+	<div id="projectContainer" style="display: none; overflow: auto;">
+		<div class="heading">
+			<a href="javascript:void(0)">
+				<img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+		</div>
+
+		<iframe id="projectCont" class="business_units_iframe" frameborder="0"></iframe>
+	</div>
+	<div id="teamContainer" style="display: none; overflow: auto;">
+		<div class="heading">
+			<a href="javascript:void(0)">
+				<img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+		</div>
+
+		<iframe id="teamCont" class="business_units_iframe" frameborder="0"></iframe>
+	</div>
+<script>
+$('#description').jqte();
+
+
+</script>

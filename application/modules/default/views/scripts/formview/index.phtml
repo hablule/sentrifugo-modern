@@ -1,0 +1,121 @@
+
+<?php
+$form = $this->form;
+$popup = $this->popup;
+$personalDetailElementNames = $this->PersonalDetailElementNames;
+$personalDetailElementLabels = $this->PersonalDetailElementLabels;
+$workExperienceElementNames = $this->WorkExperienceElementNames;
+$workExperienceElementLabels = $this->WorkExperienceElementLabels;
+$educationElementLabels = $this->EducationElementLabels;
+$educationElementNames = $this->EducationElementNames;
+$CVElementNames = $this->CVElementNames;
+$CVElementLabels = $this->CVElementLabels;
+
+sapp_Global::generateClientValidations($this->form);
+sapp_Global::generateClientValidations($this->popup);
+?>
+
+
+<?php if (count($this->messages)) {?>
+	<div id="dispmsgemp">
+    <?php 
+			foreach ($this->messages as $message)
+			{
+				$flag = array();				
+				$flag = array_keys($message);
+				echo "<div id='messageData' class='ml-alert-1-$flag[0]'><div style='display:block;'><span class='style-1-icon $flag[0]'></span>";
+				echo $message[$flag[0]];
+				echo "</div></div>";
+			} 
+	?>
+	</div>	
+	
+<?php } ?>
+<style>
+.info_div {
+		background: #fff;
+		border: 1px dashed #ccc;
+		color: #333;
+		padding: 10px;
+		text-align: center;
+		width: 40%;
+		float: right;
+		margin: 0 50px 0 0;
+	}
+</style>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH ?>css/custompopup.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH ?>js/custompopup.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH ?>/js/hrms.js"></script>
+<input type="button" title="Add New Element" value="Add Record" id="but_add" class="sprite addrecord"onclick="displaydeptform('<?php echo BASE_URL . 'formview/addpopup' ?>','Add New Element');">
+<div class="info_div">
+	Click on a Check Box You Want to Display Elements to  Resume Builder Form.
+</div>
+<div id="form">
+    <form name="<?php echo $form->getName(); ?>" id="<?php echo $form->getId(); ?>" method="POST" action="<?php echo $form->getAction(); ?>">
+        <?php echo $form->id;
+        ?>
+        <div class="total-form-controller">
+            <div class="separetor-heading">Personal profile form</div>
+
+            <?php for ($i = 0; $i < count($personalDetailElementNames); $i++) {
+                if (!($personalDetailElementNames[$i] == "Hidden")) { ?>
+                    <div class="new-form-ui">
+                        <?php echo $personalDetailElementLabels[$i]; ?>
+                        <div class="division"><?php $elementName = $personalDetailElementNames[$i];
+
+                                                echo $form->$elementName; ?> </div>
+                    </div>
+            <?php }
+            } ?>
+            <div class="separetor-heading">work exeperiance form</div>
+
+            <?php for ($i = 0; $i < count($workExperienceElementNames); $i++) {
+                if (!($personalDetailElementNames[$i] == "Hidden")) { ?>
+                    <div class="new-form-ui">
+                        <?php echo $workExperienceElementLabels[$i]; ?>
+                        <div class="division"><?php $elementName = $workExperienceElementNames[$i];
+
+                                                echo $form->$elementName; ?> </div>
+                    </div>
+            <?php }
+            } ?>
+
+            <div class="separetor-heading">Education Detail form</div>
+            <?php for ($i = 0; $i < count($educationElementNames); $i++) { ?>
+                <div class="new-form-ui">
+                    <?php echo $educationElementLabels[$i]; ?>
+                    <div class="division"><?php $elementName = $educationElementNames[$i];
+
+                                            echo $form->$elementName; ?> </div>
+                </div>
+            <?php } ?>
+
+            <div class="separetor-heading">CV Upload form</div>
+            <?php for ($i = 0; $i < count($CVElementNames); $i++) { ?>
+                <div class="new-form-ui">
+                    <?php echo $CVElementLabels[$i]; ?>
+                    <div class="division"><?php $elementName = $CVElementNames[$i];
+
+                                            echo $form->$elementName; ?> </div>
+                </div>
+            <?php } ?>
+
+
+            <div class="new-form-ui-submit">
+                <div class="division"><?php echo $form->submit ?></div>
+            </div>
+        </div>
+    </form>
+   
+
+
+</div>
+<div id="formviewContainer" style="display: none; overflow: auto;">
+	<div class="heading">
+		<a href="javascript:void(0)">
+			<img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+	</div>
+
+	<iframe id="formviewCont" class="business_units_iframe" frameborder="0"></iframe>
+</div>

@@ -1,0 +1,261 @@
+<?php
+
+/**
+ * Geography Group Mapping Add Popup View
+ * 
+ * Runs inside an iframe modal. On success, updates the parent DOM via global JS.
+ * Strictly adheres to SSOT v6.1.
+ */
+$this->msgarray = isset($this->msgarray) ? $this->msgarray : array();
+sapp_Global::generateClientValidations($this->form);
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/custompopup.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<style>
+    .hidden-cascade {
+        display: none !important;
+    }
+</style>
+
+<div style="padding: 15px;">
+    <?php if (isset($this->popup) && $this->popup == 'close') : ?>
+        <div class="ml-alert-1-success">
+            <div style="display:block;"><span class="style-1-icon success"></span>Mapping <?php echo $this->escape($this->eventact); ?> successfully.</div>
+        </div>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                setTimeout(function() {
+                    // Update parent dropdown and close iframe modal
+                    parent.closeiframeAddPopup('<?php echo $this->optionsHtml; ?>', 'geographygroupmap', 'geographygroupmap_id', 'Geography Mapping');
+                }, 1500);
+            });
+        </script>
+
+    <?php else : ?>
+        <div id="error_message" style="display:none;"></div>
+        <?php if (!empty($this->msgarray['error'])) : ?>
+            <div class="ml-alert-1-error">
+                <div style="display:block;"><span class="style-1-icon error"></span><?php echo $this->escape($this->msgarray['error']); ?></div>
+            </div>
+        <?php endif; ?>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" action="<?php echo $this->escape($this->form->getAction()); ?>" method="<?php echo $this->escape($this->form->getMethod()); ?>">
+            <?php echo $this->form->id; ?>
+            <?php echo $this->form->entity_id; ?>
+
+            <div class="total-form-controller" style="box-shadow: none; border: none; padding: 0;">
+                <div class="division">
+
+                    <!-- Target Geography Group -->
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->geographygroup_id->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->geographygroup_id; ?>
+                        </div>
+                        <?php if (isset($this->msgarray['geographygroup_id'])): ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->geographygroup_id->getId()); ?>">
+                                <?php echo $this->escape($this->msgarray['geographygroup_id'] ?? ''); ?>
+                            </span>
+                        <?php endif; ?>
+                    </div>
+
+                    <!-- Mapping Level -->
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->entity_type->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->entity_type; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->entity_type->getId()); ?>"><?php echo $this->escape($this->msgarray['entity_type'] ?? ''); ?></span>
+                    </div>
+
+                    <div id="row_country" class="new-form-ui clearb hidden-cascade">
+                        <label class="required"><?php echo $this->escape($this->form->country_id->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->country_id; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->country_id->getId()); ?>"><?php echo $this->escape($this->msgarray['country_id'] ?? ''); ?></span>
+                    </div>
+
+                    <div id="row_state" class="new-form-ui clearb hidden-cascade">
+                        <label class="required"><?php echo $this->escape($this->form->state_id->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->state_id; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->state_id->getId()); ?>"><?php echo $this->escape($this->msgarray['state_id'] ?? ''); ?></span>
+                    </div>
+
+                    <div id="row_city" class="new-form-ui clearb hidden-cascade">
+                        <label class="required"><?php echo $this->escape($this->form->city_id->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->city_id; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->city_id->getId()); ?>"><?php echo $this->escape($this->msgarray['city_id'] ?? ''); ?></span>
+                    </div>
+
+                    <div id="row_postal" class="new-form-ui clearb hidden-cascade">
+                        <label class="required"><?php echo $this->escape($this->form->postalcode_id->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->postalcode_id; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->postalcode_id->getId()); ?>"><?php echo $this->escape($this->msgarray['postalcode_id'] ?? ''); ?></span>
+                        <span class="errors" id="errors-entity_id"><?php echo $this->escape($this->msgarray['entity_id'] ?? ''); ?></span>
+                    </div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                    </div>
+
+                    <div class="new-form-ui-submit" style="margin-top: 15px;">
+                        <div class="division">
+                            <input type="submit" name="submit" id="submitbutton" value="Save" class="actbtn_btn" />
+                            <button type="button" class="reset" onclick="parent.closeiframepopup('geographygroupmap', 'cancel');">Cancel</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+
+        <script type="text/javascript">
+            // SSOT VII: Robust AJAX Dropdown Pattern for Popups (Identical to save.phtml)
+            function getStatesByCountry(countryId) {
+                var $stateSelect = $('#state_id');
+                $('#city_id').empty().append('<option value="">Select State First...</option>');
+                $('#postalcode_id').empty().append('<option value="">Select City First...</option>');
+                $stateSelect.empty().append('<option value="">Select State/Province...</option>');
+
+                if (!countryId) {
+                    reInitMaterialize();
+                    return;
+                }
+
+                $stateSelect.parent().block({
+                    message: null,
+                    overlayCSS: {
+                        background: '#fff url(' + base_url + '/public/media/images/loader2.gif) no-repeat center',
+                        opacity: 0.8
+                    }
+                });
+
+                $.ajax({
+                    url: base_url + '/geographygroupmap/getstates/format/json',
+                    type: 'POST',
+                    data: {
+                        country_id: countryId
+                    },
+                    dataType: 'json',
+                    success: function(res) {
+                        if (res) $.each(res, function(k, v) {
+                            $stateSelect.append('<option value="' + k + '">' + v + '</option>');
+                        });
+                    },
+                    complete: function() {
+                        $stateSelect.parent().unblock();
+                        reInitMaterialize();
+                    }
+                });
+            }
+
+            function getCitiesByState(stateId) {
+                var $citySelect = $('#city_id');
+                $('#postalcode_id').empty().append('<option value="">Select City First...</option>');
+                $citySelect.empty().append('<option value="">Select City...</option>');
+
+                if (!stateId) {
+                    reInitMaterialize();
+                    return;
+                }
+
+                $citySelect.parent().block({
+                    message: null,
+                    overlayCSS: {
+                        background: '#fff url(' + base_url + '/public/media/images/loader2.gif) no-repeat center',
+                        opacity: 0.8
+                    }
+                });
+
+                $.ajax({
+                    url: base_url + '/geographygroupmap/getcities/format/json',
+                    type: 'POST',
+                    data: {
+                        state_id: stateId
+                    },
+                    dataType: 'json',
+                    success: function(res) {
+                        if (res) $.each(res, function(k, v) {
+                            $citySelect.append('<option value="' + k + '">' + v + '</option>');
+                        });
+                    },
+                    complete: function() {
+                        $citySelect.parent().unblock();
+                        reInitMaterialize();
+                    }
+                });
+            }
+
+            function getPostalCodesByCity(cityId) {
+                var $postalSelect = $('#postalcode_id');
+                $postalSelect.empty().append('<option value="">Select Postal/ZIP Code...</option>');
+
+                if (!cityId) {
+                    reInitMaterialize();
+                    return;
+                }
+
+                $postalSelect.parent().block({
+                    message: null,
+                    overlayCSS: {
+                        background: '#fff url(' + base_url + '/public/media/images/loader2.gif) no-repeat center',
+                        opacity: 0.8
+                    }
+                });
+
+                $.ajax({
+                    url: base_url + '/geographygroupmap/getpostalcodes/format/json',
+                    type: 'POST',
+                    data: {
+                        city_id: cityId
+                    },
+                    dataType: 'json',
+                    success: function(res) {
+                        if (res) $.each(res, function(k, v) {
+                            $postalSelect.append('<option value="' + k + '">' + v + '</option>');
+                        });
+                    },
+                    complete: function() {
+                        $postalSelect.parent().unblock();
+                        reInitMaterialize();
+                    }
+                });
+            }
+
+            function toggleEntityFields(entityType) {
+                $('#row_country, #row_state, #row_city, #row_postal').addClass('hidden-cascade');
+                if (entityType === 'Country') $('#row_country').removeClass('hidden-cascade');
+                else if (entityType === 'State') $('#row_country, #row_state').removeClass('hidden-cascade');
+                else if (entityType === 'City') $('#row_country, #row_state, #row_city').removeClass('hidden-cascade');
+                else if (entityType === 'PostalCode') $('#row_country, #row_state, #row_city, #row_postal').removeClass('hidden-cascade');
+                handleEntitySelection(entityType);
+            }
+
+            function handleEntitySelection(triggerLevel, val) {
+                var type = $('#entity_type').val();
+                var finalId = '';
+                if (type === 'Country') finalId = $('#country_id').val();
+                else if (type === 'State') finalId = $('#state_id').val();
+                else if (type === 'City') finalId = $('#city_id').val();
+                else if (type === 'PostalCode') finalId = $('#postalcode_id').val();
+                $('#entity_id').val(finalId);
+            }
+
+            function reInitMaterialize() {
+                if ($.isFunction($.fn.material_select)) $('select').material_select();
+                else if ($.isFunction($.fn.select2)) $('select').select2();
+            }
+
+            $(document).ready(function() {
+                if ($('#description').length) {
+                    $('#description').jqte();
+                }
+                var initType = $('#entity_type').val();
+                if (initType) toggleEntityFields(initType);
+            });
+        </script>
+    <?php endif; ?>
+</div>

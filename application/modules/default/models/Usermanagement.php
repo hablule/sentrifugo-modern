@@ -1,0 +1,425 @@
+<?php
+
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+
+class Default_Model_Usermanagement extends Zend_Db_Table_Abstract
+{
+    protected $_name = 'main_users';
+    protected $_primary = 'id';
+
+    /**
+     * This function gives data for grid view.     
+     * @param string $sort          = ascending or descending
+     * @param string $by            = name of field which to be sort  
+     * @param integer $pageNo        = page number
+     * @param integer $perPage       = no.of records per page
+     * @param string $searchQuery   = search string
+     * 
+     * @return array  ResultSet;
+     */
+    public function getUsersData($sort, $by, $pageNo, $perPage, $searchQuery)
+    {
+        $where = "u.isactive != 5  and u.id > 1 ";
+
+        if ($searchQuery)
+            $where .= " AND " . $searchQuery;
+        $flg = '0';
+
+        if ($by == 'u.isactive' && $sort == 'ASC') {
+            $flg = '1';
+            $sort = 'DESC';
+        }
+        if ($by == 'u.isactive' && $sort == 'DESC' && $flg == '0') {
+            $sort = 'ASC';
+        }
+
+        $userData = $this->select()
+            ->setIntegrityCheck(false)
+            ->from(['u' => $this->_name], ['u.*', 'u.isactive' => "if(u.isactive = 1,'Active','Inactive')"])
+            ->joinInner(['ur' => 'main_userrole'], 'u.id = ur.user_id')
+            ->joinInner(['r' => ROLE_ARRAY['tablename']], 'r.' . ROLE_ARRAY['colid'] . '=ur.role_id and r.' . ROLE_ARRAY['colisactive'] . '= "Y" and r.' . ROLE_ARRAY['colgroupid'] . ' = ' . USERS_GROUP . " ", ['rolename' => ROLE_ARRAY['colname']])
+
+            ->where($where)
+            ->order("$by $sort")
+            ->limitPage($pageNo, $perPage);
+        return $userData;
+    }//end of getUsersData
+
+    /**
+     * This function is used for getting maximum employee number.
+     * @parameters   $emp_identity_code = identity code of employee.
+     * 
+     * @return  {Integer} Maximum employee id.
+     */
+    public function getMaxEmpId($emp_identity_code)
+    {
+        $db = Zend_Db_Table::getDefaultAdapter();
+        $query = "select max(cast(substr(employeeId," . (strlen($emp_identity_code) + 1) . ") as unsigned)) max_empid 
+                    from main_users where lower(substr(employeeId,1," . (strlen($emp_identity_code)) . ")) = lower('" . $emp_identity_code . "') and employeeId is not null and employeeId != ''";
+        $result = $db->query($query);
+        $row = $result->fetch();
+        $maxid = $row['max_empid'];
+
+        return ($maxid == 0) ? 1 : ($maxid + 1);
+    }
+    public function getdata_user_report($search_arr, $per_page, $page_no, $sort_name, $sort_type)
+    {
+        if ($sort_name == 'isactive')
+            $sort_name = "e.isactive";
+        if ($sort_name == 'createddate')
+            $sort_name = "e.createddate";
+        $db = Zend_Db_Table::getDefaultAdapter();
+        $search_str = "";
+        $user_search = " where 1 ";
+        foreach ($search_arr as $key => $value) {
+            if ($value != '') {
+                if ($key != 'logindatetime') {
+                    if ($key == 'createddate')
+                        $search_str .= " date(u." . $key . ") = '" .  sapp_Global::change_date($value, 'database') . "' and";
+                    else if ($key == 'e.isactive') {
+                        if ($value == 0)
+                            $search_str .= " 1";
+                        else
+                            $search_str .= " 1";
+                    } else
+                        $search_str .= " " . $key . " = '" . $value . "' and";
+                } else {
+                    $search_str .= " date(l." . $key . ") = '" .  sapp_Global::change_date($value, 'database') . "' and";
+                }
+            }
+        }
+        if ($search_str != '') {
+            $search_str = trim($search_str, "and");
+            $search_str = " and " . $search_str;
+        }
+        $offset = ($per_page * $page_no) - $per_page;
+        $limit_str = " limit " . $per_page . " offset " . $offset;
+        $tot_query = "select date(max(l.logindatetime)) lastlog from 
+                       main_users u
+                  inner join main_userrole ur on u.id = ur.user_id
+                  left join main_userloginlog l  on u.id = l.userid
+                  left join " . ROLE_ARRAY['tablename'] . " r on ur.role_id = r.id " . $user_search . " " . $search_str . "
+                  group by u.id ";
+        if (isset($search_arr['logindatetime']) && $search_arr['logindatetime'] != '') {
+            $tot_query = "select * from (" . $tot_query . ") res where date(lastlog) = '" .  sapp_Global::change_date(sapp_Global::getGMTformatdate($search_arr['logindatetime']), 'database') . "' ";
+        }
+        //die($tot_query);
+        $tot_result = $db->query($tot_query);
+        $count = $tot_result->rowCount();
+        $page_cnt = ceil($count / $per_page);
+        $query = "select e.userfullname,e.emailaddress,u.code as user,u.empid,date(max(logindatetime)) lastlog,
+                  if(u.isactive = 1,1,0) isactive,date(u.createddate) createdate
+                   from main_employees e
+                   left join main_users u on e.id = u.empid
+                  left join main_userloginlog l  on u.id = l.userid 
+                  left join main_userrole ur on  u.id=ur.user_id
+                  left join " . ROLE_ARRAY['tablename'] . " r on  ur.role_id = r.id " . $user_search . " " . $search_str . "
+                  group by e.id order by " . $sort_name . " " . $sort_type . " ";
+
+        $query .= " " . $limit_str;
+        $result = $db->query($query);
+        $data = $result->fetchAll();
+        return ['rows' => $data, 'page_cnt' => $page_cnt];
+    }
+    /**
+     * This function will return all data of user by passing its primay key id.
+     * @parameters
+     * @param id   =  id of user (primary key)
+     * 
+     * @return Array of user data.
+     */
+    public function getUserDataById($id)
+    {
+
+        if ($id != '') {
+            try {
+                //code...
+                $row = $this->fetchRow("id = " . $id);
+                if (!$row) {
+                    //throw new Exception("Could not find row ".$id." in user");
+                    return null;
+                }
+                return $row->toArray();
+            } catch (\Throwable $th) {
+                Zend_Debug::dump($th->getMessage());
+                die;
+            }
+        }
+    }
+
+    /**
+     * This function is used to save/update data in database.
+     * @parameters
+     * @param data  =  array of form data.
+     * @param where =  where condition in case of update.
+     * 
+     * @return  Primary id when new record inserted,'update' string when a record updated.
+     */
+    public function SaveorUpdateUserData($data, $where)
+    {
+        try {
+            //code...
+            if ($where != '') {
+                $this->update($data, $where);
+                return 'update';
+            } else {
+                //Zend_Debug::dump($data);
+                //die();
+                $this->insert($data);
+                $id = $this->getAdapter()->lastInsertId($this->_name);
+                return $id;
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+            Zend_Debug::dump($th->getMessage());
+            die;
+        }
+    }
+    public function getTableName()
+    {
+        return $this->_name;
+    }
+    public function getUserCntByRole($role_id)
+    {
+        $db = Zend_Db_Table::getDefaultAdapter();
+        $query = "select count(*) cnt from main_users where  isactive = 1 and emprole = " . $role_id;
+        $result = $db->query($query);
+        $row = $result->fetch();
+        return $row['cnt'];
+    }
+    public function getRefferedByForUsers()
+    {
+        $db = Zend_Db_Table::getDefaultAdapter();
+        $query = "select u.id,ifnull(u.userfullname,c.candidate_name) cname 
+                  from main_employees u 
+                  left join main_candidatedetails c on c.id = u.candidatereferredby and c.isactive = 1
+                  ";
+        //  where u.isactive = 1 and  u.userstatus = 'old'
+        //   inner join ".ROLE_ARRAY['tablename']." r on r.id = u.emprole and ".ROLE_ARRAY['colgroupid']." is not null and ".ROLE_ARRAY['colgroupid']." not in (".USERS_GROUP.")
+        $result = $db->query($query);
+        $options = [];
+        while ($row = $result->fetch()) {
+            $options[$row['id']] = $row['cname'];
+        }
+        return $options;
+    }
+    public function updateuserstatus($userid)
+    {
+        $db = Zend_Db_Table::getDefaultAdapter();
+
+        $db->query("update main_users  set userstatus = 2 where id = '" . $userid . "' ");
+    }
+    /**
+     * This function gives all content for grid view.
+     * @parameters
+     * @param $sort          = ascending or descending
+     * @param $by            = name of field which to be sort  
+     * @param $pageNo        = page number
+     * @param $perPage       = no.of records per page
+     * @param $searchData    = search string
+     * @param $call          = type of call like ajax. 
+     * @return  Array;
+     */
+    public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall, $p2, $p3, $p4, $p5)
+    {
+        $searchQuery = '';
+        $searchArray = [];
+        $data = [];
+        if ($searchData != '' && $searchData != 'undefined') {
+            $searchValues = json_decode($searchData);
+            if (count($searchValues) > 0) {
+                foreach ($searchValues as $key => $val) {
+                    $searchQuery .= " " . $key . " like '%" . $val . "%' AND ";
+                    $searchArray[$key] = $val;
+                }
+                $searchQuery = rtrim($searchQuery, " AND");
+            }
+        }
+        $objName = 'usermanagement';
+
+        $tableFields = [
+            'action' => 'Action',
+            'employeeId' => 'User ID',
+            'emailaddress' => 'Email',
+            'rolename' => 'Role',
+            'u.isactive' => 'Status'
+
+        ];
+
+        $tablecontent = $this->getUsersData($sort, $by, $pageNo, $perPage, $searchQuery);
+
+        $dataTmp = [
+            'sort' => $sort,
+            'by' => $by,
+            'pageNo' => $pageNo,
+            'perPage' => $perPage,
+            'tablecontent' => $tablecontent,
+            'objectname' => $objName,
+            'extra' => [],
+            'tableheader' => $tableFields,
+            'jsGridFnName' => 'getAjaxgridData',
+            'jsFillFnName' => '',
+            'searchArray' => $searchArray,
+            'call' => $call,
+            'dashboardcall' => $dashboardcall,
+            'search_filters' => [
+                'u.isactive' => [
+                    'type' => 'select',
+                    'filter_data' => [
+                        '' => 'All',
+                        1 => 'Active',
+                        0 => 'Inactive',
+                    ]
+                ]
+            ],
+        ];
+        return $dataTmp;
+    }
+
+    public function getEmpForConfigMail()
+    {
+        $db = Zend_Db_Table::getDefaultAdapter();
+        $query = "select u.id,u.userfullname,u.emailaddress 
+                  from main_users u inner join " . ROLE_ARRAY['tablename'] . " r on r.id = u.emprole 
+                  and " . ROLE_ARRAY['colgroupid'] . " in (" . MANAGEMENT_GROUP . "," . SYSTEMADMIN_GROUP . "," . HR_GROUP . ") 
+                  and " . ROLE_ARRAY['colisactive'] . " = 'Y' where u.isactive = 1 group by u.id 
+                  union 
+                  select u.id,u.userfullname,u.emailaddress from main_users u 
+                  inner join " . ROLE_ARRAY['tablename'] . " r on r.id = u.emprole and " . ROLE_ARRAY['colisactive'] . " = 'Y' 
+                  and u.emprole = " . SUPERADMINROLE . " where u.isactive = 1 and u.id = " . SUPERADMIN . " ";
+        $result = $db->query($query);
+        $emp_arr = [];
+        while ($row = $result->fetch()) {
+            $emp_arr[$row['id']]['userfullname'] = $row['userfullname'];
+            $emp_arr[$row['id']]['emailaddress'] = $row['emailaddress'];
+        }
+
+        return $emp_arr;
+    }
+    public function deleteAllagencydetails($agencyid, $userid)
+    {
+        if ($agencyid != '' && $userid != '') {
+            $db = Zend_Db_Table::getDefaultAdapter();
+            $agencyData = $db->query("update main_bgagencylist set 
+								isactive = 2, modifieddate = '" . gmdate("Y-m-d H:i:s") . "',
+								modifiedby = " . $userid . "
+								where id = " . $agencyid . ";");
+            $pocTab = $db->query("update main_bgpocdetails set 
+								isactive = 2, modifieddate = '" . gmdate("Y-m-d H:i:s") . "',
+								modifiedby = " . $userid . "
+								where isactive = 1 and bg_agencyid = " . $agencyid . ";");
+            $detailsTab = $db->query("update main_bgcheckdetails set 
+								isactive = 3, modifieddate = '" . gmdate("Y-m-d H:i:s") . "',
+								modifiedby = " . $userid . "
+								where isactive = 1 and bgagency_id = " . $agencyid . ";");
+        }
+    }
+
+    public function activateAllagencydetails($agencyid, $userid)
+    {
+        if ($agencyid != '' && $userid != '') {
+            $db = Zend_Db_Table::getDefaultAdapter();
+            $agencyData = $db->query("update main_bgagencylist set 
+								isactive = 1, modifieddate = '" . gmdate("Y-m-d H:i:s") . "',
+								modifiedby = " . $userid . "
+								where id = " . $agencyid . ";");
+            $pocTab = $db->query("update main_bgpocdetails set 
+								isactive = 1, modifieddate = '" . gmdate("Y-m-d H:i:s") . "',
+								modifiedby = " . $userid . "
+								where (isactive = 2 or isactive = 3) and bg_agencyid = " . $agencyid . ";");
+        }
+    }
+
+    public function getAgencyData($userid)
+    {
+        $db = Zend_Db_Table::getDefaultAdapter();
+
+        $emailData = $db->query("select b.id as agencyid,u.emailaddress,u.userfullname,u.emprole,u.isactive from  main_users u
+						join main_bgagencylist b on u.id = b.user_id 
+						where u.id = " . $userid);
+        $data = $emailData->fetch();
+        return $data;
+    }
+
+
+    /**
+     * Fetches a list of all active users for dropdown population.
+     * Conforms to Sentrifugo 3.2 standards for status filtering and name concatenation.
+     * 
+     * @return array Returns an array of associative arrays with 'id' and 'name'
+     */
+    public function getUsersList()
+    {
+        try {
+
+            $select = $this->select()
+                ->setIntegrityCheck(false)
+                ->from(['u' => $this->_name], [
+                    'id'      => 'u.id',
+                    'name' => new Zend_Db_Expr("
+                                    COALESCE(
+                                        NULLIF(e.userfullname, ''), 
+                                        NULLIF(CONCAT_WS(' ', e.firstname, e.lastname), ''), 
+                                        u.username
+                                    )
+                                ")
+                ])
+                ->joinLeft(
+                    ['e' => 'main_employees'],
+                    'u.empid = e.id',
+                    []
+                )
+                ->where('u.isactive = ?', 1)
+                ->order(new Zend_Db_Expr("name ASC"));
+
+            $result = $this->fetchAll($select)->toArray();
+
+            return (!empty($result)) ? $result : [];
+        } catch (Exception $e) {
+            // Log the error in a real-world scenario
+            // Zend_Registry::get('log')->error($e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Additional check method used in UserroleController 
+     * to prevent duplicate assignments.
+     * @param int $userId
+     * @param int|null $excludeId
+     * @return array|null
+     * 
+     */
+    public function checkUserExists($userId, $excludeId = null)
+    {
+        $db = $this->getAdapter();
+        $select = $db->select()
+            ->from('main_userrole')
+            ->where('user_id = ?', (int)$userId)
+            ->where('isactive != ?', 5); // Exclude deleted records
+
+        if ($excludeId) {
+            $select->where('userrole_id != ?', (int)$excludeId);
+        }
+
+        return $db->fetchRow($select);
+    }
+}//end of class

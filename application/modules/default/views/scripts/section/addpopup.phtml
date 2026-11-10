@@ -1,0 +1,150 @@
+<?php
+
+/**
+ * Section Add Popup View
+ * Refactored to comply with SSOT v6.5.
+ */
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/custompopup.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/custompopup.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<?php if (isset($this->popup) && $this->popup === 'close') : ?>
+	<div class="ml-alert-1-success">
+		<div class="style-1-icon success"></div>Section added successfully. Closing...
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			var optionsHtml = '<?php echo $this->escape(isset($this->optionsHtml) ? $this->optionsHtml : ''); ?>';
+			var prevCntrl = '<?php echo $this->escape(isset($this->prev_cntrl) ? $this->prev_cntrl : 'section'); ?>';
+			setTimeout(function() {
+				if (typeof parent.closeiframeAddPopup === 'function') {
+					parent.closeiframeAddPopup(optionsHtml, prevCntrl, 'section_id', 'Section');
+				} else {
+					parent.$('#sectionContainer').dialog('close');
+				}
+			}, 1500);
+		});
+	</script>
+<?php else : ?>
+
+	<?php sapp_Global::generateClientValidations($this->form); ?>
+
+	<div id="error_message" style="display:none;"></div>
+	<div id="message_container" style="margin: 10px;"></div>
+
+	<form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" action="<?php echo $this->escape($this->form->getAction()); ?>" method="post">
+		<?php echo $this->form->id; ?>
+		<div class="total-form-controller" style="padding: 15px;">
+			<div class="division">
+
+				<div class="new-form-ui clearb"><label class="required"><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+					<div class="division"><?php echo $this->form->code; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->code->getId()); ?>"></span></div>
+				</div>
+				<div class="new-form-ui clearb"><label class="required"><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+					<div class="division"><?php echo $this->form->name; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->name->getId()); ?>"></span></div>
+				</div>
+
+				<div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->company_id->getLabel()); ?></label>
+					<div class="division"><?php echo $this->form->company_id; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->company_id->getId()); ?>"></span></div>
+				</div>
+				<div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->sbunit_id->getLabel()); ?></label>
+					<div class="division"><?php echo $this->form->sbunit_id; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->sbunit_id->getId()); ?>"></span></div>
+				</div>
+				<div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->division_id->getLabel()); ?></label>
+					<div class="division"><?php echo $this->form->division_id; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->division_id->getId()); ?>"></span></div>
+				</div>
+				<div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->department_id->getLabel()); ?></label>
+					<div class="division"><?php echo $this->form->department_id; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->department_id->getId()); ?>"></span></div>
+				</div>
+				<div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->parent_id->getLabel()); ?></label>
+					<div class="division"><?php echo $this->form->parent_id; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->parent_id->getId()); ?>"></span></div>
+				</div>
+
+				<div class="new-form-ui clearb"><label class="required"><?php echo $this->escape($this->form->representative_id->getLabel()); ?></label>
+					<div class="division"><?php echo $this->form->representative_id; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->representative_id->getId()); ?>"></span></div>
+				</div>
+
+				<?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+				<div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+					<div class="division"><?php echo $this->form->isactive; ?></div>
+				</div>
+
+				<div class="new-form-ui-submit">
+					<div class="division">
+						<?php echo $this->form->submit; ?>
+						<input onclick="parent.$('#sectionContainer').dialog('close');" value="Cancel" type="button" class="reset" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('#description').jqte();
+
+			// Exact same AJAX Validation & Submission as save.phtml
+			$('#submitbutton').off('click').on('click', function(e) {
+				e.preventDefault();
+				var $form = $('#formid');
+				$('.errors').text('');
+				$('#message_container').empty();
+
+				if (!$form.valid()) {
+					return false;
+				}
+
+				var count = 0;
+				if ($('#company_id').val() !== '') count++;
+				if ($('#sbunit_id').val() !== '') count++;
+				if ($('#division_id').val() !== '') count++;
+				if ($('#department_id').val() !== '') count++;
+				if ($('#parent_id').val() !== '') count++;
+
+				if (count === 0 || count > 1) {
+					var msg = (count > 1) ? 'Please select only ONE parent level.' : 'A Section must have a parent.';
+					$('#errors-company_id').text(msg);
+					$('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Please fix the highlighted errors.</div>');
+					$('html, body').animate({
+						scrollTop: 0
+					}, 'slow');
+					return false;
+				}
+
+				if (typeof $.blockUI === "function") $.blockUI({
+					message: null
+				});
+				var formData = new FormData($form[0]);
+
+				$.ajax({
+					url: base_url + '/section/savepopup/format/json',
+					type: 'POST',
+					data: formData,
+					processData: false,
+					contentType: false,
+					dataType: 'json',
+					success: function(response) {
+						if (typeof $.unblockUI === "function") $.unblockUI();
+						if (response && response.result === 'saved') {
+							window.location.reload();
+						} else if (response && response.result === 'exception') {
+							$('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>' + response.message + '</div>');
+						} else if (response && typeof response === 'object') {
+							$('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Please fix the highlighted errors.</div>');
+							$.each(response, function(fieldId, errorObj) {
+								var errMsg = (typeof errorObj === 'object') ? errorObj[Object.keys(errorObj)[0]] : errorObj;
+								$('#errors-' + fieldId).text(errMsg);
+							});
+						}
+					},
+					error: function() {
+						if (typeof $.unblockUI === "function") $.unblockUI();
+						$('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Server error occurred.</div>');
+					}
+				});
+			});
+		});
+	</script>
+<?php endif; ?>

@@ -1,0 +1,137 @@
+<?php
+sapp_Global::generateClientValidations($this->form);
+?>
+
+<?php if (count($this->messages)) {?>
+	<div id="dispmsgemp" class="settingssuccess">
+		<?php 
+			foreach ($this->messages as $message)
+			{
+				$flag = array();				
+				$flag = array_keys($message);
+				echo "<div id='messageData' class='ml-alert-1-$flag[0]'><div style='display:block;'><span class='style-1-icon $flag[0]'></span>";
+				echo $message[$flag[0]];
+				echo "</div></div>";
+			} 
+		;
+		?>
+	</div>	
+	
+<?php } ?>
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" method="POST" , action="<?php echo $this->fomr->getAction; ?>">
+<?php echo $this->form->id;?>
+<div class="new-form-ui ">
+        <label class="required">Address One</Address></label>
+        <div class="division"><?php echo $this->form->address1; ?></div>
+        <?php if (isset($this->msgarray['address1'])) { ?>
+            <span class="errors" id="errors-<?php echo $this->form->address1->getId(); ?>"><?php echo $this->msgarray['address1']; ?></span>
+        <?php } ?>
+    </div>
+
+    <div class="new-form-ui ">
+        <label >Address Two</label>
+        <div class="division"><?php echo $this->form->address2; ?></div>
+        <?php if (isset($this->msgarray['address2'])) { ?>
+            <span class="errors" id="errors-<?php echo $this->form->address2->getId(); ?>"><?php echo $this->msgarray['address2']; ?></span>
+        <?php } ?>
+    </div>
+	<div class="new-form-ui ">
+        <label >Address Three</label>
+        <div class="division"><?php echo $this->form->address3; ?></div>
+        <?php if (isset($this->msgarray['address3'])) { ?>
+            <span class="errors" id="errors-<?php echo $this->form->address3->getId(); ?>"><?php echo $this->msgarray['address3']; ?></span>
+        <?php } ?>
+    </div>
+	<div class="new-form-ui ">
+        <label >Address Four</label>
+        <div class="division"><?php echo $this->form->address4; ?></div>
+        <?php if (isset($this->msgarray['address4'])) { ?>
+            <span class="errors" id="errors-<?php echo $this->form->address4->getId(); ?>"><?php echo $this->msgarray['address4']; ?></span>
+        <?php } ?>
+    </div>
+
+	<div class="new-form-ui">
+        <label  class="required">Country</label>
+        <div class="division"><?php echo $this->form->country; ?>
+		<?php if(isset($this->msgarray['country'])){?>
+				   <span class="errors" id="errors-country"><?php echo $this->msgarray['country'];?></span>
+		<?php }?>
+		<?php if ($this->countryaddpermission == 'Yes') { ?>
+			<span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL.'countries/addnewcountry' ?>','Country');"> Add Country</span>
+			<?php } ?>			
+        </div>
+    </div>
+    <div class="new-form-ui">
+        <label class="required">State</label>
+        <div class="division"><?php echo $this->form->state; ?>
+		<?php if(isset($this->msgarray['state'])){?>
+				   <span class="errors" id="errors-state"><?php echo $this->msgarray['state'];?></span>
+		<?php }?>
+		<?php if ($this->stateaddpermission == 'Yes') { ?>
+			<span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL.'states/addnewstate' ?>','State');"> Add State</span>			
+			<?php } ?>
+        </div>
+    </div>
+    <div class="new-form-ui">
+        <label class="required">City</label>
+        <div class="division"><?php echo $this->form->city; ?> 
+		<?php if(isset($this->msgarray['city'])){?>
+				   <span class="errors" id="errors-city"><?php echo $this->msgarray['city'];?></span>
+		<?php }?>
+		<?php if ($this->cityaddpermission == 'Yes') { ?>
+			<span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL.'cities/addnewcity' ?>','City');"> Add City</span>
+			<?php } ?>			
+        </div>
+    </div>
+    
+	<div class="new-form-ui ">
+	<label class="required">Map Coordinate</label>
+    <div class="division"><?php echo $this->form->map_coordinate; ?><a  id='mv'href="<?php echo BASE_URL.'location/map' ?>" onclick="var popup=window.open(this.href, '_blank', 'left=600,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;"><img class="ui-datepicker-trigger" src="<?php echo MEDIA_PATH;?>images/map2.png" height="20px" alt="" title=""></a></div>
+        <?php if (isset($this->msgarray['map_coordinate'])) { ?>
+            <span class="errors" id="errors-<?php echo $this->form->map_coordinate->getId(); ?>"><?php echo $this->msgarray['map_coordinate']; ?></span>
+        <?php } ?>
+
+    </div>
+    <div class="new-form-ui">
+				<label>Active</label>
+				<div class="division"><?php echo $this->form->isactive; ?></div>
+				<?php if (isset($this->msgarray['isactive'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->isactive->getId(); ?>"><?php echo $this->msgarray['isactive']; ?></span>
+				<?php } ?>
+			</div>
+    <div class="new-form-ui-submit ">
+       
+        <div class="division"><?php echo $this->form->submit; ?></div>
+        <button onclick="window.location.href='<?php echo BASE_URL; ?>location';" type="button">Cancel</button>
+    </div>
+</form>
+
+<div id="countriesContainer"  style="display: none; overflow: auto;">
+		<div class="heading">
+			<a href="javascript:void(0)">
+			<img src="<?php echo $this->baseUrl().'/public/media/';?>images/close.png" name="" align="right"
+				border="0" hspace="3" vspace="5" class="closeAttachPopup"
+				style="margin: -24px 8px 0 0;"> </a>
+		</div>
+
+			<iframe id="countriesCont" class="business_units_iframe" frameborder="0"></iframe>
+
+	</div>
+	
+	<div id="statesContainer"  style="display: none; overflow: auto;">
+		<div class="heading">
+			<a href="javascript:void(0)">
+			<img src="<?php echo $this->baseUrl().'/public/media/';?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+		</div>
+
+		<iframe id="statesCont" class="business_units_iframe" frameborder="0"></iframe>
+	</div>  
+
+	<div id="citiesContainer"  style="display: none; overflow: auto;">
+		<div class="heading">
+			<a href="javascript:void(0)">
+			<img src="<?php echo $this->baseUrl().'/public/media/';?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+		</div>
+
+		<iframe id="citiesCont" class="business_units_iframe" frameborder="0"></iframe>
+	</div> 

@@ -1,0 +1,102 @@
+<?php
+/**
+ * Permission Mapping Log Index View
+ * 
+ * Displays the granular grid of individual permissions.
+ * Refactored for SSOT v4.5: Direct HTML asset inclusion, responsive sticky header, 
+ * and secure crash-proof array checking.
+ */
+?>
+<!-- SSOT Compliant Asset Inclusion -->
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/screen.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+
+<style>
+    /* Sticky Header & Responsive Layout */
+    .sticky-header { 
+        position: sticky; 
+        top: 0; 
+        z-index: 100; 
+        background: #fff; 
+        border-bottom: 1px solid #ddd; 
+        padding: 15px; 
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
+        box-sizing: border-box; 
+    }
+    .page-title { 
+        margin: 0; 
+        padding-top: 5px; 
+        color: #2c3e50; 
+    }
+    .page-subtitle { 
+        font-size: 12px; 
+        color: #7f8c8d; 
+        margin: 5px 0 0 0; 
+    }
+</style>
+
+<?php if ($this->call != 'ajaxcall') : ?>
+    <div id="map_header" class="sticky-header">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            
+            <!-- Left Side: Titles -->
+            <div>
+                <h4 class="page-title">Permission Mappings Log</h4>
+                <p class="page-subtitle">Granular audit log and management of specific permission assignments.</p>
+            </div>
+            
+            <!-- Right Side: Actions -->
+            <div class="actions_div" style="margin: 0;">
+                <button onclick="window.location.href='<?php echo BASE_URL; ?>permission';" class="actbtn_btn reset" title="Return to the Matrix View">
+                    <i class="fa fa-arrow-left"></i> Back to Matrix
+                </button>
+            </div>
+        </div>
+        
+        <!-- Flash Messages -->
+        <div id="message_container" style="margin-top: 15px;">
+            <?php if (!empty($this->messages)) : ?>
+                <div id="dispmsg" class="settingssuccess">
+                    <?php foreach ($this->messages as $message) : 
+                        if(is_array($message)): $key = key($message); ?>
+                            <div class="ml-alert-1-<?php echo $key; ?>">
+                                <div style="display:block;">
+                                    <span class="style-1-icon <?php echo $key; ?>"></span>
+                                    <?php echo $this->escape($message[$key]); ?>
+                                </div>
+                            </div>
+                    <?php endif; endforeach; ?>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+<?php endif; ?>
+
+<!-- Grid Container -->
+<div id="map_container" class="full-width" style="padding: 15px;">
+    <div id="msg" style="display:none; font-style: oblique; font-weight: bold; color: green;"></div>
+    
+    <div id="grid_permissionmap" class="all-grid-control">
+        <?php
+        // FIX: Crash-proof check for PHP 8+ strict typing
+        if (isset($this->dataArray) && isset($this->dataArray[0]) && !empty($this->dataArray[0]['tablecontent'])) {
+            echo $this->grid($this->dataArray[0]);
+        } else if ($this->call != 'ajaxcall') {
+            echo "<div class='no-data' style='text-align: center; color: #7f8c8d; padding: 30px; border: 1px dashed #ccc; background: #f9f9f9; border-radius: 4px;'>";
+            echo "<i class='fa fa-folder-open-o' style='font-size: 24px; margin-bottom: 10px;'></i><br>";
+            echo "No permission mappings found or system error occurred.";
+            echo "</div>";
+        }
+        ?>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    // Auto-fade flash messages cleanly without breaking the layout
+    setTimeout(function() { 
+        $('#dispmsg').fadeOut('slow'); 
+    }, 4000);
+});
+</script>

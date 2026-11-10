@@ -1,0 +1,161 @@
+<?php
+
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+?>
+<?php
+
+/**
+ * Site Preference Dashboard (Singleton View)
+ *
+ * Provides the user interface for modifying global system defaults.
+ * Complies with SSOT v6.7.
+ *
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ * @author     Hablul Soft Solution < /hablul.in>
+ * @license    http://gnu.org GNU General Public License, version 3.0 (GPL-3.0)
+ * @version    Sentrifugo v3.2
+ */
+?>
+
+<!-- Header Layout Standard (Replaces missing grid header) -->
+<div class="profile-tabs-right-2" style="width: 100% !important; margin-bottom: 15px;">
+	<div class="flt_left">
+		<h4 class="page-title" style="margin: 0; padding-top: 5px;">Global Site Preferences</h4>
+		<p style="font-size: 12px; color: #666; margin: 0;">Configure base rules, localization, and UI defaults for the entire HRMS.</p>
+	</div>
+</div>
+
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<?php sapp_Global::generateClientValidations($this->form); ?>
+
+<div class="row">
+	<div class="col s12">
+
+		<!-- Flash Messages & AJAX Errors -->
+		<div id="message_container">
+			<?php if (isset($this->messages) && !empty($this->messages)) : ?>
+				<div id="dispmsg" class="settingssuccess">
+					<?php foreach ($this->messages as $message) : $key = key($message); ?>
+						<div class="ml-alert-1-<?php echo $key; ?>">
+							<div style="display:block;">
+								<span class="style-1-icon <?php echo $key; ?>"></span>
+								<?php echo $this->escape($message[$key]); ?>
+							</div>
+						</div>
+					<?php endforeach; ?>
+				</div>
+			<?php endif; ?>
+
+			<?php if (!empty($this->msgarray)) : ?>
+				<div class="ml-alert-1-error">
+					<div style="display:block;">
+						<span class="style-1-icon error"></span>
+						Please correct the errors highlighted below.
+					</div>
+				</div>
+			<?php endif; ?>
+		</div>
+
+		<form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" method="post">
+
+			<?php echo $this->form->id; ?>
+
+			<div class="total-form-controller">
+				<div class="division">
+
+					<h5 style="margin-bottom: 20px; color: #26a69a; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Localization & Context</h5>
+
+					<div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->company_id->getLabel()); ?></label>
+						<div class="division"><?php echo $this->form->company_id; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->company_id->getId()); ?>"></span></div>
+					</div>
+					<div class="new-form-ui clearb"><label class="required"><?php echo $this->escape($this->form->nationality_id->getLabel()); ?></label>
+						<div class="division"><?php echo $this->form->nationality_id; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->nationality_id->getId()); ?>"></span></div>
+					</div>
+					<div class="new-form-ui clearb"><label class="required"><?php echo $this->escape($this->form->language_id->getLabel()); ?></label>
+						<div class="division"><?php echo $this->form->language_id; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->language_id->getId()); ?>"></span></div>
+					</div>
+
+					<div class="new-form-ui clearb"><label class="required"><?php echo $this->escape($this->form->timezone_id->getLabel()); ?></label>
+						<div class="division"><?php echo $this->form->timezone_id; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->timezone_id->getId()); ?>"></span></div>
+					</div>
+					<div class="new-form-ui clearb"><label class="required"><?php echo $this->escape($this->form->currency_id->getLabel()); ?></label>
+						<div class="division"><?php echo $this->form->currency_id; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->currency_id->getId()); ?>"></span></div>
+					</div>
+
+					<div style="clear: both; width: 100%; height: 20px;"></div>
+
+					<h5 style="margin: 30px 0 20px 0; color: #26a69a; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Data Formatting</h5>
+
+					<div class="new-form-ui clearb"><label class="required"><?php echo $this->escape($this->form->dateformat_id->getLabel()); ?></label>
+						<div class="division"><?php echo $this->form->dateformat_id; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->dateformat_id->getId()); ?>"></span></div>
+					</div>
+					<div class="new-form-ui clearb"><label class="required"><?php echo $this->escape($this->form->timeformat_id->getLabel()); ?></label>
+						<div class="division"><?php echo $this->form->timeformat_id; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->timeformat_id->getId()); ?>"></span></div>
+					</div>
+					<div class="new-form-ui clearb"><label class="required"><?php echo $this->escape($this->form->week_start_day->getLabel()); ?></label>
+						<div class="division"><?php echo $this->form->week_start_day; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->week_start_day->getId()); ?>"></span></div>
+					</div>
+
+					<div style="clear: both; width: 100%; height: 20px;"></div>
+
+					<h5 style="margin: 30px 0 20px 0; color: #26a69a; border-bottom: 1px solid #ddd; padding-bottom: 5px;">System Defaults</h5>
+
+					<div class="new-form-ui clearb"><label class="required"><?php echo $this->escape($this->form->default_per_page->getLabel()); ?></label>
+						<div class="division"><?php echo $this->form->default_per_page; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->default_per_page->getId()); ?>"></span></div>
+					</div>
+					<div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->password_policy_id->getLabel()); ?></label>
+						<div class="division"><?php echo $this->form->password_policy_id; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->password_policy_id->getId()); ?>"></span></div>
+					</div>
+
+					<div style="clear: both; width: 100%; height: 20px;"></div>
+
+					<?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+					<!-- Action Buttons -->
+					<div class="new-form-ui-submit">
+						<div class="division">
+							<!-- Handled by saveDetails() configured in Form class -->
+							<?php echo $this->form->submit; ?>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#description').jqte();
+		setTimeout(function() {
+			$('#dispmsg').fadeOut('slow');
+		}, 4000);
+	});
+</script>

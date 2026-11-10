@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * PA Rulebook Index View
+ * Strictly adheres to SSOT v6.2.
+ */
+?>
+<div id="message_container">
+    <?php if (!empty($this->messages)) : ?>
+        <div id="dispmsg" class="settingssuccess">
+            <?php foreach ($this->messages as $message) :
+                if (is_array($message)): $key = key($message); ?>
+                    <div class="ml-alert-1-<?php echo $this->escape($key); ?>">
+                        <div style="display:block;"><span class="style-1-icon <?php echo $this->escape($key); ?>"></span><?php echo $this->escape($message[$key]); ?></div>
+                    </div>
+            <?php endif;
+            endforeach; ?>
+        </div>
+    <?php endif; ?>
+</div>
+
+<div id="parulebook_container" class="full-width">
+    <div id="msg" style="display:none; font-style: oblique; font-weight: bold; color: green;"></div>
+    <div id="grid_parulebook" class="all-grid-control">
+        <?php
+        if (isset($this->dataArray[0]['tablecontent']) && !empty($this->dataArray[0]['tablecontent'])) {
+            echo $this->grid($this->dataArray[0]);
+        } else if ($this->call != 'ajaxcall') {
+            echo "<div class='no-data' style='text-align: center; color: #7f8c8d; padding: 30px; border: 1px dashed #ccc; background: #f9f9f9; border-radius: 4px;'><i class='fa fa-book' style='font-size: 24px; margin-bottom: 10px;'></i><br>No Rulebooks found.</div>";
+        }
+        ?>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        setTimeout(function() {
+            $('#dispmsg').fadeOut('slow');
+        }, 4000);
+    });
+</script>

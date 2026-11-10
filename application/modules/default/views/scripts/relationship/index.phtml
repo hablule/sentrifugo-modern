@@ -1,0 +1,15 @@
+<?php try {
+  ?>
+<div id="error_message" style="display:none;"></div>
+<?php 
+if($this->call == 'ajaxcall'){
+	$div = ''; $endDiv = ''; 
+} else { 
+	$div = '<div id="grid_'.$this->dataArray['objectname'].'" class="all-grid-control">'; $endDiv = '</div>';
+}
+	echo $div.'<div id="msg" style="display:none;font-style: oblique; font-weight: bold; color: green;""></div>'.$this->grid($this->dataArray).$endDiv;
+?>
+<?php   //code...
+} catch (\Throwable $th) {
+    Zend_Debug::dump($th->getMessage());
+}?>

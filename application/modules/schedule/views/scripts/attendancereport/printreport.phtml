@@ -1,0 +1,565 @@
+<?php
+$attend_data = $this->data;
+$absent_data = $this->absent_data;
+$leave_data = $this->leave_data;
+$late_data = $this->late_data;
+
+$report_options = $this->report_options;
+
+$no = '';
+if (count($report_options) > 0) {
+
+
+    if (($attend_data != NULL) || ($absent_data != NULL) || ($leave_data != NULL) || ($late_data != NULL)) {
+        //die(Zend_Debug::dump($absent_data));
+        //Zend_Debug::dump($attend_data, 'Whole data');
+
+        if ($attend_data != null) {
+            $attend_data_processed = [];
+            foreach ($attend_data as $individual) {
+                $temp_arr = [];
+
+                $date_time = $individual['Date'];
+                $schedule = $individual['Schedule'];
+                $shift = $individual['Shift'];
+               
+
+
+                // $attend_data_processed[$individual['Emp_ID']]['Name'] = $individual['Employee Name'];
+                // $attend_data_processed[$individual['Emp_ID']]['Department'] = $individual['Department'];
+                // $attend_data_processed[$individual['Emp_ID']]['Location'] = $individual['Location'];
+                // $attend_data_processed[$individual['Emp_ID']][$date_time][$schedule][$shift]['Start'] = $individual['Start'];
+                // $attend_data_processed[$individual['Emp_ID']][$date_time][$schedule][$shift]['End'] = $individual['End'];
+
+                $attend_data_processed[$date_time][$individual['Emp_ID']]['Name'] = $individual['Employee Name'];
+                $attend_data_processed[$date_time][$individual['Emp_ID']]['Department'] = $individual['Department'];
+                $attend_data_processed[$date_time][$individual['Emp_ID']]['Branch'] = $individual['Branch'];
+                $attend_data_processed[$date_time][$individual['Emp_ID']]['Businessunit'] = $individual['Businessunit'];
+                $attend_data_processed[$date_time][$individual['Emp_ID']]['Division'] = $individual['Division'];
+                $attend_data_processed[$date_time][$individual['Emp_ID']]['Section'] = $individual['Section'];
+                $attend_data_processed[$date_time][$individual['Emp_ID']]['Team'] = $individual['Team'];
+                $attend_data_processed[$date_time][$individual['Emp_ID']]['Project'] = $individual['Project'];
+
+
+                if($shift == ""){
+                    $schedule = "";
+                    $attend_data_processed[$date_time][$individual['Emp_ID']][$schedule][$shift]['Start'] = "";
+                    $attend_data_processed[$date_time][$individual['Emp_ID']][$schedule][$shift]['End'] = "";
+                }else{
+                    $attend_data_processed[$date_time][$individual['Emp_ID']][$schedule][$shift]['Start'] = $individual['Start'];
+                    $attend_data_processed[$date_time][$individual['Emp_ID']][$schedule][$shift]['End'] = $individual['End'];
+                }
+               
+            }
+        }
+
+        if ($absent_data != null) {
+
+            $absent_data_processed = [];
+            foreach ($absent_data as $individual) {
+                $temp_arr = [];
+                $date_time = $individual['Date'];
+                $schedule = $individual['Schedule'];
+                $shift = $individual['Shift'];
+                if($shift == ""){
+                    $schedule = "";
+                }
+                // $absent_data_processed[$individual['Emp_ID']]['Name'] = $individual['Employee Name'];
+                // $absent_data_processed[$individual['Emp_ID']]['Department'] = $individual['Department'];
+                // $absent_data_processed[$individual['Emp_ID']]['Location'] = $individual['Location'];
+                // $absent_data_processed[$individual['Emp_ID']][$date_time][$schedule][$shift]['Start'] = $individual['Start'];
+                // $absent_data_processed[$individual['Emp_ID']][$date_time][$schedule][$shift]['End'] = $individual['End'];
+
+                $absent_data_processed[$date_time][$individual['Emp_ID']]['Name'] = $individual['Employee Name'];
+                $absent_data_processed[$date_time][$individual['Emp_ID']]['Department'] = $individual['Department'];
+                $absent_data_processed[$date_time][$individual['Emp_ID']]['Branch'] = $individual['Branch'];
+                $absent_data_processed[$date_time][$individual['Emp_ID']]['Businessunit'] = $individual['Businessunit'];
+                $absent_data_processed[$date_time][$individual['Emp_ID']]['Division'] = $individual['Division'];
+                $absent_data_processed[$date_time][$individual['Emp_ID']]['Section'] = $individual['Section'];
+                $absent_data_processed[$date_time][$individual['Emp_ID']]['Project'] = $individual['Project'];
+                $absent_data_processed[$date_time][$individual['Emp_ID']]['Team'] = $individual['Team'];
+
+                $absent_data_processed[$date_time][$individual['Emp_ID']][$schedule][$shift]['Start'] = $individual['Start'];
+                $absent_data_processed[$date_time][$individual['Emp_ID']][$schedule][$shift]['End'] = $individual['End'];
+            }
+        }
+
+        if ($leave_data != null) {
+            $leave_data_processed = [];
+            foreach ($leave_data as $individual) {
+                $temp_arr = [];
+                $date_time = $individual['Date'];
+                $schedule = $individual['Schedule'];
+                $shift = $individual['Shift'];
+                if($shift == ""){
+                    $schedule = "";
+                }
+                // $leave_data_processed[$individual['Emp_ID']]['Name'] = $individual['Employee Name'];
+                // $leave_data_processed[$individual['Emp_ID']]['Department'] = $individual['Department'];
+                // $leave_data_processed[$individual['Emp_ID']]['Location'] = $individual['Location'];
+                // $leave_data_processed[$individual['Emp_ID']][$date_time][$schedule][$shift]['Start'] = $individual['Start'];
+                // $leave_data_processed[$individual['Emp_ID']][$date_time][$schedule][$shift]['End'] = $individual['End'];
+
+                $leave_data_processed[$date_time][$individual['Emp_ID']]['Name'] = $individual['Employee Name'];
+                $leave_data_processed[$date_time][$individual['Emp_ID']]['Department'] = $individual['Department'];
+                $leave_data_processed[$date_time][$individual['Emp_ID']]['Branch'] = $individual['Branch'];
+                $leave_data_processed[$date_time][$individual['Emp_ID']]['Businessunit'] = $individual['Businessunit'];
+                $leave_data_processed[$date_time][$individual['Emp_ID']]['Division'] = $individual['Division'];
+                $leave_data_processed[$date_time][$individual['Emp_ID']]['Section'] = $individual['Section'];
+                $leave_data_processed[$date_time][$individual['Emp_ID']]['Project'] = $individual['Project'];
+                $leave_data_processed[$date_time][$individual['Emp_ID']]['Team'] = $individual['Team'];
+
+                $leave_data_processed[$date_time][$individual['Emp_ID']][$schedule][$shift]['Start'] = $individual['Start'];
+                $leave_data_processed[$date_time][$individual['Emp_ID']][$schedule][$shift]['End'] = $individual['End'];
+            }
+        }
+
+        if ($late_data != null) {
+            $late_data_processed = [];
+            foreach ($late_data as $individual) {
+                $temp_arr = [];
+                $date_time = $individual['Date'];
+                $schedule = $individual['Schedule'];
+                $shift = $individual['Shift'];
+              
+                // $late_data_processed[$individual['Emp_ID']]['Name'] = $individual['Employee Name'];
+                // $late_data_processed[$individual['Emp_ID']]['Department'] = $individual['Department'];
+                // $late_data_processed[$individual['Emp_ID']]['Location'] = $individual['Location'];
+                // $late_data_processed[$individual['Emp_ID']][$date_time][$schedule][$shift]['Start'] = $individual['Start'];
+                // $late_data_processed[$individual['Emp_ID']][$date_time][$schedule][$shift]['End'] = $individual['End'];
+                $late_data_processed[$date_time][$individual['Emp_ID']]['Name'] = $individual['Employee Name'];
+                $late_data_processed[$date_time][$individual['Emp_ID']]['Department'] = $individual['Department'];
+                $late_data_processed[$date_time][$individual['Emp_ID']]['Branch'] = $individual['Branch'];
+                $late_data_processed[$date_time][$individual['Emp_ID']]['Businessunit'] = $individual['Businessunit'];
+                $late_data_processed[$date_time][$individual['Emp_ID']]['Division'] = $individual['Division'];
+                $late_data_processed[$date_time][$individual['Emp_ID']]['Section'] = $individual['Section'];
+                $late_data_processed[$date_time][$individual['Emp_ID']]['Team'] = $individual['Team'];
+                $late_data_processed[$date_time][$individual['Emp_ID']]['Project'] = $individual['Project'];
+
+                if($shift == ""){
+                    $schedule = "";
+                    $late_data_processed[$date_time][$individual['Emp_ID']][$schedule][$shift]['Start'] ="";
+                    $late_data_processed[$date_time][$individual['Emp_ID']][$schedule][$shift]['End'] = "";
+                }else{
+                    $late_data_processed[$date_time][$individual['Emp_ID']][$schedule][$shift]['Start'] = $individual['Start'];
+                    $late_data_processed[$date_time][$individual['Emp_ID']][$schedule][$shift]['End'] = $individual['End'];
+                }
+               
+            }
+            
+        }
+
+        echo '<script>console.log("hello world")</script>';
+        sapp_Global::export_data_to_excel($report_options, $late_data_processed, $leave_data_processed, $absent_data_processed, $attend_data_processed, '', 'Attendance Report.xlsx');
+
+        exit;
+
+        /*    $sapp = new sapp_Global();
+        $sapp->export_data_to_excel($late_data_processed,$leave_data_processed,$absent_data_processed, $attend_data_processed, '', 'eulala.xlsx'); */
+    } else {
+        $no = "No Data Found";
+    }
+}
+?>
+<?php
+
+$form = $this->form;
+
+?>
+
+<script type="text/javascript" src="<?php echo MEDIA_PATH ?>js/addelement.js"></script>
+<!-- <link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH ?>css/addelement.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" /> -->
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+<div id="spinner" class="ajax-loader" style="display:none;">
+    <img id="img-spinner" src="<?php echo MEDIA_PATH; ?>images/loader2.gif" alt="Loading" />
+</div>
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction(); ?>" method="POST">
+    <?php echo $this->form->id; ?>
+
+    <div class="total-form-controller">
+        <table>
+            <tr>
+                <td>
+                    <div class="new-form-ui ">
+<label>Seacrch By</label>
+                        <div class="division"><?php echo $this->form->search_by; ?>
+                            <div>
+                                <span class="errors" id="errors-search"><?php echo $no; ?></span>
+                                <span class="errors" id="errors-<?php echo $this->form->search_by->getId(); ?>"><?php echo $this->msgarray['search_by']; ?></span>
+                            </div>
+                        </div>
+                    </div>
+                </td> <td>
+                    <div class="new-form-ui " id="schedule_div">
+                        <label>Schedule</label>
+                        <div class="division"><?php echo $this->form->schedule; ?>
+                        </div>
+                        <span class="errors" id="errors-<?php echo $this->form->schedule->getId(); ?>"><?php echo $this->msgarray['schedule']; ?></span>
+                    </div>
+                </td>
+                <td>
+                    <div class="new-form-ui ">
+                    <label>Report Option</label>
+
+                        <div class="division"><?php echo $this->form->report_option; ?>
+                            <div>
+                                <span class="errors" id="errors-<?php echo $this->form->report_option->getId(); ?>"><?php echo $this->msgarray['report_option']; ?></span>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+
+            </tr>
+
+            <tr>
+                <td>
+                    <div class="new-form-ui" id="start_date_div">
+                        <label>From</label>
+                        <div class="division"><?php echo $this->form->start_date; ?>
+                            <div>
+                                <span class="errors" id="errors-<?php echo $this->form->start_date->getId(); ?>"><?php echo $this->msgarray['start_date']; ?></span>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="new-form-ui " id="end_date_div">
+                        <label>To</label>
+                        <div class="division"><?php echo $this->form->end_date; ?>
+                        </div>
+                        <span class="errors" id="errors-<?php echo $this->form->end_date->getId(); ?>"><?php echo $this->msgarray['end_date']; ?></span>
+                    </div>
+                </td>
+               
+            </tr>
+            <tr>
+                <td>
+                    <div class="new-form-ui " id="day_div">
+                    <label>Day</label>
+
+                        <div class="division"><?php echo $this->form->day; ?>
+
+                        </div>
+                        <span class="errors" id="errors-<?php echo $this->form->day->getId(); ?>"><?php echo $this->msgarray['day']; ?></span>
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <div class="new-form-ui " id="dpt_div">
+                    <label>Department</label>
+
+                        <div class="division"><?php echo $this->form->dpt; ?>
+                        </div>
+                        <span class="errors" id="errors-<?php echo $this->form->dpt->getId(); ?>"><?php echo $this->msgarray['dpt']; ?></span>
+                    </div>
+                </td>
+            </tr><tr>
+                <td>
+                    <div class="new-form-ui " id="project_div">
+                    <label>Project</label>
+
+                        <div class="division"><?php echo $this->form->project; ?>
+                        </div>
+                        <span class="errors" id="errors-<?php echo $this->form->project->getId(); ?>"><?php echo $this->msgarray['project']; ?></span>
+                    </div>
+                </td>
+                </tr><tr>
+                <td>
+                    <div class="new-form-ui " id="team_div">
+                    <label>Team</label>
+
+                        <div class="division"><?php echo $this->form->team; ?>
+                        </div>
+                        <span class="errors" id="errors-<?php echo $this->form->team->getId(); ?>"><?php echo $this->msgarray['team']; ?></span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="new-form-ui " id="sbunit_div">
+                    <label>Businness Unit</label>
+
+                        <div class="division"><?php echo $this->form->sbunit; ?>
+                        </div>
+                        <span class="errors" id="errors-<?php echo $this->form->sbunit->getId(); ?>"><?php echo $this->msgarray['sbunit']; ?></span>
+                    </div>
+                </td>
+            </tr><tr>
+                <td>
+                    <div class="new-form-ui " id="division_div">
+                    <label>Division</label>
+
+                        <div class="division"><?php echo $this->form->division; ?>
+                        </div>
+                        <span class="errors" id="errors-<?php echo $this->form->division->getId(); ?>"><?php echo $this->msgarray['division']; ?></span>
+                    </div>
+                </td>
+                </tr><tr>
+                <td>
+                    <div class="new-form-ui " id="section_div">
+                    <label>Section</label>
+
+                        <div class="division"><?php echo $this->form->section; ?>
+                        </div>
+                        <span class="errors" id="errors-<?php echo $this->form->section->getId(); ?>"><?php echo $this->msgarray['section']; ?></span>
+                    </div>
+                </td>
+             
+            </tr>
+           
+            <tr>
+                <td>
+                    <div class="new-form-ui " id="location_div">
+                    <label>Branch</label>
+
+                        <div class="division"><?php echo $this->form->branch; ?>
+                        </div>
+                        <span class="errors" id="errors-<?php echo $this->form->branch->getId(); ?>"><?php echo $this->msgarray['branch']; ?></span>
+                    </div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td>
+                    <div class="new-form-ui-submit">
+                        <?php echo $form->submit_1; ?>
+                    </div>
+                </td>
+                <td>
+                    <div class="new-form-ui-previousBtn">
+                        <?php echo $form->back; ?>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>
+<script>
+    var search_array = [];
+    $('#start_date,#end_date').datepicker({
+            showOn: 'both',
+            //minDate: 0,
+            //yearRange: yearrange,
+            dateFormat: '<?php echo DATEFORMAT_JS; ?>',
+            buttonImage: "<?php echo $this->baseUrl("public/media/images/cal.jpg"); ?>",
+            buttonImageOnly: true,
+            buttonText: "",
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            onClose: function() {
+                $(this).trigger('blur');
+                var msg = "";
+                if (this.id == 'end_date')
+                    msg = "End date should be greater than Start date.";
+                else
+                    msg = "Start date should be less than End date.";
+                from_to_date_validation('start_date', 'end_date', this, msg);
+            }
+
+        });
+   
+
+        document.getElementById('location_div').style.display = 'none';
+      
+        document.getElementById('day_div').style.display = 'none';
+        document.getElementById('dpt_div').style.display = 'none';
+        document.getElementById('sbunit_div').style.display = 'none';
+            document.getElementById('division_div').style.display = 'none';
+            document.getElementById('section_div').style.display = 'none';
+            document.getElementById('project_div').style.display = 'none';
+            document.getElementById('team_div').style.display = 'none';
+        $("#search_by").change(function() {
+            document.getElementById('location_div').style.display = 'none';
+            /* document.getElementById('submit_1-label').style.display = 'none'; */
+            // document.getElementById('start_date_div').style.display = 'none';
+            // document.getElementById('end_date_div').style.display = 'none';
+            // document.getElementById('schedule_div').style.display = 'none';
+            document.getElementById('day_div').style.display = 'none';
+            document.getElementById('dpt_div').style.display = 'none';
+            document.getElementById('sbunit_div').style.display = 'none';
+            document.getElementById('division_div').style.display = 'none';
+            document.getElementById('section_div').style.display = 'none';
+            document.getElementById('project_div').style.display = 'none';
+            document.getElementById('team_div').style.display = 'none';
+        
+
+            var searches = document.getElementById('s2id_search_by');
+            searches = searches.getElementsByClassName('select2-choices')[0];
+            searches = searches.getElementsByClassName('select2-search-choice');
+            search_array = [];
+            var search = '';
+            for (var i = 0; i < searches.length; i++) {
+                search = '';
+                search = searches[i].getElementsByTagName('div')[0].innerHTML;
+                search_array[i] = search;
+
+                // if (search == 'Date Range') {
+                //     document.getElementById('start_date_div').style.display = 'block';
+                //     document.getElementById('end_date_div').style.display = 'block';
+
+
+                // } else if (search == 'Schedule') {
+                //     document.getElementById('schedule_div').style.display = 'block';
+                // } else 
+                console.log(search);
+                if (search == 'Day') {
+                    document.getElementById('day_div').style.display = 'block';
+                   
+                } else if (search == 'Department') {
+                    document.getElementById('dpt_div').style.display = 'block';
+                  
+                } else if (search == 'Branch') {
+                   
+                    document.getElementById('location_div').style.display = 'block';
+                }
+                else if (search == 'Businessunit') {
+                   
+                   document.getElementById('sbunit_div').style.display = 'block';
+               }
+               else if (search == 'Division') {
+                   
+                   document.getElementById('division_div').style.display = 'block';
+               }  else if (search == 'Section') {
+                   
+                   document.getElementById('section_div').style.display = 'block';
+               }  else if (search == 'Project') {
+                   
+                   document.getElementById('project_div').style.display = 'block';
+               }  else if (search == 'Team') {
+                   
+                   document.getElementById('team_div').style.display = 'block';
+               }
+            }
+        });
+
+        $("#report_option").change(function() {
+            var options = document.getElementById('s2id_report_option');
+            options = options.getElementsByClassName('select2-choices')[0];
+            options = options.getElementsByClassName('select2-search-choice');
+            for (var i = 0; i < options.length; i++) {
+                if (options[i].getElementsByTagName('div')[0].innerHTML == "All") {
+                    for (var i = 0; i < options.length - 1; i++) {
+                        options[i].getElementsByTagName('a')[0].click();
+                    }
+                }
+            }
+        });
+
+       
+        //console.log($('#id').val);
+        $("#submit_1").on('click', function() {
+
+            var valid = true;
+            var checkFor = [];
+            var individualValidator = [];
+            var other = [];
+            other['empty'] = 'Field is required';
+            individualValidator['isEmpty'] = 'Field is required';
+            checkFor['report_option'] = individualValidator;
+            // checkFor['name'] = individualValidator;
+            individualValidator = [];
+            individualValidator['isEmpty'] = 'Field is required';
+            // checkFor['rate'] = individualValidator;
+            individualValidator = [];
+
+            individualValidator['isEmpty'] = 'Field is required';
+            individualValidator['other'] = other;
+            //checkFor['search_by'] = individualValidator;
+            checkFor['start_date'] = individualValidator;
+            checkFor['end_date'] = individualValidator;
+            checkFor['schedule'] = individualValidator;
+            var searchby = '';
+            for (var i = 0; i < search_array.length; i++) {
+                searchby = search_array[i];
+                if (searchby == 'Day') {
+                    checkFor['day'] = individualValidator;
+                } else if (searchby == 'Department') {
+                    checkFor['dpt'] = individualValidator;
+                } else if (searchby == 'Branch') {
+                    checkFor['branch'] = individualValidator;
+                }
+                else if (searchby == 'Businessunit') {
+                    checkFor['sbunit'] = individualValidator;
+                }else if (searchby == 'Division') {
+                    checkFor['division'] = individualValidator;
+                }else if (searchby == 'Section') {
+                    checkFor['section'] = individualValidator;
+                }else if (searchby == 'Project') {
+                    checkFor['project'] = individualValidator;
+                }else if (searchby == 'Team') {
+                    checkFor['team'] = individualValidator;
+                }
+            }
+            return isValid(checkFor);
+
+
+            // var i = 0;
+
+            // function move() {
+            //     if (i == 0) {
+            //         i = 1;
+            //         var elem = document.getElementById("myBar");
+            //         var width = 1;
+            //         var id = setInterval(frame, 10);
+
+            //         function frame() {
+            //             if (width >= 100) {
+            //                 clearInterval(id);
+            //                 i = 0;
+            //             } else {
+            //                 width++;
+            //                 elem.style.width = width + "%";
+            //             }
+            //         }
+            //     }
+            // }
+
+
+            /* if(isValid(checkFor))
+            {
+                $.blockUI({
+                width: '50px',
+                message: $("#spinner").html()
+            });
+            } */
+
+
+        });
+
+        function isValid(elements) {
+            var valid = true;
+            for (var key in elements) {
+                for (var key1 in elements[key]) {
+
+                    if (key1 == 'isEmpty') {
+                        if (document.getElementById(key).value == '') {
+                            document.getElementById('errors-' + key).innerHTML = elements[key][key1];
+                            valid = false;
+                        }
+                    } else if (key1 == 'other') {
+                        for (var key2 in elements[key][key1]) {
+                            if (document.getElementById(key).value == key2) {
+                                document.getElementById('errors-' + key).innerHTML = elements[key][key1][key2];
+                                valid = false;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return valid;
+        }
+
+</script>
+
+<!-- LOAD DATA INFILE  '//devserver/Resources/Sentrifugo/Sample/Attendance/bm_event.csv' 
+INTO TABLE bm_event 
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS; -->

@@ -1,0 +1,72 @@
+<?php 
+?>
+<?php
+
+
+?>
+<?php if($this->popup == 'close') { ?>	
+	<div class="ml-alert-1-success">
+	<div class="style-1-icon success"></div>
+	</div>
+
+	<?php } 
+else
+{
+    sapp_Global::generateClientValidations($this->form);?>
+    <div id="error_message" style="display:none;"></div>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction();?>" method="<?php echo $this->form->getMethod(); ?>">
+		<?php echo $this->form->id; ?>
+        <div class="total-form-controller">
+		    <div class="new-form-ui clearb">
+			  <label class="required">Document Status</label>
+			<div class="division"><?php echo $this->form->iddocumentstatus_id; ?>
+			<?php if($this->statuspermission == 'Yes'){?>
+				<span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL . 'iddocumentstatus/addpopup' ?>','Document Status');"> Add Document Status </span>
+				<?php }?>
+
+    </div>
+			<?php if(isset($this->msgarray['iddocumentstatus_id'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->iddocumentstatus_id->getId(); ?>"><?php echo $this->msgarray['iddocumentstatus_id'];?></span>
+			<?php }?>
+			</div>
+            <div class="new-form-ui clearb">
+			  <label class="required">Value</label>
+			<div class="division"><?php echo $this->form->value; ?></div>
+			<?php if(isset($this->msgarray['value'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->value->getId(); ?>"><?php echo $this->msgarray['value'];?></span>
+			<?php }?>
+			</div>
+      <br>
+      <div class="new-form-ui clearb">
+			  <label >Active</label>
+			<div class="division"><?php echo $this->form->isactive; ?></div>
+			<?php if(isset($this->msgarray['isactive'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->isactive->getId(); ?>"><?php echo $this->msgarray['isactive'];?></span>
+			<?php }?>
+			</div>		
+            <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description','', 'fck_editor_height','',array());?>
+
+          
+		<div class="new-form-ui-submit">
+		<?php echo $this->form->submit; ?>
+        <button onclick="window.location.href='<?php echo BASE_URL; ?>documentstatuslist';" type="button">Cancel</button>
+
+		</div>
+</div>
+</form>
+<?php } ?>
+<div id="iddocumentstatusContainer" style="display: none; overflow: auto;">
+	<div class="heading">
+		<a href="javascript:void(0)">
+			<img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+	</div>
+
+	<iframe id="iddocumentstatusCont" class="business_units_iframe" frameborder="0"></iframe>
+</div>
+<script>
+$('#description').jqte();
+
+ 
+</script>

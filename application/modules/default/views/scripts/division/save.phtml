@@ -1,0 +1,169 @@
+<?php
+
+/**
+ * Division Save View
+ * Implements SSOT v6.5 explicit $.ajax() submission and client-side hierarchy validation.
+ */
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<?php sapp_Global::generateClientValidations($this->form); ?>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container"></div>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" method="post">
+            <?php echo $this->form->id; ?>
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->code; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->code->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->name; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->name->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <!-- Poly-Hierarchical Parents -->
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->company_id->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->company_id; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->company_id->getId()); ?>"></span>
+                        </div>
+                    </div>
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->sbunit_id->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->sbunit_id; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->sbunit_id->getId()); ?>"></span>
+                        </div>
+                    </div>
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->parent_id->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->parent_id; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->parent_id->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->representative_id->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->representative_id; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->representative_id->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                    </div>
+
+                    <div class="new-form-ui-submit">
+                        <div class="division">
+                            <?php echo $this->form->submit; ?>
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>division/index';" value="Cancel" type="button" class="reset" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#description').jqte();
+
+        // SSOT v6.5 Explicit AJAX Submit Handler
+        $('#submitbutton').off('click').on('click', function(e) {
+            e.preventDefault();
+            var $form = $('#formid');
+
+            $('.errors').text('');
+            $('#message_container').empty();
+
+            if (!$form.valid()) {
+                return false;
+            }
+
+            // Client-side Hierarchy Validation
+            var count = 0;
+            if ($('#company_id').val() !== '') count++;
+            if ($('#sbunit_id').val() !== '') count++;
+            if ($('#parent_id').val() !== '') count++;
+
+            if (count === 0 || count > 1) {
+                var msg = (count > 1) ? 'Please select only ONE parent level.' : 'A Division must have a parent.';
+                $('#errors-company_id').text(msg);
+                $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Please fix the highlighted errors.</div>');
+                $('html, body').animate({
+                    scrollTop: 0
+                }, 'slow');
+                return false;
+            }
+
+            if (typeof $.blockUI === "function") $.blockUI({
+                message: '<img src="<?php echo MEDIA_PATH; ?>images/loader2.gif" alt="Loading" />'
+            });
+
+            var formData = new FormData($form[0]);
+
+            $.ajax({
+                url: base_url + '/division/save/format/json',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function(response) {
+                    if (typeof $.unblockUI === "function") $.unblockUI();
+
+                    if (response && response.result === 'saved') {
+                        window.location.href = base_url + '/division';
+                    } else if (response && response.result === 'exception') {
+                        $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>' + response.message + '</div>');
+                        $('html, body').animate({
+                            scrollTop: 0
+                        }, 'slow');
+                    } else if (response && typeof response === 'object') {
+                        $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Please fix the highlighted errors.</div>');
+                        $.each(response, function(fieldId, errorObj) {
+                            var errMsg = (typeof errorObj === 'object') ? errorObj[Object.keys(errorObj)[0]] : errorObj;
+                            $('#errors-' + fieldId).text(errMsg);
+                        });
+                        $('html, body').animate({
+                            scrollTop: 0
+                        }, 'slow');
+                    }
+                },
+                error: function() {
+                    if (typeof $.unblockUI === "function") $.unblockUI();
+                    $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Server error occurred.</div>');
+                    $('html, body').animate({
+                        scrollTop: 0
+                    }, 'slow');
+                }
+            });
+        });
+    });
+</script>

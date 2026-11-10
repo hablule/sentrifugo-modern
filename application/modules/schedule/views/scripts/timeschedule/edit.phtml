@@ -1,0 +1,401 @@
+<?php try {
+?>
+	<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+	<style>
+		#report {
+
+			float: left;
+			display: flex;
+			flex-direction: row;
+		}
+
+		#first-header {
+			display: block;
+			flex-direction: row;
+			margin-left: 100px;
+
+		}
+
+		#header-name,
+		#header-name2 {
+			display: flex;
+			flex-direction: row;
+
+		}
+
+		#header-name div,
+		#header-name2 div {
+			padding: 10px;
+			padding-top: 0px;
+		}
+
+		#header-name span,
+		#header-name2 span {
+			padding-left: 10px;
+		}
+
+		.sch-time {
+			display: flex;
+			flex-direction: row;
+		}
+
+		.schedule-name {
+			padding-right: 40px;
+			width: 80px;
+		}
+
+		.timetable {
+			display: flex;
+			flex-direction: row;
+			text-align: center;
+		}
+	</style>
+	<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+	<?php if (count($this->messages)) { ?>
+		<div id="dispmsgemp" class="settingssuccess">
+			<?php
+			foreach ($this->messages as $message) {
+				$flag = array();
+				$flag = array_keys($message);
+				echo "<div id='messageData' class='ml-alert-1-$flag[0]'><div style='display:block;'><span class='style-1-icon $flag[0]'></span>";
+				echo $message[$flag[0]];
+				echo "</div></div>";
+			};
+			?>
+		</div>
+
+		<?php } ?><?php sapp_Global::generateClientValidations($this->form); ?>
+
+		<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction(); ?>" method="<?php echo $this->form->getMethod(); ?>">
+			<?php echo $this->form->id; ?>
+
+			<div class="total-form-controller">
+				<div class="new-form-ui clearb">
+					<label class="required"> Name <img class="tooltip" src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/help.png"></label>
+					<div class="division"><?php echo $this->form->name; ?></div>
+					<?php if (isset($this->msgarray['name'])) { ?>
+						<span class="errors" id="errors-<?php echo $this->form->name->getId(); ?>"><?php echo $this->msgarray['name']; ?></span>
+					<?php } ?>
+				</div>
+
+				<div class="new-form-ui clearb">
+					<label class="required"> Code </label>
+					<div class="division"><?php echo $this->form->code; ?></div>
+					<?php if (isset($this->msgarray['code'])) { ?>
+						<span class="errors" id="errors-<?php echo $this->form->code->getId(); ?>"><?php echo $this->msgarray['code']; ?></span>
+					<?php } ?>
+				</div>
+
+				<div class="new-form-ui clearb">
+					<label class="required"> Cycle </label>
+					<div class="division"><?php echo $this->form->cycle; ?>
+						<span class="add-coloum" id="schedulecycle">
+							Add Cycle
+						</span>
+					</div>
+					<?php if (isset($this->msgarray['cycle'])) { ?>
+						<span class="errors" id="errors-<?php echo $this->form->cycle->getId(); ?>"><?php echo $this->msgarray['cycle']; ?></span>
+					<?php } ?>
+				</div>
+				<div class="new-form-ui clearb">
+					<label class="required">Start Date </label>
+					<div class="division"><?php echo $this->form->startdate; ?></div>
+					<?php if (isset($this->msgarray['startdate'])) { ?>
+						<span class="errors" id="errors-<?php echo $this->form->startdate->getId(); ?>"><?php echo $this->msgarray['startdate']; ?></span>
+					<?php } ?>
+				</div>
+				<div class="new-form-ui clearb">
+					<label class="required">End Date </label>
+					<div class="division"><?php echo $this->form->enddate; ?></div>
+					<?php if (isset($this->msgarray['enddate'])) { ?>
+						<span class="errors" id="errors-<?php echo $this->form->enddate->getId(); ?>"><?php echo $this->msgarray['enddate']; ?></span>
+					<?php } ?>
+				</div>
+				<div class="new-form-ui ">
+					<label>Active</label>
+					<div class="division"><?php echo $this->form->isactive; ?>
+						<?php if (isset($this->msgarray['isactive'])) { ?>
+							<span class="errors" id="errors-<?php echo $this->form->isactive->getId(); ?>"><?php echo $this->msgarray['isactive']; ?></span>
+						<?php } ?>
+
+					</div>
+
+				</div>
+				<div class="new-form-ui ">
+					<label>Verified</label>
+					<div class="division"><?php echo $this->form->isverified; ?>
+						<?php if (isset($this->msgarray['isverified'])) { ?>
+							<span class="errors" id="errors-<?php echo $this->form->isverified->getId(); ?>"><?php echo $this->msgarray['isverified']; ?></span>
+						<?php } ?>
+
+					</div>
+
+				</div>
+				<?php if (isset($this->msgarray['test2'])) { ?>
+					<div class="dismsgemp" class="settingssuccess">
+						<span class="errors" id="errors-<?php echo $this->form->test2->getId(); ?>"><?php echo $this->msgarray['test2']; ?></span>
+					</div>
+				<?php } ?>
+				<div class="division" style="display: none;"><?php echo $this->form->test; ?></div>
+				<div class="division" style="display: none;"><?php echo $this->form->test2; ?></div>
+
+				<?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+				<div class="new-form-ui-submit">
+
+					<div class="division"><?php echo $this->form->submit; ?>
+						<button onclick="window.location.href='<?php echo BASE_URL; ?>schedule/timeschedule';" type="button" id="Cancel" name="Cancel">Cancel</button>
+					</div>
+				</div>
+			</div>
+
+		</form>
+		<table>
+			<div id="report">
+				<div>
+					<ul type="none" id="scheduletable">
+
+
+					</ul>
+				</div>
+				<?php if ($this->id != '') { ?>
+					<div id="legend" style="margin-left:100px;text-align:center;">
+						<div style="font-size: 18px; font-weight: bold; margin-bottom:10px; text-decoration: underline;">Legend</div>
+
+					</div>
+				<?php } ?>
+			</div>
+		</table>
+		<script>
+
+		</script>
+
+
+
+
+		<script>
+			$("#description").jqte();
+			let data = $.ajax({
+				url: base_url + "/schedule/timeschedule/getschedulecycle",
+				dataType: 'json',
+				data: "id=" + '<?php echo $this->id; ?>',
+				async: false
+			}).responseJSON;
+
+			$("#schedulecycle").on('click', () => {
+				let id = $('#cycle').val();
+				$("#errors-test2").html('')
+				console.log("<?php echo $this->id; ?>");
+				if ('<?php echo $this->id; ?>' == '') {
+					if (id != '')
+						displaydeptform('<?php echo BASE_URL . 'schedulecycle/addpopup/id/' ?>' + id, 'Schedule Cycle')
+				} else {
+					if ($("#cycle").val() != data['cycle']) {
+						displaydeptform('<?php echo BASE_URL . 'schedulecycle/addpopup/id/' ?>' + id, 'Schedule Cycle')
+						//$("#test").val("true");
+						//$("#test2").val("");
+					} else
+						displaydeptform('<?php echo BASE_URL . 'schedulecycle/editpopup?id=' ?>' + id + '&cycleid=' + '<?php echo $this->id; ?>', 'Schedule Cycle');
+					//$("#test").val("false");
+					//$("#test2").val("3")
+
+				}
+			})
+			<?php if ($this->id != null) { ?>
+				var res = $.ajax({
+					url: base_url + '/schedule/timeschedule/getreport',
+					dataType: 'json',
+					data: 'id=' + '<?php echo $this->id; ?>',
+					async: false
+				}).responseJSON;
+				console.log($('#cycle').val())
+				var pakedData = packData($('#cycle').val(), res);
+
+				let tmpName = [];
+				let checkCycle = {
+					"WEEKLY": "Weekdays",
+					"MONTHLY": "Month",
+					"DAYLY": "Everyday"
+				}
+				/* $("#scheduletable").append(`<li>
+					<div style="font-size:18px;font-weight:bold; margin-bottom:10px;">${checkCycle[$('#cycle').val()]}</div>
+				</li>`) */
+				const days = day("Monday", "Sunday");
+				for (const key in pakedData) {
+					const chosen_day = days.shift();
+					let sch = ''
+					if ($("#cycle").val() == "WEEKLY") {
+						sch = '<li class="sch-time">\
+							<div class="schedule-name"><span>' + chosen_day + '</span></div>\
+							<div class="timetable" id="' + chosen_day + '">' + '</div>\
+						</li>'
+					} else {
+						sch = '<li class="sch-time">\
+							<div class="schedule-name"><span>' + key + '</span></div>\
+							<div class="timetable" id="' + $("#cycle").val()+key + '">' + '</div>\
+						</li>'
+					}
+					$("#scheduletable").append(sch);
+					let shifts = [];
+					if ($("#cycle").val() == "WEEKLY") {
+
+						shifts = pakedData[chosen_day];
+						console.log(shifts);
+
+					} else {
+						shifts = pakedData[key];
+					}
+					console.log(key, 'shift')
+					//shifts.sort();
+					console.log(shifts, 'help')
+					for (const shift in shifts) {
+						const starttime = shifts[shift]['starttime'];
+						const endtime = shifts[shift]['endtime']
+						const splitstime = starttime.split(':');
+						let time = `${starttime} - ${endtime} &nbsp`;
+						/* time = time.replace('/',' '); */
+						/* $("#"+key+splitstime[0]).css("background-color","red"); */
+						textColor = '#000000'
+						if (shifts[shift]['color'] != "#ffffff") {
+							textColor = "#ffffff"
+						}
+						let container = ''
+						if ($("#cycle").val() == "WEEKLY") {
+							container = chosen_day;
+						} else {
+							container = $("#cycle").val()+key;
+						}
+						$("#" + container).append(`<div style="background-color: ${shifts[shift]['color']}; margin-right:10px; margin-bottom:10px;color:${textColor};"><div>${time}</div></div>`);
+						if (tmpName.indexOf(shifts[shift]['name']) == -1) {
+							$("#legend").append(`<div style="display: flex; flex-direction: row;">
+							<div style="display:flex; flex-direction:row;">
+							<div style="background-color: ${shifts[shift]['color']}; border: 1px solid;width:10px;height:10px;margin-right:10px"></div>
+							<div>
+								${shifts[shift]['name']}
+							</div>
+							</div>
+						</div>`);
+							tmpName.push(shifts[shift]['name']);
+						}
+					}
+
+
+
+				}
+
+				/* 				let data = $.ajax({
+									url: base_url + "/schedule/timeschedule/getschedulecycle",
+									dataType: 'json',
+									data: "id=" + '<?php echo $this->id; ?>',
+									async: false
+								}).responseJSON; */
+
+				$("#cycle").change(() => {
+					let cycle = $("#cycle").val();
+					console.log(data['cycle'], cycle);
+					if (cycle != data['cycle']) {
+						$("#test").val("true");
+						//$("#test2").val("");
+					} else {
+						$("#test").val("false");
+						//$("#test2").val("3")
+					}
+				})
+			<?php  } ?>
+
+			function createTime(day) {
+				let timediv = '';
+				for (let index = 0; index < 24; index++) {
+					timediv += '<div id="' + day + '0' + index + '"></div>'
+				}
+				return timediv;
+			}
+
+			function packData(cycle, data) {
+				packedData = [];
+				shiftData = [];
+				const check = {
+					'DAILY': 'daily',
+					'WEEKLY': 'dayofweek',
+					'MONTHLY': 'dayofmonth'
+				}
+				for (const i of data) {
+					packedData[i[check[cycle]]] = [];
+				}
+
+				for (const i of data) {
+					packedData[i[check[cycle]]].push({
+						color: i['lablecolor'],
+						name: i['shiftname'],
+						starttime: i['starttime'],
+						endtime: i['endtime']
+					})
+				}
+
+				return packedData;
+
+			}
+			$(document).ready(function() {
+
+				/* if ('<?php echo $this->msgarray["test"]; ?>' != '') {
+					displaydeptform('<?php echo BASE_URL . 'cycleshift/addpopup' ?>', 'Cycle Shift')
+				} */
+				/* if ('<?php echo $this->msgarray["test2"]; ?>' != '') {
+					let id = $('#cycle').val();
+					displaydeptform('<?php echo BASE_URL . 'schedulecycle/addpopup/id/' ?>' + id, 'Schedule Cycle')
+				} */
+				if ('<?php echo $this->id; ?>' != '' && $("#test").val() == '') {
+					//$("#test2").val("3");
+					//$("#test").val('false');
+				}
+				$('#startdate,#enddate').datepicker({
+					showOn: 'both',
+					//minDate: 0,
+					//yearRange: yearrange,
+					dateFormat: '<?php echo DATEFORMAT_JS; ?>',
+					buttonImage: "<?php echo $this->baseUrl("public/media/images/cal.jpg"); ?>",
+					buttonImageOnly: true,
+					buttonText: "",
+					changeMonth: true,
+					changeYear: true,
+					showButtonPanel: true,
+					onClose: function() {
+						$(this).trigger('blur');
+						var msg = "";
+						if (this.id == 'enddate')
+							msg = "End date should be greater than Start date.";
+						else
+							msg = "Start date should be less than End date.";
+						from_to_date_validation('startdate', 'enddate', this, msg);
+					}
+
+				});
+			});
+
+		</script>
+
+		<div id="schedulecycleContainer" style="display: none; overflow: auto;">
+			<div class="heading">
+				<a href="javascript:void(0)">
+					<img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+			</div>
+
+			<iframe id="schedulecycleCont" class="business_units_iframe" frameborder="0"></iframe>
+
+		</div>
+
+		<div id="cycleshiftContainer" style="display: none; overflow: auto;">
+			<div class="heading">
+				<a href="javascript:void(0)">
+					<img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+			</div>
+
+			<iframe id="cycleshiftCont" class="business_units_iframe timetable" frameborder="0"></iframe>
+
+		</div>
+
+	<?php 	//code...
+} catch (\Throwable $th) {
+	Zend_Debug::dump($th->getMessage());
+} ?>

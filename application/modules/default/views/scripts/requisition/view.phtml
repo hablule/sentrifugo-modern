@@ -1,0 +1,204 @@
+<?php
+
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+?>
+
+<?php
+/**
+ * Requisition View (Read-Only Campaign Details)
+ * Displays master approval details and child seat targeting.
+ * Complies with SSOT v6.7.7.
+ */
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<style>
+	.seats-table {
+		width: 100%;
+		border-collapse: collapse;
+		margin-top: 15px;
+	}
+
+	.seats-table th,
+	.seats-table td {
+		border: 1px solid #ddd;
+		padding: 10px;
+		text-align: left;
+	}
+
+	.seats-table th {
+		background: #f9f9f9;
+		font-weight: bold;
+		font-size: 12px;
+	}
+</style>
+
+<div class="row">
+	<div class="col s12">
+		<div id="message_container">
+			<?php if (isset($this->nodata) && $this->nodata === 'nodata') : ?>
+				<div class="ml-alert-1-info">
+					<div class="style-1-icon info"></div>No data found.
+				</div>
+			<?php endif; ?>
+		</div>
+
+		<?php if (isset($this->form)) : ?>
+			<div class="total-form-controller">
+				<div class="division">
+
+					<h5 style="color:#26a69a; border-bottom:1px solid #ddd; padding-bottom:5px;">Campaign Authorization</h5>
+
+					<div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+						<div class="division"><?php echo $this->form->code; ?></div>
+					</div>
+					<div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->requested_by_employee_id->getLabel()); ?></label>
+						<div class="division"><?php echo $this->form->requested_by_employee_id; ?></div>
+					</div>
+					<div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->assigned_recruiter_id->getLabel()); ?></label>
+						<div class="division"><?php echo $this->form->assigned_recruiter_id; ?></div>
+					</div>
+					<div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->requested_fte->getLabel()); ?></label>
+						<div class="division"><?php echo $this->form->requested_fte; ?></div>
+					</div>
+					<div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->status->getLabel()); ?></label>
+						<div class="division"><?php echo $this->form->status; ?></div>
+					</div>
+
+					<!-- Description WYSIWYG Container -->
+					<div style="clear:both; margin-top: 25px;">
+						<?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+					</div>
+
+
+					<!-- Explicit clear to stop the h4/h5 from floating right -->
+					<div style="clear: both; width: 100%; height: 20px;"></div>
+
+					<h5 style="color:#26a69a; border-bottom:1px solid #ddd; padding-bottom:5px; margin-top:30px;">Targeted Position Seats (The Pipeline)</h5>
+
+					<table class="seats-table">
+						<thead>
+							<tr>
+								<th>Position Code</th>
+								<th>Job Title Blueprint</th>
+								<th style="width: 100px;">Target FTE</th>
+								<th style="width: 130px;">Target Onboard</th>
+								<th style="width: 130px;">Pipeline Status</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php if (!empty($this->positions)) : ?>
+								<?php foreach ($this->positions as $pos) : ?>
+									<tr>
+										<td><strong><?php echo $this->escape($pos['position_code']); ?></strong></td>
+										<td><?php echo $this->escape($pos['jobtitle_name']); ?></td>
+										<td><?php echo $this->escape($pos['target_fte']); ?></td>
+										<td><?php echo $this->escape($pos['target_hire_date']); ?></td>
+										<td>
+											<span class="badge" style="background:<?php echo ($pos['status'] === 'Filled') ? '#2ecc71' : '#26a69a'; ?>; color:#fff; border-radius:3px; padding:3px 8px; font-size:11px;">
+												<?php echo $this->escape($pos['status']); ?>
+											</span>
+											<?php if (!empty($pos['filled_by_employee_name'])) : ?>
+												<span style="font-size:11px; color:#555; display:block; margin-top:3px;">
+													<i class="fa fa-user"></i> <?php echo $this->escape($pos['filled_by_employee_name']); ?>
+												</span>
+											<?php endif; ?>
+										</td>
+									</tr>
+								<?php endforeach; ?>
+							<?php else : ?>
+								<tr>
+									<td colspan="5" style="text-align:center; color:#999;">No specific position seats targeted yet.</td>
+								</tr>
+							<?php endif; ?>
+						</tbody>
+					</table>
+
+					<div class="new-form-ui-submit" style="margin-top:20px;">
+						<div class="division">
+							<input onclick="window.location.href='<?php echo BASE_URL; ?>requisition/index';" value="Back to List" type="button" class="reset" />
+							<?php if (defined('REQUISITION_MENU_ID') && sapp_Global::_checkprivileges(REQUISITION_MENU_ID, $this->loginuserGroup, $this->loginuserRole, 'edit') === 'Yes') : ?>
+								<input onclick="window.location.href='<?php echo BASE_URL; ?>requisition/edit/id/<?php echo $this->id; ?>';" value="Edit Campaign" type="button" class="reset" />
+							<?php endif; ?>
+						</div>
+					</div>
+
+					<div style="clear: both; width: 100%; height: 20px;"></div>
+
+					<!-- Pipeline Event Log -->
+					<h5 style="color:#7f8c8d; border-bottom:1px solid #ddd; padding-bottom:5px; margin-top:30px;">Immutable Event Ledger</h5>
+					<table class="seats-table" style="font-size: 11px;">
+						<thead>
+							<tr>
+								<th>Timestamp</th>
+								<th>Target Seat</th>
+								<th>Event</th>
+								<th>Transition Reason</th>
+								<th>Details / Hired Candidate</th>
+								<th>Action By</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php if (!empty($this->logs)) : ?>
+								<?php foreach ($this->logs as $log) : ?>
+									<tr>
+										<td style="color:#666;"><?php echo $this->escape($log['createddate']); ?></td>
+										<td><strong><?php echo $this->escape($log['position_code']); ?></strong></td>
+										<td>
+											<span class="badge" style="background:#555; color:#fff; border-radius:3px; padding:3px 6px;">
+												<?php echo $this->escape($log['status']); ?>
+											</span>
+										</td>
+										<td><?php echo $this->escape($log['reason_name'] ?: '-'); ?></td>
+										<td>
+											<?php if ($log['status'] === 'Filled') : ?>
+												<strong style="color:#2e7d32;"><i class="fa fa-user"></i> Hired: <?php echo $this->escape($log['hired_name']); ?></strong><br>
+											<?php endif; ?>
+											<?php echo nl2br($this->escape($log['notes'])); ?>
+										</td>
+										<td style="color:#666;"><?php echo $this->escape($log['actor_name']); ?></td>
+									</tr>
+								<?php endforeach; ?>
+							<?php else : ?>
+								<tr>
+									<td colspan="6" style="text-align:center; color:#999;">No pipeline events logged yet.</td>
+								</tr>
+							<?php endif; ?>
+						</tbody>
+					</table>
+
+				</div>
+			</div>
+		<?php endif; ?>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#description').jqte();
+		$('.jqte_editor').attr('contenteditable', 'false'); // Lock read-only editor
+	});
+</script>

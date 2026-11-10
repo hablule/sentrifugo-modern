@@ -1,0 +1,12 @@
+<?php
+sapp_Helper::viewHeader();
+sapp_Helper::viewBody('alt','Digital Address',(!empty($this->data['digitaladdress']))?$this->data['digitaladdress']:"...",'Active',(!empty($this->data['isactive']))?$this->data['isactive']:"...");
+sapp_Helper::viewBody('nor','Description',(!empty($this->data['description']))?$this->data['description']:"...",'Digital Media Type',(!empty($this->data['dmname']))?$this->data['dmname']:"...");
+sapp_Helper::viewBody('nor','Digital Media Category',(!empty($this->data['dcname']))?$this->data['dcname']:"...",'','');
+sapp_Helper::viewFooter();
+
+?>
+
+<div class="new-form-ui-submit" id="formSubmit">
+<button onclick="closeiframepopup('<?php echo $this->controllername;?>','cancel');"  type="button" >Cancel</button>
+</div>

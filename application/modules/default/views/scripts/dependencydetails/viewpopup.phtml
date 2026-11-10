@@ -1,0 +1,49 @@
+<?php 
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+try {
+
+?>
+
+<?php $baseUrl = $this->serverUrl().$this->baseUrl();
+sapp_Global::generateClientValidations($this->form);
+?>
+<div id="error_message" style="display:none;"></div>
+		<?php echo $this->form->id; ?>
+<?php 
+$dependentDob = $this->form->dateofbirth->getValue();
+sapp_Helper::viewHeader();
+sapp_Helper::viewBody('alt','First Name',(!empty($this->data[0]['firstname']))?$this->data[0]['firstname']:"...",'Middle Name',(!empty($this->data[0]['middlename']))?$this->data[0]['middlename']:"...");
+sapp_Helper::viewBody('alt','Last Name',(!empty($this->data[0]['lastname']))?$this->data[0]['lastname']:"...",'Dependent Relation',(!empty($this->data[0]['rname']))?$this->data[0]['rname']:"...");
+sapp_Helper::viewBody('nor','Dependent Custody Code',(!empty($this->data[0]['custody']))?$this->data[0]['custody']:"...",'Dependent DOB ',(!empty($dependentDob))?$this->form->dateofbirth->getValue():"...");
+sapp_Helper::viewBody('alt','Blood Group',(!empty($this->data[0]['bloodgroup']))?$this->data[0]['bloodgroup']:"...",'Gender',!empty($this->data[0]['gendername'])?$this->data[0]['gendername']:'...');
+sapp_Helper::viewFooter();
+?>
+       
+        <div class="new-form-ui-submit" id="formSubmit">
+        <input onclick="closeiframepopup('dependencydetails','cancel');" type="button" value="Close"  />
+        </div>
+<?php
+
+        //code...
+} catch (\Throwable $th) {
+        Zend_Debug::dump($th->getMessage());
+}
+?>

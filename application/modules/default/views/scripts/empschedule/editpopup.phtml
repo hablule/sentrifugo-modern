@@ -1,0 +1,188 @@
+<?php
+
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+?>
+
+<?php $baseUrl = $this->serverUrl() . $this->baseUrl();
+
+$form = $this->form;
+
+sapp_Global::generateClientValidations($this->form);
+?>
+<?php if ($this->successmessage != '') { ?>
+    <div id="dispmsgnempschdule" class="ml-alert-1-success">
+        <div class="style-1-icon success"></div>
+        <?php echo $this->successmessage; ?>
+    </div>
+
+<?php } else {
+    sapp_Global::generateClientValidations($this->form); ?>
+    <div id="error_message" style="display:none;"></div>
+    <link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH ?>css/custompopup.css" />
+    <script type="text/javascript" src="<?php echo MEDIA_PATH ?>js/custompopup.js"></script>
+
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction(); ?>" method="POST">
+    <?php echo $this->form->id; ?>
+    <div class="total-form-controller">
+    <div class="new-form-ui ">
+                    <label class="required">Schedule</label>
+                    <div class="division loca_state_div"><?php echo $this->form->sch_name; ?>
+					<span class="errors" id="errors-<?php echo $this->form->sch_name->getId(); ?>"><?php echo $this->msgarray['sch_name']; ?></span>
+							
+
+                    </div>
+                </div>
+                <div class="new-form-ui ">
+                    <label>Start Date</label>
+                    <div class="division loca_state_div"><?php echo $this->form->start_date; ?>
+					<span class="errors" id="errors-<?php echo $this->form->start_date->getId(); ?>"><?php echo $this->msgarray['start_date']; ?></span>
+							
+
+                    </div>
+                </div>
+                <div class="new-form-ui ">
+                    <label>End Date</label>
+                    <div class="division loca_state_div"><?php echo $this->form->end_date; ?>
+					<span class="errors" id="errors-<?php echo $this->form->end_date->getId(); ?>"><?php echo $this->msgarray['end_date']; ?></span>
+							
+
+                    </div>
+                </div>
+                <div class="new-form-ui ">
+                    <label>Description</label>
+                    <div class="division loca_state_div"><?php echo $this->form->description; ?>
+					<span class="errors" id="errors-<?php echo $this->form->description->getId(); ?>"><?php echo $this->msgarray['description']; ?></span>
+							
+
+                    </div>
+                </div>
+				<div class="new-form-ui ">
+                    <label>isactive</label>
+                    <div class="division loca_state_div"><?php echo $this->form->isactive; ?>
+					<span class="errors" id="errors-<?php echo $this->form->isactive->getId(); ?>"><?php echo $this->msgarray['isactive']; ?></span>
+							
+
+                    </div>
+                </div>
+    
+       
+      
+     
+                    <div class="new-form-ui-submit">
+                        <?php echo $this->form->submit; ?>
+                        <input onclick="closeiframepopup('empschedule','cancel');" type="button" value="Close" />
+
+                    </div>
+               
+                
+         
+    </div>
+
+
+    </div>
+</form>
+
+<?php } ?>
+
+<div id="empscheduleContainer"  style="display: none; overflow: auto;">
+	<div class="heading">
+		<a href="javascript:void(0)">
+	    <img src="<?php echo $this->baseUrl().'/public/media/';?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+	</div>
+
+	<iframe id="empscheduleCont" class="business_units_iframe" frameborder="0"></iframe>
+</div>
+<script type='text/javascript'>
+
+      var res
+    $("#sch_name").change(()=>{
+         res = $.ajax({
+            url:base_url+"/schedule/timeschedule/getschedule",
+            dataType:'json',
+            data:"id="+$("#sch_name").val(),
+            async:false
+        }).responseJSON;
+        $("#start_date,#end_date").datepicker("destroy");
+        $('#start_date,#end_date').datepicker({
+					showOn: 'both',
+					minDate: res['startdate'],
+                    maxDate: res['enddate'],
+					//yearRange: yearrange,
+					dateFormat: 'yy-m-d',
+					buttonImage: "<?php echo $this->baseUrl("public/media/images/cal.jpg"); ?>",
+					buttonImageOnly: true,
+					buttonText: "",
+					changeMonth: true,
+					changeYear: true,
+					showButtonPanel: true,
+					onClose: function() {
+						$(this).trigger('blur');
+						var msg = "";
+						if (this.id == 'enddate')
+							msg = "End date should be greater than Start date.";
+						else
+							msg = "Start date should be less than End date.";
+						from_to_date_validation('start_date', 'end_date', this, msg);
+					}
+
+		});
+    })
+$(document).ready(()=>{
+    console.log('here');
+         res = $.ajax({
+            url:base_url+"/schedule/timeschedule/getschedule",
+            dataType:'json',
+            data:"id="+$("#sch_name").val(),
+            async:false
+        }).responseJSON
+    $('#start_date,#end_date').datepicker({
+					showOn: 'both',
+					minDate: res['startdate'],
+                    maxDate: res['enddate'],
+					//yearRange: yearrange,
+					dateFormat: 'yy-m-d',
+					buttonImage: "<?php echo $this->baseUrl("public/media/images/cal.jpg"); ?>",
+					buttonImageOnly: true,
+					buttonText: "",
+					changeMonth: true,
+					changeYear: true,
+					showButtonPanel: true,
+					onClose: function() {
+						$(this).trigger('blur');
+						var msg = "";
+						if (this.id == 'enddate')
+							msg = "End date should be greater than Start date.";
+						else
+							msg = "Start date should be less than End date.";
+						from_to_date_validation('start_date', 'end_date', this, msg);
+					}
+
+		});
+})
+   
+    
+    
+    <?php if ($this->successmessage != '') {  ?>
+        setTimeout(function() {
+            closeiframepopup('<?php echo $this->controllername; ?>', '');
+        }, 2000);
+    <?php } ?>
+</script>

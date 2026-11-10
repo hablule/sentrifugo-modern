@@ -1,0 +1,142 @@
+<?php
+
+/**
+ * Holiday Calendar View (Read-Only)
+ *
+ * Displays the Business Truth (Header) and System Truth (Lines) for a holiday occurrence.
+ * Complies with SSOT v6.7.7.
+ */
+?>
+
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+
+<style>
+    .lines-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+
+    .lines-table th,
+    .lines-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    .lines-table th {
+        background-color: #f9f9f9;
+        font-weight: bold;
+        font-size: 12px;
+    }
+</style>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container">
+            <?php if (isset($this->nodata) && $this->nodata === 'nodata') : ?>
+                <div class="ml-alert-1-info">
+                    <div class="style-1-icon info"></div>No data found.
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <?php if (isset($this->form)) : ?>
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <h5 style="color:#26a69a; border-bottom:1px solid #ddd; padding-bottom:5px;">Holiday Occurrence (Business Truth)</h5>
+
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->holiday_id->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->holiday_id; ?></div>
+                    </div>
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb" style="width:45%;"><label><?php echo $this->escape($this->form->start_date->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->start_date; ?></div>
+                        </div>
+                        <div class="new-form-ui clearb" style="width:45%; margin-left:5%;"><label><?php echo $this->escape($this->form->end_date->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->end_date; ?></div>
+                        </div>
+                    </div>
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb" style="width:30%;"><label><?php echo $this->escape($this->form->duration_days->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->duration_days; ?></div>
+                        </div>
+                        <div class="new-form-ui clearb" style="width:30%; margin-left:3%;"><label><?php echo $this->escape($this->form->start_time->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->start_time; ?></div>
+                        </div>
+                        <div class="new-form-ui clearb" style="width:30%; margin-left:3%;"><label><?php echo $this->escape($this->form->end_time->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->end_time; ?></div>
+                        </div>
+                    </div>
+
+                    <h5 style="color:#26a69a; border-bottom:1px solid #ddd; padding-bottom:5px; margin-top:30px;">Immutable Policy Snapshot</h5>
+
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->work_policy->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->work_policy; ?></div>
+                    </div>
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->payroll_multiplier->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->payroll_multiplier; ?></div>
+                    </div>
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->weekend_policy->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->weekend_policy; ?></div>
+                    </div>
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->priority->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->priority; ?></div>
+                    </div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <h5 style="color:#26a69a; border-bottom:1px solid #ddd; padding-bottom:5px; margin-top:30px;">Materialized Daily Dates (System Truth)</h5>
+                    <table class="lines-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 80px;">Sequence</th>
+                                <th>Effective Date</th>
+                                <th style="width: 100px;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (!empty($this->lines)) : ?>
+                                <?php foreach ($this->lines as $line) : ?>
+                                    <tr>
+                                        <td><strong>Day <?php echo $this->escape($line['sequence_no']); ?></strong></td>
+                                        <td><?php echo sapp_Global::change_date($line['effective_date'], 'view'); ?></td>
+                                        <td><?php echo ($line['isactive'] == 1) ? '<span style="color:green;">Active</span>' : '<span style="color:red;">Cancelled</span>'; ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else : ?>
+                                <tr>
+                                    <td colspan="3" style="text-align:center; color:#999;">No materialized lines found.</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+
+                    <div class="new-form-ui-submit" style="margin-top:20px;">
+                        <div class="division">
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>holidaydate';" value="Back to List" type="button" class="reset" />
+
+                            <?php if (defined('HOLIDAY_DATE') && sapp_Global::_checkprivileges(HOLIDAY_DATE, $this->loginuserGroup, $this->loginuserRole, 'edit') === 'Yes') : ?>
+                                <input onclick="window.location.href='<?php echo BASE_URL; ?>holidaydate/edit/id/<?php echo $this->id; ?>';" value="Edit" type="button" class="reset" />
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#description').jqte();
+        $('.jqte_editor').attr('contenteditable', 'false');
+    });
+</script>

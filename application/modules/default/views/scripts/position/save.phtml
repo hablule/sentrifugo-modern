@@ -1,0 +1,223 @@
+<?php
+
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+?>
+
+<?php
+/**
+ * Position Save View (Add/Edit Seat)
+ * Features SSOT VII.22 Dynamic Wrappers for the Single Org Owner requirement.
+ * Complies with SSOT v6.7.7.
+ */
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/custompopup.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/custompopup.js"></script>
+
+<style>
+    .add-coloum {
+        color: #26a69a;
+        cursor: pointer;
+        font-size: 11px;
+        margin-top: 4px;
+        display: inline-block;
+        font-weight: bold;
+    }
+
+    .add-coloum:hover {
+        text-decoration: underline;
+    }
+
+    .dynamic-wrapper {
+        clear: both;
+        width: 100%;
+        display: none;
+    }
+</style>
+
+<?php sapp_Global::generateClientValidations($this->form); ?>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container"></div>
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" method="post">
+            <?php echo $this->form->id; ?>
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <div style="clear:both; margin-top:20px;"></div>
+
+                    <h5 style="color:#26a69a; border-bottom:1px solid #ddd; padding-bottom:5px;">Seat Specification</h5>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->code; ?>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->code->getId()); ?>"></span></div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->name; ?>
+                            <span style="font-size: 11px; color: #999;">Leave blank to inherit the name of the selected Job Title blueprint.</span>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->name->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <!-- Job Title with On-The-Fly Creation -->
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->jobtitle_id->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->jobtitle_id; ?>
+                            <span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL . 'jobtitle/addpopup'; ?>', 'Add Job Title');">+ Add Job Title</span>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->jobtitle_id->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->reports_to_position_id->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->reports_to_position_id; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->reports_to_position_id->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->status->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->status; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->status->getId()); ?>"></span></div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->max_fte->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->max_fte; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->max_fte->getId()); ?>"></span></div>
+                    </div>
+
+                    <div style="clear:both; margin-top:20px;"></div>
+
+                    <!-- SINGLE ORGANIZATIONAL OWNER SECTION (SSOT VII.22 Dynamic Wrappers) -->
+                    <h5 style="color:#26a69a; border-bottom:1px solid #ddd; padding-bottom:5px; margin-top:30px;">Direct Organizational Owner (Strict 1:1)</h5>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->org_type->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->org_type; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->org_type->getId()); ?>"></span></div>
+                    </div>
+
+                    <!-- Dynamic Wrapper for Company -->
+                    <div class="dynamic-wrapper" id="wrapper_Company">
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->company_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->company_id; ?><span class="errors" id="errors-company_id"></span></div>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Wrapper for Business Unit -->
+                    <div class="dynamic-wrapper" id="wrapper_BusinessUnit">
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->businessunit_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->businessunit_id; ?><span class="errors" id="errors-businessunit_id"></span></div>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Wrapper for Division -->
+                    <div class="dynamic-wrapper" id="wrapper_Division">
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->division_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->division_id; ?><span class="errors" id="errors-division_id"></span></div>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Wrapper for Department -->
+                    <div class="dynamic-wrapper" id="wrapper_Department">
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->department_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->department_id; ?><span class="errors" id="errors-department_id"></span></div>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Wrapper for Section -->
+                    <div class="dynamic-wrapper" id="wrapper_Section">
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->section_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->section_id; ?><span class="errors" id="errors-section_id"></span></div>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Wrapper for Team -->
+                    <div class="dynamic-wrapper" id="wrapper_Team">
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->team_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->team_id; ?><span class="errors" id="errors-team_id"></span></div>
+                        </div>
+                    </div>
+
+                    <div style="clear:both; margin-top:20px;"></div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?><span class="errors" id="errors-<?php echo $this->escape($this->form->isactive->getId()); ?>"></span></div>
+                    </div>
+
+                    <div class="new-form-ui-submit">
+                        <div class="division">
+                            <?php echo $this->form->submit; ?>
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>position/index';" value="Cancel" type="button" class="reset" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- SSOT VIII: Hidden Iframe Container for Job Title Modal -->
+ <div id="jobtitleContainer" style="display: none; overflow: auto;">
+    <div class="heading"><a href="javascript:void(0)"><img src="<?php echo MEDIA_PATH; ?>images/close.png" class="closeAttachPopup" style="margin: -24px 8px 0 0;"></a></div>
+    <iframe id="jobtitleCont" class="user_iframe" frameborder="0"></iframe>
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#description').jqte();
+        toggleOrgOwnerDropdowns(); // Initialize visibility on load
+    });
+
+    // SSOT VII.22 Dynamic Wrapper Toggler: Ensures only 1 Org Unit dropdown is visible and clears others
+    function toggleOrgOwnerDropdowns() {
+        var selectedType = $('#org_type').val();
+        $('.dynamic-wrapper').hide();
+
+        if (selectedType) {
+            $('#wrapper_' + selectedType).fadeIn(150);
+            // Clear all hidden select values so only the active one submits a value
+            $('.dynamic-wrapper select').not('#wrapper_' + selectedType + ' select').val('');
+        }
+    }
+</script>

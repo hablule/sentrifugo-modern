@@ -1,0 +1,158 @@
+<?php
+
+/**
+ * City Add Popup View
+ * 
+ * Runs inside an iframe modal. On success, updates the parent DOM via global JS.
+ */
+$this->msgarray = isset($this->msgarray) ? $this->msgarray : array();
+sapp_Global::generateClientValidations($this->form);
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/custompopup.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<div style="padding: 15px;">
+    <?php if (isset($this->popup) && $this->popup == 'close') : ?>
+        <div class="ml-alert-1-success">
+            <div style="display:block;"><span class="style-1-icon success"></span>City <?php echo $this->escape($this->eventact); ?> successfully.</div>
+        </div>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                setTimeout(function() {
+                    // Update parent dropdown and close iframe modal
+                    parent.closeiframeAddPopup('<?php echo $this->optionsHtml; ?>', 'city', 'city_id', 'City');
+                }, 1500);
+            });
+        </script>
+
+    <?php else : ?>
+        <div id="error_message" style="display:none;"></div>
+        <?php if (!empty($this->msgarray['error'])) : ?>
+            <div class="ml-alert-1-error">
+                <div style="display:block;"><span class="style-1-icon error"></span><?php echo $this->escape($this->msgarray['error']); ?></div>
+            </div>
+        <?php endif; ?>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" action="<?php echo $this->escape($this->form->getAction()); ?>" method="<?php echo $this->escape($this->form->getMethod()); ?>">
+            <?php echo $this->form->id; ?>
+            <div class="total-form-controller" style="box-shadow: none; border: none; padding: 0;">
+                <div class="division">
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->country_id->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->country_id; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->country_id->getId()); ?>"><?php echo $this->escape($this->msgarray['country_id'] ?? ''); ?></span>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->state_id->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->state_id; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->state_id->getId()); ?>"><?php echo $this->escape($this->msgarray['state_id'] ?? ''); ?></span>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->name; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->name->getId()); ?>"><?php echo $this->escape($this->msgarray['name'] ?? ''); ?></span>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->code; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->code->getId()); ?>"><?php echo $this->escape($this->msgarray['code'] ?? ''); ?></span>
+                    </div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->isactive->getId()); ?>"><?php echo $this->escape($this->msgarray['isactive'] ?? ''); ?></span>
+                    </div>
+
+                    <div class="new-form-ui-submit" style="margin-top: 15px;">
+                        <div class="division">
+                            <input type="submit" name="submit" id="submitbutton" value="Save" class="actbtn_btn" />
+                            <button type="button" class="reset" onclick="parent.closeiframepopup('city', 'cancel');">Cancel</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+
+        <script type="text/javascript">
+            // SSOT VII: Robust AJAX Dropdown Pattern
+            function getStatesByCountry(countryId) {
+                var $stateSelect = $('#state_id');
+                $stateSelect.empty().append('<option value="">Select State/Province</option>');
+
+                if (!countryId) {
+                    if ($.isFunction($.fn.material_select)) $stateSelect.material_select();
+                    return;
+                }
+
+                $stateSelect.parent().block({
+                    message: null,
+                    overlayCSS: {
+                        background: '#fff url(' + base_url + '/public/media/images/loader2.gif) no-repeat center',
+                        opacity: 0.8
+                    }
+                });
+
+                $.ajax({
+                    url: base_url + '/city/getstates/format/json',
+                    type: 'POST',
+                    data: {
+                        country_id: countryId
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response && Object.keys(response).length > 0) {
+                            var firstOptionSelected = false; // Flag to track the first item
+
+                            $.each(response, function(key, value) {
+                                var optId = '',
+                                    optName = '';
+                                if (typeof value === 'object') {
+                                    optId = value.id || key;
+                                    optName = value.name || value.state_name;
+                                } else {
+                                    optId = key;
+                                    optName = value;
+                                }
+
+                                // Select the first valid option dynamically
+                                var selectedAttr = (!firstOptionSelected) ? ' selected="selected"' : '';
+                                $stateSelect.append('<option value="' + optId + '"' + selectedAttr + '>' + optName + '</option>');
+                                firstOptionSelected = true;
+                            });
+
+                            // Trigger change so any child dropdowns (if added later) know the state changed
+                            $stateSelect.trigger('change');
+
+                        } else {
+                            // No states found for this country
+                            $stateSelect.append('<option value="">No States Available</option>');
+                        }
+                    },
+                    complete: function() {
+                        $stateSelect.parent().unblock();
+                        if ($.isFunction($.fn.material_select)) {
+                            $stateSelect.material_select();
+                        } else if ($.isFunction($.fn.select2)) {
+                            $stateSelect.select2();
+                        }
+                    }
+                });
+            }
+
+            $(document).ready(function() {
+                if ($('#description').length) {
+                    $('#description').jqte();
+                }
+            });
+        </script>
+    <?php endif; ?>
+</div>

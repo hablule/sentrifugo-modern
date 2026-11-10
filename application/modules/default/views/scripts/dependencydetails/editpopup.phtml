@@ -1,0 +1,190 @@
+<?php 
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+?>
+<script type="text/javascript" src="<?php echo MEDIA_PATH ?>/js/hrms.js"></script>
+
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH ?>css/custompopup.css" />
+  <script type="text/javascript" src="<?php echo MEDIA_PATH ?>js/custompopup.js"></script>
+  <link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+<?php $baseUrl = $this->serverUrl().$this->baseUrl();
+sapp_Global::generateClientValidations($this->form);
+?>
+<?php if($this->successmessage != '') { ?>
+<div id="dispmsgncc" class="ml-alert-1-success">
+<div class="style-1-icon success"></div>
+Employee dependency details updated successfully.
+</div>
+<?php } else	{	?>
+<div id="error_message" style="display:none;"></div>
+
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction();?>" method="<?php echo $this->form->getMethod(); ?>">
+		<?php echo $this->form->id; ?>
+        <div class="total-form-controller">
+		 	<div class="new-form-ui">
+			  <label id="injuredDate" class="required">First Name</label>
+				<div class="division loca_state_div"><?php echo $this->form->firstname; ?></div>
+				<?php if(isset($this->msgarray['firstname'])){?>
+				<span class="errors" id="errors-<?php echo $this->form->firstname->getId(); ?>"><?php echo $this->msgarray['firstname'];?></span>
+				<?php }?>
+			</div>
+			
+
+			<div class="new-form-ui">
+			  <label id="injuredDate" class="required">Middle Name</label>
+				<div class="division loca_state_div"><?php echo $this->form->middlename; ?></div>
+				<?php if(isset($this->msgarray['middlename'])){?>
+				<span class="errors" id="errors-<?php echo $this->form->middlename->getId(); ?>"><?php echo $this->msgarray['middlename'];?></span>
+				<?php }?>
+			</div>
+
+
+			<div class="new-form-ui">
+			  <label id="injuredDate" class="required">Last Name</label>
+				<div class="division loca_state_div"><?php echo $this->form->lastname; ?></div>
+				<?php if(isset($this->msgarray['lastname'])){?>
+				<span class="errors" id="errors-<?php echo $this->form->lastname->getId(); ?>"><?php echo $this->msgarray['lastname'];?></span>
+				<?php }?>
+			</div>
+
+
+			<div class="new-form-ui">
+				<label class="required">Dependent Relation</label>
+				<div class="division"><?php echo $this->form->relationship_id; ?>
+				<?php if ($this->relationpermission == 'Yes') { ?>
+						<span class="add-coloum" onclick="displayNestedPopup('<?php echo BASE_URL . 'relationship/addpopup' ?>','Relationship');"> Add Relationship</span>
+					<?php } ?>
+			</div>
+				 <?php if(isset($this->msgarray['relationship_id'])){?>
+				   <span class="errors" id="errors-<?php echo $this->form->relationship_id->getId(); ?>"><?php echo $this->msgarray['relationship_id'];?></span>
+				<?php }?>
+			</div>
+			
+
+			<div class="new-form-ui">
+			  <label class="required">Dependent <img class="tooltip" title=" <?php echo DATE_DESCRIPTION;?>" src="<?php echo MEDIA_PATH;?>images/help.png"></label>
+			  <div class="division"><?php echo $this->form->isdependent; ?></div>
+				<?php if(isset($this->msgarray['isdependent'])){?>
+				   <span class="errors" id="errors-<?php echo $this->form->isdependent->getId(); ?>"><?php echo $this->msgarray['isdependent'];?></span>
+				<?php }?>
+			</div>
+
+
+			<div class="new-form-ui">
+			    <label class="required">Custody Code</label>
+				<div class="division"><?php echo $this->form->custody; ?></div>
+				 <?php if(isset($this->msgarray['custody'])){?>
+				   <span class="errors" id="errors-<?php echo $this->form->custody->getId(); ?>"><?php echo $this->msgarray['custody'];?></span>
+				<?php }?>
+				</div>
+															
+			<div class="new-form-ui">
+			  <label class="required">Dependent DOB <img class="tooltip" title=" <?php echo DATE_DESCRIPTION;?>" src="<?php echo MEDIA_PATH;?>images/help.png"></label>
+			  <div class="division"><?php echo $this->form->dateofbirth; ?></div>
+				<?php if(isset($this->msgarray['dateofbirth'])){?>
+				   <span class="errors" id="errors-<?php echo $this->form->dateofbirth->getId(); ?>"><?php echo $this->msgarray['dateofbirth'];?></span>
+				<?php }?>
+			</div>
+				
+			<div class="new-form-ui">
+			  <label class="required">Gender<img class="tooltip" title=" <?php echo DATE_DESCRIPTION;?>" src="<?php echo MEDIA_PATH;?>images/help.png"></label>
+			  <div class="division"><?php echo $this->form->gender; ?></div>
+				<?php if(isset($this->msgarray['gender'])){?>
+				   <span class="errors" id="errors-<?php echo $this->form->gender->getId(); ?>"><?php echo $this->msgarray['gender'];?></span>
+				<?php }?>
+			</div>
+
+
+			<div class="new-form-ui">
+			  <label class="required">Blood Group<img class="tooltip" title=" <?php echo DATE_DESCRIPTION;?>" src="<?php echo MEDIA_PATH;?>images/help.png"></label>
+			  <div class="division"><?php echo $this->form->bloodgroup; ?></div>
+				<?php if(isset($this->msgarray['isactive'])){?>
+				   <span class="errors" id="errors-<?php echo $this->form->isactive->getId(); ?>"><?php echo $this->msgarray['isactive'];?></span>
+				<?php }?>
+			</div>
+
+			<div class="new-form-ui">
+			  <label class="required">Active<img class="tooltip" title=" <?php echo DATE_DESCRIPTION;?>" src="<?php echo MEDIA_PATH;?>images/help.png"></label>
+			  <div class="division"><?php echo $this->form->isactive; ?></div>
+				<?php if(isset($this->msgarray['isactive'])){?>
+				   <span class="errors" id="errors-<?php echo $this->form->isactive->getId(); ?>"><?php echo $this->msgarray['isactive'];?></span>
+				<?php }?>
+			</div>
+
+        <div class="new-form-ui-submit" id="formSubmit">
+        <?php echo $this->form->submit; ?>
+        <button onclick="closeiframepopup('dependencydetails','cancel');" type="button">Cancel</button>
+        </div>
+</div>        
+</form>
+<script type='text/javascript'>
+$(document).ready(function(){
+	//To get the Calender image...
+	  var yearrange = <?php echo "'".YEAR.':'.date('Y')."'"; ?>;
+//var yearrange = <?php echo "'".date("Y", strtotime("-30 years")).':'.date('Y')."'"; ?>;
+	$('#dependent_dob').datepicker({
+					showOn:'both',
+					maxDate: new Date, 
+					yearRange: yearrange,
+					dateFormat:"<?php echo DATEFORMAT_JS;?>",
+					buttonImage: "<?php echo $this->baseUrl("public/media/images/cal.jpg");?>",
+					buttonImageOnly: true,
+					buttonText: "",
+					changeMonth: true,
+					changeYear: true,
+                                        showButtonPanel: true ,
+					onClose:function()
+					{
+						$(this).trigger('blur');
+					}  
+						
+					
+	});
+	
+	
+    $("#disabilitydetails").addClass('active');
+	});
+</script>
+<?php	}	?>
+<script language='javascript' type='text/javascript'>
+$(document).ready(()=>{
+
+	toggleSelect();
+})
+<?php if($this->successmessage != '') { ?>
+        setTimeout(function(){
+		    closeiframepopup('<?php echo $this->controllername; ?>',''); 
+		},2000);
+<?php } ?>
+
+function toggleSelect()
+{
+	var status;
+  var isChecked = document.getElementById("isdependent").checked;
+  if(isChecked){
+	$("#custody").parent().parent().css("display","block");
+  }
+  if(!isChecked){
+	$("#custody").parent().parent().css("display","none");
+  }
+
+}
+</script>

@@ -1,0 +1,286 @@
+<?php 
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+?>
+
+  <div class="table-header">
+		    <div class="config-choose config-up" onclick="displaytabs()" id="selectfields"></div>
+			<span>Employee Leaves Summary</span>
+		    <div id="leavestabdiv" class="columnsdiv" style="display:none;">
+			<i>Columns :</i>
+			<?php 
+				$checked = '';
+				if(!empty($this->leavesheaderarr))
+				{
+					foreach($this->leavesheaderarr as $key => $val) 
+					{
+						if(!empty($this->selectColumnLabels))
+						{
+							if(array_key_exists($key,$this->selectColumnLabels))
+								$checked = 'checked';
+							else 
+								$checked = '';
+						}		
+					?>
+					
+						<p><input type="checkbox" <?php echo $checked;?> id="leavestabcheckbox_<?php echo $key;?>" name="leavestabcheckbox" value="<?php echo $key;?>"><b><?php echo $val;?></b></p>
+				  <?php
+					}
+				}?>
+				
+				<div class="new-form-ui-submit mrgetop10">
+				 <input type="button" value="Apply" onclick="setleavestab()">
+				 <button name="Cancel" id="Cancel" type="button" onclick="cancelleavestab()">Cancel</button>
+				</div>
+            </div>
+		</div>
+	<?php 
+	      $selectcolumns = ''; 
+	      if(!empty($this->selectColumnLabels))
+		  {
+			  foreach($this->selectColumnLabels as $header => $label)
+			  {
+				  $selectcolumnsArr[] = $header;
+			  }
+			  $selectcolumns = implode(",",$selectcolumnsArr);
+		  }
+	?>	
+    <input type="hidden" value="<?php echo $selectcolumns;?>" id="selectedcheckbox"/>
+
+  
+
+
+	<div class="details_data_display_block newtablegrid" id="reportgrid">
+		<table class='grid' align='center'  width='100%' cellspacing='0' cellpadding='4' border='0'>
+		    <thead>
+		        <tr>
+				    <?php if(array_key_exists('userfullname',$this->selectColumnLabels) !== false){?>
+				      <th id = "leaveappliedby" >
+					    <a onclick="sortcolumn('l.userfullname','leaveappliedby')" href="javascript:void(0);">Leave Applied By</a>
+					  </th>
+					<?php }?>  
+					<?php if(array_key_exists('leave',$this->selectColumnLabels) !== false){?>
+				      <th id = "leave" >
+					    <a onclick="sortcolumn('l.leave','leave')" href="javascript:void(0);">Leave</a>
+					  </th>
+					<?php }?>  
+					<?php if(array_key_exists('leavecategory',$this->selectColumnLabels) !== false){?>  
+		              <th id = "leavetype">
+					    <a onclick="sortcolumn('l.leavecategory','leavetype')" href="javascript:void(0);"> Leave Type</a>
+					  </th>        
+					<?php }?>
+                    <?php if(array_key_exists('status',$this->selectColumnLabels) !== false){?>					
+					   <th id = "leavestatusheader">
+					     <a onclick="sortcolumn('l.status','leavestatusheader')" href="javascript:void(0);"> Leave Status</a>
+					   </th>
+					<?php }?>
+                 
+                    <?php if(array_key_exists('leavefrom',$this->selectColumnLabels) !== false){?>					
+		               <th id = "fromdate" >
+					     <a onclick="sortcolumn('l.leavefrom','fromdate')" href="javascript:void(0);"> From Date</a>
+					   </th>    
+					<?php }?>
+                    <?php if(array_key_exists('leaveto',$this->selectColumnLabels) !== false){?>					
+		               <th id = "todate">
+					      <a onclick="sortcolumn('l.leaveto','todate')" href="javascript:void(0);"> To Date</a>
+					   </th> 
+					<?php }?>   
+					<?php if(array_key_exists('remark',$this->selectColumnLabels) !== false){?>
+		               <th id = "reason">
+					   	  <a onclick="sortcolumn('l.remark','reason')" href="javascript:void(0);"> Remark</a>
+					   </th>
+					<?php }?>
+					<?php if(array_key_exists('approvedby',$this->selectColumnLabels) !== false){?>
+		               <th id = "approver_comments">
+					   	  <a onclick="sortcolumn('l.approvedby','approver_comments')" href="javascript:void(0);"> Approved By</a>
+					   </th>
+					<?php }?>  
+                  
+                   
+                    <?php if(array_key_exists('requested',$this->selectColumnLabels) !== false){?> 					
+                       <th id = "appliedon">
+					      <a onclick="sortcolumn('l.requested','appliedon')" href="javascript:void(0);">  Applied On</a>
+					   </th> 					
+					<?php }?>   
+		                    
+		        </tr>
+		    </thead>
+		    <tbody>
+		    <?php if(!empty($this->leavestatusArr)){ 
+		    	foreach($this->leavestatusArr as $key => $status){ 
+		        	
+		        	if($key%2 == 0){
+		        		$classColor = 'row1';
+		        	}else{
+		        		$classColor = 'row2';
+		        	}
+			 ?>
+		        <tr class="<?php echo $classColor;?>"  onclick="selectrow('userlogpreview',this);">
+				    <?php if(array_key_exists('userfullname',$this->selectColumnLabels) !== false){?>
+		               <td>
+					       <span title="<?php echo $status['userfullname']; ?>"> <?php echo (strlen($status['userfullname'])>25)?substr($status['userfullname'],0,22).'...':$status['userfullname']; ?>
+						   </span>
+					   </td> 
+                    <?php }?>		
+					<?php if(array_key_exists('leave',$this->selectColumnLabels) !== false){?>
+		               <td>
+					       <span title="<?php echo $status['leave']; ?>"> <?php echo $status['leave']; ?>
+						   </span>
+					   </td> 
+                    <?php }?>					   
+                    <?php if(array_key_exists('leavecategory',$this->selectColumnLabels) !== false){?> 					   
+		              <td>
+					  <span title="<?php echo $status['leavecategory']; ?>"><?php echo $status['leavecategory']; ?></span></td>
+					<?php }?>
+				
+					<?php if(array_key_exists('status',$this->selectColumnLabels) !== false){?>
+					  <td>
+					  <span title="<?php echo $status['status']; ?>"><?php echo $status['status']; ?></span></td>
+					<?php }?>
+				
+					<?php if(array_key_exists('leavefrom',$this->selectColumnLabels) !== false){?>
+		              <td>
+					  <span title="<?php echo $status['leavefrom']; ?>"><?php echo  sapp_Global::change_date($status['leavefrom'],"view") ?></span>
+					  </td>
+					<?php }?>
+					<?php if(array_key_exists('leaveto',$this->selectColumnLabels) !== false){?>
+		              <td>
+					  <span title="<?php echo $status['leaveto']; ?>"><?php echo sapp_Global::change_date($status['leaveto'],"view") ?></span>
+					  </td>
+                    <?php }?>					
+					<?php if(array_key_exists('remark',$this->selectColumnLabels) !== false){?>
+		              <td>
+					  <span title="<?php echo $status['remark']; ?>"><?php echo (strlen($status['remark'])>25)?substr($status['reason'],0,22).'...':$status['reason']; ?>
+					  </span>
+					  </td>
+                    <?php }?>
+                    <?php if(array_key_exists('approvedby',$this->selectColumnLabels) !== false){?>
+		              <td>
+					  <span title="<?php echo $status['approvedby']; ?>"><?php echo $status['approvedby']; ?>
+					  </span>
+					  </td>
+                    <?php }?> 					
+					
+					<?php if(array_key_exists('requested',$this->selectColumnLabels) !== false){?>
+                      <td>
+					  <span title="<?php echo $status['requested']; ?>"><?php echo $status['requested']; ?></span>
+					  </td>	
+                    <?php }?>					
+		        </tr>
+		        <?php }
+		        
+		    }else{ ?>
+			   <tr>
+			      <td class="no-data-td" colspan="11"><p class="no-data">No data found</p></td>
+			   </tr>
+			<?php }?>   
+		    </tbody>
+		</table>
+	</div>
+	 
+	<div class="table-btm">
+				<div class="pagination_block">
+					<div class="records_block">
+					<?php if(!empty($this->leavestatusArr)){ ?>
+						<div class="page_txt">
+							<span>Records per page</span>
+							<div class="records_number-drop-down">
+								    <select id="perpagetext" onchange="displayleavereportsajax('perpage');">
+										<option value="20" <?php echo ($this->perpage == 20)?"selected":"" ;?>>20</option>
+										<option value="50" <?php echo ($this->perpage == 50)?"selected":"" ;?>>50</option>
+										<option value="100" <?php echo ($this->perpage == 100)?"selected":"" ;?>>100</option>
+										<option value="150" <?php echo ($this->perpage == 150)?"selected":"" ;?>>150</option>
+										<option value="200" <?php echo ($this->perpage == 200)?"selected":"" ;?>>200</option>
+									</select>
+							</div>
+						</div>
+					<?php }?>		
+					</div>
+                                    <?php 
+                            if($this->lastpage > 1)
+                            {
+?>
+        		    <div class="pagination_view">
+		 				<?php sapp_Global::pagination_html(); ?>
+					</div>
+                                    <?php 
+                            }
+?> 
+				</div>
+			</div>
+	
+<?php //}else{ echo 'norecord'; }?>
+
+
+<script type='text/javascript'>
+
+$(document).ready(function(){
+<?php if(empty($this->leavestatusArr)){ ?>
+        $("#pdf").hide();
+		$("#excel").hide();
+<?php }else{?>
+		$("#pdf").show();
+		$("#excel").show();
+<?php }?>
+<?php 
+if($this->lastpage > 1)
+{
+?>
+$('.pagination').jqPagination({
+    link_string	: '/?page={page_number}',
+    current_page    : parseInt(<?php echo $this->pageno;?>),
+    max_page	: parseInt(<?php echo $this->lastpage;?>),
+    paged		: function(page) {
+         
+           $('#pageno').val(page);
+           displayleavereportsajax('pagination');
+
+    }
+});
+<?php 
+}
+?>  
+
+$('#perpagetext').val('<?php echo $this->perpage;?>');
+	var column = $('#columnid').val();		
+	var cby = $('#columnby').val();
+	
+	if(column !='')
+	{
+		if(cby == 'Desc')
+		{
+			$('#'+column).append('<span class="s-ico"><span class="ui-icon-asc  ui-icon ui-icon-triangle-1-s"></span></span>');
+		}			
+		else
+		{
+			$('#'+column).append('<span class="s-ico"><span class="ui-icon-desc ui-icon ui-icon-triangle-1-n"></span></span>');
+		}
+	}
+	
+	
+	$('#reportgrid').slimScrollHorizontal({
+		alwaysVisible: false,
+		start: 'left',
+		position: 'bottom',
+	}).css({ background: '#ccc', paddingBottom: '10px' }); 
+});
+</script>
+
+	

@@ -1,0 +1,499 @@
+<?php
+
+
+sapp_Global::generateClientValidations($this->form);
+?>
+<?php if (count($this->messages)) { ?>
+    <div id="dispmsgemp" class="settingssuccess">
+        <?php
+        foreach ($this->messages as $message) {
+            $flag = array();
+            $flag = array_keys($message);
+            echo "<div id='messageData' class='ml-alert-1-$flag[0]'><div style='display:block;'><span class='style-1-icon $flag[0]'></span>";
+            echo $message[$flag[0]];
+            echo "</div></div>";
+        };
+        ?>
+    </div>
+
+<?php } ?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH ?>css/addelement.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH ?>js/addelement.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" method="POST" action="<?php echo $this->form->getAction(); ?>">
+    <div class="new-form-ui ">
+        <label class="required"><?php echo $this->form->name->getLabel(); ?></label>
+        <div class="division"><?php echo $this->form->name; ?>
+            <span class="errors" id="errors-<?php echo $this->form->name->getId(); ?>"><?php echo $this->msgarray['name']; ?></span>
+        </div>
+
+    </div>
+
+    <div class="new-form-ui ">
+        <label class="required"><?php echo $this->form->base->getLabel(); ?></label>
+        <div class="division"><?php echo $this->form->base; ?>
+            <span class="errors" id="errors-<?php echo $this->form->base->getId(); ?>"><?php echo $this->msgarray['base']; ?></span>
+        </div>
+
+    </div>
+
+    <div class="new-form-ui " id="base_start_time_div">
+        <label class="required" id="base_start_time_label"><?php echo $this->form->base_start_time->getLabel(); ?></label>
+        <div class="division"><?php echo $this->form->base_start_time; ?>
+            <span class="errors" id="errors-<?php echo $this->form->base_start_time->getId(); ?>"><?php echo $this->msgarray['base_start_time']; ?></span>
+        </div>
+    </div>
+
+    <div class="new-form-ui " id="base_end_time_div">
+        <label class="required" id="base_end_time_label"><?php echo $this->form->base_end_time->getLabel(); ?></label>
+        <div class="division"><?php echo $this->form->base_end_time; ?>
+            <span class="errors" id="errors-<?php echo $this->form->base_end_time->getId(); ?>"><?php echo $this->msgarray['base_end_time']; ?></span>
+        </div>
+    </div>
+
+    <div class="new-form-ui " id="base_start_date_div">
+        <label class="required" id="base_start_date_label"><?php echo $this->form->base_start_date->getLabel(); ?></label>
+        <div class="division"><?php echo $this->form->base_start_date; ?>
+            <span class="errors" id="errors-<?php echo $this->form->base_start_date->getId(); ?>"><?php echo $this->msgarray['base_start_date']; ?></span>
+        </div>
+    </div>
+
+    <div class="new-form-ui " id="base_end_date_div">
+        <label class="required" id="base_end_date_label"><?php echo $this->form->base_end_date->getLabel(); ?></label>
+        <div class="division"><?php echo $this->form->base_end_date; ?>
+            <span class="errors" id="errors-<?php echo $this->form->base_end_date->getId(); ?>"><?php echo $this->msgarray['base_end_date']; ?></span>
+        </div>
+    </div>
+
+    <div class="new-form-ui " id="base_day_div">
+        <label class="required" id="base_day_label"></label>
+        <div class="division"><?php echo $this->form->base_day; ?>
+            <span class="errors" id="errors-<?php echo $this->form->base_day->getId(); ?>"><?php echo $this->msgarray['base_day']; ?></span>
+        </div>
+    </div>
+    <div class="new-form-ui ">
+        <label class="required"><?php echo $this->form->category->getLabel(); ?></label>
+        <div class="division"><?php echo $this->form->category; ?>
+            <span class="errors" id="errors-<?php echo $this->form->category->getId(); ?>"><?php echo $this->msgarray['category']; ?></span>
+            <?php if($this->categorypermission == 'Yes'){?>
+                <span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL . 'overtime/addcategory' ?>','Add Category');"> Add Category </span>
+				<?php }?>	
+
+        </div>
+    </div>
+    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description','', 'fck_editor_height','',array());?>
+
+    <div class="new-form-ui ">
+        <label class="required">Start Date</label>
+        <div class="division"><?php echo $this->form->begining; ?>
+            <span class="errors" id="errors-<?php echo $this->form->begining->getId(); ?>"><?php echo $this->msgarray['begining']; ?></span>
+        </div>
+
+    </div>
+
+    <div class="new-form-ui ">
+        <label class="required">End Date</label>
+        <div class="division"><?php echo $this->form->ending; ?>
+            <span class="errors" id="errors-<?php echo $this->form->ending->getId(); ?>"><?php echo $this->msgarray['ending']; ?></span>
+        </div>
+    </div>
+    <div class="new-form-ui ">
+        <label class="required"><?php echo $this->form->rate->getLabel(); ?></label>
+        <div class="division"><?php echo $this->form->rate; ?>
+            <span class="errors" id="errors-<?php echo $this->form->rate->getId(); ?>"><?php echo $this->msgarray['rate']; ?></span>
+        </div>
+    </div>
+    <div class="new-form-ui ">
+        <label class="required"><?php echo $this->form->autoapv->getLabel(); ?></label>
+        <div class="division"><?php echo $this->form->autoapv; ?>
+            <span class="errors" id="errors-<?php echo $this->form->autoapv->getId(); ?>"><?php echo $this->msgarray['base']; ?></span>
+        </div>
+
+    </div>
+    <br>
+    <span class="errors" id="form_error"></span>
+    <br>
+    <br>
+
+    <div class="new-form-ui-submit">
+        <div class="division">
+            <?php echo $this->form->submit; ?>
+            <button onclick="window.location.href='<?php echo BASE_URL; ?>schedule/overtime';" type="button" id="Cancel" name="Cancel">Cancel</button>
+        </div>
+    </div>
+
+
+
+</form>
+<div id="overtimeContainer" style="display: none; overflow: auto;">
+    <div class="heading">
+        <a href="javascript:void(0)">
+            <img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+    </div>
+
+    <iframe id="overtimeCont" class="business_units_iframe" frameborder="0"></iframe>
+</div>
+
+
+<script>
+    $('#description').jqte();
+    document.getElementById('base_start_date_div').style.display = 'none'
+    document.getElementById('base_end_date_div').style.display = 'none'
+    document.getElementById('base_start_time_div').style.display = 'none'
+    document.getElementById('base_end_time_div').style.display = 'none'
+    document.getElementById('base_day_div').style.display = 'none'
+
+    $("#base").change(function() {
+        var base = document.getElementById('base').value;
+
+        if (base == 'Time') {
+            document.getElementById('base_start_time_div').style.display = 'block';
+            document.getElementById('base_end_time_div').style.display = 'block';
+
+            document.getElementById('base_day_div').style.display = 'none';
+            document.getElementById('base_start_date_div').style.display = 'none';
+            document.getElementById('base_end_date_div').style.display = 'none';
+            if (callTime != 'initial') {
+                document.getElementById('base_start_time').value = '';
+                document.getElementById('base_end_time').value = '';
+            }
+        } else if (base == 'Day') {
+            document.getElementById('base_start_time_div').style.display = 'none';
+            document.getElementById('base_end_time_div').style.display = 'none';
+            document.getElementById('base_start_date_div').style.display = 'none';
+            document.getElementById('base_end_date_div').style.display = 'none';
+
+            document.getElementById('base_day_div').style.display = 'block';
+            document.getElementById('base_day_label').innerHTML = 'Select Day'
+        } else if (base == 'Date') {
+
+            document.getElementById('base_start_label').innerHTML = 'Date';
+            document.getElementById('base_start_div').style.display = 'block';
+            document.getElementById('base_end_div').style.display = 'none';
+            document.getElementById('base_day_div').style.display = 'none';
+            if (callTime != 'initial') {
+                document.getElementById('base_start').value = '';
+            }
+        } else if (base == 'Period') {
+
+            document.getElementById('base_start_date_div').style.display = 'block';
+            document.getElementById('base_end_date_div').style.display = 'block';
+            document.getElementById('base_start_time_div').style.display = 'block';
+            document.getElementById('base_end_time_div').style.display = 'block';
+            document.getElementById('base_day_div').style.display = 'none';
+            if (callTime != 'initial') {
+                document.getElementById('base_start_date').value = ''
+                document.getElementById('base_end_date').value = ''
+                document.getElementById('base_start_time').value = ''
+                document.getElementById('base_end_time').value = ''
+            }
+        } else if (base == 'Holidays') {
+
+            document.getElementById('base_start_date_div').style.display = 'none';
+            document.getElementById('base_end_date_div').style.display = 'none';
+            document.getElementById('base_start_time_div').style.display = 'none';
+            document.getElementById('base_end_time_div').style.display = 'none';
+            document.getElementById('base_day_div').style.display = 'none';
+            if (callTime != 'initial') {
+                document.getElementById('base_start_date').value = ''
+                document.getElementById('base_end_date').value = ''
+                document.getElementById('base_start_time').value = ''
+                document.getElementById('base_end_time').value = ''
+            }
+        }
+    });
+    $("#submit").on('click', function() {
+        var valid = true;
+        var checkFor = [];
+        var individualValidator = [];
+        var other = [];
+        other['empty'] = 'Field is required';
+        individualValidator['isEmpty'] = 'Field is required';
+
+        checkFor['name'] = individualValidator;
+        individualValidator = [];
+        individualValidator['isEmpty'] = 'Field is required';
+        individualValidator['onlyNumber'] = 'Invalid input';
+        checkFor['rate'] = individualValidator;
+        individualValidator = [];
+
+        individualValidator['isEmpty'] = 'Field is required';
+        individualValidator['other'] = other;
+        checkFor['base'] = individualValidator;
+        checkFor['category'] = individualValidator;
+        var base = document.getElementById('base').value;
+        if (base != '') {
+            if (base == 'Day') {
+                checkFor['base_day'] = individualValidator;
+            } else if (base == 'Time') {
+                checkFor['base_start_time'] = individualValidator;
+                checkFor['base_end_time'] = individualValidator;
+            } else if (base == 'Date') {
+                checkFor['base_start_date'] = individualValidator;
+            } else if (base == "Period") {
+                checkFor['base_start_date'] = individualValidator;
+                checkFor['base_end_date'] = individualValidator;
+                checkFor['base_start_time'] = individualValidator;
+                checkFor['base_end_time'] = individualValidator;
+            }
+        }
+
+        if (isValid(checkFor)) {
+            if (base == "Time") {
+                //getTimeDiff(document.getElementById('base_start_time').value, document.getElementById('base_end_time').value);
+                /* var res = $.ajax({
+                    url: base_url + '/overtime/checktime',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        begining_date: document.getElementById('begining').value,
+                        ending_date: document.getElementById('ending').value,
+                        start_time: document.getElementById('base_start_time').value,
+                        end_time: document.getElementById('base_end_time').value,
+                    },
+                    async: false
+                }).responseText; */
+                var res = getphpdata('overtime/checktime',{
+                    begining_date: document.getElementById('begining').value,
+                    ending_date: document.getElementById('ending').value,
+                    start_time: document.getElementById('base_start_time').value,
+                    end_time: document.getElementById('base_end_time').value,
+                },false,'POST','json');
+                res = JSON.parse(res);
+                var error = false;
+                if (!(res.isEmpty)) {
+                    var total_errormsg = '';
+                    res.forEach(element => {
+                        var msgerror = 'Sorry! with in the specified';
+                        if (element['start_date'] == 'Yes') {
+                            msgerror += ' "Start Date"';
+                            error = true;
+                        }
+                        if (element['end_date'] == 'Yes') {
+                            msgerror += ' "End Date"';
+                            error = true;
+                        }
+                        if (element['start_time'] == 'Yes') {
+                            msgerror += ' "Start Time"';
+                            error = true;
+                        }
+                        if (element['end_time'] == 'Yes') {
+                            msgerror += ' "End Time"';
+                            error = true;
+                        }
+
+                        msgerror += ' another overtime schedule already exists!!!\n';
+                        total_errormsg += msgerror;
+                    })
+
+
+                    if (error) {
+
+                        valid = false;
+                        document.getElementById('form_error').innerHTML = total_errormsg;
+                    }
+                }
+
+
+
+            } else if (base == "Period") {
+                //getTimeDiff(document.getElementById('base_start_time').value, document.getElementById('base_end_time').value);
+                /* var res = $.ajax({
+                    url: base_url + '/overtime/checktime',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        begining_date: document.getElementById('base_start_date').value,
+                        ending_date: document.getElementById('base_end_date').value,
+                        start_time: document.getElementById('base_start_time').value,
+                        end_time: document.getElementById('base_end_time').value,
+                    },
+                    async: false
+                }).responseText; */
+                var res = getphpdata('overtime/checktime',{
+                    begining_date: document.getElementById('base_start_date').value,
+                    ending_date: document.getElementById('base_end_date').value,
+                    start_time: document.getElementById('base_start_time').value,
+                    end_time: document.getElementById('base_end_time').value
+                },false,'POST','json');
+                res = JSON.parse(res);
+                var error = false;
+                if (!(res.isEmpty)) {
+                    var total_errormsg = '';
+                    res.forEach(element => {
+                        var msgerror = '==> Sorry! with in the specified';
+                        if (element['start_date'] == 'Yes') {
+                            msgerror += ' "Start Date"';
+                            error = true;
+                        }
+                        if (element['end_date'] == 'Yes') {
+                            msgerror += ' "End Date"';
+                            error = true;
+                        }
+                        if (element['start_time'] == 'Yes') {
+                            msgerror += ' "Start Time"';
+                            error = true;
+                        }
+                        if (element['end_time'] == 'Yes') {
+                            msgerror += ' "End Time"';
+                            error = true;
+                        }
+                        msgerror += ' another overtime schedule already exists!!!\n';
+                        total_errormsg += msgerror;
+                    })
+
+
+                    if (error) {
+                        valid = false;
+                        document.getElementById('form_error').innerHTML = total_errormsg;
+                    }
+                }
+
+
+
+            }
+
+            var dateDiff = compareDates(document.getElementById('begining').value, document.getElementById('ending').value);
+            if (dateDiff == 0 || dateDiff == -1) {
+                valid = false;
+                console.log('error');
+                document.getElementById('errors-ending').innerHTML = "End Date Must Be Grater Than Start Date!";
+            }
+
+            return valid;
+        }
+        return false;
+
+    });
+
+
+    function isValid(elements) {
+        var valid = true;
+        for (var key in elements) {
+            for (var key1 in elements[key]) {
+                if (key1 == 'isEmpty') {
+                    if (document.getElementById(key).value == '') {
+                        document.getElementById('errors-' + key).innerHTML = elements[key][key1];
+                        valid = false;
+                    }
+                } else if (key1 == 'onlyNumber') {
+
+                    var reg = /^\d+(\.\d+)?$/;
+                    if (!(reg.test(document.getElementById('rate').value))) {
+                        valid = false
+                        document.getElementById('errors-' + key).innerHTML = elements[key][key1];
+                    }
+
+                } else if (key1 == 'other') {
+                    for (var key2 in elements[key][key1]) {
+                        if (document.getElementById(key).value == key2) {
+                            document.getElementById('errors-' + key).innerHTML = elements[key][key1][key2];
+                            valid = false;
+                        }
+                    }
+                }
+            }
+        }
+        return valid;
+    }
+
+    // function getTimeDiff(new_start, new_end, db_start, db_end) {
+
+    //     temp_start_array = start.split(':')
+    //     temp_end_array = end.split(':');
+    //     var start_array = [];
+    //     var end_array = [];
+    //     temp_start_array.forEach(element => {
+    //         start_array.push(element);
+    //     });
+
+    //     temp_end_array.forEach(element => {
+    //         end_array.push(element);
+    //     });
+
+    //     var start_am_pm = start_array[2].split(' ')[1];
+    //     var end_am_pm = end_array[2].split(' ')[1];
+    //     if (start_am_pm == "PM") {
+    //         start_array[0] = parseInt(start_array[0], 10) + 12;
+    //         console.log("Start Time " + start_array);
+    //     }
+    //     if (end_am_pm == "PM") {
+    //         end_array[0] = parseInt(end_array[0], 10) + 12;
+    //         console.log("End Time " + end_array);
+    //     }
+
+    // }
+    $('#begining,#ending').datepicker({
+        showOn: 'both',
+        //minDate: 0,
+        //yearRange: yearrange,
+        dateFormat: '<?php echo DATEFORMAT_JS; ?>',
+        buttonImage: "<?php echo $this->baseUrl("public/media/images/cal.jpg"); ?>",
+        buttonImageOnly: true,
+        buttonText: "",
+        changeMonth: true,
+        changeYear: true,
+        showButtonPanel: true,
+        onClose: function() {
+            $(this).trigger('blur');
+            var msg = "";
+            if (this.id == 'ending')
+                msg = "End date should be greater than Start date.";
+            else
+                msg = "Start date should be less than End date.";
+            from_to_date_validation('begining', 'ending', this, msg);
+        }
+
+    });
+
+    
+    $("#base_start_date").datepicker({
+        showOn: "both",
+        buttonImage: "<?php echo MEDIA_PATH; ?>images/cal.png",
+        buttonImageOnly: true,
+        buttonText: "",
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: "<?php echo DATEFORMAT_JS; ?>",
+        showButtonPanel: true,
+        onClose: function() {
+            $("#base_start_date").trigger('blur');
+        }
+    });
+    $("#base_end_date").datepicker({
+        showOn: "both",
+        buttonImage: "<?php echo MEDIA_PATH; ?>images/cal.png",
+        buttonImageOnly: true,
+        buttonText: "",
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: "<?php echo DATEFORMAT_JS; ?>",
+        showButtonPanel: true,
+        onClose: function() {
+            $("#base_end_date").trigger('blur');
+        }
+    });
+    $("#base_start_time").timepicker({
+        showPeriod: true,
+        showLeadingZero: true,
+
+        onClose: function() {
+            $('#base_start_time').trigger('blur');
+
+            timepicker_onclose('base_start_time');
+
+        }
+    });
+    $("#base_end_time").timepicker({
+        showPeriod: true,
+        showLeadingZero: true,
+
+        onClose: function() {
+            $('#base_end_time').trigger('blur');
+
+            timepicker_onclose('base_end_time');
+
+        }
+    });
+</script>

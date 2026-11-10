@@ -1,0 +1,79 @@
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+<script src="<?php echo MEDIA_PATH; ?>js/custompopup.js"></script>
+<?php 
+?>
+<?php
+
+
+?>
+<?php if($this->popup == 'close') { ?>	
+	<div class="ml-alert-1-success">
+	<div class="style-1-icon success"></div>
+Document Purpose<?php echo $this->eventact; ?> successfully
+	</div>
+
+	<?php } 
+else
+{
+    sapp_Global::generateClientValidations($this->form);?>
+    <div id="error_message" style="display:none;"></div>
+
+	<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction();?>" method="<?php echo $this->form->getMethod(); ?>">
+		<?php echo $this->form->id; ?>
+        <div class="total-form-controller">
+		    <div class="new-form-ui clearb">
+			  <label class="required">Name</label>
+			<div class="division"><?php echo $this->form->name; ?></div>
+			<?php if(isset($this->msgarray['name'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->name->getId(); ?>"><?php echo $this->msgarray['name'];?></span>
+			<?php }?>
+			</div>
+            <div class="new-form-ui clearb">
+			  <label class="required">Code</label>
+			<div class="division"><?php echo $this->form->code; ?></div>
+			<?php if(isset($this->msgarray['code'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->code->getId(); ?>"><?php echo $this->msgarray['code'];?></span>
+			<?php }?>
+			</div>
+		
+            <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description','', 'fck_editor_height','',array());?>
+
+        
+		<div class="new-form-ui-submit">
+		<?php echo $this->form->submit; ?>
+		<button onclick="closeiframepopup('documentpurpose','cancel');"  type="button" >Cancel</button>
+
+		</div>
+</div>
+</form>
+<?php } ?>
+
+<script>
+
+    <?php if ($this->popup != '') { ?>
+		setTimeout(function() {
+			
+			<?php if ($this->nested) { ?>
+				removeNestedPopup_OnFinish("<?php echo $this->purpose; ?>", '<?php echo $this->controllername; ?>', 'iddocumentpurpose_id', '', 'yes',false);
+			<?php }else{ ?>
+				closeiframeAddPopup("<?php echo $this->purpose ;?>",'<?php echo $this->controllername; ?>','iddocumentpurpose_id','Select...'); 	
+			<?php } ?>
+		}, 2000);
+
+	<?php } ?>
+    // }
+    $(document).ready(function() {
+		<?php if (count($this->messages)) { ?>
+			setTimeout(function() {
+				$('#popupmessage').fadeOut('slow');
+			}, 3000);
+
+		<?php } ?>
+        });
+		
+
+</script>
+<script>
+	$('#description').jqte();
+</script>

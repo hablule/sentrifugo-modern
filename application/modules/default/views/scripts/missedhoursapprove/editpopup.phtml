@@ -1,0 +1,123 @@
+<?php 
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+if($this->previlage == 'N')
+{
+?>
+    <div id="errordiv">
+  <h2><div class="page-not-authorized"><div class="div-authorized"></div><p class="sry-text">You are not authorized to access this page.</p></div></h2>
+</div>
+<?php
+}
+else{
+
+
+?>
+
+<?php
+
+$form = $this->form;
+
+?>
+<?php if($this->popup == 'close') { ?>	
+	<div class="ml-alert-1-success">
+	<div class="style-1-icon success"></div>
+	Missed Hours  <?php echo $this->eventact; ?> successfully
+	</div>
+
+	<?php } 
+else
+{
+	if (!empty($this->misshours)) {
+		foreach ($this->misshours as $value) {
+
+ sapp_Global::generateClientValidations($this->form);?>
+<div id="error_message" style="display:none;"></div>
+
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction();?>" method="<?php echo $this->form->getMethod(); ?>">
+		<?php echo $this->form->id; ?>
+
+		    <div class="new-form-ui">
+			  <label class="required"><?php echo $this->form->managerstatus->getLabel(); ?></label>
+			<div class="division"><?php echo $this->form->managerstatus; ?></div>
+			<?php if(isset($this->msgarray['managerstatus'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->managerstatus->getId(); ?>"><?php echo $this->msgarray['managerstatus'];?></span>
+			<?php }?>
+			</div>
+			
+
+	
+	<div class="new-form-ui textareaheight">
+	<label>Approved Amount</label>
+  <div class="division"><?php echo $this->form->approvedamount; ?></div>
+  <?php if(isset($this->msgarray['approvedamount'])){?>
+	 <span class="errors" id="errors-<?php echo $this->form->reason->getId(); ?>"><?php echo $this->msgarray['approvedamount'];?></span>
+  <?php }?>
+  </div>
+
+	
+		
+			<?php sapp_Helper::viewHeader();
+			
+			sapp_Helper::viewBody('nor', 'Schedule  Name', $value['schedule_name'], 'Employer Name', $value['userfullname'] );
+			sapp_Helper::viewBody('alt', 'Shift Name', $value['name'], 'Amount Lost', $value['amount_lost']);
+			sapp_Helper::viewBody('nor','Submitted Date', $value['submitted_date'],'','');
+
+				}	
+			}else{?>
+			<h6 style="text-align: center;"> No Perk Request is found </h6>
+			<?php
+				sapp_Helper::viewBody('nor', '----------', '----------', '----------', '----------');
+			}
+			sapp_Helper::viewFooter();
+	
+			?>
+			<div class="new-form-ui-submit">
+			<?php echo $this->form->submit;?>
+
+			</form>
+			<?php } ?>
+<div id="missedhoursapproveContainer" style="display: none; overflow: auto;">
+	<div class="heading">
+		<a href="javascript:void(0)">
+			<img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+	</div>
+
+	<iframe id="missedhoursapproveCont" class="business_units_iframe" frameborder="0"></iframe>
+</div>
+
+			</div>
+		</div>
+		<?php } ?>
+		<script language='javascript' type='text/javascript'>
+
+	<?php if($this->popup != '') { ?>
+		closeiframepopup('<?php echo $this->controllername; ?>',''); 
+	<?php } ?>
+	</script>
+<script type='text/javascript'>
+	$(document).ready(function() { 
+		<?php if (count($this->messages)) {?>
+			  setTimeout(function(){
+					$('#popupmessage').fadeOut('slow');
+				},3000);
+		<?php } ?>
+	});
+</script>

@@ -1,0 +1,289 @@
+<?php
+
+/**
+ * Holiday Calendar Save View (Add/Edit Occurrence)
+ *
+ * Implements linked datepickers and balanced AJAX submission.
+ * Complies with SSOT v6.7.7.
+ */
+?>
+
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<?php sapp_Global::generateClientValidations($this->form); ?>
+
+<div class="row">
+    <div class="col s12">
+
+        <div id="message_container"></div>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" method="post">
+
+            <?php echo $this->form->id; ?>
+            <?php if ($this->form->getElement('holiday_id_hidden')): ?>
+                <?php echo $this->form->holiday_id_hidden; ?>
+            <?php endif; ?>
+
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <h5 style="color:#26a69a; border-bottom:1px solid #ddd; padding-bottom:5px;">Holiday Definition</h5>
+                    <div style="clear: both; width: 100%; height: 10px;"></div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->holiday_id->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->holiday_id; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->holiday_id->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div style="clear: both; width: 100%;"></div>
+
+                    <!-- Linked Datepickers -->
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->start_date->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->start_date; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->start_date->getId()); ?>"></span>
+                        </div>
+                    </div>
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->end_date->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->end_date; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->end_date->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div style="clear: both; width: 100%;"></div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->duration_days->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->duration_days; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->duration_days->getId()); ?>"></span>
+                        </div>
+                    </div>
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->start_time->getLabel()); ?> <i class="fa fa-clock-o" style="color:#26a69a;"></i></label>
+                        <div class="division">
+                            <?php echo $this->form->start_time; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->start_time->getId()); ?>"></span>
+                        </div>
+                    </div>
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->end_time->getLabel()); ?> <i class="fa fa-clock-o" style="color:#26a69a;"></i></label>
+                        <div class="division">
+                            <?php echo $this->form->end_time; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->end_time->getId()); ?>"></span>
+                        </div>
+                    </div>                    
+
+                    <div style="clear: both; width: 100%;"></div>
+
+                    <h5 style="color:#26a69a; border-bottom:1px solid #ddd; padding-bottom:5px; margin-top:30px;">Policy Overrides & Multipliers</h5>
+                    <div style="clear: both; width: 100%; height: 10px;"></div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->work_policy->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->work_policy; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->work_policy->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->payroll_multiplier->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->payroll_multiplier; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->payroll_multiplier->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->weekend_policy->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->weekend_policy; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->weekend_policy->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->priority->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->priority; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->priority->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->is_paid->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->is_paid; ?></div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->is_mandatory->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->is_mandatory; ?></div>
+                    </div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->isactive; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->isactive->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="new-form-ui-submit">
+                        <div class="division">
+                            <?php echo $this->form->submit; ?>
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>holidaydate';" value="Cancel" type="button" class="reset" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#description').jqte();
+
+        // Linked Datepickers
+        $('#start_date').datepicker({
+            showOn: 'both',
+            dateFormat: '<?php echo DATEFORMAT_JS; ?>',
+            buttonImage: "<?php echo MEDIA_PATH; ?>images/cal.jpg",
+            buttonImageOnly: true,
+            changeMonth: true,
+            changeYear: true,
+            onClose: function(selectedDate) {
+                $(this).trigger('blur');
+                $("#end_date").datepicker("option", "minDate", selectedDate);
+            }
+        });
+
+        $('#end_date').datepicker({
+            showOn: 'both',
+            dateFormat: '<?php echo DATEFORMAT_JS; ?>',
+            buttonImage: "<?php echo MEDIA_PATH; ?>images/cal.jpg",
+            buttonImageOnly: true,
+            changeMonth: true,
+            changeYear: true,
+            onClose: function(selectedDate) {
+                $(this).trigger('blur');
+                $("#start_date").datepicker("option", "maxDate", selectedDate);
+            }
+        });
+
+        if ($('#start_date').val() !== '') {
+            $("#end_date").datepicker("option", "minDate", $('#start_date').val());
+        }
+        if ($('#end_date').val() !== '') {
+            $("#start_date").datepicker("option", "maxDate", $('#end_date').val());
+        }
+
+        // Initialize Materialize Timepicker Popup for Shift Hours
+        if ($.isFunction($.fn.timepicker)) {
+            $('#start_time, #end_time').timepicker({
+                twelveHour: false, // 24-Hour Military Format per SSOT
+                autoclose: false,
+                vibrate: true,
+                afterDone: function() {
+                    var val = $(this).val();
+                    if (val && val.length === 5) {
+                        $(this).val(val + ':00'); // Ensure HH:MM:SS format
+                    }
+                }
+            });
+        }
+
+
+        // SSOT v6.7.7 Balanced Explicit AJAX Submit with Conflict Warning Interception
+        $('#submitbutton').off('click').on('click', function(e) {
+            e.preventDefault();
+            submitHolidayDateForm(0); // Initial save attempt (force_save = 0)
+        });
+
+        function submitHolidayDateForm(forceSave) {
+            var $form = $('#formid');
+            $('.errors').text('');
+            $('#message_container').empty();
+
+            if (!$form.valid()) {
+                return false;
+            }
+
+            if (typeof $.blockUI === "function") {
+                $.blockUI({
+                    message: '<img src="<?php echo MEDIA_PATH; ?>images/loader2.gif" alt="Saving..." />'
+                });
+            }
+
+            var formData = new FormData($form[0]);
+            formData.append('force_save', forceSave);
+
+            $.ajax({
+                url: base_url + '/holidaydate/save/format/json',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function(response) {
+                    if (typeof $.unblockUI === "function") $.unblockUI();
+
+                    // 1. Success -> Redirect
+                    if (response && response.result === 'saved') {
+                        window.location.href = base_url + '/holidaydate';
+                    }
+                    // 2. Conflict Warning Interception (Phase 7)
+                    else if (response && response.result === 'conflict_warning') {
+                        var warningText = "⚠️ Holiday Overlap Detected:\n\n";
+                        $.each(response.conflicts, function(i, c) {
+                            warningText += "• " + c.message + "\n";
+                        });
+                        warningText += "\nDo you wish to acknowledge this conflict and save anyway?";
+
+                        if (confirm(warningText)) {
+                            // User confirmed -> Resubmit with force_save = 1
+                            submitHolidayDateForm(1);
+                        }
+                    }
+                    // 3. Exception
+                    else if (response && response.result === 'exception') {
+                        $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>' + response.message + '</div>');
+                        $('html, body').animate({
+                            scrollTop: 0
+                        }, 'slow');
+                    }
+                    // 4. Form Validation Errors
+                    else if (response && typeof response === 'object') {
+                        $.each(response, function(fieldId, errorObj) {
+                            var errMsg = (typeof errorObj === 'object') ? errorObj[Object.keys(errorObj)[0]] : errorObj;
+                            $('#errors-' + fieldId).text(errMsg);
+                        });
+                        $('html, body').animate({
+                            scrollTop: 0
+                        }, 'slow');
+                    }
+                },
+                error: function() {
+                    if (typeof $.unblockUI === "function") $.unblockUI();
+                    $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Server error occurred.</div>');
+                }
+            });
+        }
+    });
+</script>

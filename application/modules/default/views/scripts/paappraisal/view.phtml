@@ -1,0 +1,269 @@
+<?php
+
+/**
+ * PA Appraisal View (Read-Only)
+ * 
+ * Shows Header details and the frozen Arrays for Audience and Questions using Tabs.
+ * Strictly adheres to SSOT v6.2, including scrollable mapping tables.
+ * 
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ * @version    Sentrifugo v3.2
+ */
+?>
+<!-- SSOT VII.2: Strict Asset Inclusions -->
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<style>
+    /* Custom Sentrifugo-Themed Tabs */
+    .sf-tabs-nav {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        border-bottom: 2px solid #ccc;
+        display: flex;
+        width: 100%;
+    }
+
+    .sf-tabs-nav li {
+        margin-bottom: -2px;
+    }
+
+    .sf-tabs-nav li a {
+        display: block;
+        padding: 10px 20px;
+        text-decoration: none;
+        color: #666;
+        font-weight: bold;
+        border-bottom: 2px solid transparent;
+        transition: all 0.3s;
+    }
+
+    .sf-tabs-nav li.active a {
+        color: #26a69a;
+        border-bottom: 2px solid #26a69a;
+    }
+
+    .sf-tabs-nav li a:hover {
+        color: #26a69a;
+    }
+
+    .sf-tab-panel {
+        padding: 20px 0;
+        display: none;
+    }
+
+    .sf-tab-panel.active {
+        display: block;
+    }
+
+    /* Mapping Table & Scrollable Container Styles */
+    .mapping-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .mapping-table th,
+    .mapping-table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+    }
+
+    .mapping-table th {
+        background-color: #f9f9f9;
+        color: #333;
+        font-weight: bold;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .scrollable-table-container {
+        max-height: 400px;
+        overflow-y: auto;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background: #fff;
+    }
+
+    /* Consistency for disabled Select2 inputs */
+    .select2-container--default.select2-container--disabled .select2-selection--single {
+        background-color: #fcfcfc;
+        cursor: not-allowed;
+    }
+</style>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container">
+            <?php if (isset($this->nodata)) : ?>
+                <div class="ml-alert-1-info">
+                    <div style="display:block;"><span class="style-1-icon info"></span>No data found.</div>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <?php if (!isset($this->nodata)) : ?>
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <!-- ================= HEADER SECTION ================= -->
+                    <h4 style="font-size: 14px; color: #26a69a; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 15px;">Campaign Details</h4>
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->rulebook_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->rulebook_id; ?></div>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->period_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->period_id; ?></div>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb" style="width: 100%;">
+                        <label><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                        <div class="division" style="width: 100%;"><?php echo $this->form->name; ?></div>
+                    </div>
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->start_date->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->start_date; ?></div>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->end_date->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->end_date; ?></div>
+                        </div>
+                    </div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray ?? array(), $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                    </div>
+
+                    <!-- Explicit clear to protect layout -->
+                    <div style="clear: both; width: 100%; height: 20px;"></div>
+
+                    <!-- ================= MAPPING SECTION (Custom Tabs) ================= -->
+                    <h4 style="font-size: 14px; color: #26a69a; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 15px;">Campaign Scope</h4>
+
+                    <div id="appraisal-tabs" style="width: 100%; margin-bottom: 30px;">
+                        <!-- The Tab Navigation -->
+                        <ul class="sf-tabs-nav">
+                            <li class="active"><a href="#tab-audience" data-target="tab-audience"><i class="fa fa-users"></i> Targeted Employees</a></li>
+                            <li><a href="#tab-questions" data-target="tab-questions"><i class="fa fa-question-circle"></i> Assigned Questions</a></li>
+                        </ul>
+
+                        <!-- TAB 1: AUDIENCE -->
+                        <div id="tab-audience" class="sf-tab-panel active">
+                            <div class="scrollable-table-container">
+                                <table class="mapping-table" id="view-audience" style="margin-top: 0; border: none;">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 100px; border-top: none;">Emp ID</th>
+                                            <th style="border-top: none;">Employee Name</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody><!-- JS Injected --></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- TAB 2: QUESTIONS -->
+                        <div id="tab-questions" class="sf-tab-panel">
+                            <div class="scrollable-table-container">
+                                <table class="mapping-table" id="view-questions" style="margin-top: 0; border: none;">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 100px; border-top: none;">Question ID</th>
+                                            <th style="border-top: none;">Prompt</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody><!-- JS Injected --></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ================= FOOTER SECTION ================= -->
+
+                    <div class="new-form-ui-submit" style="margin-top: 20px;">
+                        <div class="division">
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>paappraisal';" value="Back to List" type="button" class="reset" />
+                            <?php
+                            // Edit is visible if ACL permits. The Controller will bounce them if the status is not 'Draft'.
+                            if (sapp_Global::_checkprivileges(MANAGE_CAMPAIGNS, $this->loginuserGroup, $this->loginuserRole, 'edit') == 'Yes') :
+                            ?>
+                                <input onclick="window.location.href='<?php echo BASE_URL; ?>paappraisal/edit/id/<?php echo $this->id; ?>';" value="Edit" type="button" class="reset" />
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>
+
+<script type="text/javascript">
+    // Hydrate tables with frozen JSON mappings from the controller
+    var arrAudience = <?php echo $this->existingAudience ?? '[]'; ?>;
+    var arrQuestions = <?php echo $this->existingQuestions ?? '[]'; ?>;
+
+    $(document).ready(function() {
+
+        // 1. CUSTOM TAB LOGIC
+        $('.sf-tabs-nav a').on('click', function(e) {
+            e.preventDefault();
+            var targetPanelId = $(this).attr('href');
+
+            $('.sf-tabs-nav li').removeClass('active');
+            $(this).parent('li').addClass('active');
+
+            $('.sf-tab-panel').removeClass('active').hide();
+            $(targetPanelId).addClass('active').fadeIn('fast');
+        });
+
+        // 2. Disable UI Plugins for Read-Only View
+        $('#description').jqte();
+        $('.jqte_editor').attr('contenteditable', 'false');
+
+        if ($.isFunction($.fn.select2)) {
+            $('select').select2({
+                width: '100%'
+            });
+        }
+
+        // 3. Render read-only tables
+        var htmlA = '';
+        if (arrAudience.length > 0) {
+            $.each(arrAudience, function(idx, val) {
+                htmlA += '<tr><td>#' + val.employee_id + '</td><td>' + val.employee_name + '</td></tr>';
+            });
+        } else {
+            htmlA = '<tr><td colspan="2" style="text-align:center; color:#999;">No employees targeted.</td></tr>';
+        }
+        $('#view-audience tbody').html(htmlA);
+
+        var htmlQ = '';
+        if (arrQuestions.length > 0) {
+            $.each(arrQuestions, function(idx, val) {
+                htmlQ += '<tr><td>#' + val.question_id + '</td><td>' + val.question_name + '</td></tr>';
+            });
+        } else {
+            htmlQ = '<tr><td colspan="2" style="text-align:center; color:#999;">No questions assigned.</td></tr>';
+        }
+        $('#view-questions tbody').html(htmlQ);
+    });
+</script>

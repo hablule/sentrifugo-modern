@@ -1,0 +1,36 @@
+name: Deploy Sentrifugo Demo
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Oracle Cloud via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /var/www/html/sentrifugo
+            
+            # Check if the database dump changed in this push before pulling
+            sudo git fetch --depth=2 origin main
+            DB_CHANGED=$(sudo git diff --name-only HEAD origin/main | grep "data/demo_baseline.sql.gz" || true)
+
+            # Apply the code update
+            sudo git reset --hard origin/main
+
+            # Only run the database reset if the DB dump was actually updated:
+            if [ -n "$DB_CHANGED" ]; then
+              echo "Database dump changed! Running fast reset..."
+              sudo /home/ubuntu/reset_demo_db.sh
+            else
+              echo "Code-only update. Skipping database reset for maximum speed!"
+            fi
+
+            sudo chown -R www-data:www-data /var/www/html/sentrifugo
+            sudo chmod -R 775 /var/www/html/sentrifugo/data /var/www/html/sentrifugo/logs /var/www/html/sentrifugo/public/uploads

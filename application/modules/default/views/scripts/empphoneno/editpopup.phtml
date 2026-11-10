@@ -1,0 +1,184 @@
+<?php
+
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+?>
+<script src="<?php echo MEDIA_PATH ?>build/js/intlTelInput.js"></script>
+
+<link rel="stylesheet" href="<?php echo MEDIA_PATH ?>build/css/intlTelInput.css">
+<?php $baseUrl = $this->serverUrl() . $this->baseUrl();
+
+$form = $this->form;
+
+sapp_Global::generateClientValidations($this->form);
+?>
+<?php if ($this->successmessage != '') { ?>
+    <div id="dispmsgnempaddress" class="ml-alert-1-success">
+        <div class="style-1-icon success"></div>
+        <?php echo $this->successmessage; ?>
+    </div>
+
+<?php } else {
+    sapp_Global::generateClientValidations($this->form); ?>
+    <div id="error_message" style="display:none;"></div>
+    <link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH ?>css/custompopup.css" />
+    <script type="text/javascript" src="<?php echo MEDIA_PATH ?>js/custompopup.js"></script>
+	<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+   
+	<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction(); ?>" method="<?php echo $this->form->getMethod(); ?>">
+			<?php echo $this->form->id;
+			echo $this->form->user_id;
+			?>
+			<div class="total-form-controller">
+
+				<div class="new-form-ui">
+					<label class="required">Phone Number</label>
+					<div class="division"><?php echo $this->form->phone; ?></div>
+					<?php if (isset($this->msgarray['phone'])) { ?>
+						<span class="errors" id="errors-<?php echo $this->form->phone->getId(); ?>"><?php echo $this->msgarray['phone']; ?></span>
+					<?php } ?>
+				</div>
+
+				<div class="new-form-ui">
+				<label>Contact</label>
+				<div class="division"><?php echo $this->form->contact; ?></div>
+				<?php if (isset($this->msgarray['contact'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->contact->getId(); ?>"><?php echo $this->msgarray['contact']; ?></span>
+				<?php } ?>
+			</div>	
+				
+
+			<div class="new-form-ui">
+					<label class="required">Line Type</label>
+					<div class="division"><?php echo $this->form->linetype_id; ?>
+						<span class="add-coloum" onclick="displayNestedPopup('<?php echo BASE_URL . 'linetype/addpopup' ?>','Line Type');"> Add Line type </span>
+					</div>
+					<?php if (isset($this->msgarray['linetype_id'])) { ?>
+						<span class="errors" id="errors-<?php echo $this->form->address_type_id->getId(); ?>"><?php echo $this->msgarray['address_type_id']; ?></span>
+					<?php } ?>
+					<!-- <?php //if(in_array('addresstype',$this->popConfigPermission)) { 
+							?>	 -->
+
+					<?php //} 
+					?>
+				</div>
+				<br>
+                <div class="new-form-ui">
+				<label>Active</label>
+				<div class="division"><?php echo $this->form->isactive; ?></div>
+				<?php if (isset($this->msgarray['isactive'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->isactive->getId(); ?>"><?php echo $this->msgarray['isactive']; ?></span>
+				<?php } ?>
+			</div>
+            </div>
+					<br>
+
+            <div class="new-form-ui">
+				<label>Location</label>
+				<div class="division"><?php echo $this->form->location; ?>
+					<a id='mv' onclick="displayNestedPopup('<?php echo BASE_URL . 'location/addpopupnested' ?>','Location');"><img class="ui-datepicker-trigger" src="/Sentrifugo_3.2/public/media/images/map2.png" height="20px" alt="" title=""></a>
+				</div>
+			</div>
+
+            <div class="new-form-ui">
+				<label class="required">Line Category</label>
+				<div class="division"><?php echo $this->form->linecategory_id; ?>
+                <span class="add-coloum" onclick="displayNestedPopup('<?php echo BASE_URL . 'linecategory/addpopup' ?>','Add Line Category');"> Add Line Category </span>
+				</div>
+			</div>
+			<?php if (isset($this->msgarray['linecategory_id'])) { ?>
+				<span class="errors" id="errors-<?php echo $this->form->linecategory_id->getId(); ?>"><?php echo $this->msgarray['linecategory_id']; ?></span>
+			<?php } ?>
+
+		
+				
+            <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description','', 'fck_editor_height','',array());?>
+			
+
+			<?php if (isset($this->msgarray['generalerror'])) { ?>
+					<span class="errors" id="errors-generalerror"><?php echo $this->msgarray['generalerror']; ?></span>
+				<?php } ?>
+			<div class="new-form-ui-submit ">
+            <div class="division"><?php echo $this->form->submit; ?>
+            <input onclick="closeiframepopup('empphoneno','cancel');" type="button" value="Close"  />
+
+        </div>
+	</div>
+	</div>
+
+        </div>
+	</form>
+
+    <!-- <div class="nested-popup-model" id="popup-model">
+        <div class="nested-popup-model-content">
+            <div class="nested-popup-title"></div>
+            <div class="nested-popup-main-content">
+            <iframe id="bankCont" class="" frameborder="0" src="<?php //echo BASE_URL.'bank/addpopup';?>"></iframe>
+            </div>
+        </div>
+        
+    </div> -->
+    
+    
+
+    <div id="locationContainer" style="display: none; overflow: auto;">
+        <div class="heading">
+            <a href="javascript:void(0)">
+                <img src="<?php echo MEDIA_PATH; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+        </div>
+
+        <iframe id="locationCont" class="business_units_iframe" frameborder="0"></iframe>
+
+    </div>
+<?php } ?>
+<script type='text/javascript'>
+
+    console.log("<?php echo $this->successmessage ?>")
+    <?php if ($this->successmessage != '') {  ?>
+        
+            setTimeout(function() {
+                closeiframepopup('<?php echo $this->controllername; ?>', '');
+        }, 2000);
+      
+        //removeNestedPopup_OnFinish("<?php echo $this->linecategory; ?>", '<?php echo $this->controllername; ?>', 'location', 'a location', 'yes',false);
+        
+        
+    <?php } ?>
+    $('#description').jqte();
+</script>
+
+<script>
+    // Vanilla Javascript
+    var input = document.querySelector("#phone");
+    window.intlTelInput(input,({
+      // options here
+    }));
+
+    $(document).ready(function() {
+        $('.iti__flag-container').click(function() { 
+          var countryCode = $('.iti__selected-flag').attr('title');
+          var countryCode = countryCode.replace(/[^0-9]/g,'')
+        //   $('#phone').val("");
+        //   $('#phone').val("+"+countryCode+" "+ $('#phone').val());
+       });
+    });
+  </script>
+

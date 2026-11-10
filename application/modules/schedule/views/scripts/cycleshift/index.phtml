@@ -1,0 +1,36 @@
+
+<?php try { ?>
+<?php if (count($this->messages)) {?>
+	<div id="dispmsgemp" class="settingssuccess">
+		<?php 
+			foreach ($this->messages as $message)
+			{
+				$flag = array();				
+				$flag = array_keys($message);
+				echo "<div id='messageData' class='ml-alert-1-$flag[0]'><div style='display:block;'><span class='style-1-icon $flag[0]'></span>";
+				echo $message[$flag[0]];
+				echo "</div></div>";
+			} 
+		;
+		?>
+	</div>	
+	
+<?php } ?>
+<div id="error_message" style="display:none;"></div>
+<?php 
+$auth = Zend_Auth::getInstance();
+$validcand = sapp_Global::_checkprivileges(CANDIDATEDETAILS,'',$auth->getStorage()->read()->emprole,'add');
+
+ 
+	$div = '<div id="grid_'.$this->dataArray['objectname'].'" class="all-grid-control">'; $endDiv = '</div>';
+
+$multi = '';
+echo $multi.$div.'<div id="msg" style="display:none;font-style: oblique; font-weight: bold; color: green;""></div>'.$this->gridtms($this->dataArray).$endDiv;
+
+?>
+<?php 
+
+} catch (\Throwable $th) {
+    Zend_Debug::dump($th->getMessage());
+}
+?>

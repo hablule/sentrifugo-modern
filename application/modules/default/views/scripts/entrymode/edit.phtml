@@ -1,0 +1,50 @@
+
+<?php
+sapp_Global::generateClientValidations($this->form);
+?>
+<?php if (count($this->messages)) {?>
+	<div id="dispmsgemp" class="settingssuccess">
+		<?php 
+			foreach ($this->messages as $message)
+			{
+				$flag = array();				
+				$flag = array_keys($message);
+				echo "<div id='messageData' class='ml-alert-1-$flag[0]'><div style='display:block;'><span class='style-1-icon $flag[0]'></span>";
+				echo $message[$flag[0]];
+				echo "</div></div>";
+			} 
+		;
+		?>
+	</div>	
+	
+<?php } ?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" method="POST" , action="<?php echo $this->fomr->getAction; ?>">
+<?php echo $this->form->id;?>
+<div class="new-form-ui ">
+        <label class="required">Mode</label>
+        <div class="division"><?php echo $this->form->mode; ?></div>
+        <?php if (isset($this->msgarray['mode'])) { ?>
+            <span class="errors" id="errors-<?php echo $this->form->mode->getId(); ?>"><?php echo $this->msgarray['mode']; ?></span>
+        <?php } ?>
+    </div>
+    <div class="new-form-ui ">
+        <label >Active</label>
+        <div class="division"><?php echo $this->form->isactive; ?></div>
+        <?php if (isset($this->msgarray['isactive'])) { ?>
+            <span class="errors" id="errors-<?php echo $this->form->isactive->getId(); ?>"><?php echo $this->msgarray['isactive']; ?></span>
+        <?php } ?>
+    </div>
+    <div class="new-form-ui-submit ">
+       
+        <div class="division"><?php echo $this->form->submit; ?></div>
+        <button onclick="window.location.href='<?php echo BASE_URL; ?>entrymode';" type="button" id="Cancel" name="Cancel">Cancel</button>
+    </div>
+</form>
+
+<script>
+
+
+
+</script>

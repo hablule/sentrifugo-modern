@@ -1,0 +1,161 @@
+<?php
+
+/**
+ * Discipline Case View (Read-Only)
+ * 
+ * Displays the read-only details of a Case along with its historical Audit Log Timeline.
+ * Strictly adheres to SSOT v6.2.
+ * 
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ * @version    Sentrifugo v3.2
+ */
+?>
+<!-- SSOT VII.2: Strict Asset Inclusions -->
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container">
+            <?php if (isset($this->nodata)) : ?>
+                <div class="ml-alert-1-info">
+                    <div style="display:block;"><span class="style-1-icon info"></span>No data found.</div>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <?php if (!isset($this->nodata)) : ?>
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <h4 style="font-size: 14px; color: #26a69a; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 15px;">Incident Details</h4>
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->employee_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->employee_id; ?></div>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->date_of_occurrence->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->date_of_occurrence; ?></div>
+                        </div>
+                    </div>
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->violation_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->violation_id; ?></div>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->case_status->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->case_status; ?></div>
+                        </div>
+                    </div>
+
+                    <br>
+                    <h4 style="font-size: 14px; color: #26a69a; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 20px; margin-bottom: 15px;">Investigation & Statements</h4>
+
+                    <!-- SSOT VII.6: Textarea Helper -->
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray ?? array(), $this->form, 'employer_statement', '', 'fck_editor_height', '', array()); ?>
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray ?? array(), $this->form, 'employee_statement', '', 'fck_editor_height', '', array()); ?>
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->employee_appeal->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->employee_appeal; ?></div>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->cao_verdict->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->cao_verdict; ?></div>
+                        </div>
+                    </div>
+
+                    <br>
+                    <h4 style="font-size: 14px; color: #26a69a; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 20px; margin-bottom: 15px;">Corrective Action</h4>
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->action_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->action_id; ?></div>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->action_text->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->action_text; ?></div>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->violation_expiry->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->violation_expiry; ?></div>
+                    </div>
+
+                    <br>
+                    <h4 style="font-size: 14px; color: #26a69a; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 20px; margin-bottom: 15px;">System Status</h4>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                    </div>
+
+                    <div class="new-form-ui-submit">
+                        <div class="division">
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>disciplinecase';" value="Back to List" type="button" class="reset" />
+                            <?php
+                            if (sapp_Global::_checkprivileges(DISCIPLINARY_CASE, $this->loginuserGroup, $this->loginuserRole, 'edit') == 'Yes') :
+                            ?>
+                                <input onclick="window.location.href='<?php echo BASE_URL; ?>disciplinecase/edit/id/<?php echo $this->id; ?>';" value="Edit" type="button" class="reset" />
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- AUDIT LOG TIMELINE UI -->
+            <?php if (!empty($this->logs)): ?>
+                <div class="total-form-controller" style="margin-top: 20px; background-color: #fcfcfc;">
+                    <div class="division">
+                        <h4 style="font-size: 14px; color: #555; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 15px;">
+                            <i class="fa fa-history"></i> Case History
+                        </h4>
+                        <ul style="list-style: none; padding-left: 0;">
+                            <?php foreach ($this->logs as $log): ?>
+                                <li style="padding: 10px 0; border-bottom: 1px solid #eee;">
+                                    <strong style="color: #26a69a;"><?php echo $this->escape($log['createddate']); ?></strong> -
+                                    <span style="color: #666;">(by <?php echo $this->escape($log['userfullname']); ?>)</span><br>
+                                    <span style="display: block; margin-top: 5px; color: #333;">
+                                        <?php echo nl2br($this->escape($log['description'])); ?>
+                                    </span>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+        <?php endif; ?>
+    </div>
+</div>
+
+<!-- SSOT VII.8: Disable Rich Text Editor in View Mode -->
+<script type="text/javascript">
+    $(document).ready(function() {
+        if ($('#employer_statement').length) {
+            $('#employer_statement, #employee_statement').jqte();
+            $('.jqte_editor').attr('contenteditable', 'false');
+        }
+
+        // Apply Select2 read-only appearance if available
+        if ($.isFunction($.fn.select2)) {
+            $('select').select2({
+                width: '100%'
+            });
+        }
+    });
+</script>

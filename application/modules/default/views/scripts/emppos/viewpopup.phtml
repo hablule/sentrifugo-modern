@@ -1,0 +1,13 @@
+<?php
+sapp_Helper::viewHeader();
+sapp_Helper::viewBody('alt','Position Name',(!empty($this->data['positionname']))?$this->data['positionname']:"...",'Job Title',(!empty($this->data['job_name']))?$this->data['job_name']:"...");
+sapp_Helper::viewBody('nor','Description',(!empty($this->data['description']))?$this->data['description']:"...",'Active',(!empty($this->data['isactive']))?$this->data['isactive']:"...");
+sapp_Helper::viewBody('nor','Employee Name',(!empty($this->data['userfullname']))?$this->data['userfullname']:"...",'',"");
+
+sapp_Helper::viewFooter();
+
+?>
+
+<div class="new-form-ui-submit" id="formSubmit">
+<button onclick="closeiframepopup('<?php echo $this->controllername;?>','cancel');"  type="button" >Cancel</button>
+</div>

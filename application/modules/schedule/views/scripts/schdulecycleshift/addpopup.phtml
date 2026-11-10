@@ -1,0 +1,83 @@
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/hrms.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH ?>css/addelement.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH ?>js/addelement.js"></script>
+<!-- <link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script> -->
+
+<?php if (count($this->messages)) {?>
+	<div id="dispmsgemp" class="settingssuccess">
+		<?php 
+			foreach ($this->messages as $message)
+			{
+				$flag = array();				
+				$flag = array_keys($message);
+				echo "<div id='messageData' class='ml-alert-1-$flag[0]'><div style='display:block;'><span class='style-1-icon $flag[0]'></span>";
+				echo $message[$flag[0]];
+				echo "</div></div>";
+			} 
+		;
+		?>
+	</div>	
+	
+<?php } ?><?php 
+
+
+sapp_Global::generateClientValidations($this->form);
+?>
+
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction();?>" method="<?php echo $this->form->getMethod(); ?>">
+		<?php echo $this->form->id; ?>
+        <div class="total-form-controller">
+		    <div class="new-form-ui clearb">
+			  <label class="required">Shift</label>
+			<div class="division"><?php echo $this->form->shift_id; ?></div>
+			<?php if(isset($this->msgarray['shift_id'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->shift_id->getId(); ?>"><?php echo $this->msgarray['shift_id'];?></span>
+			<?php }?>
+			</div>
+						
+            <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description','', 'fck_editor_height','',array());?>
+
+			<div class="new-form-ui ">
+			    <label >Active</label>
+				<div class="division"><?php echo $this->form->isactive; ?>
+				<?php if(isset($this->msgarray['isactive'])){?>
+				   <span class="errors" id="errors-<?php echo $this->form->isactive->getId(); ?>"><?php echo $this->msgarray['isactive'];?></span>
+				<?php }?>
+				
+				</div>
+				
+			</div>
+ 
+			
+
+		    <div class="new-form-ui-submit">
+                    <div class="division"><?php echo $this->form->submit; ?>
+                    <button onclick="window.location.href='<?php echo BASE_URL; ?>schedule/schedulecycle';" type="button" id="Cancel" name="Cancel">Cancel</button>
+                    </div>
+                </div>
+</div>
+</form>
+<!-- <div id="timetableContainer"  style="display: none; overflow: auto;">
+		<div class="heading">
+			<a href="javascript:void(0)">
+			<img src="<?php echo $this->baseUrl().'/public/media/';?>images/close.png" name="" align="right"
+				border="0" hspace="3" vspace="5" class="closeAttachPopup"
+				style="margin: -24px 8px 0 0;"> </a>
+		</div>
+
+			<iframe id="timetableCont" class="business_units_iframe" frameborder="0"></iframe>
+
+	</div> -->
+<script>
+	
+$('#description').jqte();
+
+</script>
+
+
+
+		
+       

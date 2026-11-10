@@ -1,0 +1,53 @@
+<?php try { ?>
+ <?php
+if (!empty($this->messages)) {
+?>
+<div id="dispmsgemp" class="settingssuccess">
+<?php
+	$flag = array();				
+	foreach ($this->messages as $message)
+	{
+		$flag = array_keys($message);
+		echo "<div id='messageData' class='ml-alert-1-$flag[0]'><div style='display:block;'><span class='style-1-icon $flag[0]'></span>";
+		echo $message[$flag[0]];
+		echo "</div></div>";
+	}
+?>
+</div>
+<?php }
+if(!empty($this->empdata))
+ {
+       	echo $this->employeedetails($this->empdata[0],'mydetails',$this->id);
+		?>
+		 <div class="right-block-data">
+		<?php
+		   foreach ($this->data as $data) {
+			sapp_Helper::viewHeader();
+			   sapp_Helper::viewBody('alt','Document', (!empty($data['Iname'])) ? $data['Iname'] : "...",'Provider', (!empty($data['Pname'])) ? $data['Pname'] : "...");
+			   sapp_Helper::viewBody('nor','Status list', (!empty($data['Sname'])) ? $data['Sname'] : "...",'Description', (!empty($data['description'])) ? $data['description'] : "...");
+			   sapp_Helper::viewBody('alt','Issue date', (!empty($data['issuedate'])) ? $data['issuedate'] : "...", 'Expire date', (!empty($data['expirydate'])) ? $data['expirydate'] : "...");
+			   sapp_Helper::viewBody('alt','Status', (!empty($data['iddocumentstatus'])) ? $data['iddocumentstatus'] : "...", 'ID', (!empty($data['idnumber'])) ? $data['idnumber'] : "...");
+			sapp_Helper::viewFooter();
+		   }
+		   
+		
+ }  else {
+?>
+ 		 <div class="ml-alert-1-info m1-info-set">
+				<div class="style-1-icon info"></div>
+ 					Assets not assigned yet.
+ 	     </div>				
+        <?php }?>
+		 </div> 
+<?php 	//code...
+} catch (\Throwable $th) {
+	Zend_Debug::dump($th->getMessage());
+} ?>
+<script>
+$(document).ready(function() {
+  
+    $("#employeedocs").addClass('active');
+    $("#employeedocs").removeAttr("onclick");
+
+});//end of ready function
+</script>

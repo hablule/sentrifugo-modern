@@ -1,0 +1,589 @@
+<?php
+
+/**
+ * Permission Mapping View
+ * 
+ * Displays a matrix of controllers and actions for ABAC permission mapping.
+ * Refactored for SSOT v4.5: Direct HTML asset inclusion, improved accordion UX, 
+ * stacked filters, and the "Magic Wand" Auto-Map heuristic engine.
+ * 
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ */
+?>
+<!-- SSOT Compliant Asset Inclusion -->
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/screen.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-ui.min.js"></script>
+
+<style>
+    /* Font Size Increases */
+    #permission_accordion {
+        font-size: 14px;
+    }
+
+    .grid th,
+    .grid td {
+        font-size: 13px;
+    }
+
+    /* FORCE CHECKBOXES TO SHOW (Overrides Sentrifugo style.css) */
+    .perm-checkbox,
+    .row-toggle {
+        display: inline-block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        position: relative !important;
+        left: auto !important;
+        width: 16px !important;
+        height: 16px !important;
+        pointer-events: auto !important;
+        cursor: pointer;
+    }
+
+    /* Accordion Spacing, Padding, and Lighter Backgrounds */
+    .ui-accordion-header {
+        background: #f8f9fa !important;
+        margin-top: 12px !important;
+        padding: 12px 15px 12px 35px !important;
+        border-radius: 4px;
+        border: 1px solid #e0e0e0 !important;
+        font-weight: bold;
+        color: #2c3e50;
+        transition: background-color 0.3s;
+    }
+
+    .ui-accordion-header-active {
+        background: #eaf2f8 !important;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    .ui-accordion-header .ui-accordion-header-icon {
+        left: 12px !important;
+        margin-top: -8px !important;
+    }
+
+    /* Clean Badges */
+    .badge {
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: bold;
+        color: #fff;
+        text-transform: uppercase;
+        display: inline-block;
+    }
+
+    .badge-new {
+        background-color: #e67e22;
+    }
+
+    .badge-active {
+        background-color: #27ae60;
+    }
+
+    /* Row Highlighting & Hover */
+    .perm-row {
+        transition: background-color 0.2s;
+    }
+
+    .perm-row:hover {
+        background-color: #f4f6f6 !important;
+    }
+
+    .row-modified {
+        background-color: #e8f8f5 !important;
+        border-left: 3px solid #1abc9c;
+    }
+
+    /* Sticky Header & Filter Layout */
+    .sticky-header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: #fff;
+        border-bottom: 1px solid #ddd;
+        padding: 15px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        box-sizing: border-box;
+    }
+
+    .filter-container {
+        margin-top: 15px;
+        display: block;
+        border-top: 1px dashed #eee;
+        padding-top: 10px;
+    }
+
+    .filter-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 6px;
+    }
+
+    .filter-label {
+        width: 90px;
+        font-size: 13px;
+        font-weight: bold;
+        color: #555;
+    }
+
+    .filter-box {
+        padding: 4px 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 13px;
+        background: #fff;
+        width: 250px;
+        box-sizing: border-box;
+    }
+
+    /* Utility */
+    .select-all-icon {
+        color: #7f8c8d;
+        cursor: pointer;
+        font-size: 14px;
+        margin-left: 5px;
+    }
+
+    .select-all-icon:hover {
+        color: #2c3e50;
+    }
+
+    /* Magic Wand Button Pulse Effect */
+    @keyframes pulse-glow {
+        0% {
+            box-shadow: 0 0 0 0 rgba(155, 89, 182, 0.7);
+        }
+
+        70% {
+            box-shadow: 0 0 0 10px rgba(155, 89, 182, 0);
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 rgba(155, 89, 182, 0);
+        }
+    }
+
+    .btn-magic {
+        background-color: #9b59b6 !important;
+        animation: pulse-glow 2s infinite;
+    }
+
+    .btn-magic:hover {
+        background-color: #8e44ad !important;
+        animation: none;
+    }
+</style>
+
+<!-- Sticky Action Bar & Filters -->
+<div id="permission_header" class="sticky-header">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+
+        <!-- Left Side: Title & Stacked Filters -->
+        <div style="flex: 1;">
+            <h4 class="page-title" style="margin: 0;">Action Permission Mapping</h4>
+            <p style="margin: 5px 0 0 0; font-size: 12px; color: #7f8c8d;">Map discovered controller actions to standard privileges.</p>
+
+            <div class="filter-container">
+                <!-- Filter 1: Module -->
+                <div class="filter-row">
+                    <span class="filter-label">Module:</span>
+                    <select id="filterModule" class="filter-box">
+                        <option value="">All Modules</option>
+                        <?php
+                        $uniqueModules = array();
+                        foreach ($this->matrix as $group) {
+                            if (isset($group['details'])) {
+                                $modName = isset($group['details']['module_name']) ? $group['details']['module_name'] : 'Module ' . $group['details']['module_id'];
+                                $uniqueModules[$modName] = $modName;
+                            }
+                        }
+                        ksort($uniqueModules);
+                        foreach ($uniqueModules as $mod) {
+                            echo '<option value="' . strtolower($this->escape($mod)) . '">' . $this->escape($mod) . '</option>';
+                        }
+                        ?>
+                    </select>
+                </div>
+
+                <!-- Filter 2: Controller -->
+                <div class="filter-row">
+                    <span class="filter-label">Controller:</span>
+                    <input type="text" id="filterController" class="filter-box" placeholder="Search controller...">
+                </div>
+
+                <!-- Filter 3: Action -->
+                <div class="filter-row">
+                    <span class="filter-label">Action:</span>
+                    <input type="text" id="filterAction" class="filter-box" placeholder="Search action method...">
+                </div>
+
+                <!-- Filter 4: Status -->
+                <div class="filter-row">
+                    <span class="filter-label">Status:</span>
+                    <select id="filterStatus" class="filter-box">
+                        <option value="">All Statuses</option>
+                        <option value="new">New (Unmapped)</option>
+                        <option value="mapped">Mapped (Active)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side: Buttons -->
+        <div class="actions_div" style="margin: 0; display: flex; gap: 5px; flex-wrap: nowrap; padding-top: 10px;">
+            <button id="btn-scan" class="actbtn_btn" style="background-color: #f39c12; white-space: nowrap;" title="Scan file system for new methods">
+                <i class="fa fa-search"></i> Run Scanner
+            </button>
+            <button id="btn-automap" class="actbtn_btn btn-magic" style="white-space: nowrap;" title="Auto-select checkboxes based on action names">
+                <i class="fa fa-magic"></i> Auto-Map
+            </button>
+            <button id="btn-save" class="actbtn_btn" style="white-space: nowrap;" title="Save mappings to database">
+                <i class="fa fa-save"></i> Save Mappings
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<div id="message_container" style="margin: 15px;"></div>
+
+<div class="wrapperdivrightmain" style="padding: 0 15px 15px 15px;">
+
+    <div id="permission_accordion">
+        <?php foreach ($this->matrix as $ctrlId => $group): ?>
+            <?php if (!isset($group['details'])) continue;
+            $modName = isset($group['details']['module_name']) ? $group['details']['module_name'] : 'Module ' . $group['details']['module_id'];
+            ?>
+
+            <h3 class="controller-header"
+                data-module="<?php echo strtolower($this->escape($modName)); ?>"
+                data-controller="<?php echo strtolower($this->escape($group['details']['controller'])); ?>">
+
+                <?php echo $this->escape($modName . ' / ' . $group['details']['controller']); ?>
+
+                <span style="font-size: 11px; color: #95a5a6; float:right; font-weight: normal; margin-top: 2px;">
+                    Last Scanned: <?php echo $this->escape(date('M d, Y H:i', strtotime($group['details']['last_scanned']))); ?>
+                </span>
+            </h3>
+
+            <div class="controller-body">
+                <?php
+                // Fallback array to guarantee the loop executes even if the Controller failed to pass it
+                $standardPerms = isset($this->standardPerms) && !empty($this->standardPerms)
+                    ? $this->standardPerms
+                    : array('add', 'edit', 'delete', 'view', 'upload', 'viewupload');
+                ?>
+
+                <table class="grid" style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr class="table-header" style="background: #ecf0f1; border-bottom: 2px solid #bdc3c7;">
+                            <th style="width: 5%; text-align: center;" title="Select All in Row"><i class="fa fa-check-square-o"></i></th>
+                            <th style="width: 25%; padding: 10px;">Action Name</th>
+                            <th style="width: 10%; padding: 10px;">Status</th>
+                            <?php foreach ($standardPerms as $perm): ?>
+                                <th style="text-align: center; width: 10%; padding: 10px;">
+                                    <?php echo ucfirst($perm); ?>
+                                    <i class="fa fa-caret-down select-all-icon col-toggle" data-perm="<?php echo $perm; ?>" data-ctrl="<?php echo $ctrlId; ?>" title="Toggle all <?php echo ucfirst($perm); ?>"></i>
+                                </th>
+                            <?php endforeach; ?>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($group['actions'] as $actionId => $action): ?>
+                            <?php $statusVal = ($action['status'] == 'New') ? 'new' : 'mapped'; ?>
+
+                            <tr class="perm-row" style="border-bottom: 1px solid #ecf0f1;"
+                                data-status="<?php echo $statusVal; ?>"
+                                data-action="<?php echo strtolower($this->escape($action['name'])); ?>">
+
+                                <td style="text-align: center; border-right: 1px solid #ecf0f1;">
+                                    <input type="checkbox" class="row-toggle" title="Toggle all permissions for this action">
+                                </td>
+
+                                <td style="padding: 10px; font-family: monospace; color: #2c3e50;">
+                                    <?php echo $this->escape($action['name']); ?>
+                                </td>
+
+                                <td style="padding: 10px;">
+                                    <?php if ($action['status'] == 'New'): ?>
+                                        <span class="badge badge-new">New</span>
+                                    <?php else: ?>
+                                        <span class="badge badge-active">Mapped</span>
+                                    <?php endif; ?>
+                                </td>
+
+                                <?php
+                                // Ensure permissions array exists to prevent in_array() PHP warnings
+                                $actionPerms = isset($action['permissions']) && is_array($action['permissions']) ? $action['permissions'] : array();
+                                ?>
+
+                                <?php foreach ($standardPerms as $perm): ?>
+                                    <?php $isChecked = in_array($perm, $actionPerms) ? 'checked="checked"' : ''; ?>
+                                    <td style="text-align: center;">
+                                        <input type="checkbox"
+                                            class="perm-checkbox perm-<?php echo $perm; ?> ctrl-<?php echo $ctrlId; ?>"
+                                            data-action-id="<?php echo $actionId; ?>"
+                                            data-perm="<?php echo $perm; ?>"
+                                            <?php echo $isChecked; ?>>
+                                    </td>
+                                <?php endforeach; ?>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        // 1. Initialize Accordion
+        $("#permission_accordion").accordion({
+            collapsible: true,
+            active: false,
+            heightStyle: "content",
+            icons: {
+                "header": "ui-icon-plus",
+                "activeHeader": "ui-icon-minus"
+            }
+        });
+
+        // 2. Filters
+        function applyFilters() {
+            var ctrlQuery = $('#filterController').val().toLowerCase();
+            var actionQuery = $('#filterAction').val().toLowerCase();
+            var statusFilter = $('#filterStatus').val().toLowerCase();
+            var moduleFilter = $('#filterModule').val().toLowerCase();
+
+            $('.controller-header').each(function() {
+                var $header = $(this);
+                var $body = $header.next('.controller-body');
+                var headerModule = $header.data('module');
+                var headerCtrl = $header.data('controller');
+
+                var moduleMatch = (moduleFilter === '' || headerModule === moduleFilter);
+                var ctrlMatch = (ctrlQuery === '' || headerCtrl.indexOf(ctrlQuery) > -1);
+
+                var hasVisibleRows = false;
+
+                $body.find('.perm-row').each(function() {
+                    var $row = $(this);
+                    var rowAction = $row.data('action');
+                    var rowStatus = $row.data('status');
+
+                    var actionMatch = (actionQuery === '' || rowAction.indexOf(actionQuery) > -1);
+                    var statusMatch = (statusFilter === '' || rowStatus === statusFilter);
+
+                    if (moduleMatch && ctrlMatch && actionMatch && statusMatch) {
+                        $row.show();
+                        hasVisibleRows = true;
+                    } else {
+                        $row.hide();
+                    }
+                });
+
+                if (hasVisibleRows && moduleMatch && ctrlMatch) {
+                    $header.show();
+                } else {
+                    $header.hide();
+                    if ($header.hasClass('ui-state-active')) {
+                        $header.trigger('click');
+                    }
+                }
+            });
+        }
+
+        $('#filterController, #filterAction').on('keyup', applyFilters);
+        $('#filterStatus, #filterModule').on('change', applyFilters);
+
+        // 3. Toggles
+        $('.perm-checkbox').on('change', function(e) {
+            e.stopPropagation();
+            $(this).closest('tr').addClass('row-modified');
+        });
+
+        $('.row-toggle').on('change', function(e) {
+            e.stopPropagation();
+            var isChecked = $(this).is(':checked');
+            var $row = $(this).closest('tr');
+            $row.find('.perm-checkbox').prop('checked', isChecked);
+            $row.addClass('row-modified');
+        });
+
+        $('.col-toggle').on('click', function(e) {
+            e.stopPropagation();
+            var perm = $(this).data('perm');
+            var ctrlId = $(this).data('ctrl');
+            var $checkboxes = $('.perm-' + perm + '.ctrl-' + ctrlId);
+
+            var newState = !$checkboxes.first().is(':checked');
+            $checkboxes.prop('checked', newState);
+            $checkboxes.closest('tr').addClass('row-modified');
+        });
+
+        // -------------------------------------------------------------------------
+        // 4. THE MAGIC WAND HEURISTIC ENGINE
+        // -------------------------------------------------------------------------
+        $('#btn-automap').click(function() {
+            if (typeof $.blockUI === "function") {
+                $.blockUI({
+                    message: '<img src="<?php echo MEDIA_PATH; ?>images/loader2.gif" alt="Auto-Mapping..." /><br><br>Applying Magic Wand Heuristics...'
+                });
+            }
+
+            // The Sentrifugo Keyword Dictionary
+            var dictionary = {
+                'view': ['index', 'view', 'list', 'get', 'fetch', 'display', 'show', 'search', 'report', 'grid'],
+                'add': ['add', 'create', 'insert', 'new'],
+                'edit': ['edit', 'update', 'change', 'activeinactive', 'modify', 'assign', 'set'],
+                'delete': ['delete', 'remove', 'destroy', 'discard', 'erase', 'clear'],
+                'upload': ['upload', 'import'],
+                'viewupload': ['download', 'export', 'print', 'pdf', 'excel', 'csv']
+            };
+
+            var comboSave = ['save', 'submit', 'process']; // Triggers Add + Edit
+            var mappedCount = 0;
+
+            // Iterate through all "New" rows currently visible or hidden
+            $('.perm-row[data-status="new"]').each(function() {
+                var $row = $(this);
+                var actionName = $row.data('action'); // e.g., "addcandidateaction"
+                var wasMapped = false;
+
+                // Remove 'action' suffix to avoid false positives (like 'activeinactiveAction')
+                var baseName = actionName.replace('action', '');
+
+                // 1. Check for Save/Submit combos first
+                $.each(comboSave, function(i, keyword) {
+                    if (baseName.indexOf(keyword) > -1) {
+                        $row.find('.perm-add, .perm-edit').prop('checked', true);
+                        wasMapped = true;
+                    }
+                });
+
+                // 2. Check Standard Dictionary
+                $.each(dictionary, function(permission, keywords) {
+                    $.each(keywords, function(i, keyword) {
+                        if (baseName.indexOf(keyword) > -1) {
+                            $row.find('.perm-' + permission).prop('checked', true);
+                            wasMapped = true;
+                        }
+                    });
+                });
+
+                // 3. Mark row as modified if we guessed something
+                if (wasMapped) {
+                    $row.addClass('row-modified');
+                    mappedCount++;
+
+                    // Expand accordion so user can review the changes
+                    var $header = $row.closest('.controller-body').prev('.controller-header');
+                    if (!$header.hasClass('ui-state-active')) {
+                        $header.trigger('click');
+                    }
+                }
+            });
+
+            setTimeout(function() {
+                if (typeof $.unblockUI === "function") $.unblockUI();
+                if (mappedCount > 0) {
+                    $('#message_container').html('<div class="ml-alert-1-success"><span class="style-1-icon success"></span>Magic Wand successfully pre-selected permissions for ' + mappedCount + ' unmapped actions. Please review and click "Save Mappings".</div>');
+                    // Remove animation class after first use
+                    $('#btn-automap').removeClass('btn-magic');
+                } else {
+                    $('#message_container').html('<div class="ml-alert-1-info"><span class="style-1-icon info"></span>No new actions matched the heuristic dictionary.</div>');
+                }
+                $('html, body').animate({
+                    scrollTop: 0
+                }, 'fast');
+            }, 500); // 500ms delay to let the UI breathe
+        });
+
+        // 5. Scanner AJAX
+        $('#btn-scan').click(function() {
+            if (typeof $.blockUI === "function") {
+                $.blockUI({
+                    message: '<img src="<?php echo MEDIA_PATH; ?>images/loader2.gif" alt="Scanning..." /><br><br>Scanning System...'
+                });
+            }
+
+            $.ajax({
+                url: base_url + '/permission/scan',
+                type: 'POST',
+                dataType: 'json',
+                success: function(res) {
+                    if (typeof $.unblockUI === "function") $.unblockUI();
+                    if (res.status === 'success') {
+                        window.location.reload();
+                    } else {
+                        $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>' + res.message + '</div>');
+                        $('html, body').animate({
+                            scrollTop: 0
+                        }, 'fast');
+                    }
+                }
+            });
+        });
+
+        // 6. Save AJAX
+        $('#btn-save').click(function() {
+            var mappings = {};
+
+            $('.perm-checkbox').each(function() {
+                var actionId = $(this).data('action-id');
+                var perm = $(this).data('perm');
+                if (!mappings[actionId]) mappings[actionId] = [];
+                if ($(this).is(':checked')) mappings[actionId].push(perm);
+            });
+
+            if (typeof $.blockUI === "function") {
+                $.blockUI({
+                    message: '<img src="<?php echo MEDIA_PATH; ?>images/loader2.gif" alt="Saving..." /><br><br>Compiling ACL Cache...'
+                });
+            }
+
+            $.ajax({
+                url: base_url + '/permission/savemapping',
+                type: 'POST',
+                data: {
+                    mappings: JSON.stringify(mappings)
+                },
+                dataType: 'json',
+                success: function(res) {
+                    if (typeof $.unblockUI === "function") $.unblockUI();
+                    if (res.status === 'success') {
+                        $('.row-modified').removeClass('row-modified');
+
+                        // Convert New badges to Mapped
+                        $('.perm-row[data-status="new"]').each(function() {
+                            var hasChecks = $(this).find('.perm-checkbox:checked').length > 0;
+                            if (hasChecks) {
+                                $(this).attr('data-status', 'mapped');
+                                $(this).find('.badge-new').removeClass('badge-new').addClass('badge-active').text('Mapped');
+                            }
+                        });
+
+                        $('#message_container').html('<div class="ml-alert-1-success"><span class="style-1-icon success"></span>' + res.message + '</div>');
+                        setTimeout(function() {
+                            $('#message_container').fadeOut('slow', function() {
+                                $(this).empty().show();
+                            });
+                        }, 3000);
+                    } else {
+                        $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>' + res.message + '</div>');
+                    }
+                    $('html, body').animate({
+                        scrollTop: 0
+                    }, 'fast');
+                }
+            });
+        });
+
+    });
+</script>

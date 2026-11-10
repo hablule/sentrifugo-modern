@@ -1,0 +1,32 @@
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction();?>" method="<?php echo $this->form->getMethod(); ?>">
+		<?php echo $this->form->id; 
+			echo $this->form->emptyFlag; 
+		?>
+        <div class="total-form-controller">
+	
+			 <!--  <label class="required">Module name</label> -->
+			<?php /* echo $this->form->modules; */ ?>	
+			
+			<?php /* echo $this->form->formname; */ ?>	
+			
+
+            <div class="new-form-ui">
+			  <label class="required">No. of Elements</label>
+			<div class="division"><?php echo $this->form->noofele; ?>	
+			<?php if(isset($this->msgarray['noofele'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->noofele->getId(); ?>"><?php echo $this->msgarray['noofele'];?></span>
+			<?php }?>
+			</div>
+			</div>
+			
+			
+		
+		<div class="new-form-ui-submit">
+		<?php echo $this->form->submit; ?>
+		<button onclick="window.location.href='<?php echo BASE_URL; ?>mvc/create';" type="button" id="Cancel" name="Cancel">Cancel</button>
+		</div>
+		</div>
+</form>
+<script>	
+   
+</script>

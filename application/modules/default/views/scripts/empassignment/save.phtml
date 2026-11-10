@@ -1,0 +1,207 @@
+<?php
+
+/**
+ * Employee Assignment Save View (Add/Edit)
+ * Features SSOT VIII On-The-Fly additions for Position, Contract Type, and Event Reason.
+ * Complies with SSOT v6.7.7.
+ */
+?>
+
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/custompopup.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/custompopup.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<style>
+    .add-coloum {
+        color: #26a69a;
+        cursor: pointer;
+        font-size: 11px;
+        margin-top: 4px;
+        display: inline-block;
+        font-weight: bold;
+    }
+
+    .add-coloum:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<?php sapp_Global::generateClientValidations($this->form); ?>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container"></div>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" method="post">
+            <?php echo $this->form->id; ?>
+            <?php if ($this->form->getElement('employee_id_hidden')): ?>
+                <?php echo $this->form->employee_id_hidden; ?>
+            <?php endif; ?>
+
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <h5 style="color:#26a69a; border-bottom:1px solid #ddd; padding-bottom:5px;">Assignment Details</h5>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->employee_id->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->employee_id; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->employee_id->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <!-- Position (with On-the-fly Popup) -->
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->position_id->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->position_id; ?>
+                            <span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL; ?>position/addpopup', 'Add Position');">+ Add Position Seat</span>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->position_id->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->assignment_type->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->assignment_type; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->assignment_type->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <!-- Employment Type (with On-the-fly Popup) -->
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->employment_type_id->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->employment_type_id; ?>
+                            <span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL; ?>employmenttype/addpopup', 'Add Contract Type');">+ Add Contract Type</span>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->employment_type_id->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <!-- Assignment Reason (with On-the-fly Popup) -->
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->assignment_reason_id->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->assignment_reason_id; ?>
+                            <span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL; ?>assignmentreason/addpopup', 'Add Assignment Reason');">+ Add Reason</span>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->assignment_reason_id->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->allocated_fte->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->allocated_fte; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->allocated_fte->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <!-- Linked Effective Dates -->
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb" style="width:45%;">
+                            <label class="required"><?php echo $this->escape($this->form->start_date->getLabel()); ?></label>
+                            <div class="division">
+                                <?php echo $this->form->start_date; ?>
+                                <span class="errors" id="errors-<?php echo $this->escape($this->form->start_date->getId()); ?>"></span>
+                            </div>
+                        </div>
+                        <div class="new-form-ui clearb" style="width:45%; margin-left:5%;">
+                            <label><?php echo $this->escape($this->form->end_date->getLabel()); ?></label>
+                            <div class="division">
+                                <?php echo $this->form->end_date; ?>
+                                <span class="errors" id="errors-<?php echo $this->escape($this->form->end_date->getId()); ?>"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->isactive; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->isactive->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui-submit">
+                        <div class="division">
+                            <?php echo $this->form->submit; ?>
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>empassignment/index';" value="Cancel" type="button" class="reset" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ============================================================================== -->
+<!-- SSOT VIII: Hidden Iframe Containers for "On-The-Fly" Popups                   -->
+<!-- ============================================================================== -->
+
+<div id="positionContainer" style="display: none; overflow: auto;">
+    <div class="heading"><a href="javascript:void(0)"><img src="<?php echo MEDIA_PATH; ?>images/close.png" class="closeAttachPopup" align="right" border="0" style="margin: -24px 8px 0 0;"></a></div>
+    <iframe id="positionCont" class="user_iframe" frameborder="0"></iframe>
+</div>
+
+<div id="employmenttypeContainer" style="display: none; overflow: auto;">
+    <div class="heading"><a href="javascript:void(0)"><img src="<?php echo MEDIA_PATH; ?>images/close.png" class="closeAttachPopup" align="right" border="0" style="margin: -24px 8px 0 0;"></a></div>
+    <iframe id="employmenttypeCont" class="user_iframe" frameborder="0"></iframe>
+</div>
+
+<div id="assignmentreasonContainer" style="display: none; overflow: auto;">
+    <div class="heading"><a href="javascript:void(0)"><img src="<?php echo MEDIA_PATH; ?>images/close.png" class="closeAttachPopup" align="right" border="0" style="margin: -24px 8px 0 0;"></a></div>
+    <iframe id="assignmentreasonCont" class="user_iframe" frameborder="0"></iframe>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#description').jqte();
+
+        // Linked Datepickers
+        $('#start_date').datepicker({
+            showOn: 'both',
+            dateFormat: '<?php echo DATEFORMAT_JS; ?>',
+            buttonImage: "<?php echo MEDIA_PATH; ?>images/cal.jpg",
+            buttonImageOnly: true,
+            changeMonth: true,
+            changeYear: true,
+            onClose: function(selectedDate) {
+                $(this).trigger('blur');
+                if (selectedDate !== '') {
+                    $("#end_date").datepicker("option", "minDate", selectedDate);
+                }
+            }
+        });
+
+        $('#end_date').datepicker({
+            showOn: 'both',
+            dateFormat: '<?php echo DATEFORMAT_JS; ?>',
+            buttonImage: "<?php echo MEDIA_PATH; ?>images/cal.jpg",
+            buttonImageOnly: true,
+            changeMonth: true,
+            changeYear: true,
+            onClose: function(selectedDate) {
+                $(this).trigger('blur');
+                if (selectedDate !== '') {
+                    $("#start_date").datepicker("option", "maxDate", selectedDate);
+                }
+            }
+        });
+
+        if ($('#start_date').val() !== '') {
+            $("#end_date").datepicker("option", "minDate", $('#start_date').val());
+        }
+        if ($('#end_date').val() !== '') {
+            $("#start_date").datepicker("option", "maxDate", $('#end_date').val());
+        }
+    });
+</script>

@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * Employment Type Index View (Grid)
+ */
+?>
+<div id="error_message" style="display:none;"></div>
+<?php
+if ($this->call == 'ajaxcall') {
+    $div = '';
+    $endDiv = '';
+} else {
+    $div = '<div id="grid_' . $this->dataArray[0]['objectname'] . '" class="all-grid-control">';
+    $endDiv = '</div>';
+}
+echo $div . '<div id="msg" style="display:none;font-style: oblique; font-weight: bold; color: green;""></div>' . $this->grid($this->dataArray[0]) . $endDiv;
+?>
+<script type="text/javascript" language="javascript">
+    $(document).ready(function() {
+        <?php
+        if (isset($_SESSION['role_msg'])) {
+            if ($_SESSION['role_cls'] == 'success') {
+                echo "successmessage('" . $_SESSION['role_msg'] . "');";
+            } else {
+                echo "error_message('" . $_SESSION['role_msg'] . "');";
+            }
+            unset($_SESSION['role_msg']);
+            unset($_SESSION['role_cls']);
+        }
+        ?>
+    });
+</script>

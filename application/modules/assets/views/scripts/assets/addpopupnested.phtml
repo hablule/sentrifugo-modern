@@ -1,0 +1,106 @@
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+<script src="<?php echo MEDIA_PATH; ?>js/custompopup.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/hrms.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/assets/assets.js"></script>
+
+
+<?php if($this->popup == 'close') { ?>	
+	<div class="ml-alert-1-success">
+	<div class="style-1-icon success"></div>
+Assets<?php echo $this->eventact; ?> successfully
+	</div>
+
+	<?php } 
+else
+{
+    sapp_Global::generateClientValidations($this->form);?>
+    <div id="error_message" style="display:none;"></div>
+
+	<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction();?>" method="<?php echo $this->form->getMethod(); ?>">
+		<?php echo $this->form->id; ?>
+  <div class="total-form-controller">
+
+  <div class="new-form-ui ">
+		    <label class="required"><?php echo $this->form->name->getLabel(); ?> </label>
+			<div class="division"><?php echo $this->form->name; ?>
+			<?php if(isset($this->msgarray['name'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->name->getId(); ?>"><?php echo $this->msgarray['name'];?></span>
+			<?php }?>
+			</div> 
+		</div>
+
+	    <div class="new-form-ui ">
+		    <label class="required"><?php echo $this->form->code->getLabel(); ?> </label>
+			<div class="division"><?php echo $this->form->code; ?>
+			<?php if(isset($this->msgarray['code'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->code->getId(); ?>"><?php echo $this->msgarray['code'];?></span>
+			<?php }?>
+			</div> 
+		</div>
+		<div class="new-form-ui ">
+		    <label class="required"><?php echo $this->form->assetcategory_id->getLabel(); ?> </label>
+			<div class="division"><?php echo $this->form->assetcategory_id; ?>
+
+			<?php if(isset($this->msgarray['assetcategory_id'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->assetcategory_id->getId(); ?>"><?php echo $this->msgarray['assetcategory_id'];?></span>
+			<?php }?>
+			</div> 
+		</div>
+		<div class="new-form-ui ">
+		    <label class="required"><?php echo $this->form->assettype_id->getLabel(); ?> </label>
+			<div class="division"><?php echo $this->form->assettype_id; ?>
+
+			<?php if(isset($this->msgarray['assettype_id'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->assettype_id->getId(); ?>"><?php echo $this->msgarray['assettype_id'];?></span>
+			<?php }?>
+			</div> 
+		</div>
+		<div class="new-form-ui ">
+		    <label class="required"><?php echo $this->form->uom_id->getLabel(); ?> </label>
+			<div class="division"><?php echo $this->form->uom_id; ?>
+
+			<?php if(isset($this->msgarray['uom_id'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->uom_id->getId(); ?>"><?php echo $this->msgarray['uom_id'];?></span>
+			<?php }?>
+			</div> 
+		</div>
+		<div class="new-form-ui ">
+		    <label ><?php echo $this->form->isactive->getLabel(); ?> </label>
+			<div class="division"><?php echo $this->form->isactive; ?>
+			<?php if(isset($this->msgarray['isactive'])){?>
+			   <span class="errors" id="errors-<?php echo $this->form->isactive->getId(); ?>"><?php echo $this->msgarray['isactive'];?></span>
+			<?php }?>
+			</div> 
+		</div>
+            <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description','', 'fck_editor_height','',array());?>
+
+        
+		<div class="new-form-ui-submit">
+		<?php echo $this->form->submit; ?>
+		<button onclick="closeiframepopup('assets','cancel');"  type="button" >Cancel</button>
+
+		</div>
+</div>
+</form>
+<?php } ?>
+
+<script language='javascript' type='text/javascript'>
+	<?php if ($this->popup != '') { ?>
+		setTimeout(function() {
+			removeNestedPopup_OnFinish("<?php echo $this->asset; ?>", "assets", "asset_id", "", "");
+		}, 2000);
+	<?php } ?>
+	$(document).ready(function() {
+		<?php if (count($this->messages)) { ?>
+			setTimeout(function() {
+				$('#popupmessage').fadeOut('slow');
+			}, 3000);
+
+		<?php } ?>
+		$('#description').jqte()
+	});
+</script>
+<script>
+	$('#description').jqte();
+</script>

@@ -1,0 +1,339 @@
+<?php
+
+$form = $this->form;
+$method_form = $this->method_form;
+$classes = $this->classes;
+?><?php if (count($this->messages)) {?>
+	<div id="dispmsgload">
+    <?php 
+			foreach ($this->messages as $message)
+			{
+				$flag = array();				
+				$flag = array_keys($message);
+				echo "<div id='messageData' class='ml-alert-1-$flag[0]'><div style='display:block;'><span class='style-1-icon $flag[0]'></span>";
+				echo $message[$flag[0]];
+				echo "</div></div>";
+			} 
+	?>
+	</div>	
+	
+<?php } ?>
+<script>
+    var classes = '<?php echo json_encode($classes); ?>';
+</script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH ?>js/addelement.js"></script>
+
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH ?>css/addelement.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction(); ?>" method="POST">
+    <?php echo $this->form->id; ?>
+    <div class="total-form-controller">
+    <div class="new-form-ui ">
+            <label class="required">Load Code</label>
+            <div class="division loca_state_div"><?php echo $this->form->code; ?>
+            <span class="errors" id="errors-<?php echo $this->form->code->getId(); ?>"><?php echo $this->msgarray['code']; ?></span>
+            </div>
+        </div>
+        <div class="new-form-ui ">
+            <label class="required">Load Name</label>
+            <div class="division"><?php echo $this->form->name; ?>
+            <span class="errors" id="errors-<?php echo $this->form->name->getId(); ?>"><?php echo $this->msgarray['name']; ?></span>
+            </div>
+        </div>
+        <div class="new-form-ui ">
+            <label class="required">Load Category</label>
+            <div class="division"><?php echo $this->form->category; ?>
+                <span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL . 'deductive/addcategory' ?>','Add Category');"> Add Category </span>
+
+
+                <div>
+                <span class="errors" id="errors-<?php echo $this->form->category->getId(); ?>"><?php echo $this->msgarray['category']; ?></span>
+                </div>
+            </div>
+
+        </div>
+        <br>
+        <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description','', 'fck_editor_height','',array());?>
+
+     
+        <div class="new-form-ui ">
+            <label class="required">From</label>
+            <div class="division"><?php echo $this->form->start_date; ?>
+                <div>
+                    <span class="errors" id="errors-<?php echo $this->form->start_date->getId(); ?>"><?php echo $this->msgarray['start_date']; ?></span>
+                </div>
+            </div>
+        </div>
+        <div class="new-form-ui ">
+            <label class="required">To</label>
+            <div class="division"><?php echo $this->form->end_date; ?>
+            </div>
+            <span class="errors" id="errors-<?php echo $this->form->end_date->getId(); ?>"><?php echo $this->msgarray['end_date']; ?></span>
+
+        </div>
+        <div class="new-form-ui ">
+            <label class="required">Load Type</label>
+            <div class="division loca_state_div"><?php echo $this->form->type; ?>
+            <span class="errors" id="errors-<?php echo $this->form->type->getId(); ?>"><?php echo $this->msgarray['type']; ?></span>
+            </div>
+        </div>
+        <div class="new-form-ui ">
+            <label>Is Autoapproved?</label>
+            <div class="division loca_state_div"><?php echo $this->form->autoapprove; ?>
+            <span class="errors" id="errors-<?php echo $this->form->autoapprove->getId(); ?>"><?php echo $this->msgarray['autoapprove']; ?></span>
+            </div>
+        </div>
+        <div class="new-form-ui ">
+            <label>Is Tax?</label>
+            <div class="division loca_state_div"><?php echo $this->form->istax; ?>
+            <span class="errors" id="errors-<?php echo $this->form->istax->getId(); ?>"><?php echo $this->msgarray['istax']; ?></span>
+            </div>
+        </div>
+        <div class="new-form-ui ">
+            <label >Is Penality?</label>
+            <div class="division loca_state_div"><?php echo $this->form->ispenality; ?>
+            <span class="errors" id="errors-<?php echo $this->form->ispenality->getId(); ?>"><?php echo $this->msgarray['ispenality']; ?></span>
+            </div>
+        </div>
+
+        <div class="new-form-ui ">
+            <label >Active</label>
+            <div class="division loca_state_div"><?php echo $this->form->isactive; ?>
+            <span class="errors" id="errors-<?php echo $this->form->isactive->getId(); ?>"><?php echo $this->msgarray['isactive']; ?></span>
+            </div>
+        </div>
+        <div class="new-form-ui " id="amount_div" style="display: none;">
+            <label class="required" id="amount_label"></label>
+            <div class="division loca_state_div"><?php echo $this->form->amount; ?>
+            <span class="errors" id="errors-<?php echo $this->form->amount->getId(); ?>"><?php echo $this->msgarray['amount']; ?></span>
+            </div>
+        </div>
+        <div class="new-form-ui" id="classfun_div">
+            <div class="division"><?php echo $method_form->classfun; ?>
+            <span class="errors" id="errors-<?php echo $method_form->classfun->getId(); ?>"><?php echo $this->msgarray['classfun']; ?></span>
+            </div>
+        </div>
+
+        <div class="division" style="display: none;"><?php echo $method_form->parameters; ?></div>
+        <div class="division" style="display: none;"><?php echo $method_form->classPath; ?></div>
+        <div class="total-form-controller" id="total-form-controller">
+        </div>
+        <br>
+        <br>
+        <table>
+            <tr>
+
+                <td>
+                    <div class="new-form-ui-submit">
+                        <?php echo $form->submit; ?>
+                    </div>
+                </td>
+                <td>
+                    <div class="new-form-ui-previousBtn">
+                        <?php echo $form->back; ?>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
+</form>
+<div id="deductiveContainer" style="display: none; overflow: auto;">
+    <div class="heading">
+        <a href="javascript:void(0)">
+            <img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+    </div>
+
+    <iframe id="deductiveCont" class="business_units_iframe" frameborder="0"></iframe>
+</div>
+<script>
+    document.getElementById('type').onchange = function() {
+        var selected = document.getElementById('type').value;
+
+        if (selected == 'Percentage') {
+            document.getElementById('autoapprove').disabled = false;
+            document.getElementById('classfun_div').style.display = 'none';
+            document.getElementById('amount_label').innerHTML = 'Percentage (%)';
+            document.getElementById('amount_div').style.display = 'block';
+        } else if (selected == 'Fixed') {
+            document.getElementById('autoapprove').disabled = false;
+            document.getElementById('classfun_div').style.display = 'none';
+            document.getElementById('amount_label').innerHTML = 'Amount';
+            document.getElementById('amount_div').style.display = 'block';
+        } else if (selected == 'Calculated') {
+            document.getElementById('autoapprove').disabled = false;
+            document.getElementById('amount_div').style.display = 'none';
+            document.getElementById('amount_label').innerHTML = 'Amount';
+            document.getElementById('classfun_div').style.display = 'block';
+        } else if (selected == 'Individual' || selected == '0') {
+            document.getElementById('autoapprove').selectedIndex = 0;
+            document.getElementById('autoapprove').disabled = true;
+            document.getElementById('classfun_div').style.display = 'none';
+            document.getElementById('amount_label').innerHTML = '';
+            document.getElementById('amount_div').style.display = 'none';
+        } else if (selected == 'Spot' || selected == '0') {
+            document.getElementById('autoapprove').selectedIndex = 0;
+            document.getElementById('autoapprove').disabled = true;
+            document.getElementById('classfun_div').style.display = 'none';
+            document.getElementById('amount_label').innerHTML = '';
+            document.getElementById('amount_div').style.display = 'none';
+        }
+    }
+
+
+
+    $("#submit").click(function() {
+		if (!isValid() ) {
+			return false;
+		} else {
+            document.getElementById('autoapprove').disabled = false;
+
+			var method = document.getElementById('classfun').value;
+			var selectedFun_Name = method.split(".");
+			var className = selectedFun_Name[0];
+			var methodName = selectedFun_Name[1];
+			
+			
+			if (className != 'empty') {
+				var no_parameters = classes[className]['methods'][methodName]['no_args'];
+				for (var i = 0; i < no_parameters; i++) {
+					document.getElementById('parameters').value += document.getElementById('selected_text_' + i).value + ","
+				}
+			}
+
+			return true;
+		}
+	});
+
+    function isValid() {
+      var valid=true;
+        if (document.getElementById('amount_div').style.display == 'block') {
+            if (document.getElementById('amount').value == '') {
+                valid = false;
+                document.getElementById('errors-amount').innerHTML = 'Field is required!';
+            } else {
+                var reg = /[0-9]+([.])?[0-9]+/;
+                if (!reg.test(document.getElementById('amount').value)) {
+                    document.getElementById('errors-amount').innerHTML = 'Use Only Numbers!';
+                    valid = false;
+                } else {
+                    if (document.getElementById('type').value == 'Percentage') {
+                        if (Number(document.getElementById('amount').value) <= 0 || Number(document.getElementById('amount').value) > 100) {
+                            document.getElementById('errors-amount').innerHTML = 'Percent must be between 0 and 100';
+                            valid = false;
+                        }
+                    }
+                    if (document.getElementById('type').value == 'Fixed') {
+
+                    }
+                }
+
+            }
+        }
+        if (document.getElementById('type').value == 'Calculated') {
+            var method = document.getElementById('classfun').value;
+            if (method == 'empty') {
+                document.getElementById('errors-classfun').innerHTML = 'Please select a function!';
+                valid = false;
+            } else {
+                var selectedFun_Name = method.split(".");
+                var className = selectedFun_Name[0];
+                var methodName = selectedFun_Name[1];
+                var no_parameters = classes[className]['methods'][methodName]['no_args'];
+                for (var i = 0; i < no_parameters; i++) {
+                    if (document.getElementById("selected_text_" + i).value == "") {
+                        document.getElementById("error_" + i).innerHTML = "Field is required!";
+                        valid = false;
+                    } else {
+                        document.getElementById("error_" + i).innerHTML = '';
+                    }
+                }
+            }
+        }
+        
+
+        return valid;
+
+    }
+    $(document).ready(function() {
+
+var selected = document.getElementById('type').value;
+
+if (selected == 'Percentage') {
+    document.getElementById('autoapprove').disabled = false;
+    document.getElementById('classfun_div').style.display = 'none';
+    document.getElementById('amount_label').innerHTML = 'Percentage (%)';
+    document.getElementById('amount_div').style.display = 'block';
+} else if (selected == 'Fixed') {
+    document.getElementById('autoapprove').disabled = false;
+    document.getElementById('classfun_div').style.display = 'none';
+    document.getElementById('amount_label').innerHTML = 'Amount';
+    document.getElementById('amount_div').style.display = 'block';
+} else if (selected == 'Calculated') {
+    document.getElementById('autoapprove').disabled = false;
+    document.getElementById('amount_div').style.display = 'none';
+    document.getElementById('amount_label').innerHTML = 'Amount';
+    document.getElementById('classfun_div').style.display = 'block';
+} else if (selected == 'Individual' || selected == '0') {
+    document.getElementById('autoapprove').selectedIndex = 0;
+    document.getElementById('autoapprove').disabled = true;
+    document.getElementById('classfun_div').style.display = 'none';
+    document.getElementById('amount_label').innerHTML = '';
+    document.getElementById('amount_div').style.display = 'none';
+} else if (selected == 'Spot' || selected == '0') {
+    document.getElementById('autoapprove').selectedIndex = 0;
+    document.getElementById('autoapprove').disabled = true;
+    document.getElementById('classfun_div').style.display = 'none';
+    document.getElementById('amount_label').innerHTML = '';
+    document.getElementById('amount_div').style.display = 'none';
+}
+getParams();
+var params = [];
+
+params = `<?php echo (!empty($this->params)) ? json_encode(explode(',', $this->params)) : null; ?>`;
+console.log(params)
+if (params!==null && params !='') {
+    params = JSON.parse(params);    
+}
+
+if (params != '') {
+    params.forEach((element, index) => {
+
+        document.getElementById('selected_text_' + index).value = element;
+    })
+}
+
+
+$('#start_date,#end_date').datepicker({
+    showOn: 'both',
+    //minDate: 0,
+    //yearRange: yearrange,
+    dateFormat: '<?php echo DATEFORMAT_JS; ?>',
+    buttonImage: "<?php echo $this->baseUrl("public/media/images/cal.jpg"); ?>",
+    buttonImageOnly: true,
+    buttonText: "",
+    changeMonth: true,
+    changeYear: true,
+    showButtonPanel: true,
+    onClose: function() {
+        $(this).trigger('blur');
+        var msg = "";
+        if (this.id == 'end_date')
+            msg = "End date should be greater than Start date.";
+        else
+            msg = "Start date should be less than End date.";
+        from_to_date_validation('start_date', 'end_date', this, msg);
+    }
+
+});
+});
+
+
+    $('#description').jqte();
+</script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH ?>js/UDFBuilder.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/UDFBuilder.css" />

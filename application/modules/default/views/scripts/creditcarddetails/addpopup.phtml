@@ -1,0 +1,157 @@
+<?php 
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+?>
+<script type="text/javascript" src="<?php echo MEDIA_PATH ?>/js/hrms.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH ?>css/custompopup.css" />
+    <script type="text/javascript" src="<?php echo MEDIA_PATH ?>js/custompopup.js"></script>
+	<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+<?php $baseUrl = $this->serverUrl().$this->baseUrl();
+$addcomp = $this->addcomp;
+sapp_Global::generateClientValidations($this->form);
+
+?>
+<?php if($this->successmessage != '') { ?>
+<div id="dispmsgnempskills" class="ml-alert-1-success">
+<div class="style-1-icon success"></div>
+<?php echo $this->successmessage; ?>
+</div>
+
+<?php } else { ?>
+<div id="error_message" style="display:none;"></div>
+<?php		
+if($this->emptyFlag != 0)
+	{
+?>	 <div class="ml-alert-1-info m1-info-set">
+		<div class="style-1-icon info"></div>
+			The employee configurations are not yet set.
+	</div>	
+<?php	}	?>
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction();?>" method="<?php echo $this->form->getMethod(); ?>">
+		<?php echo $this->form->id; ?>
+        <div class="total-form-controller">
+		 	<div class="new-form-ui">
+			  <label id="injuredDate" class="required">Paymentcard</label>
+				<div class="division loca_state_div"><?php echo $this->form->paymentcard_id; ?>
+				<?php if($this->cardpermission == 'Yes'){?>
+					<span class="add-coloum" onclick="displayNestedPopup('<?php echo BASE_URL . 'paymentcard/addpopup' ?>','Payment Card');"> Add Payment card</span>
+				<?php }?>
+
+			</div>
+				<?php if(isset($this->msgarray['paymentcard_id'])){?>
+				<span class="errors" id="errors-<?php echo $this->form->paymentcard_id->getId(); ?>"><?php echo $this->msgarray['paymentcard_id'];?></span>
+				<?php }?>
+			</div>
+			<div class="new-form-ui ">
+			  <label class="required">Name On card</label>
+			  <div class="division"><?php echo $this->form->nameoncard; ?></div>
+				<?php if(isset($this->msgarray['nameoncard'])){?>
+				   <span class="errors" id="errors-<?php echo $this->form->nameoncard->getId(); ?>"><?php echo $this->msgarray['nameoncard'];?></span>
+				<?php }?>
+			</div>
+			<div class="new-form-ui ">
+				<label class="required">Card Number</label>
+				<div class="division"><?php echo $this->form->cardnumber; ?>
+			</div>
+				 <?php if(isset($this->msgarray['cardnumber'])){?>
+				   <span class="errors" id="errors-<?php echo $this->form->cardnumber->getId(); ?>"><?php echo $this->msgarray['cardnumber'];?></span>
+				<?php }?>
+			</div>
+			<div class="new-form-ui ">
+				<label class="required">Verification Code</label>
+				<div class="division"><?php echo $this->form->verficationcode; ?></div>
+				 <?php if(isset($this->msgarray['verficationcode'])){?>
+				   <span class="errors" id="errors-<?php echo $this->form->verficationcode->getId(); ?>"><?php echo $this->msgarray['verficationcode'];?></span>
+				<?php }?>
+			</div>
+		
+			<div class="new-form-ui ">
+			  <label class="required">Issued Date <img class="tooltip" title="<?php echo DATE_DESCRIPTION;?>" src="<?php echo $this->baseUrl().'/public/media/';?>images/help.png"> </label>
+			  <div class="division"><?php echo $this->form->issueddate; ?></div>
+				<?php if(isset($this->msgarray['issueddate'])){?>
+				   <span class="errors" id="errors-<?php echo $this->form->issueddate->getId(); ?>"><?php echo $this->msgarray['issueddate'];?></span>
+				<?php }?>
+			</div>
+			<div class="new-form-ui ">
+			  <label class="required">Expiry Date  <img class="tooltip" title="<?php echo DATE_DESCRIPTION;?>" src="<?php echo $this->baseUrl().'/public/media/';?>images/help.png"> </label>
+			  <div class="division"><?php echo $this->form->expirydate; ?></div>
+				<?php if(isset($this->msgarray['expirydate'])){?>
+				   <span class="errors" id="errors-<?php echo $this->form->expirydate->getId(); ?>"><?php echo $this->msgarray['expirydate'];?></span>
+				<?php }?>
+			</div>
+		
+			<?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description','', 'fck_editor_height','',array());?>
+
+		
+        <div class="new-form-ui-submit" id="formSubmit">
+        <?php echo $this->form->submit; ?>
+        <button onclick="closeiframepopup('creditcarddetails','cancel');" type="button">Cancel</button>
+        </div>
+</div>        
+</form>
+<?php } ?>
+<div id="paymentcardContainer" style="display: none; overflow: auto;">
+        <div class="heading">
+            <a href="javascript:void(0)">
+                <img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+        </div>
+
+        <iframe id="paymentcardCont" class="business_units_iframe" frameborder="0"></iframe>
+    </div>
+
+<script type='text/javascript'>
+<?php if($this->successmessage != '') { ?>
+        setTimeout(function(){
+		    closeiframepopup('<?php echo $this->controllername; ?>',''); 
+		},2000);
+<?php } ?>
+</script>
+<script type='text/javascript'>
+$(document).ready(function(){
+	$('#description').jqte();
+
+	<?php echo "'".date("Y", strtotime("-30 years")).':'.date('Y')."'"; ?>;
+	     var yearrange = <?php echo "'".YEAR.':'.date('Y')."'"; ?>;
+	$('#issueddate,#expirydate').datepicker({
+					showOn:'both',
+					// maxDate: new Date, 
+					yearRange: yearrange,
+					dateFormat:"<?php echo DATEFORMAT_JS;?>",
+					buttonImage: "<?php echo $this->baseUrl("public/media/images/cal.jpg");?>",
+					buttonImageOnly: true,
+					buttonText: "",
+					changeMonth: true,
+					changeYear: true,
+                                        showButtonPanel: true ,
+					onClose:function()
+					{
+						$(this).trigger('blur');
+					}  
+					
+	});
+	
+	 });
+
+
+
+	
+</script>

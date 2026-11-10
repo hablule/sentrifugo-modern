@@ -1,0 +1,59 @@
+<?php 
+ 
+if($this->call == 'ajaxcall'){
+	$div = ''; $endDiv = ''; 
+} else { 
+	$div = '<div id="grid_'.$this->dataArray['objectname'].'" class="all-grid-control">'; $endDiv = '</div>';
+	echo ' '.$div.'<div id="msg" style="display:none;font-style: oblique; font-weight: bold; color: green;""></div>'.$this->grid($this->dataArray).$endDiv;
+?>
+<div class="new-form-ui">
+
+<select id="req">
+<option>Select Requisition Code</option>
+<?php
+foreach ($this->req as $key => $value) {
+        echo "<option value=".$value['id'].">".$value['req_code']."</option>"; 
+} 
+}
+?>
+</select>
+
+
+</div>
+<div class="new-form-ui-submit" style="width: 10%; float:right;">
+<input hidden type="button" name="submit" value="submit" id="submitBtn" />
+</div>
+
+<script>
+$('.check').change(function(ev) {
+    var checkedboxes = $('.check:checked');
+   
+    console.log($('.check').prop('checked'));
+    
+    if(checkedboxes.length == 0)
+    {
+        document.getElementById('submitBtn').hidden = true;
+    }
+    else
+    {
+        document.getElementById('submitBtn').hidden = false;
+    }
+});
+$('#submitBtn').click(function(ev){
+    var boxs = $('.check:checked');
+    var req_id = $('#req').val();
+    var ids = [];
+  for (let index = 0; index < boxs.length; index++) {
+      ids.push(boxs[index].value);
+      
+  }
+  console.log(req_id);
+  $.ajax({
+        url:base_url+'/list/selected',
+        type:'POST',
+        dataType: 'json',
+        data:{'ids':ids,'req_id':req_id}
+
+  });
+})
+</script>

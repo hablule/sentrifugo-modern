@@ -1,0 +1,37 @@
+<?php 
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+?>
+
+
+<?php 
+sapp_Helper::viewHeader();
+sapp_Helper::viewBody('alt','Paymentcard',(!empty($this->data['paymentcard_name']))?$this->data['paymentcard_name']:"...",'Name on Card',(!empty($this->data['nameoncard']))?$this->data['nameoncard']:"...");
+sapp_Helper::viewBody('nor','Card Number',(!empty($this->data['cardnumber']))?$this->data['cardnumber']:"...",'Verfication Code',(!empty($this->data['verficationcode']))?$this->data['verficationcode']:"...");
+sapp_Helper::viewBody('alt','Active',(!empty($this->data['isactive']))?$this->data['isactive']:"...",'Description',(!empty($this->data['description']))?$this->data['description']:"...");
+sapp_Helper::viewBody('nor','Issued Date',(!empty($this->data['issueddate']))?$this->data['issueddate']:"...",'Expiry Date',(!empty($this->data['expirydate']))?$this->data['expirydate']:"...");
+
+sapp_Helper::viewFooter();
+?>
+		 <div class="new-form-ui-submit" id="formSubmit">
+		 <input onclick="closeiframepopup('creditcarddetails','cancel');" type="button" value="close"  />
+        </div>
+     
+

@@ -1,0 +1,513 @@
+<?php
+
+/**
+ * Period Save View (The Merged Form)
+ * 
+ * Implements SSOT v6.8 Master-Detail JSON array builders via Custom Tabs.
+ * Features Period Definition and inline grid editing for Period Control Statuses.
+ *
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ */
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<style>
+    /* Custom Sentrifugo-Themed Tabs */
+    .sf-tabs-nav {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        border-bottom: 2px solid #ccc;
+        display: flex;
+        width: 100%;
+    }
+
+    .sf-tabs-nav li {
+        margin-bottom: -2px;
+    }
+
+    .sf-tabs-nav li a {
+        display: block;
+        padding: 10px 20px;
+        text-decoration: none;
+        color: #666;
+        font-weight: bold;
+        border-bottom: 2px solid transparent;
+        transition: all 0.3s;
+    }
+
+    .sf-tabs-nav li.active a {
+        color: #26a69a;
+        border-bottom: 2px solid #26a69a;
+    }
+
+    .sf-tabs-nav li a:hover {
+        color: #26a69a;
+    }
+
+    .sf-tab-panel {
+        padding: 20px 0;
+    }
+
+    /* Mapping Table Styles */
+    .mapping-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+        background-color: #fff;
+    }
+
+    .mapping-table th,
+    .mapping-table td {
+        border: 1px solid #e0e0e0;
+        padding: 10px;
+        text-align: left;
+        vertical-align: middle;
+    }
+
+    .mapping-table th {
+        background-color: #f5f5f5;
+        color: #333;
+        font-weight: bold;
+        font-size: 13px;
+        text-transform: uppercase;
+    }
+
+    .mapping-table select {
+        width: 100%;
+        padding: 4px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        height: 32px;
+        background-color: #fff;
+    }
+
+    .grid-btn {
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 16px;
+        transition: color 0.2s;
+        padding: 0 5px;
+    }
+
+    .grid-btn-remove {
+        color: #e74c3c;
+    }
+
+    .grid-btn-remove:hover {
+        color: #c0392b;
+    }
+
+    .staged-row {
+        background-color: #f0fbf9;
+        border-left: 3px solid #26a69a;
+    }
+
+    .deleted-row {
+        display: none;
+    }
+</style>
+
+<?php sapp_Global::generateClientValidations($this->form); ?>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container">
+            <?php if (!empty($this->msgarray)) : ?>
+                <div class="ml-alert-1-error">
+                    <div style="display:block;"><span class="style-1-icon error"></span>Please correct the highlighted errors below.</div>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" method="post">
+            <?php echo $this->form->id; ?>
+            <input type="hidden" name="controls_payload" id="controls_payload" value="">
+
+            <?php if ($this->form->getElement('fiscalyear_id_hidden')): ?>
+                <?php echo $this->form->fiscalyear_id_hidden; ?>
+            <?php endif; ?>
+
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <!-- ================= MAIN ENTITY SECTION ================= -->
+                    <h5 style="margin-bottom: 20px; color: #26a69a; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Period Definition</h5>
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                            <div class="division">
+                                <?php echo $this->form->name; ?>
+                                <span class="errors" id="errors-<?php echo $this->escape($this->form->name->getId()); ?>"></span>
+                            </div>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->fiscalyear_id->getLabel()); ?></label>
+                            <div class="division">
+                                <?php echo $this->form->fiscalyear_id; ?>
+                                <span class="errors" id="errors-<?php echo $this->escape($this->form->fiscalyear_id->getId()); ?>"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="clear: both; width: 100%; height: 20px;"></div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->period_sequence->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->period_sequence; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->period_sequence->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div style="clear: both; width: 100%; height: 20px;"></div>
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <div class="new-form-ui">
+                                <label class="required"><?php echo $this->escape($this->form->start_date->getLabel()); ?></label>
+                                <div class="division">
+                                    <?php echo $this->form->start_date; ?>
+                                    <span class="errors" id="errors-<?php echo $this->escape($this->form->start_date->getId()); ?>"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <div class="new-form-ui">
+                                <label class="required"><?php echo $this->escape($this->form->end_date->getLabel()); ?></label>
+                                <div class="division">
+                                    <?php echo $this->form->end_date; ?>
+                                    <span class="errors" id="errors-<?php echo $this->escape($this->form->end_date->getId()); ?>"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->isactive; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->isactive->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div style="clear: both; width: 100%; height: 20px;"></div>
+
+                    <!-- ================= CHILD COLLECTIONS (TABS) ================= -->
+                    <h5 style="margin-bottom: 15px; color: #26a69a; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Module Period Locks</h5>
+
+                    <div id="period-tabs" style="width: 100%; margin-bottom: 30px;">
+
+                        <!-- Tab Navigation -->
+                        <ul class="sf-tabs-nav">
+                            <li class="active"><a href="#tab-controls" data-target="tab-controls"><i class="fa fa-lock"></i> Controls Configuration</a></li>
+                        </ul>
+
+                        <!-- TAB 1: PERIOD CONTROLS (THE MERGER) -->
+                        <div id="tab-controls" class="sf-tab-panel active">
+
+                            <div class="row no-margin" style="background:#fcfcfc; padding:15px; border:1px solid #eee; border-radius: 4px;">
+                                <div class="new-form-ui clearb" style="width: 45%;">
+                                    <label>Business Process</label>
+                                    <div class="division">
+                                        <select id="ui_process_id" class="browser-default" style="border: 1px solid #ccc; padding: 5px; border-radius: 3px; width: 100%;">
+                                            <option value="">Select Process...</option>
+                                            <?php foreach ($this->processOptions as $k => $v) echo "<option value='$k'>" . $this->escape($v) . "</option>"; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="new-form-ui clearb" style="width: 30%; margin-left: 2%;">
+                                    <label>Status</label>
+                                    <div class="division">
+                                        <select id="ui_process_status" class="browser-default" style="border: 1px solid #ccc; padding: 5px; border-radius: 3px; width: 100%;">
+                                            <option value="Open" style="color: green;">Open</option>
+                                            <option value="Locked" style="color: orange;">Locked</option>
+                                            <option value="Closed" style="color: red;">Closed</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="float:left; margin-top: 25px; margin-left: 15px;">
+                                    <button type="button" class="actbtn_btn" onclick="addControlRow();"><i class="fa fa-plus"></i> Add Control</button>
+                                </div>
+                                <div style="clear:both;"></div>
+                            </div>
+
+                            <div style="width: 100%; overflow-x: auto; margin-top: 15px;">
+                                <table class="mapping-table" id="tbl-controls">
+                                    <thead>
+                                        <tr>
+                                            <th>Business Process</th>
+                                            <th style="width: 200px;">Status</th>
+                                            <th style="width: 80px; text-align:center;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody><!-- JS injected --></tbody>
+                                </table>
+                            </div>
+
+                        </div> <!-- End Tab 1 -->
+
+                    </div> <!-- End Tabs Container -->
+
+                    <!-- ================= FOOTER SECTION ================= -->
+                    <div class="new-form-ui-submit" style="margin-top: 20px;">
+                        <div class="division">
+                            <?php echo $this->form->submit; ?>
+
+                            <?php
+                            $backUrl = BASE_URL . 'period/index';
+                            // Dynamic back routing
+                            if (isset($this->form->fiscalyear_id) && $this->form->fiscalyear_id->getValue()) {
+                                $backUrl .= '/fiscalyear_id/' . $this->form->fiscalyear_id->getValue();
+                            }
+                            ?>
+                            <input onclick="window.location.href='<?php echo $backUrl; ?>';" value="Cancel" type="button" class="reset" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    // State Array populated by Controller (if editing)
+    var arrControls = <?php echo isset($this->existingControls) ? $this->existingControls : '[]'; ?>;
+
+    $(document).ready(function() {
+        $('#description').jqte();
+
+        // --- BRUTE FORCE TAB LOGIC ---
+        $('.sf-tabs-nav a').on('click', function(e) {
+            e.preventDefault();
+            var targetPanelId = $(this).attr('href');
+            $('.sf-tabs-nav li').removeClass('active');
+            $(this).parent('li').addClass('active');
+            $('.sf-tab-panel').hide();
+            $(targetPanelId).fadeIn('fast');
+        });
+
+        // --- LINKED DATEPICKERS ---
+        $('#start_date').datepicker({
+            showOn: 'both',
+            dateFormat: '<?php echo DATEFORMAT_JS; ?>',
+            buttonImage: "<?php echo MEDIA_PATH; ?>images/cal.jpg",
+            buttonImageOnly: true,
+            changeMonth: true,
+            changeYear: true,
+            onClose: function(selectedDate) {
+                $(this).trigger('blur');
+                $("#end_date").datepicker("option", "minDate", selectedDate);
+            }
+        });
+        $('#end_date').datepicker({
+            showOn: 'both',
+            dateFormat: '<?php echo DATEFORMAT_JS; ?>',
+            buttonImage: "<?php echo MEDIA_PATH; ?>images/cal.jpg",
+            buttonImageOnly: true,
+            changeMonth: true,
+            changeYear: true,
+            onClose: function(selectedDate) {
+                $(this).trigger('blur');
+                $("#start_date").datepicker("option", "maxDate", selectedDate);
+            }
+        });
+
+        if ($('#start_date').val() != '') $("#end_date").datepicker("option", "minDate", $('#start_date').val());
+        if ($('#end_date').val() != '') $("#start_date").datepicker("option", "maxDate", $('#end_date').val());
+
+        // Initial Render of the Grid
+        renderControls();
+
+        // --- MASTER SUBMIT HANDLER ---
+        $('#submitbutton').off('click').on('click', function(e) {
+            e.preventDefault();
+            var $form = $('#formid');
+            $('.errors').text('');
+            $('#message_container').empty();
+
+            if ($.isFunction($form.valid) && !$form.valid()) return false;
+
+            var sDate = new Date($('#start_date').val());
+            var eDate = new Date($('#end_date').val());
+            if (sDate > eDate) {
+                $('#errors-start_date').text("Start date cannot be after end date.");
+                $('html, body').animate({
+                    scrollTop: 0
+                }, 'slow');
+                return false;
+            }
+
+            // Sync grid dropdowns back to the Javascript array before saving
+            syncGridInputsToArray();
+
+            // Pack Array into JSON hidden input
+            $('#controls_payload').val(JSON.stringify(arrControls));
+
+            if (typeof $.blockUI === "function") $.blockUI({
+                message: '<img src="<?php echo MEDIA_PATH; ?>images/loader2.gif" />'
+            });
+
+            var formData = new FormData($form[0]);
+
+            $.ajax({
+                url: base_url + '/period/save/format/json',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function(res) {
+                    if (typeof $.unblockUI === "function") $.unblockUI();
+
+                    if (res.result === 'saved') {
+                        var fYearId = $('#fiscalyear_id').val() || $('#fiscalyear_id_hidden').val();
+                        var redirectUrl = base_url + '/period';
+                        if (fYearId) redirectUrl += '/index/fiscalyear_id/' + fYearId;
+                        window.location.href = redirectUrl;
+
+                    } else if (res.result === 'exception') {
+                        $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>' + res.message + '</div>');
+                        $('html, body').animate({
+                            scrollTop: 0
+                        }, 'slow');
+                    } else {
+                        $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Please fix the highlighted errors.</div>');
+                        $.each(res, function(key, val) {
+                            var errMsg = (typeof val === 'object') ? val[Object.keys(val)[0]] : val;
+                            $('#errors-' + key).text(errMsg);
+                        });
+                        $('html, body').animate({
+                            scrollTop: 0
+                        }, 'slow');
+                    }
+                },
+                error: function() {
+                    if (typeof $.unblockUI === "function") $.unblockUI();
+                    $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Server error occurred. Check logs.</div>');
+                    $('html, body').animate({
+                        scrollTop: 0
+                    }, 'slow');
+                }
+            });
+        });
+    });
+
+    // ==============================================================
+    // PERIOD CONTROL GRID LOGIC
+    // ==============================================================
+
+    function addControlRow() {
+        var $procSelect = $('#ui_process_id');
+        var processId = $procSelect.val();
+        var processName = $.trim($procSelect.find('option:selected').text());
+        var status = $('#ui_process_status').val();
+
+        if (!processId || processId === '') {
+            alert('Please select a Business Process.');
+            return;
+        }
+
+        // Duplicate Validation Rule
+        var exists = false;
+        $.each(arrControls, function(i, v) {
+            if (v.process_id == processId && v.action !== 'delete') {
+                exists = true;
+            }
+        });
+
+        if (exists) {
+            alert('A control entry for "' + processName + '" already exists in the grid. Please update the existing row.');
+            return;
+        }
+
+        arrControls.push({
+            id: 0, // 0 indicates a new, unsaved record
+            process_id: processId,
+            process_name: processName,
+            status: status,
+            action: 'new'
+        });
+
+        $procSelect.val(''); // Reset dropdown
+        renderControls();
+    }
+
+    function removeControlRow(index) {
+        var p = arrControls[index];
+        if (p.id > 0) {
+            p.action = 'delete';
+        } else {
+            arrControls.splice(index, 1);
+        }
+        renderControls();
+    }
+
+    // Colors the status dropdowns dynamically
+    function colorizeStatusDropdown(selectObj) {
+        var val = $(selectObj).val();
+        if (val === 'Open') $(selectObj).css('color', 'green');
+        else if (val === 'Locked') $(selectObj).css('color', 'orange');
+        else if (val === 'Closed') $(selectObj).css('color', 'red');
+    }
+
+    function renderControls() {
+        var html = '';
+        if (arrControls.length === 0) {
+            html = '<tr><td colspan="3" style="text-align:center; color:#999; padding: 20px;">No period controls defined. Use the tools above to add locks.</td></tr>';
+        }
+
+        $.each(arrControls, function(idx, val) {
+            if (val.action === 'delete') {
+                html += '<tr class="deleted-row"><td colspan="3"><input type="hidden" id="c_action_' + idx + '" value="delete"></td></tr>';
+                return true;
+            }
+
+            var isNew = (val.id == 0);
+            var rowClass = isNew ? 'staged-row' : '';
+
+            html += '<tr class="' + rowClass + '">';
+            html += '<td>' + val.process_name + '</td>';
+
+            // Status Dropdown
+            html += '<td><select id="c_status_' + idx + '" class="browser-default" onchange="colorizeStatusDropdown(this);">';
+            html += '<option value="Open" ' + (val.status === 'Open' ? 'selected' : '') + ' style="color:green;">Open</option>';
+            html += '<option value="Locked" ' + (val.status === 'Locked' ? 'selected' : '') + ' style="color:orange;">Locked</option>';
+            html += '<option value="Closed" ' + (val.status === 'Closed' ? 'selected' : '') + ' style="color:red;">Closed</option>';
+            html += '</select></td>';
+
+            html += '<td style="text-align:center;">';
+            html += '<input type="hidden" id="c_id_' + idx + '" value="' + val.id + '">';
+            html += '<input type="hidden" id="c_action_' + idx + '" value="' + (isNew ? 'new' : 'update') + '">';
+            html += '<a class="grid-btn grid-btn-remove" onclick="removeControlRow(' + idx + ');" title="Remove Control"><i class="fa fa-trash"></i></a>';
+            html += '</td></tr>';
+        });
+
+        $('#tbl-controls tbody').html(html);
+
+        // Apply colors to freshly rendered dropdowns
+        $('select[id^="c_status_"]').each(function() {
+            colorizeStatusDropdown(this);
+        });
+    }
+
+    function syncGridInputsToArray() {
+        $.each(arrControls, function(idx, val) {
+            if (val.action === 'delete') return true;
+            val.status = $('#c_status_' + idx).val();
+            val.action = $('#c_action_' + idx).val();
+        });
+    }
+</script>

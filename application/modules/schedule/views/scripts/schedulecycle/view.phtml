@@ -1,0 +1,26 @@
+<?php sapp_Helper::viewHeader();
+if (!empty($this->schedules)) {
+
+		sapp_Helper::viewBody('alt', 'Name', $this->schedules['name'], 'code', $this->schedules['code']);
+		sapp_Helper::viewBody('nor', 'From', $this->schedules['startdate'], 'To', $this->schedules['enddate']);
+		sapp_Helper::viewBody('alt', 'Cycle', $this->schedules['cycle'], 'Description', $this->schedules['description']);
+	
+} else { ?>
+	<h6 style="text-align: center;"> No Schedule is there</h6>
+<?php
+	sapp_Helper::viewBody('nor', '----------', '----------', '----------', '----------');
+}
+sapp_Helper::viewFooter();
+?>
+<div class="new-form-ui-submit">
+	<button onclick="window.location.href='<?php echo BASE_URL; ?>schedule/timeschedule';" type="button" id="Cancel" name="Cancel" style="color: #208bbd;">Cancel</button>
+</div>
+</div>
+<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" method="POST" action="<?php echo $this->form->getAction(); ?>">
+	<div class="new-form-ui-submit">
+		<!-- 	<?php echo $this->form->submit; ?> -->
+
+	</div>
+
+	</div>
+</form>

@@ -1,0 +1,131 @@
+<?php
+
+/**
+ * PA Question Add Popup View
+ * 
+ * Strictly adheres to SSOT v6.2 (Section VIII.5 Multiselect Safeguard).
+ * 
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ */
+$this->msgarray = isset($this->msgarray) ? $this->msgarray : array();
+sapp_Global::generateClientValidations($this->form);
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/custompopup.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<div style="padding: 15px;">
+    <?php if (isset($this->popup) && $this->popup == 'close') : ?>
+        <div class="ml-alert-1-success">
+            <div style="display:block;"><span class="style-1-icon success"></span>Question <?php echo $this->escape($this->eventact); ?> successfully.</div>
+        </div>
+
+        <!-- SSOT VIII.5: Mandatory Multiselect Success Script (Rescue & Restore) -->
+        <script type="text/javascript">
+            $(document).ready(function() {
+                setTimeout(function() {
+                    // Target the multiselect dropdown in the parent window
+                    var $parentSelect = parent.$('#question_id'); // Assuming the parent field is named 'question_id'
+                    var newId = "<?php echo $this->newInsertedId; ?>";
+                    var rescuedSelections = [];
+
+                    // 1. Rescue existing selections
+                    if ($parentSelect.length) {
+                        rescuedSelections = $parentSelect.val() || [];
+                        if (parent.$.inArray(newId, rescuedSelections) === -1) {
+                            rescuedSelections.push(newId);
+                        }
+                    }
+
+                    // 2. Call global helper (Double quotes required to safely pass HTML string)
+                    parent.closeiframeAddPopup("<?php echo $this->optionsHtml; ?>", "paquestion", "question_id", "Question");
+
+                    // 3. Restore selections and refresh UI plugins
+                    if ($parentSelect.length) {
+                        $parentSelect.val(rescuedSelections);
+                        if (parent.$.isFunction(parent.$.fn.select2)) {
+                            $parentSelect.select2();
+                        } else if (parent.$.isFunction(parent.$.fn.material_select)) {
+                            $parentSelect.material_select();
+                        }
+                    }
+                }, 1500);
+            });
+        </script>
+
+    <?php else : ?>
+        <div id="error_message" style="display:none;"></div>
+        <?php if (!empty($this->msgarray['error'])) : ?>
+            <div class="ml-alert-1-error">
+                <div style="display:block;"><span class="style-1-icon error"></span><?php echo $this->escape($this->msgarray['error']); ?></div>
+            </div>
+        <?php endif; ?>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" action="<?php echo $this->escape($this->form->getAction()); ?>" method="<?php echo $this->escape($this->form->getMethod()); ?>">
+            <?php echo $this->form->id; ?>
+            <div class="total-form-controller" style="box-shadow: none; border: none; padding: 0;">
+                <div class="division">
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->category_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->category_id; ?></div>
+                            <span class="errors" id="errors-category_id"><?php echo $this->escape($this->msgarray['category_id'] ?? ''); ?></span>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->rating_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->rating_id; ?></div>
+                            <span class="errors" id="errors-rating_id"><?php echo $this->escape($this->msgarray['rating_id'] ?? ''); ?></span>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->weight->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->weight; ?></div>
+                            <span class="errors" id="errors-weight"><?php echo $this->escape($this->msgarray['weight'] ?? ''); ?></span>
+                        </div>
+                    </div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'name', '', 'fck_editor_height', '', array()); ?>
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <div class="new-form-ui clearb" style="width: 100%;">
+                        <label style="width: 100%;"><?php echo $this->escape($this->form->skill_ids->getLabel()); ?></label>
+                        <div class="division" style="width: 100%;">
+                            <?php echo $this->form->skill_ids; ?>
+                        </div>
+                        <span class="errors" id="errors-skill_ids"><?php echo $this->escape($this->msgarray['skill_ids'] ?? ''); ?></span>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                    </div>
+
+                    <div class="new-form-ui-submit" style="margin-top: 15px;">
+                        <div class="division">
+                            <input type="submit" name="submit" id="submitbutton" value="Save" class="actbtn_btn" />
+                            <button type="button" class="reset" onclick="parent.closeiframepopup('paquestion', 'cancel');">Cancel</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#name, #description').jqte();
+
+                if ($.isFunction($.fn.select2)) {
+                    $('#category_id, #rating_id').select2({
+                        width: '100%'
+                    });
+                    $('#skill_ids').attr('multiple', 'multiple').select2({
+                        width: '100%',
+                        placeholder: "Search and select skills..."
+                    });
+                }
+            });
+        </script>
+    <?php endif; ?>
+</div>

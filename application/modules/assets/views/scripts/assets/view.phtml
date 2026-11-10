@@ -1,0 +1,88 @@
+
+<?php    $this->data[0]; 
+?>
+<div class="clearfix"></div>
+     <div class="total-form-controller rst_tfc">
+         <div>
+             <h4 class="rf text-left" style="float: left;">Asset Details</h4>
+              <?php 
+                $msgtitle = $this->controllername.'_delete';
+                $allocated_id = $this->data[0]['allocated_to'];
+                sapp_Helper::editdeleteForView(ASSETS,$this->controllername,$this->data[0]['id'],$msgtitle,'',$allocated_id); ?>
+            <!--  <div class="action_btns" style="float: right; width: inherit">
+                    <ul>
+                        <li><a href="<?php //echo BASE_URL; ?>assets/assets/edit/id/<?php //echo $this->data[0]['id'];?>"; class="actbtn_nrml"><i class="fa fa-pencil"></i> Edit</a></li>
+                    </ul>						          
+             </div>  -->
+             <div class="clearfix"></div>
+                <br>
+             <div class="expview_details">
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <td class="expvd_head">Name</td>
+                                <td class="expvd_text" width="300"><?php 
+								if(($this->data[0]['name'])!='')
+									echo($this->data[0]['name']);
+								else
+									echo "---";	
+								 ?></td>
+								<td class="expvd_head">Code</td>
+                                <td class="expvd_text" width="300"><?php 
+								if(($this->data[0]['code'])!='')
+									echo($this->data[0]['code']);
+								else
+									echo "---";	
+								 ?></td>
+								
+                            </tr>
+                            <tr>
+							<td class="expvd_head">Category</td>
+                                <td class="expvd_text" width="300"><?php 
+								if(($this->data[0]['category_name'])!='')
+									echo($this->data[0]['category_name']);
+								else
+									echo "---";	
+								 ?></td>
+								 <td class="expvd_head">Type</td>
+                                <td class="expvd_text" width="300"><?php 
+								if(($this->data[0]['type_name'])!='')
+									echo($this->data[0]['type_name']);
+								else
+									echo "---";	
+								 ?></td>
+                            </tr>
+                            <tr>
+							<td class="expvd_head">UOM</td>
+                                <td class="expvd_text" width="300"><?php 
+								if(($this->data[0]['uom_name'])!='')
+									echo($this->data[0]['uom_name']);
+								else
+									echo "---";	
+								 ?></td>
+								 <td class="expvd_head">Description</td>
+                                <td class="expvd_text" width="300"><?php 
+								if(($this->data[0]['description'])!='')
+									echo($this->data[0]['description']);
+								else
+									echo "---";	
+								 ?></td>
+                            </tr>
+       <tr>
+
+	   <td class="expvd_head">Active</td>
+                                <td class="expvd_text" width="300"><?php 
+								if(($this->data[0]['isactive'])!='')
+									echo($this->data[0]['isactive']);
+								else
+									echo "---";	
+								 ?></td>
+	   </tr>
+                           
+                        </tbody>
+                    </table>
+                </div> 
+       </div>
+	   <div class="new-form-ui-submit">
+			<button onclick="window.location.href='<?php echo BASE_URL; ?>assets/assets';" type="button" >Cancel</button>
+		</div>

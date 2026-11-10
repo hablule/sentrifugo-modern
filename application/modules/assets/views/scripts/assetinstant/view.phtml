@@ -1,0 +1,59 @@
+
+<?php    $this->data[0]; 
+?>
+<div class="clearfix"></div>
+     <div class="total-form-controller rst_tfc">
+         <div>
+             <h4 class="rf text-left" style="float: left;">Asset Details</h4>
+              <?php 
+                $msgtitle = $this->controllername.'_delete';
+                sapp_Helper::editdeleteForView(ASSETINSTANT,$this->controllername,$this->data[0]['id'],$msgtitle,'',$allocated_id); ?>
+       
+             <div class="clearfix"></div>
+                <br>
+             <div class="expview_details">
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <td class="expvd_head">Asset</td>
+                                <td class="expvd_text" width="300"><?php 
+								if(($this->data[0]['asset_name'])!='')
+									echo($this->data[0]['asset_name']);
+								else
+									echo "---";	
+								 ?></td>
+								<td class="expvd_head">Serial</td>
+                                <td class="expvd_text" width="300"><?php 
+								if(($this->data[0]['serialidentification'])!='')
+									echo($this->data[0]['serialidentification']);
+								else
+									echo "---";	
+								 ?></td>
+								
+                            </tr>
+                           
+                            <tr>
+							<td class="expvd_head">Active</td>
+                                <td class="expvd_text" width="300"><?php 
+								if(($this->data[0]['isactive'])!='')
+									echo($this->data[0]['isactive']);
+								else
+									echo "---";	
+								 ?></td>
+								 <td class="expvd_head">Description</td>
+                                <td class="expvd_text" width="300"><?php 
+								if(($this->data[0]['description'])!='')
+									echo($this->data[0]['description']);
+								else
+									echo "---";	
+								 ?></td>
+                            </tr>
+     
+                           
+                        </tbody>
+                    </table>
+                </div> 
+       </div>
+	   <div class="new-form-ui-submit">
+			<button onclick="window.location.href='<?php echo BASE_URL; ?>assets/assetinstant';" type="button" >Cancel</button>
+		</div>

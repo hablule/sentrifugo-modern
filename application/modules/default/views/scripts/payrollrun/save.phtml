@@ -1,0 +1,223 @@
+<?php
+
+/**
+ * Payroll Run Save View (Ad-Hoc Addition & Editing)
+ * Features linked datepickers and explicit AJAX validation.
+ * Complies with SSOT v6.7.7.
+ */
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/custompopup.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/custompopup.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<style>
+    .add-coloum {
+        color: #26a69a;
+        cursor: pointer;
+        font-size: 11px;
+        margin-top: 4px;
+        display: inline-block;
+        font-weight: bold;
+    }
+
+    .add-coloum:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<?php sapp_Global::generateClientValidations($this->form); ?>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container"></div>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" method="post">
+            <?php echo $this->form->id; ?>
+
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <h5 style="color:#26a69a; border-bottom:1px solid #ddd; padding-bottom:5px;">Run Specification</h5>
+
+                    <!-- Pay Group with On-the-Fly Popup -->
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->pay_group_id->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->pay_group_id; ?>
+                            <span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL; ?>paygroup/addpopup', 'Add Pay Group');">+ Add Pay Group</span>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->pay_group_id->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->cycle_sequence->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->cycle_sequence; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->cycle_sequence->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->run_status->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->run_status; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->run_status->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <!-- Explicit clear to stop the h4/h5 from floating right -->
+                    <div style="clear: both; width: 100%; height: 20px;"></div>
+
+                    <h5 style="color:#26a69a; border-bottom:1px solid #ddd; padding-bottom:5px; margin-top:25px;">Temporal Boundaries & Execution</h5>
+
+                    <!-- Linked Datepickers -->
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->cycle_start_date->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->cycle_start_date; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->cycle_start_date->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->cycle_end_date->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->cycle_end_date; ?>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->cycle_end_date->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->pay_date->getLabel()); ?></label>
+                        <div class="division">
+                            <?php echo $this->form->pay_date; ?>
+                            <span style="font-size:11px; color:#888; display:block;">Target date for bank direct deposit execution.</span>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->pay_date->getId()); ?>"></span>
+                        </div>
+                    </div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <div class="new-form-ui-submit">
+                        <div class="division">
+                            <?php echo $this->form->submit; ?>
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>payrollrun/index';" value="Cancel" type="button" class="reset" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Container for Pay Group On-the-fly addition -->
+<div id="paygroupContainer" style="display: none; overflow: auto;">
+    <div class="heading"><a href="javascript:void(0)"><img src="<?php echo MEDIA_PATH; ?>images/close.png" class="closeAttachPopup" align="right" border="0" style="margin: -24px 8px 0 0;"></a></div>
+    <iframe id="paygroupCont" class="user_iframe" frameborder="0"></iframe>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#description').jqte();
+
+        // Linked Datepickers Logic
+        $('#cycle_start_date').datepicker({
+            showOn: 'both',
+            dateFormat: '<?php echo DATEFORMAT_JS; ?>',
+            buttonImage: "<?php echo MEDIA_PATH; ?>images/cal.jpg",
+            buttonImageOnly: true,
+            changeMonth: true,
+            changeYear: true,
+            onClose: function(selectedDate) {
+                $(this).trigger('blur');
+                if (selectedDate !== '') {
+                    $("#cycle_end_date").datepicker("option", "minDate", selectedDate);
+                }
+            }
+        });
+
+        $('#cycle_end_date').datepicker({
+            showOn: 'both',
+            dateFormat: '<?php echo DATEFORMAT_JS; ?>',
+            buttonImage: "<?php echo MEDIA_PATH; ?>images/cal.jpg",
+            buttonImageOnly: true,
+            changeMonth: true,
+            changeYear: true,
+            onClose: function(selectedDate) {
+                $(this).trigger('blur');
+                if (selectedDate !== '') {
+                    $("#cycle_start_date").datepicker("option", "maxDate", selectedDate);
+                    $("#pay_date").datepicker("option", "minDate", selectedDate);
+                }
+            }
+        });
+
+        $('#pay_date').datepicker({
+            showOn: 'both',
+            dateFormat: '<?php echo DATEFORMAT_JS; ?>',
+            buttonImage: "<?php echo MEDIA_PATH; ?>images/cal.jpg",
+            buttonImageOnly: true,
+            changeMonth: true,
+            changeYear: true
+        });
+
+        // Explicit AJAX Form Submission per SSOT VII.10
+        $('#submitbutton').off('click').on('click', function(e) {
+            e.preventDefault();
+
+            var $form = $('#formid');
+            $('.errors').text('');
+            $('#message_container').empty();
+
+            if (!$form.valid()) {
+                return false;
+            }
+
+            if (typeof $.blockUI === "function") {
+                $.blockUI({
+                    message: '<img src="<?php echo MEDIA_PATH; ?>images/loader2.gif" alt="Saving..." />'
+                });
+            }
+
+            var formData = new FormData($form[0]);
+
+            $.ajax({
+                url: base_url + '/payrollrun/save/format/json',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function(response) {
+                    if (typeof $.unblockUI === "function") $.unblockUI();
+
+                    if (response && response.result === 'saved') {
+                        window.location.href = base_url + '/payrollrun';
+                    } else if (response && response.result === 'exception') {
+                        $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>' + response.message + '</div>');
+                        $('html, body').animate({
+                            scrollTop: 0
+                        }, 'slow');
+                    } else if (response && typeof response === 'object') {
+                        $.each(response, function(fieldId, errorMsg) {
+                            $('#errors-' + fieldId).text(errorMsg);
+                        });
+                        $('html, body').animate({
+                            scrollTop: 0
+                        }, 'slow');
+                    }
+                },
+                error: function() {
+                    if (typeof $.unblockUI === "function") $.unblockUI();
+                    $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Server error occurred.</div>');
+                }
+            });
+        });
+    });
+</script>

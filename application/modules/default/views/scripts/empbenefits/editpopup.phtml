@@ -1,0 +1,201 @@
+<?php
+
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+?>
+
+<?php $baseUrl = $this->serverUrl() . $this->baseUrl();
+
+$form = $this->form;
+$incurrdata = $this->incurrdata;
+sapp_Global::generateClientValidations($this->form);
+?>
+<?php if ($this->successmessage != '') { ?>
+	<div id="dispmsgnempbenefits" class="ml-alert-1-success">
+		<div class="style-1-icon success"></div>
+		<?php echo $this->successmessage; ?>
+	</div>
+
+<?php } else {
+	sapp_Global::generateClientValidations($this->form); ?>
+	<div id="error_message" style="display:none;"></div>
+	<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH ?>css/custompopup.css" />
+	<script type="text/javascript" src="<?php echo MEDIA_PATH ?>js/custompopup.js"></script>
+
+	<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction(); ?>" method="POST">
+		<?php echo $this->form->id; ?>
+		<div class="total-form-controller">
+			<div class="new-form-ui">
+				<label><?php echo $this->form->perk->getLabel(); ?></label>
+				<div class="division"><?php echo $this->form->perk; ?>
+					<div><span class="errors" id="errors-<?php echo $this->form->perk->getId(); ?>"><?php echo $this->msgarray['perk']; ?></span></div>
+
+				</div>
+
+			</div>
+			<div class="new-form-ui" id="amount_div" style="display: block;">
+				<label><?php echo $this->form->amount->getLabel(); ?></label>
+				<div class="division"><?php echo $this->form->amount; ?>
+					<div><span class="errors" id="errors-<?php echo $this->form->amount->getId(); ?>"><?php echo $this->msgarray['amount']; ?></span></div>
+
+				</div>
+
+			</div>
+			<div class="new-form-ui">
+				<label><?php echo $this->form->isactive->getLabel(); ?></label>
+				<div class="division"><?php echo $this->form->isactive; ?></div>
+				<?php if (isset($this->msgarray['isactive'])) { ?>
+					<span class="errors" id="errors-<?php echo $this->form->isactive->getId(); ?>"><?php echo $this->msgarray['isactive']; ?></span>
+				<?php } ?>
+			</div>
+			<div class="new-form-ui-submit" style="margin: 15px 0;">
+				<?php echo $this->form->submit; ?>
+				<button onclick="closeiframepopup('empbenefits','cancel');" type="button">Cancel</button>
+
+			</div>
+		</div>
+
+	</form>
+<?php } ?>
+<div id="empbenfitsContainer" style="display: none; overflow: auto;">
+	<div class="heading">
+		<a href="javascript:void(0)">
+			<img src="<?php echo $this->baseUrl() . '/public/media/'; ?>images/close.png" name="" align="right" border="0" hspace="3" vspace="5" class="closeAttachPopup" style="margin: -24px 8px 0 0;"> </a>
+	</div>
+
+	<iframe id="empbenfitsCont" class="business_units_iframe" frameborder="0"></iframe>
+</div>
+<?php
+foreach ($incurrdata as  $value) {
+	sapp_Helper::viewHeader();
+	sapp_Helper::viewBody('alt', 'Perk Name', $value['name'], 'Amount', $value['amount']);
+	sapp_Helper::viewFooter();
+}
+?>
+<script type='text/javascript'>
+	<?php if ($this->successmessage != '') {  ?>
+		setTimeout(function() {
+			closeiframepopup('<?php echo $this->controllername; ?>', '');
+		}, 2000);
+	<?php } ?>
+</script>
+
+<script type="text/javascript">
+	var perks = [];
+	var allPerkId = [];
+	// $(document).ready(function() {
+	// 	var perk;
+	// 	var temp_arr = [];
+	// 	perk = <?php echo json_encode($this->perks); ?>;
+
+	// 	for (i = 0; i < perk.length; i++) {
+	// 		allPerkId[i] = perk[i]['perk_id'];
+	// 		temp_arr = [];
+	// 		temp_arr['code'] = perk[i]['code'];
+	// 		temp_arr['approved'] = perk[i]['auto_approved'];
+	// 		perks['' + perk[i]['perk_id']] = temp_arr;
+
+	// 	}
+	// 	temp_arr = [];
+	// 	var temp_empperks = <?php echo json_encode($this->empperks); ?>;
+
+	// 		var result = httpRequest(temp_empperks[0]['perk_id']);
+
+	// 		if (result != '') {
+	// 			document.getElementById('amount_div').style.display = 'none';
+
+	// 			if (result[0]['type'] == 'Individual') {
+	// 				document.getElementById('amount_div').style.display = 'block';
+
+	// 				console.log('element created');
+	// 			}else{
+	//                 document.getElementById('amount_div').style.display = 'none';
+
+	//             }
+
+	// 		}
+	// });
+	// 	document.getElementById('perk').onchange = function() {
+	//         var id = $('#perk').val();
+	// 			var result = httpRequest(id);
+	//             if (result == '') {
+	// 				document.getElementById('amount_div').style.display = 'none';
+	//                 console.log("aa");
+
+	// 			} else {
+	// 				if (result[0]['type'] == 'Individual') {
+	// 					document.getElementById('amount_div').style.display = 'block';
+	// 						console.log('duplication');
+	//                         console.log("bb");
+
+	// 					} else {
+	//                         console.log("cc");
+	// 						document.getElementById('amount_div').style.display = 'none';
+	// 					}
+
+	// 				} 
+
+	// };
+	function httpRequest(id) {
+		/* var result = $.ajax({
+			url: base_url + "/empbenefits/perktype",
+			type: 'POST',
+			data: {
+				data: id
+			},
+			dataType: 'json',
+			async: false,
+
+		}).responseText; */
+		var result = getphpdata('empbenefits/perktype', {
+			data: id
+		}, false, 'POST', 'json');
+		result = JSON.parse(result);
+		return result;
+	}
+
+	function createElement(id, amount) {
+		if (document.getElementById(id + '_amount')) {
+
+		} else {
+			var container = document.getElementById('amount_div');
+			var main_div = document.createElement('div');
+			main_div.setAttribute('id', id + '_div')
+			var div = document.createElement('div');
+			div.setAttribute('class', 'new-form-ui');
+			var inner_div = document.createElement('div');
+			inner_div.setAttribute('class', 'division');
+			var label = document.createElement('label');
+			label.innerHTML = perks[id]['code'] + ' Amount';
+			label.setAttribute('id', id + '_label');
+			var textfield = document.createElement('input');
+			textfield.setAttribute('type', 'text');
+			textfield.setAttribute('id', id + '_amount');
+			textfield.value = amount;
+			container.appendChild(main_div);
+			main_div.appendChild(div);
+			div.appendChild(label);
+			div.appendChild(inner_div);
+			inner_div.appendChild(textfield);
+
+		}
+
+	}
+</script>

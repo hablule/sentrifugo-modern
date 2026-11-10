@@ -1,0 +1,179 @@
+<?php
+
+/**
+ * Discipline Case Save View
+ * Implements "On-The-Fly" Popups and the Custom Case Timeline UI.
+ */
+$this->msgarray = isset($this->msgarray) ? $this->msgarray : array();
+sapp_Global::generateClientValidations($this->form);
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container">
+            <?php if (!empty($this->msgarray)) : ?>
+                <div class="ml-alert-1-error">
+                    <div style="display:block;"><span class="style-1-icon error"></span>Please correct the highlighted errors below.</div>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" method="<?php echo $this->escape($this->form->getMethod()); ?>">
+            <?php echo $this->form->id; ?>
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <h4 style="font-size: 14px; color: #26a69a; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 15px;">Incident Details</h4>
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->employee_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->employee_id; ?></div>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->employee_id->getId()); ?>"><?php echo $this->escape($this->msgarray['employee_id'] ?? ''); ?></span>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->date_of_occurrence->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->date_of_occurrence; ?></div>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->date_of_occurrence->getId()); ?>"><?php echo $this->escape($this->msgarray['date_of_occurrence'] ?? ''); ?></span>
+                        </div>
+                    </div>
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->violation_id->getLabel()); ?></label>
+                            <div class="division">
+                                <?php echo $this->form->violation_id; ?>
+                                <span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL . 'disciplineviolation/addpopup' ?>','Add Violation Type');"> Add Violation Type</span>
+                            </div>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->violation_id->getId()); ?>"><?php echo $this->escape($this->msgarray['violation_id'] ?? ''); ?></span>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->case_status->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->case_status; ?></div>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->case_status->getId()); ?>"><?php echo $this->escape($this->msgarray['case_status'] ?? ''); ?></span>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <h4 style="font-size: 14px; color: #26a69a; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 20px; margin-bottom: 15px;">Investigation & Statements</h4>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'employer_statement', '', 'fck_editor_height', '', array()); ?>
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'employee_statement', '', 'fck_editor_height', '', array()); ?>
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->employee_appeal->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->employee_appeal; ?></div>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->cao_verdict->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->cao_verdict; ?></div>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <h4 style="font-size: 14px; color: #26a69a; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 20px; margin-bottom: 15px;">Corrective Action</h4>
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->action_id->getLabel()); ?></label>
+                            <div class="division">
+                                <?php echo $this->form->action_id; ?>
+                                <span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL . 'disciplineaction/addpopup' ?>','Add Action Type');"> Add Action Type</span>
+                            </div>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->action_text->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->action_text; ?></div>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->violation_expiry->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->violation_expiry; ?></div>
+                    </div>
+
+                    <br>
+                    <h4 style="font-size: 14px; color: #26a69a; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 20px; margin-bottom: 15px;">Update Timeline</h4>
+                    
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'log_comment', '', 'fck_editor_height', '', array()); ?>
+
+
+                    <div class="new-form-ui-submit">
+                        <div class="division">
+                            <?php echo $this->form->submit; ?>
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>disciplinecase';" value="Cancel" type="button" class="reset" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+
+        <!-- TIMELINE UI (Only shows in Edit mode) -->
+        <?php if (!empty($this->logs)): ?>
+            <div class="total-form-controller" style="margin-top: 20px; background-color: #fcfcfc;">
+                <div class="division">
+                    <h4 style="font-size: 14px; color: #555; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 15px;"><i class="fa fa-history"></i> Case History</h4>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <?php foreach ($this->logs as $log): ?>
+                            <li style="padding: 10px 0; border-bottom: 1px solid #eee;">
+                                <strong style="color: #26a69a;"><?php echo $this->escape($log['createddate']); ?></strong> -
+                                <span style="color: #666;">(by <?php echo $this->escape($log['userfullname']); ?>)</span><br>
+                                <span style="display: block; margin-top: 5px; color: #333;"><?php echo nl2br($this->escape($log['description'])); ?></span>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            </div>
+        <?php endif; ?>
+
+    </div>
+</div>
+
+<!-- Hidden Iframe Containers for Popups -->
+<div id="disciplineviolationContainer" style="display: none; overflow: auto;">
+    <div class="heading"><a href="javascript:void(0)"><img src="<?php echo MEDIA_PATH; ?>images/close.png" class="closeAttachPopup" style="margin: -24px 8px 0 0;"></a></div><iframe id="disciplineviolationCont" class="user_iframe" frameborder="0"></iframe>
+</div>
+<div id="disciplineactionContainer" style="display: none; overflow: auto;">
+    <div class="heading"><a href="javascript:void(0)"><img src="<?php echo MEDIA_PATH; ?>images/close.png" class="closeAttachPopup" style="margin: -24px 8px 0 0;"></a></div><iframe id="disciplineactionCont" class="user_iframe" frameborder="0"></iframe>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#employer_statement, #employee_statement, #log_comment').jqte();
+        if ($.isFunction($.fn.select2)) {
+            $('select').select2({
+                width: '100%'
+            });
+        }
+
+        $('#date_of_occurrence').datepicker({
+            showOn: 'both',
+            dateFormat: '<?php echo DATEFORMAT_JS; ?>',
+            buttonImage: "<?php echo MEDIA_PATH; ?>images/cal.jpg",
+            buttonImageOnly: true,
+            changeMonth: true,
+            changeYear: true,
+            maxDate: new Date()
+        });
+
+        $('#violation_expiry').datepicker({
+            showOn: 'both',
+            dateFormat: '<?php echo DATEFORMAT_JS; ?>',
+            buttonImage: "<?php echo MEDIA_PATH; ?>images/cal.jpg",
+            buttonImageOnly: true,
+            changeMonth: true,
+            changeYear: true,
+            minDate: new Date()
+        });
+    });
+</script>

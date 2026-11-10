@@ -1,0 +1,571 @@
+<?php
+
+/**
+ * PA Rulebook Save View (The Merged Form)
+ * 
+ * Implements SSOT V.10 JSON array builders via Custom Tabs.
+ * Features Brute-force jQuery Tab routing and Polymorphic dynamic dropdowns.
+ */
+$this->msgarray = isset($this->msgarray) ? $this->msgarray : array();
+sapp_Global::generateClientValidations($this->form);
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<style>
+    /* Custom Sentrifugo-Themed Tabs */
+    .sf-tabs-nav {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        border-bottom: 2px solid #ccc;
+        display: flex;
+        width: 100%;
+    }
+
+    .sf-tabs-nav li {
+        margin-bottom: -2px;
+    }
+
+    .sf-tabs-nav li a {
+        display: block;
+        padding: 10px 20px;
+        text-decoration: none;
+        color: #666;
+        font-weight: bold;
+        border-bottom: 2px solid transparent;
+        transition: all 0.3s;
+    }
+
+    .sf-tabs-nav li.active a {
+        color: #26a69a;
+        border-bottom: 2px solid #26a69a;
+    }
+
+    .sf-tabs-nav li a:hover {
+        color: #26a69a;
+    }
+
+    .sf-tab-panel {
+        padding: 20px 0;
+    }
+
+    /* Mapping Table Styles */
+    .mapping-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+
+    .mapping-table th,
+    .mapping-table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+    }
+
+    .mapping-table th {
+        background-color: #f9f9f9;
+        color: #333;
+        font-weight: bold;
+    }
+
+    .remove-btn {
+        color: #e74c3c;
+        cursor: pointer;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .remove-btn:hover {
+        text-decoration: underline;
+    }
+
+    /* Ensure Select2 fits in dynamic containers */
+    .select2-container {
+        width: 100% !important;
+        z-index: 1;
+    }
+
+    .select2-container.select2-container--open {
+        z-index: 9999 !important;
+    }
+</style>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container">
+            <?php if (!empty($this->msgarray)) : ?>
+                <div class="ml-alert-1-error">
+                    <div style="display:block;"><span class="style-1-icon error"></span>Please correct the highlighted errors below.</div>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" method="<?php echo $this->escape($this->form->getMethod()); ?>">
+            <?php echo $this->form->id; ?>
+            <?php echo $this->form->targets_payload; ?>
+            <?php echo $this->form->evaluators_payload; ?>
+            <?php echo $this->form->questions_payload; ?>
+
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <!-- ================= HEADER SECTION (Zend Form) ================= -->
+                    <h4 style="font-size: 14px; color: #26a69a; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 15px;">Rulebook Template Settings</h4>
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->code; ?></div>
+                            <span class="errors" id="errors-code"><?php echo $this->escape($this->msgarray['code'] ?? ''); ?></span>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->name; ?></div>
+                            <span class="errors" id="errors-name"><?php echo $this->escape($this->msgarray['name'] ?? ''); ?></span>
+                        </div>
+                    </div>
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->frequency->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->frequency; ?></div>
+                            <span class="errors" id="errors-frequency"><?php echo $this->escape($this->msgarray['frequency'] ?? ''); ?></span>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->trigger_type->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->trigger_type; ?></div>
+                            <span class="errors" id="errors-trigger_type"><?php echo $this->escape($this->msgarray['trigger_type'] ?? ''); ?></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->is_mandatory->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->is_mandatory; ?></div>
+                    </div>
+
+                    <!-- Explicit clear to stop the h4 from floating right -->
+                    <div style="clear: both; width: 100%; height: 20px;"></div>
+
+                    <!-- ================= MAPPING SECTION (Custom Tabs) ================= -->
+                    <h4 style="font-size: 14px; color: #26a69a; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 15px;">Configure Elements</h4>
+
+                    <div id="rulebook-tabs" style="width: 100%; margin-bottom: 30px;">
+                        <!-- The Tab Navigation -->
+                        <ul class="sf-tabs-nav">
+                            <li class="active"><a href="#tab-targets" data-target="tab-targets"><i class="fa fa-users"></i> Target Audience</a></li>
+                            <li><a href="#tab-evaluators" data-target="tab-evaluators"><i class="fa fa-gavel"></i> Evaluators</a></li>
+                            <li><a href="#tab-questions" data-target="tab-questions"><i class="fa fa-question-circle"></i> Questions</a></li>
+                        </ul>
+
+                        <!-- TAB 1: TARGETS -->
+                        <div id="tab-targets" class="sf-tab-panel active">
+                            <div class="row no-margin" style="background:#fcfcfc; padding:15px; border:1px solid #eee; border-radius: 4px;">
+                                <div class="new-form-ui clearb">
+                                    <label>Select Target Type</label>
+                                    <div class="division">
+                                        <select id="ui_target_type" class="browser-default" style="border: 1px solid #ccc; padding: 5px; border-radius: 3px; width: 100%;">
+                                            <?php foreach ($this->targetTypes as $k => $v) echo "<option value='$k'>$v</option>"; ?>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Wrapper-based Polymorphic Dynamic Dropdowns -->
+                                <div class="new-form-ui clearb" id="ui_target_id_container" style="display:none;">
+                                    <label>Specific Unit</label>
+                                    <div class="division" id="dynamic_target_dropdowns">
+                                        <?php foreach ($this->targetData as $typeKey => $pairs): ?>
+                                            <!-- The Wrapper Div controls visibility -->
+                                            <div class="target-wrapper" id="wrapper_<?php echo $typeKey; ?>" style="display:none;">
+                                                <select id="target_<?php echo $typeKey; ?>" class="target-select browser-default select2">
+                                                    <option value="">Select <?php echo $typeKey; ?>...</option>
+                                                    <?php foreach ($pairs as $k => $v) echo "<option value='$k'>" . substr($this->escape($v), 0, 40) . "</option>"; ?>
+                                                </select>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+
+                                <div style="clear:both; padding-top: 15px;">
+                                    <button type="button" class="actbtn_btn" onclick="addTargetRow();">Add Target</button>
+                                </div>
+                            </div>
+                            <table class="mapping-table" id="tbl-targets">
+                                <thead>
+                                    <tr>
+                                        <th>Target Type</th>
+                                        <th>Specific Unit</th>
+                                        <th style="width: 100px;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody><!-- JS injected --></tbody>
+                            </table>
+                        </div>
+
+                        <!-- TAB 2: EVALUATORS -->
+                        <div id="tab-evaluators" class="sf-tab-panel" style="display:none;">
+                            <div class="row no-margin" style="background:#fcfcfc; padding:15px; border:1px solid #eee; border-radius: 4px;">
+                                <div class="new-form-ui clearb">
+                                    <label>Evaluator Relationship</label>
+                                    <div class="division">
+                                        <select id="ui_evaluator_type" class="browser-default" style="border: 1px solid #ccc; padding: 5px; border-radius: 3px; width: 100%;">
+                                            <?php foreach ($this->evaluatorTypes as $k => $v) echo "<option value='$k'>$v</option>"; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="new-form-ui clearb">
+                                    <label>Is Mandatory?</label>
+                                    <div class="division">
+                                        <select id="ui_evaluator_mandatory" class="browser-default" style="border: 1px solid #ccc; padding: 5px; border-radius: 3px; width: 100%;">
+                                            <option value="1">Yes</option>
+                                            <option value="0">No</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="clear:both; padding-top: 15px;">
+                                    <button type="button" class="actbtn_btn" onclick="addEvaluatorRow();">Add Evaluator</button>
+                                </div>
+                            </div>
+                            <table class="mapping-table" id="tbl-evaluators">
+                                <thead>
+                                    <tr>
+                                        <th>Evaluator Type</th>
+                                        <th>Mandatory?</th>
+                                        <th style="width: 100px;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody><!-- JS injected --></tbody>
+                            </table>
+                        </div>
+
+                        <!-- TAB 3: QUESTIONS -->
+                        <div id="tab-questions" class="sf-tab-panel" style="display:none;">
+                            <div class="row no-margin" style="background:#fcfcfc; padding:15px; border:1px solid #eee; border-radius: 4px;">
+                                <div class="new-form-ui clearb" style="width:70%;">
+                                    <label>Select Question from Pool</label>
+                                    <div class="division">
+                                        <select id="ui_question_id" class="browser-default select2">
+                                            <option value="">Search and select...</option>
+                                            <?php foreach ($this->questionOptions as $q) echo "<option value='{$q['id']}' data-rating='{$q['rating_id']}' data-weight='{$q['weight']}'>" . substr($this->escape($q['name']), 0, 80) . "...</option>"; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="float:left; margin-top: 25px; margin-left: 15px;">
+                                    <button type="button" class="actbtn_btn" onclick="addQuestionRow();">Add Question</button>
+                                </div>
+                            </div>
+                            <table class="mapping-table" id="tbl-questions">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 100px;">Question ID</th>
+                                        <th>Prompt Preview</th>
+                                        <th style="width: 100px;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody><!-- JS injected --></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- ================= FOOTER SECTION ================= -->
+                    <div style="clear: both;"></div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                    </div>
+
+                    <div class="new-form-ui-submit" style="margin-top: 20px;">
+                        <div class="division">
+                            <?php echo $this->form->submit; ?>
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>parulebook';" value="Cancel" type="button" class="reset" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    // State Arrays populated by Controller (if editing)
+    var arrTargets = <?php echo $this->existingTargets; ?>;
+    var arrEvaluators = <?php echo $this->existingEvaluators; ?>;
+    var arrQuestions = <?php echo $this->existingQuestions; ?>;
+
+    $(document).ready(function() {
+
+        // 1. BRUTE FORCE TAB LOGIC
+        $('.sf-tabs-nav a').on('click', function(e) {
+            e.preventDefault();
+
+            var targetPanelId = $(this).attr('href');
+
+            $('.sf-tabs-nav li').removeClass('active');
+            $(this).parent('li').addClass('active');
+
+            $('.sf-tab-panel').hide();
+            $(targetPanelId).fadeIn('fast');
+        });
+
+        // 2. Initialize plugins safely
+        try {
+            $('#description').jqte();
+            if ($.isFunction($.fn.select2)) {
+                $('.select2').select2({
+                    width: '100%'
+                });
+            }
+        } catch (err) {
+            console.log("Plugin init warning: ", err);
+        }
+
+        // ==============================================================
+        // POLYMORPHIC TARGET UI TOGGLE (Wrapper-based)
+        // ==============================================================
+        $('#ui_target_type').change(function() {
+            var selectedType = $(this).val();
+
+            $('.target-wrapper').hide();
+            $('.target-select').removeClass('active-target');
+
+            if (selectedType === 'All') {
+                $('#ui_target_id_container').hide();
+            } else {
+                $('#ui_target_id_container').show();
+                var $targetWrapper = $('#wrapper_' + selectedType);
+                var $targetSelect = $('#target_' + selectedType);
+
+                if ($targetWrapper.length) {
+                    $targetWrapper.show();
+                    $targetSelect.addClass('active-target');
+                }
+            }
+        }).trigger('change');
+
+        // Initial Render of tables
+        renderTargets();
+        renderEvaluators();
+        renderQuestions();
+
+        // ==============================================================
+        // MASTER SUBMIT HANDLER (The "One-Shot" Save)
+        // ==============================================================
+        $('#submitbutton').off('click').on('click', function(e) {
+            e.preventDefault();
+
+            var $form = $('#formid');
+            if ($.isFunction($form.valid) && !$form.valid()) {
+                return false;
+            }
+
+            // Pack Arrays into JSON hidden inputs
+            $('#targets_payload').val(JSON.stringify(arrTargets));
+            $('#evaluators_payload').val(JSON.stringify(arrEvaluators));
+            $('#questions_payload').val(JSON.stringify(arrQuestions));
+
+            if ($.isFunction($.blockUI)) {
+                $.blockUI({
+                    message: '<img src="<?php echo MEDIA_PATH; ?>images/loader2.gif" />'
+                });
+            }
+
+            var formData = new FormData($form[0]);
+
+            $.ajax({
+                url: base_url + '/parulebook/save/format/json',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function(res) {
+                    if ($.isFunction($.unblockUI)) $.unblockUI();
+
+                    if (res.result === 'saved') {
+                        window.location.href = base_url + '/parulebook';
+                    } else if (res.result === 'exception') {
+                        $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>' + res.message + '</div>');
+                        $('html, body').animate({
+                            scrollTop: 0
+                        }, 'slow');
+                    } else {
+                        $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Please fix the highlighted errors.</div>');
+                        $('.errors').html('');
+
+                        $.each(res, function(key, val) {
+                            var errMsg = '';
+                            if (typeof val === 'object') {
+                                for (var prop in val) {
+                                    errMsg += val[prop];
+                                    break;
+                                }
+                            } else {
+                                errMsg = val;
+                            }
+
+                            var errorSpan = $('#errors-' + key);
+                            if (errorSpan.length > 0) {
+                                errorSpan.html(errMsg).show();
+                            } else {
+                                $('[name="' + key + '"]').after('<span class="errors" id="errors-' + key + '">' + errMsg + '</span>');
+                            }
+                        });
+                        $('html, body').animate({
+                            scrollTop: 0
+                        }, 'slow');
+                    }
+                },
+                error: function() {
+                    if ($.isFunction($.unblockUI)) $.unblockUI();
+                    $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Server Error occurred. Check logs.</div>');
+                    $('html, body').animate({
+                        scrollTop: 0
+                    }, 'slow');
+                }
+            });
+        });
+    });
+
+    // ==============================================================
+    // TARGETS LOGIC
+    // ==============================================================
+    function addTargetRow() {
+        var type = $('#ui_target_type').val();
+        var id = 0;
+        var name = 'All Employees';
+
+        if (type !== 'All') {
+            var $activeSelect = $('#target_' + type);
+            id = $activeSelect.val();
+            if (!id || id === '' || parseInt(id) <= 0) {
+                alert('Please select a specific unit.');
+                return;
+            }
+            name = $.trim($activeSelect.find('option:selected').text());
+        }
+
+        var exists = false;
+        $.each(arrTargets, function(i, v) {
+            if (v.target_type == type && v.target_id == id) exists = true;
+        });
+        if (exists) {
+            alert('This target has already been added.');
+            return;
+        }
+
+        arrTargets.push({
+            target_type: type,
+            target_id: id,
+            target_name: name
+        });
+
+        if (type !== 'All') {
+            $('#target_' + type).val('').trigger('change.select2');
+        }
+        renderTargets();
+    }
+
+    function renderTargets() {
+        var html = '';
+        $.each(arrTargets, function(idx, val) {
+            // FIXED: Target Name is now reliably populated by the DB or the JS
+            var displayId = val.target_name ? val.target_name : (val.target_id > 0 ? 'ID: ' + val.target_id : 'All Employees');
+            html += '<tr><td>' + val.target_type + '</td><td>' + displayId + '</td>';
+            html += '<td><a class="remove-btn" onclick="removeArrItem(arrTargets, ' + idx + '); renderTargets();"><i class="fa fa-trash"></i> Remove</a></td></tr>';
+        });
+        $('#tbl-targets tbody').html(html);
+    }
+
+    // ==============================================================
+    // EVALUATORS LOGIC
+    // ==============================================================
+    function addEvaluatorRow() {
+        var type = $('#ui_evaluator_type').val();
+        var isMandatory = $('#ui_evaluator_mandatory').val();
+
+        var exists = false;
+        $.each(arrEvaluators, function(i, v) {
+            if (v.evaluator_type == type) exists = true;
+        });
+        if (exists) {
+            alert('Evaluator type already added.');
+            return;
+        }
+
+        arrEvaluators.push({
+            evaluator_type: type,
+            evaluator_id: 0,
+            is_mandatory: isMandatory
+        });
+        renderEvaluators();
+    }
+
+    function renderEvaluators() {
+        var html = '';
+        $.each(arrEvaluators, function(idx, val) {
+            var mandText = val.is_mandatory == 1 ? '<span style="color:green;font-weight:bold;">Yes</span>' : '<span style="color:#e67e22;">No</span>';
+            html += '<tr><td>' + val.evaluator_type + '</td><td>' + mandText + '</td>';
+            html += '<td><a class="remove-btn" onclick="removeArrItem(arrEvaluators, ' + idx + '); renderEvaluators();"><i class="fa fa-trash"></i> Remove</a></td></tr>';
+        });
+        $('#tbl-evaluators tbody').html(html);
+    }
+
+    // ==============================================================
+    // QUESTIONS LOGIC
+    // ==============================================================
+    function addQuestionRow() {
+        var $selectedOption = $('#ui_question_id option:selected');
+        var id = $selectedOption.val();
+        var text = $.trim($selectedOption.text());
+        var ratingId = $selectedOption.data('rating');
+        var weight = $selectedOption.data('weight');
+
+        if (!id || id === '') {
+            alert('Please select a question.');
+            return;
+        }
+
+        var exists = false;
+        $.each(arrQuestions, function(i, v) {
+            if (v.question_id == id) exists = true;
+        });
+        if (exists) {
+            alert('This question is already added.');
+            return;
+        }
+
+        // PUSH RATING AND WEIGHT INTO THE JSON ARRAY
+        arrQuestions.push({
+            question_id: id,
+            question_name: text,
+            rating_id: ratingId,
+            weight: weight
+        });
+
+        $('#ui_question_id').val('').trigger('change.select2');
+        renderQuestions();
+    }
+
+    function renderQuestions() {
+        var html = '';
+        $.each(arrQuestions, function(idx, val) {
+            html += '<tr><td>#' + val.question_id + '</td><td>' + val.question_name + '</td>';
+            html += '<td><a class="remove-btn" onclick="removeArrItem(arrQuestions, ' + idx + '); renderQuestions();"><i class="fa fa-trash"></i> Remove</a></td></tr>';
+        });
+        $('#tbl-questions tbody').html(html);
+    }
+
+    // --- UTILS ---
+    function removeArrItem(arr, index) {
+        arr.splice(index, 1);
+    }
+</script>

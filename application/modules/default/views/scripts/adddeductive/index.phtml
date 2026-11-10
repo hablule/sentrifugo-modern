@@ -1,0 +1,173 @@
+<?php
+$form = $this->form;
+$validators = $this->validators;
+?>
+
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/formValidator.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>jquery/js/jquery.alert.js"></script>
+<?php if (count($this->messages)) { ?>
+  <div id="dispmsgadddeductive">
+    <?php
+    foreach ($this->messages as $message) {
+      $flag = array();
+      $flag = array_keys($message);
+      echo "<div id='messageData' class='ml-alert-1-$flag[0]'><div style='display:block;'><span class='style-1-icon $flag[0]'></span>";
+      echo $message[$flag[0]];
+      echo "</div></div>";
+    }
+    ?>
+  </div>
+
+<?php } ?>
+<div id="dispmsgadddeductive"></div>
+
+<?php
+if ($this->call !== 'ajaxcall') {
+  $div = '<div id="grid_' . $this->dataArray['objectname'] . '" class="all-grid-control">';
+
+  $endDiv = '</div>';
+
+  $multi = '';
+  echo $multi . $div . '<div id="msg" style="display:none;font-style: oblique; font-weight: bold; color: green;""></div>' . $this->grid($this->dataArray) . $endDiv;
+
+
+  $div2 = '<div id="grid_' . $this->dataArray2['objectname'] . '" class="all-grid-control">';
+
+  $endDiv2 = '</div>';
+
+  $multi2 = '';
+  echo $multi2 . $div2 . '<div id="msg" style="display:none;font-style: oblique; font-weight: bold; color: green;""></div>' . $this->grid($this->dataArray2) . $endDiv2;
+} else {
+  if ($this->objectName == 'adddeductive') {
+    $div = '<div id="grid_' . $this->dataArray['objectname'] . '" class="all-grid-control">';
+
+    $endDiv = '</div>';
+
+    $multi = '';
+    echo $multi . $div . '<div id="msg" style="display:none;font-style: oblique; font-weight: bold; color: green;""></div>' . $this->grid($this->dataArray) . $endDiv;
+  } else if ($this->objectName == 'overtime') {
+    $div2 = '<div id="grid_' . $this->dataArray2['objectname'] . '" class="all-grid-control">';
+    $endDiv2 = '</div>';
+
+    $multi2 = '';
+    echo $multi2 . $div2 . '<div id="msg" style="display:none;font-style: oblique; font-weight: bold; color: green;""></div>' . $this->grid($this->dataArray2) . $endDiv2;
+  }
+}
+
+?>
+<?php
+if ($this->call != 'ajaxcall') { ?>
+  <form name="<?php echo $form->getName(); ?>" id="<?php echo $form->getId(); ?>" class="nn" action="<?php echo $form->getAction(); ?>" method="POST">
+    <?php echo $form->id; ?>
+
+    <div class="total-form-controller">
+      <div class="new-form-ui-submit">
+        <?php echo $form->submit; ?>
+      </div>
+    </div>
+  </form>
+<?php }
+?>
+
+<script>
+  
+  var perks = [];
+  $('#submit').click(function(ev) {
+    var boxs = $('.check1:checked');
+    var boxs2 = $('.check2:checked');
+    var emp_ids = [];
+    var deductive_ids = [];
+    var deductive_autos = [];
+
+    for (let index = 0; index < boxs.length; index++) {
+      emp_ids.push(boxs[index].value);
+    }
+    for (let index2 = 0; index2 < boxs2.length; index2++) {
+      deductive_ids.push(boxs2[index2].value);
+    }
+    for (let index3 = 0; index3 < boxs2.length; index3++) {
+      deductive_autos.push(boxs2[index3].name);
+    }
+    if (emp_ids.length == 0 && deductive_ids.length == 0) {
+      jAlert('Please Select Load and Employees');
+      return false;
+    }
+    if (emp_ids.length == 0) {
+      jAlert('Please Select Employee');
+      return false;
+    }
+    if (deductive_ids.length == 0) {
+      jAlert('Please Select Load');
+      return false
+    }
+    var res = getphpdata('adddeductive/add', {
+      emp_ids: emp_ids,
+      deductive_ids: deductive_ids,
+      deductive_autos: deductive_autos
+    }, false, 'POST', 'json')
+    res = JSON.parse(res);
+    console.log(res);
+    for (const key in res) {
+      if (key == 'sucess') {
+        console.log($('#messageData').html());
+        if ($('#messageData').html() == undefined) {
+          $('#dispmsgadddeductive').append(
+            "<div id='messageData' class='ml-alert-1-success'><div style='display:block;'><span class='style-1-icon success'></span>" + res[key] + "</div>"
+          )
+
+        } else {
+
+          $('#dispmsgadddeductive').append(
+            "<div id='messageData' class='ml-alert-1-success'><div style='display:block;'><span class='style-1-icon success'></span>" + res[key] + "</div>"
+          )
+        }
+        setTimeout(() => {
+          $('#dispmsgadddeductive').fadeOut('slow', () => {
+
+          })
+
+        }, 3000)
+
+      }
+    }
+    return false;
+  });
+  $(document).ready(function() {
+
+    
+    $("#selectAll").click(function() {
+      if (this.checked) {
+        $('.check1').each(function() {
+          $(".check1").prop('checked', true);
+        })
+      } else {
+        $('.check1').each(function() {
+          $(".check1").prop('checked', false);
+        })
+      }
+    });
+
+  });
+</script>
+
+<?php
+// foreach($this->dataArray2 as $data)
+// 										{
+// 										foreach($data as $emp)
+// 										{ 
+//                        Zend_Debug::dump($emp);
+//              if ($this->perm[$emp['empid']]['permission']=='N') {  
+//                 echo "<script type='text/javascript'>
+//                 $(document).ready(function() {
+//                     $('#emp'+".$this->perm[$emp['empid']]['empid'].").remove();
+//                 });
+//                 </script>";
+//              }     else{
+               
+
+//              }
+                                            
+//             }}                           
+                                            
+                                            
+                                            ?>

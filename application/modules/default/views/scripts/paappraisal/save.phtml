@@ -1,0 +1,473 @@
+<?php
+
+/**
+ * PA Appraisal Save View (The Merged Form / Campaign Refinement)
+ * 
+ * Implements SSOT V.10 JSON array builders via Custom Tabs.
+ * If creating a new record, shows only the Header form.
+ * If editing an existing Draft, exposes the Refinement Tabs.
+ */
+$this->msgarray = isset($this->msgarray) ? $this->msgarray : array();
+sapp_Global::generateClientValidations($this->form);
+$isEditMode = (isset($this->id) && $this->id > 0);
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<style>
+    /* Custom Sentrifugo-Themed Tabs */
+    .sf-tabs-nav {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        border-bottom: 2px solid #ccc;
+        display: flex;
+        width: 100%;
+    }
+
+    .sf-tabs-nav li {
+        margin-bottom: -2px;
+    }
+
+    .sf-tabs-nav li a {
+        display: block;
+        padding: 10px 20px;
+        text-decoration: none;
+        color: #666;
+        font-weight: bold;
+        border-bottom: 2px solid transparent;
+        transition: all 0.3s;
+    }
+
+    .sf-tabs-nav li.active a {
+        color: #26a69a;
+        border-bottom: 2px solid #26a69a;
+    }
+
+    .sf-tabs-nav li a:hover {
+        color: #26a69a;
+    }
+
+    .sf-tab-panel {
+        padding: 20px 0;
+    }
+
+    /* Mapping Table Styles */
+    .mapping-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+
+    .mapping-table th,
+    .mapping-table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+    }
+
+    .mapping-table th {
+        background-color: #f9f9f9;
+        color: #333;
+        font-weight: bold;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .remove-btn {
+        color: #e74c3c;
+        cursor: pointer;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .remove-btn:hover {
+        text-decoration: underline;
+    }
+
+    .scrollable-table-container {
+        max-height: 400px;
+        overflow-y: auto;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background: #fff;
+    }
+
+    /* Ensure Select2 fits in dynamic containers */
+    .select2-container {
+        width: 100% !important;
+        z-index: 1;
+    }
+
+    .select2-container.select2-container--open {
+        z-index: 9999 !important;
+    }
+</style>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container">
+            <?php if (!empty($this->msgarray)) : ?>
+                <div class="ml-alert-1-error">
+                    <div style="display:block;"><span class="style-1-icon error"></span>Please correct the highlighted errors below.</div>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" method="<?php echo $this->escape($this->form->getMethod()); ?>">
+            <?php echo $this->form->id; ?>
+            <?php echo $this->form->audience_payload; ?>
+            <?php echo $this->form->questions_payload; ?>
+
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <!-- ================= HEADER SECTION (Zend Form) ================= -->
+                    <h4 style="font-size: 14px; color: #26a69a; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 15px;">Campaign Settings</h4>
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->rulebook_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->rulebook_id; ?></div>
+                            <span class="errors" id="errors-rulebook_id"><?php echo $this->escape($this->msgarray['rulebook_id'] ?? ''); ?></span>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->period_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->period_id; ?></div>
+                            <span class="errors" id="errors-period_id"><?php echo $this->escape($this->msgarray['period_id'] ?? ''); ?></span>
+                        </div>
+                    </div>
+
+                    <div class="new-form-ui clearb" style="width: 100%;">
+                        <label class="required"><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                        <div class="division" style="width: 100%;"><?php echo $this->form->name; ?></div>
+                        <span class="errors" id="errors-name"><?php echo $this->escape($this->msgarray['name'] ?? ''); ?></span>
+                    </div>
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->start_date->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->start_date; ?></div>
+                            <span class="errors" id="errors-start_date"><?php echo $this->escape($this->msgarray['start_date'] ?? ''); ?></span>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->end_date->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->end_date; ?></div>
+                            <span class="errors" id="errors-end_date"><?php echo $this->escape($this->msgarray['end_date'] ?? ''); ?></span>
+                        </div>
+                    </div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                    </div>
+
+                    <div style="clear: both; width: 100%; height: 20px;"></div>
+
+                    <!-- ================= REFINEMENT SECTION (Only in Edit Mode) ================= -->
+                    <?php if ($isEditMode): ?>
+
+                        <h4 style="font-size: 14px; color: #26a69a; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 15px;">Refine Campaign Content</h4>
+
+                        <div id="appraisal-tabs" style="width: 100%; margin-bottom: 30px;">
+                            <ul class="sf-tabs-nav">
+                                <li class="active"><a href="#tab-audience" data-target="tab-audience"><i class="fa fa-users"></i> Target Audience</a></li>
+                                <li><a href="#tab-questions" data-target="tab-questions"><i class="fa fa-question-circle"></i> Questions</a></li>
+                            </ul>
+
+                            <!-- TAB 1: AUDIENCE (Subtraction Only) -->
+                            <div id="tab-audience" class="sf-tab-panel active">
+                                <div style="background:#fdfdfd; padding:15px; border:1px solid #eee; border-radius: 4px; margin-bottom: 15px;">
+                                    <p style="margin:0; font-size: 12px; color: #666;"><i class="fa fa-info-circle"></i>
+                                        This audience was automatically generated from the Rulebook. You may exclude individuals from this specific cycle.
+                                    </p>
+                                </div>
+                                <div class="scrollable-table-container">
+                                    <table class="mapping-table" id="tbl-audience" style="margin-top: 0; border: none;">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 100px; border-top: none;">Emp ID</th>
+                                                <th style="border-top: none;">Employee Name</th>
+                                                <th style="width: 150px; text-align: center; border-top: none;">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody><!-- JS injected --></tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- TAB 2: QUESTIONS (Addition & Subtraction) -->
+                            <div id="tab-questions" class="sf-tab-panel" style="display:none;">
+                                <div class="row no-margin" style="background:#fcfcfc; padding:15px; border:1px solid #eee; border-radius: 4px; margin-bottom:15px; overflow:hidden;">
+                                    <div class="new-form-ui clearb" style="width:70%; margin-bottom: 0;">
+                                        <label>Add Custom Question</label>
+                                        <div class="division">
+                                            <select id="ui_question_id" class="browser-default select2">
+                                                <option value="">Search and select...</option>
+                                                <?php foreach ($this->questionOptions as $q) echo "<option value='{$q['id']}' data-rating='{$q['rating_id']}' data-weight='{$q['weight']}'>" . substr($this->escape($q['name']), 0, 80) . "...</option>"; ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div style="float:left; margin-top: 25px; margin-left: 15px;">
+                                        <button type="button" class="actbtn_btn" onclick="addQuestionRow();">Add to Campaign</button>
+                                    </div>
+                                    <div style="clear: both;"></div>
+                                </div>
+                                <div class="scrollable-table-container">
+                                    <table class="mapping-table" id="tbl-questions" style="margin-top: 0; border: none;">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 100px; border-top: none;">Question ID</th>
+                                                <th style="border-top: none;">Prompt Preview</th>
+                                                <th style="width: 100px; border-top: none;">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody><!-- JS injected --></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    <?php else: ?>
+                        <div class="ml-alert-1-info" style="margin-top: 20px;">
+                            <div style="display:block;"><span class="style-1-icon info"></span>After saving this draft, you will be able to review and refine the final list of Employees and Questions before launching the campaign.</div>
+                        </div>
+                    <?php endif; ?>
+
+                    <!-- ================= FOOTER SECTION ================= -->
+                    <div style="clear: both;"></div>
+
+                    <div class="new-form-ui-submit" style="margin-top: 20px;">
+                        <div class="division">
+                            <?php echo $this->form->submit; ?>
+                            <?php if (isset($this->campaignStatus) && $this->campaignStatus === 'Draft'): ?>
+                                <input type="submit" name="submit" id="launchbutton" value="Save & Launch" class="actbtn_btn" style="background-color: #27ae60; vertical-align: top;">
+                            <?php endif; ?>
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>paappraisal';" value="Cancel" type="button" class="reset" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    // State Arrays populated by Controller (Only valid in Edit Mode)
+    var arrAudience = <?php echo $this->existingAudience ?? '[]'; ?>;
+    var arrQuestions = <?php echo $this->existingQuestions ?? '[]'; ?>;
+
+    $(document).ready(function() {
+
+        // 1. BRUTE FORCE TAB LOGIC
+        $('.sf-tabs-nav a').on('click', function(e) {
+            e.preventDefault();
+            var targetPanelId = $(this).attr('href');
+            $('.sf-tabs-nav li').removeClass('active');
+            $(this).parent('li').addClass('active');
+            $('.sf-tab-panel').hide();
+            $(targetPanelId).fadeIn('fast');
+        });
+
+        // 2. Initialize plugins safely
+        try {
+            $('#description').jqte();
+            if ($.isFunction($.fn.select2)) {
+                $('.select2').select2({
+                    width: '100%'
+                });
+                $('#rulebook_id, #period_id').select2({
+                    width: '100%'
+                });
+            }
+        } catch (err) {
+            console.log("Plugin init warning: ", err);
+        }
+
+        // Datepickers logic
+        $('#start_date').datepicker({
+            showOn: 'both',
+            dateFormat: '<?php echo DATEFORMAT_JS; ?>',
+            buttonImage: "<?php echo MEDIA_PATH; ?>images/cal.jpg",
+            buttonImageOnly: true,
+            changeMonth: true,
+            changeYear: true,
+            onClose: function(selectedDate) {
+                $(this).trigger('blur');
+                $("#end_date").datepicker("option", "minDate", selectedDate);
+            }
+        });
+        $('#end_date').datepicker({
+            showOn: 'both',
+            dateFormat: '<?php echo DATEFORMAT_JS; ?>',
+            buttonImage: "<?php echo MEDIA_PATH; ?>images/cal.jpg",
+            buttonImageOnly: true,
+            changeMonth: true,
+            changeYear: true,
+            onClose: function(selectedDate) {
+                $(this).trigger('blur');
+                $("#start_date").datepicker("option", "maxDate", selectedDate);
+            }
+        });
+        if ($('#start_date').val() != '') $("#end_date").datepicker("option", "minDate", $('#start_date').val());
+        if ($('#end_date').val() != '') $("#start_date").datepicker("option", "maxDate", $('#start_date').val());
+
+        // Initial Render of tables
+        renderAudience();
+        renderQuestions();
+
+        // ==============================================================
+        // MASTER SUBMIT HANDLER (Handles BOTH Save and Launch)
+        // ==============================================================
+        $('#submitbutton, #launchbutton').off('click').on('click', function(e) {
+            e.preventDefault();
+
+            var $form = $('#formid');
+            if ($.isFunction($form.valid) && !$form.valid()) {
+                return false;
+            }
+
+            var isLaunching = ($(this).attr('id') === 'launchbutton');
+
+            if (isLaunching) {
+                if (!confirm('Are you sure you want to launch this campaign? This will generate assessment tasks for all targeted employees and cannot be undone.')) {
+                    return;
+                }
+            }
+
+            // Pack Arrays into JSON hidden inputs
+            $('#audience_payload').val(JSON.stringify(arrAudience));
+            $('#questions_payload').val(JSON.stringify(arrQuestions));
+
+            if ($.isFunction($.blockUI)) {
+                $.blockUI({
+                    message: '<img src="<?php echo MEDIA_PATH; ?>images/loader2.gif" />'
+                });
+            }
+
+            var formData = new FormData($form[0]);
+
+            if (isLaunching) {
+                formData.append('and_launch', '1');
+            }
+
+            $.ajax({
+                url: base_url + '/paappraisal/save/format/json',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function(res) {
+                    if ($.isFunction($.unblockUI)) $.unblockUI();
+
+                    if (res.result === 'saved') {
+                        // Controller provides the correct redirect URL
+                        window.location.href = res.redirect_url;
+                    } else if (res.result === 'exception') {
+                        $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>' + res.message + '</div>');
+                        $('html, body').animate({
+                            scrollTop: 0
+                        }, 'slow');
+                    } else {
+                        $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Please fix the highlighted errors.</div>');
+                        $('.errors').html('');
+
+                        $.each(res, function(key, val) {
+                            var errMsg = (typeof val === 'object') ? val[Object.keys(val)[0]] : val;
+                            var errorSpan = $('#errors-' + key);
+                            if (errorSpan.length > 0) {
+                                errorSpan.html(errMsg).show();
+                            } else {
+                                $('[name="' + key + '"]').after('<span class="errors" id="errors-' + key + '">' + errMsg + '</span>');
+                            }
+                        });
+                        $('html, body').animate({
+                            scrollTop: 0
+                        }, 'slow');
+                    }
+                },
+                error: function() {
+                    if ($.isFunction($.unblockUI)) $.unblockUI();
+                    $('#message_container').html('<div class="ml-alert-1-error"><span class="style-1-icon error"></span>Server Error occurred. Check logs.</div>');
+                    $('html, body').animate({
+                        scrollTop: 0
+                    }, 'slow');
+                }
+            });
+        });
+    });
+
+    // --- AUDIENCE LOGIC ---
+    function removeAudienceRow(index) {
+        if (confirm("Are you sure you want to exclude this employee from the campaign?")) {
+            arrAudience.splice(index, 1);
+            renderAudience();
+        }
+    }
+
+    function renderAudience() {
+        var html = '';
+        $.each(arrAudience, function(idx, val) {
+            html += '<tr><td>#' + val.employee_id + '</td><td>' + val.employee_name + '</td>';
+            html += '<td style="text-align: center;"><a class="remove-btn" onclick="removeAudienceRow(' + idx + ');" title="Exclude from Campaign"><i class="fa fa-times-circle fa-lg"></i> Exclude</a></td></tr>';
+        });
+        $('#tbl-audience tbody').html(html);
+    }
+
+    // --- QUESTIONS LOGIC ---
+    function addQuestionRow() {
+        var $selectedOption = $('#ui_question_id option:selected');
+        var id = $selectedOption.val();
+        var text = $.trim($selectedOption.text());
+        var ratingId = $selectedOption.data('rating');
+        var weight = $selectedOption.data('weight');
+
+        if (!id || id === '') {
+            alert('Please select a question.');
+            return;
+        }
+
+        var exists = false;
+        $.each(arrQuestions, function(i, v) {
+            if (v.question_id == id) exists = true;
+        });
+        if (exists) {
+            alert('This question is already added.');
+            return;
+        }
+
+        // PUSH RATING AND WEIGHT INTO THE JSON ARRAY
+        arrQuestions.push({
+            question_id: id,
+            question_name: text,
+            rating_id: ratingId,
+            weight: weight
+        });
+
+        $('#ui_question_id').val('').trigger('change.select2');
+        renderQuestions();
+    }
+
+    function removeQuestionRow(index) {
+        arrQuestions.splice(index, 1);
+        renderQuestions();
+    }
+
+    function renderQuestions() {
+        var html = '';
+        $.each(arrQuestions, function(idx, val) {
+            html += '<tr><td>#' + val.question_id + '</td><td>' + val.question_name + '</td>';
+            html += '<td><a class="remove-btn" onclick="removeQuestionRow(' + idx + ');"><i class="fa fa-trash"></i> Remove</a></td></tr>';
+        });
+        $('#tbl-questions tbody').html(html);
+    }
+</script>
