@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Community Q&A & Setup Help
+    url: https://github.com/hablule/sentrifugo-modern/discussions/categories/q-a
+    about: Please ask setup questions and seek installation help in Discussions, not Issues!
