@@ -5,6 +5,7 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE.txt)
 [![PHP Version](https://img.shields.io/badge/PHP-8.3%2B-777BB4?logo=php&logoColor=white)](#platform--system-requirements)
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Online-success?logo=google-chrome&logoColor=white)](https://sentrifugo-demo.duckdns.org)
+[![Discord](https://img.shields.io/badge/Discord-Join%20Community-5865F2?logo=discord&logoColor=white)](https://discord.gg/PnMxJmKh8e)
 [![Security Policy](https://img.shields.io/badge/Security-Policy-brightgreen)](SECURITY.md)
 
 ---
@@ -127,12 +128,9 @@ Sentrifugo Modern features an intelligent, state-based database synchronization 
 
 Sentrifugo Modern is currently in an active **Phase 1: Stabilization & Hardening** phase. 
 
-Before contributing code or opening pull requests, please read our:
-* **[Contributor Guidelines (CONTRIBUTING.md)](CONTRIBUTING.md)**
-* **[Single Source of Truth (SSOT.md)](SSOT.md)**
-* **[Security Policy (SECURITY.md)](SECURITY.md)**
-
-Join the conversation or ask setup questions in **[GitHub Discussions](https://github.com/hablule/sentrifugo-modern/discussions)**!
+* 💬 **Real-Time Chat & Support:** Join our **[Discord Community Server](https://discord.gg/PnMxJmKh8e)** to chat with maintainers, ask questions, or share feedback.
+* 💡 **Feature & Architecture Proposals:** Propose ideas in **[GitHub Discussions](https://github.com/hablule/sentrifugo-modern/discussions)**.
+* 📖 **Orientation & Standards:** Please review our **[Contributor Guidelines (CONTRIBUTING.md)](CONTRIBUTING.md)** and **[Single Source of Truth (SSOT.md)](SSOT.md)** before opening pull requests.
 
 ---
 
