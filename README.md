@@ -139,3 +139,15 @@ Sentrifugo Modern is currently in an active **Phase 1: Stabilization & Hardening
 * **Original Creator:** Sentrifugo was originally authored by **Sapplica Inc.**
 * **License:** Distributed under the **GNU General Public License v3.0 (GPLv3)**. See [LICENSE.txt](LICENSE.txt) for the complete legal text.
 * All modernized enhancements, tools, and extensions in this repository remain free and open-source under GPLv3.
+
+---
+
+## 💖 Support & Sponsor Development
+
+Sentrifugo Modern is a community-driven open-source initiative under the **GPLv3 license**. Choose your preferred channel to support development milestones:
+
+| Channel | Method | Best For | Link |
+| :--- | :--- | :--- | :--- |
+| **GitHub Sponsors** | 💳 Credit Card / Invoicing | Corporate teams & developers (0% platform fee) | [Sponsor on GitHub](https://github.com/sponsors/hablule) |
+| **Giveth.io** | 🌍 Crypto (Base L2) | Zero-fee public goods donations + earn GIVbacks | [Donate on Giveth](https://www.giveth.io/project/sentrifugo-modern) |
+| **Direct Web3 (Base)** | ⚡ Direct Wallet Transfer | Send USDC directly to maintainer's Base address | `0xE1E3360f62d6441b2f3D3227aDe959841416DAed` |
