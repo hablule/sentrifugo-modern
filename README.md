@@ -21,7 +21,7 @@ A fully functional, live cloud sandbox is running 24/7 on Oracle Cloud Infrastru
 | Field | Credential |
 | :--- | :--- |
 | **Username** | `alexander.wright@example.com` *(or `AlexanderW`)* |
-| **Password** | `Sentrifugo123!` |
+| **Password** | `S_fugo123456!` |
 | **Role** | Super Administrator (Full Suite Access) |
 
 > ℹ️ *Note: The live demo sandbox automatically sanitizes and resets its database to a clean baseline every night at 03:00 AM UTC.*
