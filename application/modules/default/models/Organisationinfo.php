@@ -36,7 +36,7 @@ class Default_Model_Organisationinfo extends Zend_Db_Table_Abstract
 	public function getdomainbyorgid($id)
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();
-		$query = "select * from main_companyengage where  company_id = ".$id." ";
+		$query = "select * from map_company_businessdomain where  company_id = ".$id." ";
 		$result = $db->query($query)->fetchAll();
 	    return $result;
 	}
@@ -52,7 +52,7 @@ class Default_Model_Organisationinfo extends Zend_Db_Table_Abstract
 	public function getdomains()
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();
-		$query = "select b.name as bname  from main_companyengage as a inner join main_businessdomain as b on a.businessdomain_id = b.businessdomain_id ";
+		$query = "select b.name as bname  from map_company_businessdomain as a inner join main_businessdomain as b on a.businessdomain_id = b.id ";
 		$result = $db->query($query)->fetchAll();
 		//die($result);
 		return $result;

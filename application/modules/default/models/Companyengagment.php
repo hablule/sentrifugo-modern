@@ -1,6 +1,6 @@
 <?php
 class Default_Model_Companyengagment extends Zend_Db_Table_Abstract{
-    protected $_name = 'main_companyengage';
+    protected $_name = 'map_company_businessdomain';
     protected $_primary = ['businessdomain_id','company_id'];
 
     public function getAddress($sort, $by, $pageNo, $perPage, $searchQuery)
@@ -11,7 +11,7 @@ class Default_Model_Companyengagment extends Zend_Db_Table_Abstract{
 
         $adress = $this->select()
             ->setIntegrityCheck(false)
-            ->from(['c' => 'main_companyengage'], ['comp_id' => 'c.company_id','bd_id'=>'c.businessdomain_id'])
+            ->from(['c' => 'map_company_businessdomain'], ['comp_id' => 'c.company_id','bd_id'=>'c.businessdomain_id'])
             ->joinInner(['bd' => 'main_businessdomain'], "bd.businessdomain_id = c.businessdomain_id ", ['bd_name' => 'bd.name'])
             ->joinInner(['comp' => 'main_company'], "c.company_id = comp.company_id", ['comp_name' => 'comp.name'])
             ->where($where)
@@ -83,7 +83,7 @@ class Default_Model_Companyengagment extends Zend_Db_Table_Abstract{
 			return 'update';
 		} else {
 			$this->insert($data);
-			$id=$this->getAdapter()->lastInsertId('main_companyengage');
+			$id=$this->getAdapter()->lastInsertId('map_company_businessdomain');
 			return $id;
 		}
 		
@@ -93,7 +93,7 @@ class Default_Model_Companyengagment extends Zend_Db_Table_Abstract{
       
         $adress = $this->select()
             ->setIntegrityCheck(false)
-            ->from(['c' => 'main_companyengage'], ['comp_id' => 'c.company_id','bd_id'=>'c.businessdomain_id'])
+            ->from(['c' => 'map_company_businessdomain'], ['comp_id' => 'c.company_id','bd_id'=>'c.businessdomain_id'])
             ->joinInner(['bd' => 'main_businessdomain'], "bd.businessdomain_id = c.businessdomain_id ", ['bd_name' => 'bd.name'])
             ->joinInner(['comp' => 'main_company'], "c.company_id = comp.company_id ", ['comp_name' => 'comp.name'])
             ->where('c.company_id= '.$comp_id. ' and c.businessdomain_id='.$bdid);
@@ -104,7 +104,7 @@ public function getdatacompany($comp_id)
   
     $adress = $this->select()
         ->setIntegrityCheck(false)
-        ->from(['c' => 'main_companyengage'], ['com_id' => 'c.company','bd_id'=>'c.businessdomain_id'])
+        ->from(['c' => 'map_company_businessdomain'], ['com_id' => 'c.company','bd_id'=>'c.businessdomain_id'])
         ->joinInner(['bd' => 'main_businessdomain'], "bd.businessdomain_id = c.businessdomain_id ", ['bd_name' => 'bd.name'])
         ->joinInner(['comp' => 'main_company'], "c.company_id = comp.company_id ", ['comp_name' => 'comp.name'])      
           ->where('c.company_id= '.$comp_id);
@@ -114,7 +114,7 @@ public function getdatacompany($comp_id)
   
     $adress = $this->select()
         ->setIntegrityCheck(false)
-        ->from(['c' => 'main_companyengage'], ['id' => 'c.company_id','bd_id'=>'c.businessdomain_id'])
+        ->from(['c' => 'map_company_businessdomain'], ['id' => 'c.company_id','bd_id'=>'c.businessdomain_id'])
         ->joinLeft(['bd' => 'main_businessdomain'], "bd.businessdomain_id = c.businessdomain_id ", ['name' => 'bd.name','businessdomain_id'=>'bd.businessdomain_id'])
         ->joinLeft(['comp' => 'main_company'], "c.company_id = comp.company_id ", ['comp_name' => 'comp.name'])
         ->where('c.company_id= '.$id);

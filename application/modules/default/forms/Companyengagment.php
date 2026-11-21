@@ -16,7 +16,7 @@ $businessdomain_id->setRequired(true);
 $businessdomain_id->addValidator('NotEmpty', false, ['messages' => 'Please fill the field.']);
 $businessdomain_id->addValidator(new Zend_Validate_Db_NoRecordExists(
     [
-        'table'=>'main_companyengage',
+        'table'=>'map_company_businessdomain',
         'field'=>'businessdomain_id'
 
     ]
@@ -27,7 +27,7 @@ $businessdomain_id2->setRequired(true);
 $businessdomain_id2->addValidator('NotEmpty', false, ['messages' => 'Please fill the field.']);
 $businessdomain_id2->addValidator(new Zend_Validate_Db_NoRecordExists(
     [
-        'table'=>'main_companyengage',
+        'table'=>'map_company_businessdomain',
         'field'=>'businessdomain_id'
 
     ]
