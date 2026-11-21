@@ -38,6 +38,26 @@ The project refactors the legacy architecture for **strict PHP 8.3+ compliance**
 
 ---
 
+## 🔄 Sentrifugo Modern vs. Legacy Sentrifugo (Sapplica)
+
+For years, Sentrifugo was widely recognized as one of the most comprehensive free Human Resource Management suites in the world (as documented across hundreds of reviews on [Capterra](https://www.capterra.com/p/149322/Sentrifugo-Open-Source-HRMS/)). However, when official development was discontinued around 2016, the software became impossible to run on contemporary infrastructure.
+
+**Sentrifugo Modern** directly resolves the primary historical complaints reported by past users:
+
+| Feature / Issue | Legacy Sentrifugo (Sapplica 3.2) | Sentrifugo Modern (2026 Community Edition) |
+| :--- | :--- | :--- |
+| **PHP Runtime** | ❌ Obsolete (Hard-locked to PHP 5.4 – 7.4) | ✅ **Native PHP 8.3+** (Strict types, 0 fatal crashes) |
+| **Linux Support** | ⚠️ Severe case-sensitivity and path errors | ✅ **100% Linux ext4 compliant** (Tested on Ubuntu 24.04) |
+| **Directory Service** | ❌ Broken by modern OpenSSL 3 ciphers | ✅ **Active Directory LDAPS (TLS 1.2)** supported |
+| **Database Updates** | ❌ Manual, brittle SQL scripts | ✅ **Self-Healing Declarative Schema Engine** (Doctrine DBAL 4.5) |
+| **Installation** | ❌ Fragile web installer with known backdoors | ✅ **Git-native, automated cloud & Docker ready** |
+| **Cloud Demo** | ❌ No public demo available | ✅ **24/7 Live Sandbox with SSL** ([Test Live Demo](https://sentrifugo-demo.duckdns.org)) |
+| **Maintenance** | ❌ Abandoned / Stagnant | ✅ **Actively Maintained & Community Supported** |
+
+> 💡 *If your organization historically loved Sentrifugo’s deep feature set on Capterra but had to abandon it due to PHP 7/8 deprecation crashes, **Sentrifugo Modern** is your drop-in open-source resurrection.*
+
+---
+
 ## 👥 Module Status Overview
 
 | Module | Status | Modernization Scope |
