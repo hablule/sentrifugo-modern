@@ -1,4 +1,5 @@
 <?php
+
 /********************************************************************************* 
  *  This file is part of Sentrifugo.
  *  Copyright (C) 2014 Sapplica
@@ -21,12 +22,12 @@
 
 class Default_Model_Organisationinfo extends Zend_Db_Table_Abstract
 {
-    protected $_name = 'main_company';
-    protected $_primary = 'company_id';
-	
+	protected $_name = 'main_company';
+	protected $_primary = 'company_id';
+
 	public function getOrganisationData($id)
 	{
-		$row = $this->fetchRow("company_id = '".$id."' AND isactive ='Y'");
+		$row = $this->fetchRow("company_id = '" . $id . "' AND isactive ='Y'");
 		if (!$row) {
 			throw new Exception("Could not find row $id");
 		}
@@ -36,17 +37,17 @@ class Default_Model_Organisationinfo extends Zend_Db_Table_Abstract
 	public function getdomainbyorgid($id)
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();
-		$query = "select * from map_company_businessdomain where  company_id = ".$id." ";
+		$query = "select * from map_company_businessdomain where  company_id = " . $id . " ";
 		$result = $db->query($query)->fetchAll();
-	    return $result;
+		return $result;
 	}
-	
+
 	public function getOrganisationDetails($id)
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();
-		$query = "select * from main_company where  company_id = '".$id."' and isactive='Y' ";
+		$query = "select * from main_company where  company_id = '" . $id . "' and isactive='Y' ";
 		$result = $db->query($query)->fetchAll();
-	    return $result;
+		return $result;
 	}
 
 	public function getdomains()
@@ -61,73 +62,77 @@ class Default_Model_Organisationinfo extends Zend_Db_Table_Abstract
 	public function getclocation()
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();
-		$query = "select c.address1,c.address2,c.address3,c.address4,e.country_name,d.city_name,f.state_name  from main_company as a inner join main_address as b on a.company_id = b.company_id inner join main_location as c on c.location_id=b.location_id inner join tbl_cities d on d.id=c.city_id inner join tbl_countries e on e.id = c.country_id inner join tbl_states f on f.id = c.region_id";
+		$query = "select b.address_line_1 address1, b.address_line_2 address2, b.address_line_3 address3, b.address_line_3 address4,
+						e.name country_name, d.name city_name, f.name state_name  
+					from main_company as a
+						inner join map_address_owner o on a.id = o.owner_id and o.owner_type = 'Company'
+						inner join main_address as b on o.address_id = b.id 
+						left join main_city d on d.id = b.city_id  
+						left join main_country e on e.id = b.country_id 
+						left join main_state f on f.id = b.state_id";
 		$result = $db->query($query)->fetchAll();
 		//die($result);
 		return $result;
 	}
-	
+
 	public function getOrganisationInfo()
 	{
-	   $select = $this->select()
-						->setIntegrityCheck(false)
-						->from(['s'=>'main_company'],['s.company_id as id','s.code as code','s.website as website','s.org_start_date as org_start_date','s.name as organisationname','s.domain as domain','s.org_image as org_image','s.description as orgdescription'])
-					    ->where('s.isactive = "Y"');
-						//die($select);
+		$select = $this->select()
+			->setIntegrityCheck(false)
+			->from(['s' => 'main_company'], ['s.company_id as id', 's.code as code', 's.website as website', 's.org_start_date as org_start_date', 's.name as organisationname', 's.domain as domain', 's.org_image as org_image', 's.description as orgdescription'])
+			->where('s.isactive = "Y"');
+		//die($select);
 		return $this->fetchAll($select)->toArray();
-	
 	}
 	public function getBusinessdomain()
 	{
-	   $select = $this->select()
-						->setIntegrityCheck(false)
-						->from(['s'=>'main_businessdomain'],['s.businessdomain_id as id','s.name as name'])
-					    ->where('s.isactive = "Y"');
+		$select = $this->select()
+			->setIntegrityCheck(false)
+			->from(['s' => 'main_businessdomain'], ['s.businessdomain_id as id', 's.name as name'])
+			->where('s.isactive = "Y"');
 		return $this->fetchAll($select)->toArray();
-	
 	}
 	public function SaveorUpdateData($data, $where)
 	{
-		
-     
-		
-		if($where != ''){
+
+
+
+		if ($where != '') {
 			//$this->update($data, $where);
-			$this->update($data,$where);
+			$this->update($data, $where);
 			return 'update';
 		} else {
 			$this->insert($data);
 			//$this->insert($data);
-			$id=$this->getAdapter()->lastInsertId('main_company');
+			$id = $this->getAdapter()->lastInsertId('main_company');
 			return $id;
 		}
 	}
 	public function getorghead_details()
-        {
-            $db = Zend_Db_Table::getDefaultAdapter();
-            $query1 = "select id from main_employees where is_orghead = 1";
-            $result1 = $db->query($query1);
-            $row1 = $result1->fetch();
-            $head_id = $row1['id'];
-            $head_details = [];
-            if($head_id != '')
-            {
-                $query2 = "select userfullname,jobtitle_name from employees_summary where id = ".$head_id;
-                $result2 = $db->query($query2);
-                $row2 = $result2->fetch();
-                $head_details['head_name'] = $row2['userfullname'];
-                $head_details['jobtitle_name'] = $row2['jobtitle_name'];
-            }
-            return $head_details;
-        }
+	{
+		$db = Zend_Db_Table::getDefaultAdapter();
+		$query1 = "select id from main_employees where is_orghead = 1";
+		$result1 = $db->query($query1);
+		$row1 = $result1->fetch();
+		$head_id = $row1['id'];
+		$head_details = [];
+		if ($head_id != '') {
+			$query2 = "select userfullname,jobtitle_name from employees_summary where id = " . $head_id;
+			$result2 = $db->query($query2);
+			$row2 = $result2->fetch();
+			$head_details['head_name'] = $row2['userfullname'];
+			$head_details['jobtitle_name'] = $row2['jobtitle_name'];
+		}
+		return $head_details;
+	}
 	public function getorgrecords()
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();
 		$query = "select o.* from main_company o
 					where o.isactive='Y';";
 		$result = $db->query($query)->fetchAll();
-		
-	    return $result;
+
+		return $result;
 	}
 	public function allemployee()
 	{
@@ -136,137 +141,120 @@ class Default_Model_Organisationinfo extends Zend_Db_Table_Abstract
 		FROM main_employees e
 					where e.isactive=1;";
 		$result = $db->query($query)->fetchAll();
-	    return $result;
+		return $result;
 	}
 	public function getSelecteOrgRecords()
 	{
 		$db = Zend_Db_Table::getDefaultAdapter();
-		$query = "select o.company_id, o.name,o.org_image,o.website,DATE_FORMAT(org_start_date,'".DATEFORMAT_MYSQL."') as startedon from main_company o where o.isactive='Y';";
+		$query = "select o.company_id, o.name,o.org_image,o.website,DATE_FORMAT(org_start_date,'" . DATEFORMAT_MYSQL . "') as startedon from main_company o where o.isactive='Y';";
 		$result = $db->query($query)->fetch();
 
-	    return $result;
+		return $result;
 	}
-	
-	
-	
-	public function validateOrgStartDate($startdate,$con='',$unitid = '')
+
+
+
+	public function validateOrgStartDate($startdate, $con = '', $unitid = '')
 	{
-	 if($con == 'organisationinfo')
-	   {
-	    $startdatedata = $this->select()
-    					   ->setIntegrityCheck(false)	 
-						   ->from(['b' => 'main_businessunits'],['unitid'=>'b.id'])
-                           ->joinLeft(['d'=>'main_departments'], 'b.id=d.unitid',['deptid'=>'d.id'])							   						   
-						   ->where('(b.startdate <= "'.$startdate.'" OR d.startdate <= "'.$startdate.'") AND b.startdate !="0000-00-00" 
+		if ($con == 'organisationinfo') {
+			$startdatedata = $this->select()
+				->setIntegrityCheck(false)
+				->from(['b' => 'main_businessunits'], ['unitid' => 'b.id'])
+				->joinLeft(['d' => 'main_departments'], 'b.id=d.unitid', ['deptid' => 'd.id'])
+				->where('(b.startdate <= "' . $startdate . '" OR d.startdate <= "' . $startdate . '") AND b.startdate !="0000-00-00" 
 						             AND d.startdate !="0000-00-00" AND b.isactive = 1 AND d.isactive = 1');
-		
-		$result = $this->fetchAll($startdatedata)->toArray();
-		return $result;	
-	   }
-      else if($con == 'businessunit')
-       {
-	    $db = Zend_Db_Table::getDefaultAdapter();
-		$query = "";
-		if($unitid !='')
-		{
-			$query .= "SELECT  d.id AS deptid  FROM main_departments AS d WHERE d.startdate <= '".$startdate."' AND d.isactive = 1 AND d.startdate !='0000-00-00' AND d.unitid = ".$unitid." UNION ";
-		}      
-		$query .= "SELECT o.id FROM main_organisationinfo AS o
-                  where o.org_startdate >= '".$startdate."'  AND o.isactive = 1 AND o.org_startdate !='0000-00-00'";
-		
-		
-		$result = $db->query($query)->fetch();
-        return $result;		
-       }
-       else if($con == 'departments' || $con == 'deptunit')
-       {
-	    $db = Zend_Db_Table::getDefaultAdapter();
-		$query = "";
-		if($unitid !='')
-		{
-			$query .= "SELECT  b.id AS unitid  FROM main_businessunits AS b WHERE b.startdate >= '".$startdate."' AND b.isactive = 1 AND b.id = ".$unitid." AND b.startdate !='0000-00-00' UNION ";
+
+			$result = $this->fetchAll($startdatedata)->toArray();
+			return $result;
+		} else if ($con == 'businessunit') {
+			$db = Zend_Db_Table::getDefaultAdapter();
+			$query = "";
+			if ($unitid != '') {
+				$query .= "SELECT  d.id AS deptid  FROM main_departments AS d WHERE d.startdate <= '" . $startdate . "' AND d.isactive = 1 AND d.startdate !='0000-00-00' AND d.unitid = " . $unitid . " UNION ";
+			}
+			$query .= "SELECT o.id FROM main_organisationinfo AS o
+                  where o.org_startdate >= '" . $startdate . "'  AND o.isactive = 1 AND o.org_startdate !='0000-00-00'";
+
+
+			$result = $db->query($query)->fetch();
+			return $result;
+		} else if ($con == 'departments' || $con == 'deptunit') {
+			$db = Zend_Db_Table::getDefaultAdapter();
+			$query = "";
+			if ($unitid != '') {
+				$query .= "SELECT  b.id AS unitid  FROM main_businessunits AS b WHERE b.startdate >= '" . $startdate . "' AND b.isactive = 1 AND b.id = " . $unitid . " AND b.startdate !='0000-00-00' UNION ";
+			}
+			$query .= "SELECT o.id FROM main_organisationinfo AS o
+                  where o.org_startdate >= '" . $startdate . "'  AND o.isactive = 1 AND o.org_startdate !='0000-00-00'";
+
+			$result = $db->query($query)->fetch();
+			return $result;
 		}
-		$query .= "SELECT o.id FROM main_organisationinfo AS o
-                  where o.org_startdate >= '".$startdate."'  AND o.isactive = 1 AND o.org_startdate !='0000-00-00'";
-		
-		$result = $db->query($query)->fetch();
-        return $result;		
-       }	   
-	
 	}
-	
-	public function validateEmployeeJoiningDate($startdate,$unitid = '',$deptid='')
+
+	public function validateEmployeeJoiningDate($startdate, $unitid = '', $deptid = '')
 	{
-	 
-	    $db = Zend_Db_Table::getDefaultAdapter();
+
+		$db = Zend_Db_Table::getDefaultAdapter();
 		$query = "";
-		if($unitid !='')
-		{
+		if ($unitid != '') {
 			$query .= "SELECT  b.id AS unitid  
 						FROM main_businessunits AS b 
-						WHERE b.startdate >= '".$startdate."' AND b.isactive = 1 AND b.id = ".$unitid." UNION "; //  AND b.startdate !='0000-00-00'
+						WHERE b.startdate >= '" . $startdate . "' AND b.isactive = 1 AND b.id = " . $unitid . " UNION "; //  AND b.startdate !='0000-00-00'
 		}
-		if($deptid !='')
-		{
+		if ($deptid != '') {
 			$query .= "SELECT  d.id AS deptid  
 						FROM main_departments AS d 
-						WHERE d.startdate >= '".$startdate."' AND d.isactive = 1 AND d.id = ".$deptid." UNION "; // AND d.startdate !='0000-00-00' 
-		}  
-		
+						WHERE d.startdate >= '" . $startdate . "' AND d.isactive = 1 AND d.id = " . $deptid . " UNION "; // AND d.startdate !='0000-00-00' 
+		}
+
 		$query .= "SELECT o.id 
 					FROM main_organisationinfo AS o
-                  	WHERE o.org_startdate >= '".$startdate."'  AND o.isactive = 1 "; // AND o.org_startdate !='0000-00-00'";
-				  
-		
+                  	WHERE o.org_startdate >= '" . $startdate . "'  AND o.isactive = 1 "; // AND o.org_startdate !='0000-00-00'";
+
+
 		$result = $db->query($query)->fetch();
-        return $result;		
-   
-	
+		return $result;
 	}
-	
+
 	public function getOrgLogo()
 	{
-	    $db = Zend_Db_Table::getDefaultAdapter();
-	    $query = "SELECT o.org_image FROM main_organisationinfo AS o
+		$db = Zend_Db_Table::getDefaultAdapter();
+		$query = "SELECT o.org_image FROM main_organisationinfo AS o
                   where  o.isactive = 1";
-	  
+
 		$result = $db->query($query)->fetch();
-        return $result;		
+		return $result;
 	}
-	
-	public function changeOrgHead($oldhead, $newhead,$oldheadRM = '')
+
+	public function changeOrgHead($oldhead, $newhead, $oldheadRM = '')
 	{
 		$auth = Zend_Auth::getInstance();
-		if($auth->hasIdentity()){
+		if ($auth->hasIdentity()) {
 			$loginUserId = $auth->getStorage()->read()->id;
 		}
-		$db = Zend_Db_Table::getDefaultAdapter();	
-		
+		$db = Zend_Db_Table::getDefaultAdapter();
+
 		$empmodel = new Default_Model_Employee();
 		$oldRMData = $empmodel->getsingleEmployeeData($oldhead);
-		try
-		{			
-			$empQuery1 = "UPDATE main_employees SET reporting_manager = ".$newhead.", modifieddate = '".gmdate("Y-m-d H:i:s")."', modifiedby = ".$loginUserId." WHERE reporting_manager=".$oldhead." and isactive = 1 AND user_id <> ".$newhead.";";
-				
-			
-				
-			if($oldheadRM != '')	
-			{
-				$orgQuery1 = "UPDATE main_employees SET is_orghead = 0, reporting_manager= ".$oldheadRM.", modifieddate = '".gmdate("Y-m-d H:i:s")."', modifiedby = ".$loginUserId." WHERE user_id=".$oldhead." ;";				
+		try {
+			$empQuery1 = "UPDATE main_employees SET reporting_manager = " . $newhead . ", modifieddate = '" . gmdate("Y-m-d H:i:s") . "', modifiedby = " . $loginUserId . " WHERE reporting_manager=" . $oldhead . " and isactive = 1 AND user_id <> " . $newhead . ";";
+
+
+
+			if ($oldheadRM != '') {
+				$orgQuery1 = "UPDATE main_employees SET is_orghead = 0, reporting_manager= " . $oldheadRM . ", modifieddate = '" . gmdate("Y-m-d H:i:s") . "', modifiedby = " . $loginUserId . " WHERE user_id=" . $oldhead . " ;";
 				$db->query($orgQuery1);
 			}
-			
-			$orgQuery2 = "UPDATE main_employees SET is_orghead = 1,reporting_manager= 0, modifieddate = '".gmdate("Y-m-d H:i:s")."', modifiedby = ".$loginUserId." WHERE user_id=".$newhead." ;";		
-			
+
+			$orgQuery2 = "UPDATE main_employees SET is_orghead = 1,reporting_manager= 0, modifieddate = '" . gmdate("Y-m-d H:i:s") . "', modifiedby = " . $loginUserId . " WHERE user_id=" . $newhead . " ;";
+
 			$db->query($orgQuery2);
-				
+
 			$db->query($empQuery1);
 			return 'success';
-		}
-		catch(Exception $e)
-		{			
+		} catch (Exception $e) {
 			return 'failed';
-			
 		}
 	}
 }
