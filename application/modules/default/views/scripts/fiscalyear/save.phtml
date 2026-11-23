@@ -224,14 +224,37 @@
 
                             <!-- Generation Tools -->
                             <div class="row no-margin" style="background:#fcfcfc; padding:15px; border:1px solid #eee; border-radius: 4px;">
-                                <div class="new-form-ui clearb" style="width: 40%;">
-                                    <div class="division">
-                                        <?php echo $this->form->period_generation; ?>
+
+                                <!-- Auto Generation Tools Toolbar -->
+                                <div class="row no-margin" style="background:#fcfcfc; padding:15px; border:1px solid #eee; border-radius: 4px; margin-bottom: 15px;">
+                                    <div style="font-weight: bold; color: #26a69a; font-size: 13px; margin-bottom: 10px;">
+                                        Auto-Generate Standard Periods
                                     </div>
-                                </div>
-                                <div style="float:center; margin-top: 5px; margin-left: 15px;">
-                                    <button type="button" class="actbtn_btn" onclick="generatePeriods();" 
-                                        style="background-color: #208bbd; 
+
+                                    <div style="display: flex; flex-wrap: wrap; gap: 15px; align-items: flex-end;">
+                                        <!-- 1. Calculation Base -->
+                                        <div style="flex: 1 1 200px;">
+                                            <label style="font-size: 11px; font-weight: bold; color: #666; display: block; margin-bottom: 4px;">Calculation Base</label>
+                                            <select id="gen_calculation_base" class="browser-default" style="border: 1px solid #ccc; padding: 6px; width: 100%; border-radius: 3px;">
+                                                <option value="12_MONTHLY">12 Monthly Periods</option>
+                                                <option value="4_QUARTERLY">4 Quarterly Periods (Q1 - Q4)</option>
+                                                <option value="2_SEMI_ANNUAL">2 Semi-Annual Periods (H1 - H2)</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- 2. Date Boundary Alignment -->
+                                        <div style="flex: 1 1 220px;">
+                                            <label style="font-size: 11px; font-weight: bold; color: #666; display: block; margin-bottom: 4px;">Date Alignment</label>
+                                            <select id="gen_alignment_mode" class="browser-default" style="border: 1px solid #ccc; padding: 6px; width: 100%; border-radius: 3px;">
+                                                <option value="CALENDAR_END">Calendar Month-End (e.g., Jan 31, Feb 28)</option>
+                                                <option value="EXACT_INTERVAL">Exact Day Interval (e.g., 8th to 7th)</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- 3. Trigger Button -->
+                                        <div style="flex-shrink: 0;">
+                                            <button type="button" class="actbtn_btn" onclick="generatePeriods();"
+                                                style="background-color: #208bbd; 
                                                 border: 1px solid #208bbd; 
                                                 height: 52px;
                                                 font-family: 'Roboto Regular', sans-serif; color: #ffffff;
@@ -239,7 +262,9 @@
                                                 font-weight: bold; 
                                                 border-radius: 4px; 
                                                 box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                                            <i class="fa fa-cogs"></i> Generate Periods</button>
+                                                <i class="fa fa-cogs"></i> Generate Periods</button>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div style="clear:both; margin-bottom: 15px; border-bottom: 1px dashed #ccc;"></div>
@@ -568,11 +593,140 @@
     }
 
     // ==============================================================
-    // AUTO-GENERATOR ENGINE (Client-Side)
+    // AUTO-GENERATOR ENGINE (Client-Side, Multi-Strategy)
     // ==============================================================
     function generatePeriods() {
+        var baseMode = $('#gen_calculation_base').val();
+        var alignmentMode = $('#gen_alignment_mode').val();
+        var startStr = $('#start_date').val();
+        var endStr = $('#end_date').val();
+
+        if (!startStr || !endStr) {
+            alert("Please specify the Fiscal Year Start Date and End Date first.");
+            return;
+        }
+
+        // 1. Parse Dates safely using Sentrifugo's native jQuery UI format (prevents dd/mm/yy bugs)
+        var dateFormat = '<?php echo DATEFORMAT_JS; ?>';
+        var startDate, endDate;
+        try {
+            startDate = $.datepicker.parseDate(dateFormat, startStr);
+            endDate = $.datepicker.parseDate(dateFormat, endStr);
+        } catch (e) {
+            alert("Invalid date format. Please check your Start and End dates.");
+            return;
+        }
+
+        if (startDate > endDate) {
+            alert("Start Date must be before End Date.");
+            return;
+        }
+
+        // 2. Safe Replacement: Handle existing saved records without duplicating
+        var hasSavedRecords = arrPeriods.some(function(p) {
+            return p.id > 0 && p.action !== 'delete';
+        });
+        if (hasSavedRecords) {
+            if (!confirm("Warning: Re-generating will replace your existing saved periods. (Any periods locked by Payroll will block saving). Proceed?")) {
+                return;
+            }
+        }
+
+        // Mark all existing saved periods as 'delete', discard unsaved staged records
+        var cleanArr = [];
+        $.each(arrPeriods, function(i, p) {
+            if (p.id > 0) {
+                p.action = 'delete';
+                cleanArr.push(p);
+            }
+        });
+        arrPeriods = cleanArr;
+
+        // 3. Define Step Increments based on Calculation Base
+        var stepMonths = 1;
+        var prefix = "Period ";
+        if (baseMode === '4_QUARTERLY') {
+            stepMonths = 3;
+            prefix = "Quarter ";
+        } else if (baseMode === '2_SEMI_ANNUAL') {
+            stepMonths = 6;
+            prefix = "Half-Year ";
+        }
+
+        // 4. Mathematical Generation Loop
+        var currStart = new Date(startDate.getTime());
+        var seq = 1;
+
+        while (currStart <= endDate) {
+            var currEnd;
+
+            if (alignmentMode === 'CALENDAR_END') {
+                // Find the calendar end of the period block
+                // e.g. for Monthly, last day of this month; for Quarterly, last day of +2 months
+                currEnd = new Date(currStart.getFullYear(), currStart.getMonth() + stepMonths, 0);
+            } else {
+                // Exact Day Interval: add stepMonths and subtract 1 day (e.g. July 8 -> August 7)
+                currEnd = new Date(currStart.getFullYear(), currStart.getMonth() + stepMonths, currStart.getDate() - 1);
+            }
+
+            // Cap to the Fiscal Year's actual End Date
+            if (currEnd > endDate) {
+                currEnd = new Date(endDate.getTime());
+            }
+
+            // Generate label
+            var periodName = "";
+            if (baseMode === '4_QUARTERLY') {
+                periodName = "Q" + seq + " (" + currStart.toLocaleString('default', {
+                    month: 'short'
+                }) + " - " + currEnd.toLocaleString('default', {
+                    month: 'short'
+                }) + " " + currEnd.getFullYear() + ")";
+            } else if (baseMode === '2_SEMI_ANNUAL') {
+                periodName = "H" + seq + " (" + currStart.toLocaleString('default', {
+                    month: 'short'
+                }) + " - " + currEnd.toLocaleString('default', {
+                    month: 'short'
+                }) + " " + currEnd.getFullYear() + ")";
+            } else {
+                periodName = "Period " + seq + ": " + currStart.toLocaleString('default', {
+                    month: 'short'
+                }) + " " + currStart.getFullYear();
+            }
+
+            // Format dates using Sentrifugo's exact DATEFORMAT_JS
+            var sFormatted = $.datepicker.formatDate(dateFormat, currStart);
+            var eFormatted = $.datepicker.formatDate(dateFormat, currEnd);
+
+            arrPeriods.push({
+                id: 0, // 0 = new staged record
+                sequence: seq,
+                name: periodName,
+                start_date: sFormatted,
+                end_date: eFormatted,
+                isactive: 1,
+                action: 'new'
+            });
+
+            // Move start to next day after current end
+            currStart = new Date(currEnd.getTime());
+            currStart.setDate(currStart.getDate() + 1);
+            seq++;
+        }
+
+        // 5. Refresh UI Grid
+        renderPeriods();
+    }
+
+    // ==============================================================
+    // AUTO-GENERATOR ENGINE (Client-Side)
+    // ==============================================================
+    function generatePeriods_D() {
         var strategy = $('#period_generation').val();
-        if (strategy === 'Manual') return;
+        if (strategy === 'Manual') {
+            alert("Manual strategy selected. Use the manual entry fields below to add periods.");
+            return
+        };
 
         var startStr = $('#start_date').val();
         var endStr = $('#end_date').val();
