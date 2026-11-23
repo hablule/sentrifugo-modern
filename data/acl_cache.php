@@ -1,7 +1,7 @@
 <?php
 /**
  * Auto-generated ACL Cache File
- * Generated on: 2026-11-01 00:02:17 GMT
+ * Generated on: 2026-11-23 12:51:55 GMT
  * DO NOT EDIT MANUALLY. Run Scanner and Save Mappings to regenerate.
  */
 return array (
@@ -487,17 +487,6 @@ return array (
         'saveaction' => true,
         'viewaction' => true,
       ),
-      'distributionlist' => 
-      array (
-        'addaction' => true,
-        'addpopupaction' => true,
-        'deleteaction' => true,
-        'editaction' => true,
-        'indexaction' => true,
-        'makeactiveinactiveaction' => true,
-        'saveaction' => true,
-        'viewaction' => true,
-      ),
       'division' => 
       array (
         'addaction' => true,
@@ -720,19 +709,6 @@ return array (
         'addpopupaction' => true,
         'deleteaction' => true,
         'editaction' => true,
-        'indexaction' => true,
-        'makeactiveinactiveaction' => true,
-        'saveaction' => true,
-        'viewaction' => true,
-      ),
-      'geographygroupmap' => 
-      array (
-        'addaction' => true,
-        'deleteaction' => true,
-        'editaction' => true,
-        'getcitiesaction' => true,
-        'getpostalcodesaction' => true,
-        'getstatesaction' => true,
         'indexaction' => true,
         'makeactiveinactiveaction' => true,
         'saveaction' => true,
@@ -1291,6 +1267,7 @@ return array (
         'editaction' => true,
         'indexaction' => true,
         'saveaction' => true,
+        'syncaction' => true,
         'viewaction' => true,
       ),
       'pendingleaves' => 
@@ -2563,17 +2540,6 @@ return array (
         'viewaction' => true,
       ),
       'disciplineviolation' => 
-      array (
-        'addaction' => true,
-        'addpopupaction' => true,
-        'deleteaction' => true,
-        'editaction' => true,
-        'indexaction' => true,
-        'makeactiveinactiveaction' => true,
-        'saveaction' => true,
-        'viewaction' => true,
-      ),
-      'distributionlist' => 
       array (
         'addaction' => true,
         'addpopupaction' => true,
