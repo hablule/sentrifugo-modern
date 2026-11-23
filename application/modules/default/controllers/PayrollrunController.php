@@ -65,6 +65,7 @@ class Default_PayrollrunController extends Zend_Controller_Action
         $ajaxContext->addActionContext('save', 'json')
             ->addActionContext('delete', 'json')
             ->addActionContext('cancelrun', 'json')
+            ->addActionContext('sync', 'json')
             ->initContext();
     }
 
@@ -332,6 +333,36 @@ class Default_PayrollrunController extends Zend_Controller_Action
         // 5. Deletes existing 'Scheduled' runs for that year/group (isactive=5).
         // 6. Inserts the 12-52 new rows safely.
         // 7. Commits.
+    }
+
+    /**
+     * AJAX Action: Triggers the Generator Engine manually and returns the Metric Summary.
+     */
+    public function syncAction()
+    {
+        $request = $this->getRequest();
+        if (!$request->isPost()) {
+            return $this->_helper->json(array('status' => 'error', 'message' => 'Invalid request.'));
+        }
+
+        try {
+            $payGroupId = (int) $request->getParam('pay_group_id', 0);
+            $startDate  = sapp_Global::change_date($request->getParam('start_date'), 'database');
+            $endDate    = sapp_Global::change_date($request->getParam('end_date'), 'database');
+            $isDryRun   = (bool) $request->getParam('is_dry_run', false);
+
+            if (empty($payGroupId) || empty($startDate) || empty($endDate)) {
+                throw new Exception("Please select a Pay Group and define valid start and end dates.");
+            }
+
+            require_once APPLICATION_PATH . '/../library/Sentrifugo/Service/PayrollRunEngine.php';
+            $engine = new Sentrifugo_Service_PayrollRunEngine();
+            $metrics = $engine->generateManual($payGroupId, $startDate, $endDate, $this->_loginUserId, $isDryRun);
+
+            $this->_helper->json(array('status' => 'success', 'metrics' => $metrics));
+        } catch (\Throwable $e) {
+            $this->_helper->json(array('status' => 'error', 'message' => $e->getMessage()));
+        }
     }
 
     private function _prepareForm($id = null, $readonly = false)

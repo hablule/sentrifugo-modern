@@ -6,6 +6,147 @@
  * Complies with SSOT v6.7.7.
  */
 ?>
+
+<?php if ($this->call !== 'ajaxcall') : ?>
+    <div style="display: flex; justify-content: flex-end; margin-bottom: 15px;">
+        <button type="button" class="actbtn_btn" onclick="$('#modal_sync_calendar').dialog('open');">
+            <i class="fa fa-refresh"></i> Sync / Fill Calendar Gaps
+        </button>
+    </div>
+
+    <!-- Sync Modal Form -->
+    <div id="modal_sync_calendar" style="display:none; padding:15px;">
+        <form id="frm_sync_engine">
+            <div style="margin-bottom:12px;">
+                <label style="font-weight:bold; font-size:12px; display:block;">Target Pay Group *</label>
+                <select id="sync_pay_group_id" style="width:100%; height:32px;">
+                    <option value="">Select Pay Group...</option>
+                    <?php
+                    $pgModel = new Default_Model_Paygroup();
+                    foreach ($pgModel->getPairs(true) as $id => $name) {
+                        echo "<option value='{$id}'>{$this->escape($name)}</option>";
+                    }
+                    ?>
+                </select>
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label style="font-weight:bold; font-size:12px; display:block;">Start Date *</label>
+                <input type="text" id="sync_start_date" class="datepicker" placeholder="YYYY-MM-DD" style="width:100%; height:30px;" />
+            </div>
+
+            <div style="margin-bottom:15px;">
+                <label style="font-weight:bold; font-size:12px; display:block;">End Date *</label>
+                <input type="text" id="sync_end_date" class="datepicker" placeholder="YYYY-MM-DD" style="width:100%; height:30px;" />
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button type="button" class="reset" onclick="$('#modal_sync_calendar').dialog('close');">Cancel</button>
+                <button type="button" class="actbtn_btn" onclick="executeSync();">Execute Sync</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Metric Return Results Modal -->
+    <div id="modal_metric_results" style="display:none; padding:15px;">
+        <h5 style="color:#26a69a; border-bottom:1px solid #ddd; padding-bottom:5px; margin-top:0;">Sync Execution Metrics</h5>
+        <div style="display:flex; justify-content:space-around; text-align:center; margin:15px 0;">
+            <div style="background:#e8f5e9; padding:10px; border-radius:4px; flex:1; margin:0 5px;">
+                <h4 style="margin:0; color:#2e7d32;" id="metric_created">0</h4>
+                <span style="font-size:11px; color:#555;">Gaps Filled</span>
+            </div>
+            <div style="background:#fff3e0; padding:10px; border-radius:4px; flex:1; margin:0 5px;">
+                <h4 style="margin:0; color:#e67e22;" id="metric_updated">0</h4>
+                <span style="font-size:11px; color:#555;">Adjusted</span>
+            </div>
+            <div style="background:#f5f5f5; padding:10px; border-radius:4px; flex:1; margin:0 5px;">
+                <h4 style="margin:0; color:#7f8c8d;" id="metric_untouched">0</h4>
+                <span style="font-size:11px; color:#555;">Untouched</span>
+            </div>
+            <div style="background:#ffebee; padding:10px; border-radius:4px; flex:1; margin:0 5px;">
+                <h4 style="margin:0; color:#c0392b;" id="metric_locked">0</h4>
+                <span style="font-size:11px; color:#555;">Protected</span>
+            </div>
+        </div>
+        <div id="metric_log_details" style="max-height:120px; overflow-y:auto; font-size:11px; color:#666; background:#fafafa; border:1px solid #eee; padding:8px;"></div>
+        <div style="text-align:right; margin-top:15px;">
+            <button type="button" class="actbtn_btn" onclick="window.location.reload();">Done & Refresh Grid</button>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#modal_sync_calendar').dialog({
+                autoOpen: false,
+                width: 400,
+                modal: true,
+                title: "Sync Payroll Calendar"
+            });
+            $('#modal_metric_results').dialog({
+                autoOpen: false,
+                width: 500,
+                modal: true,
+                title: "Execution Summary"
+            });
+            $('.datepicker').datepicker({
+                dateFormat: '<?php echo DATEFORMAT_JS; ?>',
+                changeMonth: true,
+                changeYear: true
+            });
+        });
+
+        function executeSync() {
+            var pgId = $('#sync_pay_group_id').val();
+            var start = $('#sync_start_date').val();
+            var end = $('#sync_end_date').val();
+
+            if (!pgId || !start || !end) {
+                alert("Please fill all required fields.");
+                return;
+            }
+
+            if (typeof $.blockUI === "function") $.blockUI({
+                message: 'Synchronizing Calendar...'
+            });
+
+            $.ajax({
+                url: base_url + '/payrollrun/sync/format/json',
+                type: 'POST',
+                data: {
+                    pay_group_id: pgId,
+                    start_date: start,
+                    end_date: end
+                },
+                dataType: 'json',
+                success: function(res) {
+                    if (typeof $.unblockUI === "function") $.unblockUI();
+                    if (res.status === 'success') {
+                        $('#modal_sync_calendar').dialog('close');
+                        $('#metric_created').text(res.metrics.created);
+                        $('#metric_updated').text(res.metrics.updated);
+                        $('#metric_untouched').text(res.metrics.untouched);
+                        $('#metric_locked').text(res.metrics.locked);
+
+                        var logHtml = '';
+                        $.each(res.metrics.details, function(i, msg) {
+                            logHtml += '<div>• ' + msg + '</div>';
+                        });
+                        $('#metric_log_details').html(logHtml || 'No changes required. All dates aligned.');
+
+                        $('#modal_metric_results').dialog('open');
+                    } else {
+                        alert(res.message || "Error running sync.");
+                    }
+                },
+                error: function() {
+                    if (typeof $.unblockUI === "function") $.unblockUI();
+                    alert("Server error occurred during sync.");
+                }
+            });
+        }
+    </script>
+<?php endif; ?>
+
 <div id="message_container">
     <?php if (isset($this->messages) && !empty($this->messages)) : ?>
         <div id="dispmsg" class="settingssuccess">

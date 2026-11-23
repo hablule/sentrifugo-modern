@@ -21,7 +21,7 @@ class Default_Model_Paygroup extends Zend_Db_Table_Abstract
 
     protected $_name = 'main_pay_group';
     protected $_primary = 'id';
-    
+
     /* =================================================================================
      * GROUP 2: DATA DISPLAY & RETRIEVAL
      * ================================================================================= */
@@ -160,6 +160,45 @@ class Default_Model_Paygroup extends Zend_Db_Table_Abstract
 
         $row = $this->fetchRow($select);
         return $row ? $row->toArray() : null;
+    }
+
+    /**
+     * Fetches a Pay Group joined with its Pay Frequency and Child Calendar Anchors.
+     * 
+     * @param int $payGroupId
+     * @return array|null
+     */
+    public function getGroupWithCadence(int $payGroupId): ?array
+    {
+        $select = $this->select()
+            ->setIntegrityCheck(false)
+            ->from(array('pg' => $this->_name))
+            ->joinInner(array('pf' => 'main_payfrequency'), 'pg.payfrequency_id = pf.id', array(
+                'frequency_code'        => 'pf.code',
+                'frequency_type'        => 'pf.frequency_type',
+                'interval_count'        => 'pf.interval_count',
+                'interval_unit'         => 'pf.interval_unit',
+                'weekly_anchor_day'     => 'pf.weekly_anchor_day',
+                'monthly_anchor_day'    => 'pf.monthly_anchor_day',
+                'global_reference_date' => 'pf.global_reference_date',
+                'missing_date_policy'   => 'pf.missing_date_policy'
+            ))
+            ->where('pg.id = ?', $payGroupId)
+            ->where('pg.isactive = ?', 1)
+            ->where('pf.isactive = ?', 1);
+
+        $row = $this->fetchRow($select);
+        if (!$row) return null;
+
+        $data = $row->toArray();
+
+        // Attach child anchors if CALENDAR_BASED
+        $freqModel = new Default_Model_Payfrequency();
+        $data['anchors'] = ($data['frequency_type'] === 'CALENDAR_BASED')
+            ? $freqModel->getAnchorsByFrequencyId((int)$data['payfrequency_id'])
+            : array();
+
+        return $data;
     }
 
     /* =================================================================================

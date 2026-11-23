@@ -201,6 +201,15 @@ class Default_PaygroupController extends Zend_Controller_Action
 
                 $db->commit();
 
+                try {
+                    require_once APPLICATION_PATH . '/../library/Sentrifugo/Service/PayrollRunEngine.php';
+                    $engine = new Sentrifugo_Service_PayrollRunEngine();
+                    $currentYear = date('Y');
+                    $engine->generateForPayGroup($savedId, "{$currentYear}-01-01", "{$currentYear}-12-31", $this->_loginUserId, false);
+                } catch (\Throwable $engineError) {
+                    error_log("Auto-Sync Engine Notice: " . $engineError->getMessage());
+                }
+
                 $this->_helper->flashMessenger->addMessage(['success' => "Pay Group {$saveMode} successfully."]);
                 $this->_helper->json(['result' => 'saved', 'nomessage' => 'yes']);
             } catch (\Throwable $e) {

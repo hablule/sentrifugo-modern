@@ -174,4 +174,161 @@ class Default_Model_Payrollrun extends Zend_Db_Table_Abstract
 
         return (bool)$db->fetchRow($select);
     }
+
+    /* =================================================================================
+     * GROUP 6: ENGINE CALCULATORS & RECONCILIATION
+     * ================================================================================= */
+
+    /**
+     * Counts how many active runs exist in the given year strictly BEFORE the target start date.
+     * Ensures gap-filled earlier runs receive their true chronological sequence (e.g., 1 for July).
+     *
+     * @param int $payGroupId
+     * @param int $startYear
+     * @param string $beforeStartDate (Y-m-d)
+     * @return int
+     */
+    public function countPriorRunsInYear(int $payGroupId, int $startYear, string $beforeStartDate): int
+    {
+        $db = $this->getAdapter();
+        $select = $db->select()
+            ->from($this->_name, array('cnt' => new Zend_Db_Expr('COUNT(id)')))
+            ->where('pay_group_id = ?', $payGroupId)
+            ->where('YEAR(cycle_start_date) = ?', $startYear)
+            ->where('cycle_start_date < ?', $beforeStartDate)
+            ->where('isactive != ?', 5);
+
+        return (int) $db->fetchOne($select);
+    }
+
+
+    /**
+     * Fetches all existing active runs within a specific date window for diffing.
+     * 
+     * @param int $payGroupId
+     * @param string $startDate (Y-m-d)
+     * @param string $endDate (Y-m-d)
+     * @return array
+     */
+    public function getRunsInWindow(int $payGroupId, string $startDate, string $endDate): array
+    {
+        $select = $this->select()
+            ->where('pay_group_id = ?', $payGroupId)
+            ->where('cycle_start_date <= ?', $endDate)
+            ->where('cycle_end_date >= ?', $startDate)
+            ->where('isactive != ?', 5)
+            ->order('cycle_start_date ASC');
+
+        return $this->fetchAll($select)->toArray();
+    }
+
+
+    /**
+     * Reconciles calculated dates against the database using the Smart Gap-Filling Diff Algorithm.
+     * Implements the "Dry-Run / Metric Return Contract".
+     */
+    public function reconcileAndCommit(int $payGroupId, array $calculatedRuns, int $userId, bool $isDryRun = false): array
+    {
+        $metrics = array(
+            'created'   => 0,
+            'updated'   => 0,
+            'untouched' => 0,
+            'locked'    => 0,
+            'details'   => array()
+        );
+
+        if (empty($calculatedRuns)) {
+            return $metrics;
+        }
+
+        $minDate = $calculatedRuns[0]['cycle_start_date'];
+        $maxDate = end($calculatedRuns)['cycle_end_date'];
+
+        $existingRuns = $this->getRunsInWindow($payGroupId, $minDate, $maxDate);
+
+        $existingMap = array();
+        foreach ($existingRuns as $ex) {
+            $existingMap[$ex['cycle_start_date']] = $ex;
+        }
+
+        $toInsert = array();
+        $toUpdate = array();
+
+        foreach ($calculatedRuns as $calc) {
+            $startDate  = $calc['cycle_start_date'];
+            $endDate    = $calc['cycle_end_date'];
+            $payDate    = $calc['pay_date'];
+            $sequenceNo = (int)$calc['cycle_sequence'];
+
+            if (isset($existingMap[$startDate])) {
+                $current = $existingMap[$startDate];
+
+                // Check 1: Is the run past 'Scheduled'? (Protected Boundary)
+                if ($current['run_status'] !== 'Scheduled') {
+                    $metrics['locked']++;
+                    $metrics['details'][] = "Protected run #{$current['id']} ({$current['run_status']}) covering {$startDate} to {$endDate}.";
+                    continue;
+                }
+
+                // Check 2: Are the dates and sequence completely identical? (Exact Match)
+                if ($current['cycle_end_date'] === $endDate && $current['pay_date'] === $payDate && (int)$current['cycle_sequence'] === $sequenceNo) {
+                    $metrics['untouched']++;
+                    continue;
+                }
+
+                // Check 3: Configuration shifted dates or sequence -> Update existing Scheduled run
+                $toUpdate[] = array(
+                    'id'               => (int) $current['id'],
+                    'cycle_end_date'   => $endDate,
+                    'pay_date'         => $payDate,
+                    'cycle_sequence'   => $sequenceNo,
+                    'modifiedby'       => $userId,
+                    'modifieddate'     => gmdate('Y-m-d H:i:s')
+                );
+                $metrics['updated']++;
+                $metrics['details'][] = "Adjusted Scheduled run #{$current['id']} (Seq #{$sequenceNo}) to end {$endDate}, pay {$payDate}.";
+            } else {
+                // Gap Detected: Prepare Insert with exact mathematical sequence
+                $toInsert[] = array(
+                    'pay_group_id'     => $payGroupId,
+                    'cycle_start_date' => $startDate,
+                    'cycle_end_date'   => $endDate,
+                    'pay_date'         => $payDate,
+                    'cycle_sequence'   => $sequenceNo,
+                    'run_status'       => 'Scheduled',
+                    'isactive'         => 1,
+                    'createdby'        => $userId,
+                    'createddate'      => gmdate('Y-m-d H:i:s')
+                );
+                $metrics['created']++;
+                $metrics['details'][] = "Created new Scheduled run (Seq #{$sequenceNo}) for {$startDate} to {$endDate}.";
+            }
+        }
+
+        if ($isDryRun) {
+            return $metrics;
+        }
+
+        $db = $this->getAdapter();
+        $db->beginTransaction();
+
+        try {
+            foreach ($toUpdate as $upRow) {
+                $runId = $upRow['id'];
+                unset($upRow['id']);
+                $this->update($upRow, array('id = ?' => $runId));
+            }
+
+            foreach ($toInsert as $inRow) {
+                $this->insert($inRow);
+            }
+
+            $db->commit();
+        } catch (\Throwable $e) {
+            $db->rollBack();
+            throw $e;
+        }
+
+        return $metrics;
+    }
 }
