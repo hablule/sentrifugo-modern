@@ -218,11 +218,8 @@ class Default_PaygroupController extends Zend_Controller_Action
                 $this->_helper->json(['result' => 'exception', 'message' => 'System error occurred.', 'msgtype' => 'error']);
             }
         } else {
-            $msgarray = [];
-            foreach ($form->getMessages() as $field => $errors) {
-                $msgarray[$field] = current($errors);
-            }
-            $this->_helper->json($msgarray);
+            // SSOT V.6: Return raw nested Zend Form messages for saveDetails()
+            $this->_helper->json($form->getMessages());
         }
     }
 

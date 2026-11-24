@@ -37,16 +37,29 @@ class Default_Form_Paygroup extends Zend_Form
          * 2. Text Elements (Code & Name)
          * -------------------------------------------------------------- */
 
-        $ssotRegexValidator = [
-            'Regex',
-            true,
-            [
-                'pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9 _\-]*)$/',
-                'messages' => [
-                    Zend_Validate_Regex::NOT_MATCH => 'Entry must contain letters and cannot start with a space or contain special characters.'
-                ]
-            ]
-        ];
+        // Code Regex: Requires at least one letter; allows letters, numbers, underscores (_), and hyphens (-). No spaces.
+		$codeRegexValidator = array(
+			'Regex',
+			true,
+			array(
+				'pattern'  => '/^(?=.*[a-zA-Z])[a-zA-Z0-9_\-]+$/',
+				'messages' => array(
+					Zend_Validate_Regex::NOT_MATCH => 'Code must contain letters and may only use numbers, underscores (_), or hyphens (-).'
+				)
+			)
+		);
+
+		// Name Regex: Requires at least one letter; cannot start with a space; allows letters, numbers, spaces, and standard punctuation (- _ ( ) & . ,).
+		$nameRegexValidator = array(
+			'Regex',
+			true,
+			array(
+				'pattern'  => '/^(?=.*[a-zA-Z])([^ ][a-zA-Z0-9 \-_()&.,]*)$/',
+				'messages' => array(
+					Zend_Validate_Regex::NOT_MATCH => 'Name must contain letters, cannot start with a space, and may only use standard punctuation (- _ ( ) & . ,).'
+				)
+			)
+		);
 
         // Code
         $code = new Zend_Form_Element_Text('code');
@@ -58,7 +71,7 @@ class Default_Form_Paygroup extends Zend_Form
             ->addFilter('StringToUpper')
             ->addValidator('NotEmpty', false, ['messages' => 'Please enter a Pay Group code.'])
             ->addValidator('StringLength', false, ['max' => 60])
-            ->addValidator($ssotRegexValidator[0], $ssotRegexValidator[1], $ssotRegexValidator[2]);
+            ->addValidator($codeRegexValidator[0], $codeRegexValidator[1], $codeRegexValidator[2]);
 
         $codeVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_pay_group',
@@ -77,7 +90,7 @@ class Default_Form_Paygroup extends Zend_Form
             ->addFilter('StripTags')
             ->addValidator('NotEmpty', false, ['messages' => 'Please enter a Pay Group name.'])
             ->addValidator('StringLength', false, ['max' => 100])
-            ->addValidator($ssotRegexValidator[0], $ssotRegexValidator[1], $ssotRegexValidator[2]);
+            ->addValidator($nameRegexValidator[0], $nameRegexValidator[1], $nameRegexValidator[2]);
 
         $nameVal = new Zend_Validate_Db_NoRecordExists([
             'table'   => 'main_pay_group',

@@ -147,7 +147,8 @@
                             <label><?php echo $this->escape($this->form->global_reference_date->getLabel()); ?></label>
                             <div class="division">
                                 <?php echo $this->form->global_reference_date; ?>
-                                <span style="font-size:11px; color:#888; display:block;">Reference date to align company-wide rolling cycles.</span>
+                                <span style="font-size:11px; color:#888; display:block;">Reference date to align company-wide rolling cycle.</span>
+                                <span class="errors" id="errors-global_reference_date"></span>
                             </div>
                         </div>
                     </div>
@@ -158,6 +159,7 @@
                             <label><?php echo $this->escape($this->form->missing_date_policy->getLabel()); ?></label>
                             <div class="division">
                                 <?php echo $this->form->missing_date_policy; ?>
+                                <span class="errors" id="errors-missing_date_policy"></span>
                             </div>
                         </div>
 
@@ -171,7 +173,8 @@
                                     <button type="button" class="actbtn_btn" onclick="addAnchorDay();" style="margin:0; height:34px; line-height:34px;">+ Add Day</button>
                                 </div>
                                 <div id="anchors_container" style="margin-top:10px; min-height:30px;"></div>
-                                <span style="font-size:11px; color:#888;">Day 31 dynamically resolves to End of Month. At least 1 anchor required.</span>
+                                <span style="font-size:11px; color:#888; display:block;">Day 31 dynamically resolves to End of Month. At least 1 anchor required.</span>
+                                <span class="errors" id="errors-calendar_anchors_payload"></span>
                             </div>
                         </div>
                     </div>
@@ -208,7 +211,7 @@
 
     $(document).ready(function() {
         $('#description').jqte();
-        
+
         $('#interval_unit').change(toggleUnitQualifiers);
         toggleUnitQualifiers();
         toggleCadenceFields();
@@ -232,18 +235,73 @@
         if (mode) {
             $('#wrapper_' + mode).fadeIn(150);
         }
+
+        // Dynamic Client-Side Validation Rules
+        if ($('#formid').data('validator')) {
+            if (mode === 'FIXED_INTERVAL') {
+                $('#interval_count').rules('add', {
+                    required: true,
+                    digits: true,
+                    min: 1,
+                    messages: {
+                        required: 'Please enter an interval step count.',
+                        digits: 'Interval count must be a positive whole number.',
+                        min: 'Interval count must be at least 1.'
+                    }
+                });
+                $('#interval_unit').rules('add', {
+                    required: true,
+                    messages: {
+                        required: 'Please select an interval unit.'
+                    }
+                });
+            } else {
+                $('#interval_count').rules('remove');
+                $('#interval_unit').rules('remove');
+                $('#errors-interval_count, #errors-interval_unit').text('');
+            }
+        }
+
         toggleUnitQualifiers();
     }
 
     function toggleUnitQualifiers() {
+        var mode = $('#frequency_type').val();
         var unit = $('#interval_unit').val();
         $('#wrapper_unit_WEEK').hide();
         $('#wrapper_unit_MONTH').hide();
 
-        if (unit === 'WEEK') {
-            $('#wrapper_unit_WEEK').fadeIn(150);
-        } else if (unit === 'MONTH') {
-            $('#wrapper_unit_MONTH').fadeIn(150);
+        if ($('#formid').data('validator')) {
+            $('#weekly_anchor_day').rules('remove');
+            $('#monthly_anchor_day').rules('remove');
+            $('#errors-weekly_anchor_day, #errors-monthly_anchor_day').text('');
+        }
+
+        if (mode === 'FIXED_INTERVAL') {
+            if (unit === 'WEEK') {
+                $('#wrapper_unit_WEEK').fadeIn(150);
+                if ($('#formid').data('validator')) {
+                    $('#weekly_anchor_day').rules('add', {
+                        required: true,
+                        messages: {
+                            required: 'Please select a week start day.'
+                        }
+                    });
+                }
+            } else if (unit === 'MONTH') {
+                $('#wrapper_unit_MONTH').fadeIn(150);
+                if ($('#formid').data('validator')) {
+                    $('#monthly_anchor_day').rules('add', {
+                        required: true,
+                        digits: true,
+                        range: [1, 31],
+                        messages: {
+                            required: 'Please enter a month start day (1-31).',
+                            range: 'Day must be between 1 and 31.'
+                        }
+                    });
+                }
+            }
         }
     }
 

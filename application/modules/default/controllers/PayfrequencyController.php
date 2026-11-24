@@ -191,72 +191,80 @@ class Default_PayfrequencyController extends Zend_Controller_Action
 			return $this->_redirect('payfrequency/index');
 		}
 
-		$id = (int) $request->getParam('id', 0);
+		$id   = (int) $request->getParam('id', 0);
 		$form = $this->_prepareForm($id);
 
+		// Dynamically enforce conditional validators BEFORE $form->isValid()
+		$freqType = trim((string) $request->getParam('frequency_type', 'FIXED_INTERVAL'));
+		$intUnit  = trim((string) $request->getParam('interval_unit', ''));
+
+		if ($freqType === 'FIXED_INTERVAL') {
+			$form->getElement('interval_count')
+				->setRequired(true)
+				->addValidator('NotEmpty', true, array('messages' => 'Please enter an interval step count.'))
+				->addValidator('GreaterThan', true, array('min' => 0, 'messages' => 'Interval count must be greater than 0.'));
+
+			$form->getElement('interval_unit')
+				->setRequired(true)
+				->addValidator('NotEmpty', true, array('messages' => 'Please select an interval unit.'));
+
+			if ($intUnit === 'WEEK') {
+				$form->getElement('weekly_anchor_day')
+					->setRequired(true)
+					->addValidator('NotEmpty', true, array('messages' => 'Please select a week start day.'));
+			} elseif ($intUnit === 'MONTH') {
+				$form->getElement('monthly_anchor_day')
+					->setRequired(true)
+					->addValidator('NotEmpty', true, array('messages' => 'Please enter a month start day (1-31).'));
+			}
+		}
+
 		if ($form->isValid($request->getPost())) {
+
+			// Validate Calendar Anchors in Zend Form error format so saveDetails() renders it inline
+			$anchorsToSync = array();
+			if ($freqType === 'CALENDAR_BASED') {
+				$rawPayload   = $request->getParam('calendar_anchors_payload');
+				$anchorsArray = !empty($rawPayload) ? json_decode($rawPayload, true) : array();
+
+				if (!is_array($anchorsArray) || count($anchorsArray) < 1) {
+					return $this->_helper->json(array(
+						'calendar_anchors_payload' => array('isEmpty' => 'Please add at least one anchor day (1-31).')
+					));
+				}
+				$anchorsToSync = $anchorsArray;
+			}
 
 			$db = Zend_Db_Table::getDefaultAdapter();
 			$db->beginTransaction();
 
 			try {
-				$freqType = trim((string) $request->getParam('frequency_type', 'FIXED_INTERVAL'));
-
-				$data = [
+				$data = array(
 					'code'                  => trim((string) $request->getParam('code', '')),
 					'name'                  => trim((string) $request->getParam('name', '')),
 					'frequency_type'        => $freqType,
 					'interval_count'        => null,
 					'interval_unit'         => null,
-					'weekly_anchor_day'     => null, // Default null
-					'monthly_anchor_day'    => null, // Default null
+					'weekly_anchor_day'     => null,
+					'monthly_anchor_day'    => null,
 					'global_reference_date' => null,
 					'missing_date_policy'   => 'PREVIOUS_VALID_DAY',
 					'description'           => trim((string) $request->getParam('description', '')),
 					'isactive'              => (int) $request->getParam('isactive', 1)
-				];
+				);
 
-				$anchorsToSync = [];
-
-				// Validation Branch 1: FIXED_INTERVAL
 				if ($freqType === 'FIXED_INTERVAL') {
-					$intCount = (int) $request->getParam('interval_count', 0);
-					$intUnit  = trim((string) $request->getParam('interval_unit', ''));
-
-					if ($intCount <= 0 || empty($intUnit)) {
-						throw new Exception("Fixed Interval frequencies require a positive step count and an interval unit.");
-					}
-
-					$data['interval_count']        = $intCount;
+					$data['interval_count']        = (int) $request->getParam('interval_count', 0);
 					$data['interval_unit']         = $intUnit;
 					$data['global_reference_date'] = $request->getParam('global_reference_date');
 
-					// Map the specific qualifier based on unit:
 					if ($intUnit === 'WEEK') {
-						$weekDay = trim((string) $request->getParam('weekly_anchor_day', ''));
-						if (empty($weekDay)) {
-							throw new Exception("Please specify which day of the week the cycle begins.");
-						}
-						$data['weekly_anchor_day'] = $weekDay;
+						$data['weekly_anchor_day'] = trim((string) $request->getParam('weekly_anchor_day', ''));
 					} elseif ($intUnit === 'MONTH') {
-						$monthDay = (int) $request->getParam('monthly_anchor_day', 0);
-						if ($monthDay < 1 || $monthDay > 31) {
-							throw new Exception("Please specify a valid start day of the month (1-31).");
-						}
-						$data['monthly_anchor_day'] = $monthDay;
+						$data['monthly_anchor_day'] = (int) $request->getParam('monthly_anchor_day', 0);
 					}
-				}
-				// Validation Branch 2: CALENDAR_BASED
-				elseif ($freqType === 'CALENDAR_BASED') {
-					$rawPayload = $request->getParam('calendar_anchors_payload');
-					$anchorsArray = !empty($rawPayload) ? json_decode($rawPayload, true) : [];
-
-					if (!is_array($anchorsArray) || count($anchorsArray) < 1) {
-						throw new Exception("Calendar Based frequencies require at least one anchor day (1-31).");
-					}
-
+				} elseif ($freqType === 'CALENDAR_BASED') {
 					$data['missing_date_policy'] = trim((string) $request->getParam('missing_date_policy', 'PREVIOUS_VALID_DAY'));
-					$anchorsToSync = $anchorsArray;
 				}
 
 				$actionFlag = 2;
@@ -271,7 +279,6 @@ class Default_PayfrequencyController extends Zend_Controller_Action
 					$savedId    = $id;
 				}
 
-				// Synchronize child anchors atomically
 				$this->_model->syncAnchors($savedId, $anchorsToSync);
 
 				if (defined('PAYFREQUENCY_MENU_ID')) {
@@ -280,19 +287,16 @@ class Default_PayfrequencyController extends Zend_Controller_Action
 
 				$db->commit();
 
-				$this->_helper->flashMessenger->addMessage(['success' => "Pay Frequency {$saveMode} successfully."]);
-				$this->_helper->json(['result' => 'saved', 'nomessage' => 'yes']);
+				$this->_helper->flashMessenger->addMessage(array('success' => "Pay Frequency {$saveMode} successfully."));
+				$this->_helper->json(array('result' => 'saved', 'nomessage' => 'yes'));
 			} catch (\Throwable $e) {
 				$db->rollBack();
 				error_log("Pay Frequency Save Error: " . $e->getMessage());
-				$this->_helper->json(['result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error']);
+				$this->_helper->json(array('result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error'));
 			}
 		} else {
-			$msgarray = [];
-			foreach ($form->getMessages() as $field => $errors) {
-				$msgarray[$field] = current($errors);
-			}
-			$this->_helper->json($msgarray);
+			// SSOT V.6: Return raw nested Zend Form messages for saveDetails()
+			$this->_helper->json($form->getMessages());
 		}
 	}
 
