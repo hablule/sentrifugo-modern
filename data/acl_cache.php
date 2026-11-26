@@ -1,7 +1,7 @@
 <?php
 /**
  * Auto-generated ACL Cache File
- * Generated on: 2026-11-23 12:51:55 GMT
+ * Generated on: 2026-11-26 10:22:15 GMT
  * DO NOT EDIT MANUALLY. Run Scanner and Save Mappings to regenerate.
  */
 return array (
@@ -556,6 +556,17 @@ return array (
         'viewaction' => true,
       ),
       'empassignment' => 
+      array (
+        'addaction' => true,
+        'addpopupaction' => true,
+        'deleteaction' => true,
+        'editaction' => true,
+        'indexaction' => true,
+        'makeactiveinactiveaction' => true,
+        'saveaction' => true,
+        'viewaction' => true,
+      ),
+      'empcompensation' => 
       array (
         'addaction' => true,
         'addpopupaction' => true,
@@ -1262,7 +1273,6 @@ return array (
       ),
       'payrollrun' => 
       array (
-        'addaction' => true,
         'deleteaction' => true,
         'editaction' => true,
         'indexaction' => true,
