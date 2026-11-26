@@ -226,6 +226,7 @@ abstract class Zend_Db_Table_Rowset_Abstract implements SeekableIterator, Counta
      *
      * @return Zend_Db_Table_Rowset_Abstract Fluent interface.
      */
+    #[\ReturnTypeWillChange]
     public function rewind()
     {
         $this->_pointer = 0;
@@ -239,6 +240,8 @@ abstract class Zend_Db_Table_Rowset_Abstract implements SeekableIterator, Counta
      *
      * @return Zend_Db_Table_Row_Abstract current element from the collection
      */
+    
+    #[\ReturnTypeWillChange]
     public function current()
     {
         if ($this->valid() === false) {
@@ -256,6 +259,7 @@ abstract class Zend_Db_Table_Rowset_Abstract implements SeekableIterator, Counta
      *
      * @return int
      */
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return $this->_pointer;
@@ -268,6 +272,7 @@ abstract class Zend_Db_Table_Rowset_Abstract implements SeekableIterator, Counta
      *
      * @return void
      */
+    #[\ReturnTypeWillChange]
     public function next()
     {
         ++$this->_pointer;
@@ -280,6 +285,7 @@ abstract class Zend_Db_Table_Rowset_Abstract implements SeekableIterator, Counta
      *
      * @return bool False if there's nothing more to iterate over
      */
+    #[\ReturnTypeWillChange]
     public function valid()
     {
         return $this->_pointer >= 0 && $this->_pointer < $this->_count;
@@ -292,6 +298,7 @@ abstract class Zend_Db_Table_Rowset_Abstract implements SeekableIterator, Counta
      *
      * @return int
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return $this->_count;
@@ -304,7 +311,8 @@ abstract class Zend_Db_Table_Rowset_Abstract implements SeekableIterator, Counta
      * @param int $position the position to seek to
      * @return Zend_Db_Table_Rowset_Abstract
      * @throws Zend_Db_Table_Rowset_Exception
-     */
+     */    
+    #[\ReturnTypeWillChange]
     public function seek($position)
     {
         $position = (int) $position;
@@ -323,6 +331,7 @@ abstract class Zend_Db_Table_Rowset_Abstract implements SeekableIterator, Counta
      * @param string $offset
      * @return boolean
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return isset($this->_data[(int) $offset]);
@@ -335,6 +344,7 @@ abstract class Zend_Db_Table_Rowset_Abstract implements SeekableIterator, Counta
      * @param string $offset
      * @return Zend_Db_Table_Row_Abstract
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         $offset = (int) $offset;
@@ -354,6 +364,7 @@ abstract class Zend_Db_Table_Rowset_Abstract implements SeekableIterator, Counta
      * @param string $offset
      * @param mixed $value
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
     }
@@ -364,6 +375,7 @@ abstract class Zend_Db_Table_Rowset_Abstract implements SeekableIterator, Counta
      *
      * @param string $offset
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
     }
