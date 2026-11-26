@@ -33,9 +33,9 @@ $isEditable = isset($this->isEditableRun) && $this->isEditableRun;
                     <div class="style-1-icon info"></div>No data found.
                 </div>
             <?php elseif (isset($this->form) && !$isEditable) : ?>
-                <div class="ml-alert-1-info">
-                    <div style="display:block;">
-                        <span class="style-1-icon info"></span>
+                <div class="ml-alert-1-info" style="height: auto; min-height: 38px; line-height: 1.5; padding: 8px 14px; overflow: hidden; box-sizing: border-box;">
+                    <div style="display: flex; align-items: flex-start; gap: 10px;">
+                        <span class="style-1-icon info" style="flex-shrink: 0; margin-top: 2px;"></span>
                         This Payroll Run is in <strong><?php echo $this->escape($this->runStatus); ?></strong> status and is strictly read-only.
                     </div>
                 </div>
