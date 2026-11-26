@@ -264,12 +264,27 @@ class Default_Model_Paygroup extends Zend_Db_Table_Abstract
     public function checkInUse($id)
     {
         $db = $this->getAdapter();
-        // Dependency Check: Prevent deletion if Pay Group is linked to generated Payroll Runs
+
+        // 1. Check Payroll Runs
         $runCheck = $db->select()
-            ->from('main_payroll_run', ['id'])
+            ->from('main_payroll_run', array('id'))
             ->where('pay_group_id = ?', (int)$id)
             ->where('isactive != ?', 5);
+        if ($db->fetchRow($runCheck)) {
+            return true;
+        }
 
-        return (bool)$db->fetchRow($runCheck);
+        // 2. Check Employee Compensation defensively
+        try {
+            $compCheck = $db->select()
+                ->from('main_emp_compensation', array('id'))
+                ->where('pay_group_id = ?', (int)$id)
+                ->where('isactive != ?', 5);
+            if ($db->fetchRow($compCheck)) {
+                return true;
+            }
+        } catch (\Throwable $e) {}
+
+        return false;
     }
 }

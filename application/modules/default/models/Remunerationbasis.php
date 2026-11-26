@@ -245,7 +245,18 @@ class Default_Model_Remunerationbasis extends Zend_Db_Table_Abstract
 	}
 
 	public function checkInUse($id)
-	{
-		return false;
-	}
+    {
+        $db = $this->getAdapter();
+        try {
+            $compCheck = $db->select()
+                ->from('main_emp_compensation', array('id'))
+                ->where('remunerationbasis_id = ?', (int)$id)
+                ->where('isactive != ?', 5);
+            if ($db->fetchRow($compCheck)) {
+                return true;
+            }
+        } catch (\Throwable $e) {}
+
+        return false;
+    }
 }

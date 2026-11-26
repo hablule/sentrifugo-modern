@@ -186,8 +186,22 @@ class Default_RemunerationbasisController extends Zend_Controller_Action
 			return $this->_redirect('remunerationbasis/index');
 		}
 
-		$id = (int) $request->getParam('id', 0);
-		$form = $this->_prepareForm($id);
+		$id      = (int) $request->getParam('id', 0);
+		$isInUse = ($id > 0 && $this->_model->checkInUse($id));
+		$form    = $this->_prepareForm($id);
+
+		if (!$form) {
+			return $this->_helper->json(array('result' => 'exception', 'message' => 'Record not found.', 'msgtype' => 'error'));
+		}
+
+		if ($isInUse) {
+			// SSOT V.12: Bypass validation on disabled fields; only 'isactive' is editable
+			foreach (array('code', 'name', 'calculation_method', 'description') as $fieldName) {
+				if ($el = $form->getElement($fieldName)) {
+					$el->setRequired(false)->clearValidators();
+				}
+			}
+		}
 
 		if ($form->isValid($request->getPost())) {
 
@@ -195,24 +209,34 @@ class Default_RemunerationbasisController extends Zend_Controller_Action
 			$db->beginTransaction();
 
 			try {
-				$data = [
-					'code'               => trim((string) $request->getParam('code', '')),
-					'name'               => trim((string) $request->getParam('name', '')),
-					'calculation_method' => trim((string) $request->getParam('calculation_method', 'FIXED_SALARY')),
-					'description'        => trim((string) $request->getParam('description', '')),
-					'isactive'           => (int) $request->getParam('isactive', 1)
-				];
-
-				$actionFlag = 2;
-				$saveMode   = 'updated';
-
-				if (!$id) {
-					$actionFlag = 1;
-					$saveMode   = 'added';
-					$savedId    = $this->_model->saveRecord($data);
-				} else {
+				if ($isInUse) {
+					$data = array(
+						'isactive' => (int) $request->getParam('isactive', 1)
+					);
 					$this->_model->saveRecord($data, $id);
 					$savedId    = $id;
+					$actionFlag = 2;
+					$saveMode   = 'updated';
+				} else {
+					$data = array(
+						'code'               => trim((string) $request->getParam('code', '')),
+						'name'               => trim((string) $request->getParam('name', '')),
+						'calculation_method' => trim((string) $request->getParam('calculation_method', 'FIXED_SALARY')),
+						'description'        => trim((string) $request->getParam('description', '')),
+						'isactive'           => (int) $request->getParam('isactive', 1)
+					);
+
+					$actionFlag = 2;
+					$saveMode   = 'updated';
+
+					if (!$id) {
+						$actionFlag = 1;
+						$saveMode   = 'added';
+						$savedId    = $this->_model->saveRecord($data);
+					} else {
+						$this->_model->saveRecord($data, $id);
+						$savedId    = $id;
+					}
 				}
 
 				if (defined('REMUNERATIONBASIS_MENU_ID')) {
@@ -221,15 +245,14 @@ class Default_RemunerationbasisController extends Zend_Controller_Action
 
 				$db->commit();
 
-				$this->_helper->flashMessenger->addMessage(['success' => "Remuneration Basis {$saveMode} successfully."]);
-				$this->_helper->json(['result' => 'saved', 'nomessage' => 'yes']);
+				$this->_helper->flashMessenger->addMessage(array('success' => "Remuneration Basis {$saveMode} successfully."));
+				$this->_helper->json(array('result' => 'saved', 'nomessage' => 'yes'));
 			} catch (\Throwable $e) {
 				$db->rollBack();
 				error_log("Remuneration Basis Save Error: " . $e->getMessage());
-				$this->_helper->json(['result' => 'exception', 'message' => 'System error occurred.', 'msgtype' => 'error']);
+				$this->_helper->json(array('result' => 'exception', 'message' => 'System error occurred.', 'msgtype' => 'error'));
 			}
 		} else {
-			// SSOT V.6: Return raw nested Zend Form messages for saveDetails()
 			$this->_helper->json($form->getMessages());
 		}
 	}
@@ -351,6 +374,7 @@ class Default_RemunerationbasisController extends Zend_Controller_Action
 	private function _prepareForm($id = null, $readonly = false)
 	{
 		$form = new Default_Form_Remunerationbasis();
+		$isInUse = false;
 
 		if ($id) {
 			$data = $this->_model->getRecordById($id);
@@ -364,6 +388,15 @@ class Default_RemunerationbasisController extends Zend_Controller_Action
 
 			$form->populate($data);
 			$form->getElement('submit')->setLabel('Update Remuneration Basis');
+
+			if (!$readonly && $this->_model->checkInUse($id)) {
+				$isInUse = true;
+				foreach (array('code', 'name', 'calculation_method', 'description') as $fieldName) {
+					if ($el = $form->getElement($fieldName)) {
+						$el->setAttrib('disabled', 'disabled');
+					}
+				}
+			}
 		}
 
 		if ($readonly) {
@@ -373,6 +406,7 @@ class Default_RemunerationbasisController extends Zend_Controller_Action
 			$form->removeElement('submit');
 		}
 
+		$this->view->isInUse = $isInUse;
 		return $form;
 	}
 }

@@ -26,7 +26,7 @@ class Default_Model_Payrollrun extends Zend_Db_Table_Abstract
     public function getGrid($sort, $by, $perPage, $pageNo, $searchData, $call, $dashboardcall)
     {
         $searchQuery = '';
-        $searchArray = [];
+        $searchArray = array();
 
         if (!empty($searchData) && $searchData !== 'undefined') {
             $searchValues = json_decode($searchData, true);
@@ -34,7 +34,10 @@ class Default_Model_Payrollrun extends Zend_Db_Table_Abstract
                 foreach ($searchValues as $key => $val) {
                     if ($key === 'paygroup_name') {
                         $searchQuery .= " (pg.name LIKE '%" . trim((string)$val) . "%' OR pg.code LIKE '%" . trim((string)$val) . "%') AND ";
-                    } elseif (in_array($key, ['cycle_start_date', 'cycle_end_date', 'pay_date'])) {
+                    } elseif ($key === 'status_text') {
+                        $dbVal = ($val === 'Active') ? 1 : 0;
+                        $searchQuery .= " pr.isactive = " . $dbVal . " AND ";
+                    } elseif (in_array($key, array('cycle_start_date', 'cycle_end_date', 'pay_date'))) {
                         $searchQuery .= " pr." . $key . " = '" . sapp_Global::change_date(urldecode($val), 'database') . "' AND ";
                     } else {
                         $searchQuery .= " pr." . $key . " LIKE '%" . trim((string)$val) . "%' AND ";
@@ -45,26 +48,27 @@ class Default_Model_Payrollrun extends Zend_Db_Table_Abstract
             }
         }
 
-        $tableHeaders = [
+        $tableHeaders = array(
             'action'           => 'Action',
             'paygroup_name'    => 'Pay Group',
             'cycle_sequence'   => 'Sequence',
             'cycle_start_date' => 'Cycle Start',
             'cycle_end_date'   => 'Cycle End',
             'pay_date'         => 'Pay Date',
-            'run_status'       => 'Run Status'
-        ];
+            'run_status'       => 'Run Status',
+            'status_text'      => 'Active'
+        );
 
         $tableContent = $this->getGridData($sort, $by, $pageNo, $perPage, $searchQuery);
 
-        return [
+        return array(
             'sort'           => $sort,
             'by'             => $by,
             'pageNo'         => $pageNo,
             'perPage'        => $perPage,
             'tablecontent'   => $tableContent,
             'objectname'     => 'payrollrun',
-            'extra'          => [],
+            'extra'          => array(),
             'tableheader'    => $tableHeaders,
             'jsGridFnName'   => 'getAjaxgridData',
             'jsFillFnName'   => '',
@@ -72,41 +76,54 @@ class Default_Model_Payrollrun extends Zend_Db_Table_Abstract
             'menuName'       => 'Payroll Runs',
             'call'           => $call,
             'dashboardcall'  => $dashboardcall,
-            'search_filters' => [
-                'run_status' => [
+            'search_filters' => array(
+                'run_status' => array(
                     'type' => 'select',
-                    'filter_data' => ['' => 'All', 'Scheduled' => 'Scheduled', 'Initiated' => 'Initiated', 'Review' => 'Review', 'Locked' => 'Locked', 'Closed' => 'Closed', 'Cancelled' => 'Cancelled']
-                ],
-                'cycle_start_date' => ['type' => 'datepicker'],
-                'cycle_end_date'   => ['type' => 'datepicker'],
-                'pay_date'         => ['type' => 'datepicker']
-            ]
-        ];
+                    'filter_data' => array('' => 'All', 'Scheduled' => 'Scheduled', 'Initiated' => 'Initiated', 'Review' => 'Review', 'Locked' => 'Locked', 'Closed' => 'Closed', 'Cancelled' => 'Cancelled')
+                ),
+                'status_text'      => array('type' => 'select', 'filter_data' => array('' => 'All', 'Active' => 'Active', 'Inactive' => 'Inactive')),
+                'cycle_start_date' => array('type' => 'datepicker'),
+                'cycle_end_date'   => array('type' => 'datepicker'),
+                'pay_date'         => array('type' => 'datepicker')
+            )
+        );
     }
 
     public function getGridData($sort, $by, $pageNo, $perPage, $searchQuery = '')
     {
+        // Map UI sort columns strictly to raw DATE / table-qualified columns (NOT formatted string aliases!)
         if ($by === 'paygroup_name') {
-            $by = 'pg.name';
+            $orderClause = array("pg.name $sort", "pr.cycle_start_date ASC");
+        } elseif ($by === 'cycle_start_date') {
+            $orderClause = "pr.cycle_start_date $sort";
+        } elseif ($by === 'cycle_end_date') {
+            $orderClause = "pr.cycle_end_date $sort";
+        } elseif ($by === 'pay_date') {
+            $orderClause = "pr.pay_date $sort";
+        } elseif ($by === 'status_text') {
+            $orderClause = "pr.isactive $sort";
+        } else {
+            $orderClause = "pr.$by $sort";
         }
 
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from(
-                ['pr' => $this->_name],
-                [
+                array('pr' => $this->_name),
+                array(
                     'id'               => 'pr.id',
                     'cycle_sequence',
                     'run_status',
                     'cycle_start_date' => new Zend_Db_Expr("DATE_FORMAT(pr.cycle_start_date, '" . DATEFORMAT_MYSQL . "')"),
                     'cycle_end_date'   => new Zend_Db_Expr("DATE_FORMAT(pr.cycle_end_date, '" . DATEFORMAT_MYSQL . "')"),
-                    'pay_date'         => new Zend_Db_Expr("DATE_FORMAT(pr.pay_date, '" . DATEFORMAT_MYSQL . "')")
-                ]
+                    'pay_date'         => new Zend_Db_Expr("DATE_FORMAT(pr.pay_date, '" . DATEFORMAT_MYSQL . "')"),
+                    'status_text'      => new Zend_Db_Expr("CASE WHEN pr.isactive = 1 THEN 'Active' ELSE 'Inactive' END")
+                )
             )
             ->joinInner(
-                ['pg' => 'main_pay_group'],
+                array('pg' => 'main_pay_group'),
                 'pr.pay_group_id = pg.id',
-                ['paygroup_name' => new Zend_Db_Expr("CONCAT(pg.code, ' - ', pg.name)")]
+                array('paygroup_name' => new Zend_Db_Expr("CONCAT(pg.code, ' - ', pg.name)"))
             )
             ->where('pr.isactive != ?', 5);
 
@@ -114,7 +131,7 @@ class Default_Model_Payrollrun extends Zend_Db_Table_Abstract
             $select->where($searchQuery);
         }
 
-        $select->order("$by $sort")->limitPage((int)$pageNo, (int)$perPage);
+        $select->order($orderClause)->limitPage((int)$pageNo, (int)$perPage);
 
         return $select;
     }
@@ -128,6 +145,7 @@ class Default_Model_Payrollrun extends Zend_Db_Table_Abstract
         $row = $this->fetchRow($select);
         return $row ? $row->toArray() : null;
     }
+    
 
     /* =================================================================================
      * GROUP 5: AJAX, INTEGRITY CHECKS & STATE MACHINE SAFEGUARDS
@@ -310,7 +328,12 @@ class Default_Model_Payrollrun extends Zend_Db_Table_Abstract
         }
 
         $db = $this->getAdapter();
-        $db->beginTransaction();
+        $startedTx = false;
+
+        if (!$db->getConnection()->inTransaction()) {
+            $db->beginTransaction();
+            $startedTx = true;
+        }
 
         try {
             foreach ($toUpdate as $upRow) {
@@ -323,9 +346,13 @@ class Default_Model_Payrollrun extends Zend_Db_Table_Abstract
                 $this->insert($inRow);
             }
 
-            $db->commit();
+            if ($startedTx) {
+                $db->commit();
+            }
         } catch (\Throwable $e) {
-            $db->rollBack();
+            if ($startedTx && $db->getConnection()->inTransaction()) {
+                $db->rollBack();
+            }
             throw $e;
         }
 

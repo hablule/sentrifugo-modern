@@ -38,7 +38,7 @@
 
                     <!-- Explicit clear to stop the h4/h5 from floating right -->
                     <div style="clear: both; width: 100%; height: 20px;"></div>
-                    
+
                     <h5 style="color:#26a69a; border-bottom:1px solid #ddd; padding-bottom:5px; margin-top:25px;">Temporal Boundaries</h5>
 
                     <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->cycle_start_date->getLabel()); ?></label>
@@ -52,6 +52,10 @@
                     </div>
 
                     <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                    </div>
 
                     <div class="new-form-ui-submit">
                         <div class="division">
@@ -69,8 +73,10 @@
     </div>
 </div>
 
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $('#description').jqte();
+        $('.jqte_editor').attr('contenteditable', 'false');
     });
 </script>

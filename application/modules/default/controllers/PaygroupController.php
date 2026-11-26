@@ -165,8 +165,22 @@ class Default_PaygroupController extends Zend_Controller_Action
             return $this->_redirect('paygroup/index');
         }
 
-        $id = (int) $request->getParam('id', 0);
-        $form = $this->_prepareForm($id);
+        $id      = (int) $request->getParam('id', 0);
+        $isInUse = ($id > 0 && $this->_model->checkInUse($id));
+        $form    = $this->_prepareForm($id);
+
+        if (!$form) {
+            return $this->_helper->json(array('result' => 'exception', 'message' => 'Record not found.', 'msgtype' => 'error'));
+        }
+
+        if ($isInUse) {
+            // SSOT V.12: Bypass validation on disabled fields; allow payment_lag_days, description, isactive
+            foreach (array('code', 'name', 'payfrequency_id') as $fieldName) {
+                if ($el = $form->getElement($fieldName)) {
+                    $el->setRequired(false)->clearValidators();
+                }
+            }
+        }
 
         if ($form->isValid($request->getPost())) {
 
@@ -174,25 +188,38 @@ class Default_PaygroupController extends Zend_Controller_Action
             $db->beginTransaction();
 
             try {
-                $data = [
-                    'code'             => trim((string) $request->getParam('code', '')),
-                    'name'             => trim((string) $request->getParam('name', '')),
-                    'payfrequency_id'  => (int) $request->getParam('payfrequency_id', 0),
-                    'payment_lag_days' => (int) $request->getParam('payment_lag_days', 0),
-                    'description'      => trim((string) $request->getParam('description', '')),
-                    'isactive'         => (int) $request->getParam('isactive', 1)
-                ];
-
-                $actionFlag = 2;
-                $saveMode   = 'updated';
-
-                if (!$id) {
-                    $actionFlag = 1;
-                    $saveMode   = 'added';
-                    $savedId    = $this->_model->saveRecord($data);
-                } else {
+                if ($isInUse) {
+                    // Strictly update ONLY 'payment_lag_days', 'description', and 'isactive'
+                    $data = array(
+                        'payment_lag_days' => (int) $request->getParam('payment_lag_days', 0),
+                        'description'      => trim((string) $request->getParam('description', '')),
+                        'isactive'         => (int) $request->getParam('isactive', 1)
+                    );
                     $this->_model->saveRecord($data, $id);
                     $savedId    = $id;
+                    $actionFlag = 2;
+                    $saveMode   = 'updated';
+                } else {
+                    $data = array(
+                        'code'             => trim((string) $request->getParam('code', '')),
+                        'name'             => trim((string) $request->getParam('name', '')),
+                        'payfrequency_id'  => (int) $request->getParam('payfrequency_id', 0),
+                        'payment_lag_days' => (int) $request->getParam('payment_lag_days', 0),
+                        'description'      => trim((string) $request->getParam('description', '')),
+                        'isactive'         => (int) $request->getParam('isactive', 1)
+                    );
+
+                    $actionFlag = 2;
+                    $saveMode   = 'updated';
+
+                    if (!$id) {
+                        $actionFlag = 1;
+                        $saveMode   = 'added';
+                        $savedId    = $this->_model->saveRecord($data);
+                    } else {
+                        $this->_model->saveRecord($data, $id);
+                        $savedId    = $id;
+                    }
                 }
 
                 if (defined('PAYGROUP_MENU_ID')) {
@@ -201,24 +228,26 @@ class Default_PaygroupController extends Zend_Controller_Action
 
                 $db->commit();
 
-                try {
-                    require_once APPLICATION_PATH . '/../library/Sentrifugo/Service/PayrollRunEngine.php';
-                    $engine = new Sentrifugo_Service_PayrollRunEngine();
-                    $currentYear = date('Y');
-                    $engine->generateForPayGroup($savedId, "{$currentYear}-01-01", "{$currentYear}-12-31", $this->_loginUserId, false);
-                } catch (\Throwable $engineError) {
-                    error_log("Auto-Sync Engine Notice: " . $engineError->getMessage());
+                // Auto-Sync Engine: Only generates/adjusts Scheduled runs if group is Active
+                if ((int)$data['isactive'] === 1) {
+                    try {
+                        require_once APPLICATION_PATH . '/../library/Sentrifugo/Service/PayrollRunEngine.php';
+                        $engine = new Sentrifugo_Service_PayrollRunEngine();
+                        $currentYear = date('Y');
+                        $engine->generateForPayGroup($savedId, "{$currentYear}-01-01", "{$currentYear}-12-31", $this->_loginUserId, false);
+                    } catch (\Throwable $engineError) {
+                        error_log("Auto-Sync Engine Notice: " . $engineError->getMessage());
+                    }
                 }
 
-                $this->_helper->flashMessenger->addMessage(['success' => "Pay Group {$saveMode} successfully."]);
-                $this->_helper->json(['result' => 'saved', 'nomessage' => 'yes']);
+                $this->_helper->flashMessenger->addMessage(array('success' => "Pay Group {$saveMode} successfully."));
+                $this->_helper->json(array('result' => 'saved', 'nomessage' => 'yes'));
             } catch (\Throwable $e) {
                 $db->rollBack();
                 error_log("Pay Group Save Error: " . $e->getMessage());
-                $this->_helper->json(['result' => 'exception', 'message' => 'System error occurred.', 'msgtype' => 'error']);
+                $this->_helper->json(array('result' => 'exception', 'message' => 'System error occurred.', 'msgtype' => 'error'));
             }
         } else {
-            // SSOT V.6: Return raw nested Zend Form messages for saveDetails()
             $this->_helper->json($form->getMessages());
         }
     }
@@ -341,8 +370,8 @@ class Default_PaygroupController extends Zend_Controller_Action
     private function _prepareForm($id = null, $readonly = false)
     {
         $form = new Default_Form_Paygroup();
+        $isInUse = false;
 
-        // Populate Pay Frequency dictionary
         $freqModel = new Default_Model_Payfrequency();
         $form->payfrequency_id->addMultiOption('', 'Select Base Pay Frequency...');
         $form->payfrequency_id->addMultiOptions($freqModel->getPairs(true));
@@ -359,6 +388,16 @@ class Default_PaygroupController extends Zend_Controller_Action
 
             $form->populate($data);
             $form->getElement('submit')->setLabel('Update Pay Group');
+
+            // Lock Code, Name, and Base Frequency if used; leave Pay Lag, Description, and Active editable
+            if (!$readonly && $this->_model->checkInUse($id)) {
+                $isInUse = true;
+                foreach (array('code', 'name', 'payfrequency_id') as $fieldName) {
+                    if ($el = $form->getElement($fieldName)) {
+                        $el->setAttrib('disabled', 'disabled');
+                    }
+                }
+            }
         }
 
         if ($readonly) {
@@ -368,6 +407,7 @@ class Default_PaygroupController extends Zend_Controller_Action
             $form->removeElement('submit');
         }
 
+        $this->view->isInUse = $isInUse;
         return $form;
     }
 }

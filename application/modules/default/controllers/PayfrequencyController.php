@@ -183,122 +183,151 @@ class Default_PayfrequencyController extends Zend_Controller_Action
 
 		$this->render('save');
 	}
-
+	
 	public function saveAction()
-	{
-		$request = $this->getRequest();
-		if (!$request->isPost()) {
-			return $this->_redirect('payfrequency/index');
-		}
+    {
+        $request = $this->getRequest();
+        if (!$request->isPost()) {
+            return $this->_redirect('payfrequency/index');
+        }
 
-		$id   = (int) $request->getParam('id', 0);
-		$form = $this->_prepareForm($id);
+        $id      = (int) $request->getParam('id', 0);
+        $isInUse = ($id > 0 && $this->_model->checkInUse($id));
+        $form    = $this->_prepareForm($id);
 
-		// Dynamically enforce conditional validators BEFORE $form->isValid()
-		$freqType = trim((string) $request->getParam('frequency_type', 'FIXED_INTERVAL'));
-		$intUnit  = trim((string) $request->getParam('interval_unit', ''));
+        if (!$form) {
+            return $this->_helper->json(array('result' => 'exception', 'message' => 'Record not found.', 'msgtype' => 'error'));
+        }
 
-		if ($freqType === 'FIXED_INTERVAL') {
-			$form->getElement('interval_count')
-				->setRequired(true)
-				->addValidator('NotEmpty', true, array('messages' => 'Please enter an interval step count.'))
-				->addValidator('GreaterThan', true, array('min' => 0, 'messages' => 'Interval count must be greater than 0.'));
+        $freqType = trim((string) $request->getParam('frequency_type', 'FIXED_INTERVAL'));
+        $intUnit  = trim((string) $request->getParam('interval_unit', ''));
 
-			$form->getElement('interval_unit')
-				->setRequired(true)
-				->addValidator('NotEmpty', true, array('messages' => 'Please select an interval unit.'));
+        if ($isInUse) {
+            // SSOT V.12: Bypass validation on disabled structural fields; only 'isactive' is editable
+            $lockedFields = array(
+                'code', 'name', 'frequency_type', 'interval_count', 'interval_unit',
+                'weekly_anchor_day', 'monthly_anchor_day', 'global_reference_date',
+                'missing_date_policy', 'description'
+            );
+            foreach ($lockedFields as $fieldName) {
+                if ($el = $form->getElement($fieldName)) {
+                    $el->setRequired(false)->clearValidators();
+                }
+            }
+        } elseif ($freqType === 'FIXED_INTERVAL') {
+            // Dynamically enforce required interval rules
+            $form->getElement('interval_count')
+                 ->setRequired(true)
+                 ->addValidator('NotEmpty', true, array('messages' => 'Please enter an interval step count.'))
+                 ->addValidator('GreaterThan', true, array('min' => 0, 'messages' => 'Interval count must be greater than 0.'));
 
-			if ($intUnit === 'WEEK') {
-				$form->getElement('weekly_anchor_day')
-					->setRequired(true)
-					->addValidator('NotEmpty', true, array('messages' => 'Please select a week start day.'));
-			} elseif ($intUnit === 'MONTH') {
-				$form->getElement('monthly_anchor_day')
-					->setRequired(true)
-					->addValidator('NotEmpty', true, array('messages' => 'Please enter a month start day (1-31).'));
-			}
-		}
+            $form->getElement('interval_unit')
+                 ->setRequired(true)
+                 ->addValidator('NotEmpty', true, array('messages' => 'Please select an interval unit.'));
 
-		if ($form->isValid($request->getPost())) {
+            if ($intUnit === 'WEEK') {
+                $form->getElement('weekly_anchor_day')
+                     ->setRequired(true)
+                     ->addValidator('NotEmpty', true, array('messages' => 'Please select a week start day.'));
+            } elseif ($intUnit === 'MONTH') {
+                $form->getElement('monthly_anchor_day')
+                     ->setRequired(true)
+                     ->addValidator('NotEmpty', true, array('messages' => 'Please enter a month start day (1-31).'));
+            }
+        }
 
-			// Validate Calendar Anchors in Zend Form error format so saveDetails() renders it inline
-			$anchorsToSync = array();
-			if ($freqType === 'CALENDAR_BASED') {
-				$rawPayload   = $request->getParam('calendar_anchors_payload');
-				$anchorsArray = !empty($rawPayload) ? json_decode($rawPayload, true) : array();
+        if ($form->isValid($request->getPost())) {
 
-				if (!is_array($anchorsArray) || count($anchorsArray) < 1) {
-					return $this->_helper->json(array(
-						'calendar_anchors_payload' => array('isEmpty' => 'Please add at least one anchor day (1-31).')
-					));
-				}
-				$anchorsToSync = $anchorsArray;
-			}
+            // Validate Calendar Anchors if unlocked and CALENDAR_BASED
+            $anchorsToSync = array();
+            if (!$isInUse && $freqType === 'CALENDAR_BASED') {
+                $rawPayload   = $request->getParam('calendar_anchors_payload');
+                $anchorsArray = !empty($rawPayload) ? json_decode($rawPayload, true) : array();
 
-			$db = Zend_Db_Table::getDefaultAdapter();
-			$db->beginTransaction();
+                if (!is_array($anchorsArray) || count($anchorsArray) < 1) {
+                    return $this->_helper->json(array(
+                        'calendar_anchors_payload' => array('isEmpty' => 'Please add at least one anchor day (1-31).')
+                    ));
+                }
+                $anchorsToSync = $anchorsArray;
+            }
 
-			try {
-				$data = array(
-					'code'                  => trim((string) $request->getParam('code', '')),
-					'name'                  => trim((string) $request->getParam('name', '')),
-					'frequency_type'        => $freqType,
-					'interval_count'        => null,
-					'interval_unit'         => null,
-					'weekly_anchor_day'     => null,
-					'monthly_anchor_day'    => null,
-					'global_reference_date' => null,
-					'missing_date_policy'   => 'PREVIOUS_VALID_DAY',
-					'description'           => trim((string) $request->getParam('description', '')),
-					'isactive'              => (int) $request->getParam('isactive', 1)
-				);
+            $db = Zend_Db_Table::getDefaultAdapter();
+            $db->beginTransaction();
 
-				if ($freqType === 'FIXED_INTERVAL') {
-					$data['interval_count']        = (int) $request->getParam('interval_count', 0);
-					$data['interval_unit']         = $intUnit;
-					$data['global_reference_date'] = $request->getParam('global_reference_date');
+            try {
+                if ($isInUse) {
+                    // Strictly update ONLY 'isactive' when used down the line
+                    $data = array(
+                        'isactive' => (int) $request->getParam('isactive', 1)
+                    );
+                    $this->_model->saveRecord($data, $id);
+                    $savedId    = $id;
+                    $actionFlag = 2;
+                    $saveMode   = 'updated';
+                } else {
+                    $data = array(
+                        'code'                  => trim((string) $request->getParam('code', '')),
+                        'name'                  => trim((string) $request->getParam('name', '')),
+                        'frequency_type'        => $freqType,
+                        'interval_count'        => null,
+                        'interval_unit'         => null,
+                        'weekly_anchor_day'     => null,
+                        'monthly_anchor_day'    => null,
+                        'global_reference_date' => null,
+                        'missing_date_policy'   => 'PREVIOUS_VALID_DAY',
+                        'description'           => trim((string) $request->getParam('description', '')),
+                        'isactive'              => (int) $request->getParam('isactive', 1)
+                    );
 
-					if ($intUnit === 'WEEK') {
-						$data['weekly_anchor_day'] = trim((string) $request->getParam('weekly_anchor_day', ''));
-					} elseif ($intUnit === 'MONTH') {
-						$data['monthly_anchor_day'] = (int) $request->getParam('monthly_anchor_day', 0);
-					}
-				} elseif ($freqType === 'CALENDAR_BASED') {
-					$data['missing_date_policy'] = trim((string) $request->getParam('missing_date_policy', 'PREVIOUS_VALID_DAY'));
-				}
+                    if ($freqType === 'FIXED_INTERVAL') {
+                        $data['interval_count']        = (int) $request->getParam('interval_count', 0);
+                        $data['interval_unit']         = $intUnit;
+                        $data['global_reference_date'] = $request->getParam('global_reference_date');
 
-				$actionFlag = 2;
-				$saveMode   = 'updated';
+                        if ($intUnit === 'WEEK') {
+                            $data['weekly_anchor_day'] = trim((string) $request->getParam('weekly_anchor_day', ''));
+                        } elseif ($intUnit === 'MONTH') {
+                            $data['monthly_anchor_day'] = (int) $request->getParam('monthly_anchor_day', 0);
+                        }
+                    } elseif ($freqType === 'CALENDAR_BASED') {
+                        $data['missing_date_policy'] = trim((string) $request->getParam('missing_date_policy', 'PREVIOUS_VALID_DAY'));
+                    }
 
-				if (!$id) {
-					$actionFlag = 1;
-					$saveMode   = 'added';
-					$savedId    = $this->_model->saveRecord($data);
-				} else {
-					$this->_model->saveRecord($data, $id);
-					$savedId    = $id;
-				}
+                    $actionFlag = 2;
+                    $saveMode   = 'updated';
 
-				$this->_model->syncAnchors($savedId, $anchorsToSync);
+                    if (!$id) {
+                        $actionFlag = 1;
+                        $saveMode   = 'added';
+                        $savedId    = $this->_model->saveRecord($data);
+                    } else {
+                        $this->_model->saveRecord($data, $id);
+                        $savedId    = $id;
+                    }
 
-				if (defined('PAYFREQUENCY_MENU_ID')) {
-					sapp_Global::logManager(PAYFREQUENCY_MENU_ID, $actionFlag, $this->_loginUserId, $savedId);
-				}
+                    $this->_model->syncAnchors($savedId, $anchorsToSync);
+                }
 
-				$db->commit();
+                if (defined('PAYFREQUENCY_MENU_ID')) {
+                    sapp_Global::logManager(PAYFREQUENCY_MENU_ID, $actionFlag, $this->_loginUserId, $savedId);
+                }
 
-				$this->_helper->flashMessenger->addMessage(array('success' => "Pay Frequency {$saveMode} successfully."));
-				$this->_helper->json(array('result' => 'saved', 'nomessage' => 'yes'));
-			} catch (\Throwable $e) {
-				$db->rollBack();
-				error_log("Pay Frequency Save Error: " . $e->getMessage());
-				$this->_helper->json(array('result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error'));
-			}
-		} else {
-			// SSOT V.6: Return raw nested Zend Form messages for saveDetails()
-			$this->_helper->json($form->getMessages());
-		}
-	}
+                $db->commit();
+
+                $this->_helper->flashMessenger->addMessage(array('success' => "Pay Frequency {$saveMode} successfully."));
+                $this->_helper->json(array('result' => 'saved', 'nomessage' => 'yes'));
+
+            } catch (\Throwable $e) {
+                $db->rollBack();
+                error_log("Pay Frequency Save Error: " . $e->getMessage());
+                $this->_helper->json(array('result' => 'exception', 'message' => $e->getMessage(), 'msgtype' => 'error'));
+            }
+        } else {
+            // SSOT V.6: Return raw nested Zend Form messages
+            $this->_helper->json($form->getMessages());
+        }
+    }
 
 	/* =================================================================================
      * GROUP 4: REMOVAL
@@ -415,34 +444,51 @@ class Default_PayfrequencyController extends Zend_Controller_Action
 	}
 
 	private function _prepareForm($id = null, $readonly = false)
-	{
-		$form = new Default_Form_Payfrequency();
+    {
+        $form = new Default_Form_Payfrequency();
+        $isInUse = false;
 
-		if ($id) {
-			$data = $this->_model->getRecordById($id);
-			if (!$data) return null;
+        if ($id) {
+            $data = $this->_model->getRecordById($id);
+            if (!$data) return null;
 
-			foreach ($data as $key => $val) {
-				if ($val !== null) {
-					$data[$key] = htmlentities(stripslashes((string)$val), ENT_QUOTES, "UTF-8");
-				}
-			}
+            foreach ($data as $key => $val) {
+                if ($val !== null) {
+                    $data[$key] = htmlentities(stripslashes((string)$val), ENT_QUOTES, "UTF-8");
+                }
+            }
 
-			if (!empty($data['global_reference_date'])) {
-				$data['global_reference_date'] = sapp_Global::change_date($data['global_reference_date'], 'view');
-			}
+            if (!empty($data['global_reference_date'])) {
+                $data['global_reference_date'] = sapp_Global::change_date($data['global_reference_date'], 'view');
+            }
 
-			$form->populate($data);
-			$form->getElement('submit')->setLabel('Update Frequency');
-		}
+            $form->populate($data);
+            $form->getElement('submit')->setLabel('Update Frequency');
 
-		if ($readonly) {
-			foreach ($form->getElements() as $element) {
-				$element->setAttrib('disabled', 'disabled');
-			}
-			$form->removeElement('submit');
-		}
+            // Lock structural fields if used down the line; leave 'isactive' editable
+            if (!$readonly && $this->_model->checkInUse($id)) {
+                $isInUse = true;
+                $lockedFields = array(
+                    'code', 'name', 'frequency_type', 'interval_count', 'interval_unit',
+                    'weekly_anchor_day', 'monthly_anchor_day', 'global_reference_date',
+                    'missing_date_policy', 'description'
+                );
+                foreach ($lockedFields as $fieldName) {
+                    if ($el = $form->getElement($fieldName)) {
+                        $el->setAttrib('disabled', 'disabled');
+                    }
+                }
+            }
+        }
 
-		return $form;
-	}
+        if ($readonly) {
+            foreach ($form->getElements() as $element) {
+                $element->setAttrib('disabled', 'disabled');
+            }
+            $form->removeElement('submit');
+        }
+
+        $this->view->isInUse = $isInUse;
+        return $form;
+    }
 }

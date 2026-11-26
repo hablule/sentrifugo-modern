@@ -115,9 +115,19 @@ class Default_Form_Payrollrun extends Zend_Form
             ->setAttribs(['class' => 'formDataElement fck_editor_height', 'rows' => 4])
             ->addFilter('StringTrim')
             ->addFilter('StripTags');
+        
+        /* --------------------------------------------------------------
+         * 6. Checkbox Elements
+         * -------------------------------------------------------------- */
+        $isactive = new Zend_Form_Element_Checkbox('isactive');
+        $isactive->setLabel('Active')
+            ->setCheckedValue('1')
+            ->setUncheckedValue('0')
+            ->setValue('1');
+
 
         /* --------------------------------------------------------------
-         * 6. Submit Element
+         * 7. Submit Element
          * -------------------------------------------------------------- */
 
         $submit = new Zend_Form_Element_Submit('submit');
@@ -139,6 +149,7 @@ class Default_Form_Payrollrun extends Zend_Form
             $pay_date,
             $run_status,
             $description,
+            $isactive,
             $submit
         ]);
 

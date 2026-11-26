@@ -299,19 +299,26 @@ class Default_Model_Payfrequency extends Zend_Db_Table_Abstract
 
 		return $this->fetchRow($select);
 	}
+	
+	/**
+     * Checks if this Pay Frequency is referenced by any Pay Group or Compensation record.
+     *
+     * @param int $id
+     * @return bool
+     */
+    public function checkInUse($id)
+    {
+        $db = $this->getAdapter();
 
-	public function checkInUse($id)
-	{
-		// Safe check for future employee salary / compensation assignment records
-		$db = $this->getAdapter();
-		try {
-			$salaryCheck = $db->select()
-				->from('main_empsalarydetails', ['empsalary_id'])
-				->where('amount_frequency = ?', (int)$id);
-			if ($db->fetchRow($salaryCheck)) return true;
-		} catch (\Throwable $e) {
-		}
+        // 1. Check Pay Groups (excluding soft-deleted)
+        $pgCheck = $db->select()
+            ->from('main_pay_group', array('id'))
+            ->where('payfrequency_id = ?', (int)$id)
+            ->where('isactive != ?', 5);
+        if ($db->fetchRow($pgCheck)) {
+            return true;
+        }      
 
-		return false;
-	}
+        return false;
+    }
 }
