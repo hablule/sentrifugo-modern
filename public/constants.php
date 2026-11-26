@@ -816,3 +816,5 @@ defined('ENTRYMODE_MENU_ID')         || define('ENTRYMODE_MENU_ID', 303);
 
 defined('PAYGROUP_MENU_ID')   || define('PAYGROUP_MENU_ID', 416);
 defined('PAYROLLRUN_MENU_ID') || define('PAYROLLRUN_MENU_ID', 417);
+
+defined('EMP_COMPENSATION_MENU_ID') || define('EMP_COMPENSATION_MENU_ID', 418);
