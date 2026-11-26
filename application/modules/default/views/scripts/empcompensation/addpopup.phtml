@@ -1,0 +1,102 @@
+<?php
+
+/**
+ * Employee Compensation Add Popup View
+ * Modal interface for adding compensation on-the-fly from Employee Profile tabs.
+ * Complies with SSOT v6.7.7.
+ */
+$this->msgarray = isset($this->msgarray) ? $this->msgarray : array();
+sapp_Global::generateClientValidations($this->form);
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/custompopup.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/custompopup.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<div style="padding: 15px;">
+    <?php if (isset($this->popup) && $this->popup == 'close') : ?>
+        <div class="ml-alert-1-success">
+            <div style="display:block;"><span class="style-1-icon success"></span>Compensation <?php echo $this->escape($this->eventact); ?> successfully.</div>
+        </div>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                setTimeout(function() {
+                    var newId = "<?php echo $this->escape($this->newInsertedId); ?>";
+                    parent.closeiframeAddPopup("<?php echo $this->optionsHtml; ?>", "empcompensation", "compensation_id", "Compensation");
+
+                    if (newId && parent.$('#compensation_id').length) {
+                        var $select = parent.$('#compensation_id');
+                        $select.val(newId);
+                        if (parent.$.isFunction(parent.$.fn.select2)) {
+                            $select.select2({
+                                width: '100%'
+                            });
+                        }
+                        $select.trigger('change');
+                    }
+                }, 1000);
+            });
+        </script>
+    <?php else : ?>
+        <div id="error_message" style="display:none;"></div>
+        <?php if (!empty($this->msgarray['error'])) : ?>
+            <div class="ml-alert-1-error">
+                <div style="display:block;"><span class="style-1-icon error"></span><?php echo $this->escape($this->msgarray['error']); ?></div>
+            </div>
+        <?php endif; ?>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" action="<?php echo $this->escape($this->form->getAction()); ?>" method="post">
+            <?php echo $this->form->id; ?>
+            <div class="total-form-controller" style="padding: 0; box-shadow: none; border: none;">
+                <div class="division">
+                    <div class="new-form-ui clearb"><label class="required"><?php echo $this->escape($this->form->employee_id->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->employee_id; ?><span class="errors" id="errors-employee_id"><?php echo $this->escape($this->msgarray['employee_id'] ?? ''); ?></span></div>
+                    </div>
+                    <div class="new-form-ui clearb"><label class="required"><?php echo $this->escape($this->form->pay_group_id->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->pay_group_id; ?><span class="errors" id="errors-pay_group_id"><?php echo $this->escape($this->msgarray['pay_group_id'] ?? ''); ?></span></div>
+                    </div>
+                    <div class="new-form-ui clearb"><label class="required"><?php echo $this->escape($this->form->remunerationbasis_id->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->remunerationbasis_id; ?><span class="errors" id="errors-remunerationbasis_id"><?php echo $this->escape($this->msgarray['remunerationbasis_id'] ?? ''); ?></span></div>
+                    </div>
+                    <div class="new-form-ui clearb"><label class="required"><?php echo $this->escape($this->form->currency_id->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->currency_id; ?><span class="errors" id="errors-currency_id"><?php echo $this->escape($this->msgarray['currency_id'] ?? ''); ?></span></div>
+                    </div>
+                    <div class="new-form-ui clearb"><label class="required"><?php echo $this->escape($this->form->base_amount->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->base_amount; ?><span class="errors" id="errors-base_amount"><?php echo $this->escape($this->msgarray['base_amount'] ?? ''); ?></span></div>
+                    </div>
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb" style="width:45%;"><label class="required"><?php echo $this->escape($this->form->start_date->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->start_date; ?><span class="errors" id="errors-start_date"><?php echo $this->escape($this->msgarray['start_date'] ?? ''); ?></span></div>
+                        </div>
+                        <div class="new-form-ui clearb" style="width:45%; margin-left:5%;"><label><?php echo $this->escape($this->form->end_date->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->end_date; ?></div>
+                        </div>
+                    </div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', array()); ?>
+                    <div class="new-form-ui clearb"><label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                    </div>
+
+                    <div class="new-form-ui-submit" style="margin-top: 15px;">
+                        <div class="division">
+                            <input type="submit" name="submit" id="submitbutton" value="Save" class="actbtn_btn" />
+                            <button type="button" class="reset" onclick="parent.closeiframepopup('empcompensation', 'cancel');">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#description').jqte();
+                $('#start_date, #end_date').datepicker({
+                    dateFormat: '<?php echo DATEFORMAT_JS; ?>',
+                    changeMonth: true,
+                    changeYear: true
+                });
+            });
+        </script>
+    <?php endif; ?>
+</div>
