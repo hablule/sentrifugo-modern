@@ -19,3 +19,6 @@ download_avatars.php
 !/public/uploads/*/.gitkeep
 /logs/*
 !/logs/.gitkeep
+
+.phpunit.result.cache
+.phpunit.result.cache
