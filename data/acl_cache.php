@@ -1,7 +1,7 @@
 <?php
 /**
  * Auto-generated ACL Cache File
- * Generated on: 2026-11-26 10:22:15 GMT
+ * Generated on: 2026-11-27 20:25:01 GMT
  * DO NOT EDIT MANUALLY. Run Scanner and Save Mappings to regenerate.
  */
 return array (
@@ -260,20 +260,6 @@ return array (
         'editaction' => true,
         'indexaction' => true,
       ),
-      'certprovider' => 
-      array (
-        'addaction' => true,
-        'addpopupaction' => true,
-        'editaction' => true,
-        'indexaction' => true,
-      ),
-      'certprovidercategory' => 
-      array (
-        'addaction' => true,
-        'addpopupaction' => true,
-        'editaction' => true,
-        'indexaction' => true,
-      ),
       'city' => 
       array (
         'addaction' => true,
@@ -308,10 +294,13 @@ return array (
       ),
       'competencylevel' => 
       array (
+        'addaction' => true,
         'addpopupaction' => true,
         'deleteaction' => true,
         'editaction' => true,
         'indexaction' => true,
+        'makeactiveinactiveaction' => true,
+        'saveaction' => true,
         'viewaction' => true,
       ),
       'country' => 
@@ -535,13 +524,6 @@ return array (
         'addpopupaction' => true,
         'editaction' => true,
         'indexaction' => true,
-      ),
-      'educationlevelcode' => 
-      array (
-        'deleteaction' => true,
-        'editaction' => true,
-        'indexaction' => true,
-        'viewaction' => true,
       ),
       'eeoccategory' => 
       array (
@@ -883,8 +865,12 @@ return array (
       'institution' => 
       array (
         'addaction' => true,
+        'addpopupaction' => true,
+        'deleteaction' => true,
         'editaction' => true,
         'indexaction' => true,
+        'makeactiveinactiveaction' => true,
+        'saveaction' => true,
         'viewaction' => true,
       ),
       'jobtitle' => 
@@ -985,14 +971,6 @@ return array (
         'viewaction' => true,
       ),
       'measurement' => 
-      array (
-        'addaction' => true,
-        'addpopupaction' => true,
-        'editaction' => true,
-        'indexaction' => true,
-        'viewaction' => true,
-      ),
-      'measurementindex' => 
       array (
         'addaction' => true,
         'addpopupaction' => true,
@@ -1669,16 +1647,11 @@ return array (
       array (
         'addaction' => true,
         'addpopupaction' => true,
+        'deleteaction' => true,
         'editaction' => true,
         'indexaction' => true,
-        'viewaction' => true,
-      ),
-      'skillsource' => 
-      array (
-        'addaction' => true,
-        'addpopupaction' => true,
-        'editaction' => true,
-        'indexaction' => true,
+        'makeactiveinactiveaction' => true,
+        'saveaction' => true,
         'viewaction' => true,
       ),
       'state' => 
@@ -1701,16 +1674,22 @@ return array (
       array (
         'addaction' => true,
         'addpopupaction' => true,
+        'deleteaction' => true,
         'editaction' => true,
         'indexaction' => true,
+        'makeactiveinactiveaction' => true,
+        'saveaction' => true,
         'viewaction' => true,
       ),
       'studylevel' => 
       array (
         'addaction' => true,
         'addpopupaction' => true,
+        'deleteaction' => true,
         'editaction' => true,
         'indexaction' => true,
+        'makeactiveinactiveaction' => true,
+        'saveaction' => true,
         'viewaction' => true,
       ),
       'tabgroups' => 
@@ -2427,10 +2406,13 @@ return array (
       ),
       'competencylevel' => 
       array (
+        'addaction' => true,
         'addpopupaction' => true,
         'deleteaction' => true,
         'editaction' => true,
         'indexaction' => true,
+        'makeactiveinactiveaction' => true,
+        'saveaction' => true,
         'viewaction' => true,
       ),
       'country' => 
@@ -4336,9 +4318,12 @@ return array (
       ),
       'competencylevel' => 
       array (
+        'addaction' => true,
         'addpopupaction' => true,
         'editaction' => true,
         'indexaction' => true,
+        'makeactiveinactiveaction' => true,
+        'saveaction' => true,
         'viewaction' => true,
       ),
       'deductive' => 

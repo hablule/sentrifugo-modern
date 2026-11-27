@@ -818,3 +818,22 @@ defined('PAYGROUP_MENU_ID')   || define('PAYGROUP_MENU_ID', 416);
 defined('PAYROLLRUN_MENU_ID') || define('PAYROLLRUN_MENU_ID', 417);
 
 defined('EMP_COMPENSATION_MENU_ID') || define('EMP_COMPENSATION_MENU_ID', 418);
+
+// Sprint B: Talent, Skills & Qualifications Menu Constants
+defined('STUDYLEVEL_MENU_ID')                  || define('STUDYLEVEL_MENU_ID', 320);
+defined('STUDYFIELD_MENU_ID')                  || define('STUDYFIELD_MENU_ID', 316);
+defined('INSTITUTION')                         || define('INSTITUTION', 312);
+defined('INSTITUTION_MENU_ID')                 || define('INSTITUTION_MENU_ID', 312);
+defined('COMPETENCYLEVEL_MENU_ID')             || define('COMPETENCYLEVEL_MENU_ID', 124);
+
+defined('MEASUREMENT')                         || define('MEASUREMENT', 317);
+defined('MEASUREMENT_MENU_ID')                 || define('MEASUREMENT_MENU_ID', 317);
+defined('SKILLCATEGORY_MENU_ID')               || define('SKILLCATEGORY_MENU_ID', 314);
+defined('SKILLSOURCE_MENU_ID')                 || define('SKILLSOURCE_MENU_ID', 315);
+defined('SKILL_MENU_ID')                       || define('SKILL_MENU_ID', 319);
+
+defined('CERTIFICATECATEGORY_MENU_ID')         || define('CERTIFICATECATEGORY_MENU_ID', 325);
+defined('CERTIFICATEPROVIDERCATEGORY_MENU_ID') || define('CERTIFICATEPROVIDERCATEGORY_MENU_ID', 321);
+defined('CERTIFICATEPROVIDER_MENU_ID')         || define('CERTIFICATEPROVIDER_MENU_ID', 322);
+defined('CERTIFICATE')                         || define('CERTIFICATE', 329);
+defined('CERTIFICATE_MENU_ID')                 || define('CERTIFICATE_MENU_ID', 329);
