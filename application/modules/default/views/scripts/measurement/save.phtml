@@ -1,0 +1,345 @@
+<?php
+
+/**
+ * Measurement Save View (Merged Master-Detail)
+ *
+ * Strictly adheres to SSOT v7.0.0.
+ *
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ * @author     Hablul Soft Solution <https://hablul.in>
+ * @license    http://gnu.org GNU General Public License, version 3.0 (GPL-3.0)
+ * @version    Sentrifugo-Modern v4.0
+ */
+$this->msgarray   = isset($this->msgarray) ? $this->msgarray : [];
+sapp_Global::generateClientValidations($this->form);
+$childIndexesJson = json_encode($this->childIndexes ?? []);
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container">
+            <?php if (!empty($this->msgarray)) : ?>
+                <div class="ml-alert-1-error">
+                    <div style="display:block;"><span class="style-1-icon error"></span>Please correct the highlighted errors below.</div>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" method="<?php echo $this->escape($this->form->getMethod()); ?>">
+            <?php echo $this->form->id; ?>
+            <?php echo $this->form->indexes_payload; ?>
+
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <h4 style="font-size: 14px; color: #26a69a; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 15px;">Measurement Scale Settings</h4>
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->code; ?></div>
+                            <span class="errors" id="errors-code"><?php echo $this->escape($this->msgarray['code'] ?? ''); ?></span>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->name; ?></div>
+                            <span class="errors" id="errors-name"><?php echo $this->escape($this->msgarray['name'] ?? ''); ?></span>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->value_type->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->value_type; ?></div>
+                            <span class="errors" id="errors-value_type"><?php echo $this->escape($this->msgarray['value_type'] ?? ''); ?></span>
+                        </div>
+                    </div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', []); ?>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                        <span class="errors" id="errors-isactive"><?php echo $this->escape($this->msgarray['isactive'] ?? ''); ?></span>
+                    </div>
+
+                    <div style="clear: both; height: 1px;"></div>
+
+                    <!-- DYNAMIC CHILD GRID: MEASUREMENT INDEX VALUES -->
+                    <div id="indexes_section" style="display: none; margin-top: 20px; background-color: #fcfcfc; padding: 15px; border: 1px solid #eee; border-radius: 4px; clear: both;">
+                        <h4 style="font-size: 14px; color: #555; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 15px;">
+                            <i class="fa fa-list-ol"></i> Manage Measurement Index Values
+                        </h4>
+                        <span class="errors" id="errors-indexes_payload" style="display: block; margin-bottom: 10px; color: red; font-size: 12px;"><?php echo $this->escape($this->msgarray['indexes_payload'] ?? ''); ?></span>
+
+                        <div style="background: #fff; padding: 15px; border: 1px solid #e0e0e0; border-radius: 4px; margin-bottom: 20px; overflow: hidden;">
+                            <div style="float: left; width: 15%; padding-right: 15px; box-sizing: border-box;">
+                                <label style="display:block; font-weight:bold; color:#555; margin-bottom:5px; font-size:12px;">Order <span style="color:red;">*</span></label>
+                                <input type="number" id="tmp_sort_order" min="1" class="formDataElement" placeholder="e.g. 1" style="width: 100%; box-sizing: border-box;">
+                            </div>
+                            <div style="float: left; width: 35%; padding-right: 15px; box-sizing: border-box;">
+                                <label style="display:block; font-weight:bold; color:#555; margin-bottom:5px; font-size:12px;">Index Value <span style="color:red;">*</span></label>
+                                <input type="text" id="tmp_value" maxlength="100" class="formDataElement" placeholder="e.g. 3 - Practitioner" style="width: 100%; box-sizing: border-box;">
+                            </div>
+                            <div style="float: left; width: 35%; padding-right: 15px; box-sizing: border-box;">
+                                <label style="display:block; font-weight:bold; color:#555; margin-bottom:5px; font-size:12px;">Description (Opt)</label>
+                                <input type="text" id="tmp_desc" maxlength="255" class="formDataElement" placeholder="e.g. Delivers outcomes independently" style="width: 100%; box-sizing: border-box;">
+                            </div>
+                            <div style="float: left; width: 15%; box-sizing: border-box; padding-top: 22px; text-align: right;">
+                                <button type="button" id="add_idx_btn" class="actbtn_btn" onclick="addIndexRow();" style="margin: 0; width: 100%;">
+                                    <i class="fa fa-plus"></i> Add
+                                </button>
+                            </div>
+                        </div>
+
+                        <table class="grid" id="indexes_table" style="width: 100%; background: #fff;">
+                            <thead>
+                                <tr style="background: #f5f5f5;">
+                                    <th style="width: 12%;">Order</th>
+                                    <th style="width: 35%;">Index Value</th>
+                                    <th style="width: 38%;">Description</th>
+                                    <th style="width: 15%;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="indexes_tbody"></tbody>
+                        </table>
+                    </div>
+
+                    <div style="clear: both;"></div>
+                    <div class="new-form-ui-submit" style="margin-top: 20px;">
+                        <div class="division">
+                            <?php echo $this->form->submit; ?>
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>measurement';" value="Cancel" type="button" class="reset" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var indexesData = <?php echo $childIndexesJson; ?>;
+    var editingIndex = -1;
+
+    function escapeHtml(text) {
+        if (text === null || text === undefined) return '';
+        return $('<div>').text(String(text)).html();
+    }
+
+    $(document).ready(function() {
+        $('#description').jqte();
+        if ($.isFunction($.fn.select2)) {
+            $('select').select2({
+                width: '100%'
+            });
+        }
+
+        $('#value_type').change(function() {
+            if ($(this).val() === 'LIST') {
+                $('#indexes_section').slideDown();
+                renderIndexesTable();
+            } else {
+                $('#indexes_section').slideUp();
+            }
+        }).trigger('change');
+
+        $('#submitbutton').off('click').on('click', function(e) {
+            e.preventDefault();
+            var $form = $('#formid');
+
+            if ($.isFunction($form.valid) && !$form.valid()) {
+                return false;
+            }
+            $('#message_container').empty();
+            $form.find('.errors').text('');
+
+            if ($('#value_type').val() === 'LIST') {
+                if (indexesData.length === 0) {
+                    var errorHtml = '<div class="ml-alert-1-error"><div style="display:block;"><span class="style-1-icon error"></span>List measurements require at least one Index Value.</div></div>';
+                    $('#message_container').html(errorHtml);
+                    $('html, body').animate({
+                        scrollTop: 0
+                    }, 'slow');
+                    return false;
+                }
+                if (editingIndex > -1 || ($.trim($('#tmp_value').val()) !== '')) {
+                    if (!confirm('You have unsaved changes in the Index input fields. Save anyway?')) {
+                        return false;
+                    }
+                }
+                $('#indexes_payload').val(JSON.stringify(indexesData));
+            } else {
+                $('#indexes_payload').val('[]');
+            }
+
+            var formData = new FormData($form[0]);
+
+            $.ajax({
+                url: base_url + '/measurement/save/format/json',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                global: false,
+                beforeSend: function() {
+                    if ($.isFunction($.blockUI)) {
+                        $.blockUI({
+                            width: '50px',
+                            message: '<img src="<?php echo MEDIA_PATH; ?>images/loader2.gif" alt="Loading" />'
+                        });
+                    }
+                },
+                complete: function() {
+                    if ($.isFunction($.unblockUI)) {
+                        $.unblockUI();
+                    }
+                },
+                success: function(response) {
+                    if (response.result === 'saved') {
+                        window.location.href = base_url + '/measurement';
+                    } else {
+                        var mainError = response.result === 'exception' ? response.message : 'Please fix the highlighted errors.';
+                        $('#message_container').html('<div class="ml-alert-1-error"><div style="display:block;"><span class="style-1-icon error"></span>' + escapeHtml(mainError) + '</div></div>');
+
+                        if (typeof response === 'object' && response.result !== 'exception') {
+                            $.each(response, function(fieldId, errorMsg) {
+                                var msgText = (typeof errorMsg === 'object' && errorMsg !== null) ?
+                                    Object.values(errorMsg)[0] :
+                                    errorMsg;
+                                var $errTarget = $('#errors-' + fieldId);
+                                if ($errTarget.length) {
+                                    $errTarget.text(msgText);
+                                } else {
+                                    var $element = $('#' + fieldId).parent().parent();
+                                    if ($element.length) {
+                                        $element.append('<span class="errors" id="errors-' + fieldId + '">' + escapeHtml(msgText) + '</span>');
+                                    }
+                                }
+                            });
+                        }
+                        $('html, body').animate({
+                            scrollTop: 0
+                        }, 'slow');
+                    }
+                },
+                error: function() {
+                    $('#message_container').html('<div class="ml-alert-1-error"><div style="display:block;"><span class="style-1-icon error"></span>Server communication error.</div></div>');
+                }
+            });
+        });
+    });
+
+    function renderIndexesTable() {
+        var tbody = $('#indexes_tbody');
+        tbody.empty();
+
+        if (indexesData.length === 0) {
+            tbody.append('<tr><td colspan="4" style="text-align:center; padding: 15px; color:#999; font-style:italic;">No index values added yet.</td></tr>');
+            $('#tmp_sort_order').val(1);
+            return;
+        }
+
+        indexesData.sort(function(a, b) {
+            return (parseInt(a.sort_order, 10) || 0) - (parseInt(b.sort_order, 10) || 0);
+        });
+
+        $.each(indexesData, function(index, item) {
+            var actionHtml = '<a href="javascript:void(0);" onclick="editIndexRow(' + index + ');" style="color:#3498db; margin-right: 10px;" title="Edit"><i class="fa fa-edit"></i></a>' +
+                '<a href="javascript:void(0);" onclick="removeIndexRow(' + index + ');" style="color:#e74c3c;" title="Delete"><i class="fa fa-trash"></i></a>';
+            var rowStyle = (index === editingIndex) ? 'background-color: #fffacd;' : '';
+
+            var tr = '<tr style="border-bottom: 1px solid #eee; ' + rowStyle + '">' +
+                '<td style="text-align:center; font-weight:bold;">' + escapeHtml(item.sort_order) + '</td>' +
+                '<td>' + escapeHtml(item.value) + '</td>' +
+                '<td>' + (item.description ? escapeHtml(item.description) : '-') + '</td>' +
+                '<td style="text-align:center;">' + actionHtml + '</td>' +
+                '</tr>';
+            tbody.append(tr);
+        });
+
+        if (editingIndex === -1) {
+            $('#tmp_sort_order').val(indexesData.length + 1);
+        }
+    }
+
+    function addIndexRow() {
+        var sortOrder = parseInt($('#tmp_sort_order').val(), 10);
+        var val = $.trim($('#tmp_value').val());
+        var desc = $.trim($('#tmp_desc').val());
+
+        if (val === '') {
+            alert('Index Value is required.');
+            return;
+        }
+        if (isNaN(sortOrder) || sortOrder < 1) {
+            sortOrder = indexesData.length + 1;
+        }
+
+        var isDup = false;
+        $.each(indexesData, function(index, item) {
+            if (index !== editingIndex && String(item.value).toLowerCase() === val.toLowerCase()) {
+                isDup = true;
+            }
+        });
+        if (isDup) {
+            alert('This Index Value already exists in the list.');
+            return;
+        }
+
+        if (editingIndex > -1) {
+            var existingId = indexesData[editingIndex].id || '';
+            indexesData[editingIndex] = {
+                id: existingId,
+                sort_order: sortOrder,
+                value: val,
+                description: desc
+            };
+            editingIndex = -1;
+            $('#add_idx_btn').html('<i class="fa fa-plus"></i> Add');
+        } else {
+            indexesData.push({
+                id: '',
+                sort_order: sortOrder,
+                value: val,
+                description: desc
+            });
+        }
+
+        $('#tmp_value, #tmp_desc').val('');
+        renderIndexesTable();
+    }
+
+    function editIndexRow(index) {
+        var item = indexesData[index];
+        editingIndex = index;
+
+        $('#tmp_sort_order').val(item.sort_order);
+        $('#tmp_value').val(item.value);
+        $('#tmp_desc').val(item.description || '');
+        $('#add_idx_btn').html('<i class="fa fa-save"></i> Update');
+
+        renderIndexesTable();
+    }
+
+    function removeIndexRow(index) {
+        if (confirm('Are you sure you want to remove this index value?')) {
+            indexesData.splice(index, 1);
+            if (editingIndex === index) {
+                $('#tmp_value, #tmp_desc').val('');
+                $('#add_idx_btn').html('<i class="fa fa-plus"></i> Add');
+                editingIndex = -1;
+            } else if (editingIndex > index) {
+                editingIndex--;
+            }
+            renderIndexesTable();
+        }
+    }
+</script>

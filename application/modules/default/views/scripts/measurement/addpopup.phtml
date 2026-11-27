@@ -1,86 +1,182 @@
-<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
-<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
-<script src="<?php echo MEDIA_PATH; ?>js/custompopup.js"></script>
-<?php 
-?>
 <?php
 
-
+/**
+ * Measurement Add Popup View
+ *
+ * Strictly adheres to SSOT v7.0.0 (Section VIII).
+ *
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ * @author     Hablul Soft Solution <https://hablul.in>
+ * @license    http://gnu.org GNU General Public License, version 3.0 (GPL-3.0)
+ * @version    Sentrifugo-Modern v4.0
+ */
+$this->msgarray   = isset($this->msgarray) ? $this->msgarray : [];
+sapp_Global::generateClientValidations($this->form);
+$childIndexesJson = json_encode($this->childIndexes ?? []);
 ?>
-<?php if($this->popup == 'close') { ?>	
-	<div class="ml-alert-1-success">
-	<div class="style-1-icon success"></div>
-	Measurement  Added<?php echo $this->eventact; ?> successfully
-	</div>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/custompopup.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
 
-	<?php } 
-else
-{
-    sapp_Global::generateClientValidations($this->form);?>
-    <div id="error_message" style="display:none;"></div>
+<div style="padding: 15px;">
+    <?php if (isset($this->popup) && $this->popup == 'close') : ?>
+        <div class="ml-alert-1-success">
+            <div style="display:block;"><span class="style-1-icon success"></span>Measurement <?php echo $this->escape($this->eventact); ?> successfully.</div>
+        </div>
 
-	<form name="<?php echo $this->form->getName(); ?>" id="<?php echo $this->form->getId(); ?>" action="<?php echo $this->form->getAction();?>" method="<?php echo $this->form->getMethod(); ?>">
-		<?php echo $this->form->id; ?>
-        <div class="total-form-controller">
-		    <div class="new-form-ui clearb">
-			  <label class="required">Name</label>
-			<div class="division"><?php echo $this->form->name; ?></div>
-			<?php if(isset($this->msgarray['name'])){?>
-			   <span class="errors" id="errors-<?php echo $this->form->name->getId(); ?>"><?php echo $this->msgarray['name'];?></span>
-			<?php }?>
-			</div>
-            <div class="new-form-ui clearb">
-			  <label class="required">Code</label>
-			<div class="division"><?php echo $this->form->code; ?></div>
-			<?php if(isset($this->msgarray['code'])){?>
-			   <span class="errors" id="errors-<?php echo $this->form->code->getId(); ?>"><?php echo $this->msgarray['code'];?></span>
-			<?php }?>
-			</div>
-            <div class="new-form-ui clearb">
-			  <label class="required">Value Type</label>
-			<div class="division"><?php echo $this->form->valuetype; ?></div>
-			<?php if(isset($this->msgarray['valuetype'])){?>
-			   <span class="errors" id="errors-<?php echo $this->form->valuetype->getId(); ?>"><?php echo $this->msgarray['valuetype'];?></span>
-			<?php }?>
-			</div>
-            <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description','', 'fck_editor_height','',array());?>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                setTimeout(function() {
+                    parent.closeiframeAddPopup("<?php echo $this->optionsHtml; ?>", "measurement", "measurement_id", "Measurement");
+                }, 1500);
+            });
+        </script>
 
-        
-		<div class="new-form-ui-submit">
-		<?php echo $this->form->submit; ?>
-		<button onclick="closeiframepopup('measurement','cancel');"  type="button" >Cancel</button>
+    <?php else : ?>
+        <div id="error_message" style="display:none;"></div>
+        <?php if (!empty($this->msgarray['error'])) : ?>
+            <div class="ml-alert-1-error">
+                <div style="display:block;"><span class="style-1-icon error"></span><?php echo $this->escape($this->msgarray['error']); ?></div>
+            </div>
+        <?php endif; ?>
 
-		</div>
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" action="<?php echo $this->escape($this->form->getAction()); ?>" method="<?php echo $this->escape($this->form->getMethod()); ?>">
+            <?php echo $this->form->id; ?>
+            <?php echo $this->form->indexes_payload; ?>
+
+            <div class="total-form-controller" style="box-shadow: none; border: none; padding: 0;">
+                <div class="division">
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->code; ?></div>
+                        <span class="errors" id="errors-code"><?php echo $this->escape($this->msgarray['code'] ?? ''); ?></span>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->name; ?></div>
+                        <span class="errors" id="errors-name"><?php echo $this->escape($this->msgarray['name'] ?? ''); ?></span>
+                    </div>
+
+                    <div class="new-form-ui clearb">
+                        <label class="required"><?php echo $this->escape($this->form->value_type->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->value_type; ?></div>
+                        <span class="errors" id="errors-value_type"><?php echo $this->escape($this->msgarray['value_type'] ?? ''); ?></span>
+                    </div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', []); ?>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                    </div>
+
+                    <div id="popup_indexes_section" style="display: none; margin-top: 15px; background: #fcfcfc; padding: 10px; border: 1px solid #eee; border-radius: 4px; clear: both;">
+                        <label style="display:block; font-weight:bold; color:#555; margin-bottom:8px;">Measurement Index Values <span style="color:red;">*</span></label>
+                        <span class="errors" id="errors-indexes_payload" style="display:block; margin-bottom:8px;"><?php echo $this->escape($this->msgarray['indexes_payload'] ?? ''); ?></span>
+
+                        <div style="margin-bottom: 10px; overflow: hidden;">
+                            <input type="text" id="popup_tmp_value" maxlength="100" class="formDataElement" placeholder="e.g. 1 - Awareness" style="width: 72%; float: left;">
+                            <button type="button" onclick="addPopupIndexRow();" class="actbtn_btn" style="width: 24%; float: right; margin: 0;">+ Add</button>
+                        </div>
+                        <table class="grid" style="width: 100%; background: #fff;">
+                            <thead>
+                                <tr style="background: #f5f5f5;">
+                                    <th style="width: 15%;">Order</th>
+                                    <th style="width: 65%;">Value</th>
+                                    <th style="width: 20%;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="popup_indexes_tbody"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="new-form-ui-submit" style="margin-top: 15px;">
+                        <div class="division">
+                            <input type="submit" name="submit" id="submitbutton" value="Save" class="actbtn_btn" />
+                            <button type="button" class="reset" onclick="parent.closeiframepopup('measurement', 'cancel');">Cancel</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+
+        <script type="text/javascript">
+            var popupIndexesData = <?php echo $childIndexesJson; ?>;
+
+            function escapePopupHtml(text) {
+                return $('<div>').text(String(text || '')).html();
+            }
+
+            function renderPopupIndexes() {
+                var tbody = $('#popup_indexes_tbody');
+                tbody.empty();
+                if (popupIndexesData.length === 0) {
+                    tbody.append('<tr><td colspan="3" style="text-align:center; color:#999; padding:8px;">No index values added.</td></tr>');
+                } else {
+                    $.each(popupIndexesData, function(i, item) {
+                        item.sort_order = i + 1;
+                        tbody.append(
+                            '<tr><td style="text-align:center;">' + (i + 1) + '</td>' +
+                            '<td>' + escapePopupHtml(item.value) + '</td>' +
+                            '<td style="text-align:center;"><a href="javascript:void(0);" onclick="removePopupIndexRow(' + i + ');" style="color:#e74c3c;"><i class="fa fa-trash"></i></a></td></tr>'
+                        );
+                    });
+                }
+                $('#indexes_payload').val(JSON.stringify(popupIndexesData));
+            }
+
+            function addPopupIndexRow() {
+                var val = $.trim($('#popup_tmp_value').val());
+                if (val === '') {
+                    alert('Please enter an index value.');
+                    return;
+                }
+                for (var i = 0; i < popupIndexesData.length; i++) {
+                    if (popupIndexesData[i].value.toLowerCase() === val.toLowerCase()) {
+                        alert('This index value already exists.');
+                        return;
+                    }
+                }
+                popupIndexesData.push({
+                    id: '',
+                    sort_order: popupIndexesData.length + 1,
+                    value: val,
+                    description: ''
+                });
+                $('#popup_tmp_value').val('');
+                renderPopupIndexes();
+            }
+
+            function removePopupIndexRow(index) {
+                popupIndexesData.splice(index, 1);
+                renderPopupIndexes();
+            }
+
+            $(document).ready(function() {
+                $('#description').jqte();
+                $('#value_type').change(function() {
+                    if ($(this).val() === 'LIST') {
+                        $('#popup_indexes_section').slideDown();
+                        renderPopupIndexes();
+                    } else {
+                        $('#popup_indexes_section').slideUp();
+                        $('#indexes_payload').val('[]');
+                    }
+                }).trigger('change');
+
+                $('#formid').on('submit', function() {
+                    if ($('#value_type').val() === 'LIST') {
+                        $('#indexes_payload').val(JSON.stringify(popupIndexesData));
+                    } else {
+                        $('#indexes_payload').val('[]');
+                    }
+                });
+            });
+        </script>
+    <?php endif; ?>
 </div>
-</form>
-<?php } ?>
-
-<script>
-
-    <?php if ($this->popup != '') { ?>
-		setTimeout(function() {
-			
-			<?php if ($this->nested) { ?>
-				removeNestedPopup_OnFinish("<?php echo $this->measurement; ?>", '<?php echo $this->controllername; ?>', 'measurement_id', '', 'yes',false);
-			<?php }else{ ?>
-				closeiframeAddPopup("<?php echo $this->measurement ;?>",'<?php echo $this->controllername; ?>','measurement_id','Select...'); 	
-			<?php } ?>
-			// removeNestedPopup_OnFinish("<?php echo $this->leavecategoryData;?>","<?php echo $this->controllername; ?>","leavecategory","","");
-		}, 2000);
-
-	<?php } ?>
-    // }
-    $(document).ready(function() {
-		<?php if (count($this->messages)) { ?>
-			setTimeout(function() {
-				$('#popupmessage').fadeOut('slow');
-			}, 3000);
-
-		<?php } ?>
-        });
-		
-
-</script>
-<script>
-	$('#description').jqte();
-</script>

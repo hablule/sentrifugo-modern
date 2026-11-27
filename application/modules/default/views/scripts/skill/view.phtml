@@ -1,19 +1,113 @@
 <?php
 
-$baseUrl = $this->serverUrl().$this->baseUrl();
-echo $this->form->id; 
-$msgtitle = $this->controllername.'_delete';
-sapp_Helper::editdeleteForView(LINECATEGORY,$this->controllername,$this->id,$msgtitle);
-
- 
-sapp_Helper::viewHeader();
-sapp_Helper::viewBody('alt','Skill',(!empty($this->data['name']))?$this->data['name']:"...",'Code',(!empty($this->data['code']))?$this->data['code']:"...");
-sapp_Helper::viewBody('nor','Summary',(!empty($this->data['issummary']))?$this->data['issummary']:"...",'Active',(!empty($this->data['isactive']))?$this->data['isactive']:"...");
-sapp_Helper::viewBody('alt','Skill Categry',(!empty($this->data['skillcategoryname']))?$this->data['skillcategoryname']:"...",'Measurement',(!empty($this->data['measurementname']))?$this->data['measurementname']:"...");
-sapp_Helper::viewBody('nor','Description',(!empty($this->data['description']))?$this->data['description']:"...",'Parent Skill',(!empty($this->data['parentskill']))?$this->data['parentskill']:"...");
-
-sapp_Helper::viewFooter();
+/**
+ * Skill View (Read-Only)
+ *
+ * Strictly adheres to SSOT v7.0.0.
+ *
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ * @author     Hablul Soft Solution <https://hablul.in>
+ * @license    http://gnu.org GNU General Public License, version 3.0 (GPL-3.0)
+ * @version    Sentrifugo-Modern v4.0
+ */
 ?>
-<div class="new-form-ui-submit">
-<button onclick="window.location.href='<?php echo BASE_URL; ?>skill';" type="button">Cancel</button>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container">
+            <?php if (isset($this->nodata)) : ?>
+                <div class="ml-alert-1-info">
+                    <div style="display:block;"><span class="style-1-icon info"></span>No data found.</div>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <?php if (!isset($this->nodata)) : ?>
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->code; ?></div>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->name; ?></div>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->taxonomy_code->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->taxonomy_code; ?></div>
+                        </div>
+                    </div>
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->is_summary->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->is_summary; ?></div>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->parent_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->parent_id; ?></div>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->sort_order->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->sort_order; ?></div>
+                        </div>
+                    </div>
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->skill_category_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->skill_category_id; ?></div>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->measurement_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->measurement_id; ?></div>
+                        </div>
+                    </div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray ?? [], $this->form, 'description', '', 'fck_editor_height', '', []); ?>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                    </div>
+
+                    <div class="new-form-ui-submit">
+                        <div class="division">
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>skill';" value="Back to List" type="button" class="reset" />
+                            <?php
+                            $menuId = defined('SKILL_MENU_ID') ? SKILL_MENU_ID : (defined('SKILL') ? SKILL : 319);
+                            if (sapp_Global::_checkprivileges($menuId, $this->loginuserGroup, $this->loginuserRole, 'edit') == 'Yes') :
+                            ?>
+                                <input onclick="window.location.href='<?php echo BASE_URL; ?>skill/edit/id/<?php echo (int)$this->id; ?>';" value="Edit" type="button" class="reset" />
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#description').jqte();
+        $('.jqte_editor').attr('contenteditable', 'false');
+        if ($.isFunction($.fn.select2)) {
+            $('select').select2({
+                width: '100%'
+            });
+        }
+    });
+</script>

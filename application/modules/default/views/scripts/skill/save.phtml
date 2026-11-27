@@ -1,0 +1,144 @@
+<?php
+
+/**
+ * Skill Save View
+ *
+ * Strictly adheres to SSOT v7.0.0, including On-The-Fly Popup containers
+ * for Skill Category and Measurement Scale.
+ *
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ * @author     Hablul Soft Solution <https://hablul.in>
+ * @license    http://gnu.org GNU General Public License, version 3.0 (GPL-3.0)
+ * @version    Sentrifugo-Modern v4.0
+ */
+$this->msgarray = isset($this->msgarray) ? $this->msgarray : [];
+sapp_Global::generateClientValidations($this->form);
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/jquery-te.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo MEDIA_PATH; ?>css/style.css" />
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/scripts.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/materialize.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo MEDIA_PATH; ?>js/jquery-te.min.js"></script>
+
+<div class="row">
+    <div class="col s12">
+        <div id="message_container">
+            <?php if (!empty($this->msgarray)) : ?>
+                <?php if (isset($this->msgarray['error'])) : ?>
+                    <div class="ml-alert-1-error">
+                        <div style="display:block;"><span class="style-1-icon error"></span><?php echo $this->escape($this->msgarray['error']); ?></div>
+                    </div>
+                <?php else : ?>
+                    <div class="ml-alert-1-error">
+                        <div style="display:block;"><span class="style-1-icon error"></span>Please correct the highlighted errors below.</div>
+                    </div>
+                <?php endif; ?>
+            <?php endif; ?>
+        </div>
+
+        <form name="<?php echo $this->escape($this->form->getName()); ?>" id="<?php echo $this->escape($this->form->getId()); ?>" method="<?php echo $this->escape($this->form->getMethod()); ?>">
+            <?php echo $this->form->id; ?>
+
+            <div class="total-form-controller">
+                <div class="division">
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->code->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->code; ?></div>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->code->getId()); ?>"><?php echo $this->escape($this->msgarray['code'] ?? ''); ?></span>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->name->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->name; ?></div>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->name->getId()); ?>"><?php echo $this->escape($this->msgarray['name'] ?? ''); ?></span>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->taxonomy_code->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->taxonomy_code; ?></div>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->taxonomy_code->getId()); ?>"><?php echo $this->escape($this->msgarray['taxonomy_code'] ?? ''); ?></span>
+                        </div>
+                    </div>
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->is_summary->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->is_summary; ?></div>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->is_summary->getId()); ?>"><?php echo $this->escape($this->msgarray['is_summary'] ?? ''); ?></span>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label><?php echo $this->escape($this->form->parent_id->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->parent_id; ?></div>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->parent_id->getId()); ?>"><?php echo $this->escape($this->msgarray['parent_id'] ?? ''); ?></span>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->sort_order->getLabel()); ?></label>
+                            <div class="division"><?php echo $this->form->sort_order; ?></div>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->sort_order->getId()); ?>"><?php echo $this->escape($this->msgarray['sort_order'] ?? ''); ?></span>
+                        </div>
+                    </div>
+
+                    <div class="row no-margin">
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->skill_category_id->getLabel()); ?></label>
+                            <div class="division">
+                                <?php echo $this->form->skill_category_id; ?>
+                                <span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL . 'skillcategory/addpopup'; ?>', 'Add Skill Category');"> Add Category</span>
+                            </div>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->skill_category_id->getId()); ?>"><?php echo $this->escape($this->msgarray['skill_category_id'] ?? ''); ?></span>
+                        </div>
+                        <div class="new-form-ui clearb">
+                            <label class="required"><?php echo $this->escape($this->form->measurement_id->getLabel()); ?></label>
+                            <div class="division">
+                                <?php echo $this->form->measurement_id; ?>
+                                <span class="add-coloum" onclick="displaydeptform('<?php echo BASE_URL . 'measurement/addpopup'; ?>', 'Add Measurement');"> Add Measurement</span>
+                            </div>
+                            <span class="errors" id="errors-<?php echo $this->escape($this->form->measurement_id->getId()); ?>"><?php echo $this->escape($this->msgarray['measurement_id'] ?? ''); ?></span>
+                        </div>
+                    </div>
+
+                    <?php echo sapp_Helper::sd_form_helper($this->msgarray, $this->form, 'description', '', 'fck_editor_height', '', []); ?>
+
+                    <div class="new-form-ui clearb">
+                        <label><?php echo $this->escape($this->form->isactive->getLabel()); ?></label>
+                        <div class="division"><?php echo $this->form->isactive; ?></div>
+                        <span class="errors" id="errors-<?php echo $this->escape($this->form->isactive->getId()); ?>"><?php echo $this->escape($this->msgarray['isactive'] ?? ''); ?></span>
+                    </div>
+
+                    <div class="new-form-ui-submit">
+                        <div class="division">
+                            <?php echo $this->form->submit; ?>
+                            <input onclick="window.location.href='<?php echo BASE_URL; ?>skill';" value="Cancel" type="button" class="reset" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Popup Containers (SSOT VIII.1) -->
+<div id="skillcategoryContainer" style="display: none; overflow: auto;">
+    <div class="heading"><a href="javascript:void(0)"><img src="<?php echo MEDIA_PATH; ?>images/close.png" class="closeAttachPopup" style="margin: -24px 8px 0 0;"></a></div>
+    <iframe id="skillcategoryCont" class="user_iframe" frameborder="0"></iframe>
+</div>
+
+<div id="measurementContainer" style="display: none; overflow: auto;">
+    <div class="heading"><a href="javascript:void(0)"><img src="<?php echo MEDIA_PATH; ?>images/close.png" class="closeAttachPopup" style="margin: -24px 8px 0 0;"></a></div>
+    <iframe id="measurementCont" class="user_iframe" frameborder="0"></iframe>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#description').jqte();
+        if ($.isFunction($.fn.select2)) {
+            $('select').select2({
+                width: '100%'
+            });
+        }
+    });
+</script>

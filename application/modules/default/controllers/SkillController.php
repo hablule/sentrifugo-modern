@@ -1,366 +1,463 @@
 <?php
 
+/*********************************************************************************
+ *  This file is part of Sentrifugo-Modern.
+ *  Copyright (C) 2026 Hablul.
+ ********************************************************************************/
+
+/**
+ * Skill Controller
+ *
+ * Manages CRUD, Grid, Popup, and N-level tree integrity for Skills.
+ * Refactored to comply with SSOT v7.0.0.
+ *
+ * @category   Application
+ * @package    Default
+ * @subpackage Controllers
+ * @author     Hablul Soft Solution <https://hablul.in>
+ * @license    http://gnu.org GNU General Public License, version 3.0 (GPL-3.0)
+ * @version    Sentrifugo-Modern v4.0
+ */
 class Default_SkillController extends Zend_Controller_Action
-{ 
+{
+    protected $_loginUserId;
+    protected $_loginuserGroup;
+    protected $_loginuserRole;
+    protected $_model;
+    protected $_options;
+
+    /* =================================================================================
+     * GROUP 1: INITIALIZATION & LIFECYCLE
+     * ================================================================================= */
+
+    /**
+     * Initializes model, auth context, and view privilege variables.
+     *
+     * @return void
+     */
     public function init()
     {
         $this->_options = $this->getInvokeArg('bootstrap')->getOptions();
+        $this->_model   = new Default_Model_Skill();
+
+        $auth = Zend_Auth::getInstance();
+        if ($auth->hasIdentity()) {
+            $user = $auth->getStorage()->read();
+            $this->_loginUserId    = $user->id;
+            $this->_loginuserRole  = $user->emprole;
+            $this->_loginuserGroup = $user->group_id;
+
+            $this->view->loginuserRole  = $this->_loginuserRole;
+            $this->view->loginuserGroup = $this->_loginuserGroup;
+        }
+
+        require_once APPLICATION_PATH . '/modules/default/library/utilClasses/Util.php';
     }
+
+    /**
+     * Validates active session and configures AjaxContext for JSON actions.
+     *
+     * @return void
+     */
+    public function preDispatch()
+    {
+        $session = sapp_Global::_readSession();
+        if (!isset($session)) {
+            if ($this->getRequest()->isXmlHttpRequest()) {
+                die(Zend_Json::encode(['login' => 'failed']));
+            }
+            $this->_redirect('');
+        }
+
+        $ajaxContext = $this->_helper->getHelper('AjaxContext');
+        $ajaxContext->addActionContext('save', 'json')
+            ->addActionContext('delete', 'json')
+            ->addActionContext('makeactiveinactive', 'json')
+            ->initContext();
+    }
+
+    /* =================================================================================
+     * GROUP 2: DATA DISPLAY & RETRIEVAL
+     * ================================================================================= */
+
+    /**
+     * Renders the Skills DataGrid ordered by tree path.
+     *
+     * @return void
+     */
     public function indexAction()
     {
         try {
-            //code...
-      
-      $dmtmodel = new Default_Model_Skill();
-      $call = $this->_getParam('call');
+            $request = $this->getRequest();
+            $call    = $request->getParam('call');
+            if ($call == 'ajaxcall') {
+                $this->_helper->layout->disableLayout();
+            }
 
-      if ($call == 'ajaxcall') {
-          $this->_helper->layout->disableLayout();
-      }
+            $searchData    = (string)$request->getParam('searchData', '');
+            $refresh       = $request->getParam('refresh');
+            $dashboardcall = $request->getParam('dashboradcall');
+            $page          = $request->getParam('page', 1);
 
-      $refresh = $this->_getParam('refresh');
-      $dashboradcall = $this->_getParam('dashboradcall');
+            $sort    = $request->getParam('sort', 'ASC');
+            $by      = $request->getParam('by', 'order_path');
+            $perPage = ($dashboardcall == 'Yes')
+                ? $request->getParam('per_page', DASHBOARD_PERPAGE)
+                : $request->getParam('per_page', PERPAGE);
 
-      $data = [];
+            if ($refresh == 'refresh') {
+                $sort       = 'ASC';
+                $by         = 'order_path';
+                $page       = 1;
+                $searchData = '';
+            }
 
-      if ($refresh == 'refresh') {
-          if ($dashboradcall == 'Yes') {
-              $perPage = DASHBOARD_PERPAGE;
-          }
-          else{
-              $perPage = PERPAGE;
-          }
-          $sort = 'DESC';
-          $by = 'name';
-          $pageNo = 1;
-          $searchData = '';
-      }
-      else{
-          $sort = ($this->_getParam('sort')!='') ? $this->_getParam('sort'):'DESC';
-          $by = ($this->_getParam('by')!='') ? $this->_getParam('by'):'name';
-          if($dashboradcall == 'Yes')
-          $perPage = $this->_getParam('per_page',DASHBOARD_PERPAGE);
-          else
-          $perPage = $this->_getParam('per_page',PERPAGE);
+            $dataTmp = $this->_model->getGrid($sort, $by, $perPage, $page, rtrim($searchData, ','), $call, $dashboardcall);
 
-          $pageNo = $this->_getParam('page',1);
-          $searchData = $this->_getParam('searchData');
-          $searchData = rtrim($searchData,',');
-      }
-      $dataTmp = $dmtmodel->getGrid($sort,$by,$perPage,$pageNo,$searchData,$call,$dashboradcall);
-
-      array_push($data,$dataTmp);
-      $this->view->dataArray = $data;
-      $this->view->call = $call;
-      $this->view->messages = $this->_helper->flashMessenger->getMessages();
-    } catch (\Throwable $th) {
-        Zend_Debug::dump($th->getMessage());
-    }
-    }
-    public function addAction()
-    {
-
-
-
-        try {
-            $form = new Default_Form_Skill();
-        $dmtmodel = new Default_Model_Skill();
-        $auth = Zend_Auth::getInstance();
- $auth = Zend_Auth::getInstance();
-		if($auth->hasIdentity()){
-            $loginUserId = $auth->getStorage()->read()->id;
-            $loginuserRole = $auth->getStorage()->read()->emprole;
-            $loginuserGroup = $auth->getStorage()->read()->group_id;            }
-        $categorypermission = '';
-        $categorypermission = sapp_Global::_checkprivileges(SKILLCATEGORY,$loginuserGroup,$loginuserRole,'add');
-        $this->view->categorypermission = $categorypermission;
-      
-        $indexpermission = '';
-        $indexpermission = sapp_Global::_checkprivileges(MEASURMENTINDEX,$loginuserGroup,$loginuserRole,'add');
-        $this->view->indexpermission = $indexpermission;
-
-
-        $modelb = new Default_Model_Measurement();
-        $add = $modelb->getmeasurementlist();
-        $form->measurement_id->addMultiOption(' ', 'Select...');
-        if (empty($add)) {
-            $msgarray['measurement_id'] = 'Measurement is not configured yet.';
-        } else {
-            foreach ($add as $adds) {
-                $form->measurement_id->addMultiOptions([$adds['measurement_id'] => $adds['name']]);
+            $this->view->dataArray     = [$dataTmp];
+            $this->view->call          = $call;
+            $this->view->messages      = $this->_helper->flashMessenger->getMessages();
+            $this->view->menu_id       = defined('SKILL_MENU_ID') ? SKILL_MENU_ID : (defined('SKILL') ? SKILL : 319);
+            $this->view->activeMenuUrl = rtrim(BASE_URL, '/') . '/skill';
+        } catch (\Throwable $e) {
+            error_log('Skill Index Error: ' . $e->getMessage());
+            if (APPLICATION_ENV == 'development') {
+                Zend_Debug::dump($e->getMessage());
             }
         }
-        $modelc = new Default_Model_Skillcategory();
-        $addc = $modelc->getallcategory();
-        $form->skillcategory_id->addMultiOption(' ', 'Select...');
-
-        if (empty($addc)) {
-            $msgarray['skillcategory_id'] = 'skillcategory is not configured yet.';
-        } else {
-            foreach ($addc as $addsc) {
-                $form->skillcategory_id->addMultiOptions([$addsc['skillcategory_id'] => $addsc['name']]);
-            }
-        }
-        $form->parentskill_id->addMultiOption(' ', 'Select...');
-        $pskill=$dmtmodel->getskilllistsummary();
-
- if (empty($pskill)) {
-            $msgarray['parentskill_id'] = 'skill is not configured yet.';
-        } else {
-            foreach ($pskill as $pskills) {
-                $form->parentskill_id->addMultiOptions([$pskills['skill_id'] => $pskills['name']]);
-            }
-        }
-        if ($this->getRequest()->isPost()) {
-           
-           
-            if ($form->isValid($this->getRequest()->getPost())) {
-
-                $data = [
-                    'name'=>$this->_request->getParam('name'),
-                    'code'=>$this->_request->getParam('code'),
-                    'skillcategory_id'=>$this->_request->getParam('skillcategory_id'),
-                    'measurement_id'=>$this->_request->getParam('measurement_id'),
-                    'parentskill_id'=>$this->_request->getParam('parentskill_id'),
-                    'description'=>$this->_request->getParam('description'),
-                    'createdby'=>$loginUserId,
-                    'createddate'=>gmdate('Y-m-d H:i:s')
-                ];
-                $Id=$dmtmodel->SaveorUpdateData($data,'');
-                $tableid = $Id;
-                $actionflag = 1;
-                $result = sapp_Global::logManager(291,$actionflag,$loginUserId,$tableid);
-                $this->_helper->getHelper("FlashMessenger")->addMessage(['success'=>'Skill Added Successful']);
-                $this->_redirect('skill');
-            }
-            $messages = $form->getMessages();
-            foreach ($messages as $key => $val) {
-                foreach ($val as $key2 => $val2) {
-                    $msgArray[$key] = $val2;
-                    break;
-                }
-            }
-        }
-        $this->view->msgarray = $msgArray;
-        $this->view->form = $form; 
-    } catch (\Throwable $th) {
-        Zend_Debug::dump($th->getMessage());
-    }
     }
 
-    public function addpopupAction()
-    {
-        
-        try {
-            Zend_Layout::getMvcInstance()->setLayoutPath(APPLICATION_PATH . "/layouts/scripts/popup/");       //code...
-      
-        $form = new Default_Form_Skill();
-        $dmtmodel = new Default_Model_skill();
-        $auth = Zend_Auth::getInstance();
-        if ($auth->hasIdentity()) {
-            $loginUserId = $auth->getStorage()->read()->id;
-        }
-        $id = $this->_request->getParam('id');
-		$this->view->status=$id;
-        $form->setAction(BASE_URL.'skill/addpopup/id/'.$id);
-        $modelb = new Default_Model_Measurement();
-        $add = $modelb->getmeasurementlist();
-        $form->measurement_id->addMultiOption(' ', 'Select...');
-        if (empty($add)) {
-            $msgarray['measurement_id'] = 'Measurement is not configured yet.';
-        } else {
-            foreach ($add as $adds) {
-                $form->measurement_id->addMultiOptions([$adds['measurement_id'] => $adds['name']]);
-            }
-        }
-        $modelc = new Default_Model_Skillcategory();
-        $addc = $modelc->getallcategory();
-        $form->skillcategory_id->addMultiOption(' ', 'Select...');
-
-        if (empty($addc)) {
-            $msgarray['skillcategory_id'] = 'skillcategory is not configured yet.';
-        } else {
-            foreach ($addc as $addsc) {
-                $form->skillcategory_id->addMultiOptions([$addsc['skillcategory_id'] => $addsc['name']]);
-            }
-        }
-        $form->parentskill_id->addMultiOption(' ', 'Select...');
-        $pskill=$dmtmodel->getskilllistsummary();
-
- if (empty($pskill)) {
-            $msgarray['parentskill_id'] = 'skill is not configured yet.';
-        } else {
-            foreach ($pskill as $pskills) {
-                $form->parentskill_id->addMultiOptions([$pskills['skill_id'] => $pskills['name']]);
-            }
-        }
-        if ($this->getRequest()->isPost()) {
-           
-            
-            if ($form->isValid($this->getRequest()->getPost())) {
-                $data = [
-                    'name'=>$this->_request->getParam('name'),
-                    'code'=>$this->_request->getParam('code'),
-                    'skillcategory_id'=>$this->_request->getParam('skillcategory_id'),
-                    'measurement_id'=>$this->_request->getParam('measurement_id'),
-                    'parentskill_id'=>$this->_request->getParam('parentskill_id'),
-                    'description'=>$this->_request->getParam('description'),
-                    'createdby'=>$loginUserId,
-                    'createddate'=>gmdate('Y-m-d H:i:s')
-                ];
-                $Id= $dmtmodel->SaveorUpdateData($data,'');
-                $tableid = $Id;
-                $actionflag = 1;
-                $result = sapp_Global::logManager(291,$actionflag,$loginUserId,$tableid);
-               $this->view->popup = 'close';
-               $linecategoryData = $dmtmodel->fetchAll('isactive = "Y"','name')->toArray();
-				$opt ='';
-				foreach($linecategoryData as $record){
-					$opt .= sapp_Global::selectOptionBuilder($record['skil_id'], $record['name']);
-				}
-                if ($id==1) {
-                    $this->view->nested=true;
-                }
-                else{
-                    $this->view->nested = false;
-                }
-				$this->view->skill = $opt;
-               $this->view->controllername = 'skill';
-            }
-            $messages = $form->getMessages();
-            foreach ($messages as $key => $val) {
-                foreach ($val as $key2 => $val2) {
-                    $msgArray[$key] = $val2;
-                    break;
-                }
-            }
-        }
-        $this->view->msgarray = $msgArray;
-        $this->view->form = $form; 
-    } catch (\Throwable $th) {
-        Zend_Debug::dump($th->getMessage());
-    }
-    }
-
-    public function editAction()
-    {
-        try{
-        require_once 'application/modules/default/library/utilClasses/Util.php';
-        $form = new Default_Form_Skill();
-        $dmtmodel = new Default_Model_Skill();
-        $auth = Zend_Auth::getInstance();
-		if($auth->hasIdentity()){
-            $loginUserId = $auth->getStorage()->read()->id;
-            $loginuserRole = $auth->getStorage()->read()->emprole;
-            $loginuserGroup = $auth->getStorage()->read()->group_id;            }
-        $categorypermission = '';
-        $categorypermission = sapp_Global::_checkprivileges(SKILLCATEGORY,$loginuserGroup,$loginuserRole,'add');
-        $this->view->categorypermission = $categorypermission;
-       
-        $indexpermission = '';
-        $indexpermission = sapp_Global::_checkprivileges(MEASURMENTINDEX,$loginuserGroup,$loginuserRole,'add');
-        $this->view->indexpermission = $indexpermission;
-
-
-        $id = $this->_getParam('id');
-        $modelb = new Default_Model_Measurement();
-        $add = $modelb->getmeasurementlist();
-        $form->measurement_id->addMultiOption(' ', 'Select...');
-        if (empty($add)) {
-            $msgarray['measurement_id'] = 'Measurement is not configured yet.';
-        } else {
-            foreach ($add as $adds) {
-                $form->measurement_id->addMultiOptions([$adds['measurement_id'] => $adds['name']]);
-            }
-        }
-        $modelc = new Default_Model_Skillcategory();
-        $addc = $modelc->getallcategory();
-        $form->skillcategory_id->addMultiOption(' ', 'Select...');
-
-        if (empty($addc)) {
-            $msgarray['skillcategory_id'] = 'skillcategory is not configured yet.';
-        } else {
-            foreach ($addc as $addsc) {
-                $form->skillcategory_id->addMultiOptions([$addsc['skillcategory_id'] => $addsc['name']]);
-            }
-        }
-        $form->parentskill_id->addMultiOption(' ', 'Select...');
-        $pskill=$dmtmodel->getskilllist();
-
- if (empty($pskill)) {
-            $msgarray['parentskill_id'] = 'skill is not configured yet.';
-        } else {
-            foreach ($pskill as $pskills) {
-                $form->parentskill_id->addMultiOptions([$pskills['skill_id'] => $pskills['name']]);
-            }
-        }
-
-        $dmtdata=$dmtmodel->getskill($id);
-        if ($auth->hasIdentity()) {
-            $loginUserId = $auth->getStorage()->read()->id;
-        }
-        $form->populate($dmtdata);
-        $form->setAttrib('action',BASE_URL.'skill/edit/id/'.$id);
-        $form->isactive->setValue(utlis::getcheckboxvalue($dmtdata['isactive'],'form'));
-        $form->issummary->setValue(utlis::getcheckboxvalue($dmtdata['issummary'],'form'));
-
-        if ($this->getRequest()->isPost()) {
-            if ($form->isValid($this->getRequest()->getPost())) {
-                $data = [
-                    'name'=>$this->_request->getParam('name'),
-                    'code'=>$this->_request->getParam('code'),
-                    'skillcategory_id'=>$this->_request->getParam('skillcategory_id'),
-                    'measurement_id'=>$this->_request->getParam('measurement_id'),
-                    'parentskill_id'=>$this->_request->getParam('parentskill_id'),
-                    'description'=>$this->_request->getParam('description'),
-                    'isactive'=>utlis::getcheckboxvalue($this->_request->getParam('isactive')),
-                    'issummary'=>utlis::getcheckboxvalue($this->_request->getParam('issummary')),
-
-                    'modifiedby'=>$loginUserId,
-                    'modifieddate'=>gmdate('Y-m-d H:i:s')
-                ];
-                $dmtmodel->SaveorUpdateData($data,'skill_id='.$id);
-                $tableid = $id;
-                $actionflag = 2;
-                $result = sapp_Global::logManager(291,$actionflag,$loginUserId,$tableid);
-                $this->_helper->getHelper("FlashMessenger")->addMessage(['success'=>'Skill Updated Successful']);
-                $this->_redirect('skill');
-            }
-            $messages = $form->getMessages();
-            foreach ($messages as $key => $val) {
-                foreach ($val as $key2 => $val2) {
-                    $msgArray[$key] = $val2;
-                    break;
-                }
-            }
-        }
-        $this->view->msgarray = $msgArray;
-        $this->view->form = $form;
-    } catch (\Throwable $th) {
-        Zend_Debug::dump($th->getMessage());
-    }
-    }
+    /**
+     * Renders a read-only view of a Skill record.
+     *
+     * @return void
+     */
     public function viewAction()
     {
-        $form = new Default_Form_Skill();
-        $dmtmodel = new Default_Model_Skill();
-        $auth = Zend_Auth::getInstance();
-        $id = $this->_getParam('id');
-        $dmtdata=$dmtmodel->getskillforview($id);
-        if ($auth->hasIdentity()) {
-            $loginUserId = $auth->getStorage()->read()->id;
+        $id   = (int)$this->getRequest()->getParam('id');
+        $form = $this->_prepareForm($id, true);
+
+        if ($id <= 0 || !$this->_model->getRecordById($id)) {
+            $this->view->nodata = true;
         }
-        $form->populate($dmtdata);
-       
-     
-        $form->isactive->setValue($dmtdata['isactive']);
-        $this->view->form = $form; 
-        $this->view->isactive = $dmtdata['isactive'];
-        $this->view->form = $form;
-        $this->view->data = $dmtdata;
 
-        $this->view->id = $id;
+        $this->view->form           = $form;
+        $this->view->id             = $id;
+        $this->view->controllername = 'skill';
+        $this->view->menu_id        = defined('SKILL_MENU_ID') ? SKILL_MENU_ID : (defined('SKILL') ? SKILL : 319);
+        $this->view->activeMenuUrl  = rtrim(BASE_URL, '/') . '/skill';
+    }
 
-        $this->view->controllername='skill';
+    /* =================================================================================
+     * GROUP 3: MODIFICATION & PERSISTENCE
+     * ================================================================================= */
+
+    /**
+     * Displays the Add Skill form.
+     *
+     * @return void
+     */
+    public function addAction()
+    {
+        $this->view->form          = $this->_prepareForm();
+        $this->view->activeMenuUrl = rtrim(BASE_URL, '/') . '/skill';
+        $this->render('save');
+    }
+
+    /**
+     * Handles the On-The-Fly Popup Add workflow (SSOT VIII).
+     *
+     * @return void
+     */
+    public function addpopupAction()
+    {
+        Zend_Layout::getMvcInstance()->setLayoutPath(APPLICATION_PATH . '/layouts/scripts/popup/');
+
+        $form = new Default_Form_Skill();
+        $this->_populateDropdowns($form);
+        $form->setAction(BASE_URL . 'skill/addpopup');
+        $form->getElement('submit')->setAttrib('onclick', null);
+
+        $request           = $this->getRequest();
+        $msgarray          = [];
+        $this->view->popup = '';
+
+        if ($request->isPost()) {
+            if ($form->isValid($request->getPost())) {
+                $parentRaw = trim((string)$request->getParam('parent_id', ''));
+                $parentId  = ($parentRaw !== '' && (int)$parentRaw > 0) ? (int)$parentRaw : null;
+
+                if ($parentId !== null) {
+                    $parentRow = $this->_model->getRecordById($parentId);
+                    if (!$parentRow || (int)$parentRow['is_summary'] !== 1) {
+                        $msgarray['parent_id'] = 'Parent node must be an active Summary Group.';
+                    }
+                }
+
+                if (empty($msgarray)) {
+                    $db = Zend_Db_Table::getDefaultAdapter();
+                    $startedTransaction = !$db->getConnection()->inTransaction();
+                    if ($startedTransaction) {
+                        $db->beginTransaction();
+                    }
+
+                    try {
+                        $taxVal  = trim((string)$request->getParam('taxonomy_code', ''));
+                        $descVal = trim((string)$request->getParam('description', ''));
+
+                        $data = [
+                            'code'              => strtoupper(trim((string)$request->getParam('code'))),
+                            'name'              => trim((string)$request->getParam('name')),
+                            'taxonomy_code'     => ($taxVal !== '') ? $taxVal : null,
+                            'skill_category_id' => (int)$request->getParam('skill_category_id'),
+                            'measurement_id'    => (int)$request->getParam('measurement_id'),
+                            'parent_id'         => $parentId,
+                            'is_summary'        => (int)$request->getParam('is_summary', 0),
+                            'sort_order'        => max(1, (int)$request->getParam('sort_order', 1)),
+                            'description'       => ($descVal !== '') ? $descVal : null,
+                            'isactive'          => (int)$request->getParam('isactive', 1)
+                        ];
+
+                        $newId  = $this->_model->saveRecord($data);
+                        $menuId = defined('SKILL_MENU_ID') ? SKILL_MENU_ID : (defined('SKILL') ? SKILL : 319);
+                        sapp_Global::logManager($menuId, 1, $this->_loginUserId, $newId);
+
+                        if ($startedTransaction) {
+                            $db->commit();
+                        }
+
+                        $activeRecords = $this->_model->getLeafBreadcrumbPairs(true);
+                        $optionsHtml   = sapp_Global::selectOptionBuilder('', 'Select Skill');
+                        foreach ($activeRecords as $valId => $valName) {
+                            $optionsHtml .= sapp_Global::selectOptionBuilder($valId, $valName, $newId);
+                        }
+
+                        $this->view->optionsHtml   = $optionsHtml;
+                        $this->view->newInsertedId = $newId;
+                        $this->view->eventact      = 'added';
+                        $this->view->popup         = 'close';
+                    } catch (\Throwable $dbError) {
+                        if ($startedTransaction && $db->getConnection()->inTransaction()) {
+                            $db->rollBack();
+                        }
+                        error_log('Skill Popup Save Error: ' . $dbError->getMessage());
+                        $msgarray['error'] = 'System error occurred while saving the skill.';
+                    }
+                }
+            } else {
+                foreach ($form->getMessages() as $field => $errors) {
+                    $msgarray[$field] = current($errors);
+                }
+            }
+        }
+
+        $this->view->controllername = 'skill';
+        $this->view->msgarray       = $msgarray;
+        $this->view->form           = $form;
+    }
+
+    /**
+     * Displays the Edit Skill form.
+     *
+     * @return void
+     */
+    public function editAction()
+    {
+        $id = (int)$this->getRequest()->getParam('id');
+        $this->view->form          = $this->_prepareForm($id, false);
+        $this->view->activeMenuUrl = rtrim(BASE_URL, '/') . '/skill';
+        $this->render('save');
+    }
+
+    /**
+     * Persists a Skill and updates materialized hierarchy paths via AJAX JSON.
+     *
+     * @return void
+     */
+    public function saveAction()
+    {
+        $form    = new Default_Form_Skill();
+        $request = $this->getRequest();
+
+        if ($request->isPost()) {
+            $id = (int)$request->getParam('id');
+            $this->_populateDropdowns($form, ($id > 0 ? $id : null));
+
+            if ($form->isValid($request->getPost())) {
+                $parentRaw = trim((string)$request->getParam('parent_id', ''));
+                $parentId  = ($parentRaw !== '' && (int)$parentRaw > 0) ? (int)$parentRaw : null;
+                $isSummary = (int)$request->getParam('is_summary', 0);
+
+                // Hierarchy integrity guards
+                if ($parentId !== null) {
+                    if ($id > 0 && $this->_model->isDescendantOrSelf($id, $parentId)) {
+                        $this->_helper->json(['parent_id' => 'Invalid parent selection: cannot assign a skill under itself or its descendants.']);
+                        return;
+                    }
+                    $parentRow = $this->_model->getRecordById($parentId);
+                    if (!$parentRow || (int)$parentRow['is_summary'] !== 1) {
+                        $this->_helper->json(['parent_id' => 'Parent node must be an active Summary Group.']);
+                        return;
+                    }
+                }
+
+                if ($id > 0 && $isSummary === 0 && $this->_model->hasActiveChildren($id)) {
+                    $this->_helper->json(['is_summary' => 'Cannot convert a Summary Group to a Leaf Skill while it has active child skills.']);
+                    return;
+                }
+
+                $db = Zend_Db_Table::getDefaultAdapter();
+                $startedTransaction = !$db->getConnection()->inTransaction();
+                if ($startedTransaction) {
+                    $db->beginTransaction();
+                }
+
+                try {
+                    $taxVal  = trim((string)$request->getParam('taxonomy_code', ''));
+                    $descVal = trim((string)$request->getParam('description', ''));
+
+                    $data = [
+                        'code'              => strtoupper(trim((string)$request->getParam('code'))),
+                        'name'              => trim((string)$request->getParam('name')),
+                        'taxonomy_code'     => ($taxVal !== '') ? $taxVal : null,
+                        'skill_category_id' => (int)$request->getParam('skill_category_id'),
+                        'measurement_id'    => (int)$request->getParam('measurement_id'),
+                        'parent_id'         => $parentId,
+                        'is_summary'        => $isSummary,
+                        'sort_order'        => max(1, (int)$request->getParam('sort_order', 1)),
+                        'description'       => ($descVal !== '') ? $descVal : null,
+                        'isactive'          => (int)$request->getParam('isactive', 1)
+                    ];
+
+                    $actionFlag = ($id > 0) ? 2 : 1;
+                    $recordId   = $this->_model->saveRecord($data, $id);
+
+                    $menuId = defined('SKILL_MENU_ID') ? SKILL_MENU_ID : (defined('SKILL') ? SKILL : 319);
+                    sapp_Global::logManager($menuId, $actionFlag, $this->_loginUserId, $recordId);
+
+                    if ($startedTransaction) {
+                        $db->commit();
+                    }
+
+                    $msg = ($actionFlag == 1) ? 'Added' : 'Updated';
+                    $this->_helper->flashMessenger->addMessage(['success' => "Skill $msg successfully."]);
+                    $this->_helper->json(['result' => 'saved', 'nomessage' => 'yes']);
+                } catch (\Throwable $e) {
+                    if ($startedTransaction && $db->getConnection()->inTransaction()) {
+                        $db->rollBack();
+                    }
+                    error_log('Skill Save Error: ' . $e->getMessage());
+                    $this->_helper->json(['result' => 'exception', 'message' => 'System error occurred while saving the record.']);
+                }
+            } else {
+                $this->_helper->json($form->getMessages());
+            }
+        }
+    }
+
+    /* =================================================================================
+     * GROUP 4: REMOVAL & STATUS
+     * ================================================================================= */
+
+    /**
+     * Soft-deletes a Skill record via AJAX.
+     *
+     * @return void
+     */
+    public function deleteAction()
+    {
+        $id = (int)$this->getRequest()->getParam('objid');
+        if ($id) {
+            try {
+                $this->_model->deleteRecord($id);
+
+                $menuId = defined('SKILL_MENU_ID') ? SKILL_MENU_ID : (defined('SKILL') ? SKILL : 319);
+                sapp_Global::logManager($menuId, 3, $this->_loginUserId, $id);
+
+                $this->_helper->json(['msgtype' => 'success', 'message' => 'Skill deleted successfully.']);
+            } catch (\Throwable $e) {
+                $this->_helper->json(['msgtype' => 'error', 'message' => $e->getMessage()]);
+            }
+        } else {
+            $this->_helper->json(['msgtype' => 'error', 'message' => 'Invalid Request.']);
+        }
+    }
+
+    /**
+     * Toggles active/inactive state via AJAX.
+     *
+     * @return void
+     */
+    public function makeactiveinactiveAction()
+    {
+        try {
+            $id     = (int)$this->getRequest()->getParam('id');
+            $status = (int)$this->getRequest()->getParam('status');
+
+            $this->_model->toggleStatus($id, $status);
+
+            $menuId = defined('SKILL_MENU_ID') ? SKILL_MENU_ID : (defined('SKILL') ? SKILL : 319);
+            sapp_Global::logManager($menuId, 4, $this->_loginUserId, $id);
+
+            $this->_helper->json(['result' => 'yes']);
+        } catch (\Throwable $e) {
+            $this->_helper->json(['result' => 'no']);
+        }
+    }
+
+    /* =================================================================================
+     * GROUP 5: INTERNAL HELPERS
+     * ================================================================================= */
+
+    /**
+     * Populates parent, category, and measurement dropdowns using SSOT VI.12.
+     *
+     * @param Default_Form_Skill $form
+     * @param int|null           $excludeId
+     * @return void
+     */
+    private function _populateDropdowns(Default_Form_Skill $form, $excludeId = null)
+    {
+        $catModel  = new Default_Model_Skillcategory();
+        $measModel = new Default_Model_Measurement();
+
+        $form->skill_category_id->addMultiOption('', 'Select Skill Category')
+            ->addMultiOptions($catModel->getPairs(true));
+
+        $form->measurement_id->addMultiOption('', 'Select Measurement Scale')
+            ->addMultiOptions($measModel->getPairs(true));
+
+        $form->parent_id->addMultiOption('', 'Root Level (No Parent)')
+            ->addMultiOptions($this->_model->getSummaryBreadcrumbPairs($excludeId, true));
+    }
+
+    /**
+     * Populates the Skill form and configures read-only mode if requested.
+     *
+     * @param int|null $id
+     * @param bool     $readonly
+     * @return Default_Form_Skill
+     */
+    private function _prepareForm($id = null, $readonly = false)
+    {
+        $form = new Default_Form_Skill();
+        $this->_populateDropdowns($form, $id);
+
+        if ($id) {
+            $data = $this->_model->getRecordById($id);
+            if ($data) {
+                $form->populate($data);
+                $form->getElement('submit')->setLabel('Update');
+            }
+        }
+
+        if ($readonly) {
+            foreach ($form->getElements() as $el) {
+                $el->setAttrib('disabled', 'disabled');
+            }
+            $form->removeElement('submit');
+        }
+
+        return $form;
     }
 }

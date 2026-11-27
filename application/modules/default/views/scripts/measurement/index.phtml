@@ -1,41 +1,57 @@
-<?php try {
-    //code...
-if (count($this->messages)) {?>
-	<div id="dispmsgemp" class="settingssuccess">
-		<?php 
-			foreach ($this->messages as $message)
-			{
-				$flag = array();				
-				$flag = array_keys($message);
-				echo "<div id='messageData' class='ml-alert-1-success'><div style='display:block;'><span class='style-1-icon $flag[0]'></span>";
-				echo $message[$flag[0]];
-				echo "</div></div>";
-			} 
-		;
-		?>
-	</div>	
-	
-<?php } ?>
-<span id="error_message"></span>
-<?php 
- if($this->call == 'ajaxcall'){
-	$div = ''; $endDiv = ''; 
-} else { 
-	$div = '<div id="grid_'.$this->dataArray[0]['objectname'].'" class="all-grid-control">'; $endDiv = '</div>';
-}
-	echo $div.'<div id="msg" style="display:none;font-style: oblique; font-weight: bold; color: green;""></div>'.$this->grid($this->dataArray[0]).$endDiv; 
+<?php
+
+/**
+ * Measurement Index View
+ *
+ * Strictly adheres to SSOT v7.0.0.
+ *
+ * @category   Application
+ * @package    Default
+ * @subpackage Views
+ * @author     Hablul Soft Solution <https://hablul.in>
+ * @license    http://gnu.org GNU General Public License, version 3.0 (GPL-3.0)
+ * @version    Sentrifugo-Modern v4.0
+ */
 ?>
-<script type='text/javascript'>
-$(document).ready(function(){
-<?php if($this->call != 'ajaxcall'){ ?>
-	$('.breadcrumbs').append("<span class='arrows'>&rsaquo;</span><span>Digital Media</span>");
-	<?php } ?>
-<?php if (count($this->messages)) {?>
-      setTimeout(function(){
-			$('#dispmsgclients').fadeOut('slow');
-		},3000);
-<?php }} catch (\Throwable $th) {
-    Zend_Debug::dump($th->getMessage());
-}  ?>
-});
+<div id="message_container">
+    <?php if (!empty($this->messages)) : ?>
+        <div id="dispmsg" class="settingssuccess">
+            <?php foreach ($this->messages as $message) :
+                if (is_array($message)) :
+                    $key = key($message); ?>
+                    <div class="ml-alert-1-<?php echo $this->escape($key); ?>">
+                        <div style="display:block;">
+                            <span class="style-1-icon <?php echo $this->escape($key); ?>"></span>
+                            <?php echo $this->escape($message[$key]); ?>
+                        </div>
+                    </div>
+            <?php endif;
+            endforeach; ?>
+        </div>
+    <?php endif; ?>
+</div>
+
+<div id="measurement_container" class="full-width">
+    <div id="msg" style="display:none; font-style: oblique; font-weight: bold; color: green;"></div>
+
+    <div id="grid_measurement" class="all-grid-control">
+        <?php
+        if (isset($this->dataArray[0]['tablecontent']) && !empty($this->dataArray[0]['tablecontent'])) {
+            echo $this->grid($this->dataArray[0]);
+        } elseif ($this->call != 'ajaxcall') {
+            echo "<div class='no-data' style='text-align: center; color: #7f8c8d; padding: 30px; border: 1px dashed #ccc; background: #f9f9f9; border-radius: 4px;'>";
+            echo "<i class='fa fa-balance-scale' style='font-size: 24px; margin-bottom: 10px;'></i><br>";
+            echo "No Measurements found.";
+            echo "</div>";
+        }
+        ?>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        setTimeout(function() {
+            $('#dispmsg').fadeOut('slow');
+        }, 4000);
+    });
 </script>
